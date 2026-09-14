@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Khóa 34 · Chọn bài kiểm tra</title>
+</head>
+<body>
+  <main>
+    <h1>Khóa 34</h1>
+    <p>Chọn bài kiểm tra để bắt đầu.</p>
+    <p><a id="test-1-link" href="test-1/index.html">Phase 1 · Test 1</a></p>
+  </main>
+  <script>
+    const testLink = document.getElementById('test-1-link');
+    if (window.location.hash) {
+      testLink.hash = window.location.hash.slice(1);
+    }
+  </script>
+</body>
+</html>
