@@ -893,14 +893,14 @@
 
   function translationHTML(){
     const questions = [
-      {prompt:'Có nhiều gia đình truyền thống ở Việt Nam ngày nay hơn bao giờ hết.',suggestion:['Use a comparison structure with “more ... than ever”.','Check the plural noun and comparative word order.']},
-      {prompt:'Việc cưới xin đang ngày càng trở nên đắt đỏ.',suggestion:'Use “become increasingly ...” to show a changing trend.'},
-      {prompt:'Nếu cha mẹ không nuôi dạy con tốt, cuộc hôn nhân của những đứa trẻ này trong tương lai sẽ kết thúc bằng việc ly hôn/ sự ly dị.',suggestion:['Build a first conditional sentence: if-clause + future result.','Keep the verb tense consistent in both clauses.']},
-      {prompt:'Những giáo viên thú vị thường cố gắng trình bày/ giải thích những từ mới thông qua cử chỉ và hành động.',suggestion:'Use “try to” followed by the base verb, then explain the method with “through”.'},
-      {prompt:'Người thầy nhàm chán nhất mà tôi từng gặp là thầy A, một tấm gương cho rất nhiều học sinh khác.',suggestion:'Use a superlative with a relative clause: “the most ... I have ever ...”.'},
-      {prompt:'Thật là khó để không học hành chăm chỉ khi mà giáo viên đẹp trai/xinh gái của tôi rất hứng thú trong việc dạy học.',suggestion:'Start with “It is difficult not to ...” and connect the reason with “when”.'},
-      {prompt:'Mọi người thường hay mắc lỗi thuộc thể loại nào (thể loại lỗi nào) khi học tiếng Anh?',suggestion:'Ask about the type or category of mistakes using “What kind of ...?”.'},
-      {prompt:'Những học sinh còn lại đã từng xin lỗi giáo viên của họ khi họ phạm lỗi bởi vì họ cảm thấy có lỗi.',suggestion:'Use the past perfect with “had ...” for the earlier action and connect the reasons clearly.'}
+      {prompt:'Có nhiều gia đình truyền thống ở Việt Nam ngày nay hơn bao giờ hết.',suggestion:['Sử dụng được cấu trúc "Có cái gì"']},
+      {prompt:'Việc cưới xin đang ngày càng trở nên đắt đỏ.',suggestion:['Sử dụng được cấu trúc "be adj to V" để miêu tả tính chất hành động.']},
+      {prompt:'Nếu cha mẹ không nuôi dạy con tốt, cuộc hôn nhân của những đứa trẻ này trong tương lai sẽ kết thúc bằng việc ly hôn/ sự ly dị.',suggestion:['Sử dụng được cấu trúc câu điều kiện loại 1']},
+      {prompt:'Những giáo viên thú vị thường cố gắng trình bày/ giải thích những từ mới thông qua cử chỉ và hành động.',suggestion:['Sử dụng được tính từ đuôi -ing/ed để miêu tả']},
+      {prompt:'Người thầy nhàm chán nhất mà tôi từng gặp là thầy A, một tấm gương cho rất nhiều học sinh khác.',suggestion:['Sử dụng được cấu trúc so sánh nhất']},
+      {prompt:'Thật là khó để không học hành chăm chỉ khi mà giáo viên đẹp trai/xinh gái của tôi rất hứng thú trong việc dạy học.',suggestion:['Sử dụng được cấu trúc “difficult not to ...”']},
+      {prompt:'Mọi người thường hay mắc lỗi thuộc thể loại nào (thể loại lỗi nào) khi học tiếng Anh?',suggestion:'Sử dụng được cấu trúc hỏi về thể loại'},
+      {prompt:'Những học sinh còn lại đã từng xin lỗi giáo viên của họ khi họ phạm lỗi bởi vì họ cảm thấy có lỗi.',suggestion:'Sử dụng được cấu trúc nói về thói quen trong quá khứ'}
     ];
     const items = questions.map((question,i)=>`
       <div class="translation-item">
@@ -920,9 +920,9 @@
 
   function speakingHTML(){
     const questions = [
-      {prompt:'1. When you start a family, do you prefer to have a big or a small one?',suggestion:['State your preference clearly.','Give two reasons and finish with a brief personal example.']},
-      {prompt:'2. What do you like to do when you go on a long coach trip/coach ride?',suggestion:'Answer with your usual activity, explain why you enjoy it, and add when or how often you do it.'},
-      {prompt:'3. What do you usually do to prepare for an English test?',suggestion:['Organize the answer in sequence: first, next, and finally.','Include specific study activities.']}
+      {prompt:'1. When you start a family, do you prefer to have a big or a small one?',suggestion:['Sử dụng được cấu trúc "prefer"','Sử dụng được các tính từ so sánh', 'Sử dụng được các từ nối']},
+      {prompt:'2. What do you like to do when you go on a long coach trip/coach ride?',suggestion:['Sử dụng được trạng từ chỉ mức độ','Sử dụng được trạng từ tần suất','Sử dụng được tính từ đuôi ing_ed']},
+      {prompt:'3. What do you usually do to prepare for an English test?',suggestion:['Sử dụng được trạng từ tần suất','Sử dụng được các từ chỉ thứ tự']}
     ];
     const items = questions.map((question,i)=>`<div class="speaking-item"><div class="prompt-row"><span class="qnum">${i+1}</span><div class="source-missing">${esc(question.prompt)}</div></div><div class="guidance-panel question-guidance"><h4>Core structure / criteria</h4>${renderSuggestion(question.suggestion)}</div><textarea data-answer="speaking_${i+1}" placeholder="Type your speaking answer here…">${esc(answerValue(`speaking_${i+1}`))}</textarea><div class="word-count" data-word-count="speaking_${i+1}">0 words</div></div>`).join('');
     return page('speaking','Speaking',18,'3 written speaking responses',`
