@@ -1,0 +1,8 @@
+{
+  "name": "webtest34-learning-frontend",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/standalone-config.test.mjs"
+  }
+}
