@@ -13,14 +13,17 @@ test('repository root delegates to the Course 34 landing page', async () => {
   assert.match(rootEntry, /location\.hash/);
 });
 
-test('Course 34 landing page links to the Test 1 entry point', async () => {
+test('Course 34 landing page links to a fresh Test 1 navigation', async () => {
   const landing = await read('term-tests/webtest-34/index.html');
-  assert.match(landing, /test-1\//);
+  assert.match(landing, /testLink\.addEventListener\('click'/);
+  assert.match(landing, /searchParams\.set\('v', Date\.now\(\)\.toString\(\)\)/);
 });
+
 
 test('Course 34 Test 1 entry point delegates to the canonical demo renderer', async () => {
   const entry = await read('term-tests/webtest-34/test-1/index.html');
   assert.match(entry, /\.\.\/\.\.\/webtest-34-demo\/index\.html/);
+  assert.match(entry, /rendererUrl\.searchParams\.set\('v', navigationVersion\)/);
   assert.match(entry, /location\.hash/);
 });
 

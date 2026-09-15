@@ -14,6 +14,8 @@
   </main>
   <script>
     const rendererUrl = new URL('../../webtest-34-demo/index.html', window.location.href);
+    const navigationVersion = new URLSearchParams(window.location.search).get('v') || Date.now().toString();
+    rendererUrl.searchParams.set('v', navigationVersion);
     if (window.location.hash) {
       rendererUrl.hash = window.location.hash.slice(1);
     }

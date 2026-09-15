@@ -16,6 +16,14 @@
     if (window.location.hash) {
       testLink.hash = window.location.hash.slice(1);
     }
+    testLink.addEventListener('click', () => {
+      const latestTestUrl = new URL(testLink.href, window.location.href);
+      latestTestUrl.searchParams.set('v', Date.now().toString());
+      if (window.location.hash) {
+        latestTestUrl.hash = window.location.hash.slice(1);
+      }
+      testLink.href = latestTestUrl.href;
+    });
   </script>
 </body>
 </html>
