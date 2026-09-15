@@ -10,7 +10,7 @@ const read = relative => fs.readFile(path.join(root, relative), 'utf8');
 test('repository root delegates to the Course 34 landing page', async () => {
   const rootEntry = await read('index.html');
   assert.match(rootEntry, /term-tests\/webtest-34\/index\.html/);
-  assert.match(rootEntry, /location\.hash/);
+  assert.match(rootEntry, /searchParams\.set\('v', Date\.now\(\)\.toString\(\)\)/);
 });
 
 test('Course 34 landing page links to a fresh Test 1 navigation', async () => {
