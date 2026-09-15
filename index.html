@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Webtest 34 Learning</title>
+</head>
+<body>
+  <main>
+    <p>Đang mở trang bài kiểm tra…</p>
+    <noscript>
+      <p><a href="term-tests/webtest-34/index.html">Mở Webtest 34</a></p>
+    </noscript>
+  </main>
+  <script>
+    const landingUrl = new URL('term-tests/webtest-34/index.html', window.location.href);
+    if (window.location.hash) {
+      landingUrl.hash = window.location.hash.slice(1);
+    }
+    window.location.replace(landingUrl.href);
+  </script>
+</body>
+</html>

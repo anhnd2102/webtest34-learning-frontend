@@ -7,6 +7,12 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = relative => fs.readFile(path.join(root, relative), 'utf8');
 
+test('repository root delegates to the Course 34 landing page', async () => {
+  const rootEntry = await read('index.html');
+  assert.match(rootEntry, /term-tests\/webtest-34\/index\.html/);
+  assert.match(rootEntry, /location\.hash/);
+});
+
 test('Course 34 landing page links to the Test 1 entry point', async () => {
   const landing = await read('term-tests/webtest-34/index.html');
   assert.match(landing, /test-1\//);
