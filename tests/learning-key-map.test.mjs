@@ -49,3 +49,18 @@ test('buildResponses keeps legacy scalar answers as strings', async () => {
 
   assert.equal(responses['item-v2'], 'legacy answer');
 });
+test('buildResponses maps typed block items by position when blocks are unsorted', async () => {
+  const keyMap = await loadKeyMap();
+  const responses = keyMap.buildResponses({
+    blocks: [{
+      items: [
+        { itemVersionId: 'item-v2', position: 2, pedagogicalTypeCode: 'vocabulary_listen_write' },
+        { itemVersionId: 'item-v1', position: 1, pedagogicalTypeCode: 'vocabulary_listen_write' }
+      ]
+    }],
+    answers: { vocab1_1: 'first', vocab1_2: 'second' }
+  });
+
+  assert.equal(responses['item-v1'], 'first');
+  assert.equal(responses['item-v2'], 'second');
+});

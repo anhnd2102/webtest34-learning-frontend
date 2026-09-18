@@ -35,6 +35,7 @@
   function buildResponses({ items, blocks, answers }) {
     const blockItems = blocks?.length
       ? blocks.flatMap(block => (block.items || []).map(item => ({ item, block })))
+        .sort((left, right) => Number(left.item.position) - Number(right.item.position))
       : [...(items || [])].sort((left, right) => Number(left.position) - Number(right.position)).map(item => ({ item }));
     const typedItems = blockItems.filter(({ item }) => String(item?.pedagogicalTypeCode || ''));
     if (typedItems.length && typedItems.length !== blockItems.length) {

@@ -1039,9 +1039,26 @@
     return [];
   }
 
+  function vocabularyItemForAnswerKey(key){
+    const match = /^vocab1_(\d+)$/.exec(String(key));
+    if(!match) return null;
+    return vocabularyDefinitionItems()?.[Number(match[1]) - 1] || null;
+  }
+
   function isAnswered(k){
     const value = state.answers[k];
-    if(Array.isArray(value)) return value.length >= 2 && value.every(part => String(part ?? '').trim().length > 0);
+    if(Array.isArray(value)){
+      const parts = value.map(part => String(part ?? '').trim());
+      const item = vocabularyItemForAnswerKey(k);
+      if(item?.interactionType === 'text_select_pair'){
+        const options = Array.isArray(item.options) ? item.options : [];
+        return parts.length >= 2
+          && parts[0].length > 0
+          && parts[1].length > 0
+          && options.some(option => String(option?.id ?? '') === parts[1]);
+      }
+      return parts.length >= 2 && parts.every(Boolean);
+    }
     return String(value ?? '').trim().length > 0;
   }
   function updateProgress(){
