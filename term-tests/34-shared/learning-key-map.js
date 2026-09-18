@@ -53,7 +53,8 @@
       const answerKey = prefix ? `${prefix}_${ordinal}` : answerKeyForPosition(item.position);
       if (answerKeys.has(answerKey)) throw new Error(`WEBTEST34_ANSWER_KEY_DUPLICATE: ${answerKey}`);
       answerKeys.add(answerKey);
-      return [item.itemVersionId, String(answers?.[answerKey] ?? '')];
+      const value = answers?.[answerKey];
+      return [item.itemVersionId, Array.isArray(value) ? [...value] : String(value ?? '')];
     }));
   }
 

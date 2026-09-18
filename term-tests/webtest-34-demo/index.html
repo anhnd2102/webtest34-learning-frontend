@@ -8,7 +8,7 @@
   <link rel="icon" href="data:,">
   <script src="config.js?rev=20260904-webtest34-preview-v2"></script>
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
-  <script src="../34-shared/learning-key-map.js?rev=20260906-block-map-v2"></script>
+  <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v1"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -159,6 +159,7 @@
     .learning-result-verdict.correct{background:#e8f7f0;color:#12805c}
     .learning-result-verdict.incorrect{background:#fff0f2;color:var(--color-primary)}
     .learning-result-verdict.pending{background:#fff7e8;color:#8a5a00}
+    .learning-result-verdict.partial{background:#fff7e8;color:#8a5a00}
     .learning-result-answer{color:var(--color-text-secondary);word-break:break-word}
     .learning-result-feedback{margin-top:8px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--color-border);font-size:12px;line-height:1.5}
     .learning-result-feedback strong{color:var(--color-text)}
@@ -191,6 +192,11 @@
     .qnum{width:30px;height:30px;border-radius:9px;background:var(--color-bg-secondary);display:grid;place-items:center;font-family:Geologica,sans-serif;font-size:12px;font-weight:700;flex:0 0 auto;color:var(--color-slate)}
     .q-row input[type="text"]{border:0;outline:0;min-width:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
     .q-row select{border:0;outline:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
+    .vocab-pair-row{display:flex;align-items:center;gap:10px;border:1px solid #e9ebee;border-radius:12px;padding:10px 12px;min-height:56px;background:white;transition:.15s ease}
+    .vocab-pair-row:focus-within{border-color:var(--color-primary);box-shadow:0 0 0 4px rgba(219,8,41,.06)}
+    .vocab-pair-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;flex:1;min-width:0}
+    .vocab-pair-controls input,.vocab-pair-controls select{border:1px solid #e3e6ea;border-radius:9px;outline:0;min-width:0;width:100%;min-height:38px;padding:0 10px;background:white;color:var(--color-text)}
+    .vocab-pair-controls input:focus,.vocab-pair-controls select:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px rgba(219,8,41,.06)}
     .done .qnum{background:#fff0f3;color:var(--color-primary)}
 
     .picture-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -271,7 +277,7 @@
       .topbar-inner{padding:10px 14px;gap:10px}.brand-sub,.save-state{display:none}.brand-mark{width:34px;height:34px;border-radius:10px}.timer{min-width:84px;padding:7px 9px}.icon-btn{width:36px;height:36px}
       .section-nav{padding:6px 14px}.section-tab{padding:9px 10px}
       .intro{margin:22px auto;padding:0 14px}.intro-card{padding:24px;border-radius:18px}h1{font-size:26px}.lead{font-size:15px}.score-grid{grid-template-columns:1fr 1fr;gap:8px}.start-form{grid-template-columns:1fr}.btn-row{flex-direction:column;align-items:stretch}.btn-row .btn{width:100%}.start-actions{flex-direction:column-reverse}.start-actions .btn{width:100%}
-      .exam-layout{padding:0 14px;margin-top:14px}.section-hero{padding:20px}.exercise{padding:18px}.exercise-head{flex-direction:column}.points{align-self:flex-start}.answer-grid{grid-template-columns:1fr}.picture-q{grid-template-columns:76px 1fr}.picture-box{width:76px}.mcq-options{grid-template-columns:1fr}.statement-actions{margin-left:0}.bottom-actions{display:none}
+      .exam-layout{padding:0 14px;margin-top:14px}.section-hero{padding:20px}.exercise{padding:18px}.exercise-head{flex-direction:column}.points{align-self:flex-start}.answer-grid{grid-template-columns:1fr}.vocab-pair-controls{grid-template-columns:1fr}.picture-q{grid-template-columns:76px 1fr}.picture-box{width:76px}.mcq-options{grid-template-columns:1fr}.statement-actions{margin-left:0}.bottom-actions{display:none}
       .mobile-bottom{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid #eceef0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:35}
       .mobile-bottom .btn{padding:0 10px}
     }
@@ -711,9 +717,22 @@
     },180);
   }
 
-  function resultAnswer(value){
+  function resultDefinitionItem(resultItem){
+    const items = learningDefinitionBlocks().flatMap(block => block.items || []);
+    return items.find(item => item.itemVersionId === resultItem?.itemVersionId)
+      || items.find(item => Number(item.position) === Number(resultItem?.position));
+  }
+
+  function resultAnswer(value, resultItem){
     if(value === null || value === undefined || value === '') return 'Chưa trả lời';
-    if(Array.isArray(value)) return value.join(', ');
+    if(Array.isArray(value)){
+      const word = String(value[0] ?? '').trim();
+      const optionId = String(value[1] ?? '').trim();
+      const option = resultDefinitionItem(resultItem)?.options?.find(item => item.id === optionId);
+      const label = option?.label ? String(option.label) : '';
+      const answer = [word, label].filter(Boolean).join(' · ');
+      return answer || 'Chưa trả lời';
+    }
     if(typeof value === 'object') return Object.values(value).join(', ');
     return String(value);
   }
@@ -763,8 +782,8 @@
           </div>
           <div class="learning-result-items">${group.items.map(item => `
             <div class="learning-result-item">
-              <span class="learning-result-verdict ${item.verdict === 'correct' ? 'correct' : item.verdict === 'incorrect' ? 'incorrect' : 'pending'}">${verdictLabel(item)}</span>
-              <div><strong>Câu ${esc(item.position)}</strong><div class="learning-result-answer">${esc(resultAnswer(item.rawAnswer))}</div>${feedbackHtml(item)}</div>
+              <span class="learning-result-verdict ${item.verdict === 'correct' ? 'correct' : item.verdict === 'incorrect' ? 'incorrect' : item.verdict === 'partial' ? 'partial' : 'pending'}">${verdictLabel(item)}</span>
+              <div><strong>Câu ${esc(item.position)}</strong><div class="learning-result-answer">${esc(resultAnswer(item.rawAnswer, item))}</div>${feedbackHtml(item)}</div>
             </div>`).join('')}</div>
         </div>`).join('');
       return `
@@ -808,8 +827,48 @@
   }
   function answerValue(name){ return state.answers[name] ?? ''; }
 
+  function answerPair(name){
+    const value = answerValue(name);
+    if(Array.isArray(value)) return [String(value[0] ?? ''), String(value[1] ?? '')];
+    return [String(value ?? ''), ''];
+  }
+
   function inputRow(name, number, placeholder='Nhập câu trả lời'){
-    return `<label class="q-row ${answerValue(name)?'done':''}"><span class="qnum">${number}</span><input type="text" data-answer="${name}" value="${esc(answerValue(name))}" placeholder="${placeholder}" autocomplete="off" /></label>`;
+    return `<label class="q-row ${isAnswered(name)?'done':''}"><span class="qnum">${number}</span><input type="text" data-answer="${name}" value="${esc(answerValue(name))}" placeholder="${placeholder}" autocomplete="off" /></label>`;
+  }
+
+  function vocabularyDefinitionItems(){
+    const blocks = learningDefinitionBlocks();
+    if(!blocks.length) return null;
+    return blocks.flatMap(block => block.items || [])
+      .filter(item => Number(item.position) >= 1 && Number(item.position) <= 25)
+      .sort((left, right) => Number(left.position) - Number(right.position));
+  }
+
+  function vocabularyPairRow(item, ordinal){
+    const options = Array.isArray(item.options) ? item.options : [];
+    if(options.length !== 25 || options.some(option => !option || typeof option.id !== 'string' || typeof option.label !== 'string')) {
+      throw new Error('WEBTEST34_VOCAB_DEFINITION_OPTIONS_INVALID');
+    }
+    const key = `vocab1_${ordinal}`;
+    const [word, optionId] = answerPair(key);
+    const optionHtml = options.map(option => `<option value="${esc(option.id)}" ${option.id === optionId ? 'selected' : ''}>${esc(option.label)}</option>`).join('');
+    return `<div class="vocab-pair-row ${isAnswered(key) ? 'done' : ''}" aria-label="Câu ${ordinal}">
+      <span class="qnum" aria-hidden="true">${esc(item.position ?? ordinal)}</span>
+      <div class="vocab-pair-controls">
+        <input type="text" data-answer="${key}" data-answer-part="0" value="${esc(word)}" placeholder="Nhập từ / cụm từ" aria-label="Câu ${ordinal}: Nhập từ / cụm từ" autocomplete="off">
+        <select data-answer="${key}" data-answer-part="1" aria-label="Câu ${ordinal}: Chọn nghĩa"><option value="">Chọn nghĩa</option>${optionHtml}</select>
+      </div>
+    </div>`;
+  }
+
+  function renderVocabularyExerciseOne(){
+    const items = vocabularyDefinitionItems();
+    if(!items) return Array.from({length:25},(_,i)=>inputRow(`vocab1_${i+1}`,i+1)).join('');
+    if(items.length !== 25) throw new Error('WEBTEST34_VOCAB_ITEMS_INVALID');
+    return items.map((item, index) => item.interactionType === 'text_select_pair'
+      ? vocabularyPairRow(item, index + 1)
+      : inputRow(`vocab1_${index + 1}`, item.position, 'Nhập câu trả lời')).join('');
   }
 
   function renderNavigation(){
@@ -818,7 +877,7 @@
   }
 
   function vocabularyHTML(){
-    const ex1 = Array.from({length:25},(_,i)=>inputRow(`vocab1_${i+1}`,i+1)).join('');
+    const ex1 = renderVocabularyExerciseOne();
     const ex2 = vocab2Prompts.map((p,i)=>`
       <div class="picture-q ${answerValue(`vocab2_${i+1}`)?'done':''}">
         <div class="picture-box"><img src="${vocab2Images[i]}" alt="Hình minh họa câu ${i+1}"></div>
@@ -949,10 +1008,21 @@
     $$('[data-answer]').forEach(el=>{
       const event = (el.type==='radio'||el.type==='checkbox'||el.tagName==='SELECT')?'change':'input';
       el.addEventListener(event,()=>{
-        const key=el.dataset.answer;
-        if(el.type==='radio') state.answers[key]=el.checked?el.value:(state.answers[key]||'');
-        else state.answers[key]=el.value;
-        const row=el.closest('.q-row,.picture-q'); if(row) row.classList.toggle('done',!!String(state.answers[key]).trim());
+        const key = el.dataset.answer;
+        const part = el.dataset.answerPart;
+        if(part !== undefined){
+          const value = Array.isArray(state.answers[key])
+            ? [...state.answers[key]]
+            : [String(state.answers[key] ?? ''), ''];
+          value[Number(part)] = el.value;
+          state.answers[key] = value;
+        }else if(el.type==='radio') {
+          state.answers[key] = el.checked ? el.value : (state.answers[key] || '');
+        }else {
+          state.answers[key] = el.value;
+        }
+        const row = el.closest('.vocab-pair-row,.q-row,.picture-q');
+        if(row) row.classList.toggle('done', isAnswered(key));
         updateProgress(); updateWordCounts(); persist();
         queueLearningDraft();
       });
@@ -969,7 +1039,11 @@
     return [];
   }
 
-  function isAnswered(k){return String(state.answers[k] ?? '').trim().length>0}
+  function isAnswered(k){
+    const value = state.answers[k];
+    if(Array.isArray(value)) return value.length >= 2 && value.every(part => String(part ?? '').trim().length > 0);
+    return String(value ?? '').trim().length > 0;
+  }
   function updateProgress(){
     let done=0,total=0;
     sections.forEach(s=>{
@@ -1035,7 +1109,16 @@
     $('#introScreen').classList.add('hidden'); $('#audioCheckScreen').classList.add('hidden'); $('#examApp').classList.remove('hidden'); $('#examHeader').classList.remove('hidden'); $('#mobileBottom').classList.remove('hidden');
     document.documentElement.style.setProperty('--font-scale',fontScale);
     $('#studentLabel').textContent=[state.studentName,state.classCode].filter(Boolean).join(' · ') || 'Bài kiểm tra 120 phút';
-    renderApp(); startTimer(); initAudioDocks();
+    try{
+      renderApp();
+    }catch(error){
+      $('#examApp').classList.add('hidden');
+      $('#mobileBottom').classList.add('hidden');
+      $('#introScreen').classList.remove('hidden');
+      setError('studentError', learningMappingError(error, 'tải cấu trúc đề'));
+      return;
+    }
+    startTimer(); initAudioDocks();
     if(state.learning?.studentResult) renderLearningResult(state.learning.studentResult);
     if(state.submittedAt || ['submitted', 'superseded'].includes(state.learning?.status)) lockSubmittedAttempt();
     startLearningResultPolling();
