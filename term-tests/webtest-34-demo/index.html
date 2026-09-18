@@ -1052,7 +1052,7 @@
       const item = vocabularyItemForAnswerKey(k);
       if(item?.interactionType === 'text_select_pair'){
         const options = Array.isArray(item.options) ? item.options : [];
-        return parts.length >= 2
+        return parts.length === 2
           && parts[0].length > 0
           && parts[1].length > 0
           && options.some(option => String(option?.id ?? '') === parts[1]);

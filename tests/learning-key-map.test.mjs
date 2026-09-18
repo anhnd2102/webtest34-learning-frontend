@@ -64,3 +64,19 @@ test('buildResponses maps typed block items by position when blocks are unsorted
   assert.equal(responses['item-v1'], 'first');
   assert.equal(responses['item-v2'], 'second');
 });
+test('buildResponses preserves a malformed three-part tuple for backend validation', async () => {
+  const keyMap = await loadKeyMap();
+  const tuple = ['word', 'definition-option-17', 'unexpected-extra'];
+  const responses = keyMap.buildResponses({
+    blocks: [{
+      items: [{
+        itemVersionId: 'item-v3',
+        position: 1,
+        pedagogicalTypeCode: 'vocabulary_listen_write'
+      }]
+    }],
+    answers: { vocab1_1: tuple }
+  });
+
+  assert.deepEqual(Array.from(responses['item-v3']), tuple);
+});
