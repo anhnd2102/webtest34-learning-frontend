@@ -8,7 +8,7 @@
   <link rel="icon" href="data:,">
   <script src="config.js?rev=20260904-webtest34-preview-v2"></script>
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
-  <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v1"></script>
+  <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1051,11 +1051,8 @@
       const parts = value.map(part => String(part ?? '').trim());
       const item = vocabularyItemForAnswerKey(k);
       if(item?.interactionType === 'text_select_pair'){
-        const options = Array.isArray(item.options) ? item.options : [];
-        return parts.length === 2
-          && parts[0].length > 0
-          && parts[1].length > 0
-          && options.some(option => String(option?.id ?? '') === parts[1]);
+        const keyMap = window.WEBTEST34_LEARNING_KEY_MAP;
+        return Boolean(keyMap?.isCompleteTextSelectPair?.(value, item));
       }
       return parts.length >= 2 && parts.every(Boolean);
     }

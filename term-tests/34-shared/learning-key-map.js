@@ -32,6 +32,15 @@
     return contract.resolvePedagogicalType(item?.pedagogicalTypeCode).answerPrefix;
   }
 
+  function isCompleteTextSelectPair(value, item){
+    if(!Array.isArray(value) || value.length !== 2) return false;
+    const word = String(value[0] ?? '').trim();
+    const optionId = String(value[1] ?? '').trim();
+    if(!word || !optionId) return false;
+    const options = Array.isArray(item?.options) ? item.options : [];
+    return options.some(option => String(option?.id ?? '') === optionId);
+  }
+
   function buildResponses({ items, blocks, answers }) {
     const blockItems = blocks?.length
       ? blocks.flatMap(block => (block.items || []).map(item => ({ item, block })))
@@ -59,5 +68,5 @@
     }));
   }
 
-  window.WEBTEST34_LEARNING_KEY_MAP = Object.freeze({ answerKeyForPosition, answerPrefixForItem, buildResponses, resolvePedagogicalType: contract.resolvePedagogicalType });
+  window.WEBTEST34_LEARNING_KEY_MAP = Object.freeze({ answerKeyForPosition, answerPrefixForItem, buildResponses, isCompleteTextSelectPair, resolvePedagogicalType: contract.resolvePedagogicalType });
 }());

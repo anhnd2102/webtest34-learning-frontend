@@ -80,3 +80,10 @@ test('buildResponses preserves a malformed three-part tuple for backend validati
 
   assert.deepEqual(Array.from(responses['item-v3']), tuple);
 });
+test('isCompleteTextSelectPair rejects a restored three-part tuple', async () => {
+  const keyMap = await loadKeyMap();
+  const item = { options: [{ id: 'definition-option-17', label: 'Nghĩa' }] };
+
+  assert.equal(keyMap.isCompleteTextSelectPair(['word', 'definition-option-17'], item), true);
+  assert.equal(keyMap.isCompleteTextSelectPair(['word', 'definition-option-17', 'unexpected-extra'], item), false);
+});
