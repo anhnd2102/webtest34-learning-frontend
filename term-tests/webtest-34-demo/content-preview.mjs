@@ -19,6 +19,11 @@ export function learningRequestMethod(path) {
   return path === '/attempts/draft' ? 'PATCH' : 'POST';
 }
 
+export function resetLocalAttemptState(state) {
+  state.answers = {};
+  state.submittedAt = null;
+}
+
 export function resultViewModel(result) {
   const summary = result?.summary || {};
   const gradingStatus = result?.gradingStatus || 'pending';
@@ -361,6 +366,7 @@ export async function mount(course) {
         learningState.draftRevision = startRes.attempt.draftRevision || 0;
         learningState.status = startRes.attempt.status || 'active';
         learningState.expiresAt = startRes.attempt.expiresAt ? Date.parse(startRes.attempt.expiresAt) : null;
+        resetLocalAttemptState(state);
         if (startRes.attempt.draft) {
           applyServerDraft(startRes.attempt.draft);
         }
