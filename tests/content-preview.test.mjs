@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
-import { draftKey, sanitizeDraft, clozeSegments, groupBody, learningRequestMethod, resetLocalAttemptState } from '../term-tests/webtest-34-demo/content-preview.mjs';
+import { draftKey, sanitizeDraft, clozeSegments, groupBody, groupSections, learningRequestMethod, resetLocalAttemptState } from '../term-tests/webtest-34-demo/content-preview.mjs';
 
 test('Learning API saves drafts with PATCH and keeps commands on POST', () => {
   assert.equal(learningRequestMethod('/attempts/draft'), 'PATCH');
@@ -116,6 +116,28 @@ test('starting a server attempt clears answers and submission state from another
   const state = { answers: { old: 'answer' }, submittedAt: 123, currentSection: 'listening' };
   resetLocalAttemptState(state);
   assert.deepEqual(state, { answers: {}, submittedAt: null, currentSection: 'listening' });
+});
+
+test('audio exercises stay hidden until their shared recording starts', () => {
+  const form = { groups: [
+    { id: 'listen-a', title: 'Part A', instructions: 'Listen', audioRequired: true, audioPath: 'audio/listen.mp3', items: [{ id: 'a', prompt: 'Question A' }] },
+    { id: 'listen-b', title: 'Part B', instructions: 'Listen', audioRequired: true, audioPath: 'audio/listen.mp3', items: [{ id: 'b', prompt: 'Question B' }] },
+    { id: 'grammar', title: 'Grammar', instructions: 'Write', audioRequired: false, items: [{ id: 'c', prompt: 'Question C' }] }
+  ] };
+  const html = groupSections(form);
+  assert.equal([...html.matchAll(/data-demo-audio-start=/g)].length, 1);
+  assert.equal([...html.matchAll(/data-demo-audio-content="audio-gate-1" hidden/g)].length, 2);
+  assert.match(html, /data-demo-audio-player="audio-gate-1"/);
+  assert.match(html, /data-demo-audio-content=""/);
+});
+
+test('all production audio paths resolve to supplied files', async () => {
+  for (const course of ['03', '45']) {
+    const form = await load(course);
+    for (const path of new Set(form.groups.map(group => group.audioPath).filter(Boolean))) {
+      await fs.access(new URL(`../term-tests/webtest-34-demo/${path}`, import.meta.url));
+    }
+  }
 });
 
 test('demo entries delegate to the canonical page and branch before Learning initialization', async () => {

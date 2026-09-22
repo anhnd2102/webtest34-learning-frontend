@@ -112,6 +112,33 @@ export function groupBody(group) {
   }).join('')}</div>`;
 }
 
+export function groupSections(form) {
+  const audioGates = new Map();
+  for (const group of form.groups) {
+    if (group.audioPath && !audioGates.has(group.audioPath)) {
+      audioGates.set(group.audioPath, `audio-gate-${audioGates.size + 1}`);
+    }
+  }
+  const renderedAudio = new Set();
+  return form.groups.map(group => {
+    const gateId = group.audioPath ? audioGates.get(group.audioPath) : '';
+    const ownsAudio = gateId && !renderedAudio.has(gateId);
+    if (ownsAudio) renderedAudio.add(gateId);
+    const audioControl = ownsAudio
+      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">▶ Bắt đầu phát audio</button><audio preload="metadata" src="${escape(group.audioPath)}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">Nội dung bài nghe đang được khóa.</span></div>`
+      : gateId
+        ? `<p class="demo-notice demo-audio-linked">Nhóm này sẽ mở khi audio ở phần trên bắt đầu phát.</p>`
+        : group.audioRequired
+          ? '<p class="demo-notice">Chưa có audio cho nhóm này nên nội dung đang được khóa.</p>'
+          : '';
+    const hidden = gateId || group.audioRequired ? ' hidden' : '';
+    return `<section data-demo-page="${sectionKey(group)}" id="demo-${escape(group.id)}" class="exercise demo-section"><div class="exercise-head"><div><h2>${escape(group.title)}</h2><p class="demo-lines">${escape(group.instructions)}</p></div><span class="points">${group.items.length} ô trả lời</span></div>
+      ${group.notice ? `<p class="demo-notice">${escape(group.notice)}</p>` : ''}
+      ${audioControl}
+      <div data-demo-audio-content="${escape(gateId)}"${hidden}>${groupBody(group)}</div></section>`;
+  }).join('');
+}
+
 export async function mount(course) {
   if (!['03','34','45'].includes(course)) throw new Error('Unknown demo course');
   const response = await fetch(new URL(`./demo-content/${course}.json`, import.meta.url));
@@ -416,10 +443,7 @@ export async function mount(course) {
         <div id="demo-result" class="demo-notice" hidden></div>
         <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
         <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span data-demo-section-count="${section}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
-        <div class="demo-main">${form.groups.map(group => `<section data-demo-page="${sectionKey(group)}" id="demo-${escape(group.id)}" class="exercise demo-section"><div class="exercise-head"><div><h2>${escape(group.title)}</h2><p class="demo-lines">${escape(group.instructions)}</p></div><span class="points">${group.items.length} ô trả lời</span></div>
-          ${group.notice ? `<p class="demo-notice">${escape(group.notice)}</p>` : ''}
-          ${group.audioPath ? `<audio controls preload="none" src="${escape(group.audioPath)}" aria-label="Audio ${escape(group.title)}"></audio>` : group.audioRequired ? '<p class="demo-notice">Chưa có file audio được xác minh cho nhóm này. Hiện có thể duyệt câu đề và ô trả lời.</p>' : ''}
-          ${groupBody(group)}</section>`).join('')}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
+        <div class="demo-main">${groupSections(form)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
       </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
     </div>`;
 
@@ -448,6 +472,10 @@ export async function mount(course) {
       .content-demo .demo-layout aside nav{position:static;padding:0;margin-top:16px;background:transparent;gap:4px}
       .content-demo .demo-layout aside .section-tab{justify-content:space-between;text-align:left}
       .content-demo .demo-section{box-shadow:var(--shadow-1);border-color:var(--color-border);border-radius:var(--radius-lg)}
+      .content-demo .demo-audio-gate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px;margin:14px 0 18px;border:1px solid #f1c8cf;border-radius:12px;background:#fff3f5}
+      .content-demo .demo-audio-gate audio{display:none}
+      .content-demo .demo-audio-status{font-size:13px;font-weight:600;color:var(--color-text-secondary)}
+      .content-demo .demo-audio-linked{font-size:13px}
       .content-demo .demo-section h2{font-family:Geologica,sans-serif;color:var(--color-text);font-size:19px;margin-bottom:0}
       .content-demo .demo-section .points{white-space:nowrap}
       .content-demo .demo-section[hidden]{display:none}
@@ -469,6 +497,50 @@ export async function mount(course) {
       @media(max-width:600px){.content-demo .demo-picture-grid{grid-template-columns:1fr}.content-demo .demo-vocab-grid{gap:0 10px}.content-demo .demo-question{min-width:0}.content-demo .demo-question input,.content-demo .demo-question select{min-width:0}.content-demo .demo-inline input{width:120px}.content-demo .demo-tabs{padding:8px 12px}.content-demo .exercise-head{gap:8px}.content-demo .demo-cloze{line-height:3.2}.content-demo .demo-top nav{flex-shrink:0}}
     `;
     document.head.append(layoutStyle);
+
+    for (const button of document.querySelectorAll('[data-demo-audio-start]')) {
+      const gateId = button.dataset.demoAudioStart;
+      const audio = document.querySelector(`[data-demo-audio-player="${gateId}"]`);
+      const status = document.querySelector(`[data-demo-audio-status="${gateId}"]`);
+      let started = false;
+      let lastGoodTime = 0;
+      audio.addEventListener('play', () => {
+        if (!started) {
+          started = true;
+          document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
+          document.querySelectorAll('.demo-audio-linked').forEach(notice => {
+            if (notice.closest('.demo-section')?.querySelector(`[data-demo-audio-content="${gateId}"]`)) notice.hidden = true;
+          });
+        }
+        button.hidden = true;
+        status.textContent = 'Audio đang phát · bài tập đã được mở.';
+      });
+      audio.addEventListener('timeupdate', () => { if (!audio.seeking) lastGoodTime = audio.currentTime; });
+      audio.addEventListener('seeking', () => {
+        if (started && Math.abs(audio.currentTime - lastGoodTime) > 0.75) audio.currentTime = lastGoodTime;
+      });
+      audio.addEventListener('pause', () => {
+        if (started && !audio.ended) audio.play().catch(() => {});
+      });
+      audio.addEventListener('ended', () => { status.textContent = 'Audio đã phát xong · bài tập vẫn mở để hoàn thành.'; });
+      audio.addEventListener('error', () => {
+        if (started) return;
+        button.disabled = false;
+        button.textContent = 'Thử phát lại audio';
+        status.textContent = 'Không tải được audio. Bài tập vẫn đang khóa.';
+      });
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        status.textContent = 'Đang tải audio…';
+        try {
+          await audio.play();
+        } catch {
+          button.disabled = false;
+          button.textContent = 'Thử phát lại audio';
+          status.textContent = 'Trình duyệt chưa phát được audio. Bài tập vẫn đang khóa.';
+        }
+      });
+    }
 
     const choiceStyle=document.createElement('style');
     choiceStyle.textContent=`.content-demo .demo-prompt-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}.content-demo .demo-prompt-row .qnum{flex-shrink:0}.content-demo .demo-prompt-row label{margin:4px 0 0}.content-demo .demo-mcq-question{border:1px solid #e5e7eb;border-radius:16px;padding:20px;margin:12px 0}.content-demo .demo-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.content-demo label.demo-choice{display:flex;align-items:center;gap:10px;border:1px solid #dce1e8;border-radius:12px;padding:14px;cursor:pointer;font-weight:400;margin:0;position:relative;overflow-wrap:anywhere}.content-demo .demo-choice-letter{font-weight:700}.content-demo .demo-choice input[type=radio]{position:absolute;opacity:0;width:1px;height:1px;padding:0}.content-demo .demo-choice:has(input:checked){border-color:var(--color-primary);background:#fff3f5}.content-demo .demo-choice:has(input:focus-visible){outline:2px solid var(--color-primary);outline-offset:2px}.content-demo .demo-choice:has(input:disabled){cursor:default}.content-demo input[type=hidden]{display:none}@media(max-width:600px){.content-demo .demo-choice-grid{grid-template-columns:1fr}.content-demo .demo-mcq-question{padding:14px}}`;
