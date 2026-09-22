@@ -3,18 +3,25 @@
 
   // Cấu hình cho index.html (Khóa 34 · Phase 1 · Test 1).
   // Tách riêng khỏi HTML để dễ đổi endpoint/audio khi chuyển môi trường.
-  // Local preview cũng gọi API production; token production chỉ nhận từ URL fragment.
+  // Local dùng backend riêng; token chỉ nhận từ URL fragment.
 
   const productionApi = 'https://webtest.ducanhn.autos';
+  const localApi = 'http://127.0.0.1:8788';
+  const page = window.location || {};
+  const query = typeof URLSearchParams !== 'undefined' ? new URLSearchParams(page.search || '') : { get: () => null };
+  const forceProd = query.get('prod') === '1' || query.get('apiEnv') === 'production';
+  const isLocal = !forceProd && (['localhost', '127.0.0.1', '[::1]', '::1'].includes(page.hostname)
+    || page.protocol === 'file:');
+  const apiBase = isLocal ? localApi : productionApi;
 
   window.WEBTEST_34_PREVIEW_CONFIG = Object.freeze({
     // Learning API độc lập dùng chung cho các khóa 03, 34 và 45.
     // Roster được đồng bộ qua boundary riêng, không cần Google token.
-    API_BASE_URL: productionApi,
-    LEARNING_API_BASE_URL: productionApi,
+    API_BASE_URL: apiBase,
+    LEARNING_API_BASE_URL: apiBase,
     LEARNING_TEST_TOKEN: '',
     TEST_SLUG: 'webtest-34',
-    // Khi mở local, dùng test token production trong fragment `#test=<test-token>`.
+    // Khi mở local, chỉ dùng token của môi trường thử trong fragment.
     // Không dùng roster/assignment fixture local và không tự fallback sang dữ liệu mẫu.
     ENABLE_DEMO_ROSTER_FALLBACK: false,
 

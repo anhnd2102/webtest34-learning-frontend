@@ -1,7 +1,20 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
-import { draftKey, sanitizeDraft, clozeSegments, groupBody } from '../term-tests/webtest-34-demo/content-preview.mjs';
+import { draftKey, sanitizeDraft, clozeSegments, groupBody, learningRequestMethod } from '../term-tests/webtest-34-demo/content-preview.mjs';
+
+test('Learning API saves drafts with PATCH and keeps commands on POST', () => {
+  assert.equal(learningRequestMethod('/attempts/draft'), 'PATCH');
+  assert.equal(learningRequestMethod('/attempts/start'), 'POST');
+  assert.equal(learningRequestMethod('/attempts/submit'), 'POST');
+});
+
+test('shared renderer does not embed local or production access tokens', async () => {
+  const source = await fs.readFile(new URL('../term-tests/webtest-34-demo/content-preview.mjs', import.meta.url), 'utf8');
+  assert.doesNotMatch(source, /03010000-0000-4000-8000-000000000002/);
+  assert.doesNotMatch(source, /45010000-0000-4000-8000-000000000002/);
+  assert.doesNotMatch(source, /defaultCourseTokens/);
+});
 
 test('Cloze maps numbered blanks to stable answer IDs and preserves surrounding text', () => {
   const segments = clozeSegments('John (1).... (not/study). I (2) ___ (think).', ['a', 'b']);
@@ -93,6 +106,10 @@ test('choice cards preserve stored option values and Vocabulary meanings remain 
   const vocabulary=groupBody(form.groups.find(group=>group.id==='vocabulary-listen'));
   assert.equal([...vocabulary.matchAll(/<select /g)].length,25);
   assert.ok(!vocabulary.includes('type="radio"'));
+  const course03=await load('03');
+  const vocabulary03=groupBody(course03.groups.find(group=>group.id==='vocabulary-listen'));
+  assert.equal([...vocabulary03.matchAll(/<select /g)].length,15);
+  assert.equal(course03.groups.find(group=>group.id==='vocabulary-listen').items.filter(item=>item.options).length,15);
 });
 
 test('demo entries delegate to the canonical page and branch before Learning initialization', async () => {
