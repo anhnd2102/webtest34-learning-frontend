@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
-import { draftKey, sanitizeDraft, clozeSegments, groupBody, learningRequestMethod } from '../term-tests/webtest-34-demo/content-preview.mjs';
+import { draftKey, sanitizeDraft, clozeSegments, groupBody, learningRequestMethod, resetLocalAttemptState } from '../term-tests/webtest-34-demo/content-preview.mjs';
 
 test('Learning API saves drafts with PATCH and keeps commands on POST', () => {
   assert.equal(learningRequestMethod('/attempts/draft'), 'PATCH');
@@ -110,6 +110,12 @@ test('choice cards preserve stored option values and Vocabulary meanings remain 
   const vocabulary03=groupBody(course03.groups.find(group=>group.id==='vocabulary-listen'));
   assert.equal([...vocabulary03.matchAll(/<select /g)].length,15);
   assert.equal(course03.groups.find(group=>group.id==='vocabulary-listen').items.filter(item=>item.options).length,15);
+});
+
+test('starting a server attempt clears answers and submission state from another student', () => {
+  const state = { answers: { old: 'answer' }, submittedAt: 123, currentSection: 'listening' };
+  resetLocalAttemptState(state);
+  assert.deepEqual(state, { answers: {}, submittedAt: null, currentSection: 'listening' });
 });
 
 test('demo entries delegate to the canonical page and branch before Learning initialization', async () => {
