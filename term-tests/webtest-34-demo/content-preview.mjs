@@ -38,6 +38,25 @@ export function resultViewModel(result) {
   };
 }
 
+export function resultDetailsHtml(result, definition) {
+  const itemsById = new Map((result?.items || []).map(item => [item.itemVersionId, item]));
+  const verdictLabel = verdict => ({ correct: 'Đúng', incorrect: 'Sai', partial: 'Một phần', pending: 'Đang chấm', manual_review: 'Chờ duyệt' }[verdict] || verdict || 'Chưa chấm');
+  return (definition?.blocks || []).map(block => {
+    const items = (block.items || []).map(item => itemsById.get(item.itemVersionId)).filter(Boolean);
+    if (!items.length) return '';
+    const score = Number(items.reduce((sum, item) => sum + (Number(item.scoreEarned) || 0), 0).toFixed(2));
+    const maxScore = Number(items.reduce((sum, item) => sum + (Number(item.maxScore) || 0), 0).toFixed(2));
+    const correct = items.filter(item => item.verdict === 'correct').length;
+    const details = items.map(item => {
+      const tone = item.verdict === 'correct' ? 'correct' : item.verdict === 'incorrect' ? 'incorrect' : item.verdict === 'partial' ? 'partial' : 'pending';
+      const errors = (item.feedback?.errors || []).map(error => `<li>${escape(error.message || error.code || '')}</li>`).join('');
+      const feedback = errors ? `<div class="learning-result-feedback"><strong>Nhận xét</strong><ul>${errors}</ul></div>` : '';
+      return `<div class="learning-result-item"><span class="learning-result-verdict ${tone}">${escape(verdictLabel(item.verdict))}</span><div><strong>Câu ${escape(item.position)}</strong><div class="learning-result-answer">${escape(item.rawAnswer || 'Chưa trả lời')}</div>${feedback}</div></div>`;
+    }).join('');
+    return `<article class="learning-result-section"><div class="learning-result-section-header"><h3>${escape(block.title)}</h3><div class="learning-result-section-actions"><div class="learning-result-section-summary"><div class="learning-result-score">${score} / ${maxScore} điểm</div><div class="meta">${correct}/${items.length} câu đúng</div></div><button class="result-details-toggle" type="button" data-result-details="result-${escape(block.blockId)}" aria-expanded="false">Xem chi tiết</button></div></div><div class="learning-result-exercise" id="result-${escape(block.blockId)}" hidden><div class="learning-result-items">${details}</div></div></article>`;
+  }).join('');
+}
+
 export function clozeSegments(text, ids, numbered = true) {
   const pattern = numbered ? /\((\d+)\)\s*[_\.\u2026]{2,}/g : /[_\.\u2026]{3,}/g;
   const segments = [];
@@ -727,7 +746,15 @@ export async function mount(course) {
             </div>
           </div>
         `}
+        <div class="learning-result-grid">${resultDetailsHtml(result, learningState.definition)}</div>
       `;
+      card.querySelectorAll('[data-result-details]').forEach(button => button.addEventListener('click', () => {
+        const details = card.querySelector(`#${button.dataset.resultDetails}`);
+        const expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        button.textContent = expanded ? 'Xem chi tiết' : 'Ẩn chi tiết';
+        if (details) details.hidden = expanded;
+      }));
     }
 
     async function pollLearningResult() {
