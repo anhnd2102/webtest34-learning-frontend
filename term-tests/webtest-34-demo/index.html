@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light" />
   <title>IZONE · Khóa 34 · Phase 1 · Test 1</title>
   <link rel="icon" href="data:,">
-  <script src="config.js?rev=20260904-webtest34-preview-v2"></script>
+  <script src="config.js?rev=20260918-local-api-v1"></script>
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
@@ -424,6 +424,26 @@
 
 <script>
 (() => {
+  const demoCourse = new URLSearchParams(location.search).get('demoCourse');
+  if (['03', '34', '45'].includes(demoCourse)) {
+    import('./content-preview.mjs').then(module => module.mount(demoCourse)).catch(() => {
+      document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại.';
+    });
+    return;
+  }
+  function resultViewModel(result){
+    const summary=result?.summary||{};
+    const status=result?.gradingStatus||'pending';
+    const scoreFinal=summary.scoreFinal===true&&status==='complete';
+    return {
+      tone:status==='manual_review'?'manual_review':scoreFinal?'complete':'pending',
+      title:status==='manual_review'?'Đang chờ giảng viên kiểm tra':scoreFinal?'Đã chấm xong':'AI đang chấm bài',
+      scoreFinal,
+      pendingItemCount:Number.isInteger(summary.pendingItemCount)?summary.pendingItemCount:0,
+      scoreLabel:scoreFinal?'Điểm chính thức':'Điểm tạm tính',
+      score:`${summary.scoreEarned??0} / ${summary.maxScore??0}`
+    };
+  }
   const STORAGE_KEY = 'izone_course34_phase1_test1_prototype_v1';
   const TOTAL_MINUTES = 120;
   const LEARNING_RESULT_POLL_MAX_MS = 45 * 60 * 1000;
@@ -739,6 +759,7 @@
 
   function renderLearningResult(result){
     if(!result || !Array.isArray(result.items)) return;
+    const asyncView=resultViewModel(result);
     const resultView = $('#learningResult');
     const resultGrouper = window.WEBTEST34_LEARNING_RESULT;
     if(!resultGrouper) throw new Error('WEBTEST34_RESULT_GROUPER_MISSING');
@@ -757,7 +778,7 @@
       ? 'Đã chấm xong toàn bộ bài.'
       : result.gradingStatus === 'manual_review'
         ? 'Một phần bài cần giảng viên kiểm tra thêm.'
-        : 'Đang chấm Translation và Speaking; kết quả sẽ tự cập nhật.';
+        : `${asyncView.title}${asyncView.pendingItemCount ? ` · còn ${asyncView.pendingItemCount} câu` : ''}; kết quả sẽ tự cập nhật.`;
     const verdictLabel = item => item.verdict === 'correct' ? 'Đúng' : item.verdict === 'incorrect' ? 'Sai' : item.verdict === 'partial' ? 'Một phần' : item.verdict === 'manual_review' ? 'Cần giảng viên' : item.verdict === 'pending' ? 'Đang chờ' : 'Chưa chấm';
     const feedbackHtml = item => {
       const feedback = item.feedback;
@@ -803,16 +824,14 @@
     }).join('');
     const waitingGroups = groups.filter(group => group.items.some(item => item.verdict === 'pending' || item.verdict === 'manual_review'));
     const waitingHtml = waitingGroups.map(group => `<span class="chip">${esc(group.label)}: ${group.items.some(item => item.verdict === 'manual_review') ? 'Cần giảng viên' : 'Đang chờ chấm AI'}</span>`).join('');
-    const displayedScore = !mappingIncomplete && result.gradingStatus === 'complete'
-      ? `${result.summary.scoreEarned} / ${result.summary.maxScore}`
-      : `${hardScore} / ${hardMax}`;
+    const displayedScore = mappingIncomplete ? `${hardScore} / ${hardMax}` : asyncView.score;
     const incompleteHtml = mappingIncomplete
       ? `<div class="learning-result-status">Chưa ghép được ${groups.unmatchedItems.length} câu vào block của đề.</div>`
       : '';
     resultView.innerHTML = `<div class="learning-result-card">
       <div class="eyebrow">KẾT QUẢ SAU KHI NỘP</div>
       <h1>Kết quả bài làm của ${esc(state.studentName || 'học viên')}</h1>
-      <div class="learning-result-status">${statusText}<br><strong>Điểm đã chấm: ${displayedScore}</strong></div>${incompleteHtml}
+      <div class="learning-result-status">${statusText}<br><strong>${mappingIncomplete?'Điểm đã ghép':asyncView.scoreLabel}: ${displayedScore}</strong></div>${incompleteHtml}
       <div class="learning-result-grid">${groupHtml}</div>
       <div class="section-stats">${waitingHtml}</div>
     </div>`;

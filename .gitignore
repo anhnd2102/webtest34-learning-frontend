@@ -1,2 +1,4 @@
 .DS_Store
 Thumbs.db
+# Local copies of supplied source recordings; publish reviewed assets separately.
+term-tests/webtest-34-demo/assets/demo-audio/

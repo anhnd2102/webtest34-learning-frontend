@@ -1,0 +1,1620 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "03",
+  "phase": null,
+  "testNumber": 1,
+  "sourceHash": "3243fc228ac25b142a2be7b05351c4c8f2a8dfdc2c3393d7b4de3176edef73dc",
+  "sourceSheet": "SS TEST 1",
+  "durationMinutes": 90,
+  "groups": [
+    {
+      "id": "listening-gap",
+      "title": "Listening · Điền từ",
+      "instructions": "🔉 Exercise 1: Listen and fill in the blanks with suitable words or phrases (Nghe và điền vào chỗ trống với từ hoặc cụm từ thích hợp) 5 điểm",
+      "context": "My name is Jackson. I live (1)____ park with a nice view of the city center, and I enjoy its great view. The park is amazing because it helps me relax. (2)____ nature, so I often visit the park to relax and soak in the fresh atmosphere. (3)____ whenever something interesting happens there, like the event they're organizing this week. There is a race in the park, so there are a lot of people in the morning. Currently, I'm interested in (4) ____, even though I can be a bit (5) ____ at times. Lately, I have met some kind people during my visits, and I love spending time with them.",
+      "audioRequired": true,
+      "notice": "",
+      "items": [
+        {
+          "id": "listening-gap-1",
+          "prompt": "Chỗ trống (1)",
+          "sourceRef": null
+        },
+        {
+          "id": "listening-gap-2",
+          "prompt": "Chỗ trống (2)",
+          "sourceRef": null
+        },
+        {
+          "id": "listening-gap-3",
+          "prompt": "Chỗ trống (3)",
+          "sourceRef": null
+        },
+        {
+          "id": "listening-gap-4",
+          "prompt": "Chỗ trống (4)",
+          "sourceRef": null
+        },
+        {
+          "id": "listening-gap-5",
+          "prompt": "Chỗ trống (5)",
+          "sourceRef": null
+        }
+      ],
+      "audioPath": "assets/demo-audio/03/listening.mp3",
+      "audioHash": "859b109fe8e497c3017462cc44124e7fd726960f302fe2333d6a60f7cabf835c",
+      "audioReviewStatus": "mapped_by_filename_requires_listening_review"
+    },
+    {
+      "id": "listening-vi",
+      "title": "Listening · Trả lời tiếng Việt",
+      "instructions": "Exercise 2: Answer these questions in Vietnamese (Trả lời các câu hỏi sau bằng tiếng Việt) 5 điểm",
+      "context": "",
+      "audioRequired": true,
+      "notice": "",
+      "items": [
+        {
+          "id": "listening-vi-1",
+          "prompt": "Từ “its” ở \"its great view\" có nghĩa tiếng Việt là gì?",
+          "sourceRef": "M22"
+        },
+        {
+          "id": "listening-vi-2",
+          "prompt": "Its thay thế cho từ/cụm từ nào trong bài?",
+          "sourceRef": "M23"
+        },
+        {
+          "id": "listening-vi-3",
+          "prompt": "Trong câu “The park is amazing” động từ to be “is” được dùng thể hiện chức năng gì?",
+          "sourceRef": "M24"
+        },
+        {
+          "id": "listening-vi-4",
+          "prompt": "Trong câu “I often visit the park to relax”, thì được sử dụng là thì gì?",
+          "sourceRef": "M25"
+        },
+        {
+          "id": "listening-vi-5",
+          "prompt": "Thì này lại được sử dụng ở đây để nói về hành động như thế nào?",
+          "sourceRef": "M26"
+        },
+        {
+          "id": "listening-vi-6",
+          "prompt": "Phân tích câu “I often visit the park to relax and soak in the fresh atmosphere” theo cấu trúc chủ ngữ - động từ - tân ngữ - thành phần khác (nếu có)\nS — Chủ ngữ",
+          "sourceRef": "M27"
+        },
+        {
+          "id": "listening-vi-7",
+          "prompt": "Phân tích câu “I often visit the park to relax and soak in the fresh atmosphere” theo cấu trúc chủ ngữ - động từ - tân ngữ - thành phần khác (nếu có)\nV — Động từ",
+          "sourceRef": "M27"
+        },
+        {
+          "id": "listening-vi-8",
+          "prompt": "Phân tích câu “I often visit the park to relax and soak in the fresh atmosphere” theo cấu trúc chủ ngữ - động từ - tân ngữ - thành phần khác (nếu có)\nO — Tân ngữ",
+          "sourceRef": "M27"
+        },
+        {
+          "id": "listening-vi-9",
+          "prompt": "Phân tích câu “I often visit the park to relax and soak in the fresh atmosphere” theo cấu trúc chủ ngữ - động từ - tân ngữ - thành phần khác (nếu có)\nThành phần khác",
+          "sourceRef": "M27"
+        },
+        {
+          "id": "listening-vi-10",
+          "prompt": "Từ “them” ở cuối bài có nghĩa tiếng Việt là gì?",
+          "sourceRef": "M31"
+        },
+        {
+          "id": "listening-vi-11",
+          "prompt": "\"them\" thay thế cho từ/cụm từ nào trong bài?",
+          "sourceRef": "M32"
+        }
+      ],
+      "audioPath": "assets/demo-audio/03/listening.mp3",
+      "audioHash": "859b109fe8e497c3017462cc44124e7fd726960f302fe2333d6a60f7cabf835c",
+      "audioReviewStatus": "mapped_by_filename_requires_listening_review"
+    },
+    {
+      "id": "vocabulary-listen",
+      "title": "Vocabulary · Nghe từ và viết nghĩa",
+      "instructions": "🔉 Exercise 1: Listen and note down the words/phrases you hear from the recording (Save the Definition for later when the recording is finished)\n(Nghe và viết các từ/cụm từ nghe được từ bản ghi âm. Viết định nghĩa sau khi đã nghe xong bản ghi âm) 15 điểm",
+      "context": "",
+      "audioRequired": true,
+      "notice": "",
+      "items": [
+        {
+          "id": "vocabulary-listen-1",
+          "prompt": "1. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-2",
+          "prompt": "1. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-3",
+          "prompt": "2. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-4",
+          "prompt": "2. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-5",
+          "prompt": "3. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-6",
+          "prompt": "3. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-7",
+          "prompt": "4. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-8",
+          "prompt": "4. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-9",
+          "prompt": "5. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-10",
+          "prompt": "5. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-11",
+          "prompt": "6. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-12",
+          "prompt": "6. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-13",
+          "prompt": "7. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-14",
+          "prompt": "7. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-15",
+          "prompt": "8. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-16",
+          "prompt": "8. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-17",
+          "prompt": "9. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-18",
+          "prompt": "9. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-19",
+          "prompt": "10. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-20",
+          "prompt": "10. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-21",
+          "prompt": "11. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-22",
+          "prompt": "11. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-23",
+          "prompt": "12. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-24",
+          "prompt": "12. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-25",
+          "prompt": "13. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-26",
+          "prompt": "13. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-27",
+          "prompt": "14. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-28",
+          "prompt": "14. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        },
+        {
+          "id": "vocabulary-listen-29",
+          "prompt": "15. Từ/cụm từ nghe được",
+          "sourceRef": null
+        },
+        {
+          "id": "vocabulary-listen-30",
+          "prompt": "15. Chọn nghĩa tiếng Việt",
+          "sourceRef": null,
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bố"
+            },
+            {
+              "id": "meaning-02",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-03",
+              "label": "con trai"
+            },
+            {
+              "id": "meaning-04",
+              "label": "du lịch"
+            },
+            {
+              "id": "meaning-05",
+              "label": "hẹn gặp lại"
+            },
+            {
+              "id": "meaning-06",
+              "label": "khỏe mạnh"
+            },
+            {
+              "id": "meaning-07",
+              "label": "năm cuối"
+            },
+            {
+              "id": "meaning-08",
+              "label": "quê"
+            },
+            {
+              "id": "meaning-09",
+              "label": "số 12"
+            },
+            {
+              "id": "meaning-10",
+              "label": "số 15"
+            },
+            {
+              "id": "meaning-11",
+              "label": "tháng chín"
+            },
+            {
+              "id": "meaning-12",
+              "label": "tháng hai"
+            },
+            {
+              "id": "meaning-13",
+              "label": "thư giãn"
+            },
+            {
+              "id": "meaning-14",
+              "label": "tên đệm"
+            },
+            {
+              "id": "meaning-15",
+              "label": "đồ ăn Trung Quốc"
+            }
+          ]
+        }
+      ],
+      "audioPath": "assets/demo-audio/03/vocabulary.mp3",
+      "audioHash": "d96eac52709081a9badf89266a37059d9be206b6176eef8786b05a3c0625ca3e",
+      "audioReviewStatus": "mapped_by_filename_requires_listening_review"
+    },
+    {
+      "id": "vocabulary-picture",
+      "title": "Vocabulary · Từ vựng qua ảnh",
+      "instructions": "Exercise 2: Look at the pictures and write down the suitable words/ phrases \n(Nhìn vào các bức tranh và điền từ/cụm từ tương ứng) 2.5 điểm",
+      "context": "",
+      "audioRequired": false,
+      "notice": "",
+      "items": [
+        {
+          "id": "vocabulary-picture-1",
+          "prompt": "1. f _ _ _    n _ _ _\nBUI QUANG HUNG",
+          "sourceRef": "L61 / L56"
+        },
+        {
+          "id": "vocabulary-picture-2",
+          "prompt": "2. u _ _ v _ _ _ _ _ y   \ns _ _ _ _ _ t",
+          "sourceRef": "N61",
+          "image": "assets/demo-03/picture-2-image5.png",
+          "sourceImageAnchor": {
+            "row": 55,
+            "column": 13
+          }
+        },
+        {
+          "id": "vocabulary-picture-3",
+          "prompt": "3. the _ _ _ _ _ _ of Vietnam",
+          "sourceRef": "Q61",
+          "image": "assets/demo-03/picture-3-image9.jpg",
+          "sourceImageAnchor": {
+            "row": 55,
+            "column": 16
+          }
+        },
+        {
+          "id": "vocabulary-picture-4",
+          "prompt": "4. g _ _ _ _ p _ _ _ _ _ s",
+          "sourceRef": "R61",
+          "image": "assets/demo-03/picture-4-image4.png",
+          "sourceImageAnchor": {
+            "row": 55,
+            "column": 17
+          }
+        },
+        {
+          "id": "vocabulary-picture-5",
+          "prompt": "5. t _ _ _ _ y",
+          "sourceRef": "L68",
+          "image": "assets/demo-03/picture-5-image1.png",
+          "sourceImageAnchor": {
+            "row": 62,
+            "column": 11
+          }
+        },
+        {
+          "id": "vocabulary-picture-6",
+          "prompt": "6. go on h _ _ _ _ _ _",
+          "sourceRef": "N68",
+          "image": "assets/demo-03/picture-6-image8.png",
+          "sourceImageAnchor": {
+            "row": 62,
+            "column": 13
+          }
+        },
+        {
+          "id": "vocabulary-picture-7",
+          "prompt": "7. d _ _ _ _ t _ _",
+          "sourceRef": "Q68",
+          "image": "assets/demo-03/picture-7-image3.png",
+          "sourceImageAnchor": {
+            "row": 62,
+            "column": 16
+          }
+        },
+        {
+          "id": "vocabulary-picture-8",
+          "prompt": "8. d _ _ _ _ _ g",
+          "sourceRef": "R68",
+          "image": "assets/demo-03/picture-8-image7.png",
+          "sourceImageAnchor": {
+            "row": 62,
+            "column": 17
+          }
+        },
+        {
+          "id": "vocabulary-picture-9",
+          "prompt": "9. read  \n n _ _ _ p _ _ _ _ s",
+          "sourceRef": "N74",
+          "image": "assets/demo-03/picture-9-image2.png",
+          "sourceImageAnchor": {
+            "row": 68,
+            "column": 13
+          }
+        },
+        {
+          "id": "vocabulary-picture-10",
+          "prompt": "10. play  \nc _ _ p _ _ _ _     g _ _ _ s",
+          "sourceRef": "Q74",
+          "image": "assets/demo-03/picture-10-image6.png",
+          "sourceImageAnchor": {
+            "row": 68,
+            "column": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-choice",
+      "title": "Vocabulary · Chọn đáp án",
+      "instructions": "Exercise 3: Choose the correct answer (Chọn đáp án đúng) 2.5 điểm",
+      "context": "",
+      "audioRequired": false,
+      "notice": "",
+      "items": [
+        {
+          "id": "vocabulary-choice-1",
+          "prompt": "Trang: _________? - Quynh: My name is Quynh.",
+          "sourceRef": "M80",
+          "options": [
+            "How old are you?",
+            "How do you spell your name?",
+            "Where are you from?",
+            "What’s your name?"
+          ]
+        },
+        {
+          "id": "vocabulary-choice-2",
+          "prompt": "I can ____. They are Italian and English.",
+          "sourceRef": "M86",
+          "options": [
+            "talk about my study",
+            "speak two languages",
+            "use the Internet",
+            "learn faster"
+          ]
+        },
+        {
+          "id": "vocabulary-choice-3",
+          "prompt": "I hate _______ . I like being with people.",
+          "sourceRef": "M91",
+          "options": [
+            "living together",
+            "living with family",
+            "living alone",
+            "living with friends"
+          ]
+        },
+        {
+          "id": "vocabulary-choice-4",
+          "prompt": "I love _ because I can buy a lot of things.",
+          "sourceRef": "M96",
+          "options": [
+            "going shopping",
+            "cooking",
+            "playing football",
+            "watching TV"
+          ]
+        },
+        {
+          "id": "vocabulary-choice-5",
+          "prompt": "5. I am ______ my family. I love them a lot.",
+          "sourceRef": "M101",
+          "options": [
+            "near to",
+            "close to",
+            "close",
+            "near"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grammar-verb",
+      "title": "Grammar · Chia động từ",
+      "instructions": "Complete the sentences in present simple using words in the brackets\n(Hoàn thành câu ở hiện tại đơn với các từ trong ngoặc) 10 điểm",
+      "context": "",
+      "audioRequired": false,
+      "notice": "",
+      "items": [
+        {
+          "id": "grammar-verb-1",
+          "prompt": "1. I ____ TV in the evening. (watch)",
+          "sourceRef": "M112"
+        },
+        {
+          "id": "grammar-verb-2",
+          "prompt": "2. He ____before 7 o’clock. (get up)",
+          "sourceRef": "M113"
+        },
+        {
+          "id": "grammar-verb-3",
+          "prompt": "3. Ms Ha ____ three children. (have)",
+          "sourceRef": "M114"
+        },
+        {
+          "id": "grammar-verb-4",
+          "prompt": "4. Hung and I ____ good friends. (be)",
+          "sourceRef": "M115"
+        },
+        {
+          "id": "grammar-verb-5",
+          "prompt": "5. Jason ____ a first-year university student. (be)",
+          "sourceRef": "M116"
+        },
+        {
+          "id": "grammar-verb-6",
+          "prompt": "6. Brian lives near us, but we ____ him very often. (not see)",
+          "sourceRef": "M117"
+        },
+        {
+          "id": "grammar-verb-7",
+          "prompt": "7. She ______ very hard. (not work)",
+          "sourceRef": "M118"
+        },
+        {
+          "id": "grammar-verb-8",
+          "prompt": "8. They ______ close to each other. (not be)",
+          "sourceRef": "M119"
+        },
+        {
+          "id": "grammar-verb-9",
+          "prompt": "9. How long ____ you to go to school? (it/take)",
+          "sourceRef": "M120"
+        },
+        {
+          "id": "grammar-verb-10",
+          "prompt": "10. ____ a teacher? (you/be)",
+          "sourceRef": "M121"
+        }
+      ]
+    },
+    {
+      "id": "grammar-correction",
+      "title": "Grammar · Tìm và sửa lỗi",
+      "instructions": "Exercise 2: Each sentence has one mistake. Find the mistake and correct it. (Mỗi câu sau có một lỗi sai. Tìm lỗi sai và sửa) 5 điểm",
+      "context": "",
+      "audioRequired": false,
+      "notice": "Demo theo chỉ dẫn hiện: điền lỗi và phần sửa riêng. Nếu câu đúng, điền X ở ô lỗi. Cần duyệt lại chỉ dẫn trước phát hành.",
+      "items": [
+        {
+          "id": "grammar-correction-1",
+          "prompt": "1. She sister is a good student.\nLỗi sai",
+          "sourceRef": "M131"
+        },
+        {
+          "id": "grammar-correction-2",
+          "prompt": "1. She sister is a good student.\nPhần sửa đúng",
+          "sourceRef": "M131"
+        },
+        {
+          "id": "grammar-correction-3",
+          "prompt": "2. We want to see them, but they don’t want to see we.\nLỗi sai",
+          "sourceRef": "M134"
+        },
+        {
+          "id": "grammar-correction-4",
+          "prompt": "2. We want to see them, but they don’t want to see we.\nPhần sửa đúng",
+          "sourceRef": "M134"
+        },
+        {
+          "id": "grammar-correction-5",
+          "prompt": "3. I don’t know her parents. Do you know her?\nLỗi sai",
+          "sourceRef": "M137"
+        },
+        {
+          "id": "grammar-correction-6",
+          "prompt": "3. I don’t know her parents. Do you know her?\nPhần sửa đúng",
+          "sourceRef": "M137"
+        },
+        {
+          "id": "grammar-correction-7",
+          "prompt": "4. What are the children doing? They’re doing them homework.\nLỗi sai",
+          "sourceRef": "M140"
+        },
+        {
+          "id": "grammar-correction-8",
+          "prompt": "4. What are the children doing? They’re doing them homework.\nPhần sửa đúng",
+          "sourceRef": "M140"
+        },
+        {
+          "id": "grammar-correction-9",
+          "prompt": "5. Him lives with his parents.\nLỗi sai",
+          "sourceRef": "M143"
+        },
+        {
+          "id": "grammar-correction-10",
+          "prompt": "5. Him lives with his parents.\nPhần sửa đúng",
+          "sourceRef": "M143"
+        }
+      ]
+    },
+    {
+      "id": "grammar-order",
+      "title": "Grammar · Sắp xếp câu",
+      "instructions": "Exercise 3: Arrange these words to make a correct sentence. Use the right form of the verb (Sắp xếp những từ sau thành một câu đúng. Sử dụng dạng đúng của động từ) 5 điểm",
+      "context": "",
+      "audioRequired": false,
+      "notice": "",
+      "items": [
+        {
+          "id": "grammar-order-1",
+          "prompt": "1. not/he/go to work/every day.",
+          "sourceRef": "M150"
+        },
+        {
+          "id": "grammar-order-2",
+          "prompt": "2. learn/English/in groups/students.",
+          "sourceRef": "M153"
+        },
+        {
+          "id": "grammar-order-3",
+          "prompt": "3. cooking/mother/help/with/the son/his/sometimes.",
+          "sourceRef": "M156"
+        },
+        {
+          "id": "grammar-order-4",
+          "prompt": "4. this hospital/my/be/a doctor/daughter/in.",
+          "sourceRef": "M159"
+        },
+        {
+          "id": "grammar-order-5",
+          "prompt": "5. know/that/man/you?",
+          "sourceRef": "M162"
+        }
+      ]
+    },
+    {
+      "id": "writing",
+      "title": "Writing · Dịch Việt–Anh",
+      "instructions": "Translate the following sentences into English \n(Dịch các câu sau sang tiếng Anh) 25 điểm",
+      "context": "",
+      "audioRequired": false,
+      "notice": "",
+      "items": [
+        {
+          "id": "writing-1",
+          "prompt": "Hoa 17 tuổi. Hoa là học sinh cấp ba. Cô ấy rất thông minh.",
+          "sourceRef": "drawing1.xml / image10.jpg / anchor 168,12",
+          "long": true
+        },
+        {
+          "id": "writing-2",
+          "prompt": "Tên họ của anh ấy là Bùi. Anh ấy đến từ Hưng Yên. Nó là một thành phố ở miền Bắc Việt Nam.\nNote: thành phố - city",
+          "sourceRef": "drawing1.xml / image10.jpg / anchor 168,12",
+          "long": true
+        },
+        {
+          "id": "writing-3",
+          "prompt": "Trang sống ở Hà Nội và bố mẹ cô ấy sống ở Hạ Long. Cô ấy thường hay về quê vào dịp lễ.",
+          "sourceRef": "drawing1.xml / image10.jpg / anchor 168,12",
+          "long": true
+        },
+        {
+          "id": "writing-4",
+          "prompt": "Thắng muốn sống với gia đình bởi vì nó vui hơn. Hằng muốn sống một mình vì cô ấy có thể làm mọi thứ cô ấy thích.",
+          "sourceRef": "drawing1.xml / image10.jpg / anchor 168,12",
+          "long": true
+        },
+        {
+          "id": "writing-5",
+          "prompt": "Sở thích của tôi là chơi bóng đá và ăn đồ Ý. Chơi bóng đá và ăn đồ Ý giúp tôi có rất nhiều niềm vui. Tôi thường chơi (bóng đá) với anh trai tôi và ăn (đồ Ý) với chị gái tôi.",
+          "sourceRef": "drawing1.xml / image10.jpg / anchor 168,12",
+          "long": true
+        }
+      ]
+    },
+    {
+      "id": "speaking",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Answer these questions using your own ideas or hints. Each answer must contain at least 15 words (Trả lời các câu hỏi sau sử dụng gợi ý. Mỗi câu trả lời viết tối thiểu 15 từ) 25 điểm",
+      "context": "",
+      "audioRequired": false,
+      "notice": "",
+      "items": [
+        {
+          "id": "speaking-1",
+          "prompt": "1. Introduce yourself\nGợi ý: tên; tuổi, sinh vào tháng mấy; sinh viên năm mấy + đến từ đâu",
+          "sourceRef": "L191",
+          "long": true,
+          "minWords": 15
+        },
+        {
+          "id": "speaking-2",
+          "prompt": "2. What do you often do to relax?\nGợi ý: làm nhiều thứ trong thời gian rảnh; nghe nhạc/xem phim/chơi thể thao/mua sắm/dùng mạng…; Chúng giúp tôi cảm thấy hào hứng",
+          "sourceRef": "L195",
+          "long": true,
+          "minWords": 15
+        },
+        {
+          "id": "speaking-3",
+          "prompt": "3. Who do you often watch movies with?\nGợi ý: xem phim cùng với ai; thích dành thời gian với họ; tôi có thể có nhiều niềm vui khi xem phim",
+          "sourceRef": "L199",
+          "long": true,
+          "minWords": 15
+        },
+        {
+          "id": "speaking-4",
+          "prompt": "4. Do you live with your family?\nGợi ý: có; sống cùng với ai; chúng tôi rất thân với nhau",
+          "sourceRef": "L203",
+          "long": true,
+          "minWords": 15
+        },
+        {
+          "id": "speaking-5",
+          "prompt": "5. Tell me about your parents\nGợi ý: bao nhiêu tuổi; tính cách: nói nhiều/ít nói/ngượng ngùng; họ thường nói về công việc cùng nhau",
+          "sourceRef": "L207",
+          "long": true,
+          "minWords": 15
+        }
+      ]
+    }
+  ]
+}
