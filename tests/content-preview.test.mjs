@@ -147,5 +147,10 @@ test('demo entries delegate to the canonical page and branch before Learning ini
     assert.match(entry, /location\.hash/);
   }
   const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.ok(html.indexOf("import('./content-preview.mjs')") < html.indexOf('const STORAGE_KEY'));
+  assert.ok(html.indexOf("import('./content-preview.mjs?rev=") < html.indexOf('const STORAGE_KEY'));
+});
+
+test('canonical demo cache-busts the content renderer after text fixes', async () => {
+  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
+  assert.match(html, /import\('\.\/content-preview\.mjs\?rev=[a-z0-9-]+'\)/i);
 });
