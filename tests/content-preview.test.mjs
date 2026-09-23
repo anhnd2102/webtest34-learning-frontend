@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
-import { draftKey, sanitizeDraft, clozeSegments, groupBody, groupSections, learningRequestMethod, resetLocalAttemptState } from '../term-tests/webtest-34-demo/content-preview.mjs';
+import { draftKey, sanitizeDraft, clozeSegments, groupBody, groupSections, learningRequestMethod, mapAnswerFromDefinitionValue, mapAnswerToDefinitionValue, resetLocalAttemptState } from '../term-tests/webtest-34-demo/content-preview.mjs';
 
 test('Learning API saves drafts with PATCH and keeps commands on POST', () => {
   assert.equal(learningRequestMethod('/attempts/draft'), 'PATCH');
@@ -147,5 +147,20 @@ test('demo entries delegate to the canonical page and branch before Learning ini
     assert.match(entry, /location\.hash/);
   }
   const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.ok(html.indexOf("import('./content-preview.mjs')") < html.indexOf('const STORAGE_KEY'));
+  assert.ok(html.indexOf("import('./content-preview.mjs?rev=") < html.indexOf('const STORAGE_KEY'));
+});
+
+test('choice answers are translated between visible labels and stable definition option IDs', () => {
+  const formItem = { options: ['A label', 'B label', 'C label', "What’s your name?"] };
+  const definitionItem = { options: [
+    { id: 'choice-a' }, { id: 'choice-b' }, { id: 'choice-c' }, { id: 'choice-d' }
+  ] };
+  assert.equal(mapAnswerToDefinitionValue(formItem, definitionItem, "What’s your name?"), 'choice-d');
+  assert.equal(mapAnswerFromDefinitionValue(formItem, definitionItem, 'choice-d'), "What’s your name?");
+  assert.equal(mapAnswerToDefinitionValue({}, {}, 'free text'), 'free text');
+});
+
+test('canonical demo cache-busts the content renderer after text fixes', async () => {
+  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
+  assert.match(html, /import\('\.\/content-preview\.mjs\?rev=[a-z0-9-]+'\)/i);
 });
