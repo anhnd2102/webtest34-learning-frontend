@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
 
-import { resultDetailsHtml, resultViewModel } from '../term-tests/webtest-34-demo/content-preview.mjs';
+import { resultDetailsHtml, resultViewModel, withLocalGroupLabels } from '../term-tests/webtest-34-demo/content-preview.mjs';
 
 test('labels pending scores as provisional and reports remaining AI items', () => {
   assert.deepEqual(resultViewModel({
@@ -35,4 +35,19 @@ test('course 03 and 45 result details use the Course 34 section layout', () => {
   assert.match(html, /learning-result-verdict correct/);
   assert.match(html, /learning-result-verdict pending/);
   assert.match(html, /1 \/ 2 điểm/);
+});
+
+test('result rendering replaces legacy database mojibake with reviewed local group labels', () => {
+  const definition = {
+    blocks: [{ blockId: 'block-1', title: 'Listening Â· Äiá»n tá»«', instructions: 'broken', items: [] }]
+  };
+  const form = {
+    groups: [{ title: 'Listening · Điền từ', instructions: 'Nghe và điền từ' }]
+  };
+
+  const localized = withLocalGroupLabels(definition, form);
+
+  assert.equal(localized.blocks[0].title, 'Listening · Điền từ');
+  assert.equal(localized.blocks[0].instructions, 'Nghe và điền từ');
+  assert.equal(definition.blocks[0].title, 'Listening Â· Äiá»n tá»«');
 });
