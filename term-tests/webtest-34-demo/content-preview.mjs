@@ -717,18 +717,19 @@ export async function mount(course) {
       const card = query('#demo-ai-card');
       card.hidden = false;
       const isComplete = vm.scoreFinal;
+      const isManualReview = result.gradingStatus === 'manual_review';
       card.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;border-bottom:1px solid #f1f5f9;padding-bottom:16px;margin-bottom:16px">
           <div>
-            <div style="font-size:12px;font-weight:700;color:${isComplete ? '#16a34a' : '#d97706'};letter-spacing:1px;text-transform:uppercase">
+            <div style="font-size:12px;font-weight:700;color:${isComplete ? '#16a34a' : isManualReview ? '#ea580c' : '#d97706'};letter-spacing:1px;text-transform:uppercase">
               ${escape(vm.title)}
             </div>
             <h2 style="font-size:22px;color:#174266;margin:4px 0 0 0">Kết quả bài thi · ${escape(learningState.studentName || title)}</h2>
             <div style="font-size:13px;color:#64748b;margin-top:4px">Mã lớp: <strong>${escape(learningState.className || learningState.courseCode)}</strong> · Trạng thái chấm: <strong>${escape(result.gradingStatus || 'pending')}</strong></div>
           </div>
-          <div style="background:${isComplete ? '#f0fdf4' : '#fffbeb'};border:1px solid ${isComplete ? '#bbf7d0' : '#fef3c7'};border-radius:12px;padding:12px 20px;text-align:right">
+          <div style="background:${isComplete ? '#f0fdf4' : isManualReview ? '#fff7ed' : '#fffbeb'};border:1px solid ${isComplete ? '#bbf7d0' : isManualReview ? '#fed7aa' : '#fef3c7'};border-radius:12px;padding:12px 20px;text-align:right">
             <div style="font-size:12px;color:#64748b;font-weight:600">${escape(vm.scoreLabel)}</div>
-            <div style="font-size:28px;font-weight:900;color:${isComplete ? '#16a34a' : '#b45309'}">${escape(vm.score)}</div>
+            <div style="font-size:28px;font-weight:900;color:${isComplete ? '#16a34a' : isManualReview ? '#c2410c' : '#b45309'}">${escape(vm.score)}</div>
           </div>
         </div>
         ${isComplete ? `
@@ -737,6 +738,13 @@ export async function mount(course) {
             <p style="margin:0;font-size:14px;line-height:1.6;color:#475569">
               Bài thi đã hoàn tất chấm điểm toàn diện các phần trắc nghiệm, từ vựng và tự luận Speaking/Writing. Các câu trả lời bên dưới đã được lưu trữ vĩnh viễn trên hệ thống.
             </p>
+          </div>
+        ` : isManualReview ? `
+          <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+            <span style="font-size:20px">📝</span>
+            <div style="font-size:13px;color:#9a3412;line-height:1.5">
+              Hệ thống AI đã hoàn tất chấm. Một số câu tự luận được chuyển sang trạng thái <strong>Chờ giảng viên kiểm tra</strong> (manual review). Điểm chính thức sẽ được cập nhật sau khi giảng viên xác nhận.
+            </div>
           </div>
         ` : `
           <div style="background:#eff6ff;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
@@ -764,7 +772,7 @@ export async function mount(course) {
         if (res.result) {
           learningState.result = res.result;
           renderAiResultCard(res.result);
-          if (res.result.gradingStatus === 'complete' || res.result.summary?.scoreFinal) {
+          if (res.result.gradingStatus === 'complete' || res.result.gradingStatus === 'manual_review' || res.result.summary?.scoreFinal) {
             clearInterval(learningState.pollTimer);
             learningState.pollTimer = null;
           }
@@ -848,6 +856,9 @@ export async function mount(course) {
 
     if (isLearningMode && state.submittedAt) {
       void pollLearningResult();
+      if (!learningState.pollTimer) {
+        learningState.pollTimer = setInterval(pollLearningResult, 3000);
+      }
     }
   }
 }

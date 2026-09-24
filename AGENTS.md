@@ -1,5 +1,18 @@
 # AGENTS.md — Course 34 frontend
 
+## Superpowers
+
+Dự án dùng [obra/superpowers](https://github.com/obra/superpowers) làm workflow cho coding agent.
+Khi plugin có sẵn, đọc `superpowers:using-superpowers` trước khi bắt đầu công việc và
+dùng skill phù hợp: brainstorming cho tính năng mới, systematic-debugging cho lỗi,
+writing-plans cho công việc nhiều bước, test-driven-development cho thay đổi logic,
+verification-before-completion trước khi báo hoàn tất. Review thay đổi đáng kể bằng
+requesting-code-review. Chỉ dùng subagent khi người dùng cho phép và môi trường hỗ trợ.
+Yêu cầu trực tiếp của người dùng và các boundary trong tài liệu này có ưu tiên cao hơn
+workflow của skill. Nếu thiếu plugin, báo rõ và tiếp tục công việc có thể thực hiện;
+không tuyên bố đã chạy skill khi chưa đọc được skill.
+Hướng dẫn cài đặt: `../webtest34-learning-platform/doc/SUPERPOWERS.md`.
+
 ## Phạm vi
 
 Đây là frontend canonical của Course 34, được serve tĩnh và publish qua GitHub Pages.
