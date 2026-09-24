@@ -450,7 +450,7 @@ export async function mount(course) {
         </div>`;
 
     document.body.innerHTML = `<div class="content-demo">
-      <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(title)}</div><div class="brand-sub">${headerSub}</div></div></div><nav aria-label="Chọn khóa">${['03','34','45'].map(c => `<a ${c===course?'aria-current="page"':''} href="?demoCourse=${c}">Khóa ${c}</a>`).join('')}</nav></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span class="tab-count" data-demo-tab-count="${section}"></span></button>`).join('')}</nav></header>
+      <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(title)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span class="tab-count" data-demo-tab-count="${section}"></span></button>`).join('')}</nav></header>
       <main class="demo-width">
         ${noticeBanner}
         <div class="demo-toolbar">
@@ -466,11 +466,58 @@ export async function mount(course) {
       </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
     </div>`;
 
-    const courseNavigation=document.querySelector('.demo-top nav');
-    courseNavigation.className='demo-course-switch';
-    document.querySelector('main.demo-width').prepend(courseNavigation);
     document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${form.durationMinutes}:00</span></div>`);
     document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
+
+    // Đếm ngược thời gian làm bài (120 phút)
+    const durationMinutes = Number(form.durationMinutes) || 120;
+    const durationMs = durationMinutes * 60 * 1000;
+    const timerStorageKey = `izone_timer_${isLearningMode ? (learningState.attemptToken || testToken) : course}`;
+
+    let examEndTime = learningState.expiresAt;
+    if (!examEndTime) {
+      let storedStart = parseInt(localStorage.getItem(timerStorageKey) || '0', 10);
+      if (!storedStart || storedStart > Date.now()) {
+        storedStart = Date.now();
+        localStorage.setItem(timerStorageKey, String(storedStart));
+      }
+      examEndTime = storedStart + durationMs;
+    }
+
+    const timerDisplay = document.querySelector('#examTimerDisplay');
+    let examTimerInterval = null;
+
+    function tickExamTimer() {
+      if (!timerDisplay) return;
+      if (state.submittedAt) {
+        timerDisplay.textContent = 'Đã nộp';
+        timerDisplay.classList.remove('warn');
+        if (examTimerInterval) clearInterval(examTimerInterval);
+        return;
+      }
+      const now = Date.now();
+      const remainingMs = Math.max(0, examEndTime - now);
+      const remainingSecs = Math.floor(remainingMs / 1000);
+      const mins = Math.floor(remainingSecs / 60);
+      const secs = remainingSecs % 60;
+      timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      if (remainingSecs <= 600) {
+        timerDisplay.classList.add('warn');
+      } else {
+        timerDisplay.classList.remove('warn');
+      }
+      if (remainingSecs <= 0) {
+        if (examTimerInterval) clearInterval(examTimerInterval);
+        if (!state.submittedAt) {
+          alert('Đã hết giờ làm bài! Hệ thống sẽ tự động xác nhận nộp bài.');
+          const confirmSubmitBtn = document.querySelector('#demo-confirm-submit');
+          if (confirmSubmitBtn) confirmSubmitBtn.click();
+        }
+      }
+    }
+
+    tickExamTimer();
+    examTimerInterval = setInterval(tickExamTimer, 1000);
 
     for(const section of sections) {
       const groups=form.groups.filter(group=>sectionKey(group)===section);
@@ -795,6 +842,8 @@ export async function mount(course) {
           state.submittedAt = Date.now();
           persist();
           update();
+          if (examTimerInterval) clearInterval(examTimerInterval);
+          if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
           query('#demo-confirm').close();
           window.scrollTo({top: 0, behavior: 'smooth'});
 
@@ -829,6 +878,11 @@ export async function mount(course) {
     query('#demo-reset').addEventListener('click',()=>{
       if (!confirm('Xóa câu trả lời và làm lại?')) return;
       state=sanitizeDraft(form,null); fields.forEach(field=>field.value=''); persist(); update();
+      localStorage.removeItem(timerStorageKey);
+      if (examTimerInterval) clearInterval(examTimerInterval);
+      examEndTime = Date.now() + durationMs;
+      tickExamTimer();
+      examTimerInterval = setInterval(tickExamTimer, 1000);
     });
 
     function showSection(section) {
