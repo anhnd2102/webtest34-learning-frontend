@@ -1,0 +1,334 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "45",
+  "phase": 1,
+  "testNumber": 3,
+  "sourceHash": "bf4256ff6c12ad3d643a9a868a0de2c571a2d9c010047f17af6d050f08e15a9c",
+  "durationMinutes": 120,
+  "groups": [
+    {
+      "id": "grammar-ng-t-khuy-t-thi-u-modals",
+      "title": "Grammar · Động từ khuyết thiếu (Modals)",
+      "instructions": "3. Fill in the gaps below with the correct form of (not) have to, must, (not) need to or can.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "283e24ec-d045-42fb-b41c-f295cd328f0f",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2913c686-26f6-4e03-810d-7306e84f4d7f",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0368f0ef-e4b5-4459-83cf-3773ef59e390",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c9235646-cfb5-4f91-aaab-3168272c6ac5",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "8708e24a-0551-4b74-bc1d-38350e1dd3f7",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c9016a92-7767-4a66-879d-7776b422550e",
+          "prompt": "Chỗ trống (6)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4c7efe62-bea6-49d5-82ac-3e94d31eb06f",
+          "prompt": "Chỗ trống (7)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2c073ca4-8c3c-423c-9ab2-35c53846b84d",
+          "prompt": "Chỗ trống (8)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4d844d56-2b3d-4232-b506-f05424be57ec",
+          "prompt": "Chỗ trống (9)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7bf38929-da52-4331-b36d-1f8285a38ea0",
+          "prompt": "Chỗ trống (10)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f0c83cca-614c-4858-ad8f-7de19c4e225f",
+          "prompt": "Chỗ trống (11)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "8d985bc2-2e82-407c-95f7-e7b7a825e81f",
+          "prompt": "Chỗ trống (12)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-ch-p-c-u-nghe-c",
+      "title": "Listening · Chép câu nghe được",
+      "instructions": "1. You will hear 5 sentences. Listen carefully and write down exactly what you hear. You will hear each sentence twice.",
+      "context": "",
+      "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Dictation.mp3",
+      "items": [
+        {
+          "id": "811a07dc-c206-43d7-bb83-a969391d623e",
+          "prompt": "Câu nghe 1",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a7778fa4-47d5-4e05-bd74-be4381818102",
+          "prompt": "Câu nghe 2",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0d477804-566a-4e1a-9f46-52118f30b01b",
+          "prompt": "Câu nghe 3",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "5673e43c-c18c-427a-ac8f-d22f74d81920",
+          "prompt": "Câu nghe 4",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4746336d-6cab-49f9-9714-9d80678df6c8",
+          "prompt": "Câu nghe 5",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-i-n-bi-u-m-u",
+      "title": "Listening · Điền biểu mẫu",
+      "instructions": "2. Listen and complete the notes below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
+      "context": "",
+      "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Comprehension Questions.mp3",
+      "items": [
+        {
+          "id": "a57dd8d8-8a2f-4cc4-87a9-1705b277ec1b",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f701e564-6cb0-40a2-a848-9dcc8fb62fb6",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7262117d-cf66-4c8f-b560-945785534d61",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9e967e3d-a1f1-4386-ad6f-106c0ceb53d6",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "971d38c6-7208-4f8f-a786-39ac7b21b141",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-tr-l-i-ng-n",
+      "title": "Listening · Trả lời ngắn",
+      "instructions": "3. Listen to the recording and answer the questions below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+      "context": "",
+      "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Comprehension Questions.mp3",
+      "items": [
+        {
+          "id": "5695db6e-b47b-4630-9f86-f9275152bf75",
+          "prompt": "6. Listen to the second part of the conversation and answer the questions.\nWrite NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a28bd455-fd5b-4c97-a183-20b72b0b273b",
+          "prompt": "7. What will John email her information about?",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "aa53a911-9463-41bf-898a-14a41828d143",
+          "prompt": "8. Where is the weight machine located in the pharmacy?",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e28cf42a-dc3e-425f-81a2-0884f4fc31c8",
+          "prompt": "9. Who should customers talk to if they need medical assistance?",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "500d28fb-5e29-4632-99df-53d28895d7e8",
+          "prompt": "10. Which part of her body might she injure if she lifts boxes incorrectly?",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-t-v-ng-t-ng-h-p",
+      "title": "Vocabulary · Từ vựng tổng hợp",
+      "instructions": "Hoàn thành các câu hỏi từ vựng bên dưới.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "3188f0c0-0024-4e44-9dcf-7ee8869bfed1",
+          "prompt": "2. Police still (2) ______ the reasons for the problem of juvenile crime in large cities.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "37faa3e6-541e-4e60-9e04-4dd6aceb8332",
+          "prompt": "3. The new study (3) ______ preliminary results on the effects of poverty on education.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4a6a9ead-18ee-4d89-b792-1ec6cb2de64c",
+          "prompt": "4. Many modern companies try to (4) ______ energy by using energy-efficient machines to reduce the electricity bill.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "96cbb384-3d02-4fe3-82cd-087816ba1186",
+          "prompt": "5. Social media now (5) ______ a key role in everyday communication between older generations and teenagers.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "360949ec-4f47-4549-91ed-b4cb20614dd0",
+          "prompt": "6. Researchers are trying to (6) ______ a new way of helping criminals back in the streets to find work.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ac27b4d1-b066-4893-b4fa-5f6c03cc2295",
+          "prompt": "7",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "28fd3911-5ec9-491b-8f92-0a2e78dfeb26",
+          "prompt": "8",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a675d4c9-7eac-4d4b-8fcc-093d013cbe79",
+          "prompt": "9",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f0e14cf5-3aa0-40c5-9fc4-9a1ef5f84b03",
+          "prompt": "10",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "64f0615a-04a6-4161-8bb4-e3b5237f9917",
+          "prompt": "11",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4565d515-0341-44ff-af65-76db26c86a50",
+          "prompt": "12",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "343db55d-d2f8-4f52-9023-cb44e0d9ea33",
+          "prompt": "13",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "79946b8f-82a1-4868-b20f-91c8cacdcea9",
+          "prompt": "14",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "efb4ea05-d983-4570-82f3-ac56015e645d",
+          "prompt": "15",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0eb4cc35-a86b-4ee9-b4bc-d67cf9020cd6",
+          "prompt": "16",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "speaking-tr-l-i-vi-t",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Viết câu trả lời tối thiểu 50 từ cho mỗi câu hỏi. Bài làm sẽ được AI tự động chấm theo 3 tiêu chí: Ngữ pháp (4đ), Tính mạch lạc & Phát triển ý (3đ), Từ vựng (3đ).",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "a37acbec-89e4-45f6-8e36-668b98bd1820",
+          "prompt": "Question 1: Do you think it’s better for criminals to go to prison or to do community work? Briefly explain your choice.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "c7a27db5-7f1f-44c5-8087-38aa3d661f7c",
+          "prompt": "Question 2: What do you think were the reasons that caused many animal species to be endangered/extinct?\nGợi ý: poaching & deforestation",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "1bbc5e2c-294d-420b-a0ba-1f2f07bcf89e",
+          "prompt": "Question 3: If you didn’t have to work for money/to support yourself (in the future), what would you spend most of your time on?",
+          "options": [],
+          "long": true
+        }
+      ]
+    }
+  ]
+}

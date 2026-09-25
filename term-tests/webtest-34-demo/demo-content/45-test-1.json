@@ -1,0 +1,448 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "45",
+  "phase": 1,
+  "testNumber": 1,
+  "sourceHash": "5e7d56edda72f17a943d944a798de987eb8a3e4e22fbf7546547866fe86e0fb0",
+  "durationMinutes": 120,
+  "groups": [
+    {
+      "id": "grammar-hi-n-t-i",
+      "title": "Grammar · Hiện tại",
+      "instructions": "1. Fill in the gaps with the correct form of the verbs in brackets (present simple or present continuous)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "985b3d2a-03e3-41a6-9c14-b63ac72be9bc",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6f31b644-162f-4933-ac1a-329a13dd50b9",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "8c8e3f4a-b1cd-4c8e-bff2-1fe84c71895c",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ae1d2c95-2194-4946-99a5-f7b416acfad1",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "75bd2b49-1a03-41e3-b021-7baaa54ef750",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "3ddf4067-62ed-406d-9ff3-3adbf42bae11",
+          "prompt": "Chỗ trống (6)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "grammar-qu-kh",
+      "title": "Grammar · Quá khứ",
+      "instructions": "2. Fill in the gaps with the past simple or past continuous form of the verbs in brackets.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "60b76c5f-3aa7-4c01-b8c3-a49d8667b58a",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "cf25b982-7d76-4d9f-8f00-3785118bfa3f",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b057cd61-e970-488a-bcde-96eda0b09ded",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a243ff71-7663-484f-916a-d0bd135eca66",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4b149391-b67d-4377-a3db-cc9294ffb055",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6b6a0fce-f3a4-4abf-9d42-992856ca2c52",
+          "prompt": "Chỗ trống (6)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a74ea1fb-89f6-48d1-9118-09ea91e98fb2",
+          "prompt": "Chỗ trống (7)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "grammar-ho-n-th-nh",
+      "title": "Grammar · Hoàn thành",
+      "instructions": "3. Fill in the gaps with a verb from the box in the past simple, past perfect simple or past perfect continuous tense",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "c43ccbcb-014d-426b-aae2-1c5305279c4e",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9c845578-4f0c-4d83-a575-41d1c5eecbd5",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "628dc730-c643-4e02-a859-54f53cdd695a",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b00406db-f416-4e78-ae18-239845de4d05",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "97fa5b86-6e9f-4261-aa39-619a2353f2fe",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "75e12106-2249-46b4-b2b4-065c9f334a58",
+          "prompt": "Chỗ trống (6)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1fb8c079-8fbb-454d-abe4-380d991c6ebf",
+          "prompt": "Chỗ trống (7)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7660b499-4788-4b2f-b19f-33b788f6589b",
+          "prompt": "Chỗ trống (8)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "fa7537ae-3674-4e62-8ac3-e2c851b11436",
+          "prompt": "Chỗ trống (9)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-ch-p-c-u-nghe-c",
+      "title": "Listening · Chép câu nghe được",
+      "instructions": "1. You will hear 5 sentences. Listen carefully and write down exactly what you hear. You will hear each sentence twice.",
+      "context": "",
+      "audioPath": "assets/demo-audio/45/01. Phase 1 Test 1 Dictation.mp3",
+      "items": [
+        {
+          "id": "834bf5ea-c6b2-4992-9dd1-80a679ae87a5",
+          "prompt": "Câu nghe 1",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "fcfcfd95-9559-4c07-932e-836a99f7076d",
+          "prompt": "Câu nghe 2",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e29ffd56-20d2-4855-83d8-cba5bb7b5406",
+          "prompt": "Câu nghe 3",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "feac802f-424d-4fa7-930e-b9ed0429c47a",
+          "prompt": "Câu nghe 4",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0087b5d0-4ec6-4d86-9b38-ad229fc0a09e",
+          "prompt": "Câu nghe 5",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-i-n-bi-u-m-u",
+      "title": "Listening · Điền biểu mẫu",
+      "instructions": "2. Listen and complete the notes below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
+      "context": "",
+      "audioPath": "assets/demo-audio/45/02. Phase 1 Test 1 Comprehension Questions.mp3",
+      "items": [
+        {
+          "id": "1103f2aa-689d-44a6-b76c-7dea5293ec43",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b10dec24-5bbc-44a9-8382-e0ea754cb543",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "89cf68f7-83a2-4e61-abd8-05f333919364",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "8b2366c7-82e3-4aa0-8a06-a203b218c01a",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "29eac0df-f540-454c-8a5e-9c04c45ecc92",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-tr-l-i-ng-n",
+      "title": "Listening · Trả lời ngắn",
+      "instructions": "3. Listen to the recording and answer the questions below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+      "context": "",
+      "audioPath": "assets/demo-audio/45/02. Phase 1 Test 1 Comprehension Questions.mp3",
+      "items": [
+        {
+          "id": "19f174f1-6ec8-418f-b8fa-4d5a5a700d1d",
+          "prompt": "6. Câu hỏi 6",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "40142fe0-73ee-4ffd-ae10-94f5324157c7",
+          "prompt": "7. Câu hỏi 7",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "dff1cf96-4e2e-4364-a511-acf10d4dbc79",
+          "prompt": "8. Câu hỏi 8",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "088819dc-c6b8-47cf-9ae5-9af3128efcb7",
+          "prompt": "9. Câu hỏi 9",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "518ea05e-31de-479b-95ee-68bb7c9c19ba",
+          "prompt": "10. Câu hỏi 10",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-t-trang-tr-ng",
+      "title": "Vocabulary · Từ trang trọng",
+      "instructions": "I. Use more formal alternatives to the words in bold. Make any necessary grammatical changes.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "c06c4811-c2cb-4f0e-96f8-a7b0f298fb68",
+          "prompt": "1. The book is mainly concerned with the problem of policing the internet",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "277db345-2175-4465-ba7b-de50067aa204",
+          "prompt": "2. The work of the Institute is not only devoted to cancer research.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "71503b63-8965-4033-a250-2dd7eca6f9db",
+          "prompt": "3. We tried to find a new way of understanding the data.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e39abeeb-2fd5-4454-a008-4e6d39a1b3de",
+          "prompt": "4. Almost every school in the country had reported problems with the new system",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6dc0aae6-166a-45ad-a26a-32b76a576593",
+          "prompt": "5. Basically, we believe we have demonstrated a significant link between the two events.",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-bi-n-i-t",
+      "title": "Vocabulary · Biến đổi từ",
+      "instructions": "II. Complete the sentences using the correct form of the word in CAPITALS.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "dcc15d20-5ccd-4721-94d0-d17e81d1d316",
+          "prompt": "6. Mass tourism has led to the _______________ of many local habitats. (DESTROY)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "8c45959b-fcc3-4335-baf9-691cf2f093a0",
+          "prompt": "7. The singer gained _______________ worldwide after releasing her hit song. (RECOGNIZE)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b25a282b-00c6-4852-834f-0a55e0fae4b2",
+          "prompt": "8. Playing sports is a great way to keep yourself _______________ and energetic. (HEALTH)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9b1c1451-8e55-48f2-8ce7-b5d8319cb3a4",
+          "prompt": "9. Some locals are very _______________ and always welcome visitors with a smile. (HOSPITALITY)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f213ee08-40d0-4caf-91a6-51a9f3a12ef1",
+          "prompt": "10. The rapid _______________ of the city has caused significant traffic jams. (DEVELOP)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-c-m-t",
+      "title": "Vocabulary · Cụm từ",
+      "instructions": "III. Complete the collocations in the sentences below. Write ONE WORD only for each blank.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "009e2e66-1612-4040-88f7-106f89220eb1",
+          "prompt": "11. The study lacks solid __________ to support its conclusion that radiation caused the problem.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "63315e12-6e78-47db-9fc4-d45adac24033",
+          "prompt": "12. Increasing pollution levels pose a __________ to the stability of the local ecosystem.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "5bb475bb-b792-40ea-a430-7d7826a90949",
+          "prompt": "13. The political motives for the government's actions are beyond the __________ of this essay.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e468a8a0-d001-44c5-ac88-100143e4774e",
+          "prompt": "14. The hospital puts a lot of __________ on training nurses to ensure high-quality care.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "35bc408a-5176-4533-99d6-bba7c112ecbc",
+          "prompt": "15. I play sports like football or tennis regularly to keep in __________.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "d6132d87-dfa4-40e5-9256-33119079a682",
+          "prompt": "16. Up until the 1980s, actors did not care much about their public __________.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "032d7644-2483-4363-9cc8-c35cbb9ccfa4",
+          "prompt": "17. International students __________ for nearly 80% of the university's total population.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "36d2945d-b7f7-45ea-8a21-cda1ce900a46",
+          "prompt": "18. Experts recommend playing sports on a regular __________.",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "speaking-tr-l-i-vi-t",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Viết câu trả lời tối thiểu 50 từ cho mỗi câu hỏi. Bài làm sẽ được AI tự động chấm theo 3 tiêu chí: Ngữ pháp (4đ), Tính mạch lạc & Phát triển ý (3đ), Từ vựng (3đ).",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "e95207e1-7df8-4a78-88da-7a75403e588c",
+          "prompt": "Question 1: In a few words, tell me about a close friend of yours\nCues:\n+ Who is he/she?\n+ How did you know each other?\n+ What do you have in common?",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "4811c68f-e292-48e1-813a-4da9c2198661",
+          "prompt": "Question 2: Describe your last holiday\n+ When was it?\n+ Who did you go with?\n+ Did you enjoy it?",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "956886a9-6b32-44a7-a1bb-1b857b4bb941",
+          "prompt": "Question 3: Tell me about your English studying journey\nCues:\n+ How long have you been studying English?\n+ What are the problems you’ve had?\n+ What is the most enjoyable part during this journey?\n+ How do you often self-study?",
+          "options": [],
+          "long": true
+        }
+      ]
+    }
+  ]
+}
