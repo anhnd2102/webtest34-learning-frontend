@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 2,
   "testNumber": 5,
-  "sourceHash": "6bbba5248eac425d50c7d113ac67515c895ff95f3d7fc9be9d3ae0ea84417f5d",
+  "sourceHash": "012ad058829a9e70d105fc2af3a9bab05e2fd6a3d0fb6266647fcfb928c8f1b4",
   "durationMinutes": 120,
   "groups": [
     {
@@ -14,61 +14,61 @@
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 2).MP3",
       "items": [
         {
-          "id": "740c7712-27d0-46d9-9949-9a41c14f9110",
+          "id": "e0554dfa-416f-4016-99e7-ed134a2dadcc",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "cfe13a6a-cb08-4935-9704-27b8e17417d0",
+          "id": "6d4655ea-a1f6-47fe-aaa2-fa14aff4634e",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "2734ca23-96eb-46a7-96bd-303fab7b891b",
+          "id": "f24e458b-adb1-47e3-91d5-b79b461e4e43",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "e5d9a1f0-7133-45e0-adf7-b4bca055905f",
+          "id": "99fd49fe-2c04-4dbd-9b72-a655a958b7ef",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "42464a4e-6db7-450c-9684-d69f4bcd977b",
+          "id": "6fcc7a93-1fc8-4a15-8a41-380f6f9d8653",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "5f9890bc-b407-47e8-89d3-aa547ed0e0f4",
+          "id": "940f6789-cc27-4f06-b65e-3910f83fa784",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "125087ae-1287-440a-900a-d636e8077708",
+          "id": "ec8c79ad-5a54-4a2a-ac1e-c9434064199e",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "a83555ee-fcbc-4abe-84fc-bd82ef15dd6c",
+          "id": "ca7b5379-503b-45d0-be94-5c952ac40a0b",
           "prompt": "Chỗ trống (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "65668a9b-8226-4532-bd6c-63ebd64aa9be",
+          "id": "3ac96955-489e-4fac-a604-a9a758ba17aa",
           "prompt": "Chỗ trống (9)",
           "options": [],
           "long": false
         },
         {
-          "id": "fd9dbab0-97b8-4e4f-abe4-d38d35e11c31",
+          "id": "8fdf25fb-6046-47a4-ba0a-6a0ddd5f9ab5",
           "prompt": "Chỗ trống (10)",
           "options": [],
           "long": false
@@ -83,7 +83,7 @@
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 2).MP3",
       "items": [
         {
-          "id": "4c861b22-ed64-4183-9cc9-1e25a434f7e1",
+          "id": "aee6f02e-a466-4e31-a6e9-93578ac8766f",
           "prompt": "Câu 1",
           "options": [
             {
@@ -106,7 +106,7 @@
           "long": false
         },
         {
-          "id": "c746d85a-c778-48a2-82d5-4b37cced1c2b",
+          "id": "fd1a138a-d9e8-4dd2-a281-1f1e196a6b2d",
           "prompt": "Câu 2",
           "options": [
             {
@@ -129,7 +129,7 @@
           "long": false
         },
         {
-          "id": "f9897d64-6c8b-4f3a-ad6f-47b73345b24a",
+          "id": "82b0e781-a174-428c-9919-a37dbb4f70ab",
           "prompt": "Câu 3",
           "options": [
             {
@@ -152,7 +152,7 @@
           "long": false
         },
         {
-          "id": "822d1a1f-18d9-4688-9a5b-cdc08993f1a9",
+          "id": "7204ddfc-09d8-42a7-9a7a-2ec2e1862089",
           "prompt": "Câu 4",
           "options": [
             {
@@ -175,7 +175,7 @@
           "long": false
         },
         {
-          "id": "7c14fb5b-4a1a-4aa4-8f6a-367fb8f9c6f7",
+          "id": "463f08a3-df38-4e13-9a11-662ea6224f06",
           "prompt": "Câu 5",
           "options": [
             {
@@ -198,7 +198,7 @@
           "long": false
         },
         {
-          "id": "d40fe7a5-7767-45c2-9405-95375e24590f",
+          "id": "605c0635-ec24-409a-8f49-240e0da5d708",
           "prompt": "Câu 6",
           "options": [
             {
@@ -221,7 +221,7 @@
           "long": false
         },
         {
-          "id": "5a69419c-8b59-46e3-b767-114cf1962214",
+          "id": "49f6351e-e091-4e7b-a737-c0a5527d9dd1",
           "prompt": "Câu 7",
           "options": [
             {
@@ -244,7 +244,7 @@
           "long": false
         },
         {
-          "id": "79269162-883d-4edd-b621-7117eb8e10ec",
+          "id": "6d00b63c-bfda-4dd5-b78d-aea73d7b6c5d",
           "prompt": "Câu 8",
           "options": [
             {
@@ -267,7 +267,7 @@
           "long": false
         },
         {
-          "id": "ff14e80d-781f-4d08-9e4d-be9166a29540",
+          "id": "7b68204e-2d28-43dc-9153-e64ff340f48b",
           "prompt": "Câu 9",
           "options": [
             {
@@ -290,7 +290,7 @@
           "long": false
         },
         {
-          "id": "b46f15b7-c077-4c6a-9e13-a9ee4853de99",
+          "id": "0b2ca164-7e89-4ad3-af3f-f500cf220c60",
           "prompt": "Câu 10",
           "options": [
             {
@@ -322,7 +322,7 @@
       "audioPath": "",
       "items": [
         {
-          "id": "f1011a01-0e9e-48ad-a702-10d60db81bfc",
+          "id": "8084b67c-ef88-4671-a562-e7f9dd5cc2a7",
           "prompt": "Câu 1",
           "options": [
             {
@@ -345,7 +345,7 @@
           "long": false
         },
         {
-          "id": "d1b4e474-c178-45bd-969a-2256fd4b4039",
+          "id": "bda919a1-9170-41ac-bc53-be70e3960025",
           "prompt": "Câu 2",
           "options": [
             {
@@ -368,7 +368,7 @@
           "long": false
         },
         {
-          "id": "ee0bb674-032c-4002-8919-cd23f32829f4",
+          "id": "1de6aefd-5a7d-4135-9d34-1bd870d02a31",
           "prompt": "Câu 3",
           "options": [
             {
@@ -391,7 +391,7 @@
           "long": false
         },
         {
-          "id": "9ddad367-036a-4ef3-a0da-6cb38f56560b",
+          "id": "017bb62c-7f33-48fe-a80d-3b2f2c9114ff",
           "prompt": "Câu 4",
           "options": [
             {
@@ -414,7 +414,7 @@
           "long": false
         },
         {
-          "id": "0a980729-7002-447e-9733-683cae88801e",
+          "id": "3bb2ffee-83a5-45c4-8bb8-45c21cceb515",
           "prompt": "Câu 5",
           "options": [
             {
@@ -437,7 +437,7 @@
           "long": false
         },
         {
-          "id": "61383500-6b57-4804-93c7-58caeabab0d8",
+          "id": "3d75a841-370e-4545-abb4-a467130a53fc",
           "prompt": "Câu 6",
           "options": [
             {
@@ -460,7 +460,7 @@
           "long": false
         },
         {
-          "id": "c10c3fbd-8858-436e-8cd4-37f4e1f72535",
+          "id": "044f8179-8c1b-4bca-bc8c-f4293acd4adf",
           "prompt": "Câu 7",
           "options": [
             {
@@ -483,7 +483,7 @@
           "long": false
         },
         {
-          "id": "edd1ce4a-303e-4c1f-bd52-bea1f0e9a469",
+          "id": "61cd0fdb-e235-49a0-836b-8e77b7197ef6",
           "prompt": "Câu 8",
           "options": [
             {
@@ -506,7 +506,7 @@
           "long": false
         },
         {
-          "id": "89be0dc5-065d-4efe-93d8-5c3bc01ecde0",
+          "id": "a1506504-fc51-4f6c-8b7d-f7eb3797e509",
           "prompt": "Câu 9",
           "options": [
             {
@@ -529,7 +529,7 @@
           "long": false
         },
         {
-          "id": "3af7cc93-5061-4467-9ee4-1e7c26fe51fb",
+          "id": "99064f91-9e6c-4091-b16d-11f0dfce435a",
           "prompt": "Câu 10",
           "options": [
             {
@@ -552,7 +552,7 @@
           "long": false
         },
         {
-          "id": "83eed390-f29e-4ec3-8aa4-1adeab9bfe0b",
+          "id": "f5c5be42-d3e2-4cce-8748-3f7a88bcfd67",
           "prompt": "Câu 11",
           "options": [
             {
@@ -575,7 +575,7 @@
           "long": false
         },
         {
-          "id": "939f747c-ebc8-4cf5-830a-2f242f4c9aa6",
+          "id": "d645a377-d3e7-4503-a093-5ff77b84ccfb",
           "prompt": "Câu 12",
           "options": [
             {
@@ -598,7 +598,7 @@
           "long": false
         },
         {
-          "id": "8f9b4001-b7f9-4370-9ea5-ec502e63b242",
+          "id": "1d7a314e-1b1b-4286-980d-6d5596f36932",
           "prompt": "Câu 13",
           "options": [
             {
@@ -621,7 +621,7 @@
           "long": false
         },
         {
-          "id": "4e35e23a-3f83-4a7b-a177-baf830319fb9",
+          "id": "39784a71-8424-492a-bdc5-50b67d7cbb8f",
           "prompt": "Câu 14",
           "options": [
             {
@@ -644,7 +644,7 @@
           "long": false
         },
         {
-          "id": "26b1ea6c-9bec-4aa9-ba93-92323b5d83e8",
+          "id": "3073e62a-0cea-4db2-829e-0c2faabce20e",
           "prompt": "Câu 15",
           "options": [
             {
@@ -667,7 +667,7 @@
           "long": false
         },
         {
-          "id": "746b6436-92f8-4e2a-9251-e65651952bcc",
+          "id": "af469d55-33f1-4fb4-b87b-56baaa0e4630",
           "prompt": "Câu 16",
           "options": [
             {
@@ -690,7 +690,7 @@
           "long": false
         },
         {
-          "id": "c9f52d7d-1c4a-4063-93a7-8947aec4b336",
+          "id": "bebd060f-04d7-4db9-80d5-46b24792d3fb",
           "prompt": "Câu 17",
           "options": [
             {
@@ -713,7 +713,7 @@
           "long": false
         },
         {
-          "id": "f8d7da71-7509-4eef-bc0f-7c4d2c0714c4",
+          "id": "c8f81692-b693-48a0-8739-ac2fa4173e2b",
           "prompt": "Câu 18",
           "options": [
             {
@@ -745,61 +745,61 @@
       "audioPath": "",
       "items": [
         {
-          "id": "737969ec-b00c-488e-88ea-d7655fd807a8",
+          "id": "3e4a2543-b1a3-434f-b90c-6a41711ee7ef",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "646234bb-f200-458b-8f82-b0d995f51005",
+          "id": "8e55d0a5-8971-4960-8f39-17aaa3319a13",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "757fcffc-272e-4027-a86b-f571fc11897b",
+          "id": "07b5102f-662b-49ec-bd7d-2ba2f2666439",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "cf5b62e6-106e-4821-a3f2-0bcdf4749b42",
+          "id": "32a75812-f076-49a5-a4dc-9bb6e202e17b",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "3cd75a68-13fa-43c0-8a9b-79bdc97c19a1",
+          "id": "d9910092-7f99-486c-b2e9-2720dc6cb17f",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "8c9b9640-32ea-458b-b756-4292a6f80f54",
+          "id": "f9853e44-a25b-4337-851e-beb6cf531c7e",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "3251b222-e1c3-4bf9-b3c2-0d78c9ab07e7",
+          "id": "7857191d-7187-4879-add9-79f17dde6491",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "d98f6749-80d8-4f2c-aff2-9b7720271080",
+          "id": "83f9eea6-cc33-4b56-a2fd-bcab3aaa72e7",
           "prompt": "Chỗ trống (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "29671cdd-9f91-45df-8428-f088b93de204",
+          "id": "b755fb47-14a9-4f88-8f38-098befda65be",
           "prompt": "Chỗ trống (9)",
           "options": [],
           "long": false
         },
         {
-          "id": "e97e24eb-566d-4d00-88e4-4562f4781208",
+          "id": "26982ce2-03f2-4d23-90d1-fa679460e6c2",
           "prompt": "Chỗ trống (10)",
           "options": [],
           "long": false
@@ -814,43 +814,43 @@
       "audioPath": "",
       "items": [
         {
-          "id": "29e64854-02a4-4ff1-bcef-d25c4a0afbbe",
+          "id": "b53abdc6-5211-4710-894c-8338655f62cc",
           "prompt": "Dịch câu 1 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "aa3ac339-7e9f-4a15-abbe-98813f9e7ba8",
+          "id": "9facbf46-a631-42fb-8bb3-9c43f0fdbc3f",
           "prompt": "Dịch câu 2 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "a6bbae99-5d64-4598-ba12-7d4f18ba3dbf",
+          "id": "1ee022fd-9505-4c10-b679-47a1e20fefdc",
           "prompt": "Dịch câu 3 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "749897cf-d15b-4177-94d0-8ff590a4e0dc",
+          "id": "4eef6d86-8042-48f0-a159-cad0e849b8ce",
           "prompt": "Dịch câu 4 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "093a629c-009a-4c10-8228-770a4ba7a25c",
+          "id": "6ca3b240-3b5e-4689-a9f4-18aae5162a68",
           "prompt": "Dịch câu 5 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "b0101c82-e48b-42f9-8b50-17aad7232bf2",
+          "id": "82b62f1e-5c1a-4ca2-a24d-24d25b27b5f9",
           "prompt": "Dịch câu 6 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "6dcdd704-1eb3-4625-b5c0-911aaa2d4f60",
+          "id": "cbb8b8d4-4ea2-4c5a-9f7c-a4a896106d2d",
           "prompt": "Dịch câu 7 sang tiếng Anh.",
           "options": [],
           "long": true
@@ -865,13 +865,13 @@
       "audioPath": "",
       "items": [
         {
-          "id": "e0ec6ac3-39e2-4ece-8095-a9b821daa4a4",
+          "id": "35a0b4dd-b5d8-430f-a3df-659a94327f93",
           "prompt": "Question 1: Talk about your favorite leisure activity.\n+ What is it?\n+ When do you do it?\n+ Why do you enjoy it?",
           "options": [],
           "long": true
         },
         {
-          "id": "3bd28bd7-3e2c-4d5a-8986-789abf2f5e9d",
+          "id": "bbffcf3c-bfe0-4057-bfee-be1562128164",
           "prompt": "Question 2: Describe a memorable trip you have had.\n+ Where did you go?\n+ Who did you go with?\n+ What did you do there?",
           "options": [],
           "long": true
