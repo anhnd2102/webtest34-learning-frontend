@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 3,
-  "sourceHash": "794e1a0b4ebd9647550e76e67deb6be1e43a145489e6d808dadd311e7e8b6393",
+  "sourceHash": "95c877a4de5eb07bcb208775e78e1807239fc7e0bb97b5bd0288110514346cd3",
   "durationMinutes": 120,
   "groups": [
     {
@@ -14,73 +14,73 @@
       "audioPath": "",
       "items": [
         {
-          "id": "96c72999-b32f-4a23-92d8-f987b4eb1f1b",
+          "id": "9cc4bb75-5281-4df7-8a5a-93a1aa9ab2a4",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "a9cd693e-77fc-4b8c-8490-0228d707e227",
+          "id": "74cac08b-ed57-4e8a-a982-0ab361b170e9",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "931674c9-d4d0-41e8-a4c2-b8303b58c8ef",
+          "id": "cc9802cd-31ab-4698-a268-6651feb13e1c",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "ffb9fae1-e237-4dcc-a018-3a455282b4b3",
+          "id": "90d82967-b3b1-4c52-bb9a-36a9f8c87c94",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "fcd4302a-abd1-46dd-8428-b4e973ee7363",
+          "id": "e96033e0-e31c-4737-9a74-19f5efe7cb3b",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "fbc37b77-3e96-4aaf-994e-6660f4c604e7",
+          "id": "44da5e51-0597-4889-9f30-e2601b86cdf8",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "07429f6b-6ca5-4a93-97b8-6ede00858a9d",
+          "id": "291bddf7-5a23-4912-ad38-254970af6bbc",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "8001a3fe-4e7b-47ef-bc5e-85eb5ac7cbfa",
+          "id": "0b231f34-f1ab-4a5e-9c64-87c9446db156",
           "prompt": "Chỗ trống (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "666725ea-86a0-40b8-acaf-162d87e5f27c",
+          "id": "a16bda02-dcb0-42ee-8ba3-c81e183286cc",
           "prompt": "Chỗ trống (9)",
           "options": [],
           "long": false
         },
         {
-          "id": "8fe44f91-0bcd-4b57-8e74-08300baec7d7",
+          "id": "08e24ca1-48c3-4b3e-b329-8fc371157e20",
           "prompt": "Chỗ trống (10)",
           "options": [],
           "long": false
         },
         {
-          "id": "547068e8-732e-4e25-a2ac-44bf33790cfc",
+          "id": "66485862-ba53-4e88-9925-365660e50b57",
           "prompt": "Chỗ trống (11)",
           "options": [],
           "long": false
         },
         {
-          "id": "00f1b35b-d932-427c-84d3-c5027e701211",
+          "id": "cbe232ec-e55c-47b0-bc26-16f4ddacf796",
           "prompt": "Chỗ trống (12)",
           "options": [],
           "long": false
@@ -95,31 +95,31 @@
       "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Dictation.mp3",
       "items": [
         {
-          "id": "dce1793f-8abe-4389-8dab-2a9a0c542563",
+          "id": "a66f331d-4055-45af-87f4-09aab5be3349",
           "prompt": "Câu nghe 1",
           "options": [],
           "long": false
         },
         {
-          "id": "ddccad0b-00b8-4c32-a953-360aceb46a87",
+          "id": "fe149b40-221d-4d25-9a78-e3b7cba57201",
           "prompt": "Câu nghe 2",
           "options": [],
           "long": false
         },
         {
-          "id": "3e71f297-37d0-428c-af1a-2ea552bf971b",
+          "id": "73cf86c6-a727-4705-ac1c-a3fc074aa58d",
           "prompt": "Câu nghe 3",
           "options": [],
           "long": false
         },
         {
-          "id": "22311b57-977b-4a8a-a3aa-cce7a08222bb",
+          "id": "ed1b1ba3-704b-4e72-8431-69f28aa777c9",
           "prompt": "Câu nghe 4",
           "options": [],
           "long": false
         },
         {
-          "id": "38ad04b5-3ff1-4f04-bec9-f4aab7c21cc4",
+          "id": "e130eb73-d5cd-43fe-8740-081209592e25",
           "prompt": "Câu nghe 5",
           "options": [],
           "long": false
@@ -134,31 +134,31 @@
       "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "0f837b3a-88b9-458a-8505-d188b27bc409",
+          "id": "fe5b26dd-5d01-4f8c-b9bf-9194f58829b5",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "e468de2b-2ea5-45dc-ba62-f1f01acc6285",
+          "id": "27b81f1d-26b6-4ed9-8663-cd8e804b8750",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "988bcbc7-3ad8-4f53-a5bf-86654858e028",
+          "id": "49d478c4-ff0a-40fe-b890-aa873f174292",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "97e9fda3-cc16-4876-84fe-26a849235d85",
+          "id": "6a9ba0ba-f547-41b7-b53b-11756bc361fd",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "a85ccbcb-4855-4155-b121-6b34fff8feed",
+          "id": "ee7303bb-6447-4a91-a46e-729227a489ab",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
@@ -173,31 +173,31 @@
       "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "99c4f40c-b94d-48f3-9096-f7d08a7dc3d0",
+          "id": "7d4734f9-11ea-44ac-bcce-826f3f3d8cef",
           "prompt": "6. Listen to the second part of the conversation and answer the questions.\nWrite NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
           "options": [],
           "long": false
         },
         {
-          "id": "9566511d-d18e-4040-8b2e-1840ed6bb5f5",
+          "id": "683e79ec-1733-490d-a4a9-d4889a49c790",
           "prompt": "7. What will John email her information about?",
           "options": [],
           "long": false
         },
         {
-          "id": "b4e7cc2b-2f23-4c48-a850-57de4213cdcd",
+          "id": "9b1ee297-268e-4753-8928-bb70aeca13ff",
           "prompt": "8. Where is the weight machine located in the pharmacy?",
           "options": [],
           "long": false
         },
         {
-          "id": "49aa0148-a7ec-4a80-9816-baa210d3df21",
+          "id": "5089e25c-f90d-40a3-b108-38570ab7ac67",
           "prompt": "9. Who should customers talk to if they need medical assistance?",
           "options": [],
           "long": false
         },
         {
-          "id": "7b76b525-256f-43d9-9a36-9234329599dc",
+          "id": "88bf94f4-fe9f-4cbc-b3b7-b4b442e1ea3c",
           "prompt": "10. Which part of her body might she injure if she lifts boxes incorrectly?",
           "options": [],
           "long": false
@@ -212,91 +212,91 @@
       "audioPath": "",
       "items": [
         {
-          "id": "8348d844-08d6-4115-b0a0-c69718a821ec",
+          "id": "40c5bdb5-63c3-457f-abd0-aae9d2136e82",
           "prompt": "2. Police still (2) ______ the reasons for the problem of juvenile crime in large cities.",
           "options": [],
           "long": false
         },
         {
-          "id": "86a4d7d7-662e-4fe6-bb00-6a10b496b1bc",
+          "id": "59b49899-4c11-4baa-9945-37e504b42584",
           "prompt": "3. The new study (3) ______ preliminary results on the effects of poverty on education.",
           "options": [],
           "long": false
         },
         {
-          "id": "a95ad14a-e65b-4f16-80fe-bc4784bfaae2",
+          "id": "9550a8bc-4445-4878-9a4d-2509cc2db61e",
           "prompt": "4. Many modern companies try to (4) ______ energy by using energy-efficient machines to reduce the electricity bill.",
           "options": [],
           "long": false
         },
         {
-          "id": "0ea69855-ad52-4441-8c25-6e6d802a1317",
+          "id": "9cedc02e-46d0-4c9a-ae77-d2451ae8d01c",
           "prompt": "5. Social media now (5) ______ a key role in everyday communication between older generations and teenagers.",
           "options": [],
           "long": false
         },
         {
-          "id": "c7a3d240-08a2-4682-804d-8e2ab42a22e3",
+          "id": "8231f1e9-5776-45b2-abb0-ba9cebdd4b0d",
           "prompt": "6. Researchers are trying to (6) ______ a new way of helping criminals back in the streets to find work.",
           "options": [],
           "long": false
         },
         {
-          "id": "007d34eb-26cc-4ae7-ba53-6a61d04895f0",
+          "id": "2be206a5-e50f-4467-ba67-594b214ceac2",
           "prompt": "7",
           "options": [],
           "long": false
         },
         {
-          "id": "962a6da1-6aa7-462b-9643-faa72e1dfc49",
+          "id": "fbcb9be7-ffba-4427-9726-91364ad54422",
           "prompt": "8",
           "options": [],
           "long": false
         },
         {
-          "id": "6a3900da-b14e-4afc-8701-01a8b4d9fb7c",
+          "id": "49190c19-2e5b-4a3d-81d7-42b9cbfc31a5",
           "prompt": "9",
           "options": [],
           "long": false
         },
         {
-          "id": "340c61c0-f98c-4716-9701-769a0117fb78",
+          "id": "5a6c7626-a383-44cd-8db7-50d8861c01f6",
           "prompt": "10",
           "options": [],
           "long": false
         },
         {
-          "id": "dcb5bbf4-1030-466e-a2ce-5709adc34030",
+          "id": "e4e0ff43-f5c4-4182-8145-d01c218bbc8c",
           "prompt": "11",
           "options": [],
           "long": false
         },
         {
-          "id": "0e2df3d5-9636-49c7-9880-271ec1588cf1",
+          "id": "cb5ef28a-178f-42c9-a00f-4584361c6259",
           "prompt": "12",
           "options": [],
           "long": false
         },
         {
-          "id": "9de1c578-b7c4-42b0-8c2d-ec7004f7519b",
+          "id": "5a0c9928-b58f-4b62-b5da-234129653e3a",
           "prompt": "13",
           "options": [],
           "long": false
         },
         {
-          "id": "50c357e1-9102-4856-ab89-50e48d7e7f56",
+          "id": "ffb4ed93-4556-4874-9fa5-b906b9eff599",
           "prompt": "14",
           "options": [],
           "long": false
         },
         {
-          "id": "fc0b7b95-a239-4d28-adca-83059ad165ad",
+          "id": "655221b8-ed27-4281-b873-9900550c5fab",
           "prompt": "15",
           "options": [],
           "long": false
         },
         {
-          "id": "184bed3d-3e9f-491f-bf71-dff296ca74a6",
+          "id": "009cdff9-8a33-44e1-a371-154e3ecd8260",
           "prompt": "16",
           "options": [],
           "long": false
@@ -311,19 +311,19 @@
       "audioPath": "",
       "items": [
         {
-          "id": "c0ccdad8-341a-4308-9410-88ee70988499",
+          "id": "57b26939-a940-4bda-bdc7-51e2d7907b88",
           "prompt": "Question 1: Do you think it’s better for criminals to go to prison or to do community work? Briefly explain your choice.",
           "options": [],
           "long": true
         },
         {
-          "id": "ea1e57f1-7213-4f06-9ee4-c7254c8e02fe",
+          "id": "db13c71f-6b12-47b0-b60e-74e4d10357f3",
           "prompt": "Question 2: What do you think were the reasons that caused many animal species to be endangered/extinct?\nGợi ý: poaching & deforestation",
           "options": [],
           "long": true
         },
         {
-          "id": "9fc633a7-8c4e-498e-bbb9-40e2cf649d51",
+          "id": "12e0358d-2546-4f73-83e2-12dd95d1d7f7",
           "prompt": "Question 3: If you didn’t have to work for money/to support yourself (in the future), what would you spend most of your time on?",
           "options": [],
           "long": true

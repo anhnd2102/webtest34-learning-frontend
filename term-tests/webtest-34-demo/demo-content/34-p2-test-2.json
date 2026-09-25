@@ -1,0 +1,882 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "34",
+  "phase": 2,
+  "testNumber": 6,
+  "sourceHash": "a7d9b43226395e4cbbd2764e857734d02a406d9d557f5333415c3efb202a916c",
+  "durationMinutes": 120,
+  "groups": [
+    {
+      "id": "listening-i-n-t",
+      "title": "Listening · Điền từ",
+      "instructions": "Exercise 1: Listen and fill in the blank with the missing words (10 points)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/Test 2 Phase 2 2026.m4a",
+      "items": [
+        {
+          "id": "fa82a0c8-fa69-417d-9444-311b2edf2d37",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "308b2aca-77b1-4ae2-a032-6ec2196919ff",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a5eebd3f-aa4e-4a60-947c-41a05efad8bc",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f0080651-7b10-49bc-a0ee-9feb80db7172",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f82330f6-b61c-4dcd-a67b-2b9ac5660d5f",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "af281a69-b678-4af1-9f10-473fdcc35979",
+          "prompt": "Chỗ trống (6)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9cd3ea07-0ba8-464e-8f2c-c516819575d3",
+          "prompt": "Chỗ trống (7)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "d163b817-3d69-49cf-b93d-3f1b9e2a4140",
+          "prompt": "Chỗ trống (8)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9be08ddb-c410-46d4-9945-a05c95c7f1d6",
+          "prompt": "Chỗ trống (9)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "fa6e9e3b-b9b2-4d2a-9cd4-9276a3e9333d",
+          "prompt": "Chỗ trống (10)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-ch-n-p-n",
+      "title": "Listening · Chọn đáp án",
+      "instructions": "Exercise 2: Listen and choose the best answer (10 points)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/Test 2 Phase 2 2026.m4a",
+      "items": [
+        {
+          "id": "fece1445-1af3-4dfb-8b32-c4c687b91aa8",
+          "prompt": "Câu 1",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "3ddd4139-eb7e-4a6e-b391-3da40a9470c0",
+          "prompt": "Câu 2",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "06cd84c4-2bae-4b41-b834-0bfddb68e2c6",
+          "prompt": "Câu 3",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "ea5dc20b-7112-46e0-af3e-3796aea3caaa",
+          "prompt": "Câu 4",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "9f8164c3-4c4c-4cd1-8d7f-7c7d0f55c7d4",
+          "prompt": "Câu 5",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "a76cbc19-a7fe-4947-b600-c7afcefe2f32",
+          "prompt": "Câu 6",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "f224fdf3-ce08-4914-98f5-d28ef2565ad0",
+          "prompt": "Câu 7",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "986e42fe-1786-4134-b0f1-79310d617578",
+          "prompt": "Câu 8",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "45fc0d45-c64e-47e9-8f49-a0c4cad76e8d",
+          "prompt": "Câu 9",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "017f978b-8eaf-4e55-8766-4b94c08ba0b4",
+          "prompt": "Câu 10",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "grammar-tr-c-nghi-m",
+      "title": "Grammar · Trắc nghiệm",
+      "instructions": "Exercise 1: Choose the most suitable answer (18 points)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "9b3bd524-e969-4c3b-86aa-0a246dabe5e3",
+          "prompt": "Câu 1",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "d5d43fc9-248b-42e3-8039-1ca1c160ee7c",
+          "prompt": "Câu 2",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "ce30d8b0-50cb-4fa1-aae8-f616d1064830",
+          "prompt": "Câu 3",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "c90ea09c-a1ff-49da-9309-b85707069dce",
+          "prompt": "Câu 4",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "ad933f93-522c-4d23-b063-edb4662acd4d",
+          "prompt": "Câu 5",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "451b9a9b-7db3-41be-a8e2-9146940bef0c",
+          "prompt": "Câu 6",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "cea44a95-72d7-463e-a61e-3cf2b65190ce",
+          "prompt": "Câu 7",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "ce89e665-d7eb-4e70-b44c-98fda3855e7a",
+          "prompt": "Câu 8",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "fb2c28b6-3065-4c98-a82e-3ecc8210adca",
+          "prompt": "Câu 9",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "fab12d28-2fe9-4155-b72b-262f99799b6b",
+          "prompt": "Câu 10",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "d2f72d3a-6a1a-4405-b05d-e6dde21eb6a1",
+          "prompt": "Câu 11",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "495b452c-2036-4702-9c13-7ac18f13aceb",
+          "prompt": "Câu 12",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "77e0986d-3153-472a-9ec0-ed44e027c9ff",
+          "prompt": "Câu 13",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "c6e4d364-fec5-44d0-b77b-b4fd0004dc0f",
+          "prompt": "Câu 14",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "8449f504-816f-436d-911a-bd242832b248",
+          "prompt": "Câu 15",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "9c617477-aad3-435a-bd69-299419939964",
+          "prompt": "Câu 16",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "f5e345bc-2fa5-4ecf-9f5c-85376d0bab56",
+          "prompt": "Câu 17",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "4256d26b-55b9-4586-af9f-0f0ac469ac8d",
+          "prompt": "Câu 18",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "grammar-i-n-t-v-o-o-n-v-n",
+      "title": "Grammar · Điền từ vào đoạn văn",
+      "instructions": "Exercise 2: Fill in the gaps with suitable verb forms (20 points)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "54376aaf-83a5-4af8-a85f-2d897c3c55d0",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ebf0bf22-9e21-46e7-a081-ba4ab1f83022",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c3f6744f-77c9-4e38-afa0-2f5f23634e3a",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2f8592ab-7beb-4bba-b930-90e7575ec416",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "61502120-b37d-4104-a9cb-4f915d8c8680",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "66751981-466f-4c57-81f4-67825d476ea3",
+          "prompt": "Chỗ trống (6)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6dea1005-bead-48e7-99c0-64c62e2e1f19",
+          "prompt": "Chỗ trống (7)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a40f0c84-324f-4b1b-a0e7-83ceb41c5ba0",
+          "prompt": "Chỗ trống (8)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "8a95212e-42fe-4d43-b9df-405a3ec21a47",
+          "prompt": "Chỗ trống (9)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6b6e87d4-b53f-4237-93b1-f44ae64b2703",
+          "prompt": "Chỗ trống (10)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "translation-d-ch-c-u",
+      "title": "Translation · Dịch câu",
+      "instructions": "Dịch các câu sau sang tiếng Anh hoàn chỉnh (14 points)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "be7628e8-6c8d-4ac8-844f-5c92376cf677",
+          "prompt": "Dịch câu 1 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "2a624431-8523-41a0-8c0c-a6438fe33e15",
+          "prompt": "Dịch câu 2 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "3c1fb7d4-da2d-4ab1-bb8e-f1feebc59b7d",
+          "prompt": "Dịch câu 3 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "dc6d9ee9-8ad6-44a5-9a17-aaea5acc16e5",
+          "prompt": "Dịch câu 4 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "44f1c3b8-98e1-4bc4-a819-db1797c495d9",
+          "prompt": "Dịch câu 5 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "aa4d2ed7-ead1-420f-9916-923d460b52b0",
+          "prompt": "Dịch câu 6 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "58948585-faf1-4cb7-b1cb-94ef252c7f11",
+          "prompt": "Dịch câu 7 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        }
+      ]
+    },
+    {
+      "id": "speaking-tr-l-i-vi-t",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Viết câu trả lời theo các gợi ý trong đề (tối thiểu 35 từ mỗi câu). Bài thi được chấm bằng AI (18 points).",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "0dd67e58-df16-42c6-a196-901a75d077e1",
+          "prompt": "Question 1: Talk about your favorite leisure activity.\n+ What is it?\n+ When do you do it?\n+ Why do you enjoy it?",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "9c2e76dd-ac27-4ba0-949f-e6b2c8ecadb9",
+          "prompt": "Question 2: Describe a memorable trip you have had.\n+ Where did you go?\n+ Who did you go with?\n+ What did you do there?",
+          "options": [],
+          "long": true
+        }
+      ]
+    }
+  ]
+}

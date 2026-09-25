@@ -166,9 +166,18 @@ export async function mount(course) {
   const testToken = hashParams.get('test') || queryParams.get('test') || config.LEARNING_TEST_TOKEN || '';
 
   let testNum = Number(queryParams.get('testNum')) || 1;
-  const tokenMatch = testToken.match(/-0*([1-9]\d*)$/);
-  if (tokenMatch) {
-    testNum = Number(tokenMatch[1]);
+  const phaseParam = queryParams.get('phase');
+  if (course === '34' && phaseParam === '2' && testNum <= 2) {
+    testNum = testNum + 4;
+  }
+  const prefixMatch = testToken.match(/^(\d{2})(\d{2})/);
+  if (prefixMatch && prefixMatch[1] === course) {
+    testNum = Number(prefixMatch[2]);
+  } else {
+    const tokenMatch = testToken.match(/-0*([1-9]\d*)$/);
+    if (tokenMatch) {
+      testNum = Number(tokenMatch[1]);
+    }
   }
 
   let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json`, import.meta.url);

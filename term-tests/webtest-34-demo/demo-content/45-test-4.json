@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 4,
-  "sourceHash": "bab886b622134e921e986a29ea1c70b09a8e44537d64e02e06067961bb892e81",
+  "sourceHash": "3490ca413a56ac7e10f722ff15353f7e3a325a73013d1a719c9bdbda8bc480c5",
   "durationMinutes": 120,
   "groups": [
     {
@@ -14,73 +14,73 @@
       "audioPath": "",
       "items": [
         {
-          "id": "69d26ec4-da48-4cc2-9bfc-7688ee688595",
+          "id": "c0383c11-534a-4d68-8f7c-9b73e6d1c0e1",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "d1c02b0f-e106-4243-bfd9-6f2fc7ac6fd6",
+          "id": "42312e0e-6b29-4cc0-a6bc-290e697f6d4f",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "c43c15c9-85ed-49dc-8992-ff2936209a42",
+          "id": "5ba3fa61-f2ce-4b7f-9f7b-7b62e6bfc816",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "d65db0f3-a454-419d-b13a-bd9c338936de",
+          "id": "26da2eab-f838-487c-bad4-aef42304d31a",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "0d3bbe20-a1bb-4518-ba32-116da527a4fe",
+          "id": "6a0c74cb-3d08-448a-aaa5-bc6987c4d44c",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "670253ce-22cf-4815-bda1-03635452866e",
+          "id": "2589f0e8-cdf9-4be8-afc0-41f6402468a8",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "e112b5ab-6086-4343-b5d0-0c170bcbbed8",
+          "id": "e9d8fe80-b3c3-42de-8588-1781d5b6e9e3",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "8140af5d-8eaa-473d-8709-657c08c268d0",
+          "id": "dd51d4b7-7ca4-485d-b540-12a268567469",
           "prompt": "Chỗ trống (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "8de12745-6c23-4990-ab99-5b154b0025a5",
+          "id": "1c2fa97f-5fe5-4539-9524-80d5ae6aa363",
           "prompt": "Chỗ trống (9)",
           "options": [],
           "long": false
         },
         {
-          "id": "cc295675-a6e4-4c36-8d22-475f0bafe2a7",
+          "id": "0c05f7dd-114f-4449-b598-0f6a4a49c958",
           "prompt": "Chỗ trống (10)",
           "options": [],
           "long": false
         },
         {
-          "id": "b125f696-2b26-430c-9552-4f7b1e9267e9",
+          "id": "2b1896ab-6970-4945-9168-aed2efa58dc7",
           "prompt": "Chỗ trống (11)",
           "options": [],
           "long": false
         },
         {
-          "id": "fc742d12-0dd3-4d4c-b0c8-be57b6c5ae99",
+          "id": "ca94b16d-7efd-4970-99ee-15c885b3e582",
           "prompt": "Chỗ trống (12)",
           "options": [],
           "long": false
@@ -95,31 +95,31 @@
       "audioPath": "assets/demo-audio/45/Phase 1 Test 4 Dictation.mp3",
       "items": [
         {
-          "id": "62475359-7cb5-4c75-8a1c-aa05b801181c",
+          "id": "2351a7c8-00dc-49a7-bf9c-d3bc8447de65",
           "prompt": "Câu nghe 1",
           "options": [],
           "long": false
         },
         {
-          "id": "9de624ab-7aa6-43ed-bef0-6918eb67709b",
+          "id": "54fb3a5a-6786-4a23-8428-94199f35eb0d",
           "prompt": "Câu nghe 2",
           "options": [],
           "long": false
         },
         {
-          "id": "326dfcfc-9737-4f97-8f99-428e52591d46",
+          "id": "c1c6b31a-6fcf-4a34-ba8e-ea803f084d53",
           "prompt": "Câu nghe 3",
           "options": [],
           "long": false
         },
         {
-          "id": "603b63af-d6b1-46b8-b5c5-eac5836b44ae",
+          "id": "284583c8-a0a2-4b9d-b173-8db5404e1914",
           "prompt": "Câu nghe 4",
           "options": [],
           "long": false
         },
         {
-          "id": "03dc5232-d49c-4e8c-8a93-b30039ba563a",
+          "id": "68105bc3-15ef-4d5d-9ae2-fa0fec13b925",
           "prompt": "Câu nghe 5",
           "options": [],
           "long": false
@@ -134,31 +134,31 @@
       "audioPath": "assets/demo-audio/45/Phase 1 Test 4 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "2a23cec2-a1a9-45f8-8c05-fbfc389af4ab",
+          "id": "1cbd121d-a5ff-4c36-b10b-da3a7d72be4e",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "cc36f443-bd37-4fcf-b4bd-7fab07b3725b",
+          "id": "850fa008-9613-4d73-ad73-bd283c82b563",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "f50237b0-1947-4841-87d4-ba1085d47f9b",
+          "id": "f1499fd4-7344-4c41-9ff2-ffa6820c9047",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "946bd0f0-6c28-4891-9712-4e20f02b3ec1",
+          "id": "d17598fa-1a90-4dbd-b466-02ad86825f60",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "a75e4af5-7dcd-4ba7-aeac-bbe9c5b422c7",
+          "id": "955b45e4-e67e-414a-b762-395c50492532",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
@@ -173,31 +173,31 @@
       "audioPath": "assets/demo-audio/45/Phase 1 Test 4 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "0f40dc40-8f82-4eaf-ae50-5040b5b990cb",
+          "id": "a634fd80-af38-46f3-9b29-ddc65d7692b8",
           "prompt": "6. Câu hỏi 6",
           "options": [],
           "long": false
         },
         {
-          "id": "6e354b36-854c-47ba-9ad0-69e1e81463fe",
+          "id": "76b28136-55c7-4ae3-968b-007e5b75a2bb",
           "prompt": "7. Câu hỏi 7",
           "options": [],
           "long": false
         },
         {
-          "id": "585e354b-f555-4286-9f4b-a1421270217a",
+          "id": "ec969fc0-3699-4cdc-a61d-a3bd8835bd73",
           "prompt": "8. What cost can change a lot depending on where you buy it?",
           "options": [],
           "long": false
         },
         {
-          "id": "435760bc-5145-4130-8602-0526b4a8a50b",
+          "id": "0048428e-4561-49fc-b3f6-055f9d73b176",
           "prompt": "9. How is Campbelltown described?",
           "options": [],
           "long": false
         },
         {
-          "id": "ee977d04-d423-4950-b323-eab5afffb123",
+          "id": "e861237d-a39d-4dfb-a5f4-41ce9a291f53",
           "prompt": "10. How do you have to get there with a campervan?",
           "options": [],
           "long": false
@@ -212,85 +212,85 @@
       "audioPath": "",
       "items": [
         {
-          "id": "7a4b1954-ad3e-4081-b578-01a05699d4fc",
+          "id": "b2fd2a06-6e44-4a8d-8eaf-775260ebc6d9",
           "prompt": "Câu 5",
           "options": [],
           "long": false
         },
         {
-          "id": "0cbe72cb-bf2d-47dc-b0a3-f2f8137d370f",
+          "id": "07b529f5-7033-4d63-a204-429bf5a713e8",
           "prompt": "6. What cost can change a lot depending on where you buy it?",
           "options": [],
           "long": false
         },
         {
-          "id": "22cf43da-0177-4cda-81ec-61d9242f5716",
+          "id": "f3cfd4bc-857e-4ac8-a6a2-dd9c95c31ca0",
           "prompt": "7. How is Campbelltown described?",
           "options": [],
           "long": false
         },
         {
-          "id": "a4305a94-f9b4-4252-947f-44497e0b5e15",
+          "id": "f3fee5f8-0810-4431-9e52-caa08fb7c686",
           "prompt": "8. How do you have to get there with a campervan?",
           "options": [],
           "long": false
         },
         {
-          "id": "b1ca0f12-6149-4920-bac5-2df15b7bde3b",
+          "id": "6d445c24-c1e6-466d-b152-295a48738eb0",
           "prompt": "9. What daily driving distance does she suggest not going over?",
           "options": [],
           "long": false
         },
         {
-          "id": "1c85969b-5d62-4145-b1ee-4f2e6f88403e",
+          "id": "6d95693b-62a3-4f24-965c-09caccce5c60",
           "prompt": "10. What can you rent to explore local areas?",
           "options": [],
           "long": false
         },
         {
-          "id": "82f21124-f6e5-4705-b3e4-24a38fc25740",
+          "id": "807a6989-493c-4f77-bf60-b9b63822351d",
           "prompt": "1",
           "options": [],
           "long": false
         },
         {
-          "id": "6b67a486-91d8-43b7-bc43-cbee2d2404ec",
+          "id": "8308e9ab-cee7-4270-a637-d1fb280eff32",
           "prompt": "44595",
           "options": [],
           "long": false
         },
         {
-          "id": "14e93b5d-e601-4670-9f17-65d1674e9b7b",
+          "id": "2e8b081f-9a6e-4b54-b1e1-e891f577dacd",
           "prompt": "Câu 3",
           "options": [],
           "long": false
         },
         {
-          "id": "8df2a5ee-a15e-4cce-8662-2e4b67bca10b",
+          "id": "3b6da42f-4f58-46b5-8379-9aeb7266fb6f",
           "prompt": "4",
           "options": [],
           "long": false
         },
         {
-          "id": "85d625d3-a600-4eb7-9886-0e88136c9b82",
+          "id": "960869ea-aa0d-4824-bfee-67014580e5b0",
           "prompt": "5",
           "options": [],
           "long": false
         },
         {
-          "id": "69087fa5-6a83-4e64-aaba-2a1ec5775805",
+          "id": "a3bc2a52-0f64-4e1d-a664-3235e99152d0",
           "prompt": "6",
           "options": [],
           "long": false
         },
         {
-          "id": "69e1d616-09b3-4cab-ae36-569072e2bd64",
+          "id": "039fc11b-1879-4ec5-b2b9-c81fb3a838d9",
           "prompt": "44750",
           "options": [],
           "long": false
         },
         {
-          "id": "70cffa78-1dcd-46b8-ae1f-61ab31956cf1",
+          "id": "28e60220-885d-46a3-a77b-39426a8bf09e",
           "prompt": "Câu 8",
           "options": [],
           "long": false
@@ -305,19 +305,19 @@
       "audioPath": "",
       "items": [
         {
-          "id": "35141ace-5ca0-4b2d-af0c-55c0b3b3ab40",
+          "id": "18811c07-91a6-4964-8488-df84f26ded1b",
           "prompt": "Question 1: What problems will the peer pressure among teenagers today cause? (name at least three)? (Note to use proper signposts)",
           "options": [],
           "long": true
         },
         {
-          "id": "85537fb6-9c05-4da2-873d-8f7e2aed6986",
+          "id": "29c8aa2e-fb3c-4fe4-a5fd-0fd85b995d33",
           "prompt": "Question 2: What are the causes for the rise in youth crime these days? (name at least three, explain your answer briefly using proper conjunctions) – (Note to use proper signposts)",
           "options": [],
           "long": true
         },
         {
-          "id": "17c7129e-19ae-4cb0-9192-9f914a56822e",
+          "id": "a1ca0a76-2b83-48bf-bafb-fe520a9cc227",
           "prompt": "Question 3:  Describe a movie that you’ve recently watched.",
           "options": [],
           "long": true
