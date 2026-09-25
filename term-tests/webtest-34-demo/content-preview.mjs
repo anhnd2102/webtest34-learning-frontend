@@ -167,7 +167,7 @@ export async function mount(course) {
 
   let testNum = Number(queryParams.get('testNum')) || 1;
   const phaseParam = queryParams.get('phase');
-  if (course === '34' && phaseParam === '2' && testNum <= 2) {
+  if ((course === '34' || course === '45') && phaseParam === '2' && testNum <= 2) {
     testNum = testNum + 4;
   }
   const prefixMatch = testToken.match(/^(\d{2})(\d{2})/);
@@ -193,7 +193,7 @@ export async function mount(course) {
   try { state = sanitizeDraft(form, JSON.parse(localStorage.getItem(key))); }
   catch { state = sanitizeDraft(form, null); }
   const items = form.groups.flatMap(group => group.items);
-  const title = `Khóa ${course}${form.phase ? ' · Phase 1' : ''} · Test ${form.testNumber || testNum}`;
+  const title = `Khóa ${course}${form.phase ? ` · Phase ${form.phase}` : ''} · Test ${form.testNumber || testNum}`;
   const sections = [...new Set(form.groups.map(sectionKey))];
   let activeSection = sections[0];
 

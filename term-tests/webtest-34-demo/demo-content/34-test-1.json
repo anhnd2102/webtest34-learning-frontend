@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 1,
   "testNumber": 1,
-  "sourceHash": "bf2fce1d409a41df6649891218e274aa27a6d767fecfdf3480439f6d74f605c7",
+  "sourceHash": "a931d9eb8fb7316c9f05ee7b9f6d7b4fcf933b42b62bcd73a5df763ad778a69c",
   "durationMinutes": 120,
   "groups": [
     {
@@ -14,13 +14,13 @@
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "247786c2-f548-4068-baa5-7c68d1249ac9",
+          "id": "8b73d982-213f-41a3-bcd7-942aa1a0513a",
           "prompt": "1. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "d1c30b55-485c-4d57-bdc9-d33c49980b99",
+          "id": "38fabd78-69b7-41f6-bf92-afad7487a20e",
           "prompt": "1. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -43,13 +43,13 @@
           "long": false
         },
         {
-          "id": "90a5fd33-cc60-4544-8efb-3c986cf81afb",
+          "id": "e5380e3c-7e51-49dd-9b7c-79f01db13890",
           "prompt": "2. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "fa2f3fa8-4b10-4706-84d5-92fe917b4918",
+          "id": "c26195fc-c6b7-4497-8ee4-10f02caef126",
           "prompt": "2. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -72,13 +72,13 @@
           "long": false
         },
         {
-          "id": "c1ece0e3-7427-452f-8aa6-f8de7637a163",
+          "id": "b75ddb17-b916-4d32-a477-a0f64ccd29a7",
           "prompt": "3. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "92536d2a-ae37-4db3-9d84-1bc3f1967a3f",
+          "id": "bd96c122-dcd1-4caa-94bf-d580cf160786",
           "prompt": "3. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -101,13 +101,13 @@
           "long": false
         },
         {
-          "id": "b412695f-7486-4316-a796-be3aa2a2421f",
+          "id": "3c74b10a-bff3-486e-8160-9ade70a60ed1",
           "prompt": "4. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "f1dc2155-9146-4dbd-a906-76bd6b3ea637",
+          "id": "55a29ef1-5ec6-4d44-82a4-631e3e1c84ed",
           "prompt": "4. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -130,13 +130,13 @@
           "long": false
         },
         {
-          "id": "eeba6da5-9c08-4563-8535-e79bf0b1141d",
+          "id": "2419d03b-a133-4fa8-b1b6-490b45e27b3f",
           "prompt": "5. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "ff8f7026-d451-4480-bac7-8cc4877d0b90",
+          "id": "97df7179-0565-4003-9702-4ce8bb90fa3d",
           "prompt": "5. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -159,13 +159,13 @@
           "long": false
         },
         {
-          "id": "98956327-1d2f-4d19-b746-448deb5f6efd",
+          "id": "7420f9de-3a0d-4f07-a438-44469171d71e",
           "prompt": "6. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "5de0bf53-ea84-408c-ba9b-15ad9191a40c",
+          "id": "b9c91064-acb0-4a33-b970-ca2053f63fc8",
           "prompt": "6. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -188,13 +188,13 @@
           "long": false
         },
         {
-          "id": "4d239ada-b9b7-43dd-87d4-5ff61f2bbfbc",
+          "id": "001f6b4f-1493-4823-ae20-86a934dbf9c3",
           "prompt": "7. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "b41cddbc-8bbf-4dad-b724-7e910de01057",
+          "id": "8fd70434-1696-4c20-8554-73a1cfe5f158",
           "prompt": "7. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -217,13 +217,13 @@
           "long": false
         },
         {
-          "id": "1f6ca7ea-8e56-4444-9246-79c0c577c778",
+          "id": "04fa972e-2091-4631-961a-f7e856d3fa6c",
           "prompt": "8. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "fb49ad1a-1cdb-4bbe-b81c-c266ff73db76",
+          "id": "ff048ce4-be9f-40e4-8a3f-a0019cfb3572",
           "prompt": "8. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -246,13 +246,13 @@
           "long": false
         },
         {
-          "id": "2cd607fc-3ba5-4ba2-b81e-af490aeb64b2",
+          "id": "4a9d4bae-cbe7-4c30-9cdf-1e44794cc713",
           "prompt": "9. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "5dc63333-3f5f-4dc9-8861-430f95003177",
+          "id": "a641efa8-da96-452c-8967-6bb2033f0371",
           "prompt": "9. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -275,13 +275,13 @@
           "long": false
         },
         {
-          "id": "0e374a76-ca2a-4f1b-a003-bc9691903a46",
+          "id": "531374de-f983-4f66-a769-2b5a08995f1b",
           "prompt": "10. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "80bada3d-538c-460b-8a2a-f6358fe9f02e",
+          "id": "c64ae7c4-a6c4-4f60-b9d8-c1726d670603",
           "prompt": "10. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -304,13 +304,13 @@
           "long": false
         },
         {
-          "id": "14583866-0ec1-41ee-ada2-fbc3df111525",
+          "id": "f3c683c9-9c02-4b93-8229-b0d2d72e0bf8",
           "prompt": "11. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "659e0535-8663-40f9-b334-1f2b73a1ff60",
+          "id": "057d2331-fed4-430d-bef7-c746d6a5b87b",
           "prompt": "11. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -333,13 +333,13 @@
           "long": false
         },
         {
-          "id": "023202f4-f6fd-494a-9f42-261c58e9f41c",
+          "id": "8713a6f9-2b61-4e58-8538-61c06c47afd0",
           "prompt": "12. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "48272038-274d-475f-8327-3d1a9f6db6aa",
+          "id": "27ee5b17-99b6-48af-b1b1-e548ba3cd84c",
           "prompt": "12. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -362,13 +362,13 @@
           "long": false
         },
         {
-          "id": "2c3ac351-e0c7-4465-a94c-12aba564725c",
+          "id": "bc588e86-fc77-4384-a054-748513bd045f",
           "prompt": "13. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "ac608173-dd59-4907-ab7e-9f62eb25ab18",
+          "id": "9f587eaf-4d8d-4344-a965-c6709937c0f8",
           "prompt": "13. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -391,13 +391,13 @@
           "long": false
         },
         {
-          "id": "b647254e-0171-428e-b6e1-d3463ee6b089",
+          "id": "191d9911-9c34-495a-87cc-a1c34fa7d133",
           "prompt": "14. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "dcf3699e-049a-4695-8920-ae9644c250f8",
+          "id": "7ca577c9-6bff-4ffd-8ddf-3fc3c4f3da56",
           "prompt": "14. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -420,13 +420,13 @@
           "long": false
         },
         {
-          "id": "78f4a268-4bf7-4d30-b0bc-c8b70bc4c189",
+          "id": "358fb945-3bad-4f00-8b90-aa5906d11260",
           "prompt": "15. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "4c065e0c-b721-4d3c-a90f-54e7118bf625",
+          "id": "b283dcca-0d0f-4e44-bdf1-203fb2b1e9be",
           "prompt": "15. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -449,13 +449,13 @@
           "long": false
         },
         {
-          "id": "56b2f632-a18c-41eb-94c6-2b4074d6c9f5",
+          "id": "97f7f565-2cb3-4aa4-b238-30d46c585435",
           "prompt": "16. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "2c10d86c-dc39-4f47-99d3-8a1608c0e7f9",
+          "id": "9ea3e7ce-8885-4879-bd04-768099bdb805",
           "prompt": "16. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -478,13 +478,13 @@
           "long": false
         },
         {
-          "id": "3ce2435f-67ad-436d-9762-fbd096053fc5",
+          "id": "22536280-7d96-40f8-a07d-de300afc07ef",
           "prompt": "17. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "fb5ab0be-c2cd-4bc9-b443-2cdeabddee67",
+          "id": "0fbe1e6e-a66e-4d93-b297-28cf1bce0be3",
           "prompt": "17. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -507,13 +507,13 @@
           "long": false
         },
         {
-          "id": "d55aa309-0e5e-4a6c-b9dc-90b6d50f2cb9",
+          "id": "78e8cdea-d2e9-45d5-9e60-8e599c7e0c68",
           "prompt": "18. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "c8982d5f-bef7-41ad-a00f-60221446c800",
+          "id": "fc8f63fa-f7d3-4cd9-9812-2b351714807f",
           "prompt": "18. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -536,13 +536,13 @@
           "long": false
         },
         {
-          "id": "37d6895b-b085-4c37-9d95-bdc4a78e4320",
+          "id": "9369e6e5-096a-4f65-99dd-c805ed93e157",
           "prompt": "19. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "79432db4-2405-4e6a-8a25-d13f59b6d695",
+          "id": "4d435826-43cd-4a71-9e90-2f379034ee5f",
           "prompt": "19. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -565,13 +565,13 @@
           "long": false
         },
         {
-          "id": "ed04248a-291a-47fd-aae9-83827e0d9e9e",
+          "id": "9d0d4d08-11f8-4b50-b9f5-23029046fd8a",
           "prompt": "20. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "41e08ce3-0ef3-4415-bbf4-8eff1de61390",
+          "id": "d494e079-6d9d-46fc-9fbf-dcd554542a30",
           "prompt": "20. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -594,13 +594,13 @@
           "long": false
         },
         {
-          "id": "d2575ecd-0cdb-4a0a-adff-b0ed49f1d23d",
+          "id": "46da32ee-180a-4965-95f5-d4d6fe649bb0",
           "prompt": "21. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "24242022-d9a5-492b-a333-cafa82ba59b1",
+          "id": "191ae1ae-d5ea-4aed-abca-818284ded419",
           "prompt": "21. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -623,13 +623,13 @@
           "long": false
         },
         {
-          "id": "57c63b81-a7c4-4dc8-a4ad-c6febbd675b1",
+          "id": "9485e05c-20c3-4b76-821a-975ecaaf2776",
           "prompt": "22. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "62c83a78-ef1f-4c51-8f21-1c4202876061",
+          "id": "0652683d-1305-40d2-84b1-49efdfa3acbd",
           "prompt": "22. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -652,13 +652,13 @@
           "long": false
         },
         {
-          "id": "cdda8cd4-2e91-408d-890a-64803b91b4fc",
+          "id": "ca1a0c84-8ad3-46de-8052-d00486e3368f",
           "prompt": "23. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "79d14e0a-af08-4fe4-9dc5-ff4cfa385e0a",
+          "id": "415e97e2-1ef2-4490-891b-0734ee441737",
           "prompt": "23. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -681,13 +681,13 @@
           "long": false
         },
         {
-          "id": "d64e7bee-d636-4663-be40-d37c2fb45d18",
+          "id": "32b0b0f6-71f7-40f3-9204-e74a3a37c704",
           "prompt": "24. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "bff8496a-f078-4a4c-8a9f-7212c689e8b0",
+          "id": "47397195-2f37-4be9-a359-6e4ec8a115ea",
           "prompt": "24. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -710,13 +710,13 @@
           "long": false
         },
         {
-          "id": "1f3d5ddf-1bb9-4394-a260-e2bbe04f55d2",
+          "id": "0c6fa908-d0d7-4544-84a5-1daddfd0f948",
           "prompt": "25. Từ/cụm từ nghe được",
           "options": [],
           "long": false
         },
         {
-          "id": "a5cd126a-af4c-45b8-b2bf-3b40bb23528a",
+          "id": "cd4326fe-61e8-43a6-82e4-ce9e6bb560b1",
           "prompt": "25. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -748,151 +748,151 @@
       "audioPath": "",
       "items": [
         {
-          "id": "e23d7540-c37d-4716-bf91-4eac77ea2ad6",
+          "id": "0a0a495e-ebe8-4bae-a93b-f1b6256b0600",
           "prompt": "Hình ảnh (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "1b2d0f2b-51ea-44bb-a423-eb5f0aaee5aa",
+          "id": "d751c7dc-834d-4f92-8d54-48ee3864a91c",
           "prompt": "Hình ảnh (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "cb1086c8-a7ce-493c-af98-06ca6b210cf1",
+          "id": "5491723d-a171-43a7-beb0-b708368578bf",
           "prompt": "Hình ảnh (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "9f17a053-b246-4a9d-979c-dbde3b7cf261",
+          "id": "d3b10b42-4836-4296-bf52-61793b88210e",
           "prompt": "Hình ảnh (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "7ba9639b-9eaa-4990-bcb9-9973028fed0c",
+          "id": "ddf960ec-f27d-40b0-8afe-4d31f193e8c4",
           "prompt": "Hình ảnh (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "9f61c452-2a17-43e3-8b34-98dfe68807bf",
+          "id": "84794e4f-2287-4928-9363-523f8a8a80d2",
           "prompt": "Hình ảnh (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "a919b069-eda1-4881-b6e9-adce0e98329c",
+          "id": "cd610d57-d799-45db-8726-e4948927ba0b",
           "prompt": "Hình ảnh (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "00507859-dae6-41dc-b9a1-295581fc1574",
+          "id": "f41088af-5040-4604-af4a-e2dccf864f85",
           "prompt": "Hình ảnh (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "25d00a6e-f633-49b5-834e-5f4803c55473",
+          "id": "43cc77ed-31e2-4161-b72a-8d986c20de85",
           "prompt": "Hình ảnh (9)",
           "options": [],
           "long": false
         },
         {
-          "id": "91ac55e0-4292-4d3f-b137-01281a6fba27",
+          "id": "33d4d57f-f5c3-4c9c-97a0-90c91ab39f7e",
           "prompt": "Hình ảnh (10)",
           "options": [],
           "long": false
         },
         {
-          "id": "a32d14fb-3cf6-42f9-a8e2-ec4609afb3a4",
+          "id": "1465f677-a9b5-49e4-82e7-014cd99498b2",
           "prompt": "Hình ảnh (11)",
           "options": [],
           "long": false
         },
         {
-          "id": "d35edcc6-5c06-44c9-92bb-323f0e57bc0d",
+          "id": "3dcb33e4-548e-425a-be6a-27eba8fc8981",
           "prompt": "Hình ảnh (12)",
           "options": [],
           "long": false
         },
         {
-          "id": "e82260e5-3765-4f9a-af71-1ea37f769721",
+          "id": "4106361d-73f2-434d-8a09-0f32f0123d89",
           "prompt": "Hình ảnh (13)",
           "options": [],
           "long": false
         },
         {
-          "id": "9f5687be-7d39-4126-a612-8d24ddd8be2d",
+          "id": "6cd486bf-16ba-4e5c-848c-e36a3369e78a",
           "prompt": "Hình ảnh (14)",
           "options": [],
           "long": false
         },
         {
-          "id": "f2b926ad-beeb-4c7c-9d1e-240c1849798f",
+          "id": "81fc6ef7-4938-4b09-8935-957a6c6a24c8",
           "prompt": "Hình ảnh (15)",
           "options": [],
           "long": false
         },
         {
-          "id": "36172d26-62f2-4b9d-9701-e59c43867aca",
+          "id": "7871708a-4e8d-4d36-aca1-c71a8d6936c4",
           "prompt": "Hình ảnh (16)",
           "options": [],
           "long": false
         },
         {
-          "id": "128324de-42ea-4ae5-824f-5d781f4804f2",
+          "id": "cae57bf3-9ab6-4248-b20e-cb3c516d4b0e",
           "prompt": "Hình ảnh (17)",
           "options": [],
           "long": false
         },
         {
-          "id": "f28246e8-2652-4bb7-bee5-63660bc298ae",
+          "id": "0fc49fcb-1eb0-49f5-bf29-3332e2c088dd",
           "prompt": "Hình ảnh (18)",
           "options": [],
           "long": false
         },
         {
-          "id": "b5e7961b-d592-4c3c-9334-20913145800a",
+          "id": "4ec89a0a-1bab-4cb8-b32b-7ea14d1e4b55",
           "prompt": "Hình ảnh (19)",
           "options": [],
           "long": false
         },
         {
-          "id": "d3f29251-4b67-49c4-b837-522323f3569f",
+          "id": "0f0da5e9-5838-47e7-b29c-216ee3768c5b",
           "prompt": "Hình ảnh (20)",
           "options": [],
           "long": false
         },
         {
-          "id": "1cc84cb8-2295-4ea4-9e11-baf2675f96ac",
+          "id": "b4e94e37-333b-4fb9-87ae-f8ee8edb2eb0",
           "prompt": "Hình ảnh (21)",
           "options": [],
           "long": false
         },
         {
-          "id": "c70dca07-4901-4aaf-80a9-6b8e14900cff",
+          "id": "c37a78f5-46da-4440-bb5c-bc453e51fe0a",
           "prompt": "Hình ảnh (22)",
           "options": [],
           "long": false
         },
         {
-          "id": "a6d013e6-0441-4dea-9f58-25467cb41b9a",
+          "id": "ffc03e8c-febd-413f-a2d2-ed1c64091879",
           "prompt": "Hình ảnh (23)",
           "options": [],
           "long": false
         },
         {
-          "id": "a8055e41-4424-4caa-a4c8-ea1158143f7c",
+          "id": "d2c76528-66e2-4133-b46a-1a0bc8166c57",
           "prompt": "Hình ảnh (24)",
           "options": [],
           "long": false
         },
         {
-          "id": "2f1bf9aa-8bd9-46c2-a5e3-aa4aff158bf8",
+          "id": "269bda6d-070b-4e67-a5a2-34102cd2887e",
           "prompt": "Hình ảnh (25)",
           "options": [],
           "long": false
@@ -907,7 +907,7 @@
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "f03ec219-cc1d-4204-8f87-e9525dde531b",
+          "id": "7fd343d5-afa6-45d2-b908-7b683aec7add",
           "prompt": "Vị trí 1",
           "options": [
             {
@@ -934,7 +934,7 @@
           "long": false
         },
         {
-          "id": "e41ca7fe-e51c-4873-90c8-75fa2f9520e5",
+          "id": "bb766849-145d-4e23-a080-f0b703a96c7c",
           "prompt": "Vị trí 2",
           "options": [
             {
@@ -961,7 +961,7 @@
           "long": false
         },
         {
-          "id": "2378df63-7f18-4c84-bcc0-6c4787b4b7e9",
+          "id": "7b8c8332-2c52-4d46-8996-0cc976aee585",
           "prompt": "Vị trí 3",
           "options": [
             {
@@ -988,7 +988,7 @@
           "long": false
         },
         {
-          "id": "ccde6e0e-7bb4-4b6f-95c0-a9bf09aa55d7",
+          "id": "0ec3479a-213c-43de-a960-d3982af6f058",
           "prompt": "Vị trí 4",
           "options": [
             {
@@ -1015,7 +1015,7 @@
           "long": false
         },
         {
-          "id": "e3daced0-2de1-4671-bfdf-099dc388e602",
+          "id": "4a2f1622-3ac5-40d6-9ae0-44bb87a3e79a",
           "prompt": "Vị trí 5",
           "options": [
             {
@@ -1051,31 +1051,31 @@
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "daaeaf56-0c5e-4884-ac16-73ca333c78a3",
+          "id": "3933e3ce-1f3c-47b5-96f2-75e0bc889771",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "0ddde463-b8b9-4c89-9416-fa4538c65f57",
+          "id": "0ff69149-0175-4e43-aaa0-d08fa853464b",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "879c92f8-1f00-42a6-ac94-4a8027348cbe",
+          "id": "b1d47769-2ec9-467c-ad59-f4b612d32b1c",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "6da46e4a-afb0-4043-910c-75a0638c8de1",
+          "id": "d6730504-3ac7-4bd9-8b7a-4b0580a2c926",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "d1fd72f7-4d03-4326-86c3-704546d312cf",
+          "id": "54cfb927-1e9d-4be3-8651-4da403f6d7a7",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
@@ -1090,7 +1090,7 @@
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "4cb9df1f-32ed-4ba0-ab6a-48be39ec67df",
+          "id": "260c2a14-b78e-47cc-ac40-1d7e51c913e4",
           "prompt": "Câu 1",
           "options": [
             {
@@ -1105,7 +1105,7 @@
           "long": false
         },
         {
-          "id": "99a33b68-b704-4cd3-92c2-8cbdb9942ed6",
+          "id": "c6ace94d-60d7-4b87-a7d9-e1df4dd2eaae",
           "prompt": "Câu 2",
           "options": [
             {
@@ -1120,7 +1120,7 @@
           "long": false
         },
         {
-          "id": "c3345eeb-6ba8-4f7e-a428-4998f9ccb763",
+          "id": "2480edc7-b753-4518-a320-39f066823228",
           "prompt": "Câu 3",
           "options": [
             {
@@ -1135,7 +1135,7 @@
           "long": false
         },
         {
-          "id": "c948e31a-7f12-4d8b-b823-23de117edc1c",
+          "id": "306aa980-f08c-4c9c-8677-007689d79354",
           "prompt": "Câu 4",
           "options": [
             {
@@ -1150,7 +1150,7 @@
           "long": false
         },
         {
-          "id": "912a2dd1-9901-4fef-ab03-6780f7ea93fc",
+          "id": "a1f2f074-6b05-4076-8209-df15f3cc0444",
           "prompt": "Câu 5",
           "options": [
             {
@@ -1174,61 +1174,61 @@
       "audioPath": "",
       "items": [
         {
-          "id": "e621decd-0e16-46be-bd70-cd90a0c63257",
+          "id": "14ad3bc1-e033-44cc-9536-ff6e244675f5",
           "prompt": "Từ 1",
           "options": [],
           "long": false
         },
         {
-          "id": "f0697dd6-fa7c-482c-a343-9ce9a64ac802",
+          "id": "18ae3eab-3018-47d0-9279-69bc5a2f06b5",
           "prompt": "Từ 2",
           "options": [],
           "long": false
         },
         {
-          "id": "84d33bd9-8095-4e8f-9a61-ec285058cbfb",
+          "id": "4c184fcd-e684-4849-b78a-6248eeec1ded",
           "prompt": "Từ 3",
           "options": [],
           "long": false
         },
         {
-          "id": "9c292c26-5a1e-4516-aef9-a17de70fd0a0",
+          "id": "eaf4b880-519c-48e4-89a1-97e636952ae9",
           "prompt": "Từ 4",
           "options": [],
           "long": false
         },
         {
-          "id": "49d8ec79-f4f9-4024-9c6e-b16edbf89093",
+          "id": "ef247b6f-8c71-4077-bc1c-c60749dd2577",
           "prompt": "Từ 5",
           "options": [],
           "long": false
         },
         {
-          "id": "b6aa020e-b98c-4f61-a911-ba0245e3f485",
+          "id": "eed84672-3a05-4ffa-94a1-c02b5e666e59",
           "prompt": "Từ 6",
           "options": [],
           "long": false
         },
         {
-          "id": "469967e7-9cd7-4f23-9c3f-dc804bd2633f",
+          "id": "3a98fa2d-020d-4609-9253-a84d7a70a283",
           "prompt": "Từ 7",
           "options": [],
           "long": false
         },
         {
-          "id": "4ee66a18-5b36-49c5-acd5-841ef389bb2b",
+          "id": "4049fbc7-f0f8-44cd-a90b-488a987e16de",
           "prompt": "Từ 8",
           "options": [],
           "long": false
         },
         {
-          "id": "c121f71e-5bf6-4f5e-8e5e-78771945a1c7",
+          "id": "f778f920-73f3-4be9-be41-7c46b117ce0d",
           "prompt": "Từ 9",
           "options": [],
           "long": false
         },
         {
-          "id": "f25b3c1a-36ad-4a1c-acac-c0df606d7c8c",
+          "id": "065166a2-58d4-4b55-86b5-758d61245270",
           "prompt": "Từ 10",
           "options": [],
           "long": false
@@ -1243,7 +1243,7 @@
       "audioPath": "",
       "items": [
         {
-          "id": "c6008738-dc17-4b87-adca-4298da67e2db",
+          "id": "9992f623-a998-41bd-8848-e3203e9c8bac",
           "prompt": "Câu 1",
           "options": [
             {
@@ -1262,7 +1262,7 @@
           "long": false
         },
         {
-          "id": "9d83735c-d3e9-4d35-af15-432934e55822",
+          "id": "9a12c82b-0fee-467d-8c46-643599d93f40",
           "prompt": "Câu 2",
           "options": [
             {
@@ -1281,7 +1281,7 @@
           "long": false
         },
         {
-          "id": "8023aa3a-d27e-4a94-8500-46a5e3900025",
+          "id": "1bc90d98-9548-4da8-bcd9-0cda38e19b2d",
           "prompt": "Câu 3",
           "options": [
             {
@@ -1300,7 +1300,7 @@
           "long": false
         },
         {
-          "id": "12b02513-71b7-4cce-9676-0e97a8774988",
+          "id": "2f85bb75-52ad-48c2-8165-f7b9d391829e",
           "prompt": "Câu 4",
           "options": [
             {
@@ -1319,7 +1319,7 @@
           "long": false
         },
         {
-          "id": "fc19ecd9-edec-4ebc-be15-e9af2e01d31b",
+          "id": "f31d1adb-68e3-4f1e-9863-b3f1b5970f12",
           "prompt": "Câu 5",
           "options": [
             {
@@ -1338,7 +1338,7 @@
           "long": false
         },
         {
-          "id": "fe59597c-4cfe-4f3b-8ccb-6bba743a6e9e",
+          "id": "8bb84d70-18e4-474f-a2ac-5a362d2eb8f4",
           "prompt": "Câu 6",
           "options": [
             {
@@ -1357,7 +1357,7 @@
           "long": false
         },
         {
-          "id": "cf8c0f34-883d-4631-8b5a-97ce1baf276d",
+          "id": "a5fb11d3-99fa-424b-a416-fbbc02c52147",
           "prompt": "Câu 7",
           "options": [
             {
@@ -1376,7 +1376,7 @@
           "long": false
         },
         {
-          "id": "0be505af-37e6-4246-9b79-3a6a54bed545",
+          "id": "48bf4de4-52f9-45dd-a5d3-4d99f6f36a9c",
           "prompt": "Câu 8",
           "options": [
             {
@@ -1395,7 +1395,7 @@
           "long": false
         },
         {
-          "id": "d90437d2-6f03-412f-a2f1-3a46c8e42446",
+          "id": "087d8baf-cc82-4080-819e-c161a8cc0f7c",
           "prompt": "Câu 9",
           "options": [
             {
@@ -1414,7 +1414,7 @@
           "long": false
         },
         {
-          "id": "36149388-3790-4d35-acd9-86db9e3a384e",
+          "id": "f2bb7ed6-ddd6-4680-9fd4-fed4f8971966",
           "prompt": "Câu 10",
           "options": [
             {
@@ -1442,49 +1442,49 @@
       "audioPath": "",
       "items": [
         {
-          "id": "db7c5d5b-f6a1-4498-9055-3c121ce47a3f",
+          "id": "2a533ca4-6bef-49d0-8cfd-36b91f9e2cf0",
           "prompt": "Dịch câu 1 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "d2e5c056-f9db-4a2f-a81c-45e2a7407277",
+          "id": "2b5dc193-04dd-40f2-8027-226cdca2de0f",
           "prompt": "Dịch câu 2 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "d061d28b-8765-4640-9ffe-4fa8ffbb7eca",
+          "id": "50dc7726-e8cb-453a-85d4-e234a824b1af",
           "prompt": "Dịch câu 3 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "f15b3b4a-f263-4811-a30e-339cdf2d8254",
+          "id": "3efedf6f-f7d3-434a-b682-f6cc29c61524",
           "prompt": "Dịch câu 4 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "ed2d4af1-db0b-4d78-8978-bfc4b825788d",
+          "id": "890c950a-b6d9-414e-96c7-774d09936c6f",
           "prompt": "Dịch câu 5 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "279a0e57-45f2-4378-a6c5-f074cb50f787",
+          "id": "3b39f7d0-9220-4228-9e5d-da864587eb98",
           "prompt": "Dịch câu 6 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "170f9971-05cb-4cb1-8ccb-8f55e8bb4fdf",
+          "id": "53193a19-df26-4de9-836e-4bbb4679cc9f",
           "prompt": "Dịch câu 7 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "7875a5f4-d0cb-41f2-a08b-e0e6574de833",
+          "id": "b3f2f0da-78b5-4432-bbaf-39b9aad7481b",
           "prompt": "Dịch câu 8 sang tiếng Anh.",
           "options": [],
           "long": true
@@ -1499,19 +1499,19 @@
       "audioPath": "",
       "items": [
         {
-          "id": "a5692ad0-ddce-41f1-abc5-b5a7d4cc009a",
+          "id": "22e851cf-7cf8-4011-8392-3ad0ae2137d8",
           "prompt": "1. When you start a family, do you prefer to have a big or a small one? (6 points)\nSuggested Vocab:",
           "options": [],
           "long": true
         },
         {
-          "id": "1bb6548b-b98c-45d7-8d31-37d53c27a693",
+          "id": "9dbdf4d1-9156-4d9c-9fc2-9f3482954a69",
           "prompt": "2. What do you like to do when you go on a long coach trip/coach ride? (6 points)\nNote: a long coach trip/bus ride – chuyến đi xa bằng xe khách (Vd: về quê, đi du lịch Bãi Cháy, Sầm Sơn…)\nSuggested ideas",
           "options": [],
           "long": true
         },
         {
-          "id": "6fd6f906-1800-43ce-bf5e-ed0c6e8ee79f",
+          "id": "8bce8452-d489-41f4-a770-83a3b1c993b4",
           "prompt": "3. What do you usually do to prepare for an English test? (6 points)\nSuggested Vocabulary:",
           "options": [],
           "long": true

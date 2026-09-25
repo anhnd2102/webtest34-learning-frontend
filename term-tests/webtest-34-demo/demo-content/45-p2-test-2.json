@@ -1,0 +1,671 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "45",
+  "phase": 2,
+  "testNumber": 6,
+  "sourceHash": "07cd32410db26ce6d80ee646a0bae1c5044ead18eefa6e3b342a1d14df8686fa",
+  "durationMinutes": 70,
+  "groups": [
+    {
+      "id": "vocabulary-exercise-1-matching",
+      "title": "Vocabulary · Exercise 1 (Matching)",
+      "instructions": "1. Match the beginning of each sentence with the most suitable ending (a-e)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "03dac9ad-8cbd-4a3c-a755-e98960f98d3f",
+          "prompt": "1. Students always seem to have difficulty",
+          "options": [
+            {
+              "id": "a",
+              "label": "a. apparent."
+            },
+            {
+              "id": "b",
+              "label": "b. many difficulties."
+            },
+            {
+              "id": "c",
+              "label": "c. some important questions for the Party."
+            },
+            {
+              "id": "d",
+              "label": "d. in remembering this formula."
+            },
+            {
+              "id": "e",
+              "label": "e. considerable challenges for scientists."
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "8113d18c-289d-4c44-93ac-6ad7b5eac599",
+          "prompt": "2. The need to find replacement fuels poses",
+          "options": [
+            {
+              "id": "a",
+              "label": "a. apparent."
+            },
+            {
+              "id": "b",
+              "label": "b. many difficulties."
+            },
+            {
+              "id": "c",
+              "label": "c. some important questions for the Party."
+            },
+            {
+              "id": "d",
+              "label": "d. in remembering this formula."
+            },
+            {
+              "id": "e",
+              "label": "e. considerable challenges for scientists."
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "a4fbd41d-574f-4685-8425-d8b8422d21a7",
+          "prompt": "3. In the figures he presented, several errors were",
+          "options": [
+            {
+              "id": "a",
+              "label": "a. apparent."
+            },
+            {
+              "id": "b",
+              "label": "b. many difficulties."
+            },
+            {
+              "id": "c",
+              "label": "c. some important questions for the Party."
+            },
+            {
+              "id": "d",
+              "label": "d. in remembering this formula."
+            },
+            {
+              "id": "e",
+              "label": "e. considerable challenges for scientists."
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "e6c988db-bfc9-49b8-9183-73cba85bf2b5",
+          "prompt": "4. On their way across Antarctica, they experienced",
+          "options": [
+            {
+              "id": "a",
+              "label": "a. apparent."
+            },
+            {
+              "id": "b",
+              "label": "b. many difficulties."
+            },
+            {
+              "id": "c",
+              "label": "c. some important questions for the Party."
+            },
+            {
+              "id": "d",
+              "label": "d. in remembering this formula."
+            },
+            {
+              "id": "e",
+              "label": "e. considerable challenges for scientists."
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "78a4a6ae-a4a9-4b0e-a269-4e307040dd73",
+          "prompt": "5. The results of the opinion poll raised",
+          "options": [
+            {
+              "id": "a",
+              "label": "a. apparent."
+            },
+            {
+              "id": "b",
+              "label": "b. many difficulties."
+            },
+            {
+              "id": "c",
+              "label": "c. some important questions for the Party."
+            },
+            {
+              "id": "d",
+              "label": "d. in remembering this formula."
+            },
+            {
+              "id": "e",
+              "label": "e. considerable challenges for scientists."
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-exercise-2-missing-preposition",
+      "title": "Vocabulary · Exercise 2 (Missing Preposition)",
+      "instructions": "2. There is a preposition missing in each sentence. Add it in the right place (điền từ liền trước + giới từ hoặc chỉ giới từ).",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "1c6c57c9-1771-4dde-a45d-58fa35a17587",
+          "prompt": "6. The theatre has been slow to respond the challenges presented by movies.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1d4be70d-3889-4e10-84d5-61a1560cd550",
+          "prompt": "7. In this lecture I plan to deal the later novels of Charles Dickens.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9aafadd5-fdda-4a81-9d19-e3b085694d7d",
+          "prompt": "8. Changes in the frequency of droughts and floods pose a real challenge farmers.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "41590492-ef3a-4efc-9348-4aa82c22bb6f",
+          "prompt": "9. He thought for a long time but was unable to come with a solution.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e07d1040-e77a-4533-8d81-7fb6134e7a61",
+          "prompt": "10. This article raises the issue what people can do to protect forests.",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-exercise-3-word-choice",
+      "title": "Vocabulary · Exercise 3 (Word Choice)",
+      "instructions": "3. Choose the best word in italics to complete each sentence.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "fc4f489e-7eb5-4e6a-90a0-d4b91fa18b80",
+          "prompt": "11. It is sensible to unify/select/verify your results before publishing them.",
+          "options": [
+            {
+              "id": "unify",
+              "label": "unify"
+            },
+            {
+              "id": "select",
+              "label": "select"
+            },
+            {
+              "id": "verify",
+              "label": "verify"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "0ea3f68b-bbe3-4b56-a068-aab6e3ff266e",
+          "prompt": "12. Hip replacement is usually a simple medical application/procedure/behavior.",
+          "options": [
+            {
+              "id": "application",
+              "label": "application"
+            },
+            {
+              "id": "procedure",
+              "label": "procedure"
+            },
+            {
+              "id": "behavior",
+              "label": "behavior"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "d691ac27-14c0-4c0c-8deb-9c20293512d0",
+          "prompt": "13. Many students supplement/utilize/verify their scholarships by doing some part-time job.",
+          "options": [
+            {
+              "id": "supplement",
+              "label": "supplement"
+            },
+            {
+              "id": "utilize",
+              "label": "utilize"
+            },
+            {
+              "id": "verify",
+              "label": "verify"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "94e537e3-9b19-4b1d-8601-4513f69f2af4",
+          "prompt": "14. As the next step/behavior/application in our study, we plan to carry out interviews.",
+          "options": [
+            {
+              "id": "step",
+              "label": "step"
+            },
+            {
+              "id": "behavior",
+              "label": "behavior"
+            },
+            {
+              "id": "application",
+              "label": "application"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "e6f0c419-d480-4189-b477-c87d1bbbacf1",
+          "prompt": "15. Her aim is to form/design/function a radically different type of electric engine.",
+          "options": [
+            {
+              "id": "form",
+              "label": "form"
+            },
+            {
+              "id": "design",
+              "label": "design"
+            },
+            {
+              "id": "function",
+              "label": "function"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-exercise-4-word-formation",
+      "title": "Vocabulary · Exercise 4 (Word Formation)",
+      "instructions": "4. Fill in the missing words with a word formed from the root in brackets.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "c43662e9-db0a-48ac-b659-ec1506f6182c",
+          "prompt": "16. There has been an enormous ...... in aviation in recent years. (EXPAND)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0954e618-ffa7-433d-b83b-aeac95f5bd4d",
+          "prompt": "17. Economists are increasingly concerned that development should be...... (SUSTAIN)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f77bc231-ae11-47a0-86b8-67bf19a9b847",
+          "prompt": "18. There has been no ...... change in the patient's condition. (PERCEIVE)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "bcb74ca9-a5cb-466d-a6f6-f0752938f0ab",
+          "prompt": "19. The survey found that most people feel that modern life is becoming ...... difficult (INCREASE)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6de10530-7090-4a6e-88b1-f26c4634de84",
+          "prompt": "20. Industrial ...... has, of course, transformed people's working lives. (DEVELOP)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-exercise-5-word-choice",
+      "title": "Vocabulary · Exercise 5 (Word Choice)",
+      "instructions": "5. Choose the best word in italics to complete each sentence.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "d34fc136-dc1f-455d-b2fc-92f9cb407884",
+          "prompt": "21. The economy now seems to be recovering / amending.",
+          "options": [
+            {
+              "id": "recovering",
+              "label": "recovering"
+            },
+            {
+              "id": "amending",
+              "label": "amending"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "fdec8b61-0037-41e5-b2c1-7263dd58dfe2",
+          "prompt": "22. Many people now are converting / transforming to using solar power.",
+          "options": [
+            {
+              "id": "converting",
+              "label": "converting"
+            },
+            {
+              "id": "transforming",
+              "label": "transforming"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "dbf665aa-eae1-4446-963f-eaa13d297bcd",
+          "prompt": "23. Why do some people abandon / shift their families and disappear without a word?",
+          "options": [
+            {
+              "id": "abandon",
+              "label": "abandon"
+            },
+            {
+              "id": "shift",
+              "label": "shift"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "aeee04de-9745-4011-b794-ab509ed08c93",
+          "prompt": "24. It takes most people some time to alter / adjust to living in a new country.",
+          "options": [
+            {
+              "id": "alter",
+              "label": "alter"
+            },
+            {
+              "id": "adjust",
+              "label": "adjust"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "05d49d66-645a-481d-a816-a660c38eca02",
+          "prompt": "25. It is increasingly hard to adapt / maintain traditions in the face of progress.",
+          "options": [
+            {
+              "id": "adapt",
+              "label": "adapt"
+            },
+            {
+              "id": "maintain",
+              "label": "maintain"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-section-1-form-completion",
+      "title": "Listening · Section 1 (Form Completion)",
+      "instructions": "🔉 Complete the form below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+      "context": "",
+      "audioPath": "Test45/Phase2_Test2/Section 1.mp3",
+      "items": [
+        {
+          "id": "347cf006-beb8-4fa9-89fc-64b9eb0e0645",
+          "prompt": "Name of group: 1_______ (Salsa/Baseball)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "828b9d89-a314-48ba-be56-5bbe8af2783c",
+          "prompt": "Leader: 2_______ Jim",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e0381c67-354a-4df4-abed-607fe9a452f7",
+          "prompt": "Activity for beginners: 3_______ (Football/Skateboarding)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "264fef01-8d55-4b82-a69b-8b4b699330eb",
+          "prompt": "Session 4: 4_______ (Roller skating)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-section-2-3-plan-flowchart",
+      "title": "Listening · Section 2 & 3 (Plan & Flowchart)",
+      "instructions": "🔉 Label the plan and complete the flowchart below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER.",
+      "context": "",
+      "audioPath": "Test45/Phase2_Test2/Section 2 & 3.mp3",
+      "items": [
+        {
+          "id": "4434b052-2a7a-4f34-b6e7-b2d513df8345",
+          "prompt": "Plan Area 5: _______ (Dance Studios)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2040bd03-2905-4615-a86e-265733d0c223",
+          "prompt": "Plan Area 6: _______ (Changing rooms)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "cb1928a4-d546-4d15-aa13-7c5a309fba5e",
+          "prompt": "Plan Area 7: _______ (Tennis courts)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "23b3bdc5-b352-4e71-a3ad-29a8d30a2cc9",
+          "prompt": "Flowchart 8: Parents need to 8______ an authorisation form.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "edafc255-222a-4d33-970d-fd7c2d09add0",
+          "prompt": "Flowchart 9: Give forms to 9______ with a fee of £20.",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "32952f99-67d8-4efe-b4ae-06c1f6198d34",
+          "prompt": "Flowchart 10: You will receive your 10______ in the post.",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "reading-passage-2-the-chilean-mine-rescue",
+      "title": "Reading · Passage 2 (The Chilean Mine Rescue)",
+      "instructions": "You should spend about 20 minutes on Questions 14-27 based on Reading Passage 2 below.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "6cbfc9c0-2383-4753-8834-1ac3fd98fb51",
+          "prompt": "14. A description of the physical difficulties miners faced underground",
+          "options": [
+            {
+              "id": "A",
+              "label": "Paragraph A"
+            },
+            {
+              "id": "B",
+              "label": "Paragraph B"
+            },
+            {
+              "id": "C",
+              "label": "Paragraph C"
+            },
+            {
+              "id": "D",
+              "label": "Paragraph D"
+            },
+            {
+              "id": "E",
+              "label": "Paragraph E"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "0d952e53-0d82-47fe-bc30-632172245a4b",
+          "prompt": "15. An account of how the location of the trapped miners was confirmed",
+          "options": [
+            {
+              "id": "A",
+              "label": "Paragraph A"
+            },
+            {
+              "id": "B",
+              "label": "Paragraph B"
+            },
+            {
+              "id": "C",
+              "label": "Paragraph C"
+            },
+            {
+              "id": "D",
+              "label": "Paragraph D"
+            },
+            {
+              "id": "E",
+              "label": "Paragraph E"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "a5ca4a5b-d127-46b5-859b-56f79ff7e572",
+          "prompt": "Question 16: they could be 16_____ by emergency workers",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "31679c73-327c-420e-8fd1-0571938f67ce",
+          "prompt": "Question 17: by 17_____ emergency workers in the next few days",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f39cbf8a-3480-4fc0-8e73-ba70ca2673d0",
+          "prompt": "Question 18: As soon as the miners have been 18_____",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2bc5d260-c55d-418c-b428-cea87680f326",
+          "prompt": "Question 19: a specially 19_____ capsule will be sent down",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "db26900d-83eb-4531-ae56-4e4b6e6ac9e3",
+          "prompt": "Question 20: It is 20_____ that bringing all of the men back up will take up to forty hours",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b02c91c8-3793-4455-b58f-25b47aeae407",
+          "prompt": "21. The capsule structure is made of _______",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e8ef1927-68db-45e1-8601-8ee84f1ac1f0",
+          "prompt": "22. The diameter of the capsule is _______",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "e783b321-ae86-4999-ba2e-a93838cc4a08",
+          "prompt": "23. Interior equipped with _______",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f7bbeb01-cac9-4bbc-aa8d-75edb68b088b",
+          "prompt": "24. Emergency supply includes _______",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "86a65d74-6f1d-4d4a-8ad3-b52fb831a3ee",
+          "prompt": "25. Bottom escape mechanism _______",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "18dcc21d-4590-48e8-87e9-23184eb81264",
+          "prompt": "26. Wheels fitted on exterior: _______",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "bb6f9555-e256-4149-bfc1-ad89127b0c86",
+          "prompt": "27. Choose the most suitable title for the whole of Reading Passage 2:",
+          "options": [
+            {
+              "id": "A",
+              "label": "A. Mine rescue on verge of breakthrough"
+            },
+            {
+              "id": "B",
+              "label": "B. Journalists and rescuers race to Chile"
+            },
+            {
+              "id": "C",
+              "label": "C. Engineers save the day"
+            },
+            {
+              "id": "D",
+              "label": "D. The Phoenix will rise"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "writing-academic-essay-body-paragraphs",
+      "title": "Writing · Academic Essay Body Paragraphs",
+      "instructions": "Viết 2 đoạn thân bài (Body 1 & Body 2) cho bài luận IELTS Task 2 theo dàn ý gợi ý. Mỗi đoạn tối thiểu 60-70 từ. Bài làm được chấm bằng AI theo 4 tiêu chí chuẩn IELTS.",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "c6ec66f0-22aa-45f1-ad84-310797b494a1",
+          "prompt": "Đề bài: More and more people are migrating to cities in search of a better life, but city life can be extremely difficult. Explain some of the difficulties of living in a city. How can governments make urban life better for everyone?\n\nYêu cầu: Hãy viết đoạn thân bài 1 (Body 1) nêu ra các khó khăn khi sống ở thành phố lớn dựa trên dàn ý gợi ý sau (Tối thiểu 70 từ):\n- Topic sentence: Nêu khái quát cuộc sống thành phố gặp nhiều thách thức.\n- Ý 1: Chi phí sinh hoạt (cost of living) tại thành phố cao hơn nông thôn; chi phí nhà ở (housing costs) và thực phẩm (food expenses) đắt đỏ.\n- Ý 2: Các vấn đề xã hội (social problems) như tỷ lệ tội phạm (crime rates) và nghèo đói (poverty).\n- Ý 3: Chất lượng không khí kém (poor air quality) do ô nhiễm giao thông và mật độ dân cư quá đông đúc (overcrowded).",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "4d5ad54f-684d-455d-b05d-b661660f35ca",
+          "prompt": "Yêu cầu: Hãy viết đoạn thân bài 2 (Body 2) nêu ra các giải pháp mà chính phủ có thể thực hiện để cải thiện đời sống đô thị dựa trên dàn ý gợi ý sau (Tối thiểu 70 từ):\n- Topic sentence: Nêu khái quát chính phủ có thể triển khai một số giải pháp hiệu quả.\n- Ý 1: Xây dựng nhà ở giá cả phải chăng hoặc nhà ở xã hội (affordable / social housing) cho người có thu nhập thấp.\n- Ý 2: Cấm hoặc đánh phí phương tiện cá nhân (như phí tắc nghẽn - congestion charge tại London) và phát triển giao thông công cộng sạch (clean public transport).\n- Ý 3: Đầu tư phát triển các thị trấn vệ tinh / khu vực nông thôn (provincial towns & rural areas), chuyển dịch bớt việc làm và ngành công nghiệp để giảm áp lực cho đô thị lớn.",
+          "options": [],
+          "long": true
+        }
+      ]
+    }
+  ]
+}

@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 1,
-  "sourceHash": "a78a7d104762bd194a4ddb31b65712c27f5eb4fe5e9da49fe9e5c508c3fd4d3d",
+  "sourceHash": "ecb53c8a6370cf90e4108eaafd4759ff29b3ac24aebde17a7c58ee3d37e8c11e",
   "durationMinutes": 120,
   "groups": [
     {
@@ -14,37 +14,37 @@
       "audioPath": "",
       "items": [
         {
-          "id": "5d8d9d6c-d0be-44bf-83be-c060eaf087a0",
+          "id": "6d9a80df-e00c-4eb3-9275-b5dc8b265db6",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "b2c4238c-34b7-49bb-868c-a46149dc5e6c",
+          "id": "9548f679-5e86-4605-9145-36758fd86e28",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "7e7efb41-a90b-48d1-9397-60b6a7d94810",
+          "id": "ddd7cb27-78ee-4989-9a7e-2739b381d329",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "8beba231-9927-45d7-9815-747e73e6475c",
+          "id": "d9f0d2db-4246-4bb0-923c-86595c38c89e",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "7e55e313-fe57-4208-87e7-e6c901aa8cb2",
+          "id": "22acd1bd-6318-4e6b-8b47-1b14cd091d6c",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "ccdaa462-31ae-48a1-9c5f-dc5d749a85c1",
+          "id": "c1bf6721-b82a-4149-97e5-5462a09ed23d",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
@@ -59,43 +59,43 @@
       "audioPath": "",
       "items": [
         {
-          "id": "4b34f628-71f2-40b5-8e16-45f2c50f0547",
+          "id": "83c0028e-b162-4c1e-9183-fb0183c9755d",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "a7efa834-62f9-4ac1-82c8-22719c8afda3",
+          "id": "98bfe433-5438-41f7-9125-22ca533d7527",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "4e9c46b2-fe5c-4993-9c25-9a504643272a",
+          "id": "f2ce2e24-9a30-4fd2-b9c6-2d891ccf37cc",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "1b038cad-3e1a-4ac2-852a-9637b278a3d7",
+          "id": "60c5257d-2151-4f4f-9945-75d3015f2a8d",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "b64a054d-8522-4430-ad08-6ba2eb4735d4",
+          "id": "054ad665-e577-4625-aceb-0dbadd712d6b",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "9852debc-60ed-4db8-b426-84e969713696",
+          "id": "68b5f19a-31d6-4b48-b070-6a596399be4f",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "d21ff4d8-80f0-4552-9e09-f059594e7822",
+          "id": "574c14ee-9539-4eef-aace-66e8bbd64f55",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
@@ -110,55 +110,55 @@
       "audioPath": "",
       "items": [
         {
-          "id": "7a65a0ea-4e03-4f23-bd49-093194920212",
+          "id": "8150bfe7-9b08-49b3-ac6f-fb01da1b338f",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "acd2ee21-c18c-4bbb-be7b-0e6b6d9c2e8b",
+          "id": "55dceacf-ea64-45fe-9d2f-21db979a7e1c",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "f36066a4-4a53-4ba7-911a-83eceee4c219",
+          "id": "cf37e3d7-1feb-4f9a-974f-b08bfce6b6b9",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "16777965-b041-4d99-9ee6-10dbe2356cfc",
+          "id": "5a8b4981-f570-4119-bad2-28f034f28b92",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "959fd55b-046e-4008-840a-b117d72230ad",
+          "id": "17983dde-b851-40bc-bb8f-a14f659fe016",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "6cb96af2-c789-4d03-b31e-03a0b6492cb5",
+          "id": "f501cda6-ea14-4030-ae08-7d69a9c2cfc7",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "e2e044a6-e931-4793-ac26-ee20524338b6",
+          "id": "cd992bd2-de99-4180-8de4-363b89113e1a",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "f1c2540b-524a-40f1-a37b-f9facbfa3097",
+          "id": "818705d8-e4ba-4fd2-9d0b-c3dd9caa1208",
           "prompt": "Chỗ trống (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "589b0c71-a2d9-4faf-a1ff-955e0a5fc7b1",
+          "id": "b055d9bb-77fc-40fb-8edf-0f8dfbe0da4d",
           "prompt": "Chỗ trống (9)",
           "options": [],
           "long": false
@@ -173,31 +173,31 @@
       "audioPath": "assets/demo-audio/45/01. Phase 1 Test 1 Dictation.mp3",
       "items": [
         {
-          "id": "77f34b56-f5e0-45b5-8638-7522ef227a65",
+          "id": "e8e8dadf-aa52-4e4b-97dc-72affc029155",
           "prompt": "Câu nghe 1",
           "options": [],
           "long": false
         },
         {
-          "id": "be3a938e-5dac-4e26-81c3-1e9903663724",
+          "id": "95179580-e378-45f9-9cf7-026d91986963",
           "prompt": "Câu nghe 2",
           "options": [],
           "long": false
         },
         {
-          "id": "5a7efd9c-63d6-49a7-8833-c2d8d04479d9",
+          "id": "72716dbb-bdcf-4d3e-a337-6a8146d6ec26",
           "prompt": "Câu nghe 3",
           "options": [],
           "long": false
         },
         {
-          "id": "e439f8a5-1650-4b7d-88fd-270c731b5086",
+          "id": "df7cd198-499a-4eec-80d1-8b65a734ae06",
           "prompt": "Câu nghe 4",
           "options": [],
           "long": false
         },
         {
-          "id": "0305d8d7-a6f2-4377-bbb3-19dcf116fd62",
+          "id": "d1d467bb-473d-48ed-8321-2063cbc260c2",
           "prompt": "Câu nghe 5",
           "options": [],
           "long": false
@@ -212,31 +212,31 @@
       "audioPath": "assets/demo-audio/45/02. Phase 1 Test 1 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "f89c9a60-93f0-4c9e-9bb9-7eda70ce7c3d",
+          "id": "d3c93144-49a0-4a5f-96f0-e52fedead2b5",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "ab8a2068-9049-42a4-b70a-2dca969248a5",
+          "id": "50020c70-e6ff-45f4-aacb-e40cce1d7ef9",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "d3c2325c-ca2b-4004-8565-775bbb245cfe",
+          "id": "9f3f100e-fddf-47b1-b34d-e8ba61d3f341",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "d01d3e14-d256-490d-89fb-882f94d73a3e",
+          "id": "33206a99-2551-4593-ab61-10cf3432a5b4",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "771ab24e-6180-47c8-8f27-ec8d5b8598df",
+          "id": "e4b0399c-47fc-40e1-9673-a0061c678c94",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
@@ -251,31 +251,31 @@
       "audioPath": "assets/demo-audio/45/02. Phase 1 Test 1 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "05b93ffe-d6bc-42f8-a0be-b2d3c4886693",
+          "id": "d46080a3-5b37-4d3b-bdfb-980199c7c662",
           "prompt": "6. Câu hỏi 6",
           "options": [],
           "long": false
         },
         {
-          "id": "438cee49-a8f4-4575-b896-76842658a839",
+          "id": "823004aa-0759-483f-91e1-09a6b3c5aa5e",
           "prompt": "7. Câu hỏi 7",
           "options": [],
           "long": false
         },
         {
-          "id": "6af6d447-246a-497d-aee7-47eece3c88b7",
+          "id": "ba8f3042-d655-4864-a7aa-7a54119879c0",
           "prompt": "8. Câu hỏi 8",
           "options": [],
           "long": false
         },
         {
-          "id": "75abcc0b-0806-4121-9f37-335888f3fb1c",
+          "id": "99a5dfad-970e-4fb6-af1a-b199950a2a13",
           "prompt": "9. Câu hỏi 9",
           "options": [],
           "long": false
         },
         {
-          "id": "93288fe2-7bfd-41db-826c-72e604df20b0",
+          "id": "15413b36-7eaf-4393-a7e0-b78c06330f0b",
           "prompt": "10. Câu hỏi 10",
           "options": [],
           "long": false
@@ -290,31 +290,31 @@
       "audioPath": "",
       "items": [
         {
-          "id": "4cdc1625-a9f6-49c3-bc74-d9f23406d542",
+          "id": "aff9bdd0-e8eb-4844-b5fa-9bf023dafd4f",
           "prompt": "1. The book is mainly concerned with the problem of policing the internet",
           "options": [],
           "long": false
         },
         {
-          "id": "5d67f2e5-315a-4f81-b2b0-144fb80fc12b",
+          "id": "899bb9e6-6ebe-435e-b6ca-3f6186199c66",
           "prompt": "2. The work of the Institute is not only devoted to cancer research.",
           "options": [],
           "long": false
         },
         {
-          "id": "b8c1d84a-524e-48a4-88c7-82e7fdd1e276",
+          "id": "1dfbe5b7-3490-4c35-8b22-74eb6077700f",
           "prompt": "3. We tried to find a new way of understanding the data.",
           "options": [],
           "long": false
         },
         {
-          "id": "60edf5d8-1970-4faf-9dc1-296524fefe3a",
+          "id": "9e7df653-abbf-4a8a-98bd-765321c2ba1c",
           "prompt": "4. Almost every school in the country had reported problems with the new system",
           "options": [],
           "long": false
         },
         {
-          "id": "301580a5-a922-48e3-a3be-95c5f6399f81",
+          "id": "eaf70132-1d36-47cb-9019-6a98c1053fdc",
           "prompt": "5. Basically, we believe we have demonstrated a significant link between the two events.",
           "options": [],
           "long": false
@@ -329,31 +329,31 @@
       "audioPath": "",
       "items": [
         {
-          "id": "6cc6b5eb-cce2-4576-bf46-05699419e583",
+          "id": "f7239798-ca34-435b-8a00-8404666d9773",
           "prompt": "6. Mass tourism has led to the _______________ of many local habitats. (DESTROY)",
           "options": [],
           "long": false
         },
         {
-          "id": "f4476974-715c-40e3-b0e3-dff00619bd97",
+          "id": "b9f3545e-661a-4f59-a29f-fb168cd3c044",
           "prompt": "7. The singer gained _______________ worldwide after releasing her hit song. (RECOGNIZE)",
           "options": [],
           "long": false
         },
         {
-          "id": "d594e917-6af8-4e37-8cf8-2771199f1e7d",
+          "id": "1e2dfb24-7c38-40da-8ed4-f6749bd4f1e0",
           "prompt": "8. Playing sports is a great way to keep yourself _______________ and energetic. (HEALTH)",
           "options": [],
           "long": false
         },
         {
-          "id": "b5328b6d-dcf4-4db8-951d-d0eb41a8a439",
+          "id": "710cbd4b-3362-460f-aa3f-c7c31e8e9ffe",
           "prompt": "9. Some locals are very _______________ and always welcome visitors with a smile. (HOSPITALITY)",
           "options": [],
           "long": false
         },
         {
-          "id": "9396ad5a-e648-4c77-8db2-b995c9f1ab1e",
+          "id": "5c26a852-5836-4828-9875-ac0d6faa369d",
           "prompt": "10. The rapid _______________ of the city has caused significant traffic jams. (DEVELOP)",
           "options": [],
           "long": false
@@ -368,49 +368,49 @@
       "audioPath": "",
       "items": [
         {
-          "id": "042e6f61-ebcf-4add-99c9-43ccc976e602",
+          "id": "a3831b91-e72a-41fa-851b-36881aaeb32f",
           "prompt": "11. The study lacks solid __________ to support its conclusion that radiation caused the problem.",
           "options": [],
           "long": false
         },
         {
-          "id": "caac2fe8-b70f-458c-a40d-4fa9f03c2c82",
+          "id": "e698620f-4bd5-43b6-85d6-8e8d521c14b7",
           "prompt": "12. Increasing pollution levels pose a __________ to the stability of the local ecosystem.",
           "options": [],
           "long": false
         },
         {
-          "id": "470aa91c-da74-4539-9df3-1bca0cebe8cf",
+          "id": "95adf896-fb94-4222-a71e-4502ab508ad9",
           "prompt": "13. The political motives for the government's actions are beyond the __________ of this essay.",
           "options": [],
           "long": false
         },
         {
-          "id": "e071c97a-da55-45df-8ce8-868d54101c92",
+          "id": "0891c5e2-fd9c-4812-adc6-eb657e787267",
           "prompt": "14. The hospital puts a lot of __________ on training nurses to ensure high-quality care.",
           "options": [],
           "long": false
         },
         {
-          "id": "a7bb00b0-aed7-4209-8d74-92ce382af449",
+          "id": "f528ed63-7ec2-4b27-881d-6a507bf0a9ac",
           "prompt": "15. I play sports like football or tennis regularly to keep in __________.",
           "options": [],
           "long": false
         },
         {
-          "id": "9c52479c-60fc-4990-bb07-2f3be758d6f6",
+          "id": "ee77be3b-f237-4772-b68c-55cc950c7c98",
           "prompt": "16. Up until the 1980s, actors did not care much about their public __________.",
           "options": [],
           "long": false
         },
         {
-          "id": "9ac85c06-0232-439c-9e75-4f81c3a1b3c8",
+          "id": "0dcb3b2e-6685-461d-9b24-f58ece4ae856",
           "prompt": "17. International students __________ for nearly 80% of the university's total population.",
           "options": [],
           "long": false
         },
         {
-          "id": "dbd32405-1ef3-40a6-a8c9-5746c913ae68",
+          "id": "b1f6e135-bb7c-4888-bfec-959a3d4f7ee6",
           "prompt": "18. Experts recommend playing sports on a regular __________.",
           "options": [],
           "long": false
@@ -425,19 +425,19 @@
       "audioPath": "",
       "items": [
         {
-          "id": "ac05ef83-112b-429c-8793-7a57a432e776",
+          "id": "4df25f56-d9db-45e4-aa88-091a5ac16fb1",
           "prompt": "Question 1: In a few words, tell me about a close friend of yours\nCues:\n+ Who is he/she?\n+ How did you know each other?\n+ What do you have in common?",
           "options": [],
           "long": true
         },
         {
-          "id": "38452e88-2c9a-43f7-8aae-2f55c75b8483",
+          "id": "386d7c18-6bb1-4482-88c8-44437b54c26e",
           "prompt": "Question 2: Describe your last holiday\n+ When was it?\n+ Who did you go with?\n+ Did you enjoy it?",
           "options": [],
           "long": true
         },
         {
-          "id": "68e2d8a7-bd75-45fa-86f7-6cdf4bde13b8",
+          "id": "6f9a1ca2-95a9-4552-94a2-e7fa92619e6a",
           "prompt": "Question 3: Tell me about your English studying journey\nCues:\n+ How long have you been studying English?\n+ What are the problems you’ve had?\n+ What is the most enjoyable part during this journey?\n+ How do you often self-study?",
           "options": [],
           "long": true

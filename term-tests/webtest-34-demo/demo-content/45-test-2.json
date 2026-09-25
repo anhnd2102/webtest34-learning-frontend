@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 2,
-  "sourceHash": "c670d9d5f4e36fba2348414c9ce38a17dd43ee4920c2cdd712eeaac5a1f221ed",
+  "sourceHash": "7bc617d95bb79b3b28c32b32211af0d4889a424bf3fcd4dde4d6152fa13ad03a",
   "durationMinutes": 120,
   "groups": [
     {
@@ -14,49 +14,49 @@
       "audioPath": "",
       "items": [
         {
-          "id": "7c87583b-dcc1-45fc-b27a-3db29dadc175",
+          "id": "e4ee8ea1-1f3d-4a29-8714-79083335470e",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "23c898ad-d799-4021-bb6b-5019e69f341c",
+          "id": "712a8a61-6bba-4352-a366-caf9a76fd608",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "8b5d5624-4432-46ea-b8df-1c0829260d6b",
+          "id": "b0313b3f-29c9-4e1c-9438-87fef5976bcd",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "a2b8833b-d49d-40a3-9c31-1f523576a906",
+          "id": "87080896-3d30-4d98-aefb-20c1b4d8414c",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "be7e0942-a3bd-40a9-b701-b338ce98052c",
+          "id": "700ab9aa-c0a3-4586-acf9-b3ddcf4c79e3",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "705471a0-4fe6-4c42-aeba-4acb1983b716",
+          "id": "d7449222-d1cf-4b43-959b-0d4302767536",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "80a2f8a3-ce07-41ae-a6a4-d96e939c07f4",
+          "id": "12ba7527-f58d-40eb-b813-41b15e67ae7b",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "2b8aeaa9-db46-4c5c-b3a8-e8c91d785dac",
+          "id": "8da14d44-0e28-4469-8d1f-235d74c99083",
           "prompt": "Chỗ trống (8)",
           "options": [],
           "long": false
@@ -71,31 +71,31 @@
       "audioPath": "",
       "items": [
         {
-          "id": "82e048c3-200f-46db-834a-13f1293087a0",
+          "id": "75997a96-0218-467d-8831-527e222952d4",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "5053ea82-35d9-4fe3-a5df-3353d6f0ff80",
+          "id": "b976c95b-be3d-48a3-aa3e-8c31890e6129",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "b2871ed3-0857-4add-b892-fa83aee401cb",
+          "id": "7b36d75e-b129-4877-9b1c-c84574ae92a9",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "f72c30b1-9ee8-4727-91e5-ad8d19f25924",
+          "id": "9090dfb8-d8b4-4afc-bdf4-15be476d53d0",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "95755e0a-02b0-48b9-bddc-737e77ab60af",
+          "id": "85c0df6d-1959-4648-a825-07da935bcbf0",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
@@ -110,61 +110,61 @@
       "audioPath": "",
       "items": [
         {
-          "id": "409969de-e42f-43e0-bafe-cabf9faefb12",
+          "id": "60abf20b-7157-4772-883c-30f8a61bba81",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "cf942ca0-4d1e-4e7a-8577-12eceda4040b",
+          "id": "c6d5fb4f-8cbd-41bd-b67f-a696738da638",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "4f88946b-c8cc-46f6-a009-9bd76126449b",
+          "id": "dd6e1ba5-65b4-4573-ae03-0e784cf0c2df",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "72d8bee8-2a06-4455-892d-b1f05868ef4e",
+          "id": "e524a5d9-9874-4a4d-ab9a-e6dbd5c459fc",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "8f14178d-02cb-421e-90c9-75d2025b0d83",
+          "id": "96437645-78da-492a-9a63-8316f70a9ba9",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "a0534205-75f5-4957-a403-266f13004474",
+          "id": "8e91c3c4-b7d0-46e3-bcd7-1a0ecd6935c1",
           "prompt": "Chỗ trống (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "7e903c50-f6bb-408c-ae04-35fea4e8b63d",
+          "id": "2cb6d2d6-ee5f-406e-a5c2-f02b0e9326c1",
           "prompt": "Chỗ trống (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "c5235cf0-d5e9-4ef1-93ee-bf1f53bd969a",
+          "id": "8de06ce4-968c-4b0a-be39-94b94438a484",
           "prompt": "Chỗ trống (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "81641928-cf47-402c-b813-936eab23a47c",
+          "id": "73a2991b-bb44-448e-b380-a534b7944980",
           "prompt": "Chỗ trống (9)",
           "options": [],
           "long": false
         },
         {
-          "id": "c8b03feb-6985-4ef7-ae1d-17e9ad203905",
+          "id": "7bcd8937-b1cb-4163-89a1-083d742f3c1c",
           "prompt": "Chỗ trống (10)",
           "options": [],
           "long": false
@@ -179,61 +179,61 @@
       "audioPath": "",
       "items": [
         {
-          "id": "0b00301c-b76c-4943-a86e-ffebe47c0c0e",
+          "id": "40fbbd00-6408-4e2a-b5d3-e393871a909d",
           "prompt": "Câu 1: 1. My father likes the classical music and listens to it all the time.",
           "options": [],
           "long": false
         },
         {
-          "id": "b54e9dda-972d-465c-81f9-9f3480e35903",
+          "id": "8a0b6969-2adb-488a-9b7a-86d27087cc4e",
           "prompt": "Câu 2: 2. I saw a man sitting in a restaurant. A woman came and joined him, but the man got up and left without speaking to her.",
           "options": [],
           "long": false
         },
         {
-          "id": "d3f6602f-473b-452a-9a82-69c14c2080b8",
+          "id": "0266d9cc-74ff-4d4e-a2ab-2028f5d4a650",
           "prompt": "Câu 3: 3. Sun was shining and it was a lovely day.",
           "options": [],
           "long": false
         },
         {
-          "id": "c372cf13-4e9e-4149-adfa-641cd9fe05d8",
+          "id": "ed37aa37-307c-45c0-a102-8191004f24c9",
           "prompt": "Câu 4: 4. I can play piano",
           "options": [],
           "long": false
         },
         {
-          "id": "ff3fe271-0118-48b5-95e9-ff7e669c4133",
+          "id": "f2d4c2fe-7bf1-4c1c-93d5-1a4c1e4548fd",
           "prompt": "Câu 5: 5. I come from United Arab Emirates.",
           "options": [],
           "long": false
         },
         {
-          "id": "69d62b7a-4c6f-467e-80b1-b6bca6db5340",
+          "id": "4b4d2949-a08e-4c4d-ba38-5f5499c29f07",
           "prompt": "Câu 6: 6. I’ve applied to study at the university of Edinburgh.",
           "options": [],
           "long": false
         },
         {
-          "id": "0c1aa9d6-dfc7-48d0-8301-d7133b3ca409",
+          "id": "d11ea546-0d26-43f1-acb1-36efaac77a1c",
           "prompt": "Câu 7: 7. I usually go to work by the bus.",
           "options": [],
           "long": false
         },
         {
-          "id": "16d7da7d-f21c-4621-a32a-1b336ab9e53f",
+          "id": "6669adec-2911-4656-a893-136d6451c21e",
           "prompt": "Câu 8: 8. My husband is doctor.",
           "options": [],
           "long": false
         },
         {
-          "id": "b9c3ee2e-3ff3-4701-8b77-9475a2ce7d0c",
+          "id": "1d8a86f3-bfc5-405c-8788-9d6ba2d6177f",
           "prompt": "Câu 9: 9. Sorry I’m late – car wouldn’t start this morning",
           "options": [],
           "long": false
         },
         {
-          "id": "5ab67205-504f-4621-9175-79bb56169eb5",
+          "id": "d0bdc743-8ac3-4396-b575-a9b646da6e43",
           "prompt": "Câu 10: 10. I’m going to start a cruise down river Nile",
           "options": [],
           "long": false
@@ -248,31 +248,31 @@
       "audioPath": "assets/demo-audio/45/01. Phase 1 Test 2 Dictation.mp3",
       "items": [
         {
-          "id": "4e3d47a9-32dd-443d-ad9d-e2d4a842648a",
+          "id": "e083a9f9-0f17-4a30-af47-8c7043d6b214",
           "prompt": "Câu nghe 1",
           "options": [],
           "long": false
         },
         {
-          "id": "1394fa9e-15b9-402b-8e7d-888f8d0e3dae",
+          "id": "7f24a3c2-b1f5-424c-a332-4c7a6968ecbb",
           "prompt": "Câu nghe 2",
           "options": [],
           "long": false
         },
         {
-          "id": "719755d4-3d44-4a11-ad83-add4596152f3",
+          "id": "c2a79b07-e1f1-459c-a4eb-c9eee98c51bc",
           "prompt": "Câu nghe 3",
           "options": [],
           "long": false
         },
         {
-          "id": "0c1c4df1-d404-4de2-8d04-636052263a50",
+          "id": "779b9e69-bbaa-4c6d-ae92-7d9edf056de3",
           "prompt": "Câu nghe 4",
           "options": [],
           "long": false
         },
         {
-          "id": "53a1cd9c-1459-4d3d-b0da-97efa8e6ab07",
+          "id": "3aa7f9a2-f521-4668-8f0f-2f73577137b3",
           "prompt": "Câu nghe 5",
           "options": [],
           "long": false
@@ -287,31 +287,31 @@
       "audioPath": "assets/demo-audio/45/02. Phase 1 Test 2 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "eb2339ce-72a6-4884-9fd7-568494c9c6d7",
+          "id": "22cbd1b3-225c-49ee-aaf2-c033069a2519",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "a125a354-8045-4ad4-8a34-81a1f2896ee6",
+          "id": "f8436132-76a0-408e-b374-f590e95ac081",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "d133cbf2-937a-483d-a384-bdea0b87e2a4",
+          "id": "69d38b47-2376-483b-b08e-9c6cab6785f6",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "54df2720-b6e9-470e-bb4e-f4981ce0e093",
+          "id": "6f04b39f-b490-4c74-8569-81a9d700bb42",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "a1251784-a656-4298-8df4-0d0ecb03ab9a",
+          "id": "9d20e4eb-bf9e-4771-9289-59b49106b94d",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
@@ -326,31 +326,31 @@
       "audioPath": "assets/demo-audio/45/02. Phase 1 Test 2 Comprehension Questions.mp3",
       "items": [
         {
-          "id": "1e916ecc-cb07-47be-b90e-d909c7a9e3d1",
+          "id": "81b06ddd-e2e3-439e-98b1-24c8cff1cc62",
           "prompt": "6. 6",
           "options": [],
           "long": false
         },
         {
-          "id": "be36cd96-25f0-44d1-ac71-77b5a427516f",
+          "id": "051de313-21e6-4332-b126-ed50ac6c5eac",
           "prompt": "7. 7",
           "options": [],
           "long": false
         },
         {
-          "id": "2ea6acff-0133-472d-89b1-3ae50ef2b673",
+          "id": "22fc16f6-4a54-4bbb-88f6-686f3fcf839b",
           "prompt": "8. 8",
           "options": [],
           "long": false
         },
         {
-          "id": "3731b177-80ea-4513-80d2-de3906ca048e",
+          "id": "e3820f0e-384b-4c9a-850f-094259ec8f6d",
           "prompt": "9. 9",
           "options": [],
           "long": false
         },
         {
-          "id": "9a7fa6d6-0cc3-44d3-9605-bfd3d6273272",
+          "id": "00d8b215-0577-4575-9f54-0fb80b815690",
           "prompt": "10. 10",
           "options": [],
           "long": false
@@ -365,97 +365,97 @@
       "audioPath": "",
       "items": [
         {
-          "id": "85178250-01b0-4936-a423-2d83280938af",
+          "id": "91e84055-8ae7-42b0-ae01-a8b5c83ff134",
           "prompt": "2. Write the opposite of the adjectives/ adverbs in italics",
           "options": [],
           "long": false
         },
         {
-          "id": "306f77a2-fdb5-46b0-b2df-a16012d2488f",
+          "id": "383f8ae4-992b-4567-a85f-da998ef7b2b0",
           "prompt": "5. The test results were accurate.",
           "options": [],
           "long": false
         },
         {
-          "id": "09360592-76a6-4d12-805d-6e83070659b7",
+          "id": "e4726fe5-169d-4761-9830-556e2d334881",
           "prompt": "6. At this stage, we only have a rough idea of the total tuition fees.",
           "options": [],
           "long": false
         },
         {
-          "id": "303e27f0-1a99-4ed3-911e-0cb2e4d22b91",
+          "id": "c67cf2c3-e9cd-4d19-9294-303620108ba3",
           "prompt": "7. The instructions for online registration are very simple.",
           "options": [],
           "long": false
         },
         {
-          "id": "9d96b92e-6ee9-4a15-af4d-6074a58f27ad",
+          "id": "37479229-b9d3-4659-a4aa-1ce6fa0ac869",
           "prompt": "8. The teacher played a significant role in motivating the students.",
           "options": [],
           "long": false
         },
         {
-          "id": "b860be78-8ef3-42cc-802e-0dc9391320f4",
+          "id": "e966736c-d49a-4f1f-906d-b17e4a517a97",
           "prompt": "9. There were roughly 200 students in the in-class lecture.",
           "options": [],
           "long": false
         },
         {
-          "id": "b709ddd4-5875-4fd5-b637-210d27d1e368",
+          "id": "7863ce21-1fdc-430f-8087-54dd77487bff",
           "prompt": "10. We checked the data and initially found some small errors in the calculations.",
           "options": [],
           "long": false
         },
         {
-          "id": "f3fcf4fe-3c56-496c-aae0-15fee231b68f",
+          "id": "7b399cb3-3379-43c1-896d-cc44ddc5ed96",
           "prompt": "11. The temperature was exactly one degree higher than yesterday.",
           "options": [],
           "long": false
         },
         {
-          "id": "c2842b79-d3d9-4d17-b6c6-a122f5fca40f",
+          "id": "8623f5a6-b674-44f6-bd95-8d2ea4125efd",
           "prompt": "12. The problem is specifically caused by work fatigue.",
           "options": [],
           "long": false
         },
         {
-          "id": "6f9826fb-9915-474e-a703-7e7a9aef0d77",
+          "id": "54311b8e-ae89-4142-b61a-9c8e9bca51b5",
           "prompt": "Chỗ trống (14)",
           "options": [],
           "long": false
         },
         {
-          "id": "5fd7a582-9707-4171-ae17-b048403a2587",
+          "id": "fd3183bd-0feb-452d-91bc-bb9b8745a46c",
           "prompt": "Chỗ trống (15)",
           "options": [],
           "long": false
         },
         {
-          "id": "e31cc5e8-95b2-4740-82b8-14419a942e28",
+          "id": "ba5716d9-7617-4d14-8df6-db79b71edd78",
           "prompt": "Chỗ trống (16)",
           "options": [],
           "long": false
         },
         {
-          "id": "ac2ccadb-d1f9-41a5-911f-f7e137305e7a",
+          "id": "f95c4ef4-acc5-40e6-ab7d-def59b7c0581",
           "prompt": "Chỗ trống (17)",
           "options": [],
           "long": false
         },
         {
-          "id": "c6e66457-8c92-4892-8cff-54bec45d4cee",
+          "id": "5fa1779b-e974-412c-8ced-1756c20d48e8",
           "prompt": "Chỗ trống (18)",
           "options": [],
           "long": false
         },
         {
-          "id": "1c43dfc6-b82c-44a2-9d7c-0cfd732a7bee",
+          "id": "13bc275f-7925-45ba-b7df-17f5acb00d00",
           "prompt": "Chỗ trống (19)",
           "options": [],
           "long": false
         },
         {
-          "id": "c0ade303-9423-47e5-bc53-75b1b2313489",
+          "id": "cd73372f-af23-4ec9-a661-cb34da7e5a6f",
           "prompt": "Chỗ trống (20)",
           "options": [],
           "long": false
@@ -470,19 +470,19 @@
       "audioPath": "",
       "items": [
         {
-          "id": "dbfd0f35-2553-4d22-a499-dd7c0135ba36",
+          "id": "62dd8db0-ca2b-46c4-aaab-2a11c2cb2ba9",
           "prompt": "Question 1: Write two intentions about your future job AND/OR your education.",
           "options": [],
           "long": true
         },
         {
-          "id": "c3462657-a7ad-4f50-8ace-34dfe36981b4",
+          "id": "fd43fd53-4bc6-4b3a-85b5-125c3df9b5b4",
           "prompt": "Question 2: Do you think Internet access will be more common in the future? Why?",
           "options": [],
           "long": true
         },
         {
-          "id": "5613850e-334a-41fb-a2fa-d84af505bb88",
+          "id": "9eca2c0f-c1f9-4fb3-8b9f-720b2f3b72c1",
           "prompt": "Question 3: What changes do you think will happen to the workplace in the future? (List at least 2 changes)",
           "options": [],
           "long": true
