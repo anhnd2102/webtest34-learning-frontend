@@ -426,7 +426,7 @@
 (() => {
   const demoCourse = new URLSearchParams(location.search).get('demoCourse');
   if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs').then(module => module.mount(demoCourse)).catch(() => {
+    import('./content-preview.mjs?rev=20260923-utf8-result-v1').then(module => module.mount(demoCourse)).catch(() => {
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại.';
     });
     return;

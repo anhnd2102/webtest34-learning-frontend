@@ -57,6 +57,34 @@ export function resultDetailsHtml(result, definition) {
   }).join('');
 }
 
+export function withLocalGroupLabels(definition, form) {
+  if (!definition || !Array.isArray(definition.blocks) || !Array.isArray(form?.groups)) return definition;
+  return {
+    ...definition,
+    blocks: definition.blocks.map((block, index) => {
+      const local = form.groups[index];
+      if (!local) return block;
+      return {
+        ...block,
+        title: local.title || block.title,
+        instructions: local.instructions || block.instructions
+      };
+    })
+  };
+}
+
+export function mapAnswerToDefinitionValue(formItem, definitionItem, value) {
+  if (typeof value !== 'string' || !Array.isArray(formItem?.options) || !Array.isArray(definitionItem?.options)) return value;
+  const localIndex = formItem.options.findIndex(option => optionId(option) === value);
+  return localIndex < 0 ? value : (definitionItem.options[localIndex]?.id || value);
+}
+
+export function mapAnswerFromDefinitionValue(formItem, definitionItem, value) {
+  if (typeof value !== 'string' || !Array.isArray(formItem?.options) || !Array.isArray(definitionItem?.options)) return value;
+  const definitionIndex = definitionItem.options.findIndex(option => option?.id === value);
+  return definitionIndex < 0 ? value : optionId(formItem.options[definitionIndex]);
+}
+
 export function clozeSegments(text, ids, numbered = true) {
   const pattern = numbered ? /\((\d+)\)\s*[_\.\u2026]{2,}/g : /[_\.\u2026]{3,}/g;
   const segments = [];
@@ -226,7 +254,8 @@ export async function mount(course) {
     if (defItems.length && defItems.length === formItems.length) {
       for (let i = 0; i < defItems.length; i++) {
         const val = state.answers[formItems[i].id];
-        responses[defItems[i].itemVersionId] = typeof val === 'string' ? val : (val ?? '');
+        const answer = typeof val === 'string' ? val : (val ?? '');
+        responses[defItems[i].itemVersionId] = mapAnswerToDefinitionValue(formItems[i], defItems[i], answer);
       }
     } else {
       for (const item of formItems) {
@@ -244,7 +273,7 @@ export async function mount(course) {
       for (let i = 0; i < defItems.length; i++) {
         const itemVerId = defItems[i].itemVersionId;
         if (serverDraft[itemVerId] !== undefined) {
-          state.answers[formItems[i].id] = serverDraft[itemVerId];
+          state.answers[formItems[i].id] = mapAnswerFromDefinitionValue(formItems[i], defItems[i], serverDraft[itemVerId]);
         }
       }
     }
@@ -801,7 +830,7 @@ export async function mount(course) {
             </div>
           </div>
         `}
-        <div class="learning-result-grid">${resultDetailsHtml(result, learningState.definition)}</div>
+        <div class="learning-result-grid">${resultDetailsHtml(result, withLocalGroupLabels(learningState.definition, form))}</div>
       `;
       card.querySelectorAll('[data-result-details]').forEach(button => button.addEventListener('click', () => {
         const details = card.querySelector(`#${button.dataset.resultDetails}`);
