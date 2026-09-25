@@ -160,7 +160,23 @@ export function groupSections(form) {
 
 export async function mount(course) {
   if (!['03','34','45'].includes(course)) throw new Error('Unknown demo course');
-  const response = await fetch(new URL(`./demo-content/${course}.json`, import.meta.url));
+  const config = window.WEBTEST_34_PREVIEW_CONFIG || {};
+  const hashParams = new URLSearchParams(location.hash.replace(/^#/, ''));
+  const queryParams = new URLSearchParams(location.search || '');
+  const testToken = hashParams.get('test') || queryParams.get('test') || config.LEARNING_TEST_TOKEN || '';
+
+  let testNum = Number(queryParams.get('testNum')) || 1;
+  const tokenMatch = testToken.match(/-0*([1-9]\d*)$/);
+  if (tokenMatch) {
+    testNum = Number(tokenMatch[1]);
+  }
+
+  let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json`, import.meta.url);
+  let response = await fetch(formUrl);
+  if (!response.ok) {
+    formUrl = new URL(`./demo-content/${course}.json`, import.meta.url);
+    response = await fetch(formUrl);
+  }
   if (!response.ok) throw new Error('Content unavailable');
   const form = await response.json();
   const key = draftKey(form);
@@ -168,14 +184,10 @@ export async function mount(course) {
   try { state = sanitizeDraft(form, JSON.parse(localStorage.getItem(key))); }
   catch { state = sanitizeDraft(form, null); }
   const items = form.groups.flatMap(group => group.items);
-  const title = `Khóa ${course}${form.phase ? ' · Phase 1' : ''} · Test 1`;
+  const title = `Khóa ${course}${form.phase ? ' · Phase 1' : ''} · Test ${form.testNumber || testNum}`;
   const sections = [...new Set(form.groups.map(sectionKey))];
   let activeSection = sections[0];
 
-  const config = window.WEBTEST_34_PREVIEW_CONFIG || {};
-  const hashParams = new URLSearchParams(location.hash.replace(/^#/, ''));
-  const queryParams = new URLSearchParams(location.search || '');
-  const testToken = hashParams.get('test') || queryParams.get('test') || config.LEARNING_TEST_TOKEN || '';
   const isProd = queryParams.get('prod') === '1' || queryParams.get('apiEnv') === 'production';
   const apiBase = (isProd ? 'https://webtest.ducanhn.autos' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhn.autos')).replace(/\/$/, '');
   const isLearningMode = Boolean(testToken);

@@ -1,0 +1,725 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "03",
+  "phase": null,
+  "testNumber": 4,
+  "sourceHash": "5eeebab5d59d0cdc56780bd98ddf64d42f42797cd7ab23e4634704fba9faa92a",
+  "durationMinutes": 90,
+  "groups": [
+    {
+      "id": "listening-i-n-t",
+      "title": "Listening · Điền từ",
+      "instructions": "🔉 Exercise 1: Listen and fill in the blanks with suitable words or phrases (Nghe và điền vào chỗ trống với từ hoặc cụm từ thích hợp) 5 điểm",
+      "context": "",
+      "audioPath": "assets/demo-audio/03/test_4_Listening.mp3",
+      "items": [
+        {
+          "id": "b20bd959-a2a6-4687-9326-338eac4bf754",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "04f03921-1372-4d3f-ae19-2e6920c044de",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "dd819b32-93d0-4862-afd1-d89b0f1f8ca8",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4940632f-0dc0-4319-bc64-c6d17c09d2ba",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ed56f527-594a-4137-adc4-994cc8d0103a",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-tr-l-i-ti-ng-vi-t",
+      "title": "Listening · Trả lời tiếng Việt",
+      "instructions": "Exercise 2: Answer these questions in Vietnamese (Trả lời các câu hỏi sau bằng tiếng Việt) 5 điểm",
+      "context": "",
+      "audioPath": "assets/demo-audio/03/test_4_Listening.mp3",
+      "items": [
+        {
+          "id": "72aea856-7e19-4e24-8b8c-49af3a7bb469",
+          "prompt": "Trong câu “I have been to Hanoi to go to university for 3 years”, thì động từ được sử dụng là gì?",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "f032b0a2-ab31-40d4-8b4d-3a9680d20b6d",
+          "prompt": "Trong câu “It was not peaceful anymore, with a lot of modern buildings and vehicles”, “it” ở đây chỉ cái gì?",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "6ec96fc4-aa8d-4ca7-8486-15ab656f2763",
+          "prompt": "có thể thay “it was” bằng “there was” được không?",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "3630820f-a32f-4c43-a33e-4d9105c7cbfa",
+          "prompt": "Trong câu dưới đây, hai từ “early” là trạng từ hay tính từ?\n    “On the day we traveled, in the early (1) morning, we woke up early (2) to get ready.”",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "1c6a5047-c435-4ecb-9912-0b7901a8b729",
+          "prompt": "Câu hỏi tiếng Việt 5",
+          "options": [],
+          "long": true
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-nghe-t-v-vi-t-ngh-a",
+      "title": "Vocabulary · Nghe từ và viết nghĩa",
+      "instructions": "🔉 Exercise 1: Listen and note down the words/phrases you hear from the recording (10 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/03/Test4_SS_Vocab.mp3",
+      "items": [
+        {
+          "id": "62f3c8e2-c550-4139-bac8-60830249922f",
+          "prompt": "1. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "276629d3-17d5-455f-b0b8-7f7d65ee2a6b",
+          "prompt": "1. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "d3ea2af6-ebe4-42bb-a421-ae4baf266191",
+          "prompt": "2. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "65198a89-1d14-4d3c-971c-5176c68fad52",
+          "prompt": "2. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "55b3031c-e385-4d2a-9f04-24916004e24f",
+          "prompt": "3. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "44d0ebfb-4308-425a-b260-bfef1dc94084",
+          "prompt": "3. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "bac62780-40fd-4b80-aea5-d4660b400ebf",
+          "prompt": "4. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ed5dd8b2-e5a5-4823-9114-fcad233b188b",
+          "prompt": "4. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b7f33260-fb1d-4f76-bd21-e44d5b17ff32",
+          "prompt": "5. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7a280c74-865b-4062-963a-2c15a6efbf9a",
+          "prompt": "5. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c1f39f9f-294a-4793-9062-02fa3d42507c",
+          "prompt": "6. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "28c5790a-355d-4d0d-a30a-1a83bdbf0b44",
+          "prompt": "6. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7024eed4-7788-45e4-b689-14b67acd20f9",
+          "prompt": "7. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "956bf1cb-d951-452c-a88c-7b03596522fc",
+          "prompt": "7. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4659aed2-6742-474c-b571-b30d0793b36b",
+          "prompt": "8. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6676fd38-e792-4a8d-be4a-e760729cb0ae",
+          "prompt": "8. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "10f69ceb-8bae-4c55-9007-767434ef7fa2",
+          "prompt": "9. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ab49dfe4-5b9d-49b2-9dff-36d7efa2209c",
+          "prompt": "9. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c7ac0da1-69c2-4a44-9e3b-42cb9794bc4c",
+          "prompt": "10. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "bcf7a45c-0e0f-4814-8773-c42239ad12c1",
+          "prompt": "10. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "923b0e3a-05db-40e3-b5d5-d37bfef4a525",
+          "prompt": "11. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9562ef69-c07e-45ef-9877-214872015984",
+          "prompt": "11. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "5ed96fae-e6ec-4c28-ba6c-a238c49411ea",
+          "prompt": "12. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4b033503-7045-4372-b7b9-6d67edfbbf24",
+          "prompt": "12. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b6a0d648-82ad-452f-b367-9d0e11165aec",
+          "prompt": "13. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "349a5ebc-446d-4ee8-b67d-31017b1ee38a",
+          "prompt": "13. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "d51fb42a-f8d2-451f-962e-d4c26791a15d",
+          "prompt": "14. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f3fc92c1-82f1-4636-8f15-6469a83c36f7",
+          "prompt": "14. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "5e867666-04ca-4941-85d2-7f4ff7d91a6d",
+          "prompt": "15. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1a6303f1-0bf8-4a82-a68f-52007813a814",
+          "prompt": "15. Nghĩa tiếng Việt",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-t-v-ng-qua-nh",
+      "title": "Vocabulary · Từ vựng qua ảnh",
+      "instructions": "Exercise 2: Look at the pictures and write down the suitable words/ phrases (5 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "b3a009a0-b646-4367-bae3-4252bc09c95f",
+          "prompt": "Hình ảnh (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "059fe8b5-b832-4173-942c-ad630b8c7d50",
+          "prompt": "Hình ảnh (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0a5c4045-846d-4029-acda-9dff6616f58b",
+          "prompt": "Hình ảnh (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "90678da4-b594-4b28-b075-1ef80ac17bc7",
+          "prompt": "Hình ảnh (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4805f8ad-fb9f-40af-b9a3-15b41b434251",
+          "prompt": "Hình ảnh (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b20cdaa5-5c36-4cbb-a0fb-723172ed9f82",
+          "prompt": "Hình ảnh (6)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "f4803c14-db85-4029-a239-5a5cd6ec0127",
+          "prompt": "Hình ảnh (7)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "d9ded6f2-7088-44dc-bba6-6632d2da59cc",
+          "prompt": "Hình ảnh (8)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c0fc0e81-bcf1-435b-89e9-0cd9ae67e658",
+          "prompt": "Hình ảnh (9)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "93ca2055-d154-4185-b4a9-33aaeb1d4513",
+          "prompt": "Hình ảnh (10)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-ch-n-p-n",
+      "title": "Vocabulary · Chọn đáp án",
+      "instructions": "Exercise 3: Choose the correct answer (Chọn đáp án đúng) 5 điểm",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "9cd4de75-4e00-41ed-876a-1e20cb27cd0c",
+          "prompt": "Câu 1",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "232be197-3202-44ed-b7cf-6b1c2e6d7257",
+          "prompt": "Câu 2",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "c09c8106-1298-4add-857e-320215c55e43",
+          "prompt": "Câu 3",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "63669b56-677e-491c-a76c-17559d9351e5",
+          "prompt": "Câu 4",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "4d9d3166-aeaa-45bc-8c0b-95b8dd1e9493",
+          "prompt": "Câu 5",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "grammar-chia-ng-t",
+      "title": "Grammar · Chia động từ",
+      "instructions": "Exercise 1: Complete the sentences using words in the brackets (10 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "acc33948-1439-44fd-ad5b-c00c677dd272",
+          "prompt": "Câu 1",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a09dffbf-5c65-4ef1-9895-21d589a2bcd6",
+          "prompt": "Câu 2",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4e1c89bd-9b59-4a67-ada8-18ec8be29127",
+          "prompt": "Câu 3",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0b3dce2c-faa1-4dc9-82e2-0c10fef2d658",
+          "prompt": "Câu 4",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a3eda20d-23af-40c0-8776-b8772048f9d9",
+          "prompt": "Câu 5",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "17f9bf26-5b02-4f31-bad3-3ce1cc8aad87",
+          "prompt": "Câu 6",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a2f57bd0-1d83-4252-993c-2451511f17eb",
+          "prompt": "Câu 7",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2f900e56-c55e-4af7-a797-46415c597550",
+          "prompt": "Câu 8",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b86211c1-afc3-4dbd-a322-83320a4b49ff",
+          "prompt": "Câu 9",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b1b2a5d0-e477-4946-b89e-bb307e9cb495",
+          "prompt": "Câu 10",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "grammar-t-m-v-s-a-l-i",
+      "title": "Grammar · Tìm và sửa lỗi",
+      "instructions": "Exercise 2: Find and correct the mistakes in the sentences below (5 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "c80fa08f-ad05-4d20-aa7f-2bd52362d385",
+          "prompt": "Câu 1\nLỗi sai",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "35cb0910-3c55-4f34-a503-f3c379cba2f1",
+          "prompt": "Câu 1\nPhần sửa đúng",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b66147db-f433-4216-b0d6-13061f5a3e19",
+          "prompt": "Câu 2\nLỗi sai",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "bf67be8c-26e5-4a5f-829b-d3610e6806e0",
+          "prompt": "Câu 2\nPhần sửa đúng",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "48253328-8726-4849-9821-d895a8e74a1d",
+          "prompt": "Câu 3\nLỗi sai",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "761a5710-414e-441f-a79e-420a7bf4af21",
+          "prompt": "Câu 3\nPhần sửa đúng",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "47176f03-dbf3-452f-973f-0f1e50686dff",
+          "prompt": "Câu 4\nLỗi sai",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4be799aa-a86c-4b4c-a9bb-d82c8f64629a",
+          "prompt": "Câu 4\nPhần sửa đúng",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2340b6b3-9fb0-4921-b41c-bd39480904c3",
+          "prompt": "Câu 5\nLỗi sai",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4e256212-549e-4489-91e7-fec289ff5108",
+          "prompt": "Câu 5\nPhần sửa đúng",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "grammar-s-p-x-p-c-u",
+      "title": "Grammar · Sắp xếp câu",
+      "instructions": "Exercise 3: Put the words in the correct order to make complete sentences (5 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "0b517239-c2d1-498d-a147-7c2e0cf0f576",
+          "prompt": "Câu 1",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7247a754-77e1-4875-8a06-fd1919f142c8",
+          "prompt": "Câu 2",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ba1a3c15-8313-4d67-b745-5c6cd1c8ecbf",
+          "prompt": "Câu 3",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6a6c175c-acd8-481b-9350-f363bfcdf281",
+          "prompt": "Câu 4",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9a975e82-f55e-4724-abee-4c2d5e43031b",
+          "prompt": "Câu 5",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "writing-d-ch-vi-t-anh",
+      "title": "Writing · Dịch Việt–Anh",
+      "instructions": "Dịch các câu sau sang tiếng Anh (25 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "cd568160-17b7-4d57-a266-5901320825a3",
+          "prompt": "Dịch câu 1 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "9e27e625-c650-432a-b1ab-6adf883f1b29",
+          "prompt": "Dịch câu 2 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "334d1709-1e00-4fac-9c90-5676732e3e63",
+          "prompt": "Dịch câu 3 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "36c906b5-4699-4878-bfc0-00432cd8bb7d",
+          "prompt": "Dịch câu 4 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "fd1de577-6347-4f8b-94ba-0b206f81ad95",
+          "prompt": "Dịch câu 5 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        }
+      ]
+    },
+    {
+      "id": "speaking-tr-l-i-vi-t",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Trả lời các câu hỏi sau bằng tiếng Anh (Tối thiểu 30 từ cho mỗi câu). Bài làm được chấm bằng AI (25 điểm).",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "ccfb2bf7-a7cd-4192-b4e5-56ca80ed2c94",
+          "prompt": "1. Tell me about your house\nGợi ý: Hints:; nhà to/nhỏ/hiện đại; có các phòng nào (phòng khách, phòng ngủ…); ở ngoại ô/trung tâm thành phố; nó thoải mái/ấm cúng/tiện lợi; đã sống ở đây được bao nhiêu lâu",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "7e67fb85-71ad-4e4c-b2d7-360c6da58843",
+          "prompt": "2. Where do you often go on the weekend?\nGợi ý: đến rạp chiếu phim khi có phim mới; Chỉ tốn… phút để đến rạp phim ➔ đi xem phim một cách dễ dàng; thường đi vs …. nhưng thi thoảng đi vs ….; xem phim giúp tôi thế nào (ví dụ: thư giãn, vui vẻ, v.v.)",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "907f4e62-ae87-4115-b16f-33c1929c2163",
+          "prompt": "3. What is your favorite season?\nGợi ý: mùa yêu thích là mùa hè bởi vì thời tiết rất đẹp; tháng 6-7, thời tiết nhiều nắng; tháng 8-9, trời hay mưa to; nhiệt độ luôn luôn cao ➔ phải bật điều hòa cả ngày",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "3015430c-ea8a-4b85-a03f-a9c133f7b832",
+          "prompt": "4. How many cities and provinces in Vietnam have you been to?\nGợi ý: Tôi từng đến…. tỉnh và thành phố; Tôi thích…. vì nó rất yên bình/hiện đại/tiện lợi..; Tôi mong được sống ở đó trong tương lai vì tôi muốn.. (ví dụ: sống gần thiên nhiên/có những trải nghiệm tuyệt vời/..)",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "f0aa8ca7-57c0-48aa-b42c-5c332bdaa2c7",
+          "prompt": "5. Have you ever been abroad?\nGợi ý: tôi đã từng đến Thái Lan và nó rất đẹp; có nhiều hoạt động thú vị ở đây như …. (ví dụ: đi mua sắm, ngắm cảnh, đi bơi,chụp ảnh v.v.); có nhiều trải nghiệm khó quên  ở đó; Nhưng trời rất nắng khi tôi ở Thái năm ngoái/lúc đó ➔ không cảm thấy dễ chịu; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
+          "options": [],
+          "long": true
+        }
+      ]
+    }
+  ]
+}

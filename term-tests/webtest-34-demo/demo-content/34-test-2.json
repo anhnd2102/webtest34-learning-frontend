@@ -1,0 +1,1522 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "34",
+  "phase": 1,
+  "testNumber": 2,
+  "sourceHash": "3bfe1185c8b0b5c5f04738387b28223ce5dc4502e3d5626d5e04b2d598a582b5",
+  "durationMinutes": 120,
+  "groups": [
+    {
+      "id": "vocabulary-nghe-t-v-ch-n-ngh-a",
+      "title": "Vocabulary · Nghe từ và chọn nghĩa",
+      "instructions": "EXERCISE 1 (25 words = 12.5 points): Listen and note down the words/phrases you hear from the recording",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/Test 2 (Phase 1)_Full.MP3",
+      "items": [
+        {
+          "id": "9512529a-23d0-4a4c-b65f-2acc2319210b",
+          "prompt": "1. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "8c301c3c-ea51-49af-af53-4fbefcc1e86d",
+          "prompt": "1. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "67ecf9d9-ebb7-4bf7-bfcc-b88850da912d",
+          "prompt": "2. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "94cb0034-05e8-4c6a-a180-d13f829618e1",
+          "prompt": "2. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "36ae7511-f77b-4e57-b407-6db7bd1bc1f0",
+          "prompt": "3. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "06aff4c4-beb1-43b0-ae08-e18c35d689ad",
+          "prompt": "3. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "7b900a0d-edea-4c6a-8df4-0cd7be7be41f",
+          "prompt": "4. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "87ffe3ab-a546-444e-9294-a7d2631ab409",
+          "prompt": "4. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "2e25057c-0774-48b0-9ba5-5fee0a19f4c4",
+          "prompt": "5. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "893039f8-ac09-42dd-a802-17bfa7643170",
+          "prompt": "5. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "93de837f-c441-4476-88ea-9b57be3bf1ca",
+          "prompt": "6. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "cef3a221-4b83-4345-a97c-c07de168c203",
+          "prompt": "6. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "cb12299c-5a50-4c07-b024-7baa4824bb7e",
+          "prompt": "7. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "aa595a3a-6e9f-4317-afd8-4a3793ae919d",
+          "prompt": "7. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "43dee123-fe7b-475c-9966-8e66d708ca14",
+          "prompt": "8. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "02afe766-93cc-4b02-b577-7697fc58d341",
+          "prompt": "8. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "7156a803-ee04-40b0-84de-fec7eef927dc",
+          "prompt": "9. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "68f3c8c5-1200-410d-ab2c-92a6f4347e15",
+          "prompt": "9. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "62a6aa40-934e-4c84-b465-4853dd2ef52b",
+          "prompt": "10. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "bc87c877-3047-4acd-8bb2-0a2e40e31440",
+          "prompt": "10. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "a85f5a89-9394-422a-bc1a-eded52548b07",
+          "prompt": "11. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "29eca11a-0fb9-4e3f-bdba-a46cf3d37ef2",
+          "prompt": "11. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "50a4533a-a6d6-45ab-a8a7-21aefe34baa1",
+          "prompt": "12. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1780e6d9-4e5b-4c33-bbda-8d87b8b812de",
+          "prompt": "12. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "b2f0b596-46e1-40db-bac1-7198c19e3f3d",
+          "prompt": "13. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "96531b90-1d53-4b4f-833a-40e0cb169fd5",
+          "prompt": "13. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "643b50ff-b5f2-4484-9f6a-e253a885b0c6",
+          "prompt": "14. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1a6bb290-737e-4172-8a85-318c6cba9049",
+          "prompt": "14. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "aaaae68d-b729-49a6-a7a7-78dd729a8446",
+          "prompt": "15. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1d0fb108-ca1f-4553-ad5f-970046a3d8fc",
+          "prompt": "15. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "d30ed7c8-339c-4bf5-afe4-615757972280",
+          "prompt": "16. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "3a6163c6-68ed-4ce3-acdf-545df34f5df5",
+          "prompt": "16. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "bcc3404a-05f5-445d-8ed9-ac02f33715b5",
+          "prompt": "17. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "24ffce7b-cfe6-4c2a-96f6-131a5929d4a3",
+          "prompt": "17. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "9c9c918e-9da3-4a93-8fe6-f088717f76e6",
+          "prompt": "18. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b9b8bc8c-887b-4541-9d43-d826716012a2",
+          "prompt": "18. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "f36a71db-4d59-4978-acfb-62981945252f",
+          "prompt": "19. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "a56a1b76-36a3-425f-8cbb-2b03ecb3dc92",
+          "prompt": "19. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "4065e585-0649-4147-a986-1b2cf1681d95",
+          "prompt": "20. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ddc48bf8-128c-4b38-97c5-189246be3149",
+          "prompt": "20. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "e414d55b-8533-49ff-b2db-2d9000a89f86",
+          "prompt": "21. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "d3ff3aa4-c6e0-4a08-a5b9-d65073de5dcd",
+          "prompt": "21. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "4253f80a-f8d1-4907-a2c5-cdc3283693ec",
+          "prompt": "22. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "34c06cfa-36c5-4dc2-bccf-7a4abde83601",
+          "prompt": "22. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "5a93411f-05e4-43bd-b93f-3e470240289b",
+          "prompt": "23. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "ffc4f9f1-80a6-44f4-be3b-d276dcc5912f",
+          "prompt": "23. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "6255d9af-8987-4937-859f-f8d5979a6287",
+          "prompt": "24. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4624abfe-35dc-4284-b632-edca17025254",
+          "prompt": "24. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "8785ad57-4036-4e6d-9143-63cc1a2b658d",
+          "prompt": "25. Từ/cụm từ nghe được",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0c5adb5d-956e-4557-9f08-5637e7c0da5f",
+          "prompt": "25. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-t-v-ng-qua-nh",
+      "title": "Vocabulary · Từ vựng qua ảnh",
+      "instructions": "EXERCISE 2 (25 words = 12.5 points): PICTORIAL WORDS: Look at the pictures and write down the words/phrases they represent",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "71ce09ba-54a8-47c0-8f7f-d929e174d9c3",
+          "prompt": "Hình ảnh (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7b1a76d6-21d5-4f8b-88da-44960ab3c501",
+          "prompt": "Hình ảnh (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "b6a0808b-af75-4b69-a301-98c0139bfa2f",
+          "prompt": "Hình ảnh (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "3a572bd0-013c-479e-ab95-e9a8d3690ff0",
+          "prompt": "Hình ảnh (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7a1928be-87c6-427c-8108-fa7e37d625b1",
+          "prompt": "Hình ảnh (5)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "72139102-9d7e-4ba7-a275-006fd7fa691e",
+          "prompt": "Hình ảnh (6)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "17e306f5-9554-4af5-9f8b-16ee1f453fb9",
+          "prompt": "Hình ảnh (7)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "31768a27-85f1-42bd-b2da-f3f0bed4ce02",
+          "prompt": "Hình ảnh (8)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "39d6b321-bbad-4596-bc36-9e04f8db92d8",
+          "prompt": "Hình ảnh (9)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "078c01b8-ef65-46ab-a37a-061dc2394ec4",
+          "prompt": "Hình ảnh (10)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "fe364ae0-cc4a-461d-b289-3f6d733a19b4",
+          "prompt": "Hình ảnh (11)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "843b8be8-d37e-4121-b16a-fd4f786042f1",
+          "prompt": "Hình ảnh (12)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "14761310-3272-48d6-9495-496e9d3c963e",
+          "prompt": "Hình ảnh (13)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2ba1cb54-604a-4756-ad24-c740c0faaadf",
+          "prompt": "Hình ảnh (14)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "acac64c7-138e-4d14-bb4f-1f624bbb373d",
+          "prompt": "Hình ảnh (15)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1463017c-b5af-4c83-91af-aff6acd13ec9",
+          "prompt": "Hình ảnh (16)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "42994b17-21aa-4f97-b0ff-89e4507fdaa5",
+          "prompt": "Hình ảnh (17)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "324c915c-2370-41d5-b126-90cddc27a627",
+          "prompt": "Hình ảnh (18)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "067b7d4d-3e61-43f4-8bec-e2ef98ade626",
+          "prompt": "Hình ảnh (19)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "420b54d6-9a1a-4e12-9ddb-db63e7d61aa9",
+          "prompt": "Hình ảnh (20)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "437031bb-af82-4827-89c1-f96e162ca4b8",
+          "prompt": "Hình ảnh (21)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "3f542721-7e37-4a3d-84a0-d524c419d839",
+          "prompt": "Hình ảnh (22)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2391aa53-4a66-4283-86b6-86097f3dde45",
+          "prompt": "Hình ảnh (23)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "154fe4d4-d4f4-414b-b7f1-14d67a408aba",
+          "prompt": "Hình ảnh (24)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "5e3e0137-5cb4-4a0c-970a-e5d49be6d12a",
+          "prompt": "Hình ảnh (25)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-s-p-x-p",
+      "title": "Listening · Sắp xếp",
+      "instructions": "Listen and put the events in the correct order (5 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/Test 2 (Phase 1)_Full.MP3",
+      "items": [
+        {
+          "id": "22edc20f-26ad-4c5b-83e5-284d4fccd2b9",
+          "prompt": "Vị trí 1",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            },
+            {
+              "id": "E",
+              "label": "E"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "17961bd9-d439-4fcf-a0c2-d1ca997f87f6",
+          "prompt": "Vị trí 2",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            },
+            {
+              "id": "E",
+              "label": "E"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "9bbf6da6-c6c9-4d92-a70f-c6271878fdbb",
+          "prompt": "Vị trí 3",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            },
+            {
+              "id": "E",
+              "label": "E"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "e0596d25-3f8f-4f17-bbda-fca1a734283a",
+          "prompt": "Vị trí 4",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            },
+            {
+              "id": "E",
+              "label": "E"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "5f5d93f5-401e-4808-bdea-3485aa897f8b",
+          "prompt": "Vị trí 5",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "label": "D"
+            },
+            {
+              "id": "E",
+              "label": "E"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-i-n-b-ng",
+      "title": "Listening · Điền bảng",
+      "instructions": "Listen and complete the table below. Write NO MORE THAN ONE WORD for each answer (5 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/Test 2 (Phase 1)_Full.MP3",
+      "items": [
+        {
+          "id": "8e14bddf-0092-48bb-8619-1c8ea5708643",
+          "prompt": "Chỗ trống (1)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "0c076ef1-f9f9-4fe4-8139-1207087dfdb5",
+          "prompt": "Chỗ trống (2)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "2d446eac-3e04-415f-b922-dcc65bb0fbb8",
+          "prompt": "Chỗ trống (3)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c5961706-4c03-4672-8e35-bb4f1f3b2166",
+          "prompt": "Chỗ trống (4)",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "fdd6e524-6559-4f61-b5db-18b384a846e1",
+          "prompt": "Chỗ trống (5)",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "listening-ng-sai",
+      "title": "Listening · Đúng/Sai",
+      "instructions": "Listen and decide whether the statements are True (T) or False (F) (5 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/Test 2 (Phase 1)_Full.MP3",
+      "items": [
+        {
+          "id": "028af2d5-b057-4d35-b990-4d3115a8925f",
+          "prompt": "Câu 1",
+          "options": [
+            {
+              "id": "A",
+              "label": "T"
+            },
+            {
+              "id": "B",
+              "label": "F"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "f104525d-5872-4681-9b62-c8cf3a0ed063",
+          "prompt": "Câu 2",
+          "options": [
+            {
+              "id": "A",
+              "label": "T"
+            },
+            {
+              "id": "B",
+              "label": "F"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "cc06d3ef-bad2-4d09-b144-ec8c9de88a54",
+          "prompt": "Câu 3",
+          "options": [
+            {
+              "id": "A",
+              "label": "T"
+            },
+            {
+              "id": "B",
+              "label": "F"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "0bae383b-f15f-452d-918a-48d831644f99",
+          "prompt": "Câu 4",
+          "options": [
+            {
+              "id": "A",
+              "label": "T"
+            },
+            {
+              "id": "B",
+              "label": "F"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "a81635ce-9eb0-4c59-9749-707b2c8da4c7",
+          "prompt": "Câu 5",
+          "options": [
+            {
+              "id": "A",
+              "label": "T"
+            },
+            {
+              "id": "B",
+              "label": "F"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "pronunciation-phi-n-m-t",
+      "title": "Pronunciation · Phiên âm → từ",
+      "instructions": "Nhìn vào phiên âm IPA và viết lại từ tiếng Anh tương ứng (5 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "b2444267-2811-4bcf-9085-c28c1c6f29ce",
+          "prompt": "Từ 1",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "1c31483d-925a-418b-8b7d-24687742ca1d",
+          "prompt": "Từ 2",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "3ff79bb5-9795-45c0-9865-6d020025ac03",
+          "prompt": "Từ 3",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6aeff5e9-f36b-48ab-a2a4-020b984b2603",
+          "prompt": "Từ 4",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "6a148275-e981-4937-8ce0-8f85410c1f1a",
+          "prompt": "Từ 5",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "7a3a1743-394b-4a07-b00e-c836119699c3",
+          "prompt": "Từ 6",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "c46af9fd-7945-4c6b-8943-1e24abe5c894",
+          "prompt": "Từ 7",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "4d0d378e-2ecd-469b-9360-661f6fd65614",
+          "prompt": "Từ 8",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "9f18c1a9-b678-4124-a592-6c0f5deb2021",
+          "prompt": "Từ 9",
+          "options": [],
+          "long": false
+        },
+        {
+          "id": "3b881b8e-3871-49a9-812e-408a1462efa2",
+          "prompt": "Từ 10",
+          "options": [],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "pronunciation-ch-n-phi-n-m",
+      "title": "Pronunciation · Chọn phiên âm",
+      "instructions": "Chọn cách phát âm / phiên âm đúng cho từ được gạch chân (5 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "f3836ce5-4e57-45a9-bc5e-b1a3fd4cece6",
+          "prompt": "Câu 1",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "35d8646e-d770-46eb-92be-30b0ff7ca9ee",
+          "prompt": "Câu 2",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "eadf747d-ac79-4b0e-a081-8e1bf4a612df",
+          "prompt": "Câu 3",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "4c803401-dd87-472c-822b-a6bb7bca8908",
+          "prompt": "Câu 4",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "692aa8ee-45ce-40fc-8448-29008e8f8eba",
+          "prompt": "Câu 5",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "2da25602-4e78-45d1-a607-fb1de10d3140",
+          "prompt": "Câu 6",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "822d75aa-a459-4a70-bbad-656aa8774621",
+          "prompt": "Câu 7",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "6da02a22-0cf7-4089-b6bf-c412b45e4348",
+          "prompt": "Câu 8",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "bcfcb80c-12e3-484c-92d4-e98ec6677325",
+          "prompt": "Câu 9",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        },
+        {
+          "id": "9582f378-2a1d-4375-8b39-e2a848987f2a",
+          "prompt": "Câu 10",
+          "options": [
+            {
+              "id": "A",
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "label": "C"
+            }
+          ],
+          "long": false
+        }
+      ]
+    },
+    {
+      "id": "translation-d-ch-vi-t-anh",
+      "title": "Translation · Dịch Việt–Anh",
+      "instructions": "Dịch các câu sau sang tiếng Anh hoàn chỉnh (16 điểm)",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "27d67009-e91a-430b-a42b-a4e9c6dff686",
+          "prompt": "Dịch câu 1 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "e93ec352-415b-4cff-a8f0-5fa4b728a37a",
+          "prompt": "Dịch câu 2 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "24fdfe6e-c5f8-44b9-a651-cd912ad63aee",
+          "prompt": "Dịch câu 3 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "cb07c9d2-dd74-48cc-8894-7cc0c21046d4",
+          "prompt": "Dịch câu 4 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "255d0962-acfe-42a2-9355-dbe96c772872",
+          "prompt": "Dịch câu 5 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "1ef81f61-1336-4513-8790-ab21b5bd25b7",
+          "prompt": "Dịch câu 6 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "7285abd5-0d98-40a7-bbfc-a0958e0fba05",
+          "prompt": "Dịch câu 7 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "c2bce07a-a306-4f76-9e83-1f85eefcab86",
+          "prompt": "Dịch câu 8 sang tiếng Anh.",
+          "options": [],
+          "long": true
+        }
+      ]
+    },
+    {
+      "id": "speaking-tr-l-i-vi-t",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Viết câu trả lời theo ý tưởng và gợi ý trong đề (tối thiểu 30 từ mỗi câu). Bài thi được chấm bằng AI (18 điểm).",
+      "context": "",
+      "audioPath": "",
+      "items": [
+        {
+          "id": "cbbaa555-ca49-41e9-a7d1-c247e2e109ad",
+          "prompt": "1.  How often do you work out? (6 points)\nSuggested Ideas (Vietnamese) – Chọn 1 trong 2 gợi ý sau đây:\n1. Change of habit\n2. Break down the keywords",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "c412d551-1892-4252-bdf9-fdd436d006bd",
+          "prompt": "2. What is your favorite type of pet?\nSuggested Ideas (Vietnamese) – Chọn 1 trong 2 gợi ý sau đây:\n1. Dogs\n2. Cats",
+          "options": [],
+          "long": true
+        },
+        {
+          "id": "d98b78de-fb82-4168-b304-40c09872bd1f",
+          "prompt": "3. Is collecting stamps popular in your country?\nSuggested Ideas\nSuggested Vocab:",
+          "options": [],
+          "long": true
+        }
+      ]
+    }
+  ]
+}
