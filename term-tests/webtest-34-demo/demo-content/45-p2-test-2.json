@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 2,
   "testNumber": 6,
-  "sourceHash": "0b80960c68e1b787b0dd0caee7ec11c1554e15d63f099173c2e7c210e89c7dbd",
+  "sourceHash": "808486ecd7bd4a131c677bdda8d4c6ccf0c426310b6f8bea5f0aae45495205ac",
   "durationMinutes": 70,
   "groups": [
     {
@@ -14,7 +14,7 @@
       "audioPath": "",
       "items": [
         {
-          "id": "5b8defde-67f5-465a-b692-621d37c9c0bc",
+          "id": "7d24bd93-ed09-4cf3-a3bf-846bd0864a13",
           "prompt": "1. Students always seem to have difficulty",
           "options": [
             {
@@ -41,7 +41,7 @@
           "long": false
         },
         {
-          "id": "bb7da191-2f4c-4cf5-9be6-05cf73f3f520",
+          "id": "2328659c-3526-4df3-be9f-a55d5b8bdb5b",
           "prompt": "2. The need to find replacement fuels poses",
           "options": [
             {
@@ -68,7 +68,7 @@
           "long": false
         },
         {
-          "id": "f99d2958-35e7-48cb-9f6e-85853ac48954",
+          "id": "6a86d5ae-4eb6-4aae-b701-1f30b15388be",
           "prompt": "3. In the figures he presented, several errors were",
           "options": [
             {
@@ -95,7 +95,7 @@
           "long": false
         },
         {
-          "id": "aed4daaf-004a-483c-96e8-247c52fcf4ba",
+          "id": "97bd1935-513f-4d19-9cb6-9d248af8ee2c",
           "prompt": "4. On their way across Antarctica, they experienced",
           "options": [
             {
@@ -122,7 +122,7 @@
           "long": false
         },
         {
-          "id": "dfcc1589-4c88-401b-b260-de5ae3546090",
+          "id": "87961629-f300-45db-b621-d7855d404610",
           "prompt": "5. The results of the opinion poll raised",
           "options": [
             {
@@ -158,31 +158,31 @@
       "audioPath": "",
       "items": [
         {
-          "id": "ad6d2bed-4743-4a15-a541-949ab0f60afc",
+          "id": "fa5e85d1-d42d-4577-aaf5-f3689725cfbc",
           "prompt": "6. The theatre has been slow to respond the challenges presented by movies.",
           "options": [],
           "long": false
         },
         {
-          "id": "1f0903d3-dcc7-405d-8b7f-b6899e422a3c",
+          "id": "fd40eeee-a569-41de-8cde-b41e078cfb4a",
           "prompt": "7. In this lecture I plan to deal the later novels of Charles Dickens.",
           "options": [],
           "long": false
         },
         {
-          "id": "04c7a397-8e00-4f65-aee7-20fbcc60318d",
+          "id": "6addb0ee-df43-4b47-90a4-30c4d1d13923",
           "prompt": "8. Changes in the frequency of droughts and floods pose a real challenge farmers.",
           "options": [],
           "long": false
         },
         {
-          "id": "85fd4876-0937-4ae7-bd95-fdb195a8540d",
+          "id": "0ae6054e-b12d-47fe-8026-5ceefe258ea9",
           "prompt": "9. He thought for a long time but was unable to come with a solution.",
           "options": [],
           "long": false
         },
         {
-          "id": "9a7996e7-abad-470e-9c23-1749dfa4525c",
+          "id": "da7ac553-ad61-44c4-863e-40bd2db28a74",
           "prompt": "10. This article raises the issue what people can do to protect forests.",
           "options": [],
           "long": false
@@ -197,7 +197,7 @@
       "audioPath": "",
       "items": [
         {
-          "id": "55c5912b-1ef0-4e2f-8ca2-ed1189264580",
+          "id": "d00073f4-9f44-45a3-aee9-cfb6a9c9a1bf",
           "prompt": "11. It is sensible to unify/select/verify your results before publishing them.",
           "options": [
             {
@@ -216,7 +216,7 @@
           "long": false
         },
         {
-          "id": "a2d5abc1-a247-4c70-b17e-890bd3705b7c",
+          "id": "9c253077-7ac6-4a93-94e2-6dc2f122e15e",
           "prompt": "12. Hip replacement is usually a simple medical application/procedure/behavior.",
           "options": [
             {
@@ -235,7 +235,7 @@
           "long": false
         },
         {
-          "id": "ef60c482-eb0f-40ed-b20e-59c2d9513205",
+          "id": "e427b3c6-5d44-43da-b88b-9119ad1a9e3f",
           "prompt": "13. Many students supplement/utilize/verify their scholarships by doing some part-time job.",
           "options": [
             {
@@ -254,7 +254,7 @@
           "long": false
         },
         {
-          "id": "ad1d5ece-6bef-4a3b-9c67-00d4f2643dd0",
+          "id": "a21fa0f7-6d59-4152-86ee-386b0480d4c2",
           "prompt": "14. As the next step/behavior/application in our study, we plan to carry out interviews.",
           "options": [
             {
@@ -273,7 +273,7 @@
           "long": false
         },
         {
-          "id": "b475d695-63d2-4f34-afb5-f6f4c6f4ef38",
+          "id": "7c8ab04e-b597-4082-b3b8-cce8a17ee0db",
           "prompt": "15. Her aim is to form/design/function a radically different type of electric engine.",
           "options": [
             {
@@ -301,31 +301,31 @@
       "audioPath": "",
       "items": [
         {
-          "id": "af534f43-4c41-482b-a798-56c25b03811b",
+          "id": "1e2e2339-dbad-4b4f-a2ed-b0482ca9d5b8",
           "prompt": "16. There has been an enormous ...... in aviation in recent years. (EXPAND)",
           "options": [],
           "long": false
         },
         {
-          "id": "ed0ac3e9-dac6-4a48-8878-bf01490a5663",
+          "id": "97a8354d-fb76-4059-9340-fdaec81d6b0d",
           "prompt": "17. Economists are increasingly concerned that development should be...... (SUSTAIN)",
           "options": [],
           "long": false
         },
         {
-          "id": "3f5517c6-4f52-4517-914c-869b1862e475",
+          "id": "5f866f2d-a3e8-4b2a-bee5-f0f892aa3be4",
           "prompt": "18. There has been no ...... change in the patient's condition. (PERCEIVE)",
           "options": [],
           "long": false
         },
         {
-          "id": "af4f00cc-4192-443a-8cd7-05fa1b56bdcc",
+          "id": "ad82bb2d-034b-49dd-85a9-97e5cfa766b0",
           "prompt": "19. The survey found that most people feel that modern life is becoming ...... difficult (INCREASE)",
           "options": [],
           "long": false
         },
         {
-          "id": "daeb7e5d-b11d-4301-99c6-84082c42446a",
+          "id": "0002d51b-7435-4cfd-8195-458542c93f0e",
           "prompt": "20. Industrial ...... has, of course, transformed people's working lives. (DEVELOP)",
           "options": [],
           "long": false
@@ -340,7 +340,7 @@
       "audioPath": "",
       "items": [
         {
-          "id": "413bdd0a-bcd6-415e-aecc-64726c0eea7d",
+          "id": "dbbf40f6-c608-4dc9-8a5a-5e3e130c5c0e",
           "prompt": "21. The economy now seems to be recovering / amending.",
           "options": [
             {
@@ -355,7 +355,7 @@
           "long": false
         },
         {
-          "id": "dc4e81e0-dc52-495a-b355-d703982cf4a4",
+          "id": "02049c56-c70a-4fdb-b177-8c8e3ab0bcf1",
           "prompt": "22. Many people now are converting / transforming to using solar power.",
           "options": [
             {
@@ -370,7 +370,7 @@
           "long": false
         },
         {
-          "id": "d88d626a-e55d-46f6-90b3-867821c924cb",
+          "id": "1962d24e-ebcd-4c3c-890b-f1d638129214",
           "prompt": "23. Why do some people abandon / shift their families and disappear without a word?",
           "options": [
             {
@@ -385,7 +385,7 @@
           "long": false
         },
         {
-          "id": "80adfaba-0b8e-44c5-8035-293cb8c3af51",
+          "id": "bc9d7d11-46de-409d-9099-f6700d466937",
           "prompt": "24. It takes most people some time to alter / adjust to living in a new country.",
           "options": [
             {
@@ -400,7 +400,7 @@
           "long": false
         },
         {
-          "id": "1fd7c4bf-9ca7-4423-9386-032f12be12a5",
+          "id": "81f7aabf-ab64-4014-8dcc-434ee996f9cc",
           "prompt": "25. It is increasingly hard to adapt / maintain traditions in the face of progress.",
           "options": [
             {
@@ -424,25 +424,25 @@
       "audioPath": "Test45/Phase2_Test2/Section 1.mp3",
       "items": [
         {
-          "id": "28571fb0-7b10-4b6f-b27d-e40233f9d99f",
+          "id": "fccc31b8-ff4d-4c0f-92b4-aadd3e76fad1",
           "prompt": "Name of group: 1_______ (Salsa/Baseball)",
           "options": [],
           "long": false
         },
         {
-          "id": "b501bdbc-fd73-4336-bc8c-33fae28965dd",
+          "id": "16902619-35fc-4d95-957e-5cc53f998ae7",
           "prompt": "Leader: 2_______ Jim",
           "options": [],
           "long": false
         },
         {
-          "id": "5b19d720-8409-47f5-9d84-7bf006498e50",
+          "id": "1f7d0a7b-2f16-445e-b88f-f8182dbacf1c",
           "prompt": "Activity for beginners: 3_______ (Football/Skateboarding)",
           "options": [],
           "long": false
         },
         {
-          "id": "529d8928-7468-4074-918d-263a916e6da7",
+          "id": "f6a4ee9e-4444-4854-9765-06147038fc6b",
           "prompt": "Session 4: 4_______ (Roller skating)",
           "options": [],
           "long": false
@@ -457,37 +457,37 @@
       "audioPath": "Test45/Phase2_Test2/Section 2 & 3.mp3",
       "items": [
         {
-          "id": "0a2037a5-2266-4daa-a789-80bc05885608",
+          "id": "4eb8c138-2061-46ac-aa8b-29fb8f8dc969",
           "prompt": "Plan Area 5: _______ (Dance Studios)",
           "options": [],
           "long": false
         },
         {
-          "id": "e0d65656-e66c-4551-ab53-5fd82d449000",
+          "id": "8fef2b8e-194f-4049-a2e4-73ab6e93a7b7",
           "prompt": "Plan Area 6: _______ (Changing rooms)",
           "options": [],
           "long": false
         },
         {
-          "id": "676ab3b4-4020-4458-b529-9470a96bd1b6",
+          "id": "23e83da8-7042-4c4d-9ba1-1deed50dc951",
           "prompt": "Plan Area 7: _______ (Tennis courts)",
           "options": [],
           "long": false
         },
         {
-          "id": "10f78157-5ad4-4ff9-b3a2-d14b6a602fb3",
+          "id": "4d9ab9ec-3062-413d-86fe-79e5d1a1f699",
           "prompt": "Flowchart 8: Parents need to 8______ an authorisation form.",
           "options": [],
           "long": false
         },
         {
-          "id": "20c97567-a6d6-4ac4-be28-deac9f5be6f3",
+          "id": "997b7d52-3432-4598-96b3-a879299dc018",
           "prompt": "Flowchart 9: Give forms to 9______ with a fee of £20.",
           "options": [],
           "long": false
         },
         {
-          "id": "c91f0534-4c06-432f-8af8-3e2a84ffab0c",
+          "id": "4193b2c7-1589-48d2-b11a-97886b8a1880",
           "prompt": "Flowchart 10: You will receive your 10______ in the post.",
           "options": [],
           "long": false
@@ -502,7 +502,7 @@
       "audioPath": "",
       "items": [
         {
-          "id": "4692adc3-b354-48ab-8d62-1bbd1c42830b",
+          "id": "f3d5e3b0-3196-4191-a2df-b8e388dddc18",
           "prompt": "14. A description of the physical difficulties miners faced underground",
           "options": [
             {
@@ -529,7 +529,7 @@
           "long": false
         },
         {
-          "id": "d72ffc7d-964f-476e-9e01-183bb700ac1c",
+          "id": "4779f58a-0ba5-4eab-865d-21a593d405fd",
           "prompt": "15. An account of how the location of the trapped miners was confirmed",
           "options": [
             {
@@ -556,73 +556,73 @@
           "long": false
         },
         {
-          "id": "1829f4be-cbcb-4665-8a34-7c157c51da00",
+          "id": "23580fcb-a9d5-43c7-969b-b12a41734538",
           "prompt": "Question 16: they could be 16_____ by emergency workers",
           "options": [],
           "long": false
         },
         {
-          "id": "fa1cb4b2-9941-458f-a449-4e5f621e9bb0",
+          "id": "7c7ce9d6-faf9-4ba6-ae19-715fa0739aa0",
           "prompt": "Question 17: by 17_____ emergency workers in the next few days",
           "options": [],
           "long": false
         },
         {
-          "id": "8dffa169-8ccc-468c-ad09-0d7d7611a83f",
+          "id": "af74c8a7-c1aa-432f-bd3c-504531f396e4",
           "prompt": "Question 18: As soon as the miners have been 18_____",
           "options": [],
           "long": false
         },
         {
-          "id": "5fa8613a-2e20-4280-946a-0610c9dbb554",
+          "id": "9849c6d5-278e-4800-8dd7-12064a8b78d1",
           "prompt": "Question 19: a specially 19_____ capsule will be sent down",
           "options": [],
           "long": false
         },
         {
-          "id": "3abd7c16-42e6-4b90-a7b8-ebf597e08f0a",
+          "id": "14426d3e-f5bb-45df-aa5f-a0b56e2086f4",
           "prompt": "Question 20: It is 20_____ that bringing all of the men back up will take up to forty hours",
           "options": [],
           "long": false
         },
         {
-          "id": "133e81fb-3e3e-44e7-971a-71a21a7daebf",
+          "id": "fa2123a5-d310-47e2-bba4-2784f700fbc0",
           "prompt": "21. The capsule structure is made of _______",
           "options": [],
           "long": false
         },
         {
-          "id": "b909a8fb-1891-479d-a497-cbfcc21762e7",
+          "id": "c9fd37b5-972c-4994-a7d5-9c46269ab8ed",
           "prompt": "22. The diameter of the capsule is _______",
           "options": [],
           "long": false
         },
         {
-          "id": "4a9907e2-2f5e-469b-9c6e-dfae4bedfde2",
+          "id": "93bef623-3542-4d49-b7a4-a85e5a28e1c7",
           "prompt": "23. Interior equipped with _______",
           "options": [],
           "long": false
         },
         {
-          "id": "df76df56-2527-417d-a34d-d084291545bb",
+          "id": "1f6a35fb-7ac0-42fd-a837-37a34e79750f",
           "prompt": "24. Emergency supply includes _______",
           "options": [],
           "long": false
         },
         {
-          "id": "f6cf68ac-3301-48a4-b109-b9da6ff1a35e",
+          "id": "f86210a0-c327-4cce-b7d6-9a28a0db9fd8",
           "prompt": "25. Bottom escape mechanism _______",
           "options": [],
           "long": false
         },
         {
-          "id": "1f99ab15-b301-44da-83ea-f5c0ddbae0fb",
+          "id": "a088ad10-1f14-4a78-8c09-86b381f66cb9",
           "prompt": "26. Wheels fitted on exterior: _______",
           "options": [],
           "long": false
         },
         {
-          "id": "3c6266db-9991-4a34-a4e5-0a96ac09801e",
+          "id": "6966619e-1739-4217-8be1-1dd19c469f54",
           "prompt": "27. Choose the most suitable title for the whole of Reading Passage 2:",
           "options": [
             {
@@ -654,13 +654,13 @@
       "audioPath": "",
       "items": [
         {
-          "id": "5569dde3-a9f6-432f-939d-c9a1f437f0f7",
+          "id": "d108c3f5-9985-4e83-ad21-3a2c26a0c330",
           "prompt": "Đề bài: More and more people are migrating to cities in search of a better life, but city life can be extremely difficult. Explain some of the difficulties of living in a city. How can governments make urban life better for everyone?\n\nYêu cầu: Hãy viết đoạn thân bài 1 (Body 1) nêu ra các khó khăn khi sống ở thành phố lớn dựa trên dàn ý gợi ý sau (Tối thiểu 70 từ):\n- Topic sentence: Nêu khái quát cuộc sống thành phố gặp nhiều thách thức.\n- Ý 1: Chi phí sinh hoạt (cost of living) tại thành phố cao hơn nông thôn; chi phí nhà ở (housing costs) và thực phẩm (food expenses) đắt đỏ.\n- Ý 2: Các vấn đề xã hội (social problems) như tỷ lệ tội phạm (crime rates) và nghèo đói (poverty).\n- Ý 3: Chất lượng không khí kém (poor air quality) do ô nhiễm giao thông và mật độ dân cư quá đông đúc (overcrowded).",
           "options": [],
           "long": true
         },
         {
-          "id": "052e0cbd-a172-4e31-a93f-9926404683f2",
+          "id": "e02b5c6a-abaf-47a2-bb79-2942ef07d549",
           "prompt": "Yêu cầu: Hãy viết đoạn thân bài 2 (Body 2) nêu ra các giải pháp mà chính phủ có thể thực hiện để cải thiện đời sống đô thị dựa trên dàn ý gợi ý sau (Tối thiểu 70 từ):\n- Topic sentence: Nêu khái quát chính phủ có thể triển khai một số giải pháp hiệu quả.\n- Ý 1: Xây dựng nhà ở giá cả phải chăng hoặc nhà ở xã hội (affordable / social housing) cho người có thu nhập thấp.\n- Ý 2: Cấm hoặc đánh phí phương tiện cá nhân (như phí tắc nghẽn - congestion charge tại London) và phát triển giao thông công cộng sạch (clean public transport).\n- Ý 3: Đầu tư phát triển các thị trấn vệ tinh / khu vực nông thôn (provincial towns & rural areas), chuyển dịch bớt việc làm và ngành công nghiệp để giảm áp lực cho đô thị lớn.",
           "options": [],
           "long": true

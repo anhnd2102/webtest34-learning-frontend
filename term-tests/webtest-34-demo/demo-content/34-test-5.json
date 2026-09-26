@@ -3,877 +3,450 @@
   "course": "34",
   "phase": 2,
   "testNumber": 5,
-  "sourceHash": "d49bc20e332ed1ad99ad3ef8a43244137146ff85655d3bd11b07fe7638e89a84",
-  "durationMinutes": 120,
+  "sourceHash": "47bd45049450554f36db2d84df163ccd2e735f1449d83700432a028fa62d8c75",
+  "durationMinutes": 90,
   "groups": [
     {
-      "id": "listening-i-n-t",
+      "id": "listening-gap",
       "title": "Listening · Điền từ",
-      "instructions": "Exercise 1: Listen and fill in the blank with the missing words (10 points)",
+      "instructions": "Listen and fill in the blanks with suitable words (10 điểm)",
       "context": "",
-      "audioPath": "assets/demo-audio/34/Test 1 (Phase 2).MP3",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
       "items": [
         {
-          "id": "e2b60e80-7392-410c-a0b9-a949db6a9a71",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "f5e3b65b-d276-43b0-b5b7-d7f7a5fcf4ed",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "c1d78512-393d-424b-993c-c9edd5039ac1",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "1b5697bd-d1f7-4c8d-84d7-8a2a634af995",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "29aad59d-d7a5-47a3-8b1c-965e749e356d",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "2d44f962-b28b-492e-a75b-0ddd79ee0aad",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "0b67a3f9-e2d7-4b0b-aa25-5d791ff6903d",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "6d8458d6-4009-4595-954b-b88fc4066ed6",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "7f7dd288-aa7c-442f-b017-0bf99dde9ab3",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "0d326a45-3d29-4c82-85ac-b65dd0f0e748",
+          "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "f4fb1871-a825-45c3-a6e3-a3be7b0fefbc",
-          "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "id": "f9f30763-ab9a-4511-a4df-9623087268e6",
+          "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "3dd2ad69-5426-498a-8cb7-bb2a14bcffde",
-          "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
+          "id": "0af97ae4-480d-4848-b1d5-7f96c28275c4",
+          "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "dfcf3b3d-00e4-43c3-a5f8-604f253c3dd5",
-          "prompt": "Chỗ trống (8)",
-          "options": [],
-          "long": false
+          "id": "ac1fe4df-b03d-40ce-aa22-3f86c041601d",
+          "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "2d6b0f49-87c8-4e77-9aa5-a0e53cff5f15",
-          "prompt": "Chỗ trống (9)",
-          "options": [],
-          "long": false
+          "id": "ff4aecf2-c72d-458f-a36d-268b67f7574f",
+          "prompt": "Chỗ trống (9)"
         },
         {
-          "id": "82114243-c36e-44cb-a36f-15b7caaca8b9",
-          "prompt": "Chỗ trống (10)",
-          "options": [],
-          "long": false
+          "id": "fb4af2b2-ac6f-44fd-b61a-8f1bf21e5234",
+          "prompt": "Chỗ trống (10)"
         }
       ]
     },
     {
-      "id": "listening-ch-n-p-n",
+      "id": "listening-choice",
       "title": "Listening · Chọn đáp án",
-      "instructions": "Exercise 2: Listen and choose the best answer (10 points)",
+      "instructions": "Listen and choose the correct answer (10 điểm)",
       "context": "",
-      "audioPath": "assets/demo-audio/34/Test 1 (Phase 2).MP3",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
       "items": [
         {
-          "id": "19ddac78-1d10-4560-b41c-9d9313ee8bba",
-          "prompt": "Câu 1",
+          "id": "445f29cb-0eab-4d39-92c5-57cbd232b66c",
+          "prompt": "9. My parents usually encourage me to do ______. They want to build my ______ in science.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
         },
         {
-          "id": "33d19ad0-fcca-482a-bb6c-dfe1a5a097b7",
-          "prompt": "Câu 2",
+          "id": "cf692f42-1679-444a-8ef1-d96209abd0db",
+          "prompt": "Question 2",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
         },
         {
-          "id": "497e6d99-a57b-4338-bd29-4cc20b4377d5",
-          "prompt": "Câu 3",
+          "id": "8626a96d-fd74-47bd-bb64-5eb76c93f8a4",
+          "prompt": "Question 3",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "She told him to check his thermometer."
+          ]
         },
         {
-          "id": "acf9ca09-5c80-4129-ad9e-385af781cc00",
-          "prompt": "Câu 4",
+          "id": "13f1d769-2d7c-463c-8a81-9bc9ae87c010",
+          "prompt": "She told him to take his temperature.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "She told him to make sure he did not have a fever.",
+            "Option B",
+            "Option C"
+          ]
         },
         {
-          "id": "9a221941-b64f-4a07-9b52-4eb3d1f7b491",
-          "prompt": "Câu 5",
+          "id": "be1ca78f-544c-47df-8cba-39756bc8021b",
+          "prompt": "To call his teacher",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "To check his temperature",
+            "To call a doctor",
+            "Option C"
+          ]
         },
         {
-          "id": "8bb7acee-f2d5-48e4-9502-42aaf93a19c0",
-          "prompt": "Câu 6",
+          "id": "d142ea2a-553a-462c-a525-af84549e438f",
+          "prompt": "Part 2:",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "She shot the ball.",
+            "She laid flat on her back."
+          ]
         },
         {
-          "id": "13fd40c5-55d7-43e2-84bf-4f23e5d2aaa6",
-          "prompt": "Câu 7",
+          "id": "193bc87f-698b-47db-b68c-5fe655686fe7",
+          "prompt": "She had a foot injury.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Her teammates"
+          ]
         },
         {
-          "id": "62354b38-7a8a-4ca5-8695-b0faa078965c",
-          "prompt": "Câu 8",
+          "id": "259f1b97-d92a-4ce1-846c-63bb5e1971e9",
+          "prompt": "Her team doctor",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Her team",
+            "Option B",
+            "Option C"
+          ]
         },
         {
-          "id": "b105e0a3-9ae3-4884-a96e-b8b6a0113337",
-          "prompt": "Câu 9",
+          "id": "3099223d-a4d4-4d99-b880-fa6a72650786",
+          "prompt": "Julia should sit out the rest of the game.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Julia should see him the next day.",
+            "Julia should be disappointed.",
+            "Option C"
+          ]
         },
         {
-          "id": "c797855e-69c1-41ad-9b87-8d31e0c37357",
-          "prompt": "Câu 10",
+          "id": "f87701fa-f294-4a90-919a-9f9a2152a46c",
+          "prompt": "Part 3:",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "People can receive emails quickly.",
+            "People can communicate with strangers."
+          ]
         }
       ]
     },
     {
-      "id": "grammar-tr-c-nghi-m",
+      "id": "grammar-choice",
       "title": "Grammar · Trắc nghiệm",
-      "instructions": "Exercise 1: Choose the most suitable answer (18 points)",
+      "instructions": "Choose the best answer to complete each sentence (18 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "dd5ee543-e6f7-46f6-a9b8-5f2cb7d5057c",
-          "prompt": "Câu 1",
+          "id": "43b4232d-96ce-49bd-acde-43ac43b111e0",
+          "prompt": "They can send messages to many people at the same time.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "People become unhealthy.",
+            "People become lonely."
+          ]
         },
         {
-          "id": "994dd50a-4d0a-4cae-b0fb-ab3205c0b9f5",
-          "prompt": "Câu 2",
+          "id": "db401f4f-941f-4a19-a684-25b8d8eb25ef",
+          "prompt": "People become lonely.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "People become family-oriented.",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "3e3388c2-328a-460d-a1c1-efadcdb561fd",
-          "prompt": "Câu 3",
+          "id": "0716bc47-ffdd-4f22-a93b-4936d62040dd",
+          "prompt": "1. What did Tim do with his tenth birthday gift?",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "He traded it for a set of video games.",
+            "He did experiments with it.",
+            "He didn’t use it.",
+            "Option D"
+          ]
         },
         {
-          "id": "d03888c1-9ae3-4ef4-9497-38f8dfdc2f1a",
-          "prompt": "Câu 4",
+          "id": "0873c24b-2ad6-413d-94d8-1818113c5093",
+          "prompt": "Sentence 4",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Tim’s interest was only in video games.",
+            "Tim lost confidence in science.",
+            "Tim thought math was boring."
+          ]
         },
         {
-          "id": "4d7f727f-d3d7-4350-85cb-e17520330ab4",
-          "prompt": "Câu 5",
+          "id": "05de5f07-098f-4a98-b234-1f5f93ed9cf4",
+          "prompt": "Tim thought math was boring.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "582dfc6a-b717-47d8-bb44-23ca2dc38880",
-          "prompt": "Câu 6",
+          "id": "af09a0b9-accb-4785-91df-72f3d93a097f",
+          "prompt": "Exercise 1: Choose the most suitable answer (18 points)",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "e981a8f6-8070-425b-996a-1a41e2ba1d93",
-          "prompt": "Câu 7",
+          "id": "ac504358-94dd-4e8e-bb9f-0b1b55767507",
+          "prompt": "Sentence 7",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "e52cafbb-d16c-40ab-bc51-527950fb0415",
-          "prompt": "Câu 8",
+          "id": "36741d6a-2f79-4362-ad47-81458181f74d",
+          "prompt": "Sentence 8",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "7024abce-d9ac-4b31-be76-5f135bbd3b93",
-          "prompt": "Câu 9",
+          "id": "b5a2c5c8-a206-4861-913d-eccd4a919959",
+          "prompt": "C. less careful/ probably won’t",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "94396105-84c9-4e68-ad8b-68bc5f932314",
-          "prompt": "Câu 10",
+          "id": "08b11f1e-9151-4e5d-bde4-1e6c2bfaae31",
+          "prompt": "C. painfully slow process",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "98a8e2de-502e-4025-8777-1675146f3a6c",
-          "prompt": "Câu 11",
+          "id": "71e2b1e4-3a21-4293-b1b5-24fbe8bd8712",
+          "prompt": "C. well extremely",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "23c17d8c-d493-497d-a4f0-40ff93ed77db",
-          "prompt": "Câu 12",
+          "id": "f2c9e29b-39dd-4018-82b1-04df2449924b",
+          "prompt": "C. hardly/hardly",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "ce84636c-9ef5-42c0-a5c9-029185edbd03",
-          "prompt": "Câu 13",
+          "id": "b6cdf1e2-854a-4a78-9041-11c79eea208d",
+          "prompt": "C. in",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "ff5538f3-5fc6-499d-a93f-52bb8ed2d328",
-          "prompt": "Câu 14",
+          "id": "de5de8e9-4b17-43cf-a54f-14d666269b0a",
+          "prompt": "C. terrifying",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "d66b28bf-71ad-4303-a50c-0ebda791b231",
-          "prompt": "Câu 15",
+          "id": "d830a228-eb0b-4bec-a0f6-4aedde9b6fb8",
+          "prompt": "C. really gets upset",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "de1f9289-1afe-4a75-adfa-090d784a03bf",
-          "prompt": "Câu 16",
+          "id": "744fe533-faf2-418b-a142-fd6556257978",
+          "prompt": "C. It seems like",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "1ea345f1-1d5c-4ded-b6fd-cbc349a803a7",
-          "prompt": "Câu 17",
+          "id": "ae352447-ae05-4ed6-93d5-9da11b30b082",
+          "prompt": "C. There were",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         },
         {
-          "id": "6012a82a-2467-4522-ba37-691c704fb781",
-          "prompt": "Câu 18",
+          "id": "22e24bea-ca10-418d-b5c2-7e6ab86e892d",
+          "prompt": "C. There isn't",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
         }
       ]
     },
     {
-      "id": "grammar-i-n-t-v-o-o-n-v-n",
+      "id": "grammar-gap",
       "title": "Grammar · Điền từ vào đoạn văn",
-      "instructions": "Exercise 2: Fill in the gaps with suitable verb forms (20 points)",
+      "instructions": "Fill in the blanks with the correct form of words (10 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "4c647bf9-5511-42df-86b8-fa122fb4b1f8",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "6497363f-6f6b-4944-814d-ae613f877cb0",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "949fee83-9a76-4d95-93f3-5c77c49ad605",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "efa09480-562e-41b0-91d8-e15c622fbe6b",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "718ea314-4133-4db9-b04c-2c33c190724d",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "9afeb10c-e485-44d4-9f15-ecde2b229fe8",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "ff3b50fb-4480-439a-bc15-c564bd163c6f",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "1f00c8f2-2010-44f6-a7a9-333941d6909a",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "9ca4e518-9c61-417b-bfaf-c473d59a73e0",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "0cae5eef-ca71-4576-b1c5-e875873807ce",
+          "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "1de98368-11cd-47b9-a388-1fd689cffc9e",
-          "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "id": "430bb64b-5dcf-4c42-9838-325ddc53d014",
+          "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "300139e4-4930-4ee7-b20f-a39785beafa6",
-          "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
+          "id": "f812cdc8-02c1-4ebb-a325-1ace36602cc1",
+          "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "f0fe3da2-fa39-48fd-b5f2-7018f06ac281",
-          "prompt": "Chỗ trống (8)",
-          "options": [],
-          "long": false
+          "id": "792d95bd-e1cc-4d22-8f5f-c6af7b9c5d7f",
+          "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "613cc9b2-0289-4583-9ffe-241451153a4f",
-          "prompt": "Chỗ trống (9)",
-          "options": [],
-          "long": false
+          "id": "bf7abb89-10ad-4440-99ba-eaa7f522893f",
+          "prompt": "Chỗ trống (9)"
         },
         {
-          "id": "f920b2a2-8e52-4337-b8f0-dbeba5947b46",
-          "prompt": "Chỗ trống (10)",
-          "options": [],
-          "long": false
+          "id": "08213aa7-80e1-40ad-a0f6-e937ac4613e9",
+          "prompt": "Chỗ trống (10)"
         }
       ]
     },
     {
-      "id": "translation-d-ch-c-u",
+      "id": "translation",
       "title": "Translation · Dịch câu",
-      "instructions": "Dịch các câu sau sang tiếng Anh hoàn chỉnh (14 points)",
+      "instructions": "Translate the following sentences into English (28 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "39cf8f7e-65cd-49c3-b937-c1360f26b828",
-          "prompt": "Dịch câu 1 sang tiếng Anh.",
-          "options": [],
+          "id": "5c0c4269-ea7b-46ff-ae89-7405360e25d9",
+          "prompt": "23. There’s plenty of food, you can have ____________ you want.",
           "long": true
         },
         {
-          "id": "ef052eaf-b5ec-4e8e-9fbe-a13d451a378b",
-          "prompt": "Dịch câu 2 sang tiếng Anh.",
-          "options": [],
+          "id": "07c53cfd-4738-4c2d-b33f-2e67caa6c628",
+          "prompt": "A. as much as",
           "long": true
         },
         {
-          "id": "e65637e5-fb6c-4158-9bd1-89cbd60387d2",
-          "prompt": "Dịch câu 3 sang tiếng Anh.",
-          "options": [],
+          "id": "b5849194-bb76-4605-97ca-c6d283146670",
+          "prompt": "C. as many as",
           "long": true
         },
         {
-          "id": "d3691412-e9ca-4047-b5b7-372c5f025a63",
+          "id": "18ae2e3f-7abc-4358-9ea8-43913e41aa1a",
           "prompt": "Dịch câu 4 sang tiếng Anh.",
-          "options": [],
           "long": true
         },
         {
-          "id": "c21ae2fc-b919-4c22-bdc4-870f857939aa",
-          "prompt": "Dịch câu 5 sang tiếng Anh.",
-          "options": [],
+          "id": "cb6e1d82-591e-4874-a2bc-5f5f9efe30fb",
+          "prompt": "24. As the argument went on, Peter became ____________.",
           "long": true
         },
         {
-          "id": "31fb662f-af6f-4075-bed3-c3b20b711441",
-          "prompt": "Dịch câu 6 sang tiếng Anh.",
-          "options": [],
+          "id": "eab02265-7cbd-4ba2-91b8-7ac06276b61f",
+          "prompt": "A. tireder and tireder",
           "long": true
         },
         {
-          "id": "ef51936d-909c-45dc-b166-54147729ee29",
-          "prompt": "Dịch câu 7 sang tiếng Anh.",
-          "options": [],
+          "id": "0cc7001e-8dcb-49c4-ba0f-750f10081e05",
+          "prompt": "C. the more tired",
           "long": true
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Viết câu trả lời theo các gợi ý trong đề (tối thiểu 35 từ mỗi câu). Bài thi được chấm bằng AI (18 points).",
+      "instructions": "Answer the speaking questions (24 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "b783efb2-a3cc-4bbe-99f2-2ea668279b6a",
-          "prompt": "Question 1: Talk about your favorite leisure activity.\n+ What is it?\n+ When do you do it?\n+ Why do you enjoy it?",
-          "options": [],
+          "id": "69d93058-71d7-4599-9953-fd00a267c22a",
+          "prompt": "Part 1: Trả lời câu hỏi Speaking theo chủ đề.",
           "long": true
         },
         {
-          "id": "7efb9de1-74b1-4325-97da-a890838abe59",
-          "prompt": "Question 2: Describe a memorable trip you have had.\n+ Where did you go?\n+ Who did you go with?\n+ What did you do there?",
-          "options": [],
+          "id": "57bb2ae7-5536-4365-a89c-6c3664deda85",
+          "prompt": "Part 2: Trả lời câu hỏi Speaking theo chủ đề.",
           "long": true
         }
       ]

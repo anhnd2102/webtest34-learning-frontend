@@ -3,488 +3,271 @@
   "course": "45",
   "phase": 1,
   "testNumber": 2,
-  "sourceHash": "12dc57478d0512e0800af84dc617bc0a724ab85134050e95b300c4a1550cda13",
-  "durationMinutes": 120,
+  "sourceHash": "39a94d598c803e31000ed44406ff07c58c00e2af7f06376335cb51b464d8c37c",
+  "durationMinutes": 90,
   "groups": [
     {
-      "id": "grammar-c-m-t-t-ng-lai",
+      "id": "grammar-present",
       "title": "Grammar · Cụm từ tương lai",
-      "instructions": "1. Fill in the gaps in the second half of this model answer with phrases from the list of words",
-      "context": "",
-      "audioPath": "",
+      "instructions": "1. Fill in the gaps in the second half of this model answer with phrases from the box.",
+      "context": "… So, now let’s us consider the changes that ...are likely to occur... in the next 100 years. Unfortunately, I believe that not all changes (1)____ for the better. For example, in the future more and more people (2)____ from home and so they (3)____ more isolated from their colleagues. On the other hand, they (4)____ (certainly) greater freedom to choose their working hours.\nA further possible change is that handwriting (5)____ obsolete. We are already used to using a keyboard that today’s children are losing the ability to spell without the aid of a word processor.\nWithout a doubt, even greater changes (6)____ in technology used in the workplace. Computers (7)____ (undoubtedly) to grow even more powerful and this (8)____ (probably) in an even faster pace of life than we have now.",
       "items": [
         {
-          "id": "5e3d6151-64a5-42a5-a0b7-d5fa6a71445f",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "4c545de4-7d4f-4b03-a817-e74cd06d138e",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "b69784ff-b5dd-430a-a01f-54cb92f77456",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "2116b3cb-ee2a-4e23-aa9a-4370291e4d1f",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "236a2bae-c589-41e7-ac03-d40112571ffe",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "11221dbe-059e-45dc-a834-44b23d30420e",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "e74cca30-151a-4e17-96f3-89714193ec46",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "dbe27d2c-0f2d-47a3-b803-3c982e46ae27",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "4ae088aa-16cb-4a7c-aeac-bcca93b2a3fa",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "0002293c-0406-491f-abec-facd3461ff76",
+          "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "13aaca3a-cdfa-4e68-99d4-b3ab14842980",
-          "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "id": "0a78059b-3578-4920-9dd3-82f33b1395e6",
+          "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "a1714430-533d-49ce-8e8d-c2d4ec5be2ac",
-          "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
+          "id": "5846ada3-a651-429c-9f58-4cb31d4808b4",
+          "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "eb3d7f6d-0266-453b-8aa1-680609045311",
-          "prompt": "Chỗ trống (8)",
-          "options": [],
-          "long": false
+          "id": "850639fa-99b0-4451-af11-22ef2f0a31b8",
+          "prompt": "Chỗ trống (8)"
         }
       ]
     },
     {
-      "id": "grammar-hi-n-t-i-ti-p-di-n-t-ng-lai-n",
-      "title": "Grammar · Hiện tại tiếp diễn / Tương lai đơn",
-      "instructions": "2. Fill in the gaps with the present continuous or will-future form of the verbs in brackets.",
+      "id": "grammar-correction",
+      "title": "Grammar · Tìm và sửa lỗi",
+      "instructions": "4. In some of these sentences, there is a mistake with articles. Find the mistake and correct it. (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "07419644-835b-46ae-8315-26e0ce745f9a",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "0aa53f63-0630-4bc2-a63d-d0435f1d388d",
+          "prompt": "1. My father likes the classical music and listens to it all the time.\nLỗi sai"
         },
         {
-          "id": "5280ca74-3502-44e6-89f1-d8f49ab4b353",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "07a06f2e-8851-4e84-b79d-7c449c1dc96d",
+          "prompt": "1. My father likes the classical music and listens to it all the time.\nPhần sửa đúng"
         },
         {
-          "id": "bc7a41c2-9b49-4281-982f-6a2262f69312",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "51a47609-cf80-40b2-99a6-8b396aa7e54e",
+          "prompt": "2. I saw a man sitting in a restaurant. A woman came and joined man.\nLỗi sai"
         },
         {
-          "id": "6c6d73a3-a95f-4724-8728-234da91c9287",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "51387ac7-4fff-4c98-9c8f-523030ef0c15",
+          "prompt": "2. I saw a man sitting in a restaurant. A woman came and joined man.\nPhần sửa đúng"
         },
         {
-          "id": "cc3d5dd8-8ccb-400a-a9da-081bd307f1ed",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "122e0962-ee96-41a0-b45b-f269165fd77d",
+          "prompt": "3. Sun was shining and it was a lovely day.\nLỗi sai"
+        },
+        {
+          "id": "662a8299-2b2e-4330-9526-534a0c9acb27",
+          "prompt": "3. Sun was shining and it was a lovely day.\nPhần sửa đúng"
+        },
+        {
+          "id": "049e9cd4-90f8-4cd5-94b4-bc6a2928f896",
+          "prompt": "4. I would like to live by sea because I love swimming.\nLỗi sai"
+        },
+        {
+          "id": "93694226-82b1-4c54-8f01-0b29358c8398",
+          "prompt": "4. I would like to live by sea because I love swimming.\nPhần sửa đúng"
+        },
+        {
+          "id": "4d390c80-8ac2-407d-ade0-e607ca46a3b3",
+          "prompt": "5. He bought expensive car yesterday.\nLỗi sai"
+        },
+        {
+          "id": "445b12a7-7a9d-41f9-8947-1cb81dc66dc0",
+          "prompt": "5. He bought expensive car yesterday.\nPhần sửa đúng"
         }
       ]
     },
     {
-      "id": "grammar-c-c-th-t-ng-lai",
-      "title": "Grammar · Các thì tương lai",
-      "instructions": "3. Fill in the gaps with a future form from this unit and the verbs in brackets",
-      "context": "",
-      "audioPath": "",
-      "items": [
-        {
-          "id": "93fcd8f5-983d-459c-8c02-07f05ae764f4",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "8579f699-f33a-4930-973e-b6e404433287",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "e286fb9d-360a-46c1-bd78-3d19bf8a1c5d",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "8c9bb629-52c7-4577-95b8-4106dbd9a8ff",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "bd83ab32-b918-4ef1-92f1-147a200644df",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "d1e5c849-04ab-4c76-b55d-afeba322efe2",
-          "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "c6e17b48-7b37-4164-a7ff-f8a5a63de482",
-          "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "25c009f6-23d9-4b3f-87c2-86c663aef930",
-          "prompt": "Chỗ trống (8)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "a4557696-33d7-454a-82d6-a165cc8934c8",
-          "prompt": "Chỗ trống (9)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "b1341d7a-b57b-4336-ba79-bf4cbfc08cce",
-          "prompt": "Chỗ trống (10)",
-          "options": [],
-          "long": false
-        }
-      ]
-    },
-    {
-      "id": "grammar-t-m-v-s-a-l-i-sai",
-      "title": "Grammar · Tìm và sửa lỗi sai",
-      "instructions": "4. In some of these sentences, there is a mistake with articles. Find the mistake and correct it. If the sentence is correct, write X.",
-      "context": "",
-      "audioPath": "",
-      "items": [
-        {
-          "id": "6d2c46e3-4cfa-4b33-8cd3-fb760a0e45b5",
-          "prompt": "Câu 1: 1. My father likes the classical music and listens to it all the time.",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "cbea78f6-05aa-46c8-8936-9f91d19ebad4",
-          "prompt": "Câu 2: 2. I saw a man sitting in a restaurant. A woman came and joined him, but the man got up and left without speaking to her.",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "f28bf709-4d55-4561-bb16-59e3e44a7740",
-          "prompt": "Câu 3: 3. Sun was shining and it was a lovely day.",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "072d6f84-7a35-4595-9c35-26546b536a1a",
-          "prompt": "Câu 4: 4. I can play piano",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "a84a1064-b34c-45cc-b3c2-789e33dcc20a",
-          "prompt": "Câu 5: 5. I come from United Arab Emirates.",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "17540fc5-e7a2-42e1-b0ce-ed80cd8da6da",
-          "prompt": "Câu 6: 6. I’ve applied to study at the university of Edinburgh.",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "51d75c99-808c-4482-a56b-99dd0c9e3477",
-          "prompt": "Câu 7: 7. I usually go to work by the bus.",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "a3db77e6-99d7-4248-9b2a-225def49e77c",
-          "prompt": "Câu 8: 8. My husband is doctor.",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "176161f8-79f7-4903-b866-4b80d7832649",
-          "prompt": "Câu 9: 9. Sorry I’m late – car wouldn’t start this morning",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "77320adb-0d66-4bc4-8ddd-2023bfe3335c",
-          "prompt": "Câu 10: 10. I’m going to start a cruise down river Nile",
-          "options": [],
-          "long": false
-        }
-      ]
-    },
-    {
-      "id": "listening-ch-p-c-u-nghe-c",
+      "id": "listening-dictation",
       "title": "Listening · Chép câu nghe được",
       "instructions": "1. You will hear 5 sentences. Listen carefully and write down exactly what you hear. You will hear each sentence twice.",
       "context": "",
-      "audioPath": "assets/demo-audio/45/01. Phase 1 Test 2 Dictation.mp3",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "0af9c140-1355-4a38-b724-d4819aa44401",
-          "prompt": "Câu nghe 1",
-          "options": [],
-          "long": false
+          "id": "0c1ff2a4-94b3-4be6-8153-f6572de262c6",
+          "prompt": "Câu nghe 1"
         },
         {
-          "id": "41f1cc98-3a89-4277-9cd4-6739c0b13256",
-          "prompt": "Câu nghe 2",
-          "options": [],
-          "long": false
+          "id": "dce4c24e-4523-416c-872f-6ff3152dea29",
+          "prompt": "Câu nghe 2"
         },
         {
-          "id": "7093e6f4-e19a-41b1-835e-68bbdcbe4042",
-          "prompt": "Câu nghe 3",
-          "options": [],
-          "long": false
+          "id": "6d04df7d-676f-40ce-ac30-ee07fab252ad",
+          "prompt": "Câu nghe 3"
         },
         {
-          "id": "19ca1ac2-09e0-4054-ad95-755a3bcfcf0d",
-          "prompt": "Câu nghe 4",
-          "options": [],
-          "long": false
+          "id": "2383ebb0-0249-4296-99c9-2c2499598d6b",
+          "prompt": "Câu nghe 4"
         },
         {
-          "id": "ac2a40b2-3dd3-48c9-b908-833b9c81ef92",
-          "prompt": "Câu nghe 5",
-          "options": [],
-          "long": false
+          "id": "703b0299-8143-40d9-9c1b-64fef9b46b1b",
+          "prompt": "Câu nghe 5"
         }
       ]
     },
     {
-      "id": "listening-i-n-bi-u-m-u",
+      "id": "listening-notes",
       "title": "Listening · Điền biểu mẫu",
       "instructions": "2. Listen and complete the notes below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
-      "context": "",
-      "audioPath": "assets/demo-audio/45/02. Phase 1 Test 2 Comprehension Questions.mp3",
+      "context": "Rose Garden Apartments\nAsked about apartment (1) __________\nConvenient for big (2) __________\nPrice/ night: (3) __________\n\nBlue Bay\nAbout 1 km from some (4) __________\nNot suitable for people with (5) __________",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "33539b8d-d6b4-4754-bc68-72916b8208ae",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "88dc4404-842a-4de1-a9cd-0fa7a0cb5eec",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "54d9309b-8e9f-44cc-b634-b9540a7ac8ee",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "4188261a-e140-437e-a1e3-8646869b1d05",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "67494477-dbfb-4784-9c1e-c9fbd7b25d0f",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "9253df8c-6cfc-4562-b76e-dd23cdfcf816",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "477fc98d-8e82-4d0c-a961-a10392057640",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "7f1512e1-e20a-4ce3-9048-8b805578ca29",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "7a99530a-ccf5-4727-ab3c-cee4357e22ab",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "7c21d195-6bb1-4ad6-a447-5e93e61bcfb9",
+          "prompt": "Chỗ trống (5)"
         }
       ]
     },
     {
-      "id": "listening-tr-l-i-ng-n",
+      "id": "listening-answers",
       "title": "Listening · Trả lời ngắn",
       "instructions": "3. Listen to the recording and answer the questions below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
       "context": "",
-      "audioPath": "assets/demo-audio/45/02. Phase 1 Test 2 Comprehension Questions.mp3",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "324b3d9a-e9ea-45f7-93d2-0b2488e06998",
-          "prompt": "6. 6",
-          "options": [],
-          "long": false
+          "id": "4778d8b6-9e33-4333-b013-388729742739",
+          "prompt": "6. Which apartment is on top of a hill?"
         },
         {
-          "id": "9659fcbe-4e3e-42f7-a793-a177bae97794",
-          "prompt": "7. 7",
-          "options": [],
-          "long": false
+          "id": "b17c0a11-32fe-4753-9138-d01975c8b204",
+          "prompt": "7. What shared cooking facilities are provided at this apartment?"
         },
         {
-          "id": "ca566ac9-dd62-4147-b861-2144453a3fce",
-          "prompt": "8. 8",
-          "options": [],
-          "long": false
+          "id": "680effe9-c359-445a-aaa8-5871341a99cc",
+          "prompt": "8. How much does a stay at this apartment cost?"
         },
         {
-          "id": "ebf5876d-af01-49d8-9e0b-851e50b7945b",
-          "prompt": "9. 9",
-          "options": [],
-          "long": false
+          "id": "270952d0-a57e-4371-8543-a4100f579ca0",
+          "prompt": "9. Where can guests park for free at the Grand Apartments?"
         },
         {
-          "id": "f47dd149-4867-4be2-a932-bb64896a0416",
-          "prompt": "10. 10",
-          "options": [],
-          "long": false
+          "id": "1cc09d14-aef7-4e23-ad5f-abed4c728761",
+          "prompt": "10. Which group makes up the largest number of customers at the Grand Apartments?"
         }
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-gi-i-t",
-      "title": "Vocabulary · Từ vựng & Giới từ",
-      "instructions": "Hoàn thành các bài tập từ trái nghĩa và điền giới từ thích hợp vào đoạn văn.",
+      "id": "vocabulary-formal",
+      "title": "Vocabulary · Từ vựng",
+      "instructions": "Complete the vocabulary exercises below.",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "999fbf94-fd14-46f9-ab83-ee63aebb4bb4",
-          "prompt": "2. Write the opposite of the adjectives/ adverbs in italics",
-          "options": [],
-          "long": false
+          "id": "eb4b9ddb-c1a6-4274-b5b5-1a6a46366658",
+          "prompt": "1. The examples about online shopping are not really relevant with the main topic of the essay."
         },
         {
-          "id": "7b1e9931-0a31-489f-b5e6-781835891e84",
-          "prompt": "5. The test results were accurate.",
-          "options": [],
-          "long": false
+          "id": "f2b40a82-873b-4606-8575-ce70d57e7f68",
+          "prompt": "Sentence 2"
         },
         {
-          "id": "cfae17fd-38ca-402a-b8d8-e7eed62ec203",
-          "prompt": "6. At this stage, we only have a rough idea of the total tuition fees.",
-          "options": [],
-          "long": false
+          "id": "c8a1544c-25c2-41bd-954b-83818f475c81",
+          "prompt": "Sentence 3"
         },
         {
-          "id": "c6360156-126e-4960-9087-722d125fdd5a",
-          "prompt": "7. The instructions for online registration are very simple.",
-          "options": [],
-          "long": false
+          "id": "80b15d1b-bc17-4c13-901b-258705dba2fc",
+          "prompt": "2. Flexible working is now characteristic for many modern companies."
         },
         {
-          "id": "7c2e17cf-4845-4f8a-9bc5-4d9427bb8fc4",
-          "prompt": "8. The teacher played a significant role in motivating the students.",
-          "options": [],
-          "long": false
+          "id": "9a04dffb-2e67-49d5-9800-0c15b275b628",
+          "prompt": "Sentence 5"
         },
         {
-          "id": "dfbd274b-5e19-4659-86b3-299fbabbb5dc",
-          "prompt": "9. There were roughly 200 students in the in-class lecture.",
-          "options": [],
-          "long": false
+          "id": "fca12f81-323a-4894-bb12-d6312aa5bbd8",
+          "prompt": "Sentence 6"
         },
         {
-          "id": "2f41695c-4602-48c5-91ba-264e78babc9e",
-          "prompt": "10. We checked the data and initially found some small errors in the calculations.",
-          "options": [],
-          "long": false
+          "id": "217f4b4b-0061-4a0f-9504-d2680ffa9579",
+          "prompt": "3. Relative with last year’s results, the students’ achievement has improved significantly."
         },
         {
-          "id": "bed3c5b6-1e30-4200-a303-09310b67f5da",
-          "prompt": "11. The temperature was exactly one degree higher than yesterday.",
-          "options": [],
-          "long": false
+          "id": "775556cc-a2a7-467e-806f-8b181808cb20",
+          "prompt": "Sentence 8"
         },
         {
-          "id": "afac051b-764c-485d-ab9b-90e70afbd7ff",
-          "prompt": "12. The problem is specifically caused by work fatigue.",
-          "options": [],
-          "long": false
+          "id": "69534ac8-71d9-48ae-8622-a7f2fd1ffa04",
+          "prompt": "Sentence 9"
         },
         {
-          "id": "9546c2dd-4583-4b76-a7ab-c75a472907b5",
-          "prompt": "Chỗ trống (14)",
-          "options": [],
-          "long": false
+          "id": "6654a424-78c2-4847-810b-68d63fb44620",
+          "prompt": "4. This simple introduction is very appropriate with an essay about language learning."
         },
         {
-          "id": "7f49beb4-bd5c-4303-a9a2-4c074e1002be",
-          "prompt": "Chỗ trống (15)",
-          "options": [],
-          "long": false
+          "id": "5eca8da9-d8c5-497f-9ae1-262caffafe95",
+          "prompt": "Sentence 11"
         },
         {
-          "id": "8d1ea1fa-f56b-47df-818c-e84ae4806136",
-          "prompt": "Chỗ trống (16)",
-          "options": [],
-          "long": false
+          "id": "c2d4be64-c9ee-4bda-b051-3326cb29b6b4",
+          "prompt": "Sentence 12"
         },
         {
-          "id": "1e7abd48-9a92-4d0e-81de-90daf55cf38a",
-          "prompt": "Chỗ trống (17)",
-          "options": [],
-          "long": false
+          "id": "a912e82d-52c1-465e-9e09-7c527ac2ba82",
+          "prompt": "2. Write the opposite of the adjectives/ adverbs in italics"
         },
         {
-          "id": "d19b7a96-8a07-4525-953e-651865081f12",
-          "prompt": "Chỗ trống (18)",
-          "options": [],
-          "long": false
+          "id": "2f5895f3-a38f-4547-8683-8f554be56462",
+          "prompt": "5. The test results were accurate."
         },
         {
-          "id": "7f5d2f5a-4ec1-4fbe-8bbf-00d47137c103",
-          "prompt": "Chỗ trống (19)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "b7151e26-730d-4136-8425-327cdb5082cf",
-          "prompt": "Chỗ trống (20)",
-          "options": [],
-          "long": false
+          "id": "a37062b8-d22d-4d05-b0a8-fd1ac2a16388",
+          "prompt": "6. At this stage, we only have a rough idea of the total tuition fees."
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Viết câu trả lời tối thiểu 50 từ cho mỗi câu hỏi. Bài làm sẽ được AI tự động chấm theo 3 tiêu chí: Ngữ pháp (4đ), Tính mạch lạc & Phát triển ý (3đ), Từ vựng (3đ).",
+      "instructions": "Answer the questions in full English paragraphs. Automated AI grading (30 points).",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "8479b712-d606-4265-8b3c-f010489a63d8",
+          "id": "5b9356e4-ada9-4eb5-9f20-dd98b0a5ee03",
           "prompt": "Question 1: Write two intentions about your future job AND/OR your education.",
-          "options": [],
           "long": true
         },
         {
-          "id": "094b03c4-99b7-4c09-a40e-266345120655",
+          "id": "5df86749-68a3-4b34-ad84-836c6c1525df",
           "prompt": "Question 2: Do you think Internet access will be more common in the future? Why?",
-          "options": [],
           "long": true
         },
         {
-          "id": "77820b0e-5772-44db-88d1-71578c99fb96",
+          "id": "8a775f8c-474f-4184-bddc-b9911d872fab",
           "prompt": "Question 3: What changes do you think will happen to the workplace in the future? (List at least 2 changes)",
-          "options": [],
           "long": true
         }
       ]

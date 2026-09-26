@@ -3,720 +3,503 @@
   "course": "03",
   "phase": null,
   "testNumber": 3,
-  "sourceHash": "805c92ef98a03601384dcbddf17d9ea5c8fe7c2b4478e3790b0f3d12bbedd239",
+  "sourceHash": "6e31a1eb9d8df24fc57716751b5637f8da01b5e4b0079bc7586f98125c96dae1",
   "durationMinutes": 90,
   "groups": [
     {
-      "id": "listening-i-n-t",
+      "id": "listening-gap",
       "title": "Listening · Điền từ",
       "instructions": "🔉 Exercise 1: Listen and fill in the blanks with suitable words or phrases (Nghe và điền vào chỗ trống với từ hoặc cụm từ thích hợp) 5 điểm",
-      "context": "",
-      "audioPath": "assets/demo-audio/03/Test_3_ex_1_enhanced.mp3",
+      "context": "Today, I’m going to talk about Cristiano Ronaldo, a really (1)____  in the football world. At the age of 18, he began playing for a local club and he (2)____, which helped him stand out among his teammates. He also followed a really strict diet - He never drank bubble tea or soft drinks, and always chose (3)____, like fruits, meat, and vegetables, for his meals. He was really busy with his practice but he still tried to find time for cooking at home, even on special occasions like his birthday parties. Eating healthy foods was one of the reasons why Ronaldo has become the best football player in the world. Besides sports, Ronaldo is also a big fan of (4)____ He enjoys going to the shopping mall and (5)____ People often see him going shopping with his girlfriend.",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "01075663-3dd4-4094-a4d2-1687ea0d0f82",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "88f8eeea-835d-4066-ab83-92b05f9930cc",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "71d73a0c-2465-4fd0-a85f-ce1d35c0baa9",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "4ca13795-c390-4c52-95b7-e51d854218f4",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "c73b63a2-f0a8-4376-a44e-121c062f92ce",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "a2fc0cef-ab55-4751-a72b-297dd1a0805d",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "7aa427d2-4c8d-4d66-b5a2-e64d6d7a66d5",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "a1d65fcd-839f-41f3-9e5f-27c682991035",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "e7de200c-887d-4326-9f79-7f36faf8c944",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "b241a3a3-8361-4d19-ac14-8317e74dda0d",
+          "prompt": "Chỗ trống (5)"
         }
       ]
     },
     {
-      "id": "listening-tr-l-i-ti-ng-vi-t",
+      "id": "listening-vi",
       "title": "Listening · Trả lời tiếng Việt",
       "instructions": "Exercise 2: Answer these questions in Vietnamese (Trả lời các câu hỏi sau bằng tiếng Việt) 5 điểm",
       "context": "",
-      "audioPath": "assets/demo-audio/03/Test_3_ex_1_enhanced.mp3",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "c813fa33-0441-452d-b6c7-c36b02fca66f",
-          "prompt": " Trong câu “ When he was 18, he began playing for a local club..”, dấu hiệu nào về mặt thời gian cho biết câu này đang nói về hành động trong thời điểm trong quá khứ?",
-          "options": [],
+          "id": "b28b6b56-9fb8-479e-8c95-2cf11ee144c8",
+          "prompt": "Trong câu “ When he was 18, he began playing for a local club..”, dấu hiệu nào về mặt thời gian cho biết câu này đang nói về hành động trong thời điểm trong quá khứ?",
           "long": true
         },
         {
-          "id": "274095c7-8b21-4fb0-9b88-f356bccff193",
+          "id": "e17173eb-3177-437a-8b72-98412c4ea4a4",
+          "prompt": "Câu “ When he was 18, he began playing for a local club..” có thể tách thành hai câu \n“When he was 18.” và \n“He began playing for a local club.” được không?",
+          "long": true
+        },
+        {
+          "id": "8ab4d1c9-b694-4ea8-8f38-8737b2370420",
           "prompt": "Vì sao?",
-          "options": [],
           "long": true
         },
         {
-          "id": "6c04bfb4-bb3c-443a-8288-f9aa0fcfec26",
+          "id": "535f6cb5-2197-4f89-b9c1-86771bf98b73",
           "prompt": "Tại sao trong câu “He also followed a really strict diet - He never drank bubble tea or soft drinks…” không có dấu hiệu về thời gian trong quá khứ mà lại chia thì Quá Khứ Đơn",
-          "options": [],
           "long": true
         },
         {
-          "id": "52807be1-7f22-472d-b05c-f7b4d926b0a8",
-          "prompt": "Trong câu “Eating healthy foods was one of the reasons…” tại sao động từ lại chia số ít “was” dù trước đó có danh từ số nhiều “foods”",
-          "options": [],
-          "long": true
-        },
-        {
-          "id": "133da7c7-8818-4c29-808c-6ef6d0a6ecd9",
-          "prompt": "Câu hỏi tiếng Việt 5",
-          "options": [],
+          "id": "ae78853a-a129-4ed9-99e1-5a1eea8d4bc5",
+          "prompt": "Trong câu “People often see him going shopping with his girlfriend”, tại sao “people” (một từ không có “s” ở cuối - báo hiệu danh từ số nhiều) lại không được chia động từ là “sees”?",
           "long": true
         }
       ]
     },
     {
-      "id": "vocabulary-nghe-t-v-vi-t-ngh-a",
+      "id": "vocabulary-listen",
       "title": "Vocabulary · Nghe từ và viết nghĩa",
       "instructions": "🔉 Exercise 1: Listen and note down the words/phrases you hear from the recording (10 điểm)",
       "context": "",
-      "audioPath": "assets/demo-audio/03/Test_3_SS_Vocab.mp3",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "62ea5ba7-ae6a-4958-b4af-ffc65cf7ee51",
-          "prompt": "1. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "07242b43-f9fd-4925-b447-61d7a9e45acf",
+          "prompt": "1. Từ/cụm từ nghe được"
         },
         {
-          "id": "cec11976-3b58-4d3e-8070-8eb083bca023",
-          "prompt": "1. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "bc979f78-f5b5-4b82-9db1-c0bf4273c8bd",
+          "prompt": "1. Nghĩa tiếng Việt"
         },
         {
-          "id": "681fdf5f-bbfb-47f4-af26-cf0a7f772304",
-          "prompt": "2. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "46c125d9-4cbe-451a-b843-cca628ec6b4e",
+          "prompt": "2. Từ/cụm từ nghe được"
         },
         {
-          "id": "6d7db32e-885b-4cb5-aca1-bbb1716341b2",
-          "prompt": "2. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "9f34b0a1-1f70-4732-886d-1df5c6b3f325",
+          "prompt": "2. Nghĩa tiếng Việt"
         },
         {
-          "id": "e454ef63-cf8f-4831-b04f-751fda33281b",
-          "prompt": "3. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "f7913ebe-b412-4245-be79-c0e54ea6a6f1",
+          "prompt": "3. Từ/cụm từ nghe được"
         },
         {
-          "id": "27496191-0f35-497d-b79d-e67bb3bf1556",
-          "prompt": "3. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "30d2dae6-c0e2-4357-812c-4fd3276a80e9",
+          "prompt": "3. Nghĩa tiếng Việt"
         },
         {
-          "id": "f16b132e-aa4d-4dfa-8554-d68737d727de",
-          "prompt": "4. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "4897ff29-a3c4-41fc-8012-a60d866f65f0",
+          "prompt": "4. Từ/cụm từ nghe được"
         },
         {
-          "id": "9f6d70a8-0199-4cf7-a986-4169f835dd29",
-          "prompt": "4. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "951585ee-1a8a-4947-9866-6cda0d71496f",
+          "prompt": "4. Nghĩa tiếng Việt"
         },
         {
-          "id": "a434ccfb-ac9d-46fc-b177-887babeca5da",
-          "prompt": "5. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "0894c360-d006-4b22-a77d-04a3c53dbfae",
+          "prompt": "5. Từ/cụm từ nghe được"
         },
         {
-          "id": "9103b0bc-4185-48d2-9499-9a3ad1677cf8",
-          "prompt": "5. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "f816b58b-0cf7-4cd0-b080-eaa0d1dacf59",
+          "prompt": "5. Nghĩa tiếng Việt"
         },
         {
-          "id": "8d310d44-24ae-4024-8595-94443ef67177",
-          "prompt": "6. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "3498cf54-cdda-4108-b951-f2cb5f3e53d9",
+          "prompt": "6. Từ/cụm từ nghe được"
         },
         {
-          "id": "78d13d0a-971d-4ce7-8c68-78affe1a9593",
-          "prompt": "6. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "6305d0d3-bd12-4828-b941-961bc0b23384",
+          "prompt": "6. Nghĩa tiếng Việt"
         },
         {
-          "id": "b4b01565-8e1f-4316-acc6-afc3dcfb3dba",
-          "prompt": "7. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "1777e1a5-2a3e-4e05-9a4b-da4260db3f6b",
+          "prompt": "7. Từ/cụm từ nghe được"
         },
         {
-          "id": "0eacb290-2f2c-40aa-973e-4ae15bcdc3e8",
-          "prompt": "7. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "b8357f69-5739-445f-bdbd-c1342882188b",
+          "prompt": "7. Nghĩa tiếng Việt"
         },
         {
-          "id": "dcf47153-ff2c-474d-8120-4f4ed93f8660",
-          "prompt": "8. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "de1c789a-b894-4b59-a1ea-9acc6d74f597",
+          "prompt": "8. Từ/cụm từ nghe được"
         },
         {
-          "id": "50eee01a-49f4-420a-a60b-d2beafaa004a",
-          "prompt": "8. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "4285bd1a-ede9-4b7d-9831-c3341e74ec2c",
+          "prompt": "8. Nghĩa tiếng Việt"
         },
         {
-          "id": "f2e4eb24-d4c8-4f43-8712-7e53f469d09d",
-          "prompt": "9. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "ea562e42-95b8-42a6-94b9-b8c394d76dac",
+          "prompt": "9. Từ/cụm từ nghe được"
         },
         {
-          "id": "5766a9ba-1d2b-4824-b7d4-088a27a8a3f8",
-          "prompt": "9. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "aa3bbc79-5a2d-4ae3-bdb1-d9eace5ba6d9",
+          "prompt": "9. Nghĩa tiếng Việt"
         },
         {
-          "id": "a4c79f88-7d7c-4260-9754-494f2e5aa253",
-          "prompt": "10. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "6e874dbf-6763-4b7a-918e-b6760b7e4812",
+          "prompt": "10. Từ/cụm từ nghe được"
         },
         {
-          "id": "3a57ffbc-8796-4eb1-a45c-20de7fdf8c42",
-          "prompt": "10. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "5e3f1753-1db4-45b8-a717-dc8c6c6ecafe",
+          "prompt": "10. Nghĩa tiếng Việt"
         },
         {
-          "id": "754dad12-f8fc-4573-b27f-bc7f0576d86a",
-          "prompt": "11. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "9124ea4a-63b0-4439-a08d-8558ad299fd2",
+          "prompt": "11. Từ/cụm từ nghe được"
         },
         {
-          "id": "76668b21-8354-4c44-ad27-4d7ce2e533d5",
-          "prompt": "11. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "342817af-8db2-4063-ab48-cc396508252f",
+          "prompt": "11. Nghĩa tiếng Việt"
         },
         {
-          "id": "83bebc3e-a2b6-475f-ac8f-371a8e0d5062",
-          "prompt": "12. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "a42d6ca7-bce6-47a4-8272-d9528e53bf70",
+          "prompt": "12. Từ/cụm từ nghe được"
         },
         {
-          "id": "38262406-cc10-48fa-b885-301205a40851",
-          "prompt": "12. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "98299767-46f1-4987-a4d3-fba46119236b",
+          "prompt": "12. Nghĩa tiếng Việt"
         },
         {
-          "id": "c3dfa7b0-6786-4271-8890-649cf992833c",
-          "prompt": "13. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "694f7127-86ac-4b8c-8cc7-13db01a4a548",
+          "prompt": "13. Từ/cụm từ nghe được"
         },
         {
-          "id": "e327c4bc-2862-498d-a46a-933f09cd7bba",
-          "prompt": "13. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "637f06cd-c4a0-449a-a9d1-68efde7b3871",
+          "prompt": "13. Nghĩa tiếng Việt"
         },
         {
-          "id": "243e7bef-7563-4c9c-9a50-f4754c59ce7c",
-          "prompt": "14. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "b9f4d17c-aebb-4b9e-bc54-876e1025dbb4",
+          "prompt": "14. Từ/cụm từ nghe được"
         },
         {
-          "id": "c0a22fa4-b38a-460c-bc63-6918df5b97a1",
-          "prompt": "14. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "6bf98a04-7d4d-45eb-b62e-bb0e149227aa",
+          "prompt": "14. Nghĩa tiếng Việt"
         },
         {
-          "id": "d74ea2ce-f769-4c0a-b4c0-819cb71789ed",
-          "prompt": "15. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "06a248a3-1059-4490-965a-d3567cb0c5d7",
+          "prompt": "15. Từ/cụm từ nghe được"
         },
         {
-          "id": "fa7502de-e3f4-4fbb-a8cd-00d10220fbe1",
-          "prompt": "15. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "3376ba25-b152-46ae-bb3d-a5b822933c2c",
+          "prompt": "15. Nghĩa tiếng Việt"
         }
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-qua-nh",
+      "id": "vocabulary-picture",
       "title": "Vocabulary · Từ vựng qua ảnh",
       "instructions": "Exercise 2: Look at the pictures and write down the suitable words/ phrases (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "60705c80-4847-473c-8c5e-f7de18bab771",
-          "prompt": "Hình ảnh (1)",
-          "options": [],
-          "long": false
+          "id": "801a23a8-8a4a-4d34-a747-29dbedc854bd",
+          "prompt": "1. v _ g _ t _ _ _ _ _",
+          "image": "assets/03/test-3/pic-1.png"
         },
         {
-          "id": "516ccb1f-b117-49f7-bfe1-6a277485ca08",
-          "prompt": "Hình ảnh (2)",
-          "options": [],
-          "long": false
+          "id": "226b1d14-2589-4d3a-a381-96ab3f2cf72a",
+          "prompt": "2. b _ _ _ _ e       t _ _",
+          "image": "assets/03/test-3/pic-2.png"
         },
         {
-          "id": "b711a8e8-10d9-4b5c-b253-a80700b73518",
-          "prompt": "Hình ảnh (3)",
-          "options": [],
-          "long": false
+          "id": "7e7d5cf4-8868-49d6-af68-f5e6cadbbf8a",
+          "prompt": "3. n _ o _ _ _     s _ _ _",
+          "image": "assets/03/test-3/pic-3.png"
         },
         {
-          "id": "8dc63055-39c7-4132-85d7-1822991b97cf",
-          "prompt": "Hình ảnh (4)",
-          "options": [],
-          "long": false
+          "id": "e8806328-d8f6-4eb0-98cc-e97b389a7e91",
+          "prompt": "4. s _ _ _ _ o _",
+          "image": "assets/03/test-3/pic-4.png"
         },
         {
-          "id": "6d5520a8-1a5e-4b74-b863-0df32d8766ed",
-          "prompt": "Hình ảnh (5)",
-          "options": [],
-          "long": false
+          "id": "d9ff681d-ce6a-4a1f-bb0c-41093ee4e392",
+          "prompt": "5. m _ _ _ _ _       p _ _ _ _",
+          "image": "assets/03/test-3/pic-5.png"
         },
         {
-          "id": "d3295056-572d-4928-970f-2496897df4ff",
-          "prompt": "Hình ảnh (6)",
-          "options": [],
-          "long": false
+          "id": "8b894c3d-c123-46ec-ad09-6511ee805f47",
+          "prompt": "6. c _ _ i _",
+          "image": "assets/03/test-3/pic-6.png"
         },
         {
-          "id": "093851bc-682b-4027-86fe-a7edd13ecc66",
-          "prompt": "Hình ảnh (7)",
-          "options": [],
-          "long": false
+          "id": "a08075c0-4b4c-403e-9549-549a20651578",
+          "prompt": "7. h _ _ _ b _ _",
+          "image": "assets/03/test-3/pic-7.png"
         },
         {
-          "id": "7481c9e6-034a-42ea-b9a6-8ef07bc569a8",
-          "prompt": "Hình ảnh (8)",
-          "options": [],
-          "long": false
+          "id": "57ce9eed-1009-49f7-8f9c-03f829e6851d",
+          "prompt": "8. t _ _ _ _    t _ _ _ _ _",
+          "image": "assets/03/test-3/pic-8.png"
         },
         {
-          "id": "72482830-eb98-4712-ab5f-482aa9cd7332",
-          "prompt": "Hình ảnh (9)",
-          "options": [],
-          "long": false
+          "id": "c7ae20b8-02a3-4b5b-bf00-802ea61b898e",
+          "prompt": "9. l _ _ _    wei _ _ _ _",
+          "image": "assets/03/test-3/pic-9.png"
         },
         {
-          "id": "f79990c1-8999-4979-a25e-3c4d8b4c37f3",
-          "prompt": "Hình ảnh (10)",
-          "options": [],
-          "long": false
+          "id": "cc5828db-fd89-48b4-a64b-13216c1604d1",
+          "prompt": "10. _ _ _ _ _ _ _ _ _ _",
+          "image": "assets/03/test-3/pic-10.png"
         }
       ]
     },
     {
-      "id": "vocabulary-ch-n-p-n",
+      "id": "vocabulary-choice",
       "title": "Vocabulary · Chọn đáp án",
       "instructions": "Exercise 3: Choose the correct answer (Chọn đáp án đúng) 5 điểm",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "8618379a-44f9-47a3-adb7-441034d0fea0",
-          "prompt": "Câu 1",
+          "id": "b36ebc86-360b-4425-abfc-d710100595a1",
+          "prompt": "At the moment I am …… work so I don’t have time to cook.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "very busy",
+            "busy with",
+            "energetic with",
+            "very energetic"
+          ]
         },
         {
-          "id": "35684056-8c87-4ec3-a7d4-ddb2ec6f1ce6",
-          "prompt": "Câu 2",
+          "id": "78e98c0b-5bf5-44cd-b27f-453f3f445938",
+          "prompt": "I love eating fish. It is  ……",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "bad",
+            "comfortable",
+            "warm",
+            "delicious"
+          ]
         },
         {
-          "id": "67dc6826-3797-497c-bf63-9cb10b6c2372",
-          "prompt": "Câu 3",
+          "id": "0b8185f7-6add-4a03-b479-2ac046a006f4",
+          "prompt": "It was very cold yesterday so I wore a …… when I went out.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "T-shirt",
+            "watch",
+            "jacket",
+            "gift"
+          ]
         },
         {
-          "id": "c63a6591-4ac6-4aa1-9e4c-d00b45df79b7",
-          "prompt": "Câu 4",
+          "id": "a776d115-7314-4faa-9ab2-3ddfc31f03cd",
+          "prompt": "Hung goes ……… three times a week. He loves riding his bike around town.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "swimming",
+            "running",
+            "jogging",
+            "cycling"
+          ]
         },
         {
-          "id": "e28662cb-fb23-4de8-ba84-05eb8c973a9f",
-          "prompt": "Câu 5",
+          "id": "83c9b268-becb-4421-8e1b-ad62ea401253",
+          "prompt": "Playing sports helps people to build up ………",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "benefits",
+            "muscles",
+            "weights",
+            "health"
+          ]
         }
       ]
     },
     {
-      "id": "grammar-chia-ng-t",
+      "id": "grammar-verb",
       "title": "Grammar · Chia động từ",
       "instructions": "Exercise 1: Complete the sentences using words in the brackets (10 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "5007620f-963d-4763-8a9b-5b8744745e84",
-          "prompt": "Câu 1",
-          "options": [],
-          "long": false
+          "id": "0a297046-bf27-4c02-a422-630b7761c88d",
+          "prompt": "1. He ____(travel) abroad last year. He ____ (visit) a lot of countries."
         },
         {
-          "id": "a6a92fdc-48b8-4df4-a745-adced0b8cec9",
-          "prompt": "Câu 2",
-          "options": [],
-          "long": false
+          "id": "da3e68f2-c63c-4672-85a0-defbfda8812d",
+          "prompt": "2. Sia ____ (not/attend) the Spanish class because she ____ (be) sick."
         },
         {
-          "id": "05d36cb7-1f75-4b46-bfa3-e48e4be6b531",
-          "prompt": "Câu 3",
-          "options": [],
-          "long": false
+          "id": "4d801213-b318-42b5-bf7d-0f531ada5ddf",
+          "prompt": "3. Sam ____ (swim) in the river this morning because the weather ____ (turn) hot."
         },
         {
-          "id": "23d7f670-d8c7-49b5-960e-786bb56e51b4",
-          "prompt": "Câu 4",
-          "options": [],
-          "long": false
+          "id": "79569126-c9f0-475f-b2f0-ee41f0784c28",
+          "prompt": "4. Where ____ (she/be) when you ____ (arrive) the airport?"
         },
         {
-          "id": "178acde3-4703-421a-ae05-f6f35ede614e",
-          "prompt": "Câu 5",
-          "options": [],
-          "long": false
+          "id": "1e3c4212-ea56-4660-9b5c-36483a96270f",
+          "prompt": "5. Hien ____ (go on) a vacation last weekend. She wasn’t at home when we ____ (call) her."
         },
         {
-          "id": "86f8e893-0708-44fb-870b-9d4b21be4fbe",
-          "prompt": "Câu 6",
-          "options": [],
-          "long": false
+          "id": "172f401c-ea72-432a-abe5-70523d300d38",
+          "prompt": "6. ____ (you/borrow) my book last week? – No, I ____ (not)"
         },
         {
-          "id": "edfa2746-3cf0-4038-9c62-89f2c1480fe0",
-          "prompt": "Câu 7",
-          "options": [],
-          "long": false
+          "id": "b6fcf1f8-6bb2-4047-971d-815f8aecff2b",
+          "prompt": "7. They ____ (come) back home and ____ (play) computer games."
         },
         {
-          "id": "567368e6-b492-4ff3-becb-b31d7159a58f",
-          "prompt": "Câu 8",
-          "options": [],
-          "long": false
+          "id": "3f60fe8f-4c7e-499c-b1a4-5328ea997ee5",
+          "prompt": "8. I ____ (can) come to the party because I ____ (finish) my homework."
         },
         {
-          "id": "f748040c-9bef-49fd-a1ad-91431734e87c",
-          "prompt": "Câu 9",
-          "options": [],
-          "long": false
+          "id": "ccf5736e-8c75-43c6-93f9-98c0e0a80508",
+          "prompt": "9. Peter ____ (not/review) for the exam. He ____ (not/can) pass it."
         },
         {
-          "id": "7e2fc381-d333-44fb-b2b8-41542192d5bf",
-          "prompt": "Câu 10",
-          "options": [],
-          "long": false
+          "id": "a8f2ef21-f3d7-4007-81e6-1fce908b43de",
+          "prompt": "10. Ha and Huong were at the beach yesterday. They ____ (walk) and ____ (pick up) seashells."
         }
       ]
     },
     {
-      "id": "grammar-t-m-v-s-a-l-i",
+      "id": "grammar-correction",
       "title": "Grammar · Tìm và sửa lỗi",
-      "instructions": "Exercise 2: Find and correct the mistakes in the sentences below (5 điểm)",
+      "instructions": "Exercise 2: Each sentence has one mistake. Find the mistake and correct it (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "3cf8e0a9-eaa6-4550-ae04-1b75dd738fcc",
-          "prompt": "Câu 1\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "0b89b8bf-1fd6-4a9b-b0da-30846a634aa8",
+          "prompt": "1. We have two knife in the kitchen.\nLỗi sai"
         },
         {
-          "id": "8400cdd3-6993-4bef-9a4c-e50a56295d23",
-          "prompt": "Câu 1\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "50fd7d8f-9e1a-4cba-8c9d-f8f8fb56d2d3",
+          "prompt": "1. We have two knife in the kitchen.\nPhần sửa đúng"
         },
         {
-          "id": "d742bf5c-a2e2-474d-915d-8d938c8fd459",
-          "prompt": "Câu 2\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "92f92e5b-ca77-48fe-8389-a6f9508c8d8e",
+          "prompt": "2. Danny bought five bottle of water in the supermarket.\nLỗi sai"
         },
         {
-          "id": "dbb2f993-940c-484a-a191-b2a35bcc29ae",
-          "prompt": "Câu 2\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "babef80d-7d53-4cfb-83ad-75181a2f5c46",
+          "prompt": "2. Danny bought five bottle of water in the supermarket.\nPhần sửa đúng"
         },
         {
-          "id": "9cd6b028-623d-48c2-93a6-d83443fb2330",
-          "prompt": "Câu 3\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "8f9c7286-9997-4d1e-bd54-8aa34b556b1c",
+          "prompt": "3. We gave them lots of egg to cook breakfast.\nLỗi sai"
         },
         {
-          "id": "4270cf3b-9ce7-478e-a30f-049f02d784de",
-          "prompt": "Câu 3\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "e4fc346d-441a-4dc2-a6e9-f3eb8c67ddb1",
+          "prompt": "3. We gave them lots of egg to cook breakfast.\nPhần sửa đúng"
         },
         {
-          "id": "a960af4a-2d24-4550-a355-81fa4d3493cf",
-          "prompt": "Câu 4\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "8a4c0c63-d6b0-4805-8ebe-db0d89519608",
+          "prompt": "4. What would you like? - I’d like a water.\nLỗi sai"
         },
         {
-          "id": "3ec5633c-c2e2-4c7d-b09c-da524a30f54b",
-          "prompt": "Câu 4\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "2aad2bb2-07ab-4bb7-b361-5f9c7953d81e",
+          "prompt": "4. What would you like? - I’d like a water.\nPhần sửa đúng"
         },
         {
-          "id": "5e953431-c0c8-4e6c-b54a-32ff4eca6767",
-          "prompt": "Câu 5\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "292987b3-a050-443b-ba6e-5b3fe1d7ea0a",
+          "prompt": "5. I borrowed some moneys from my parents.\nLỗi sai"
         },
         {
-          "id": "d084f3a8-3345-4a55-833c-d3fe79828328",
-          "prompt": "Câu 5\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "4136e1e0-dd84-40d5-86bf-593a462ec22c",
+          "prompt": "5. I borrowed some moneys from my parents.\nPhần sửa đúng"
         }
       ]
     },
     {
-      "id": "grammar-s-p-x-p-c-u",
+      "id": "grammar-order",
       "title": "Grammar · Sắp xếp câu",
-      "instructions": "Exercise 3: Put the words in the correct order to make complete sentences (5 điểm)",
+      "instructions": "Exercise 3: Arrange these words to make a correct sentence (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "6983aa5d-8cb3-4eb6-b6df-be25b9c712ee",
-          "prompt": "Câu 1",
-          "options": [],
-          "long": false
+          "id": "09e3ad89-2f43-4379-8abd-9bf93543b081",
+          "prompt": "1. eat/Loan/fish/yesterday."
         },
         {
-          "id": "fb1722b6-04cc-4412-997c-4cdb04a5f828",
-          "prompt": "Câu 2",
-          "options": [],
-          "long": false
+          "id": "d7214bdd-e5b7-4a19-b6fa-57e2b4807bb2",
+          "prompt": "2. see/can’t/last/his/parents/Terry/night."
         },
         {
-          "id": "8bff5870-8143-4e54-a36d-5a127cce90d5",
-          "prompt": "Câu 3",
-          "options": [],
-          "long": false
+          "id": "41bb9384-5fe6-4524-8c09-c0d742c1083e",
+          "prompt": "3. 2001/Tam/in/lived/city/center/in/the."
         },
         {
-          "id": "e8e001b9-b48c-46ec-baba-bdfbd52f734a",
-          "prompt": "Câu 4",
-          "options": [],
-          "long": false
+          "id": "43c0e843-7d62-4e33-a1b6-f3f847d5e4cd",
+          "prompt": "4. last/play/night/they/football."
         },
         {
-          "id": "ac58553f-0485-4da6-b96f-01daa760ddc0",
-          "prompt": "Câu 5",
-          "options": [],
-          "long": false
+          "id": "efaef354-396e-45fb-8943-608ae2cb9577",
+          "prompt": "5. doctor/had/Tracy/had/to/see/a/she/because/year,/an/Last/accident."
         }
       ]
     },
     {
-      "id": "writing-d-ch-vi-t-anh",
+      "id": "writing",
       "title": "Writing · Dịch Việt–Anh",
-      "instructions": "Dịch các câu sau sang tiếng Anh (25 điểm)",
+      "instructions": "Translate the following sentences into English (Dịch các câu sau sang tiếng Anh) 25 điểm",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "5e9fcf5c-84e2-4437-a26f-aebca906f7d4",
-          "prompt": "Dịch câu 1 sang tiếng Anh.",
-          "options": [],
+          "id": "0e0fabd1-43a0-45e5-a0e9-1eea9b88520c",
+          "prompt": "1. Linh mua hai cái đèn bàn ở trung tâm thương mại vào tháng trước. Chúng rất đắt và không có giảm giá.",
           "long": true
         },
         {
-          "id": "8dc131a1-505e-401d-89d4-dffac01b9d9f",
-          "prompt": "Dịch câu 2 sang tiếng Anh.",
-          "options": [],
+          "id": "5aabdcb1-f729-4ddc-96fc-bc0d81cc52d9",
+          "prompt": "2. Peter thích mặc màu đen. Quần áo của anh ấy toàn màu đen. Màu này hợp với anh ấy. Anh ấy cảm thấy thoải mái khi mặc quần áo đen với giày chạy màu trắng.",
           "long": true
         },
         {
-          "id": "97f9e028-2c34-4b95-bbd3-56841a68d483",
-          "prompt": "Dịch câu 3 sang tiếng Anh.",
-          "options": [],
+          "id": "8913b914-325c-4ba6-a5f0-666bc44583a0",
+          "prompt": "3. Tại sao nhiều người thích ăn đồ ăn nhanh? Bởi vì họ thích vị của nó. Họ không thích sa lát bởi vì nó không ngon đối với họ.",
           "long": true
         },
         {
-          "id": "72b71bdb-99aa-4244-9a51-0270840c10d2",
-          "prompt": "Dịch câu 4 sang tiếng Anh.",
-          "options": [],
+          "id": "e46fce47-a930-45b2-9172-2e8f1fe97271",
+          "prompt": "4. Hai tháng trước Jack rất bận. Anh ấy không thể dành thời gian cho thể thao nên anh ấy không giỏi chơi chúng. Bây giờ anh ấy thường xuyên chơi đá bóng với các đồng nghiệp vào cuối tuần.",
           "long": true
         },
         {
-          "id": "2886f17c-c5bd-4037-8d70-f077c1ab4a72",
-          "prompt": "Dịch câu 5 sang tiếng Anh.",
-          "options": [],
+          "id": "f29c9f8f-f2b9-4140-ab3f-c7a5e314ec8f",
+          "prompt": "5. Tần suất Thịnh đi tập gym thế nào? Anh ấy tập gym 5 lần một tuần. Đi tập gym giúp Thịnh cảm thấy tràn đầy năng lượng, sống khỏe mạnh và thư giãn.",
           "long": true
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Trả lời các câu hỏi sau bằng tiếng Anh (Tối thiểu 25 từ cho mỗi câu). Bài làm được chấm bằng AI (25 điểm).",
+      "instructions": "Answer these questions using your own ideas or hints (25 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "f84feddd-5cf7-46e9-a98b-7513889a03ff",
+          "id": "4332e9e5-cfe8-49be-af31-00545359b353",
           "prompt": "1. What’s your favorite food and drink? Why?\nGợi ý: Hints:; món ăn ưa thích của tôi là … + giải thích vì sao; đồ uống ưa thích của tôi là; thích vị của nó vì sao?",
-          "options": [],
           "long": true
         },
         {
-          "id": "90d31d3c-82a9-4018-a816-a7a8c12db2eb",
+          "id": "554b2305-8e0a-4eb5-b76e-e84266ec062e",
           "prompt": "2. How often do you eat in a restaurant?\nGợi ý: Hints:; tần suất ăn ở nhà hàng như thế nào; ăn ở ngoài với ai; ăn món gì",
-          "options": [],
           "long": true
         },
         {
-          "id": "dad1cbbe-f5ff-447f-8340-6ec3f8282ca3",
+          "id": "af0aa62c-70f5-4cdf-b917-20d83bdc5006",
           "prompt": "3. Who did you often go shopping for clothes with?\nGợi ý: Hints:; Đã thường đi mua sắm với ai; Cả hai chúng tôi đều thích thời trang; nên (so) tôi rất thích đi mua sắm với anh ấy/cô ấy",
-          "options": [],
           "long": true
         },
         {
-          "id": "ee7f158a-41d6-4483-9d59-bc5c0bdd841f",
+          "id": "4bfa74b2-6723-493e-926c-14eec12a2b85",
           "prompt": "4. What clothes did you buy the last time you went to a shopping mall?\nGợi ý: Hints:; Đã mua……..(liệt kê các đồ quần áo đã mua); Chiếc áo/ quần rất thoải mái, dễ mặc, và không đắt tiền (yêu cầu nêu cả 3 thông tin); Rất phấn khích vì món đồ; Mặc nó hàng ngày và cả các dịp đặc biệt",
-          "options": [],
           "long": true
         },
         {
-          "id": "41892f1d-259f-45cd-9288-b3b633b32654",
+          "id": "fe877f80-4cf5-4586-82fc-dba5f3d8c845",
           "prompt": "5. Did you like sports when you were a child?\nGợi ý: Hints:; Khi tôi còn nhỏ → thường chơi …; Nó đã giúp tôi + (nêu ra ít nhất 2 lợi ích của thể thao); Tôi đã thường xuyên xem các trận đấu và cổ vũ cho đội tôi yêu thích; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
-          "options": [],
           "long": true
         }
       ]

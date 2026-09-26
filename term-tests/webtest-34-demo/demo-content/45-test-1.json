@@ -3,444 +3,439 @@
   "course": "45",
   "phase": 1,
   "testNumber": 1,
-  "sourceHash": "b76d1a9a905b262510e25ca8a189386137be2feda0164bb4860d56d46a0284fe",
+  "sourceHash": "712083183529f048693956015675e10f76f647716c82bb17edb86a7082466595",
   "durationMinutes": 120,
   "groups": [
     {
-      "id": "grammar-hi-n-t-i",
+      "id": "grammar-present",
       "title": "Grammar · Hiện tại",
       "instructions": "1. Fill in the gaps with the correct form of the verbs in brackets (present simple or present continuous)",
-      "context": "",
-      "audioPath": "",
+      "context": "I’m busy right now. I’m filling in (fill in) an application form for a new job.\nJohn (1)................ (not/study) very hard at the moment. I (2).............. (not think) he’ll pass his exams.\nWhat (3).............. (he/do)?\nHe (4)..................... (try) to fix the television aerial.\nAnimals (5)................... (breathe in) oxygen and  (6)..................... (give out) carbon dioxide.",
+      "audioRequired": false,
+      "notice": "",
       "items": [
         {
-          "id": "58f99e40-49f7-437e-9a72-c0f5fd0d4fb1",
+          "id": "grammar-present-1",
           "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "a26fb43b-e240-4dd1-a14c-18283296907b",
+          "id": "grammar-present-2",
           "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "164a9ea7-56bd-4dc8-923e-00b5639d1c63",
+          "id": "grammar-present-3",
           "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "e9e8491b-5b92-42c4-85cf-29a1be58f5da",
+          "id": "grammar-present-4",
           "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "0e924ac2-14be-485b-84f8-9f8b4ac4b654",
+          "id": "grammar-present-5",
           "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "763c31fc-d848-4932-ba41-507fe2a09773",
+          "id": "grammar-present-6",
           "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         }
       ]
     },
     {
-      "id": "grammar-qu-kh",
+      "id": "grammar-past",
       "title": "Grammar · Quá khứ",
       "instructions": "2. Fill in the gaps with the past simple or past continuous form of the verbs in brackets.",
-      "context": "",
-      "audioPath": "",
+      "context": "I had (have) a wonderful biology teacher, Mrs. Hughes. She (1).............  (make) us excited about the subject because she was so interested in it herself. I remember one lesson in particular; we (2)............. (study) different types of plants, and Mrs. Hughes (3)............. (describe) the different parts of the flower. She (4)............. (pick up) a purple flower, I can’t remember exactly what it was, and suddenly we (5)............. (notice) that she (6)............. (cry)! She (7)............. (apologize) and said that sometimes nature was so beautiful it just made her cry.",
+      "audioRequired": false,
+      "notice": "",
       "items": [
         {
-          "id": "7f4a18e1-345b-45f3-b1a4-37e47cdf62b4",
+          "id": "grammar-past-1",
           "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "20ad462b-a5b9-458b-9189-d804a0a37c2c",
+          "id": "grammar-past-2",
           "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "f10b8e23-e8f0-453e-9cba-16782fd0f152",
+          "id": "grammar-past-3",
           "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "9dbc90b9-24a0-4f82-a168-84391315331d",
+          "id": "grammar-past-4",
           "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "49f07fbc-b13a-45c6-992e-7c0149ea925f",
+          "id": "grammar-past-5",
           "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "69e1839f-1b1b-4b0f-8d08-8abbb93e8570",
+          "id": "grammar-past-6",
           "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "d713755c-092c-4cde-a12d-02dc8aac2f57",
+          "id": "grammar-past-7",
           "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         }
       ]
     },
     {
-      "id": "grammar-ho-n-th-nh",
+      "id": "grammar-perfect",
       "title": "Grammar · Hoàn thành",
-      "instructions": "3. Fill in the gaps with a verb from the box in the past simple, past perfect simple or past perfect continuous tense",
-      "context": "",
-      "audioPath": "",
+      "instructions": "3. Fill in the gaps with a verb from the box in the past simple, past  perfect simple or past perfect continuous tense",
+      "context": "Like\nStart\nDecide\nTake\nWork\nStay\nBe\nBuy\nvisit\n- She (1) ........................ as a waitress for five years when he met her.\n- The lecture (2)...................... by the time they got there.\n- In the supermarket, he (3)............................all the ingredients he needed and then went home to make her a birthday cake.\n- Holly did well in her exam, which was a shock because she (4)........ (never) an exam before.\n- They went on a big tour in Britain. First they (5)................. in London for a few days. Then they (6)................. Cambridge, York and Edinburgh, and then Bath. They (7)..................... to Bath before, but they (8)....................it so much that they (9)................... to go back again.",
+      "audioRequired": false,
+      "notice": "",
       "items": [
         {
-          "id": "1669cb32-e8d1-453b-b417-0b38cfee25dd",
+          "id": "grammar-perfect-1",
           "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "8e4c9d98-2eb0-4241-b41b-b5ecf18db617",
+          "id": "grammar-perfect-2",
           "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "ca2fe469-7e74-4696-9ad0-f7d9405db72d",
+          "id": "grammar-perfect-3",
           "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "dfe096a2-516d-47a5-92f1-18df31889094",
+          "id": "grammar-perfect-4",
           "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "dde6dbf3-861a-4cce-b2bb-be5901383980",
+          "id": "grammar-perfect-5",
           "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "bfdf89e0-2980-41d4-a694-0a07cc296c64",
+          "id": "grammar-perfect-6",
           "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "c0e0c04c-50bb-42d9-a6ac-7e17ffa6be2f",
+          "id": "grammar-perfect-7",
           "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "777ef301-f9ec-4d33-9f0b-c6ae5e01eeae",
+          "id": "grammar-perfect-8",
           "prompt": "Chỗ trống (8)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         },
         {
-          "id": "e89df873-46f5-4463-ba4d-9ef90bab7e82",
+          "id": "grammar-perfect-9",
           "prompt": "Chỗ trống (9)",
-          "options": [],
-          "long": false
+          "sourceRef": null
         }
       ]
     },
     {
-      "id": "listening-ch-p-c-u-nghe-c",
+      "id": "listening-dictation",
       "title": "Listening · Chép câu nghe được",
-      "instructions": "1. You will hear 5 sentences. Listen carefully and write down exactly what you hear. You will hear each sentence twice.",
-      "context": "",
-      "audioPath": "assets/demo-audio/45/01. Phase 1 Test 1 Dictation.mp3",
+      "instructions": "1. You will hear 5 sentences about a birthday party. Listen carefully and write down exactly what you hear. You will hear each sentence twice.",
+      "context": "You will hear a conversation between a customer named Katherine and a representative from John's Outdoor Center. Katherine is enquiring about booking a venue for her upcoming birthday celebration.",
+      "audioRequired": true,
+      "notice": "",
       "items": [
         {
-          "id": "2547b870-4cc8-42ed-ba2f-f7442794921f",
+          "id": "listening-dictation-1",
           "prompt": "Câu nghe 1",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "long": true
         },
         {
-          "id": "b01a2a62-84ea-4425-8cbb-6d44aed8da1f",
+          "id": "listening-dictation-2",
           "prompt": "Câu nghe 2",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "long": true
         },
         {
-          "id": "7c17ea48-e2b8-4e1c-ac4d-12a18fec223d",
+          "id": "listening-dictation-3",
           "prompt": "Câu nghe 3",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "long": true
         },
         {
-          "id": "b8fa82a8-89f6-4d19-b7bc-60b7d582296b",
+          "id": "listening-dictation-4",
           "prompt": "Câu nghe 4",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "long": true
         },
         {
-          "id": "41218568-e344-4414-bb2b-e37f62d3b719",
+          "id": "listening-dictation-5",
           "prompt": "Câu nghe 5",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "long": true
         }
-      ]
+      ],
+      "audioPath": "assets/demo-audio/45/dictation.mp3",
+      "audioHash": "6ff7ce32af8b0da7fc981d14742f98a65ae43d81d970f51aa063da1420f8f56d",
+      "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
     {
-      "id": "listening-i-n-bi-u-m-u",
+      "id": "listening-notes",
       "title": "Listening · Điền biểu mẫu",
-      "instructions": "2. Listen and complete the notes below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
-      "context": "",
-      "audioPath": "assets/demo-audio/45/02. Phase 1 Test 1 Comprehension Questions.mp3",
+      "instructions": "2. Listen and complete the notes below.\nWrite NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
+      "context": "JOHN’S OUTDOOR CENTRE – PARTY ENQUIRY FORM\n\nEvent: Katherine’s (1) ____________\nReason for choosing this place: it is (2) ____________ from the city\nKatherine’s birthday: (3) ________________________\nOvernight accommodation: in the (4) ________________________\nPhone number: (5) ________________________",
+      "audioRequired": true,
+      "notice": "",
       "items": [
         {
-          "id": "78000c11-ad63-412d-a607-28fde2ef5bcd",
+          "id": "listening-notes-1",
           "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "maxWords": 3
         },
         {
-          "id": "6de914a2-d979-4ba2-ba92-c2152c20e859",
+          "id": "listening-notes-2",
           "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "maxWords": 3
         },
         {
-          "id": "299c4060-49c5-48d0-aa7b-1b0886c7f052",
+          "id": "listening-notes-3",
           "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "maxWords": 3
         },
         {
-          "id": "4fc5ae5d-e661-4289-b9da-3f48f4e87cf3",
+          "id": "listening-notes-4",
           "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "maxWords": 3
         },
         {
-          "id": "df0f504f-9138-4b1f-ab79-033a58ff9cd2",
+          "id": "listening-notes-5",
           "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "sourceRef": null,
+          "maxWords": 3
         }
-      ]
+      ],
+      "audioPath": "assets/demo-audio/45/comprehension.mp3",
+      "audioHash": "3d9a4624a42bedae62297612ae97b147e92c38eca1d17e61e7e9594b7f4d96b1",
+      "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
     {
-      "id": "listening-tr-l-i-ng-n",
+      "id": "listening-answers",
       "title": "Listening · Trả lời ngắn",
       "instructions": "3. Listen to the recording and answer the questions below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
       "context": "",
-      "audioPath": "assets/demo-audio/45/02. Phase 1 Test 1 Comprehension Questions.mp3",
+      "audioRequired": true,
+      "notice": "",
       "items": [
         {
-          "id": "287e765f-cfdb-4d6f-b6d3-19cab46d824e",
-          "prompt": "6. Câu hỏi 6",
-          "options": [],
-          "long": false
+          "id": "listening-answers-1",
+          "prompt": "6. On what date would Katherine like to celebrate the party?",
+          "sourceRef": "K72",
+          "maxWords": 2
         },
         {
-          "id": "cf369618-5699-411f-82cc-412b4e9d3e75",
-          "prompt": "7. Câu hỏi 7",
-          "options": [],
-          "long": false
+          "id": "listening-answers-2",
+          "prompt": "7. What day of the week will the party be held?",
+          "sourceRef": "K73",
+          "maxWords": 2
         },
         {
-          "id": "ef2916ee-76c2-4529-81d8-2264f3bd8ad1",
-          "prompt": "8. Câu hỏi 8",
-          "options": [],
-          "long": false
+          "id": "listening-answers-3",
+          "prompt": "8. What does John’s calendar show about that date?",
+          "sourceRef": "K74",
+          "maxWords": 2
         },
         {
-          "id": "4133cb3d-2487-49d7-adaa-53330be04ce5",
-          "prompt": "9. Câu hỏi 9",
-          "options": [],
-          "long": false
+          "id": "listening-answers-4",
+          "prompt": "9. Why are the horses not available for riding on that day?",
+          "sourceRef": "K75",
+          "maxWords": 2
         },
         {
-          "id": "3a20cb1f-4188-4703-81a2-62be8dd52847",
-          "prompt": "10. Câu hỏi 10",
-          "options": [],
-          "long": false
+          "id": "listening-answers-5",
+          "prompt": "10. What evening activity will be organised for Katherine’s guests?",
+          "sourceRef": "K76",
+          "maxWords": 2
         }
-      ]
+      ],
+      "audioPath": "assets/demo-audio/45/comprehension.mp3",
+      "audioHash": "3d9a4624a42bedae62297612ae97b147e92c38eca1d17e61e7e9594b7f4d96b1",
+      "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
     {
-      "id": "vocabulary-t-trang-tr-ng",
+      "id": "vocabulary-formal",
       "title": "Vocabulary · Từ trang trọng",
-      "instructions": "I. Use more formal alternatives to the words in bold. Make any necessary grammatical changes.",
+      "instructions": "I.  Use more formal alternatives to the words in bold. Make any necessary grammatical changes.",
       "context": "",
-      "audioPath": "",
+      "audioRequired": false,
+      "notice": "",
       "items": [
         {
-          "id": "883ca7cc-1556-47ee-81fc-971f3be0817d",
+          "id": "vocabulary-formal-1",
           "prompt": "1. The book is mainly concerned with the problem of policing the internet",
-          "options": [],
-          "long": false
+          "sourceRef": "K82",
+          "targetWord": "mainly"
         },
         {
-          "id": "0dc17bb5-8023-4fff-a92b-9a98944f480f",
+          "id": "vocabulary-formal-2",
           "prompt": "2. The work of the Institute is not only devoted to cancer research.",
-          "options": [],
-          "long": false
+          "sourceRef": "K83",
+          "targetWord": "only"
         },
         {
-          "id": "5664855f-ec58-4914-8566-dee3892b260b",
+          "id": "vocabulary-formal-3",
           "prompt": "3. We tried to find a new way of understanding the data.",
-          "options": [],
-          "long": false
+          "sourceRef": "K84",
+          "targetWord": "tried"
         },
         {
-          "id": "ebf91870-64c1-4432-96fd-31becc50ff8f",
+          "id": "vocabulary-formal-4",
           "prompt": "4. Almost every school in the country had reported problems with the new system",
-          "options": [],
-          "long": false
+          "sourceRef": "K85",
+          "targetWord": "Almost"
         },
         {
-          "id": "03db7cc3-e3a5-480f-9f38-d0c11ff4e708",
+          "id": "vocabulary-formal-5",
           "prompt": "5. Basically, we believe we have demonstrated a significant link between the two events.",
-          "options": [],
-          "long": false
+          "sourceRef": "K86",
+          "targetWord": "Basically"
         }
       ]
     },
     {
-      "id": "vocabulary-bi-n-i-t",
+      "id": "vocabulary-word-form",
       "title": "Vocabulary · Biến đổi từ",
       "instructions": "II. Complete the sentences using the correct form of the word in CAPITALS.",
       "context": "",
-      "audioPath": "",
+      "audioRequired": false,
+      "notice": "",
       "items": [
         {
-          "id": "c235a66d-18f6-4e6b-a0a6-eaeb31d40c2d",
+          "id": "vocabulary-word-form-1",
           "prompt": "6. Mass tourism has led to the _______________ of many local habitats. (DESTROY)",
-          "options": [],
-          "long": false
+          "sourceRef": "K89"
         },
         {
-          "id": "9815c8e5-0908-4b75-baff-75db718d3587",
+          "id": "vocabulary-word-form-2",
           "prompt": "7. The singer gained _______________ worldwide after releasing her hit song. (RECOGNIZE)",
-          "options": [],
-          "long": false
+          "sourceRef": "K90"
         },
         {
-          "id": "8f5cee63-6e5b-4b2d-9295-a4a6ba8ae175",
+          "id": "vocabulary-word-form-3",
           "prompt": "8. Playing sports is a great way to keep yourself _______________ and energetic. (HEALTH)",
-          "options": [],
-          "long": false
+          "sourceRef": "K91"
         },
         {
-          "id": "97492c57-5fd9-416f-9362-3fe1208e4301",
+          "id": "vocabulary-word-form-4",
           "prompt": "9. Some locals are very _______________ and always welcome visitors with a smile. (HOSPITALITY)",
-          "options": [],
-          "long": false
+          "sourceRef": "K92"
         },
         {
-          "id": "759c1ff1-a563-4851-972c-856c0b560cc3",
+          "id": "vocabulary-word-form-5",
           "prompt": "10. The rapid _______________ of the city has caused significant traffic jams. (DEVELOP)",
-          "options": [],
-          "long": false
+          "sourceRef": "K93"
         }
       ]
     },
     {
-      "id": "vocabulary-c-m-t",
+      "id": "vocabulary-collocation",
       "title": "Vocabulary · Cụm từ",
-      "instructions": "III. Complete the collocations in the sentences below. Write ONE WORD only for each blank.",
+      "instructions": "III.  Complete the collocations in the sentences below. Write ONE WORD only for each blank.",
       "context": "",
-      "audioPath": "",
+      "audioRequired": false,
+      "notice": "",
       "items": [
         {
-          "id": "8ba9d827-0fca-4b07-a7b7-1eb9c87dc9f2",
+          "id": "vocabulary-collocation-1",
           "prompt": "11. The study lacks solid __________ to support its conclusion that radiation caused the problem.",
-          "options": [],
-          "long": false
+          "sourceRef": "K98",
+          "maxWords": 1
         },
         {
-          "id": "2c7a6300-b326-43e6-809d-79ea066b8973",
+          "id": "vocabulary-collocation-2",
           "prompt": "12. Increasing pollution levels pose a __________ to the stability of the local ecosystem.",
-          "options": [],
-          "long": false
+          "sourceRef": "K99",
+          "maxWords": 1
         },
         {
-          "id": "aaf25e49-13f1-48e5-880c-3faacc167e69",
+          "id": "vocabulary-collocation-3",
           "prompt": "13. The political motives for the government's actions are beyond the __________ of this essay.",
-          "options": [],
-          "long": false
+          "sourceRef": "K100",
+          "maxWords": 1
         },
         {
-          "id": "e8cddf52-fa2f-403c-9821-de7156467edc",
+          "id": "vocabulary-collocation-4",
           "prompt": "14. The hospital puts a lot of __________ on training nurses to ensure high-quality care.",
-          "options": [],
-          "long": false
+          "sourceRef": "K101",
+          "maxWords": 1
         },
         {
-          "id": "73cb90e8-6f87-47be-9da9-d40c3410ff09",
+          "id": "vocabulary-collocation-5",
           "prompt": "15. I play sports like football or tennis regularly to keep in __________.",
-          "options": [],
-          "long": false
+          "sourceRef": "K102",
+          "maxWords": 1
         },
         {
-          "id": "50fef1e9-8c93-4ae6-828a-595e4d01baaf",
+          "id": "vocabulary-collocation-6",
           "prompt": "16. Up until the 1980s, actors did not care much about their public __________.",
-          "options": [],
-          "long": false
+          "sourceRef": "K103",
+          "maxWords": 1
         },
         {
-          "id": "2fda1eb1-f84d-4e1e-86ac-64b4fa2f00f6",
+          "id": "vocabulary-collocation-7",
           "prompt": "17. International students __________ for nearly 80% of the university's total population.",
-          "options": [],
-          "long": false
+          "sourceRef": "K104",
+          "maxWords": 1
         },
         {
-          "id": "fcbf69bb-cac0-407b-b386-7a044b14d9ea",
+          "id": "vocabulary-collocation-8",
           "prompt": "18. Experts recommend playing sports on a regular __________.",
-          "options": [],
-          "long": false
+          "sourceRef": "K105",
+          "maxWords": 1
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Viết câu trả lời tối thiểu 50 từ cho mỗi câu hỏi. Bài làm sẽ được AI tự động chấm theo 3 tiêu chí: Ngữ pháp (4đ), Tính mạch lạc & Phát triển ý (3đ), Từ vựng (3đ).",
+      "instructions": "Viết câu trả lời tối thiểu 50 từ cho mỗi câu hỏi.",
       "context": "",
-      "audioPath": "",
+      "audioRequired": false,
+      "notice": "",
       "items": [
         {
-          "id": "e31e19b0-241e-4df3-b2d8-17d6d9fba4cb",
-          "prompt": "Question 1: In a few words, tell me about a close friend of yours\nCues:\n+ Who is he/she?\n+ How did you know each other?\n+ What do you have in common?",
-          "options": [],
-          "long": true
+          "id": "speaking-1",
+          "prompt": "Question 1: In a few words, tell me about a close friend of yours\n+ Who is he/she?\n+ How did you know each other?\n+ What do you have in common?",
+          "sourceRef": "Speaking DOCX",
+          "long": true,
+          "minWords": 50
         },
         {
-          "id": "4371a86e-bdb7-4095-9b4a-95adddf81f0a",
+          "id": "speaking-2",
           "prompt": "Question 2: Describe your last holiday\n+ When was it?\n+ Who did you go with?\n+ Did you enjoy it?",
-          "options": [],
-          "long": true
+          "sourceRef": "Speaking DOCX",
+          "long": true,
+          "minWords": 50
         },
         {
-          "id": "6b09758c-3be7-4f00-aae9-a1ae486c3c8d",
-          "prompt": "Question 3: Tell me about your English studying journey\nCues:\n+ How long have you been studying English?\n+ What are the problems you’ve had?\n+ What is the most enjoyable part during this journey?\n+ How do you often self-study?",
-          "options": [],
-          "long": true
+          "id": "speaking-3",
+          "prompt": "Question 3: Tell me about your English studying journey\n+ How long have you been studying English?\n+ What are the problems you’ve had?\n+ What is the most enjoyable part during this journey?\n+ How do you often self-study?",
+          "sourceRef": "Speaking DOCX",
+          "long": true,
+          "minWords": 50
         }
       ]
     }

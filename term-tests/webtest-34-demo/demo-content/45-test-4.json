@@ -3,323 +3,231 @@
   "course": "45",
   "phase": 1,
   "testNumber": 4,
-  "sourceHash": "aaa3c203ca119412bdcf32a946821dc52caf32e1bdbbad359c3df7b1cdb2becb",
-  "durationMinutes": 120,
+  "sourceHash": "0f5e986a91d9a48e8b6583854777f2e1bcf12f511fb5718f0ecc0454ac55344a",
+  "durationMinutes": 90,
   "groups": [
     {
-      "id": "grammar-chia-ng-t",
+      "id": "grammar-present",
       "title": "Grammar · Chia động từ",
       "instructions": "3. Fill in the gaps with an appropriate form of the verbs in brackets.",
-      "context": "",
-      "audioPath": "",
+      "context": "Many people think that the best way to reduce deaths from smoking is to ban smoking in public places. (1)However/In addition, it is not as simple as that. There are several reasons why I do not consider this approach to be suitable\n\n(2)Alternatively/firstly, banning activities often increases their popularity by making them seem more exciting. (3)Furthermore/In contrast, most smoking takes place in the privacy of people’s homes, and would (4)therefore/nevertheless not be affected by the ban. (5)Thirdly/Similarly, a ban on smoking would make extra demand on the police.\n\n(6)Although/despite the ideas behind banning smoking in public places are good, an alternative approach needs to be taken, in my opinion. Schools should lead the way in discussing the harmful effects of smoking not only on the smokers themselves but on others around them. (7)In addition/consequently, parents need to support these efforts by encouraging the children to understand the negative aspects of smoking\n\nIf we adopted these measures, I believe that fewer people would take up smoking (8)as a result/moreover. To some extent, these things are already happening. (9)And/nevertheless, further efforts are needed.",
       "items": [
         {
-          "id": "95e4d40e-a2d1-4874-921d-0194e5fd7ff9",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "8d7df6f6-fe6b-4716-98c7-350ffe61269a",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "caed58b4-bf9d-4280-b0ee-a1d4a9fd022e",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "10eda993-a949-4096-9789-612709e82239",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "6d0c169d-aede-4ea2-935f-ad1a086e76a0",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "f10545c2-73a1-4ea2-925e-57a8f7bdaa13",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "ca9d0b94-36e8-492e-82f9-2ce3ed5bb38a",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "401bf0c1-b458-42c5-b168-1e215fcd2cd3",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "1755c802-3882-4969-93b9-25783e73607d",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "0dcbcd0c-ae77-4a9b-af5d-7633858479c1",
+          "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "d3e9952c-f293-4237-aa5d-48f88d9c61b5",
-          "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "id": "33604192-d13f-4aab-bccc-a92fa81f5c16",
+          "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "c827a351-9751-4730-b40d-5bbe27128d04",
-          "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
+          "id": "2a240001-174d-4bfd-a4ff-5fe6882ab215",
+          "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "11d295b2-2770-4321-b943-8da029e2fadb",
-          "prompt": "Chỗ trống (8)",
-          "options": [],
-          "long": false
+          "id": "50ccae9d-ec81-4314-80cb-d0d192a7468d",
+          "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "a16d0ee7-838e-4719-ae6e-d2345a48c2b5",
-          "prompt": "Chỗ trống (9)",
-          "options": [],
-          "long": false
+          "id": "90aecdc8-ec7e-4bf5-9424-5b5073799350",
+          "prompt": "Chỗ trống (9)"
         },
         {
-          "id": "60a65a40-9cba-44f0-9c94-5b46e0daeeae",
-          "prompt": "Chỗ trống (10)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "0eb970d3-bd7c-4fd3-9ee3-66d1f4797b52",
-          "prompt": "Chỗ trống (11)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "383342cb-c22e-4479-acd2-7149cfee8b24",
-          "prompt": "Chỗ trống (12)",
-          "options": [],
-          "long": false
+          "id": "cec18603-0ebe-4cc0-aef6-9019730b0c36",
+          "prompt": "Chỗ trống (10)"
         }
       ]
     },
     {
-      "id": "listening-ch-p-c-u-nghe-c",
+      "id": "listening-dictation",
       "title": "Listening · Chép câu nghe được",
       "instructions": "1. You will hear 5 sentences. Listen carefully and write down exactly what you hear. You will hear each sentence twice.",
       "context": "",
-      "audioPath": "assets/demo-audio/45/Phase 1 Test 4 Dictation.mp3",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "9ecb437b-1cae-4fbe-95d7-5af1fe22d250",
-          "prompt": "Câu nghe 1",
-          "options": [],
-          "long": false
+          "id": "3e1703cc-a995-4d41-9e4a-5708e1f4ea48",
+          "prompt": "Câu nghe 1"
         },
         {
-          "id": "5ccf4dda-15c4-4809-9204-22b8752391d4",
-          "prompt": "Câu nghe 2",
-          "options": [],
-          "long": false
+          "id": "a0251ed9-c24c-4a2f-9179-50a814e980eb",
+          "prompt": "Câu nghe 2"
         },
         {
-          "id": "73d5adb8-b8f8-4693-a7eb-6ea817780914",
-          "prompt": "Câu nghe 3",
-          "options": [],
-          "long": false
+          "id": "ec8e8d29-d603-45b6-b612-95d8da16134a",
+          "prompt": "Câu nghe 3"
         },
         {
-          "id": "2219bc2d-d3db-485a-9db8-15a116725e2f",
-          "prompt": "Câu nghe 4",
-          "options": [],
-          "long": false
+          "id": "ce97d611-0ccb-45c2-9808-91ce51820752",
+          "prompt": "Câu nghe 4"
         },
         {
-          "id": "c59472d8-8e17-4e1f-bb18-1ee94b0f4394",
-          "prompt": "Câu nghe 5",
-          "options": [],
-          "long": false
+          "id": "ccbc5376-4c15-4cfe-a755-c24176eb5dbf",
+          "prompt": "Câu nghe 5"
         }
       ]
     },
     {
-      "id": "listening-i-n-bi-u-m-u",
+      "id": "listening-notes",
       "title": "Listening · Điền biểu mẫu",
       "instructions": "2. Listen and complete the notes below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
-      "context": "",
-      "audioPath": "assets/demo-audio/45/Phase 1 Test 4 Comprehension Questions.mp3",
+      "context": "Previous campervan holiday: (1) _________\nOnline choice: many (2) _________ available\nTrip time: (3) _________\nChairs stored: (4) _________ in van\nAgent helps get a (5) _________",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "4b880b45-e371-4de0-b20f-3aeec3a5aef4",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "b49316e4-0b88-4dd8-99bd-5818c31fa4aa",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "9d87dcce-72b6-40ce-ae82-a49f7b8fdd2b",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "4bc9ceca-51ef-4668-acb2-d964601eafbf",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "6c67a7d4-d359-4b9d-901d-6147f709a784",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "29f247da-488f-459a-b290-86b704c0447c",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "52f5c91a-09fc-4ff2-b9b7-b1f89c04d8cf",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "2caab984-bc88-41f6-a6b1-de77a835a76f",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "7261dd46-62ff-4cec-9d0e-d592dac9b3e3",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "866282f0-fb20-4bc9-93e8-fe1cd4bdf2f5",
+          "prompt": "Chỗ trống (5)"
         }
       ]
     },
     {
-      "id": "listening-tr-l-i-ng-n",
+      "id": "listening-answers",
       "title": "Listening · Trả lời ngắn",
       "instructions": "3. Listen to the recording and answer the questions below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
       "context": "",
-      "audioPath": "assets/demo-audio/45/Phase 1 Test 4 Comprehension Questions.mp3",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "64c7782d-5e35-47ee-9c32-651b2f065910",
-          "prompt": "6. Câu hỏi 6",
-          "options": [],
-          "long": false
+          "id": "cd3c77e6-a5ed-4d78-9a8a-8c813f074585",
+          "prompt": "6. What cost can change a lot depending on where you buy it?"
         },
         {
-          "id": "7fb4ae76-c3e0-4a38-a274-ee007e7d32dc",
-          "prompt": "7. Câu hỏi 7",
-          "options": [],
-          "long": false
+          "id": "f364dff9-3769-4fa9-945b-182ac591cf06",
+          "prompt": "7. How is Campbelltown described?"
         },
         {
-          "id": "32798c28-5e18-4821-8c45-4f4d012fd29d",
-          "prompt": "8. What cost can change a lot depending on where you buy it?",
-          "options": [],
-          "long": false
+          "id": "df21ec96-d6ef-4298-ac71-476ff47bc4c8",
+          "prompt": "8. How do you have to get there with a campervan?"
         },
         {
-          "id": "07491965-40a4-41ae-a92d-0da3943b9b27",
-          "prompt": "9. How is Campbelltown described?",
-          "options": [],
-          "long": false
+          "id": "bd58ba0c-7bb7-4c5f-8c3f-1598c8665f41",
+          "prompt": "9. What daily driving distance does she suggest not going over?"
         },
         {
-          "id": "883d12f9-3a38-4a6c-8d18-36c2bcac5ff9",
-          "prompt": "10. How do you have to get there with a campervan?",
-          "options": [],
-          "long": false
+          "id": "f0813849-b756-4d8f-96dc-1928fad3af95",
+          "prompt": "10. What can you rent to explore local areas?"
         }
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-t-ng-h-p",
-      "title": "Vocabulary · Từ vựng tổng hợp",
-      "instructions": "Hoàn thành các câu hỏi từ vựng bên dưới.",
+      "id": "vocabulary-formal",
+      "title": "Vocabulary · Từ vựng",
+      "instructions": "Complete the vocabulary exercises below.",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "aec64586-140f-40a2-bc10-b210a41dff68",
-          "prompt": "Câu 5",
-          "options": [],
-          "long": false
+          "id": "b8791531-07ca-4fab-9690-36c423484f36",
+          "prompt": "1. Complete the prepositional phrases as used in these press announcements."
         },
         {
-          "id": "8ff2db82-36aa-4809-b46c-81af37f2afa3",
-          "prompt": "6. What cost can change a lot depending on where you buy it?",
-          "options": [],
-          "long": false
+          "id": "efc2bd9c-1fa9-4425-b9c9-53c0488ed498",
+          "prompt": "1"
         },
         {
-          "id": "b1e20785-e60b-4266-9638-79a7d87c35db",
-          "prompt": "7. How is Campbelltown described?",
-          "options": [],
-          "long": false
+          "id": "d0da2db7-7372-4dcb-b542-20ad24ebb88f",
+          "prompt": "Sentence 3"
         },
         {
-          "id": "f8c2f006-4487-4dbb-9600-7b62ea4b81d5",
-          "prompt": "8. How do you have to get there with a campervan?",
-          "options": [],
-          "long": false
+          "id": "3857ef17-372f-4f74-9c26-978c11752311",
+          "prompt": "Sentence 4"
         },
         {
-          "id": "62b8b3db-e123-4b48-8384-1287bffc0c1d",
-          "prompt": "9. What daily driving distance does she suggest not going over?",
-          "options": [],
-          "long": false
+          "id": "40203084-5343-4218-a1c8-3a29f233c58c",
+          "prompt": "44595"
         },
         {
-          "id": "8b3fa4de-879b-4975-8a89-c4a438c61a48",
-          "prompt": "10. What can you rent to explore local areas?",
-          "options": [],
-          "long": false
+          "id": "6cc2f1a0-10e5-426d-b41b-89766d2ea669",
+          "prompt": "Sentence 6"
         },
         {
-          "id": "e81fe397-50fc-4282-b3ae-4fe550127868",
-          "prompt": "1",
-          "options": [],
-          "long": false
+          "id": "fba3018f-791e-4a32-894b-59cb99f83f12",
+          "prompt": "Sentence 7"
         },
         {
-          "id": "1b8ca065-71cd-49f5-a3c6-1fd8c7f8cfdb",
-          "prompt": "44595",
-          "options": [],
-          "long": false
+          "id": "f30e0678-125d-4146-8c1c-e88938c8941b",
+          "prompt": "Sentence 8"
         },
         {
-          "id": "cec3bf2a-f49a-4c3f-bf43-384ec287818f",
-          "prompt": "Câu 3",
-          "options": [],
-          "long": false
+          "id": "b58bdeb3-f45d-4c06-9fb7-130fa31b984b",
+          "prompt": "Sentence 9"
         },
         {
-          "id": "ecbc5eab-c423-40f2-9ef4-046e874a45c4",
-          "prompt": "4",
-          "options": [],
-          "long": false
+          "id": "fcb03bc1-cf64-48c5-9ffb-0028e25ed2d3",
+          "prompt": "Sentence 10"
         },
         {
-          "id": "8f9ac0f1-4807-4819-b975-0a193a023946",
-          "prompt": "5",
-          "options": [],
-          "long": false
+          "id": "d4f1df0a-d679-4ada-a0be-e40e80733020",
+          "prompt": "4"
         },
         {
-          "id": "4f420050-0e54-4ec3-b945-9ac5e0e08191",
-          "prompt": "6",
-          "options": [],
-          "long": false
+          "id": "b0cf4945-6661-4cac-a866-0315b2f2cd3f",
+          "prompt": "Sentence 12"
         },
         {
-          "id": "741f8481-f24f-4576-87b4-d77f3e0785c5",
-          "prompt": "44750",
-          "options": [],
-          "long": false
+          "id": "66d2bd37-bd91-4492-8b57-8d652c5d6c3f",
+          "prompt": "Sentence 13"
         },
         {
-          "id": "4a749933-055f-4d46-af9f-bf6381a85bfb",
-          "prompt": "Câu 8",
-          "options": [],
-          "long": false
+          "id": "ba54c997-e50b-4da1-88d0-04bd55d21991",
+          "prompt": "5"
+        },
+        {
+          "id": "e9591623-7f94-4976-a9eb-4558dd9b7c5e",
+          "prompt": "Sentence 15"
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Viết câu trả lời tối thiểu 50 từ cho mỗi câu hỏi. Bài làm sẽ được AI tự động chấm theo 3 tiêu chí: Ngữ pháp (4đ), Tính mạch lạc & Phát triển ý (3đ), Từ vựng (3đ).",
+      "instructions": "Answer the questions in full English paragraphs. Automated AI grading (30 points).",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "f511d0f6-a56c-4ef5-aa87-9dd9654f8422",
+          "id": "55a18047-a778-46f1-afbd-7eeb9a1ea4cb",
           "prompt": "Question 1: What problems will the peer pressure among teenagers today cause? (name at least three)? (Note to use proper signposts)",
-          "options": [],
           "long": true
         },
         {
-          "id": "ee21e522-6738-4615-bc97-1ef31f6db618",
+          "id": "d51591d0-ffa2-461e-b3f0-18a521003882",
           "prompt": "Question 2: What are the causes for the rise in youth crime these days? (name at least three, explain your answer briefly using proper conjunctions) – (Note to use proper signposts)",
-          "options": [],
           "long": true
         },
         {
-          "id": "af356938-b3a1-4c34-ab93-ea3c710c2707",
+          "id": "8d348517-3f12-4cf0-ba2f-3bb6a6d50e8b",
           "prompt": "Question 3:  Describe a movie that you’ve recently watched.",
-          "options": [],
           "long": true
         }
       ]

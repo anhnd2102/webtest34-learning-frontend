@@ -3,329 +3,231 @@
   "course": "45",
   "phase": 1,
   "testNumber": 3,
-  "sourceHash": "ed8d4e64555be6db36180da5cd3358e49a27a1be519380e920f87b7488496dbe",
-  "durationMinutes": 120,
+  "sourceHash": "b9a9c5bc93f78e37f286dbe28e7b244d02620a421d630a881eeee4da32819e89",
+  "durationMinutes": 90,
   "groups": [
     {
-      "id": "grammar-ng-t-khuy-t-thi-u-modals",
+      "id": "grammar-present",
       "title": "Grammar · Động từ khuyết thiếu (Modals)",
       "instructions": "3. Fill in the gaps below with the correct form of (not) have to, must, (not) need to or can.",
-      "context": "",
-      "audioPath": "",
+      "context": "1        A: I’m going to Florence next week so I (1)...... to buy a guide book\nB: Ah, well, you’re in luck. You (2)....... buy a book because I’ve got a small guide to Florence I can lend you. In fact, it’s better than the book, so you (3)…… use it instead.                                        \n                                                \n                                                \n2        A: What’s Mike doing these days?\nB: He’s studying really hard. He (4)…… pass his exams in order to get the promotion his company has promised him.        \n                                \n3        A: (5)…… (you) wear an uniform at work? \nB: Yes, and I find it rather strange because I’ve never worn one before. When I was at school we (6)…… wear a uniform although the girls (7)…… wear skirts and not trousers.                                        \n                                                \n                                                \n4        A: The rules for university fees have just changed. I was really lucky because I .(8)…… pay for my education, but unfortunately my brother (9)…… pay when he goes to university next year.\nB: Yes, I know. My sister will be affected, too.                                        \n                                                \n5        A: The bread is in the oven. Can you remind me to get it out in 20 minutes? I (10)…… forget like last time when I burnt the loaf.\nB: I’m sorry. I’m afraid I (11)…… go now, so I won’t be able to remind you. Can’t you set a timer?\nA: Oh, (12)…… (you/really) go? I’d hoped you’d stay for lunch and have some of my bread.",
       "items": [
         {
-          "id": "70c55b10-6f5b-4bf1-bb8a-81ee13708d75",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "2433e3a8-6f7b-4bd3-aea9-da57c8032d98",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "1668b8db-a304-458e-8875-6d10c931a78c",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "e1239739-c16d-42b4-9a64-331a5d7bd1fc",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "c6f98688-815a-4d92-a482-b3911edaab2d",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "6769879c-84ce-4d74-840f-8e011d07c736",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "56d168c8-34ab-4711-a265-4a1bae7a60bf",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "edc6a35c-208e-4aee-92bf-e4887f0c8032",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "90febfb5-02f1-4bb1-9af2-977f4898d6ca",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "de0d2fe6-3c30-41b0-875d-c96caa97c76c",
+          "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "c8e5c48e-666b-470f-844d-5f46255cba1b",
-          "prompt": "Chỗ trống (6)",
-          "options": [],
-          "long": false
+          "id": "ecd239fb-4e11-4249-b15f-6b9785dc7756",
+          "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "5b7ef56e-55a6-4dff-8ada-4499817dde96",
-          "prompt": "Chỗ trống (7)",
-          "options": [],
-          "long": false
+          "id": "aa193026-2cb7-4783-be95-d853fddbcf5c",
+          "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "99850c24-4a37-4b73-9b83-127e07013605",
-          "prompt": "Chỗ trống (8)",
-          "options": [],
-          "long": false
+          "id": "414bc534-db03-40aa-a1c2-bcfea815d09b",
+          "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "284166aa-d452-4eeb-a7f4-5be0ac6ba3e1",
-          "prompt": "Chỗ trống (9)",
-          "options": [],
-          "long": false
+          "id": "e931f32b-fea6-4c58-829e-08b51f609d26",
+          "prompt": "Chỗ trống (9)"
         },
         {
-          "id": "19cfd8d7-7b87-42bd-9ce0-bb1f780c4fbf",
-          "prompt": "Chỗ trống (10)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "488e2e1e-987b-4f2c-ba98-23c61d19ba13",
-          "prompt": "Chỗ trống (11)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "27a6fa83-d209-4099-998b-80bb98ba2dad",
-          "prompt": "Chỗ trống (12)",
-          "options": [],
-          "long": false
+          "id": "a566bed4-30d0-478e-9f8c-a0439ced7192",
+          "prompt": "Chỗ trống (10)"
         }
       ]
     },
     {
-      "id": "listening-ch-p-c-u-nghe-c",
+      "id": "listening-dictation",
       "title": "Listening · Chép câu nghe được",
       "instructions": "1. You will hear 5 sentences. Listen carefully and write down exactly what you hear. You will hear each sentence twice.",
       "context": "",
-      "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Dictation.mp3",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "b3b54a9b-61cf-41e7-8357-cace87310c9d",
-          "prompt": "Câu nghe 1",
-          "options": [],
-          "long": false
+          "id": "d50f7aca-079d-4539-a9e3-6f07d7be75f6",
+          "prompt": "Câu nghe 1"
         },
         {
-          "id": "b4d2eb7f-a401-4c3e-85ac-0f8ed954655f",
-          "prompt": "Câu nghe 2",
-          "options": [],
-          "long": false
+          "id": "93a744b2-b74f-4ec2-a8bc-df808a71c4c1",
+          "prompt": "Câu nghe 2"
         },
         {
-          "id": "a45cf080-daf2-4448-8deb-734a2aeabc02",
-          "prompt": "Câu nghe 3",
-          "options": [],
-          "long": false
+          "id": "7b39fd0a-3f70-4d71-b01b-88231b4b04b5",
+          "prompt": "Câu nghe 3"
         },
         {
-          "id": "cba18a1e-67f6-4ebc-bde0-70fc46525bfe",
-          "prompt": "Câu nghe 4",
-          "options": [],
-          "long": false
+          "id": "4e914dfb-358f-4fff-a154-85d0e0f9d23a",
+          "prompt": "Câu nghe 4"
         },
         {
-          "id": "7cafd48b-6306-4493-a9c2-5a2133e562de",
-          "prompt": "Câu nghe 5",
-          "options": [],
-          "long": false
+          "id": "e4f8413d-df3d-40a0-b366-280333d0ae81",
+          "prompt": "Câu nghe 5"
         }
       ]
     },
     {
-      "id": "listening-i-n-bi-u-m-u",
+      "id": "listening-notes",
       "title": "Listening · Điền biểu mẫu",
       "instructions": "2. Listen and complete the notes below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
-      "context": "",
-      "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Comprehension Questions.mp3",
+      "context": "Pharmacy – New Staff\nPharmacy name: (1) ______ Pharmacy\nReason for call: (2) ______\nExtra help from: (3) ______\nFriday evening: (4) ______ night\nReason for early arrival: (5) ______",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "0bf96094-ab10-4104-853b-e0aaae1f4bc8",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "c8bdc4ac-944a-4eb9-8519-1fa8d8318d66",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "15644193-8023-4b57-bddc-9bab1863e18d",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "fc092b0d-0e48-470a-86b5-fa1efcb3781e",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "ba23ded6-57bd-4588-8911-6abdcd60d6dc",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "08d24440-ba55-4655-bc06-aa802ef103db",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "087ebd23-36d0-4803-88c3-7c3444b03f9d",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "67fa4360-0640-4e55-84c3-36c0e3d4f39c",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "fc6ce558-2dbf-4475-8e11-be07e99b1677",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "91b48e9c-cfe5-4589-bfb7-7fbda36240f4",
+          "prompt": "Chỗ trống (5)"
         }
       ]
     },
     {
-      "id": "listening-tr-l-i-ng-n",
+      "id": "listening-answers",
       "title": "Listening · Trả lời ngắn",
       "instructions": "3. Listen to the recording and answer the questions below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
       "context": "",
-      "audioPath": "assets/demo-audio/45/Phase 1 Test 3 Comprehension Questions.mp3",
+      "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "7843d2c4-544e-429f-b95e-a253ae17f750",
-          "prompt": "6. Listen to the second part of the conversation and answer the questions.\nWrite NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
-          "options": [],
-          "long": false
+          "id": "002a26fd-fdb9-4205-8522-0fca7d0b778e",
+          "prompt": "6. What will John email her information about?"
         },
         {
-          "id": "e92d585f-c0d7-4aed-a6d0-c8b3c34ce128",
-          "prompt": "7. What will John email her information about?",
-          "options": [],
-          "long": false
+          "id": "8349ee46-dbb2-4b61-868b-ea2cb1a11e19",
+          "prompt": "7. Where is the weight machine located in the pharmacy?"
         },
         {
-          "id": "d87307bc-1225-412e-9549-26d154ccf478",
-          "prompt": "8. Where is the weight machine located in the pharmacy?",
-          "options": [],
-          "long": false
+          "id": "f036067c-7530-4c21-b9b2-7396fc1b8f6e",
+          "prompt": "8. Who should customers talk to if they need medical assistance?"
         },
         {
-          "id": "7b8d3410-e38f-4141-9aa5-e96472d51c56",
-          "prompt": "9. Who should customers talk to if they need medical assistance?",
-          "options": [],
-          "long": false
+          "id": "5ce6e854-dc1e-4bb2-8872-95e53d71eedd",
+          "prompt": "9. Which part of her body might she injure if she lifts boxes incorrectly?"
         },
         {
-          "id": "9752ce5a-f2e0-498a-995c-5f41ddfe54f8",
-          "prompt": "10. Which part of her body might she injure if she lifts boxes incorrectly?",
-          "options": [],
-          "long": false
+          "id": "0b1066f5-633d-4106-b9ac-053f9234c261",
+          "prompt": "10. What is special about the new bags?"
         }
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-t-ng-h-p",
-      "title": "Vocabulary · Từ vựng tổng hợp",
-      "instructions": "Hoàn thành các câu hỏi từ vựng bên dưới.",
+      "id": "vocabulary-formal",
+      "title": "Vocabulary · Từ vựng",
+      "instructions": "Complete the vocabulary exercises below.",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "08120e76-0a30-45ee-b951-df38671545ff",
-          "prompt": "2. Police still (2) ______ the reasons for the problem of juvenile crime in large cities.",
-          "options": [],
-          "long": false
+          "id": "94b42dac-282d-4bb1-948c-bd5a505b808e",
+          "prompt": "1. Through international sporting events, many young people first (1) ______ into contact with other cultures."
         },
         {
-          "id": "8369fb74-573d-48ef-95af-8913f019671b",
-          "prompt": "3. The new study (3) ______ preliminary results on the effects of poverty on education.",
-          "options": [],
-          "long": false
+          "id": "4ecc0bb1-07d6-4582-9786-afeafc432b83",
+          "prompt": "2. Police still (2) ______ the reasons for the problem of juvenile crime in large cities."
         },
         {
-          "id": "41373174-316e-4e0e-9883-ab30f7300f8b",
-          "prompt": "4. Many modern companies try to (4) ______ energy by using energy-efficient machines to reduce the electricity bill.",
-          "options": [],
-          "long": false
+          "id": "091d2316-f6e1-42ad-8019-37ad4c590781",
+          "prompt": "3. The new study (3) ______ preliminary results on the effects of poverty on education."
         },
         {
-          "id": "5a640c00-94b8-462a-9a83-b9d346fdbc44",
-          "prompt": "5. Social media now (5) ______ a key role in everyday communication between older generations and teenagers.",
-          "options": [],
-          "long": false
+          "id": "1192ef5d-83a2-4a10-b233-04e94467e395",
+          "prompt": "4. Many modern companies try to (4) ______ energy by using energy-efficient machines to reduce the electricity bill."
         },
         {
-          "id": "bada265e-a2c7-4753-9bed-45d14b005226",
-          "prompt": "6. Researchers are trying to (6) ______ a new way of helping criminals back in the streets to find work.",
-          "options": [],
-          "long": false
+          "id": "7f20203e-287c-4bd1-8648-408a2bf0d086",
+          "prompt": "5. Social media now (5) ______ a key role in everyday communication between older generations and teenagers."
         },
         {
-          "id": "b68afe9c-b5bd-4070-9fd3-9cb08d80f22c",
-          "prompt": "7",
-          "options": [],
-          "long": false
+          "id": "06ce6527-3232-43aa-bde2-97a360531af7",
+          "prompt": "6. Researchers are trying to (6) ______ a new way of helping criminals back in the streets to find work."
         },
         {
-          "id": "8ab115b7-fe2a-4c9a-b923-01934cdbcc09",
-          "prompt": "8",
-          "options": [],
-          "long": false
+          "id": "26cc8584-bc3c-4fc5-b19e-2948fcf10c8a",
+          "prompt": "Sentence 7"
         },
         {
-          "id": "49749942-b7ea-4764-b501-0306a19a1ff7",
-          "prompt": "9",
-          "options": [],
-          "long": false
+          "id": "cf486506-95b4-444b-a638-4e66484c37d0",
+          "prompt": "2. Replace the phrases in bold by using an adjective from the box combined with a noun (this noun is transformed from the bolded adjectives) => to make the phrase like: of great interest."
         },
         {
-          "id": "6dfe1e50-60e6-4c3b-8ff7-7cbc981aad42",
-          "prompt": "10",
-          "options": [],
-          "long": false
+          "id": "780ffae3-c651-4adf-9d5a-57319a457647",
+          "prompt": "Sentence 9"
         },
         {
-          "id": "a0e9813c-b792-492b-ae5b-f3aa2d8b70ae",
-          "prompt": "11",
-          "options": [],
-          "long": false
+          "id": "f923cca1-1dab-41b2-90ae-294bc2ab0926",
+          "prompt": "Sentence 10"
         },
         {
-          "id": "baa13e78-e5bf-46c8-9283-88086cbc2cb4",
-          "prompt": "12",
-          "options": [],
-          "long": false
+          "id": "f4b08a89-a6b0-4e67-b9cc-995a8d0fea62",
+          "prompt": "Sentence 11"
         },
         {
-          "id": "961c44da-c646-4cea-af31-9aac8360c42b",
-          "prompt": "13",
-          "options": [],
-          "long": false
+          "id": "2a0e61a8-4f11-478c-a683-4aa19df46f40",
+          "prompt": "Sentence 12"
         },
         {
-          "id": "d9120692-40fc-4c19-a10b-d7b90cc1eb52",
-          "prompt": "14",
-          "options": [],
-          "long": false
+          "id": "b7b47660-ae6a-4fd6-b4a7-8b70b4585ba1",
+          "prompt": "7"
         },
         {
-          "id": "4f9404ba-5a1d-4adb-bea1-817190d8953e",
-          "prompt": "15",
-          "options": [],
-          "long": false
+          "id": "728cbc65-db2d-4775-a890-71f80f242a70",
+          "prompt": "8"
         },
         {
-          "id": "7c466424-da30-4168-a3fc-32c42caa0c55",
-          "prompt": "16",
-          "options": [],
-          "long": false
+          "id": "be5bd859-5b83-4cbc-ac86-ee878f80f4b6",
+          "prompt": "9"
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Viết câu trả lời tối thiểu 50 từ cho mỗi câu hỏi. Bài làm sẽ được AI tự động chấm theo 3 tiêu chí: Ngữ pháp (4đ), Tính mạch lạc & Phát triển ý (3đ), Từ vựng (3đ).",
+      "instructions": "Answer the questions in full English paragraphs. Automated AI grading (30 points).",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "d6fb1e90-563c-4dac-a774-3f576f5ff269",
+          "id": "309b395f-bea6-44ea-9450-ac25682b3462",
           "prompt": "Question 1: Do you think it’s better for criminals to go to prison or to do community work? Briefly explain your choice.",
-          "options": [],
           "long": true
         },
         {
-          "id": "e14c9528-c90d-4289-b38a-9be73b87f590",
+          "id": "52429987-3ebe-4af5-b874-cc5185c7cdce",
           "prompt": "Question 2: What do you think were the reasons that caused many animal species to be endangered/extinct?\nGợi ý: poaching & deforestation",
-          "options": [],
           "long": true
         },
         {
-          "id": "09218878-ca5b-4801-8776-a1c07672a5dc",
+          "id": "81612a90-8ee4-41ec-9e24-8b742e2e11f9",
           "prompt": "Question 3: If you didn’t have to work for money/to support yourself (in the future), what would you spend most of your time on?",
-          "options": [],
           "long": true
         }
       ]
