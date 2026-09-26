@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 3,
-  "sourceHash": "b9a9c5bc93f78e37f286dbe28e7b244d02620a421d630a881eeee4da32819e89",
+  "sourceHash": "c16a86dd4891c0ea8c72f1d5ade4acb8edc25e999ec01c7f17db6a8864d44573",
   "durationMinutes": 90,
   "groups": [
     {
@@ -13,44 +13,52 @@
       "context": "1        A: I’m going to Florence next week so I (1)...... to buy a guide book\nB: Ah, well, you’re in luck. You (2)....... buy a book because I’ve got a small guide to Florence I can lend you. In fact, it’s better than the book, so you (3)…… use it instead.                                        \n                                                \n                                                \n2        A: What’s Mike doing these days?\nB: He’s studying really hard. He (4)…… pass his exams in order to get the promotion his company has promised him.        \n                                \n3        A: (5)…… (you) wear an uniform at work? \nB: Yes, and I find it rather strange because I’ve never worn one before. When I was at school we (6)…… wear a uniform although the girls (7)…… wear skirts and not trousers.                                        \n                                                \n                                                \n4        A: The rules for university fees have just changed. I was really lucky because I .(8)…… pay for my education, but unfortunately my brother (9)…… pay when he goes to university next year.\nB: Yes, I know. My sister will be affected, too.                                        \n                                                \n5        A: The bread is in the oven. Can you remind me to get it out in 20 minutes? I (10)…… forget like last time when I burnt the loaf.\nB: I’m sorry. I’m afraid I (11)…… go now, so I won’t be able to remind you. Can’t you set a timer?\nA: Oh, (12)…… (you/really) go? I’d hoped you’d stay for lunch and have some of my bread.",
       "items": [
         {
-          "id": "2433e3a8-6f7b-4bd3-aea9-da57c8032d98",
+          "id": "58807f4d-2678-495d-8e5b-6fc7698c8753",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "e1239739-c16d-42b4-9a64-331a5d7bd1fc",
+          "id": "2882d2aa-1c67-4a0e-882e-88dfa7bc19d5",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "6769879c-84ce-4d74-840f-8e011d07c736",
+          "id": "24d8203f-d7bd-481e-a078-77b102e6b16f",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "edc6a35c-208e-4aee-92bf-e4887f0c8032",
+          "id": "43bfca6b-937a-465d-ac83-91a10493da34",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "de0d2fe6-3c30-41b0-875d-c96caa97c76c",
+          "id": "58ed23b0-603a-44a0-afdb-b29f42bd4a6f",
           "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "ecd239fb-4e11-4249-b15f-6b9785dc7756",
+          "id": "6e4e413d-be44-4df4-a7b1-b53c8c8436c1",
           "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "aa193026-2cb7-4783-be95-d853fddbcf5c",
+          "id": "5e242277-aeab-488d-8e69-b2cca521aacd",
           "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "414bc534-db03-40aa-a1c2-bcfea815d09b",
+          "id": "0f56ae7d-6716-46b3-b8cf-4e585c27f4d0",
           "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "e931f32b-fea6-4c58-829e-08b51f609d26",
+          "id": "84116436-f729-459a-9b30-855174064d63",
           "prompt": "Chỗ trống (9)"
         },
         {
-          "id": "a566bed4-30d0-478e-9f8c-a0439ced7192",
+          "id": "7bc24926-b316-4b8b-92d9-3ab3e6c11096",
           "prompt": "Chỗ trống (10)"
+        },
+        {
+          "id": "d00cae7e-dc1b-4466-8868-1416ec46df49",
+          "prompt": "Chỗ trống (11)"
+        },
+        {
+          "id": "aa4b5ebf-29a4-4b1e-b448-33c3d7adb1eb",
+          "prompt": "Chỗ trống (12)"
         }
       ]
     },
@@ -62,23 +70,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "d50f7aca-079d-4539-a9e3-6f07d7be75f6",
+          "id": "05d21b22-82dc-4a96-b261-278a68ddfda3",
           "prompt": "Câu nghe 1"
         },
         {
-          "id": "93a744b2-b74f-4ec2-a8bc-df808a71c4c1",
+          "id": "f6dab013-0ccb-4aa9-a779-ad4d36cbf5b0",
           "prompt": "Câu nghe 2"
         },
         {
-          "id": "7b39fd0a-3f70-4d71-b01b-88231b4b04b5",
+          "id": "049fd700-d200-4fd6-84b1-5628c6c953be",
           "prompt": "Câu nghe 3"
         },
         {
-          "id": "4e914dfb-358f-4fff-a154-85d0e0f9d23a",
+          "id": "271fc13d-01c0-4bbb-8620-079cddfb9ce5",
           "prompt": "Câu nghe 4"
         },
         {
-          "id": "e4f8413d-df3d-40a0-b366-280333d0ae81",
+          "id": "bc80d969-8229-4bff-a4e7-53b0f05456d1",
           "prompt": "Câu nghe 5"
         }
       ]
@@ -91,23 +99,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "c8bdc4ac-944a-4eb9-8519-1fa8d8318d66",
+          "id": "0c298c83-b42b-42a0-b39c-e26d436dc75d",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "fc092b0d-0e48-470a-86b5-fa1efcb3781e",
+          "id": "8a2c80f7-d605-457d-bd70-d7abb8a03253",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "08d24440-ba55-4655-bc06-aa802ef103db",
+          "id": "1a0335d6-5247-4f63-b921-28863f1d94ff",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "67fa4360-0640-4e55-84c3-36c0e3d4f39c",
+          "id": "4febd54e-5f36-49b4-b820-ab22ecad37f6",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "91b48e9c-cfe5-4589-bfb7-7fbda36240f4",
+          "id": "4ea50d18-a55c-4a10-bb75-0a34eb7ced75",
           "prompt": "Chỗ trống (5)"
         }
       ]
@@ -120,23 +128,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "002a26fd-fdb9-4205-8522-0fca7d0b778e",
+          "id": "d72f95f8-20de-4d12-9cff-2ca6f4ee4424",
           "prompt": "6. What will John email her information about?"
         },
         {
-          "id": "8349ee46-dbb2-4b61-868b-ea2cb1a11e19",
+          "id": "0f6abc57-b49d-4888-8860-45b7c7c7c89a",
           "prompt": "7. Where is the weight machine located in the pharmacy?"
         },
         {
-          "id": "f036067c-7530-4c21-b9b2-7396fc1b8f6e",
+          "id": "5cfe0b39-65d6-4b18-af1f-75f980a4adf0",
           "prompt": "8. Who should customers talk to if they need medical assistance?"
         },
         {
-          "id": "5ce6e854-dc1e-4bb2-8872-95e53d71eedd",
+          "id": "ca3fdebd-ebf6-472d-98e6-274b6dcc80ec",
           "prompt": "9. Which part of her body might she injure if she lifts boxes incorrectly?"
         },
         {
-          "id": "0b1066f5-633d-4106-b9ac-053f9234c261",
+          "id": "ace86a62-46b0-44d8-bac1-fe1caffda478",
           "prompt": "10. What is special about the new bags?"
         }
       ]
@@ -148,63 +156,63 @@
       "context": "",
       "items": [
         {
-          "id": "94b42dac-282d-4bb1-948c-bd5a505b808e",
+          "id": "11719b71-712e-4f96-9909-a63f07b79e4d",
           "prompt": "1. Through international sporting events, many young people first (1) ______ into contact with other cultures."
         },
         {
-          "id": "4ecc0bb1-07d6-4582-9786-afeafc432b83",
+          "id": "260122a0-a934-497a-9ddb-86a8d769c50a",
           "prompt": "2. Police still (2) ______ the reasons for the problem of juvenile crime in large cities."
         },
         {
-          "id": "091d2316-f6e1-42ad-8019-37ad4c590781",
+          "id": "183d4d43-b2fe-46ee-a07a-97cc8452e079",
           "prompt": "3. The new study (3) ______ preliminary results on the effects of poverty on education."
         },
         {
-          "id": "1192ef5d-83a2-4a10-b233-04e94467e395",
+          "id": "66f7a47e-d904-4a11-a109-85a18cbbcba6",
           "prompt": "4. Many modern companies try to (4) ______ energy by using energy-efficient machines to reduce the electricity bill."
         },
         {
-          "id": "7f20203e-287c-4bd1-8648-408a2bf0d086",
+          "id": "0c332e02-65c7-4358-b6df-f4933cac1631",
           "prompt": "5. Social media now (5) ______ a key role in everyday communication between older generations and teenagers."
         },
         {
-          "id": "06ce6527-3232-43aa-bde2-97a360531af7",
+          "id": "be91ec68-17f4-440d-acf7-06cd26c72b91",
           "prompt": "6. Researchers are trying to (6) ______ a new way of helping criminals back in the streets to find work."
         },
         {
-          "id": "26cc8584-bc3c-4fc5-b19e-2948fcf10c8a",
+          "id": "94cc168a-993a-41d0-9c39-af54dbd9fe71",
           "prompt": "Sentence 7"
         },
         {
-          "id": "cf486506-95b4-444b-a638-4e66484c37d0",
+          "id": "00ed9d91-e9a4-4e3f-a60a-97bc65f1ad6b",
           "prompt": "2. Replace the phrases in bold by using an adjective from the box combined with a noun (this noun is transformed from the bolded adjectives) => to make the phrase like: of great interest."
         },
         {
-          "id": "780ffae3-c651-4adf-9d5a-57319a457647",
+          "id": "f1d391b1-9f1f-4b73-824c-c313eb570ddc",
           "prompt": "Sentence 9"
         },
         {
-          "id": "f923cca1-1dab-41b2-90ae-294bc2ab0926",
+          "id": "e07a970a-2d10-4c55-9aed-348e2ac35158",
           "prompt": "Sentence 10"
         },
         {
-          "id": "f4b08a89-a6b0-4e67-b9cc-995a8d0fea62",
+          "id": "539cc004-b705-411a-b6c8-d91f6053c4c1",
           "prompt": "Sentence 11"
         },
         {
-          "id": "2a0e61a8-4f11-478c-a683-4aa19df46f40",
+          "id": "9741c394-3a63-495d-b4d8-09d4023bf66c",
           "prompt": "Sentence 12"
         },
         {
-          "id": "b7b47660-ae6a-4fd6-b4a7-8b70b4585ba1",
+          "id": "64038248-90bc-4402-8818-2e52963ef905",
           "prompt": "7"
         },
         {
-          "id": "728cbc65-db2d-4775-a890-71f80f242a70",
+          "id": "2ff12a54-d725-4df5-abed-2244ae3ec543",
           "prompt": "8"
         },
         {
-          "id": "be5bd859-5b83-4cbc-ac86-ee878f80f4b6",
+          "id": "a2dd1727-bcbb-434f-aac1-a8e739accfad",
           "prompt": "9"
         }
       ]
@@ -216,17 +224,17 @@
       "context": "",
       "items": [
         {
-          "id": "309b395f-bea6-44ea-9450-ac25682b3462",
+          "id": "77f3143b-e5e8-4ae3-890c-c5b12c427624",
           "prompt": "Question 1: Do you think it’s better for criminals to go to prison or to do community work? Briefly explain your choice.",
           "long": true
         },
         {
-          "id": "52429987-3ebe-4af5-b874-cc5185c7cdce",
+          "id": "57102526-a95d-44d6-8210-40a6467e7874",
           "prompt": "Question 2: What do you think were the reasons that caused many animal species to be endangered/extinct?\nGợi ý: poaching & deforestation",
           "long": true
         },
         {
-          "id": "81612a90-8ee4-41ec-9e24-8b742e2e11f9",
+          "id": "cf6ca4c4-86b7-4416-88b2-3f0146ebc6d2",
           "prompt": "Question 3: If you didn’t have to work for money/to support yourself (in the future), what would you spend most of your time on?",
           "long": true
         }

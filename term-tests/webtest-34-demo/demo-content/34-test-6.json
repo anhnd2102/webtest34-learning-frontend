@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 2,
   "testNumber": 6,
-  "sourceHash": "dc5fd746ff908af6c0cd84a92c245325f472b709adfa25548aec50486483f45e",
+  "sourceHash": "5ac191f2f4da0429af64340823fe1e1ba5f9801c3a868f1aba051ee9691c7fad",
   "durationMinutes": 90,
   "groups": [
     {
@@ -14,43 +14,43 @@
       "audioPath": "assets/demo-audio/34/listening.mp3",
       "items": [
         {
-          "id": "9929d1ff-a2f5-4071-96e2-44a34bb6badc",
+          "id": "32dcae99-b5a6-4134-a036-7f5cd809515f",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "5859fb3d-8bbf-4eb0-83fa-86997ffaa8b8",
+          "id": "3f56b976-e68e-44df-bd6b-c4cd5b081d89",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "ff0c26b4-6aca-4a30-b0cd-9b2cb52365bc",
+          "id": "94344c65-018f-474a-a15d-e3d99979ce59",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "0f02c785-2798-4dd9-902c-3f8844a02716",
+          "id": "40363ca9-4848-4598-a2ce-2b8a5971817a",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "752672b2-5e23-45fe-97a7-1da8d3e016a3",
+          "id": "777167ef-76a3-4086-a07a-6ef07b27634c",
           "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "866cea2e-2eaf-488b-80ac-2e9a5d2441c3",
+          "id": "bd90ba00-f0b4-4e27-a898-338ec76ff99f",
           "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "ddf421d1-bc97-4901-a525-2f194c8c75f0",
+          "id": "acb28704-add2-4040-808f-5ab2728771bf",
           "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "eb12dd23-72bd-4c9a-8061-6f8221596c3e",
+          "id": "c7837a6d-9a7d-44e3-a1f9-416f93054160",
           "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "0da9665a-e8f5-4b97-bc7b-8164eeb7fa1a",
+          "id": "94df8f80-aaa6-4495-b53d-fe597a59be82",
           "prompt": "Chỗ trống (9)"
         },
         {
-          "id": "bdfac566-982d-4858-80af-f208c6447f3a",
+          "id": "0e8ddbc5-b31a-4c28-9805-0e9e6ac1f9f7",
           "prompt": "Chỗ trống (10)"
         }
       ]
@@ -63,7 +63,7 @@
       "audioPath": "assets/demo-audio/34/listening.mp3",
       "items": [
         {
-          "id": "c19f911f-63ba-4874-ad45-c78d5893f199",
+          "id": "9eb978c2-885a-43df-ad31-1971969857ac",
           "prompt": "Question 1",
           "options": [
             "Option A",
@@ -72,7 +72,7 @@
           ]
         },
         {
-          "id": "d3e902dc-6324-4b0e-9f76-646663ce058e",
+          "id": "1d846345-6a51-4639-91b8-98daa267bd4c",
           "prompt": "Question 2",
           "options": [
             "Option A",
@@ -81,7 +81,7 @@
           ]
         },
         {
-          "id": "952dde58-722e-41c9-8a86-f1b20662ee6e",
+          "id": "8f4c4f59-1ba4-46a1-a503-2cbb167158dc",
           "prompt": "Question 3",
           "options": [
             "Option A",
@@ -90,7 +90,7 @@
           ]
         },
         {
-          "id": "11bbefdd-0955-4265-8e0f-aad9ea398042",
+          "id": "9af4edf2-587b-487f-8c60-29039c6df5d9",
           "prompt": "Question 4",
           "options": [
             "Option A",
@@ -99,7 +99,7 @@
           ]
         },
         {
-          "id": "48e50b11-c1b2-4783-8e60-0bbc320b156b",
+          "id": "7bbe9973-9475-4072-b83d-4affadd53025",
           "prompt": "Because of its unusual size.",
           "options": [
             "Option A",
@@ -108,7 +108,7 @@
           ]
         },
         {
-          "id": "b46287b2-082a-40dd-9ab3-c36a3c3c40e7",
+          "id": "e8f27b6b-44e2-4c01-8e36-e78bd8796790",
           "prompt": "Question 6",
           "options": [
             "Option A",
@@ -117,7 +117,7 @@
           ]
         },
         {
-          "id": "cece0c45-70af-41a9-95c4-70d4bd77ae0c",
+          "id": "f413706d-1982-4088-b0dc-678eb7bb1e2f",
           "prompt": "Question 7",
           "options": [
             "Option A",
@@ -126,7 +126,7 @@
           ]
         },
         {
-          "id": "2c0da493-a87e-4ec5-9a13-ceaf0ae32397",
+          "id": "132ad780-c4a1-4b9d-a653-60d44543ef39",
           "prompt": "A fun adventure.",
           "options": [
             "Option A",
@@ -135,7 +135,7 @@
           ]
         },
         {
-          "id": "d53ea3ef-7080-4909-9f4d-dd9f7985f1d7",
+          "id": "562b8f42-dc42-40d2-810f-46496e722fbe",
           "prompt": "By speaking long lines.",
           "options": [
             "Option A",
@@ -144,7 +144,7 @@
           ]
         },
         {
-          "id": "1533e52e-41e3-4647-9c6e-4dda7ddc9be2",
+          "id": "6ac6e346-9b8d-4341-ae15-9419a7718040",
           "prompt": "Question 10",
           "options": [
             "Option A",
@@ -161,7 +161,7 @@
       "context": "",
       "items": [
         {
-          "id": "948c5b04-3715-450a-a695-7f2b5bf4d8e9",
+          "id": "db04b672-051d-400f-8f19-8c37cecbfa12",
           "prompt": "The temperature will drop significantly.",
           "options": [
             "Option A",
@@ -171,7 +171,7 @@
           ]
         },
         {
-          "id": "744eeee5-33b5-46e9-bc78-7820e50395b4",
+          "id": "8562342b-2ebe-4913-8e0a-b204f9e28397",
           "prompt": "To keep some drinks cold.",
           "options": [
             "Option A",
@@ -181,7 +181,7 @@
           ]
         },
         {
-          "id": "0ffe6030-02fb-4bef-b3ed-5544506cca8d",
+          "id": "1a4f3c38-f189-46d9-ad65-96f38d5173f5",
           "prompt": "From a local store near the lake.",
           "options": [
             "Option A",
@@ -191,7 +191,7 @@
           ]
         },
         {
-          "id": "b1b44193-9798-4c7e-9912-02a4883ce158",
+          "id": "2e924466-d2f2-4933-a58d-a16d93b0d52f",
           "prompt": "Sentence 4",
           "options": [
             "Option A",
@@ -201,7 +201,7 @@
           ]
         },
         {
-          "id": "6e53c8cd-7d58-4af9-9150-a321f708d457",
+          "id": "7eb75219-3915-49ea-8ffd-06194ec86e6d",
           "prompt": "They are not necessary for this trip.",
           "options": [
             "Option A",
@@ -211,7 +211,7 @@
           ]
         },
         {
-          "id": "daa4050f-d11c-4402-9417-b85b0128e927",
+          "id": "696e14da-70c7-47e3-8e71-f16368ac3405",
           "prompt": "Excited and prepared.",
           "options": [
             "Option A",
@@ -221,7 +221,7 @@
           ]
         },
         {
-          "id": "98409548-43ca-4639-a53e-85c80eb25f09",
+          "id": "7ec85754-5f7f-49f2-927c-f78a392bd176",
           "prompt": "Sentence 7",
           "options": [
             "Option A",
@@ -231,7 +231,7 @@
           ]
         },
         {
-          "id": "c527ca01-17db-44a1-a8f0-cc18cafaaba1",
+          "id": "1147051b-0f51-486e-b479-50ba9300e00e",
           "prompt": "Sentence 8",
           "options": [
             "B. am spending",
@@ -241,7 +241,7 @@
           ]
         },
         {
-          "id": "d9e64666-c79e-436b-8d87-3a42119fc26f",
+          "id": "49b68c48-9b59-42e8-a0c8-9490584b7ec9",
           "prompt": "Sentence 9",
           "options": [
             "B. are preparing",
@@ -251,7 +251,7 @@
           ]
         },
         {
-          "id": "21253df5-33cb-43ed-aced-1ee433364130",
+          "id": "cec764fb-6a21-4e8e-b508-ca64dff174b1",
           "prompt": "Sentence 10",
           "options": [
             "B. don’t go",
@@ -261,7 +261,7 @@
           ]
         },
         {
-          "id": "a96a8689-f146-4db1-b27a-80a4d302e9d4",
+          "id": "944f3f72-86fa-45eb-8c1c-42cfa0254c29",
           "prompt": "Sentence 11",
           "options": [
             "B. was performing",
@@ -271,7 +271,7 @@
           ]
         },
         {
-          "id": "b46aabae-ae56-43db-b43e-1cec4de93809",
+          "id": "bcd4b110-8d6c-48e3-b2f7-5a0e99ded9b0",
           "prompt": "Sentence 12",
           "options": [
             "B. couldn’t",
@@ -281,7 +281,7 @@
           ]
         },
         {
-          "id": "5eb3ffa7-749e-420f-87a7-e993a3ffd062",
+          "id": "77f6b5ad-8c7f-477b-ba5d-75f2f92b1ecd",
           "prompt": "Sentence 13",
           "options": [
             "B. go",
@@ -291,7 +291,7 @@
           ]
         },
         {
-          "id": "c2ce237f-5128-45b8-ad34-2dbc5250123d",
+          "id": "0e4cd378-b419-40f3-a6fc-e4f126cf9d9f",
           "prompt": "Sentence 14",
           "options": [
             "B. was painted",
@@ -301,7 +301,7 @@
           ]
         },
         {
-          "id": "514e910c-5fe0-4efa-81a5-d281114be0f0",
+          "id": "3c2096f6-d077-4d2c-a641-9a50c1813951",
           "prompt": "Sentence 15",
           "options": [
             "B. with",
@@ -311,7 +311,7 @@
           ]
         },
         {
-          "id": "fcb18e9e-a9fe-4563-aeb7-fbbe0f2beabe",
+          "id": "d0f07c48-d41a-4a1c-a06f-b621c5d02ad9",
           "prompt": "Sentence 16",
           "options": [
             "B. such a",
@@ -321,7 +321,7 @@
           ]
         },
         {
-          "id": "5b7ef9de-b5c5-40e8-8339-106096643b70",
+          "id": "07570a58-1ec7-4f32-8fdc-a544a91b5af5",
           "prompt": "Sentence 17",
           "options": [
             "B. such",
@@ -331,7 +331,7 @@
           ]
         },
         {
-          "id": "ba3c2f73-622c-4d9a-8585-f2c8061bc7f8",
+          "id": "14b59ec0-44f5-4d19-b16c-6a665d58fdc5",
           "prompt": "Sentence 18",
           "options": [
             "B. to argue",
@@ -349,43 +349,43 @@
       "context": "",
       "items": [
         {
-          "id": "e7e07d3f-679d-4b43-97f8-dd1b4064dc0f",
+          "id": "2008727e-050d-4de4-9542-02a4bbb2b799",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "af4504d3-11ea-4ee6-a63d-bb18f633a1c7",
+          "id": "710c3e73-e4ee-4b5e-aaa1-034a79d5f15c",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "c262c35c-fffd-4bbc-ac20-5ad254c6f56c",
+          "id": "3f489359-29ce-4670-b15e-51178bae45dc",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "112b0655-daa3-4111-a377-eedbaa32ea65",
+          "id": "f51dd88e-e1cf-4aae-9243-24dea80bd9f3",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "c0ab559e-9300-4526-84ef-091fd5c3b8a7",
+          "id": "d824fcf9-c05b-4dc2-aa89-690a2df62b68",
           "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "e3c7dd6d-8083-457c-a605-c3f95429e850",
+          "id": "758fad2f-ecbb-4988-8ac1-8c70791a74d4",
           "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "f96a91ab-7504-4021-9624-559a5f6e369f",
+          "id": "f34df2c5-df5f-4504-a3e6-6b6ecc2f16c4",
           "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "79093968-a6be-41d9-b7e7-437308515e57",
+          "id": "f7533008-eea4-438b-9d4a-e4785be5a7e7",
           "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "b02cd94d-0b9e-4d11-af2f-ff4e2920807f",
+          "id": "3ca0b1f6-e584-413d-8aa4-b2cead875847",
           "prompt": "Chỗ trống (9)"
         },
         {
-          "id": "0fa3b03b-79c2-499e-960b-2e25af560b4e",
+          "id": "a6b8b827-9311-4834-a79a-15f7be651f7c",
           "prompt": "Chỗ trống (10)"
         }
       ]
@@ -397,37 +397,37 @@
       "context": "",
       "items": [
         {
-          "id": "d998a699-0423-4171-a867-ede21bcd8d54",
+          "id": "d501c108-f79d-4ae8-aac6-b9b85907b7a1",
           "prompt": "D. that",
           "long": true
         },
         {
-          "id": "0b81d71a-9aea-4e68-83e5-a7f2eb21d646",
+          "id": "311a79fa-1ac5-4e4d-b91b-997d4ab12205",
           "prompt": "Dịch câu 2 sang tiếng Anh.",
           "long": true
         },
         {
-          "id": "0543c2d9-204c-4120-9daa-f1287a959573",
+          "id": "751cf2b7-b0b3-4165-af98-1e044e62772a",
           "prompt": "Dịch câu 3 sang tiếng Anh.",
           "long": true
         },
         {
-          "id": "ef61d7eb-d90b-400e-8dff-a3d2373faefb",
+          "id": "8311344e-d448-41bb-8179-4e59f5e4dc16",
           "prompt": "B. which",
           "long": true
         },
         {
-          "id": "375f31f3-fffe-4e63-a69b-ee06971617cb",
+          "id": "f626611c-714e-409c-bea8-621051e671f3",
           "prompt": "D. her",
           "long": true
         },
         {
-          "id": "4ba810a7-f381-45b3-ba07-2575ef5e702d",
+          "id": "ed18e75d-1917-4e80-8c9a-d4c9956cbf37",
           "prompt": "Dịch câu 6 sang tiếng Anh.",
           "long": true
         },
         {
-          "id": "e789dd67-4c6d-416a-a9df-7f04aa5c7779",
+          "id": "23c9e481-5586-4270-b741-2ddbe5027453",
           "prompt": "Dịch câu 7 sang tiếng Anh.",
           "long": true
         }
@@ -440,12 +440,12 @@
       "context": "",
       "items": [
         {
-          "id": "385b888d-c562-4ad4-b84c-5476110732a9",
+          "id": "e5080f2b-b972-4c3d-b1e8-94cebecb5247",
           "prompt": "Part 1: Trả lời câu hỏi Speaking theo chủ đề.",
           "long": true
         },
         {
-          "id": "34fd4aeb-0139-40c7-b813-c7aca4ab4d08",
+          "id": "9b9b859d-e10f-4f94-89cd-236dff8fcfff",
           "prompt": "Part 2: Trả lời câu hỏi Speaking theo chủ đề.",
           "long": true
         }

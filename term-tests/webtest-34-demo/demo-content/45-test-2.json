@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 2,
-  "sourceHash": "39a94d598c803e31000ed44406ff07c58c00e2af7f06376335cb51b464d8c37c",
+  "sourceHash": "4b2a84a4fc460e64a4f97a5b68787efefac7c979d811635652d500fe061b35dc",
   "durationMinutes": 90,
   "groups": [
     {
@@ -13,35 +13,35 @@
       "context": "… So, now let’s us consider the changes that ...are likely to occur... in the next 100 years. Unfortunately, I believe that not all changes (1)____ for the better. For example, in the future more and more people (2)____ from home and so they (3)____ more isolated from their colleagues. On the other hand, they (4)____ (certainly) greater freedom to choose their working hours.\nA further possible change is that handwriting (5)____ obsolete. We are already used to using a keyboard that today’s children are losing the ability to spell without the aid of a word processor.\nWithout a doubt, even greater changes (6)____ in technology used in the workplace. Computers (7)____ (undoubtedly) to grow even more powerful and this (8)____ (probably) in an even faster pace of life than we have now.",
       "items": [
         {
-          "id": "4c545de4-7d4f-4b03-a817-e74cd06d138e",
+          "id": "66c0fbab-590f-448d-a645-150b75e2ca42",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "2116b3cb-ee2a-4e23-aa9a-4370291e4d1f",
+          "id": "47a6477b-ccfb-4e2a-82a7-fc8ecaa582da",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "11221dbe-059e-45dc-a834-44b23d30420e",
+          "id": "68337ec4-686a-4711-ac3a-609529128052",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "dbe27d2c-0f2d-47a3-b803-3c982e46ae27",
+          "id": "40358f50-028d-4d1b-82d7-08bbd7fd44f6",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "0002293c-0406-491f-abec-facd3461ff76",
+          "id": "92b34f9f-34fb-4836-aeeb-62a32b76e752",
           "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "0a78059b-3578-4920-9dd3-82f33b1395e6",
+          "id": "e74629f3-33c7-4b95-86f2-1eae992ad764",
           "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "5846ada3-a651-429c-9f58-4cb31d4808b4",
+          "id": "92197ce6-045f-474c-b953-5d9fa2da4c65",
           "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "850639fa-99b0-4451-af11-22ef2f0a31b8",
+          "id": "2613c6c5-424b-4293-b97f-7aef4fde62ec",
           "prompt": "Chỗ trống (8)"
         }
       ]
@@ -53,43 +53,43 @@
       "context": "",
       "items": [
         {
-          "id": "0aa53f63-0630-4bc2-a63d-d0435f1d388d",
+          "id": "f028a7c8-49ce-4dab-bc19-6073e4431327",
           "prompt": "1. My father likes the classical music and listens to it all the time.\nLỗi sai"
         },
         {
-          "id": "07a06f2e-8851-4e84-b79d-7c449c1dc96d",
+          "id": "28b83073-db80-4333-a663-692797d9b824",
           "prompt": "1. My father likes the classical music and listens to it all the time.\nPhần sửa đúng"
         },
         {
-          "id": "51a47609-cf80-40b2-99a6-8b396aa7e54e",
+          "id": "22cbdd98-21b7-45fa-b32f-c992d43a5503",
           "prompt": "2. I saw a man sitting in a restaurant. A woman came and joined man.\nLỗi sai"
         },
         {
-          "id": "51387ac7-4fff-4c98-9c8f-523030ef0c15",
+          "id": "4871dd99-7cca-4a64-a37c-7a3e8edd8f5d",
           "prompt": "2. I saw a man sitting in a restaurant. A woman came and joined man.\nPhần sửa đúng"
         },
         {
-          "id": "122e0962-ee96-41a0-b45b-f269165fd77d",
+          "id": "d553923b-4112-4caa-b169-e3ad7789b3bc",
           "prompt": "3. Sun was shining and it was a lovely day.\nLỗi sai"
         },
         {
-          "id": "662a8299-2b2e-4330-9526-534a0c9acb27",
+          "id": "6897e0d5-951d-4302-b232-6c279e4e34d9",
           "prompt": "3. Sun was shining and it was a lovely day.\nPhần sửa đúng"
         },
         {
-          "id": "049e9cd4-90f8-4cd5-94b4-bc6a2928f896",
+          "id": "85a7761c-03f9-4bdf-ac87-8227bdcc4874",
           "prompt": "4. I would like to live by sea because I love swimming.\nLỗi sai"
         },
         {
-          "id": "93694226-82b1-4c54-8f01-0b29358c8398",
+          "id": "eede90f3-8649-4fca-8271-4b246d3584d5",
           "prompt": "4. I would like to live by sea because I love swimming.\nPhần sửa đúng"
         },
         {
-          "id": "4d390c80-8ac2-407d-ade0-e607ca46a3b3",
+          "id": "e71929c0-5080-419a-8693-473b70c28b52",
           "prompt": "5. He bought expensive car yesterday.\nLỗi sai"
         },
         {
-          "id": "445b12a7-7a9d-41f9-8947-1cb81dc66dc0",
+          "id": "4ace25b3-59e9-4e4f-bc8b-38b5d10db678",
           "prompt": "5. He bought expensive car yesterday.\nPhần sửa đúng"
         }
       ]
@@ -102,23 +102,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "0c1ff2a4-94b3-4be6-8153-f6572de262c6",
+          "id": "4e1540ca-e519-46ae-94ef-e572acfda632",
           "prompt": "Câu nghe 1"
         },
         {
-          "id": "dce4c24e-4523-416c-872f-6ff3152dea29",
+          "id": "23d88995-e943-400e-b544-e317f95fbe28",
           "prompt": "Câu nghe 2"
         },
         {
-          "id": "6d04df7d-676f-40ce-ac30-ee07fab252ad",
+          "id": "48fcd568-83cf-4a2f-a7de-78cf9eefbbca",
           "prompt": "Câu nghe 3"
         },
         {
-          "id": "2383ebb0-0249-4296-99c9-2c2499598d6b",
+          "id": "feafef94-7708-4d16-96aa-c97a2e1087e1",
           "prompt": "Câu nghe 4"
         },
         {
-          "id": "703b0299-8143-40d9-9c1b-64fef9b46b1b",
+          "id": "3163dc63-b6ab-42c6-aa52-7104ca25130b",
           "prompt": "Câu nghe 5"
         }
       ]
@@ -131,23 +131,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "88dc4404-842a-4de1-a9cd-0fa7a0cb5eec",
+          "id": "167366bd-a98a-4781-bc63-f4b6971e95a8",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "4188261a-e140-437e-a1e3-8646869b1d05",
+          "id": "cd6d91a9-d0ba-4159-94b0-8e52a55745c8",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "9253df8c-6cfc-4562-b76e-dd23cdfcf816",
+          "id": "85842e86-2d47-4b99-9392-098348f456e1",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "7f1512e1-e20a-4ce3-9048-8b805578ca29",
+          "id": "5a5c8cd5-0937-46f4-a93b-b71cd7b244ac",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "7c21d195-6bb1-4ad6-a447-5e93e61bcfb9",
+          "id": "356143af-4d7d-40b6-91c1-beec9b5a9bc0",
           "prompt": "Chỗ trống (5)"
         }
       ]
@@ -160,23 +160,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "4778d8b6-9e33-4333-b013-388729742739",
+          "id": "f9257a20-f9f1-4760-93e1-d3a5b899a37a",
           "prompt": "6. Which apartment is on top of a hill?"
         },
         {
-          "id": "b17c0a11-32fe-4753-9138-d01975c8b204",
+          "id": "656e0b2b-ec61-452d-b0ca-c74418da8beb",
           "prompt": "7. What shared cooking facilities are provided at this apartment?"
         },
         {
-          "id": "680effe9-c359-445a-aaa8-5871341a99cc",
+          "id": "91150260-c1be-4380-b6b0-19844ea6abb4",
           "prompt": "8. How much does a stay at this apartment cost?"
         },
         {
-          "id": "270952d0-a57e-4371-8543-a4100f579ca0",
+          "id": "c7d71061-d357-4eeb-a7ad-d9204059df94",
           "prompt": "9. Where can guests park for free at the Grand Apartments?"
         },
         {
-          "id": "1cc09d14-aef7-4e23-ad5f-abed4c728761",
+          "id": "50117cae-dbb2-49df-8444-4a191f8d9b86",
           "prompt": "10. Which group makes up the largest number of customers at the Grand Apartments?"
         }
       ]
@@ -188,63 +188,63 @@
       "context": "",
       "items": [
         {
-          "id": "eb4b9ddb-c1a6-4274-b5b5-1a6a46366658",
+          "id": "a5134d25-b97f-4d19-9d81-0427f7b1b760",
           "prompt": "1. The examples about online shopping are not really relevant with the main topic of the essay."
         },
         {
-          "id": "f2b40a82-873b-4606-8575-ce70d57e7f68",
+          "id": "220c8ca4-05cd-48d7-820e-2432f862b524",
           "prompt": "Sentence 2"
         },
         {
-          "id": "c8a1544c-25c2-41bd-954b-83818f475c81",
+          "id": "1e02077e-57b2-4276-887c-ffeaa77c4eb8",
           "prompt": "Sentence 3"
         },
         {
-          "id": "80b15d1b-bc17-4c13-901b-258705dba2fc",
+          "id": "50cd0497-e543-419e-ab32-78f1156105b2",
           "prompt": "2. Flexible working is now characteristic for many modern companies."
         },
         {
-          "id": "9a04dffb-2e67-49d5-9800-0c15b275b628",
+          "id": "ac94b98d-f213-4487-bb96-62730869dc25",
           "prompt": "Sentence 5"
         },
         {
-          "id": "fca12f81-323a-4894-bb12-d6312aa5bbd8",
+          "id": "0c0a8bcc-f753-44ed-887d-eb6a373ecb0e",
           "prompt": "Sentence 6"
         },
         {
-          "id": "217f4b4b-0061-4a0f-9504-d2680ffa9579",
+          "id": "5b214851-074e-4d6a-b328-5a535a3e01e3",
           "prompt": "3. Relative with last year’s results, the students’ achievement has improved significantly."
         },
         {
-          "id": "775556cc-a2a7-467e-806f-8b181808cb20",
+          "id": "7a8b358b-9804-42ec-99f4-33bfc8803a01",
           "prompt": "Sentence 8"
         },
         {
-          "id": "69534ac8-71d9-48ae-8622-a7f2fd1ffa04",
+          "id": "cf067a4e-3a98-4d91-82e1-682e5183277c",
           "prompt": "Sentence 9"
         },
         {
-          "id": "6654a424-78c2-4847-810b-68d63fb44620",
+          "id": "8c2a3cb7-cd3e-4351-8b00-4f303ac7f4d4",
           "prompt": "4. This simple introduction is very appropriate with an essay about language learning."
         },
         {
-          "id": "5eca8da9-d8c5-497f-9ae1-262caffafe95",
+          "id": "e017bc94-c5d5-4a8f-8356-bf599e235318",
           "prompt": "Sentence 11"
         },
         {
-          "id": "c2d4be64-c9ee-4bda-b051-3326cb29b6b4",
+          "id": "d52393ea-8570-40ac-9b2b-8ccc8c114d61",
           "prompt": "Sentence 12"
         },
         {
-          "id": "a912e82d-52c1-465e-9e09-7c527ac2ba82",
+          "id": "9dbbacfe-3fde-4757-8bf4-a0e3b3940fcc",
           "prompt": "2. Write the opposite of the adjectives/ adverbs in italics"
         },
         {
-          "id": "2f5895f3-a38f-4547-8683-8f554be56462",
+          "id": "e78671db-4300-40a0-ad7a-efaaa205b1b3",
           "prompt": "5. The test results were accurate."
         },
         {
-          "id": "a37062b8-d22d-4d05-b0a8-fd1ac2a16388",
+          "id": "6c8aed07-3cad-4318-93e6-a889c8c6f4dd",
           "prompt": "6. At this stage, we only have a rough idea of the total tuition fees."
         }
       ]
@@ -256,17 +256,17 @@
       "context": "",
       "items": [
         {
-          "id": "5b9356e4-ada9-4eb5-9f20-dd98b0a5ee03",
+          "id": "d31cd499-f58d-446c-a6e0-d509d920fc1e",
           "prompt": "Question 1: Write two intentions about your future job AND/OR your education.",
           "long": true
         },
         {
-          "id": "5df86749-68a3-4b34-ad84-836c6c1525df",
+          "id": "9b9fdd19-e596-4b27-8821-c2978150b11c",
           "prompt": "Question 2: Do you think Internet access will be more common in the future? Why?",
           "long": true
         },
         {
-          "id": "8a775f8c-474f-4184-bddc-b9911d872fab",
+          "id": "ff90dc6f-dfa4-4389-b28a-f374b2f0f9e3",
           "prompt": "Question 3: What changes do you think will happen to the workplace in the future? (List at least 2 changes)",
           "long": true
         }
