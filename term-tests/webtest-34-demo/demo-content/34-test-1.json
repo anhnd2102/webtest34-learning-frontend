@@ -3,737 +3,2687 @@
   "course": "34",
   "phase": 1,
   "testNumber": 1,
-  "sourceHash": "a931d9eb8fb7316c9f05ee7b9f6d7b4fcf933b42b62bcd73a5df763ad778a69c",
+  "sourceHash": "8cca6ee6ed21d77b527d4e5871861b3b4a150cff3ebe86aa870d766bf2d85406",
   "durationMinutes": 120,
   "groups": [
     {
-      "id": "vocabulary-nghe-t-v-ch-n-ngh-a",
-      "title": "Vocabulary · Nghe từ và chọn nghĩa",
+      "id": "vocabulary-exercise-1",
+      "title": "Vocabulary · Exercise 1",
       "instructions": "EXERCISE 1 (25 words = 12.5 points): Listen and note down the words/phrases you hear from the recording",
       "context": "",
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "8b73d982-213f-41a3-bcd7-942aa1a0513a",
+          "id": "75703da7-6967-4da0-a25a-de1f3ae2a94b",
           "prompt": "1. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "38fabd78-69b7-41f6-bf92-afad7487a20e",
-          "prompt": "1. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "e5380e3c-7e51-49dd-9b7c-79f01db13890",
+          "id": "b099860d-bea9-4be2-bb94-5412213e3b84",
           "prompt": "2. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "c26195fc-c6b7-4497-8ee4-10f02caef126",
-          "prompt": "2. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "b75ddb17-b916-4d32-a477-a0f64ccd29a7",
+          "id": "a46bf1a0-c51b-4f89-abd0-c3155110c774",
           "prompt": "3. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "bd96c122-dcd1-4caa-94bf-d580cf160786",
-          "prompt": "3. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "3c74b10a-bff3-486e-8160-9ade70a60ed1",
+          "id": "987bc58a-cf3b-4b98-a607-9457810d4083",
           "prompt": "4. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "55a29ef1-5ec6-4d44-82a4-631e3e1c84ed",
-          "prompt": "4. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "2419d03b-a133-4fa8-b1b6-490b45e27b3f",
+          "id": "e848cda6-9a1a-46aa-8341-3ea28a5fc76e",
           "prompt": "5. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "97df7179-0565-4003-9702-4ce8bb90fa3d",
-          "prompt": "5. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "7420f9de-3a0d-4f07-a438-44469171d71e",
+          "id": "fa896cf3-e7d5-4d7d-9214-b7e0b6005eea",
           "prompt": "6. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "b9c91064-acb0-4a33-b970-ca2053f63fc8",
-          "prompt": "6. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "001f6b4f-1493-4823-ae20-86a934dbf9c3",
+          "id": "0d504d7d-3d23-4ee4-a684-4d6409405510",
           "prompt": "7. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "8fd70434-1696-4c20-8554-73a1cfe5f158",
-          "prompt": "7. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "04fa972e-2091-4631-961a-f7e856d3fa6c",
+          "id": "de5f9709-1bdd-41bf-bd41-8f40b37699a0",
           "prompt": "8. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "ff048ce4-be9f-40e4-8a3f-a0019cfb3572",
-          "prompt": "8. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "4a9d4bae-cbe7-4c30-9cdf-1e44794cc713",
+          "id": "e80e100b-930a-49f0-b400-215e9893c3e0",
           "prompt": "9. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "a641efa8-da96-452c-8967-6bb2033f0371",
-          "prompt": "9. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "531374de-f983-4f66-a769-2b5a08995f1b",
+          "id": "c8c09e57-3ade-413d-99b9-9935cb935760",
           "prompt": "10. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "c64ae7c4-a6c4-4f60-b9d8-c1726d670603",
-          "prompt": "10. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "f3c683c9-9c02-4b93-8229-b0d2d72e0bf8",
+          "id": "e033e792-9102-4770-812d-7b4dbbed4caf",
           "prompt": "11. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "057d2331-fed4-430d-bef7-c746d6a5b87b",
-          "prompt": "11. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "8713a6f9-2b61-4e58-8538-61c06c47afd0",
+          "id": "bed9b925-d722-45e6-a8f9-99ff1740ec1e",
           "prompt": "12. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "27ee5b17-99b6-48af-b1b1-e548ba3cd84c",
-          "prompt": "12. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "bc588e86-fc77-4384-a054-748513bd045f",
+          "id": "40e50a0d-a008-406c-8b54-e3e1b294c6d2",
           "prompt": "13. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "9f587eaf-4d8d-4344-a965-c6709937c0f8",
-          "prompt": "13. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "191d9911-9c34-495a-87cc-a1c34fa7d133",
+          "id": "0a395233-3469-4ec8-b653-8a97aea78bd1",
           "prompt": "14. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "7ca577c9-6bff-4ffd-8ddf-3fc3c4f3da56",
-          "prompt": "14. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "358fb945-3bad-4f00-8b90-aa5906d11260",
+          "id": "ba9ae159-2d27-4900-b46c-616eceecf71f",
           "prompt": "15. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "b283dcca-0d0f-4e44-bdf1-203fb2b1e9be",
-          "prompt": "15. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "97f7f565-2cb3-4aa4-b238-30d46c585435",
+          "id": "17a0b302-eaa8-40e3-959e-0107c7fdac06",
           "prompt": "16. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "9ea3e7ce-8885-4879-bd04-768099bdb805",
-          "prompt": "16. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "22536280-7d96-40f8-a07d-de300afc07ef",
+          "id": "e3166883-efd1-4027-be61-24d858460a85",
           "prompt": "17. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "0fbe1e6e-a66e-4d93-b297-28cf1bce0be3",
-          "prompt": "17. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "78e8cdea-d2e9-45d5-9e60-8e599c7e0c68",
+          "id": "2ccaef0d-c9c7-47db-b59e-4543f96c11db",
           "prompt": "18. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "fc8f63fa-f7d3-4cd9-9812-2b351714807f",
-          "prompt": "18. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "9369e6e5-096a-4f65-99dd-c805ed93e157",
+          "id": "125e48e5-e163-4558-87dc-57019a9ae5ad",
           "prompt": "19. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "4d435826-43cd-4a71-9e90-2f379034ee5f",
-          "prompt": "19. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "9d0d4d08-11f8-4b50-b9f5-23029046fd8a",
+          "id": "6649d458-7701-418c-a952-5a8d455b3ea6",
           "prompt": "20. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "d494e079-6d9d-46fc-9fbf-dcd554542a30",
-          "prompt": "20. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "46da32ee-180a-4965-95f5-d4d6fe649bb0",
+          "id": "3728481f-f1c2-40dc-b992-9240975a6496",
           "prompt": "21. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "191ae1ae-d5ea-4aed-abca-818284ded419",
-          "prompt": "21. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "9485e05c-20c3-4b76-821a-975ecaaf2776",
+          "id": "8dbedba6-572f-4259-84f7-63b2b4c2e6b9",
           "prompt": "22. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "0652683d-1305-40d2-84b1-49efdfa3acbd",
-          "prompt": "22. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "ca1a0c84-8ad3-46de-8052-d00486e3368f",
+          "id": "9152811a-03b0-4a62-95f2-ac31889df26d",
           "prompt": "23. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "415e97e2-1ef2-4490-891b-0734ee441737",
-          "prompt": "23. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "32b0b0f6-71f7-40f3-9204-e74a3a37c704",
+          "id": "617c581d-d63c-4e0d-ad0c-7dd4da40bd23",
           "prompt": "24. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "47397195-2f37-4be9-a359-6e4ec8a115ea",
-          "prompt": "24. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
         },
         {
-          "id": "0c6fa908-d0d7-4544-84a5-1daddfd0f948",
+          "id": "534816a0-81c1-4a28-9e13-fb4339e880a8",
           "prompt": "25. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "cd4326fe-61e8-43a6-82e4-ce9e6bb560b1",
-          "prompt": "25. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "vocab-opt-01",
+              "label": "hướng ngoại"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "vocab-opt-02",
+              "label": "môi trường"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "vocab-opt-03",
+              "label": "đi ăn ngoài"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "vocab-opt-04",
+              "label": "It takes how much time to do sth"
+            },
+            {
+              "id": "vocab-opt-05",
+              "label": "lịch trình thường nhật"
+            },
+            {
+              "id": "vocab-opt-06",
+              "label": "review one’s study notes"
+            },
+            {
+              "id": "vocab-opt-07",
+              "label": "Bị kẹt"
+            },
+            {
+              "id": "vocab-opt-08",
+              "label": "tắc đường"
+            },
+            {
+              "id": "vocab-opt-09",
+              "label": "lịch đều đặn, thường xuyên"
+            },
+            {
+              "id": "vocab-opt-10",
+              "label": "cập nhật về đời sống của nhau"
+            },
+            {
+              "id": "vocab-opt-11",
+              "label": "thuận tiện"
+            },
+            {
+              "id": "vocab-opt-12",
+              "label": "in one’s free time"
+            },
+            {
+              "id": "vocab-opt-13",
+              "label": "bắt xe buýt"
+            },
+            {
+              "id": "vocab-opt-14",
+              "label": "Pitch in to help sb"
+            },
+            {
+              "id": "vocab-opt-15",
+              "label": "đi tập gym"
+            },
+            {
+              "id": "vocab-opt-16",
+              "label": "a big fan of sth"
+            },
+            {
+              "id": "vocab-opt-17",
+              "label": "mở rộng kiến thức"
+            },
+            {
+              "id": "vocab-opt-18",
+              "label": "hầu hết thời gian"
+            },
+            {
+              "id": "vocab-opt-19",
+              "label": "làm việc chăm chỉ"
+            },
+            {
+              "id": "vocab-opt-20",
+              "label": "quyển sách mới ra"
+            },
+            {
+              "id": "vocab-opt-21",
+              "label": "tụ tập"
+            },
+            {
+              "id": "vocab-opt-22",
+              "label": "địa điểm thu hút khách du lịch"
+            },
+            {
+              "id": "vocab-opt-23",
+              "label": "be involved in sth"
+            },
+            {
+              "id": "vocab-opt-24",
+              "label": "combine sth"
+            },
+            {
+              "id": "vocab-opt-25",
+              "label": "đăng ký các tour có hướng dẫn viên"
             }
           ],
           "long": false
@@ -741,158 +2691,158 @@
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-qua-nh",
-      "title": "Vocabulary · Từ vựng qua ảnh",
+      "id": "vocabulary-exercise-2",
+      "title": "Vocabulary · Exercise 2",
       "instructions": "EXERCISE 2 (25 words = 12.5 points): PICTORIAL WORDS: Look at the pictures and write down the words/phrases they represent",
       "context": "",
       "audioPath": "",
       "items": [
         {
-          "id": "0a0a495e-ebe8-4bae-a93b-f1b6256b0600",
+          "id": "faa81b54-cef4-499d-9f4b-523f7ab3b37d",
           "prompt": "Hình ảnh (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "d751c7dc-834d-4f92-8d54-48ee3864a91c",
+          "id": "34b8541e-2367-4710-b930-6b05f7d8792e",
           "prompt": "Hình ảnh (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "5491723d-a171-43a7-beb0-b708368578bf",
+          "id": "34c51d3f-0a73-4688-8d69-66c58f6b6ba2",
           "prompt": "Hình ảnh (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "d3b10b42-4836-4296-bf52-61793b88210e",
+          "id": "69ab0562-893b-4105-9538-a6d52444593b",
           "prompt": "Hình ảnh (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "ddf960ec-f27d-40b0-8afe-4d31f193e8c4",
+          "id": "768373e1-ae5b-40e9-a06d-b8a8ecd1c7e6",
           "prompt": "Hình ảnh (5)",
           "options": [],
           "long": false
         },
         {
-          "id": "84794e4f-2287-4928-9363-523f8a8a80d2",
+          "id": "11c46d78-f183-4e7b-97e2-145b7a66d4d6",
           "prompt": "Hình ảnh (6)",
           "options": [],
           "long": false
         },
         {
-          "id": "cd610d57-d799-45db-8726-e4948927ba0b",
+          "id": "b833c2be-e1d7-4815-a08b-18f106c1b0cc",
           "prompt": "Hình ảnh (7)",
           "options": [],
           "long": false
         },
         {
-          "id": "f41088af-5040-4604-af4a-e2dccf864f85",
+          "id": "706f0911-2afe-4c85-8a0a-d369d833ad1b",
           "prompt": "Hình ảnh (8)",
           "options": [],
           "long": false
         },
         {
-          "id": "43cc77ed-31e2-4161-b72a-8d986c20de85",
+          "id": "a25e8a7b-8b20-4208-97e5-9f945c6a8554",
           "prompt": "Hình ảnh (9)",
           "options": [],
           "long": false
         },
         {
-          "id": "33d4d57f-f5c3-4c9c-97a0-90c91ab39f7e",
+          "id": "df101fd2-96ab-4cde-9ad3-8959b553cf6b",
           "prompt": "Hình ảnh (10)",
           "options": [],
           "long": false
         },
         {
-          "id": "1465f677-a9b5-49e4-82e7-014cd99498b2",
+          "id": "8002f575-2810-4295-8caa-6bc4af0c6a81",
           "prompt": "Hình ảnh (11)",
           "options": [],
           "long": false
         },
         {
-          "id": "3dcb33e4-548e-425a-be6a-27eba8fc8981",
+          "id": "2ff0f7bd-b6e0-4af5-a6f0-611c3c4a3567",
           "prompt": "Hình ảnh (12)",
           "options": [],
           "long": false
         },
         {
-          "id": "4106361d-73f2-434d-8a09-0f32f0123d89",
+          "id": "75f27638-4c2c-41f0-b2c9-ad905cd4e2b4",
           "prompt": "Hình ảnh (13)",
           "options": [],
           "long": false
         },
         {
-          "id": "6cd486bf-16ba-4e5c-848c-e36a3369e78a",
+          "id": "0c9575e3-75fd-425f-8fec-58a349fd2057",
           "prompt": "Hình ảnh (14)",
           "options": [],
           "long": false
         },
         {
-          "id": "81fc6ef7-4938-4b09-8935-957a6c6a24c8",
+          "id": "8404e866-3485-4350-bdfd-7d52e41fb142",
           "prompt": "Hình ảnh (15)",
           "options": [],
           "long": false
         },
         {
-          "id": "7871708a-4e8d-4d36-aca1-c71a8d6936c4",
+          "id": "49d8d090-538c-454d-9506-527ad01cec3b",
           "prompt": "Hình ảnh (16)",
           "options": [],
           "long": false
         },
         {
-          "id": "cae57bf3-9ab6-4248-b20e-cb3c516d4b0e",
+          "id": "0587c511-af5d-42a1-8c20-537ef502f6d9",
           "prompt": "Hình ảnh (17)",
           "options": [],
           "long": false
         },
         {
-          "id": "0fc49fcb-1eb0-49f5-bf29-3332e2c088dd",
+          "id": "c6b6f9b8-ab06-4827-b649-e7acb249f742",
           "prompt": "Hình ảnh (18)",
           "options": [],
           "long": false
         },
         {
-          "id": "4ec89a0a-1bab-4cb8-b32b-7ea14d1e4b55",
+          "id": "477ea6df-0876-43f4-a390-59e03f25d3bc",
           "prompt": "Hình ảnh (19)",
           "options": [],
           "long": false
         },
         {
-          "id": "0f0da5e9-5838-47e7-b29c-216ee3768c5b",
+          "id": "11791886-949f-41bc-9456-a2974ff66719",
           "prompt": "Hình ảnh (20)",
           "options": [],
           "long": false
         },
         {
-          "id": "b4e94e37-333b-4fb9-87ae-f8ee8edb2eb0",
+          "id": "95516bf4-1f2e-47b6-9419-942d9be04877",
           "prompt": "Hình ảnh (21)",
           "options": [],
           "long": false
         },
         {
-          "id": "c37a78f5-46da-4440-bb5c-bc453e51fe0a",
+          "id": "c9ec7fe2-e988-47cb-b8cb-e41e993eeda8",
           "prompt": "Hình ảnh (22)",
           "options": [],
           "long": false
         },
         {
-          "id": "ffc03e8c-febd-413f-a2d2-ed1c64091879",
+          "id": "e8d2a92c-25f1-4669-9e0f-fea9a32a13d5",
           "prompt": "Hình ảnh (23)",
           "options": [],
           "long": false
         },
         {
-          "id": "d2c76528-66e2-4133-b46a-1a0bc8166c57",
+          "id": "c5afbba9-788a-410f-8633-4f42fe4540a7",
           "prompt": "Hình ảnh (24)",
           "options": [],
           "long": false
         },
         {
-          "id": "269bda6d-070b-4e67-a5a2-34102cd2887e",
+          "id": "293bacac-13f0-48a2-8e26-4eef48c5393d",
           "prompt": "Hình ảnh (25)",
           "options": [],
           "long": false
@@ -900,14 +2850,14 @@
       ]
     },
     {
-      "id": "listening-s-p-x-p",
-      "title": "Listening · Sắp xếp",
+      "id": "listening-part-1",
+      "title": "Listening · Part 1",
       "instructions": "Listen and put the events in the correct order (5 điểm)",
       "context": "",
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "7fd343d5-afa6-45d2-b908-7b683aec7add",
+          "id": "096ced30-df6e-4f56-8cfb-a9730ba845c2",
           "prompt": "Vị trí 1",
           "options": [
             {
@@ -934,7 +2884,7 @@
           "long": false
         },
         {
-          "id": "bb766849-145d-4e23-a080-f0b703a96c7c",
+          "id": "ebbc5828-24eb-41d5-8179-637f1eccc676",
           "prompt": "Vị trí 2",
           "options": [
             {
@@ -961,7 +2911,7 @@
           "long": false
         },
         {
-          "id": "7b8c8332-2c52-4d46-8996-0cc976aee585",
+          "id": "7eca9066-9577-4a82-bbd6-d984ff81ad33",
           "prompt": "Vị trí 3",
           "options": [
             {
@@ -988,7 +2938,7 @@
           "long": false
         },
         {
-          "id": "0ec3479a-213c-43de-a960-d3982af6f058",
+          "id": "53625a97-dcdd-4bb4-8b2b-4cf7b9ba5c88",
           "prompt": "Vị trí 4",
           "options": [
             {
@@ -1015,7 +2965,7 @@
           "long": false
         },
         {
-          "id": "4a2f1622-3ac5-40d6-9ae0-44bb87a3e79a",
+          "id": "85023b17-e1f0-4c89-ac9a-f70e031a048b",
           "prompt": "Vị trí 5",
           "options": [
             {
@@ -1044,38 +2994,38 @@
       ]
     },
     {
-      "id": "listening-i-n-b-ng",
-      "title": "Listening · Điền bảng",
+      "id": "listening-part-2",
+      "title": "Listening · Part 2",
       "instructions": "Listen and complete the table below. Write NO MORE THAN ONE WORD for each answer (5 điểm)",
       "context": "",
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "3933e3ce-1f3c-47b5-96f2-75e0bc889771",
+          "id": "ed133b44-3c8b-46e1-933b-c01ae4fea256",
           "prompt": "Chỗ trống (1)",
           "options": [],
           "long": false
         },
         {
-          "id": "0ff69149-0175-4e43-aaa0-d08fa853464b",
+          "id": "c9b5cf82-fd9b-403e-a9a9-4f6350cba3e7",
           "prompt": "Chỗ trống (2)",
           "options": [],
           "long": false
         },
         {
-          "id": "b1d47769-2ec9-467c-ad59-f4b612d32b1c",
+          "id": "1aa4f888-aef4-4844-84be-9b97c9d3a4c1",
           "prompt": "Chỗ trống (3)",
           "options": [],
           "long": false
         },
         {
-          "id": "d6730504-3ac7-4bd9-8b7a-4b0580a2c926",
+          "id": "df5c4d56-fc2e-4fb0-a04c-ef88fe9b2bb0",
           "prompt": "Chỗ trống (4)",
           "options": [],
           "long": false
         },
         {
-          "id": "54cfb927-1e9d-4be3-8651-4da403f6d7a7",
+          "id": "9d681e9c-e655-4143-a57d-6d65aab3f5ca",
           "prompt": "Chỗ trống (5)",
           "options": [],
           "long": false
@@ -1083,14 +3033,14 @@
       ]
     },
     {
-      "id": "listening-ng-sai",
-      "title": "Listening · Đúng/Sai",
+      "id": "listening-part-3",
+      "title": "Listening · Part 3",
       "instructions": "Listen and decide whether the statements are True (T) or False (F) (5 điểm)",
       "context": "",
       "audioPath": "assets/demo-audio/34/Test 1 (Phase 1) _Full.MP3",
       "items": [
         {
-          "id": "260c2a14-b78e-47cc-ac40-1d7e51c913e4",
+          "id": "f3bf6c11-60f7-497b-980a-5a00396430f9",
           "prompt": "Câu 1",
           "options": [
             {
@@ -1105,7 +3055,7 @@
           "long": false
         },
         {
-          "id": "c6ace94d-60d7-4b87-a7d9-e1df4dd2eaae",
+          "id": "b7486d7e-6b86-4ca7-b57d-dcd37e97ecc7",
           "prompt": "Câu 2",
           "options": [
             {
@@ -1120,7 +3070,7 @@
           "long": false
         },
         {
-          "id": "2480edc7-b753-4518-a320-39f066823228",
+          "id": "6f7005cd-4445-4eb3-b2f4-5ee186dde0af",
           "prompt": "Câu 3",
           "options": [
             {
@@ -1135,7 +3085,7 @@
           "long": false
         },
         {
-          "id": "306aa980-f08c-4c9c-8677-007689d79354",
+          "id": "04926c9d-0e9d-4049-9904-9102dd7a5ea0",
           "prompt": "Câu 4",
           "options": [
             {
@@ -1150,7 +3100,7 @@
           "long": false
         },
         {
-          "id": "a1f2f074-6b05-4076-8209-df15f3cc0444",
+          "id": "98db0b56-09d2-44db-a7bf-fde9b8b1a680",
           "prompt": "Câu 5",
           "options": [
             {
@@ -1167,68 +3117,68 @@
       ]
     },
     {
-      "id": "pronunciation-phi-n-m-t",
-      "title": "Pronunciation · Phiên âm → từ",
+      "id": "pronunciation-part-1",
+      "title": "Pronunciation · Part 1",
       "instructions": "Nhìn vào phiên âm IPA và viết lại từ tiếng Anh tương ứng (5 điểm)",
       "context": "",
       "audioPath": "",
       "items": [
         {
-          "id": "14ad3bc1-e033-44cc-9536-ff6e244675f5",
+          "id": "88307c6c-d8a5-4a6f-8f36-cc4e8e83a837",
           "prompt": "Từ 1",
           "options": [],
           "long": false
         },
         {
-          "id": "18ae3eab-3018-47d0-9279-69bc5a2f06b5",
+          "id": "3913cffa-281d-44d2-b163-1b02d2df8b71",
           "prompt": "Từ 2",
           "options": [],
           "long": false
         },
         {
-          "id": "4c184fcd-e684-4849-b78a-6248eeec1ded",
+          "id": "5e41285e-56f1-488d-8ede-5accde87fd6f",
           "prompt": "Từ 3",
           "options": [],
           "long": false
         },
         {
-          "id": "eaf4b880-519c-48e4-89a1-97e636952ae9",
+          "id": "382cd365-e82c-4de6-86fb-6fbbea70eab8",
           "prompt": "Từ 4",
           "options": [],
           "long": false
         },
         {
-          "id": "ef247b6f-8c71-4077-bc1c-c60749dd2577",
+          "id": "b18413a7-53e2-416b-9835-492353214897",
           "prompt": "Từ 5",
           "options": [],
           "long": false
         },
         {
-          "id": "eed84672-3a05-4ffa-94a1-c02b5e666e59",
+          "id": "f4ed281f-55d0-4ece-ac61-bda0d0e560e3",
           "prompt": "Từ 6",
           "options": [],
           "long": false
         },
         {
-          "id": "3a98fa2d-020d-4609-9253-a84d7a70a283",
+          "id": "3d3b664f-173b-4a0b-989d-b04e897df86f",
           "prompt": "Từ 7",
           "options": [],
           "long": false
         },
         {
-          "id": "4049fbc7-f0f8-44cd-a90b-488a987e16de",
+          "id": "1bf0a153-9b61-48d3-a62f-d220d127fa13",
           "prompt": "Từ 8",
           "options": [],
           "long": false
         },
         {
-          "id": "f778f920-73f3-4be9-be41-7c46b117ce0d",
+          "id": "bf35ab97-24e6-4aa3-ad47-8d8c10e71935",
           "prompt": "Từ 9",
           "options": [],
           "long": false
         },
         {
-          "id": "065166a2-58d4-4b55-86b5-758d61245270",
+          "id": "82089f10-e97e-4a47-accc-d49cdfcab996",
           "prompt": "Từ 10",
           "options": [],
           "long": false
@@ -1236,14 +3186,14 @@
       ]
     },
     {
-      "id": "pronunciation-ch-n-phi-n-m",
-      "title": "Pronunciation · Chọn phiên âm",
+      "id": "pronunciation-part-2",
+      "title": "Pronunciation · Part 2",
       "instructions": "Chọn cách phát âm / phiên âm đúng cho từ được gạch chân (5 điểm)",
       "context": "",
       "audioPath": "",
       "items": [
         {
-          "id": "9992f623-a998-41bd-8848-e3203e9c8bac",
+          "id": "a0fd0313-388f-454c-852b-de5cf69771ff",
           "prompt": "Câu 1",
           "options": [
             {
@@ -1262,7 +3212,7 @@
           "long": false
         },
         {
-          "id": "9a12c82b-0fee-467d-8c46-643599d93f40",
+          "id": "f2fed289-e2dd-4de1-a264-5c3ae07b7a95",
           "prompt": "Câu 2",
           "options": [
             {
@@ -1281,7 +3231,7 @@
           "long": false
         },
         {
-          "id": "1bc90d98-9548-4da8-bcd9-0cda38e19b2d",
+          "id": "cbca5248-310f-43ae-ae6f-a4b60066e438",
           "prompt": "Câu 3",
           "options": [
             {
@@ -1300,7 +3250,7 @@
           "long": false
         },
         {
-          "id": "2f85bb75-52ad-48c2-8165-f7b9d391829e",
+          "id": "68acd4bd-fcdc-4ae5-ae4c-4d5f3ca04f5a",
           "prompt": "Câu 4",
           "options": [
             {
@@ -1319,7 +3269,7 @@
           "long": false
         },
         {
-          "id": "f31d1adb-68e3-4f1e-9863-b3f1b5970f12",
+          "id": "6d56b114-c712-4861-b2fd-0e72d70f163a",
           "prompt": "Câu 5",
           "options": [
             {
@@ -1338,7 +3288,7 @@
           "long": false
         },
         {
-          "id": "8bb84d70-18e4-474f-a2ac-5a362d2eb8f4",
+          "id": "c3bee253-5c5c-4364-83db-1bcb3a7dc1db",
           "prompt": "Câu 6",
           "options": [
             {
@@ -1357,7 +3307,7 @@
           "long": false
         },
         {
-          "id": "a5fb11d3-99fa-424b-a416-fbbc02c52147",
+          "id": "33b6bf7f-7e2c-478f-8361-da2da30b4f8b",
           "prompt": "Câu 7",
           "options": [
             {
@@ -1376,7 +3326,7 @@
           "long": false
         },
         {
-          "id": "48bf4de4-52f9-45dd-a5d3-4d99f6f36a9c",
+          "id": "e723b94c-8695-40ec-9575-d0b452d2526c",
           "prompt": "Câu 8",
           "options": [
             {
@@ -1395,7 +3345,7 @@
           "long": false
         },
         {
-          "id": "087d8baf-cc82-4080-819e-c161a8cc0f7c",
+          "id": "ff24b96d-d5cf-41c2-b182-f5f84ef6fc5b",
           "prompt": "Câu 9",
           "options": [
             {
@@ -1414,7 +3364,7 @@
           "long": false
         },
         {
-          "id": "f2bb7ed6-ddd6-4680-9fd4-fed4f8971966",
+          "id": "a419a65a-68d1-4266-b0df-9bfc06c9103e",
           "prompt": "Câu 10",
           "options": [
             {
@@ -1435,56 +3385,56 @@
       ]
     },
     {
-      "id": "translation-d-ch-vi-t-anh",
-      "title": "Translation · Dịch Việt–Anh",
-      "instructions": "Dịch các câu sau sang tiếng Anh hoàn chỉnh (16 điểm)",
+      "id": "translation",
+      "title": "Translation",
+      "instructions": "Dịch các câu sau sang tiếng Anh hoàn chỉnh (32 điểm)",
       "context": "",
       "audioPath": "",
       "items": [
         {
-          "id": "2a533ca4-6bef-49d0-8cfd-36b91f9e2cf0",
+          "id": "12728884-5a2a-47e6-81ce-489a721086cd",
           "prompt": "Dịch câu 1 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "2b5dc193-04dd-40f2-8027-226cdca2de0f",
+          "id": "c941efb3-daf6-45f8-9aaf-80ed9cc525e9",
           "prompt": "Dịch câu 2 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "50dc7726-e8cb-453a-85d4-e234a824b1af",
+          "id": "c480606a-572b-40df-82fa-1dc37e5b64b0",
           "prompt": "Dịch câu 3 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "3efedf6f-f7d3-434a-b682-f6cc29c61524",
+          "id": "4f761797-b7fc-4ef6-abfc-35d19782b7c2",
           "prompt": "Dịch câu 4 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "890c950a-b6d9-414e-96c7-774d09936c6f",
+          "id": "84bce4f7-9283-4c46-8293-28a23c384048",
           "prompt": "Dịch câu 5 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "3b39f7d0-9220-4228-9e5d-da864587eb98",
+          "id": "31dca07d-c20c-44bc-85bf-0f6f56c23151",
           "prompt": "Dịch câu 6 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "53193a19-df26-4de9-836e-4bbb4679cc9f",
+          "id": "e9615de8-d6ea-4462-b46b-1b3b6e270d20",
           "prompt": "Dịch câu 7 sang tiếng Anh.",
           "options": [],
           "long": true
         },
         {
-          "id": "b3f2f0da-78b5-4432-bbaf-39b9aad7481b",
+          "id": "712bc812-c183-4c42-98a6-25a6f532897d",
           "prompt": "Dịch câu 8 sang tiếng Anh.",
           "options": [],
           "long": true
@@ -1492,26 +3442,26 @@
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
-      "title": "Speaking · Trả lời viết",
-      "instructions": "Viết câu trả lời theo ý tưởng và gợi ý trong đề (tối thiểu 30 từ mỗi câu). Bài thi được chấm bằng AI (18 điểm).",
+      "id": "speaking",
+      "title": "Speaking",
+      "instructions": "Nói / viết câu trả lời theo các câu hỏi bên dưới (tối thiểu 30 từ mỗi câu). Bài làm được chấm bằng AI (18 điểm).",
       "context": "",
       "audioPath": "",
       "items": [
         {
-          "id": "22e851cf-7cf8-4011-8392-3ad0ae2137d8",
+          "id": "dbd7ccf7-ae14-4847-bc49-d5b3a56e0c8a",
           "prompt": "1. When you start a family, do you prefer to have a big or a small one? (6 points)\nSuggested Vocab:",
           "options": [],
           "long": true
         },
         {
-          "id": "9dbdf4d1-9156-4d9c-9fc2-9f3482954a69",
+          "id": "82a20b6a-c113-4473-bd78-3c4ed2528ec2",
           "prompt": "2. What do you like to do when you go on a long coach trip/coach ride? (6 points)\nNote: a long coach trip/bus ride – chuyến đi xa bằng xe khách (Vd: về quê, đi du lịch Bãi Cháy, Sầm Sơn…)\nSuggested ideas",
           "options": [],
           "long": true
         },
         {
-          "id": "8bce8452-d489-41f4-a770-83a3b1c993b4",
+          "id": "53e7edd4-3444-4c13-b9dc-e4b4982b66dc",
           "prompt": "3. What do you usually do to prepare for an English test? (6 points)\nSuggested Vocabulary:",
           "options": [],
           "long": true
