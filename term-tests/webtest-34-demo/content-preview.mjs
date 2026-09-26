@@ -165,7 +165,7 @@ export async function mount(course) {
   const queryParams = new URLSearchParams(location.search || '');
   const testToken = hashParams.get('test') || queryParams.get('test') || config.LEARNING_TEST_TOKEN || '';
 
-  let testNum = Number(queryParams.get('testNum')) || 1;
+  let testNum = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || 1;
   const phaseParam = queryParams.get('phase');
   if ((course === '34' || course === '45') && phaseParam === '2' && testNum <= 2) {
     testNum = testNum + 4;
