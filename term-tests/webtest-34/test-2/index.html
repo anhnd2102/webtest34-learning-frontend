@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Webtest 34 · Test 2</title>
+</head>
+<body>
+  <main>
+    <p>Đang mở bài kiểm tra…</p>
+    <noscript>
+      <p><a href="../../webtest-34-demo/index.html?test=2">Mở Test 2</a></p>
+    </noscript>
+  </main>
+  <script>
+    const rendererUrl = new URL('../../webtest-34-demo/index.html', window.location.href);
+    const params = new URLSearchParams(window.location.search);
+    rendererUrl.searchParams.set('test', '2');
+    rendererUrl.searchParams.set('v', params.get('v') || Date.now().toString());
+    if (window.location.hash) {
+      rendererUrl.hash = window.location.hash.slice(1);
+    }
+    window.location.replace(rendererUrl.href);
+  </script>
+</body>
+</html>

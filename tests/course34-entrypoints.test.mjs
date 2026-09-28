@@ -20,6 +20,19 @@ test('Course 34 landing page links to a fresh Test 1 navigation', async () => {
 });
 
 
+test('Course 34 landing page exposes an explicit Test 2 entry point', async () => {
+  const landing = await read('term-tests/webtest-34/index.html');
+  assert.match(landing, /id="test-2-link" href="test-2\/index\.html"/);
+  assert.match(landing, /querySelectorAll\('a\[id\^="test-"\]\[id\$="-link"\]'\)/);
+});
+
+test('Course 34 Test 2 entry point selects Test 2 in the canonical renderer', async () => {
+  const entry = await read('term-tests/webtest-34/test-2/index.html');
+  assert.match(entry, /rendererUrl\.searchParams\.set\('test', '2'\)/);
+  assert.match(entry, /rendererUrl\.searchParams\.set\('v'/);
+  assert.match(entry, /location\.hash/);
+});
+
 test('Course 34 Test 1 entry point delegates to the canonical demo renderer', async () => {
   const entry = await read('term-tests/webtest-34/test-1/index.html');
   assert.match(entry, /\.\.\/\.\.\/webtest-34-demo\/index\.html/);

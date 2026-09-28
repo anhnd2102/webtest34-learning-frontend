@@ -10,19 +10,22 @@
     <h1>Khóa 34</h1>
     <p>Chọn bài kiểm tra để bắt đầu.</p>
     <p><a id="test-1-link" href="test-1/index.html">Phase 1 · Test 1</a></p>
+    <p><a id="test-2-link" href="test-2/index.html">Phase 1 · Test 2</a></p>
   </main>
   <script>
-    const testLink = document.getElementById('test-1-link');
-    if (window.location.hash) {
-      testLink.hash = window.location.hash.slice(1);
-    }
-    testLink.addEventListener('click', () => {
-      const latestTestUrl = new URL(testLink.href, window.location.href);
-      latestTestUrl.searchParams.set('v', Date.now().toString());
+    const testLinks = [...document.querySelectorAll('a[id^="test-"][id$="-link"]')];
+    testLinks.forEach((testLink) => {
       if (window.location.hash) {
-        latestTestUrl.hash = window.location.hash.slice(1);
+        testLink.hash = window.location.hash.slice(1);
       }
-      testLink.href = latestTestUrl.href;
+      testLink.addEventListener('click', () => {
+        const latestTestUrl = new URL(testLink.href, window.location.href);
+        latestTestUrl.searchParams.set('v', Date.now().toString());
+        if (window.location.hash) {
+          latestTestUrl.hash = window.location.hash.slice(1);
+        }
+        testLink.href = latestTestUrl.href;
+      });
     });
   </script>
 </body>

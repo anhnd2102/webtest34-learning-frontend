@@ -7,6 +7,8 @@
   <title>IZONE · Khóa 34 · Phase 1 · Test 1</title>
   <link rel="icon" href="data:,">
   <script src="config.js?rev=20260918-local-api-v1"></script>
+  <script src="config.test2.js?rev=20260927-test2-audio-v1"></script>
+  <script src="test2-public.js?rev=20260927-test2-public-v1"></script>
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
@@ -425,6 +427,8 @@
 <script>
 (() => {
   const demoCourse = new URLSearchParams(location.search).get('demoCourse');
+  const testMode = new URLSearchParams(location.search).get('test') === '2' ? 'test2' : 'test1';
+  const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
   if (['03', '34', '45'].includes(demoCourse)) {
     import('./content-preview.mjs?rev=20260923-utf8-result-v1').then(module => module.mount(demoCourse)).catch(() => {
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại.';
@@ -444,10 +448,10 @@
       score:`${summary.scoreEarned??0} / ${summary.maxScore??0}`
     };
   }
-  const STORAGE_KEY = 'izone_course34_phase1_test1_prototype_v1';
+  const STORAGE_KEY = testMode === 'test2' ? (test2Content?.storageKey || 'izone_course34_phase1_test2_v1') : 'izone_course34_phase1_test1_prototype_v1';
   const TOTAL_MINUTES = 120;
   const LEARNING_RESULT_POLL_MAX_MS = 45 * 60 * 1000;
-  const vocab2Prompts = [
+  const test1Vocab2Prompts = [
     'The c_ _ _ _ _ _ _ leads to three doors. — Note: lead (v): dẫn đến',
     'The two girls love to g_ _ _ _ _ a_ _ _ _ their friends’ lives.',
     'I often r_ _ _ m_ b_ _ _ t_ s_ _ _ _ _.',
@@ -474,7 +478,8 @@
     'The class starts at nine o’_ _ _ _ _ s_ _ _ _.',
     'My friends sometimes b_ _ s_ _ _ _ _ to eat during break times.'
   ];
-  const vocab2Images = Array.from({length:25}, (_, i) => `assets/test 1/vocabulary/image${i+1}.png`);
+  const vocab2Images = testMode === 'test2' && test2Content ? test2Content.vocab2Images : Array.from({length:25}, (_, i) => `assets/test 1/vocabulary/image${i+1}.png`);
+  const vocab2Prompts = testMode === 'test2' && test2Content ? test2Content.vocab2Prompts : test1Vocab2Prompts;
 
   const listeningOrder = [
     ['A','American families are changing from the way they used to be.'],
@@ -513,6 +518,11 @@
     {id:'translation', label:'Translation', points:32, count:8},
     {id:'speaking', label:'Speaking', points:18, count:3}
   ];
+  if(testMode === 'test2'){
+    document.title = 'IZONE · Khóa 34 · Phase 1 · Test 2';
+    document.querySelector('.brand-title').textContent = 'Khóa 34 · Phase 1 · Test 2';
+    document.querySelector('#introScreen h1').textContent = '34 PHASE 1 · TEST 2';
+  }
 
   const state = loadState();
   let currentSection = state.currentSection || 'vocabulary';
@@ -920,8 +930,31 @@
   }
 
   function listeningHTML(){
-    const orderList = listeningOrder.map(([l,t])=>`<div class="choice-row"><div class="qnum">${l}</div><div class="choice-label">${esc(t)}</div></div>`).join('');
-    const ranks = Array.from({length:5},(_,i)=>`<div class="rank-card"><label>Vị trí ${i+1}</label><select data-answer="listen_p1_${i+1}" class="rank-select"><option value="">Chọn</option>${['A','B','C','D','E'].map(x=>`<option value="${x}" ${answerValue(`listen_p1_${i+1}`)===x?'selected':''}>${x}</option>`).join('')}</select></div>`).join('');
+    const part1 = testMode === 'test2' ? test2Content.listening.part1 : listeningOrder;
+    const orderList = part1.map(([letter, text]) => `<div class="choice-row"><div class="qnum">${letter}</div><div class="choice-label">${esc(text)}</div></div>`).join('');
+    const ranks = (prefix = 'listen_p1') => Array.from({length:5},(_,i)=>`<div class="rank-card"><label>Vị trí ${i+1}</label><select data-answer="${prefix}_${i+1}" class="rank-select"><option value="">Chọn</option>${['A','B','C','D','E'].map(x=>`<option value="${x}" ${answerValue(`${prefix}_${i+1}`)===x?'selected':''}>${x}</option>`).join('')}</select></div>`).join('');
+    if(testMode === 'test2'){
+      const part2 = test2Content.listening.part2.map((prompt, index) => `<p>${esc(prompt).replace('_____', `<input class="inline-answer" data-answer="listen_p2_${index + 1}" value="${esc(answerValue(`listen_p2_${index + 1}`))}" aria-label="Listening Part 2 câu ${index + 1}">`)}</p>`).join('');
+      const part3 = test2Content.listening.part3.map(([letter, text]) => `<div class="choice-row"><div class="qnum">${letter}</div><div class="choice-label">${esc(text)}</div></div>`).join('');
+      return page('listening','Listening',15,'15 items · 3 parts',`
+        ${audioDock('listening')}
+        <div data-audio-content="listening" hidden inert aria-hidden="true">
+          <div class="exercise">
+            ${exerciseHead('Part 1 · Man’s best friend','Listen and order the sentences from A to E. You have 30 seconds to read the questions.','5 points')}
+            <div class="choice-list">${orderList}</div>
+            <div class="rank-grid">${ranks()}</div>
+          </div>
+          <div class="exercise">
+            ${exerciseHead('Part 2 · The Active Leisure Center','Listen and complete the table below. WRITE ONE WORD ONLY for each answer. You have 60 seconds to read the questions.','5 points')}
+            <div class="table-wrap"><div class="listening-gap-prompts">${part2}</div></div>
+          </div>
+          <div class="exercise">
+            ${exerciseHead('Part 3 · Collecting Stamps','Listen and order the sentences from A to E. You have 30 seconds to read the questions.','5 points')}
+            <div class="choice-list">${part3}</div>
+            <div class="rank-grid">${ranks('listen_p3')}</div>
+          </div>
+        </div>`);
+    }
     const tf = listeningTF.map((t,i)=>`<div class="statement"><div class="statement-text"><span class="qnum">${i+1}</span><div>${esc(t)}</div></div><div class="statement-actions"><label class="pill-choice"><input type="radio" name="listen_p3_${i+1}" data-answer="listen_p3_${i+1}" value="T" ${answerValue(`listen_p3_${i+1}`)==='T'?'checked':''}><span>True</span></label><label class="pill-choice"><input type="radio" name="listen_p3_${i+1}" data-answer="listen_p3_${i+1}" value="F" ${answerValue(`listen_p3_${i+1}`)==='F'?'checked':''}><span>False</span></label></div></div>`).join('');
     return page('listening','Listening',15,'15 items · 3 parts',`
       ${audioDock('listening')}
@@ -929,7 +962,7 @@
         <div class="exercise">
           ${exerciseHead('Part 1 · American families today','Listen and order the sentences from A to E. You have 30 seconds to read the questions.','5 points')}
           <div class="choice-list">${orderList}</div>
-          <div class="rank-grid">${ranks}</div>
+          <div class="rank-grid">${ranks()}</div>
         </div>
         <div class="exercise">
           ${exerciseHead('Part 2 · My favourite teacher','Listen and complete the table below. WRITE ONE WORD ONLY for each answer. You have 60 seconds to read the questions.','5 points')}
@@ -950,8 +983,10 @@
   }
 
   function pronunciationHTML(){
-    const p1 = pronPart1.map((ipa,i)=>`<label class="q-row ${answerValue(`pron_p1_${i+1}`)?'done':''}"><span class="qnum">${i+1}</span><span style="min-width:130px;font-family:Geologica,sans-serif">${esc(ipa)}</span><input type="text" data-answer="pron_p1_${i+1}" value="${esc(answerValue(`pron_p1_${i+1}`))}" placeholder="Write the word" autocomplete="off"></label>`).join('');
-    const p2 = pronPart2.map((row,i)=>`<div class="mcq-item"><div class="mcq-title"><span class="qnum">${i+1}</span><span>${esc(row[0])}</span></div><div class="mcq-options">${['A','B','C'].map((l,j)=>`<label class="mcq-option"><input type="radio" name="pron_p2_${i+1}" data-answer="pron_p2_${i+1}" value="${l}" ${answerValue(`pron_p2_${i+1}`)===l?'checked':''}><span><b class="letter">${l}</b> ${esc(row[j+1])}</span></label>`).join('')}</div></div>`).join('');
+    const part1 = testMode === 'test2' ? test2Content.pronunciation.part1 : pronPart1;
+    const part2 = testMode === 'test2' ? test2Content.pronunciation.part2 : pronPart2;
+    const p1 = part1.map((ipa,i)=>`<label class="q-row ${answerValue(`pron_p1_${i+1}`)?'done':''}"><span class="qnum">${i+1}</span><span style="min-width:130px;font-family:Geologica,sans-serif">${esc(ipa)}</span><input type="text" data-answer="pron_p1_${i+1}" value="${esc(answerValue(`pron_p1_${i+1}`))}" placeholder="Write the word" autocomplete="off"></label>`).join('');
+    const p2 = part2.map((row,i)=>`<div class="mcq-item"><div class="mcq-title"><span class="qnum">${i+1}</span><span>${esc(row[0])}</span></div><div class="mcq-options">${['A','B','C'].map((l,j)=>`<label class="mcq-option"><input type="radio" name="pron_p2_${i+1}" data-answer="pron_p2_${i+1}" value="${l}" ${answerValue(`pron_p2_${i+1}`)===l?'checked':''}><span><b class="letter">${l}</b> ${esc(row[j+1])}</span></label>`).join('')}</div></div>`).join('');
     return page('pronunciation','Pronunciation',10,'20 items · 2 parts',`
       <div class="exercise">
         ${exerciseHead('Part 1','Provide the words for the following phonetic transcriptions.','5 points')}
@@ -970,39 +1005,40 @@
   }
 
   function translationHTML(){
-    const questions = [
-      {prompt:'Có nhiều gia đình truyền thống ở Việt Nam ngày nay hơn bao giờ hết.',suggestion:['Sử dụng được cấu trúc "Có cái gì"']},
-      {prompt:'Việc cưới xin đang ngày càng trở nên đắt đỏ.',suggestion:['Sử dụng được cấu trúc "be adj to V" để miêu tả tính chất hành động.']},
-      {prompt:'Nếu cha mẹ không nuôi dạy con tốt, cuộc hôn nhân của những đứa trẻ này trong tương lai sẽ kết thúc bằng việc ly hôn/ sự ly dị.',suggestion:['Sử dụng được cấu trúc câu điều kiện loại 1']},
-      {prompt:'Những giáo viên thú vị thường cố gắng trình bày/ giải thích những từ mới thông qua cử chỉ và hành động.',suggestion:['Sử dụng được tính từ đuôi -ing/ed để miêu tả']},
-      {prompt:'Người thầy nhàm chán nhất mà tôi từng gặp là thầy A, một tấm gương cho rất nhiều học sinh khác.',suggestion:['Sử dụng được cấu trúc so sánh nhất']},
-      {prompt:'Thật là khó để không học hành chăm chỉ khi mà giáo viên đẹp trai/xinh gái của tôi rất hứng thú trong việc dạy học.',suggestion:['Sử dụng được cấu trúc “difficult not to ...”']},
-      {prompt:'Mọi người thường hay mắc lỗi thuộc thể loại nào (thể loại lỗi nào) khi học tiếng Anh?',suggestion:'Sử dụng được cấu trúc hỏi về thể loại'},
-      {prompt:'Những học sinh còn lại đã từng xin lỗi giáo viên của họ khi họ phạm lỗi bởi vì họ cảm thấy có lỗi.',suggestion:'Sử dụng được cấu trúc nói về thói quen trong quá khứ'}
-    ];
+    const questions = testMode === 'test2'
+      ? test2Content.translation.map(prompt => ({prompt, suggestion: []}))
+      : [
+        {prompt:'Có nhiều gia đình truyền thống ở Việt Nam ngày nay hơn bao giờ hết.',suggestion:['Sử dụng được cấu trúc "Có cái gì"']},
+        {prompt:'Việc cưới xin đang ngày càng trở nên đắt đỏ.',suggestion:['Sử dụng được cấu trúc "be adj to V" để miêu tả tính chất hành động.']},
+        {prompt:'Nếu cha mẹ không nuôi dạy con tốt, cuộc hôn nhân của những đứa trẻ này trong tương lai sẽ kết thúc bằng việc ly hôn/ sự ly dị.',suggestion:['Sử dụng được cấu trúc câu điều kiện loại 1']},
+        {prompt:'Những giáo viên thú vị thường cố gắng trình bày/ giải thích những từ mới thông qua cử chỉ và hành động.',suggestion:['Sử dụng được tính từ đuôi -ing/ed để miêu tả']},
+        {prompt:'Người thầy nhàm chán nhất mà tôi từng gặp là thầy A, một tấm gương cho rất nhiều học sinh khác.',suggestion:['Sử dụng được cấu trúc so sánh nhất']},
+        {prompt:'Thật là khó để không học hành chăm chỉ khi mà giáo viên đẹp trai/xinh gái của tôi rất hứng thú trong việc dạy học.',suggestion:['Sử dụng được cấu trúc “difficult not to ...”']},
+        {prompt:'Mọi người thường hay mắc lỗi thuộc thể loại nào (thể loại lỗi nào) khi học tiếng Anh?',suggestion:'Sử dụng được cấu trúc hỏi về thể loại'},
+        {prompt:'Những học sinh còn lại đã từng xin lỗi giáo viên của họ khi họ phạm lỗi bởi vì họ cảm thấy có lỗi.',suggestion:'Sử dụng được cấu trúc nói về thói quen trong quá khứ'}
+      ];
     const items = questions.map((question,i)=>`
       <div class="translation-item">
         <div class="prompt-row"><span class="qnum">${i+1}</span><div>${esc(question.prompt)}</div></div>
-        <div class="guidance-panel question-guidance">
-          <h4>Core structure / criteria</h4>
-          ${renderSuggestion(question.suggestion)}
-        </div>
+        ${question.suggestion.length ? `<div class="guidance-panel question-guidance"><h4>Core structure / criteria</h4>${renderSuggestion(question.suggestion)}</div>` : ''}
         <textarea data-answer="translation_${i+1}" placeholder="Viết câu dịch tiếng Anh">${esc(answerValue(`translation_${i+1}`))}</textarea>
       </div>`).join('');
     return page('translation','Translation',32,'8 sentences · Vietnamese → English',`
       <div class="exercise">
-        ${exerciseHead('Exercise 5','Hãy dịch các câu tiếng Việt sang tiếng Anh','32 points')}
+        ${exerciseHead('Exercise 5','Hãy dịch các câu Việt sang tiếng Anh','32 points')}
         ${items}
       </div>`);
   }
 
   function speakingHTML(){
-    const questions = [
-      {prompt:'1. When you start a family, do you prefer to have a big or a small one?',suggestion:['Sử dụng được cấu trúc "prefer"','Sử dụng được các tính từ so sánh', 'Sử dụng được các từ nối']},
-      {prompt:'2. What do you like to do when you go on a long coach trip/coach ride?',suggestion:['Sử dụng được trạng từ chỉ mức độ','Sử dụng được trạng từ tần suất','Sử dụng được tính từ đuôi ing_ed']},
-      {prompt:'3. What do you usually do to prepare for an English test?',suggestion:['Sử dụng được trạng từ tần suất','Sử dụng được các từ chỉ thứ tự']}
-    ];
-    const items = questions.map((question,i)=>`<div class="speaking-item"><div class="prompt-row"><span class="qnum">${i+1}</span><div class="source-missing">${esc(question.prompt)}</div></div><div class="guidance-panel question-guidance"><h4>Core structure / criteria</h4>${renderSuggestion(question.suggestion)}</div><textarea data-answer="speaking_${i+1}" placeholder="Type your speaking answer here…">${esc(answerValue(`speaking_${i+1}`))}</textarea><div class="word-count" data-word-count="speaking_${i+1}">0 words</div></div>`).join('');
+    const questions = testMode === 'test2'
+      ? test2Content.speaking.map(prompt => ({prompt, suggestion: []}))
+      : [
+        {prompt:'1. When you start a family, do you prefer to have a big or a small one?',suggestion:['Sử dụng được cấu trúc "prefer"','Sử dụng được các tính từ so sánh', 'Sử dụng được các từ nối']},
+        {prompt:'2. What do you like to do when you go on a long coach trip/coach ride?',suggestion:['Sử dụng được trạng từ chỉ mức độ','Sử dụng được trạng từ tần suất','Sử dụng được tính từ đuôi ing_ed']},
+        {prompt:'3. What do you usually do to prepare for an English test?',suggestion:['Sử dụng được trạng từ tần suất','Sử dụng được các từ chỉ thứ tự']}
+      ];
+    const items = questions.map((question,i)=>`<div class="speaking-item"><div class="prompt-row"><span class="qnum">${i+1}</span><div class="${testMode === 'test2' ? '' : 'source-missing'}">${esc(question.prompt)}</div></div>${question.suggestion.length ? `<div class="guidance-panel question-guidance"><h4>Core structure / criteria</h4>${renderSuggestion(question.suggestion)}</div>` : ''}<textarea data-answer="speaking_${i+1}" placeholder="Type your speaking answer here…">${esc(answerValue(`speaking_${i+1}`))}</textarea><div class="word-count" data-word-count="speaking_${i+1}">0 words</div></div>`).join('');
     return page('speaking','Speaking',18,'3 written speaking responses',`
       <div class="exercise">
         ${exerciseHead('Exercise 6','Học viên viết câu trả lời cho câu hỏi Speaking. Không yêu cầu thu âm ở prototype này.','18 points')}

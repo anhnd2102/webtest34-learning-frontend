@@ -60,7 +60,8 @@
       const prefix = typedItems.length ? answerPrefixForItem(item) : '';
       const ordinal = (typeOrdinals.get(prefix) || 0) + 1;
       if (prefix) typeOrdinals.set(prefix, ordinal);
-      const answerKey = prefix ? `${prefix}_${ordinal}` : answerKeyForPosition(item.position);
+      const positionalAnswerKey = positionToAnswerKey.get(Number(item.position));
+      const answerKey = positionalAnswerKey || (prefix ? `${prefix}_${ordinal}` : answerKeyForPosition(item.position));
       if (answerKeys.has(answerKey)) throw new Error(`WEBTEST34_ANSWER_KEY_DUPLICATE: ${answerKey}`);
       answerKeys.add(answerKey);
       const value = answers?.[answerKey];

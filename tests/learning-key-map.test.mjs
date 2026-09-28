@@ -64,6 +64,32 @@ test('buildResponses maps typed block items by position when blocks are unsorted
   assert.equal(responses['item-v1'], 'first');
   assert.equal(responses['item-v2'], 'second');
 });
+
+test('buildResponses keeps separate order-answer ranges when Test 2 reuses listening_order', async () => {
+  const keyMap = await loadKeyMap();
+  const responses = keyMap.buildResponses({
+    blocks: [
+      { items: Array.from({length: 5}, (_, index) => ({ itemVersionId: `part1-${index}`, position: 51 + index, pedagogicalTypeCode: 'listening_order' })) },
+      { items: Array.from({length: 5}, (_, index) => ({ itemVersionId: `part3-${index}`, position: 61 + index, pedagogicalTypeCode: 'listening_order' })) }
+    ],
+    answers: {
+      listen_p1_1: 'A',
+      listen_p1_2: 'B',
+      listen_p1_3: 'C',
+      listen_p1_4: 'D',
+      listen_p1_5: 'E',
+      listen_p3_1: 'E',
+      listen_p3_2: 'D',
+      listen_p3_3: 'C',
+      listen_p3_4: 'B',
+      listen_p3_5: 'A'
+    }
+  });
+  assert.equal(responses['part1-0'], 'A');
+  assert.equal(responses['part1-4'], 'E');
+  assert.equal(responses['part3-0'], 'E');
+  assert.equal(responses['part3-4'], 'A');
+});
 test('buildResponses preserves a malformed three-part tuple for backend validation', async () => {
   const keyMap = await loadKeyMap();
   const tuple = ['word', 'definition-option-17', 'unexpected-extra'];
