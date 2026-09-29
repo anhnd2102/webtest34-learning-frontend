@@ -343,10 +343,11 @@ export async function mount(course) {
   const queryParams = new URLSearchParams(location.search || '');
   const rawHash = location.hash.replace(/^#/, '').trim();
   const hashParams = new URLSearchParams(rawHash);
-  const hashToken = rawHash.includes('=') ? hashParams.get('test') : (rawHash.includes('-') ? rawHash : '');
-  const testToken = hashToken || hashParams.get('test') || queryParams.get('test') || config.LEARNING_TEST_TOKEN || '';
+  const hashToken = rawHash.includes('=') ? (hashParams.get('token') || hashParams.get('testToken') || hashParams.get('test')) : (rawHash.includes('-') ? rawHash : '');
+  const rawTestTokenParam = queryParams.get('testToken') || queryParams.get('token') || (queryParams.get('test')?.includes('-') ? queryParams.get('test') : '');
+  const testToken = (hashToken?.includes('-') ? hashToken : '') || rawTestTokenParam || config.LEARNING_TEST_TOKEN || '';
 
-  let testNum = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || (Number(queryParams.get('test')) && Number(queryParams.get('test')) <= 10 ? Number(queryParams.get('test')) : 0) || 1;
+  let testNum = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || (!queryParams.get('test')?.includes('-') ? Number(queryParams.get('test')) : 0) || 1;
   const phaseParam = queryParams.get('phase');
   if ((course === '34' || course === '45') && phaseParam === '2' && testNum <= 2) {
     testNum = testNum + 4;
