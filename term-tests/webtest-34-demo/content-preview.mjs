@@ -117,21 +117,112 @@ export function groupBody(group) {
   const inlineGroups = ['listening-gap', 'listening-notes', 'grammar-present', 'grammar-past', 'grammar-perfect'];
   const numbered = group.context && inlineGroups.includes(group.id) ? clozeSegments(group.context, group.items.map(item => item.id)) : null;
   if (numbered) return `<div class="demo-context demo-lines demo-cloze">${clozeMarkup(numbered, group.items)}</div>`;
-  return `${group.context ? `<div class="demo-context demo-lines">${escape(group.context)}</div>` : ''}<div class="${group.id === 'vocabulary-listen' ? 'demo-vocab-grid' : group.id === 'vocabulary-picture' ? 'demo-picture-grid' : ''}">${group.items.map((item,index) => {
-    const prefix=item.prompt.match(/^\s*(\d+)[.)]\s*/);
-    const number=prefix?prefix[1]:group.id==='vocabulary-listen'?Math.floor(index/2)+1:index+1;
-    const prompt=item.prompt.replace(/^\s*\d+[.)]\s*/,'');
-    const single = group.id === 'grammar-verb' ? clozeSegments(prompt, [item.id], false) : null;
-    if (single) return `<div class="demo-cloze demo-sentence"><span class="qnum">${number}</span> ${clozeMarkup(single, [item], false)}</div>`;
-    const cards=['vocabulary-choice','pronunciation-choice','listening-tf'].includes(group.id);
-    return `<div class="demo-question${cards?' demo-mcq-question':''}"><div class="demo-prompt-row"><span class="qnum">${number}</span><${cards?'div':'label'} ${cards?'':`for="${escape(item.id)}"`} class="demo-lines">${escape(prompt)}</${cards?'div':'label'}></div>
-      ${item.targetWord ? `<p>Thay từ/cụm: <strong>${escape(item.targetWord)}</strong></p>` : ''}
-      ${item.image ? `<img src="${escape(item.image)}" alt="Hình minh họa câu ${escape(item.prompt.split('.')[0])}" loading="lazy">` : ''}
-      ${answerField(item,false,cards)}${item.long || item.maxWords ? `<small id="${escape(item.id)}-count"></small>` : ''}</div>`;
-  }).join('')}</div>`;
+  if (['vocabulary-listen', 'vocabulary-picture'].includes(group.id)) {
+    return `${group.context ? `<div class="demo-context demo-lines">${escape(group.context)}</div>` : ''}<div class="${group.id === 'vocabulary-listen' ? 'demo-vocab-grid' : 'demo-picture-grid'}">${group.items.map((item, index) => {
+      const prefix = item.prompt.match(/^\s*(\d+)[.)]\s*/);
+      const number = prefix ? prefix[1] : group.id === 'vocabulary-listen' ? Math.floor(index / 2) + 1 : index + 1;
+      const prompt = item.prompt.replace(/^\s*\d+[.)]\s*/, '');
+      const cards = ['vocabulary-choice', 'pronunciation-choice', 'listening-tf'].includes(group.id);
+      return `<div class="demo-question${cards ? ' demo-mcq-question' : ''}"><div class="demo-prompt-row"><span class="qnum">${number}</span><${cards ? 'div' : 'label'} ${cards ? '' : `for="${escape(item.id)}"`} class="demo-lines">${escape(prompt)}</${cards ? 'div' : 'label'}></div>
+        ${item.targetWord ? `<p>Thay từ/cụm: <strong>${escape(item.targetWord)}</strong></p>` : ''}
+        ${item.image ? `<img src="${escape(item.image)}" alt="Hình minh họa câu ${escape(item.prompt.split('.')[0])}" loading="lazy">` : ''}
+        ${answerField(item, false, cards)}${item.long || item.maxWords ? `<small id="${escape(item.id)}-count"></small>` : ''}</div>`;
+    }).join('')}</div>`;
+  }
+
+  // Clustering for general groups
+  const clusters = [];
+  let curCluster = [];
+  let curKey = null;
+
+  for (const item of group.items) {
+    const prefix = item.prompt.match(/^\s*(\d+)[.)]\s*/);
+    const nlSplit = item.prompt.split('\n');
+    const stem = nlSplit.length > 1 ? nlSplit[0].replace(/^\s*\d+[.)]\s*/, '').trim() : null;
+    const key = prefix ? `num-${prefix[1]}` : (stem ? `stem-${stem}` : null);
+
+    if (key && key === curKey) {
+      curCluster.push(item);
+    } else {
+      if (curCluster.length) clusters.push(curCluster);
+      curCluster = [item];
+      curKey = key;
+    }
+  }
+  if (curCluster.length) clusters.push(curCluster);
+
+  let clusterCounter = 0;
+  const rendered = clusters.map(cluster => {
+    clusterCounter++;
+    const firstItem = cluster[0];
+    const prefix = firstItem.prompt.match(/^\s*(\d+)[.)]\s*/);
+    const questionNumber = prefix ? prefix[1] : clusterCounter;
+
+    if (cluster.length === 1) {
+      const item = cluster[0];
+      const prompt = item.prompt.replace(/^\s*\d+[.)]\s*/, '');
+      const single = group.id === 'grammar-verb' ? clozeSegments(prompt, [item.id], false) : null;
+      if (single) return `<div class="demo-cloze demo-sentence"><span class="qnum">${questionNumber}</span> ${clozeMarkup(single, [item], false)}</div>`;
+      const cards = ['vocabulary-choice', 'pronunciation-choice', 'listening-tf'].includes(group.id);
+      return `<div class="demo-question${cards ? ' demo-mcq-question' : ''}"><div class="demo-prompt-row"><span class="qnum">${questionNumber}</span><${cards ? 'div' : 'label'} ${cards ? '' : `for="${escape(item.id)}"`} class="demo-lines">${escape(prompt)}</${cards ? 'div' : 'label'}></div>
+        ${item.targetWord ? `<p>Thay từ/cụm: <strong>${escape(item.targetWord)}</strong></p>` : ''}
+        ${item.image ? `<img src="${escape(item.image)}" alt="Hình minh họa câu ${escape(item.prompt.split('.')[0])}" loading="lazy">` : ''}
+        ${answerField(item, false, cards)}${item.long || item.maxWords ? `<small id="${escape(item.id)}-count"></small>` : ''}</div>`;
+    }
+
+    const allHaveNl = cluster.every(it => it.prompt.includes('\n'));
+    const firstLastNl = allHaveNl ? cluster[0].prompt.lastIndexOf('\n') : -1;
+    const firstStem = allHaveNl && firstLastNl > 0 ? cluster[0].prompt.slice(0, firstLastNl).replace(/^\s*\d+[.)]\s*/, '').trim() : '';
+    const hasCommonStem = allHaveNl && Boolean(firstStem) && cluster.every(it => {
+      const idx = it.prompt.lastIndexOf('\n');
+      return idx > 0 && it.prompt.slice(0, idx).replace(/^\s*\d+[.)]\s*/, '').trim() === firstStem;
+    });
+    const commonStemText = hasCommonStem ? firstStem : '';
+
+    const getSubLabel = it => {
+      if (hasCommonStem) {
+        const idx = it.prompt.lastIndexOf('\n');
+        return it.prompt.slice(idx + 1).trim();
+      }
+      return it.prompt.replace(/^\s*\d+[.)]\s*/, '').trim();
+    };
+
+    const isCompactGrid = cluster.every(it => !it.long && getSubLabel(it).length <= 40);
+
+    if (isCompactGrid) {
+      return `<div class="demo-question demo-multipart-card">
+        <div class="demo-prompt-row"><span class="qnum">${questionNumber}</span>${commonStemText ? `<div class="demo-lines demo-multipart-stem">${escape(commonStemText)}</div>` : ''}</div>
+        <div class="demo-subfield-grid">
+          ${cluster.map(it => {
+            const subLabel = getSubLabel(it);
+            return `<div class="demo-subfield">
+              <label for="${escape(it.id)}" class="demo-subfield-label">${escape(subLabel)}</label>
+              ${answerField(it, false, false)}
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }
+
+    return `<div class="demo-question demo-multipart-card">
+      <div class="demo-prompt-row"><span class="qnum">${questionNumber}</span>${commonStemText ? `<div class="demo-lines demo-multipart-stem">${escape(commonStemText)}</div>` : ''}</div>
+      <div class="demo-subparts-list">
+        ${cluster.map(it => {
+          const subLabel = getSubLabel(it);
+          return `<div class="demo-subpart-item">
+            <label for="${escape(it.id)}" class="demo-subpart-label">${escape(subLabel)}</label>
+            ${answerField(it, false, false)}
+            ${it.long || it.maxWords ? `<small id="${escape(it.id)}-count"></small>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+
+  return `${group.context ? `<div class="demo-context demo-lines">${escape(group.context)}</div>` : ''}<div>${rendered.join('')}</div>`;
 }
 
-export function groupSections(form) {
+export function groupSections(form, bypass = false) {
   const audioGates = new Map();
   for (const group of form.groups) {
     if (group.audioPath && !audioGates.has(group.audioPath)) {
@@ -144,13 +235,13 @@ export function groupSections(form) {
     const ownsAudio = gateId && !renderedAudio.has(gateId);
     if (ownsAudio) renderedAudio.add(gateId);
     const audioControl = ownsAudio
-      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">▶ Bắt đầu phát audio</button><audio preload="metadata" src="${escape(group.audioPath)}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">Nội dung bài nghe đang được khóa.</span></div>`
+      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">▶ Phát audio (nếu có)</button><audio preload="metadata" src="${escape(group.audioPath)}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">${bypass ? 'Đã mở khóa nội dung câu hỏi để kiểm tra.' : 'Nội dung bài nghe đang được khóa.'}</span></div>`
       : gateId
-        ? `<p class="demo-notice demo-audio-linked">Nhóm này sẽ mở khi audio ở phần trên bắt đầu phát.</p>`
+        ? `<p class="demo-notice demo-audio-linked">${bypass ? 'Bài nghe này dùng chung audio ở phần trên.' : 'Nhóm này sẽ mở khi audio ở phần trên bắt đầu phát.'}</p>`
         : group.audioRequired
-          ? '<p class="demo-notice">Chưa có audio cho nhóm này nên nội dung đang được khóa.</p>'
+          ? `<p class="demo-notice">${bypass ? 'Chưa có file audio chính thức. Nội dung câu hỏi đã mở để kiểm tra.' : 'Chưa có audio cho nhóm này nên nội dung đang được khóa.'}</p>`
           : '';
-    const hidden = gateId || group.audioRequired ? ' hidden' : '';
+    const hidden = !bypass && (gateId || group.audioRequired) ? ' hidden' : '';
     return `<section data-demo-page="${sectionKey(group)}" id="demo-${escape(group.id)}" class="exercise demo-section"><div class="exercise-head"><div><h2>${escape(group.title)}</h2><p class="demo-lines">${escape(group.instructions)}</p></div><span class="points">${group.items.length} ô trả lời</span></div>
       ${group.notice ? `<p class="demo-notice">${escape(group.notice)}</p>` : ''}
       ${audioControl}
@@ -483,7 +574,7 @@ export async function mount(course) {
         <div id="demo-result" class="demo-notice" hidden></div>
         <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
         <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span data-demo-section-count="${section}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
-        <div class="demo-main">${groupSections(form)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
+        <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
       </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
     </div>`;
 
@@ -591,16 +682,16 @@ export async function mount(course) {
       const status = document.querySelector(`[data-demo-audio-status="${gateId}"]`);
       let started = false;
       let lastGoodTime = 0;
+      document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
+      if (status) status.textContent = '🔊 Đã mở khóa nội dung câu hỏi để kiểm tra đề.';
       audio.addEventListener('play', () => {
-        if (!started) {
-          started = true;
-          document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
-          document.querySelectorAll('.demo-audio-linked').forEach(notice => {
-            if (notice.closest('.demo-section')?.querySelector(`[data-demo-audio-content="${gateId}"]`)) notice.hidden = true;
-          });
-        }
+        started = true;
+        document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
+        document.querySelectorAll('.demo-audio-linked').forEach(notice => {
+          if (notice.closest('.demo-section')?.querySelector(`[data-demo-audio-content="${gateId}"]`)) notice.hidden = true;
+        });
         button.hidden = true;
-        status.textContent = 'Audio đang phát · bài tập đã được mở.';
+        status.textContent = 'Audio đang phát.';
       });
       audio.addEventListener('timeupdate', () => { if (!audio.seeking) lastGoodTime = audio.currentTime; });
       audio.addEventListener('seeking', () => {
@@ -611,10 +702,10 @@ export async function mount(course) {
       });
       audio.addEventListener('ended', () => { status.textContent = 'Audio đã phát xong · bài tập vẫn mở để hoàn thành.'; });
       audio.addEventListener('error', () => {
-        if (started) return;
         button.disabled = false;
         button.textContent = 'Thử phát lại audio';
-        status.textContent = 'Không tải được audio. Bài tập vẫn đang khóa.';
+        status.textContent = 'Chưa tải được audio (nội dung câu hỏi vẫn mở để bạn kiểm tra).';
+        document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
       });
       button.addEventListener('click', async () => {
         button.disabled = true;
@@ -624,7 +715,8 @@ export async function mount(course) {
         } catch {
           button.disabled = false;
           button.textContent = 'Thử phát lại audio';
-          status.textContent = 'Trình duyệt chưa phát được audio. Bài tập vẫn đang khóa.';
+          status.textContent = 'Trình duyệt chưa phát được audio (nội dung câu hỏi vẫn mở để bạn kiểm tra).';
+          document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
         }
       });
     }
@@ -675,14 +767,25 @@ export async function mount(course) {
       .content-demo .demo-section{margin-bottom:18px;padding:24px}
       .content-demo .demo-section h2{font-size:22px;font-weight:400}
       .content-demo .demo-layout aside nav{display:grid;gap:8px}
-      .content-demo .demo-question textarea{border-radius:12px;min-height:140px;resize:vertical;line-height:1.6}
+      .content-demo .demo-question textarea{border-radius:10px;min-height:76px;resize:vertical;line-height:1.5}
+      .content-demo .demo-multipart-card{border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;margin:16px 0;background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+      .content-demo .demo-multipart-stem{font-size:15px;font-weight:600;color:var(--color-navy,#174266);line-height:1.55}
+      .content-demo .demo-subfield-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px}
+      .content-demo .demo-subfield{display:flex;flex-direction:column;gap:6px}
+      .content-demo .demo-subfield-label{font-size:13px;font-weight:600;color:#475569}
+      .content-demo .demo-subfield input{min-height:42px;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px}
+      .content-demo .demo-subparts-list{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+      .content-demo .demo-subpart-item{display:flex;flex-direction:column;gap:6px}
+      .content-demo .demo-subpart-label{font-size:14px;font-weight:500;color:#1e293b;line-height:1.45}
+      .content-demo .demo-subpart-item input{min-height:42px;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px}
+      .content-demo .demo-subpart-item textarea{min-height:64px;resize:vertical;line-height:1.5;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px}
       .content-demo .demo-picture-grid .demo-question{border:1px solid #e9ebee;border-radius:12px;padding:14px;margin-bottom:12px}
       .content-demo .demo-picture-grid .demo-question img{max-width:140px;max-height:120px;margin:12px auto}
       .content-demo .demo-top .top-actions{display:flex;align-items:center;gap:8px}
       .content-demo .demo-top .icon-btn{width:40px;height:40px;padding:0;border-radius:10px}
       .content-demo #demo-save{font-size:12px;color:var(--color-text-secondary);max-width:180px}
       .content-demo [data-demo-page][hidden]{display:none}
-      @media(max-width:760px){.content-demo .demo-top{flex-direction:row;flex-wrap:wrap}.content-demo .demo-top .top-actions{margin-left:auto}.content-demo #demo-save{display:none}.content-demo .demo-section{padding:18px}.content-demo .timer{min-width:80px}.content-demo .section-hero{padding:20px}}
+      @media(max-width:760px){.content-demo .demo-top{flex-direction:row;flex-wrap:wrap}.content-demo .demo-top .top-actions{margin-left:auto}.content-demo #demo-save{display:none}.content-demo .demo-section{padding:18px}.content-demo .timer{min-width:80px}.content-demo .section-hero{padding:20px}.content-demo .demo-multipart-card{padding:14px}.content-demo .demo-subfield-grid{grid-template-columns:1fr;gap:10px}}
     `;
     document.head.append(canonicalStyle);
 

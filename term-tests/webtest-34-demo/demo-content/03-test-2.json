@@ -3,7 +3,7 @@
   "course": "03",
   "phase": null,
   "testNumber": 2,
-  "sourceHash": "83f277cb096791aa6f660f59f693b7c4be6ad286711021db9a59ce2b08985e27",
+  "sourceHash": "c026853e39ab929cef80d40e4f032bd322f6b68c6938453947060c55f2c8c185",
   "durationMinutes": 90,
   "groups": [
     {
@@ -14,23 +14,23 @@
       "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "2684f8b9-94a1-4520-82a5-b1796284f641",
+          "id": "e9846402-e181-46e9-921b-c622960c3140",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "750e0ca4-add3-4bd3-b76c-413a4c884918",
+          "id": "43caf627-da76-46f3-bd26-03073ea1f6d3",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "6db813fe-ad1f-47f2-8871-f34dd2516c2f",
+          "id": "49f62647-5626-48b8-b882-d3eecefb0c83",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "f07de6d6-f0c3-458e-bc34-d27576b999ac",
+          "id": "52fc3b4b-e20d-470b-bb8a-c9c5d2a991bb",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "6a5e5a68-6b4b-4183-b44c-63557cff89b1",
+          "id": "6b6bbb98-553e-4aa9-a807-6a3a639fbd5c",
           "prompt": "Chỗ trống (5)"
         }
       ]
@@ -43,28 +43,58 @@
       "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "6a979ad3-4a5b-44c1-af5b-e5e3f3f76326",
-          "prompt": "Ở câu “He has to work with numbers”, nếu thay “has to” bằng “must” thì nghĩa có giữ nguyên không?",
+          "id": "f51ef069-d542-4a11-b78d-fa5f5c86c2c3",
+          "prompt": "1. (a) Ở câu “He has to work with numbers”, nếu thay “has to” bằng “must” thì nghĩa có giữ nguyên không?",
+          "long": false
+        },
+        {
+          "id": "2cb0e5c3-c202-4bf6-b27f-769b54f5e305",
+          "prompt": "1. (b) Tại sao?",
           "long": true
         },
         {
-          "id": "2872ad61-29bc-47b9-9150-82a7ed25cd34",
-          "prompt": "Tại sao?",
+          "id": "9db4ab3e-2f5f-4b8c-9c5a-5f6f13e33940",
+          "prompt": "2. Tại sao câu “I know he is working hard for our family” không viết là “I am knowing he is working hard for our family” để diễn tả một việc đang diễn ra?",
           "long": true
         },
         {
-          "id": "f60390c3-e2eb-4700-9239-1efe140cf806",
-          "prompt": "Tại sao câu “I know he is working hard for our family” không viết là “I am knowing he is working hard for our family” để diễn tả một việc đang diễn ra?",
+          "id": "c41e55ae-68d3-4a87-a3ff-d1aea90e20ba",
+          "prompt": "3. (a) Tại sao trong câu “He says eating snacks and junk food is a waste of money” động từ lại chia là “is”?",
           "long": true
         },
         {
-          "id": "31383597-6159-4442-b883-802ce1b573e0",
-          "prompt": "Tại sao trong câu “He says eating snacks and junk food is a waste of money” động từ lại chia là “is”?",
+          "id": "e3f77fcf-4536-4491-898f-a5a35e4432e6",
+          "prompt": "3. (b) “Is” ở trên là động từ chính hay trợ động từ?",
+          "long": false
+        },
+        {
+          "id": "51ce46c9-d79f-4f1c-be37-c5520a93b090",
+          "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nS (Chủ ngữ):",
+          "long": false
+        },
+        {
+          "id": "a74c7b92-62fd-4c81-9408-8078625131ec",
+          "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nV (Động từ):",
+          "long": false
+        },
+        {
+          "id": "a06fefc1-70bb-4913-99fa-36077f5accbb",
+          "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nO (Tân ngữ):",
+          "long": false
+        },
+        {
+          "id": "2f0e4261-d4b8-4b52-a460-1a5b69f69679",
+          "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nKhác (Thành phần khác):",
+          "long": false
+        },
+        {
+          "id": "f723df48-d544-46c1-8fa3-1a20e204a5d4",
+          "prompt": "5. Tìm câu có cấu trúc song song trong đoạn trên\nCâu 1:",
           "long": true
         },
         {
-          "id": "7a415b5a-f704-4b5e-a0d8-a516aa1dadc9",
-          "prompt": "“Is” ở trên là động từ chính hay trợ động từ?",
+          "id": "16ebd8bc-ff02-4119-a718-1ff38852f80a",
+          "prompt": "5. Tìm câu có cấu trúc song song trong đoạn trên\nCâu 2:",
           "long": true
         }
       ]
@@ -77,124 +107,1054 @@
       "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "3fb40eb8-09e1-4211-92d7-ec4216af461e",
+          "id": "a182c8bb-b544-403a-9292-7a473b6d81a5",
           "prompt": "1. Từ/cụm từ nghe được"
         },
         {
-          "id": "71b68596-81fb-42c4-9ec2-f382d453442f",
-          "prompt": "1. Nghĩa tiếng Việt"
+          "id": "47a9462b-faee-4329-b1e9-e289995db6ff",
+          "prompt": "1. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "e8d17cf2-3919-442e-8efb-be03badaaad8",
+          "id": "ca79fb55-925a-4180-811c-0834e3e6ee71",
           "prompt": "2. Từ/cụm từ nghe được"
         },
         {
-          "id": "785970d3-12be-425d-bac9-ec0ff2d30f97",
-          "prompt": "2. Nghĩa tiếng Việt"
+          "id": "bc0f2aec-13f3-47b0-a2af-0540e91b0f92",
+          "prompt": "2. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "bef25ea4-6057-43bb-994d-da735ad38fb7",
+          "id": "fd715252-821f-4daa-847b-c9170d268700",
           "prompt": "3. Từ/cụm từ nghe được"
         },
         {
-          "id": "33225aac-c6e8-43ea-a11c-b4c234bcd8c6",
-          "prompt": "3. Nghĩa tiếng Việt"
+          "id": "56b5485f-a5b5-4912-a3dc-6709d21bdc7a",
+          "prompt": "3. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "5ea8e067-51ed-450f-8ddc-af09e2d5fc94",
+          "id": "a2eadc38-fd3f-4bea-a4e5-b195632a5925",
           "prompt": "4. Từ/cụm từ nghe được"
         },
         {
-          "id": "982aacd9-d24d-4dc6-93e1-1484bafe3796",
-          "prompt": "4. Nghĩa tiếng Việt"
+          "id": "dc1bc6ec-6dc6-4888-9c91-02052385b39b",
+          "prompt": "4. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "6254758d-b64a-4047-80f0-a0d2f9eadf2d",
+          "id": "c2701f89-4155-463c-b930-01547c66a304",
           "prompt": "5. Từ/cụm từ nghe được"
         },
         {
-          "id": "7194adb8-048b-4c91-80f5-b532ddd87656",
-          "prompt": "5. Nghĩa tiếng Việt"
+          "id": "390c8236-4fcb-4f11-bc50-66df2d82ae37",
+          "prompt": "5. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "437786da-d9ba-4c4b-85c2-baf59f763d48",
+          "id": "94e497f6-4927-4841-81e5-485888a49a07",
           "prompt": "6. Từ/cụm từ nghe được"
         },
         {
-          "id": "16f2aca5-3740-4d59-a87e-395ea0d365f0",
-          "prompt": "6. Nghĩa tiếng Việt"
+          "id": "1ed2b568-e977-4769-9d21-bc45133d9d64",
+          "prompt": "6. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "0fa8338c-ea72-41a1-8e51-98edb4ad8ed8",
+          "id": "5f12f195-0a7d-420c-a39e-7c602915a74b",
           "prompt": "7. Từ/cụm từ nghe được"
         },
         {
-          "id": "eab77f6f-cce8-408a-bfaf-a37fd5e38fe3",
-          "prompt": "7. Nghĩa tiếng Việt"
+          "id": "77a9d17d-31d2-4d55-b86f-681a18c097dd",
+          "prompt": "7. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "f81d1f93-95ac-4dda-84fe-8b69febf2098",
+          "id": "58542963-f6dc-4ba7-a12e-6d39156e9d57",
           "prompt": "8. Từ/cụm từ nghe được"
         },
         {
-          "id": "63af2435-d25c-4146-bca3-754578c542f5",
-          "prompt": "8. Nghĩa tiếng Việt"
+          "id": "904d3f6f-cf31-46a2-aba9-414c496fb351",
+          "prompt": "8. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "63841990-26f4-4fa6-9d69-be653e414be1",
+          "id": "2e14f1f1-e04b-4318-b821-d4700aaf3f4f",
           "prompt": "9. Từ/cụm từ nghe được"
         },
         {
-          "id": "4026a793-b4be-4f36-bf0d-50099ab0c9d3",
-          "prompt": "9. Nghĩa tiếng Việt"
+          "id": "f4aa2446-087d-40db-8ef6-379ecc0e2ec1",
+          "prompt": "9. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "8e7ca6b3-94e2-4e7d-8816-22f80eeac782",
+          "id": "dfa276bb-9bff-4cf1-8de1-780875854f9c",
           "prompt": "10. Từ/cụm từ nghe được"
         },
         {
-          "id": "645e9fb0-3ed8-488e-b8b6-8afec3979062",
-          "prompt": "10. Nghĩa tiếng Việt"
+          "id": "77abe087-232f-4fb2-a6ad-ec7c643b6c43",
+          "prompt": "10. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "ae8762d2-4201-4b4a-8cf0-0e66402700ea",
+          "id": "30c2a532-56f9-4cdb-a9cd-b7bb4bc11f07",
           "prompt": "11. Từ/cụm từ nghe được"
         },
         {
-          "id": "79af37e9-2ea8-4a5b-a531-ec192df24011",
-          "prompt": "11. Nghĩa tiếng Việt"
+          "id": "16c612de-d979-4109-84d6-e8eea0b6226b",
+          "prompt": "11. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "3f5314df-d5dd-4015-b5aa-51ddcf11539f",
+          "id": "b19c511d-b842-4772-9f26-d84c8d1dfad4",
           "prompt": "12. Từ/cụm từ nghe được"
         },
         {
-          "id": "6e4f63df-5d0d-4da9-b65e-48c78dd5e653",
-          "prompt": "12. Nghĩa tiếng Việt"
+          "id": "3fa8f0a8-3a26-43b2-81e1-f251f9437d47",
+          "prompt": "12. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "863c9fb5-957e-4f79-835b-15f2ff179201",
+          "id": "384edbc7-d858-4e78-8892-82971cdbf5e4",
           "prompt": "13. Từ/cụm từ nghe được"
         },
         {
-          "id": "62338e4d-37d8-4bdf-811a-1d8591e71952",
-          "prompt": "13. Nghĩa tiếng Việt"
+          "id": "23e41815-7b2c-43bd-96ee-b5d3d9b8b9cb",
+          "prompt": "13. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "54d2040c-2941-4494-a4e5-5f2cc7d41a62",
+          "id": "67d660eb-1613-4776-808e-7860b955c43d",
           "prompt": "14. Từ/cụm từ nghe được"
         },
         {
-          "id": "cf051fac-10fe-444b-9211-4b668e38050f",
-          "prompt": "14. Nghĩa tiếng Việt"
+          "id": "69694eeb-c839-4d36-9f4c-65e633229132",
+          "prompt": "14. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         },
         {
-          "id": "cb9f3814-1caa-4d4f-9bc3-8bece81c3e25",
+          "id": "7cf20cb3-41a3-462a-b621-c551d93c922f",
           "prompt": "15. Từ/cụm từ nghe được"
         },
         {
-          "id": "21c3c265-8c50-4c28-b875-dcd0791782e7",
-          "prompt": "15. Nghĩa tiếng Việt"
+          "id": "ece2d697-4b5a-41b0-b88a-8294c2213fad",
+          "prompt": "15. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "ăn trưa"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cải thiện kỹ năng"
+            },
+            {
+              "id": "meaning-03",
+              "label": "cấp 2"
+            },
+            {
+              "id": "meaning-04",
+              "label": "công việc mơ ước"
+            },
+            {
+              "id": "meaning-05",
+              "label": "dịu dàng"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Doanh nhân nữ"
+            },
+            {
+              "id": "meaning-07",
+              "label": "kỹ sư"
+            },
+            {
+              "id": "meaning-08",
+              "label": "làm việc nhà"
+            },
+            {
+              "id": "meaning-09",
+              "label": "làm xong công việc"
+            },
+            {
+              "id": "meaning-10",
+              "label": "môn học ưa thích"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nam diễn viên"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ngữ văn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "ôn lại"
+            },
+            {
+              "id": "meaning-14",
+              "label": "rửa bát đĩa"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tắm vòi sen"
+            }
+          ]
         }
       ]
     },
@@ -205,52 +1165,52 @@
       "context": "",
       "items": [
         {
-          "id": "0b4235dc-9888-417c-ab5a-ac56e4363816",
+          "id": "6851b528-b496-46d8-8ac3-49f324f90aa8",
           "prompt": "1. s _ _ _   k _ r _ _ _ _",
           "image": "assets/03/test-2/pic-1.png"
         },
         {
-          "id": "049b560e-ba67-471b-84b0-6b636c3cab23",
+          "id": "bd5288fa-cfe2-4da4-8c5f-d90c9f0cf218",
           "prompt": "2. p _ _ _   c _ _ _ _",
           "image": "assets/03/test-2/pic-2.png"
         },
         {
-          "id": "635e94f5-5038-452e-a1f7-f3f67bd27058",
+          "id": "1aea7dca-4d8e-4610-9c67-5cfa0b7f8551",
           "prompt": "3. g _   t _   b _ _",
           "image": "assets/03/test-2/pic-3.png"
         },
         {
-          "id": "16c8565a-be47-4166-9491-b4082e0d051d",
+          "id": "837fc565-0482-475c-95f5-acfd4f482fa4",
           "prompt": "4. g _  t _  w _ _ _",
           "image": "assets/03/test-2/pic-4.png"
         },
         {
-          "id": "73565684-86e7-492a-aa54-672a1d7f972f",
+          "id": "dbc34e15-16e0-4d94-a8e4-060e3296c19d",
           "prompt": "5. h _ _ _   s _ _ _ _ _",
           "image": "assets/03/test-2/pic-5.png"
         },
         {
-          "id": "ef4c7937-f772-4341-9f09-91ca23becb76",
+          "id": "551c69be-bca4-486d-b0b7-e4183229bdca",
           "prompt": "6. a _ s _ g _ m_ _ t",
           "image": "assets/03/test-2/pic-6.png"
         },
         {
-          "id": "5b237277-8131-4669-9aff-f69cbc494acf",
+          "id": "1fbf2326-5ded-484d-83b4-d22731bb8e16",
           "prompt": "7. P _ _ s _ cs",
           "image": "assets/03/test-2/pic-7.png"
         },
         {
-          "id": "14672507-4569-4048-ab22-91d7abc6603d",
+          "id": "d1165f00-e522-4556-9afe-f07d7d928fe9",
           "prompt": "8. a _ _ r _ _s",
           "image": "assets/03/test-2/pic-8.png"
         },
         {
-          "id": "4f499ccc-d6c5-4c22-80e4-512f60c6ad22",
+          "id": "04fe4bce-5fab-40d6-845e-df349eb3f9be",
           "prompt": "9. w _ _ _ _ _",
           "image": "assets/03/test-2/pic-9.png"
         },
         {
-          "id": "8a64e2a9-8b7a-4af1-b7e4-a5fe554fb2d3",
+          "id": "29ae1709-8756-46b1-bc70-5263b7cc70e2",
           "prompt": "10. m _ _ _  \na lot of  m _ _ _ _",
           "image": "assets/03/test-2/pic-10.png"
         }
@@ -263,7 +1223,7 @@
       "context": "",
       "items": [
         {
-          "id": "9813b4f6-ee40-4c26-b434-17b80c9c6e83",
+          "id": "a4c5cced-8c62-4b30-9363-588e1592d414",
           "prompt": "It’s 7 a.m. Ha is ____.",
           "options": [
             "having dinner",
@@ -273,7 +1233,7 @@
           ]
         },
         {
-          "id": "58926b79-1ecf-4631-b9a3-3ee73ef56036",
+          "id": "a92eb52c-9927-4f45-a708-09ba79fe7710",
           "prompt": "What does your brother do?",
           "options": [
             "He is a businessman.",
@@ -283,7 +1243,7 @@
           ]
         },
         {
-          "id": "07e658d1-9720-457c-978e-39c1434984b8",
+          "id": "3d434e55-5660-49d1-895f-fcacf1c41097",
           "prompt": "My ____ is to be a salesman.",
           "options": [
             "dreaming job",
@@ -293,7 +1253,7 @@
           ]
         },
         {
-          "id": "aba12c3d-1907-4e15-99ab-7878d2322839",
+          "id": "7908b481-047c-4bc8-b2ba-f0d38563c957",
           "prompt": "Linh wants to get good grades at school so she tries to ____.",
           "options": [
             "focus on her study",
@@ -303,7 +1263,7 @@
           ]
         },
         {
-          "id": "d2934f68-497b-42f9-a255-e394168eee49",
+          "id": "6d3f3668-100a-40dc-82d6-c90a2bbcdaed",
           "prompt": "I usually spend ____ at home.",
           "options": [
             "30 minutes to watch TV",
@@ -321,43 +1281,43 @@
       "context": "",
       "items": [
         {
-          "id": "f91a6acc-5ae2-4d7d-8f10-19a4789a1a4d",
+          "id": "ff9feec4-1c5e-41cf-9e3d-eec429c8f691",
           "prompt": "1. Look! They ____(leave) the house."
         },
         {
-          "id": "200425ca-881c-4359-b92a-52b1b6e76e60",
+          "id": "fa2c59cf-e1c8-4a5e-8f04-197aaa096349",
           "prompt": "2. Now, Samantha ____ (do) her homework."
         },
         {
-          "id": "73fc3e54-bccc-4301-af92-a727229f02e5",
+          "id": "8eb8cad4-8bbd-4875-84e6-e4098f0a4756",
           "prompt": "3. You don’t need to wear a raincoat because it ______(not rain) outside."
         },
         {
-          "id": "d3593951-c4e3-4d1d-86e7-69b499ac5d31",
+          "id": "74e7f334-8c8d-4366-bae3-c8aa883a6013",
           "prompt": "4. What ____ (this word/mean) in Vietnamese?"
         },
         {
-          "id": "1a00cd57-3260-4b67-9da6-1706788c72e0",
+          "id": "0dfada67-7e64-457f-abd8-ff763cec27d8",
           "prompt": "5. Mary and Joe ____ (be) in a clothes shop at the moment."
         },
         {
-          "id": "8e689d4f-824f-414f-9335-b3ee85e8f2f0",
+          "id": "e465391c-5a4d-4c2f-8a1f-2b5cdb582496",
           "prompt": "6. “Can you speak more slowly, I ____(not understand)''"
         },
         {
-          "id": "7699914f-94d3-4fc5-9d45-36903ec1ed71",
+          "id": "701ea06d-bc6f-423e-9676-6ee4d9e431b9",
           "prompt": "7. He ____ (not wash) the dishes at the moment because he is ill."
         },
         {
-          "id": "e5f1d403-abd1-4639-8f92-ed370096d809",
+          "id": "3dd27873-7588-4910-af7d-ebbc492f9f50",
           "prompt": "8. _____ (be) playing cards a fun game?"
         },
         {
-          "id": "3ae9139e-3068-4547-8cb8-a129bf9b1416",
+          "id": "a29b9efa-c36e-4338-bdff-d8011d65b19b",
           "prompt": "9. Her sister ____ (want) to improve her English."
         },
         {
-          "id": "80525fb8-5f3d-4563-a3b5-15dfdf82da42",
+          "id": "cbb619e3-040b-4858-8776-1cdbc921321f",
           "prompt": "10. He usually ____ (get up) early in the morning."
         }
       ]
@@ -369,43 +1329,43 @@
       "context": "",
       "items": [
         {
-          "id": "7b77a8da-953a-4577-9373-ea5a7e1896cd",
+          "id": "cb7b47dd-1f5f-4717-917c-c2b96d64c5d2",
           "prompt": "1. I can playing some sports such as football and volleyball.\nLỗi sai"
         },
         {
-          "id": "b0029d1b-ce2d-4658-8d47-e94ae4fdbf5a",
+          "id": "8c72ecba-cc91-43e3-8f59-5fb5b3997e33",
           "prompt": "1. I can playing some sports such as football and volleyball.\nPhần sửa đúng"
         },
         {
-          "id": "4b79b67b-38e0-48e1-a84b-b28c415c9eec",
+          "id": "a466edf8-dc47-4676-9537-ad11c60bf210",
           "prompt": "2. My company is not far, so I mustn’t go there by car.\nLỗi sai"
         },
         {
-          "id": "b3a916ab-497a-48d9-9c29-22a4c3bf6821",
+          "id": "e834fb47-570d-46e4-b7ca-85c3a11c899b",
           "prompt": "2. My company is not far, so I mustn’t go there by car.\nPhần sửa đúng"
         },
         {
-          "id": "40d673d9-2f24-4112-9311-fc023d915a04",
+          "id": "10ea790b-5a32-4c6b-bdbc-324245f64fdd",
           "prompt": "3. Students has to do their homework every day.\nLỗi sai"
         },
         {
-          "id": "b12b0a31-07f4-4211-89d6-75b5c3a21d88",
+          "id": "9f77049e-3dc8-479f-a8bd-a751612ec953",
           "prompt": "3. Students has to do their homework every day.\nPhần sửa đúng"
         },
         {
-          "id": "a7a73eef-6f25-42c7-bbef-08d1ff2f37fd",
+          "id": "aa5d4a43-e831-43ad-93a0-d0fd4aca70f6",
           "prompt": "4. You can finish your work today?\nLỗi sai"
         },
         {
-          "id": "ef74089e-bbbf-4ec5-95b7-0cad8991e004",
+          "id": "e0838371-1c22-4f6b-9e4f-02344b91a250",
           "prompt": "4. You can finish your work today?\nPhần sửa đúng"
         },
         {
-          "id": "d6860214-dcf7-4fb5-9cae-830a32ca33c1",
+          "id": "8ace7e17-c623-4123-b298-e89b6bd69d16",
           "prompt": "5. He shouldn’t drink a lot of water and fruit juice.\nLỗi sai"
         },
         {
-          "id": "254398a7-a8ce-4851-acda-58a2356d06e4",
+          "id": "53720c5a-565a-4b75-9f19-7de12eb01a50",
           "prompt": "5. He shouldn’t drink a lot of water and fruit juice.\nPhần sửa đúng"
         }
       ]
@@ -417,23 +1377,23 @@
       "context": "",
       "items": [
         {
-          "id": "61b01be6-fbd5-49fa-95e8-a3a16418e6b1",
+          "id": "a02d0602-a03e-4905-98fc-8ecba181518e",
           "prompt": "1. like/lunch/with/having/your/you/friends?"
         },
         {
-          "id": "b1c279db-442e-4885-bfbe-b407f3b5012e",
+          "id": "65814931-bc0e-4ea0-9204-cd572db68cdc",
           "prompt": "2. often/finish/study/he/late/his."
         },
         {
-          "id": "4a4a8be3-660e-4671-92dd-fc7efce3cb44",
+          "id": "45e54db9-e04e-4503-b789-852395e50859",
           "prompt": "3. sleep/someone/sing/karaoke/cannot/because/she."
         },
         {
-          "id": "3dd3fcfa-51fe-4521-aa7b-2ddb240fb449",
+          "id": "b2261f44-6eb1-44ee-b31b-103762023ce7",
           "prompt": "4. I / have/breakfast/at/today/every day/have/breakfast/at/7 o’clock/9/but/I."
         },
         {
-          "id": "ba7da9ae-e190-42ab-a40e-26da2bafeb06",
+          "id": "af9c7973-8520-486e-802f-59460f1b1b81",
           "prompt": "5. Mr.A/teacher/a/helpful/gentle/and/be."
         }
       ]
@@ -445,27 +1405,27 @@
       "context": "",
       "items": [
         {
-          "id": "3839650b-e732-4b70-9aae-1f13532a7b55",
+          "id": "ee7ca4b2-8c0e-4a51-a67b-b7f6f28b33cf",
           "prompt": "1. Bây giờ là 10 giờ sáng. Thầy Toàn đang ở trường. Anh ấy đang chuẩn bị cho tiết học Toán của anh ấy.",
           "long": true
         },
         {
-          "id": "f73d04e5-9531-4694-b5cf-fd2f4fe5f0c1",
+          "id": "aad753d0-c71c-48f6-9725-b38b0e7927c7",
           "prompt": "2. Giáo viên yêu thích của chúng tôi là cô A. Cô là giáo viên Hóa Học của chúng tôi ở trường cấp ba. Cô ấy là một cô giáo giỏi và có thể nói hai thứ tiếng.",
           "long": true
         },
         {
-          "id": "9ffac08a-e843-4933-b89e-47d11bf005ad",
+          "id": "3cae8ffd-b1c9-4c02-8f52-23eabe3fba02",
           "prompt": "3. Bách thường mất 30 phút để đi đến trường bằng xe đạp. Cậu ấy phải học ở trường vào thứ Hai và thứ Tư. Cậu ấy không thấy việc học dễ dàng.",
           "long": true
         },
         {
-          "id": "64b2125a-3d0f-43e6-b1f6-d92b0cfdcb6f",
+          "id": "f18a9476-156c-4b44-ae24-e68ee561a3e8",
           "prompt": "4. Ở trường này, sinh viên phải học chăm chỉ để có được tấm bằng đại học. Một tấm bằng có thể giúp họ trở thành những kỹ sư giỏi, kiếm được những công việc tốt và có lương cao.",
           "long": true
         },
         {
-          "id": "d82ed868-3008-4663-a141-cc9858ea1ec3",
+          "id": "4ec9eb41-c15a-4230-9a0f-80ccf92d8e9f",
           "prompt": "5. Steve đang làm một công việc toàn thời gian. Steve thích nhiều điểm về công ty của mình. Công ty của anh ấy có một môi trường làm việc thân thiện và đồng nghiệp thì luôn sẵn lòng giúp đỡ. Steve có thể được thăng chức.",
           "long": true
         }
@@ -478,27 +1438,27 @@
       "context": "",
       "items": [
         {
-          "id": "3d0d48a4-d7d0-46f9-97e1-dd0ce6b6cc88",
+          "id": "e49da141-1ca0-4fcf-8ebb-c9548687d2e1",
           "prompt": "1. What are you doing at the moment?\nGợi ý: Hints:; bây giờ bạn đang làm gì (ăn tối/ăn trưa…); thường làm việc này với ai vào lúc nào (với bạn bè/gia đình vào thứ …); tôi thấy nó như thế nào (thú vị/nhàm chán); At the moment, I am studying English and doing this exercise on my computer. I usually study with my classmates in the evening. I think learning English is very interesting because it helps me communicate with many people.",
           "long": true
         },
         {
-          "id": "4f35abb8-72de-470e-9620-8e793f17b299",
+          "id": "0c3c3c00-1c48-4853-82d6-6dc51376aa8c",
           "prompt": "2. What do you often do after school?\nGợi ý: Hints:; kể tên việc bạn làm (làm việc bán thời gian/chơi thể thao…); bạn làm việc này trong bao lâu; việc này giúp bạn như thế nào (kiếm tiền/tăng cường sức khỏe…); After school, I often work a part-time job and sometimes play badminton with my friends. I usually spend about four hours working every day. It helps me earn extra money and improve my communication skills.",
           "long": true
         },
         {
-          "id": "b0b3c11e-bf91-47d5-9e60-0a041c35f040",
+          "id": "c77a5a65-5372-4862-b823-ac51d379e2c6",
           "prompt": "3. How long does it take you to go to school?\nGợi ý: Hints:; mất bao nhiêu thời gian; phải học ở trường bao lâu (2,3 lần 1 tuần); thường đi bằng phương tiện gì, hôm nay đi bằng phương tiện gì; Lý do đi phương tiện đó; It takes me about twenty minutes to go to school by motorbike. I have classes three times a week. Today, I go to school by motorbike because it is fast, convenient, and saves a lot of tim",
           "long": true
         },
         {
-          "id": "3dabe020-b46f-4435-8316-031651afe2f4",
+          "id": "d1b4fb72-f48b-4fa4-97c8-a52f0b9add74",
           "prompt": "4. What is your dream job?\nGợi ý: Hints:; tên công việc yêu thích (doanh nhân/kế toán…); lý do 1 (kiếm nhiều tiền); lý do 2 (cải thiện kỹ năng); Nên làm gì để có công việc đó?; My dream job is to become a business owner. I want this job because I can earn a good income and improve my management skills. To achieve my dream, I need to study hard, learn new skills, and gain practical experience.",
           "long": true
         },
         {
-          "id": "3837bf3b-0233-48d3-88c8-a7d298a05ad0",
+          "id": "346acd44-1b98-4c26-84f7-6c600b63414c",
           "prompt": "5. Which jobs you don’t like to do?\nGợi ý: Hints:; tên công việc không muốn làm; nếu ít nhất 2 lý do không muốn làm các công việc này; chuẩn bị nhiều tài liệu; lương không cao; không thể thăng chức; I don't want to become an office clerk. I don't like this job because I have to prepare a lot of documents, the salary is not very high, and there are not many opportunities for promotion. I prefer a more creative job.; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
           "long": true
         }
