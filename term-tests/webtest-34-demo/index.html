@@ -424,7 +424,8 @@
 
 <script>
 (() => {
-  const demoCourse = new URLSearchParams(location.search).get('demoCourse');
+  const search = new URLSearchParams(location.search);
+  const demoCourse = search.get('demoCourse') || search.get('course');
   if (['03', '34', '45'].includes(demoCourse)) {
     import('./content-preview.mjs').then(module => module.mount(demoCourse)).catch(() => {
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại.';
