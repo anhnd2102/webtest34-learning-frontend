@@ -2816,7 +2816,7 @@
           ]
         }
       ],
-      "audioPath": "assets/test 1/audio/Test1_Vocab.mp3"
+      "audioPath": "assets/34/test-1/vocabulary.mp3"
     },
     {
       "id": "vocabulary-picture",
@@ -3047,7 +3047,7 @@
           ]
         }
       ],
-      "audioPath": "assets/test 1/audio/Test1_Listening.mp3"
+      "audioPath": "assets/34/test-1/listening-1.mp3"
     },
     {
       "id": "listening-gap",
@@ -3087,7 +3087,29 @@
           "sourceRef": null,
           "maxWords": 1
         }
-      ]
+      ],
+      "audioPath": "assets/34/test-1/listening-2.mp3",
+      "table": {
+        "title": "My favorite teacher - Mr. Lambert",
+        "rows": [
+          {
+            "header": "His appearance",
+            "content": "- dark hair\n(1) ____________ legs\n- thick beard"
+          },
+          {
+            "header": "His teaching style",
+            "content": "- brings energy to the class\n- always look for new ways of teaching to communicate ideas\n- does not use (2) ____________ in his French classes"
+          },
+          {
+            "header": "An unforgettable experience",
+            "content": "Once, he used a desk, a blackboard and a (3) ____________ to communicate the word \"above\". The students loved it as he was really (4) ____________ about teaching it."
+          },
+          {
+            "header": "Why he is loved by students",
+            "content": "When the students made him (5) ____________, he still loved his students"
+          }
+        ]
+      }
     },
     {
       "id": "listening-tf",
@@ -3142,7 +3164,8 @@
             "F"
           ]
         }
-      ]
+      ],
+      "audioPath": "assets/34/test-1/listening-3.mp3"
     },
     {
       "id": "pronunciation-word",

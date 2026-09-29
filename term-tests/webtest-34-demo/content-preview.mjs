@@ -142,6 +142,66 @@ export function groupBody(group) {
       ? clozeSegments(lines.slice(firstSentence).join('\n'),group.items.map(item=>item.id)) : null;
     if (segments) return `<div class="demo-word-bank" aria-label="Động từ gợi ý"><strong>Động từ gợi ý</strong><div class="demo-word-bank-list">${bank.map(word=>`<span>${escape(word)}</span>`).join('')}</div></div><div class="demo-cloze demo-cloze-sentences">${clozeMarkup(segments,group.items).split('\n').map(sentence=>`<p class="demo-cloze-line">${sentence.replace(/^\s*-\s*/, '')}</p>`).join('')}</div>`;
   }
+  if (group.table && Array.isArray(group.table.rows)) {
+    const pattern = /\((\d+)\)\s*[_\.\u2026]{2,}/g;
+    const items = group.items;
+    const renderCell = text => {
+      if (!text) return '';
+      let html = '';
+      let last = 0;
+      for (const match of text.matchAll(pattern)) {
+        const num = Number(match[1]);
+        const item = items[num - 1];
+        html += escape(text.slice(last, match.index)).replace(/\n/g, '<br>');
+        if (item) {
+          html += `<span class="demo-question demo-inline"><span class="demo-blank-number">(${num})</span>${answerField(item, true)}</span>`;
+        } else {
+          html += escape(match[0]);
+        }
+        last = match.index + match[0].length;
+      }
+      html += escape(text.slice(last)).replace(/\n/g, '<br>');
+      return html;
+    };
+
+    return `<div class="demo-table-wrapper">
+      ${group.table.title ? `<div class="demo-table-title">${escape(group.table.title)}</div>` : ''}
+      <table class="demo-cloze-table">
+        <tbody>
+          ${group.table.rows.map(row => `
+            <tr>
+              <th scope="row" class="demo-table-header">${escape(row.header).replace(/\n/g, '<br>')}</th>
+              <td class="demo-table-cell">${renderCell(row.content)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  if (group.id.startsWith('listening-order')) {
+    const sentences = (group.context || '').split('\n').map(l => l.trim()).filter(Boolean);
+    return `<div class="demo-order-container">
+      <div class="demo-order-sentences">
+        ${sentences.map(s => {
+          const m = s.match(/^([A-E])[.)\s]\s*(.*)$/i);
+          if (m) {
+            return `<div class="demo-order-sentence-card"><span class="demo-order-letter">${escape(m[1].toUpperCase())}</span><span class="demo-order-text">${escape(m[2])}</span></div>`;
+          }
+          return `<div class="demo-order-sentence-card">${escape(s)}</div>`;
+        }).join('')}
+      </div>
+      <div class="demo-order-slots">
+        ${group.items.map((item, index) => `
+          <div class="demo-order-slot">
+            <label for="${escape(item.id)}" class="demo-order-slot-label">Vị trí ${index + 1}</label>
+            ${answerField(item)}
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
   const inlineGroups = ['listening-gap', 'listening-notes', 'grammar-present', 'grammar-past', 'grammar-perfect'];
   const numbered = group.context && inlineGroups.includes(group.id) ? clozeSegments(group.context, group.items.map(item => item.id)) : null;
   if (numbered) return `<div class="demo-context demo-lines demo-cloze">${clozeMarkup(numbered, group.items)}</div>`;
@@ -191,7 +251,7 @@ export function groupBody(group) {
       const prompt = item.prompt.replace(/^\s*\d+[.)]\s*/, '');
       const single = group.id === 'grammar-verb' ? clozeSegments(prompt, [item.id], false) : null;
       if (single) return `<div class="demo-cloze demo-sentence"><span class="qnum">${questionNumber}</span> ${clozeMarkup(single, [item], false)}</div>`;
-      const cards = ['vocabulary-choice', 'pronunciation-choice', 'listening-tf'].includes(group.id);
+      const cards = ['vocabulary-choice', 'pronunciation-choice', 'listening-tf', 'listening-choice'].includes(group.id);
       return `<div class="demo-question${cards ? ' demo-mcq-question' : ''}"><div class="demo-prompt-row"><span class="qnum">${questionNumber}</span><${cards ? 'div' : 'label'} ${cards ? '' : `for="${escape(item.id)}"`} class="demo-lines">${escape(prompt)}</${cards ? 'div' : 'label'}></div>
         ${item.targetWord ? `<p>Thay từ/cụm: <strong>${escape(item.targetWord)}</strong></p>` : ''}
         ${item.image ? `<img src="${escape(item.image)}" alt="Hình minh họa câu ${escape(item.prompt.split('.')[0])}" loading="lazy">` : ''}
@@ -700,6 +760,25 @@ export async function mount(course) {
       .content-demo button.section-tab{border:0;background:transparent;padding:10px 12px}
       .content-demo button.section-tab.active{background:#fff3f5;color:var(--color-primary)}
       .content-demo .progress-track{margin-top:12px}
+      .content-demo .demo-table-wrapper{margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+      .content-demo .demo-table-title{padding:14px 18px;font-family:Geologica,sans-serif;font-size:16px;font-weight:700;color:#1e293b;background:#f8fafc;border-bottom:2px solid #e2e8f0}
+      .content-demo .demo-cloze-table{width:100%;border-collapse:collapse}
+      .content-demo .demo-table-header{width:28%;min-width:160px;vertical-align:top;text-align:left;padding:14px 18px;background:#f8fafc;font-weight:600;font-size:14px;color:#334155;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0}
+      .content-demo .demo-table-cell{vertical-align:top;padding:14px 18px;line-height:2.6;color:#1e293b;border-bottom:1px solid #e2e8f0}
+      .content-demo .demo-table-cell br{line-height:1.8}
+      .content-demo .demo-cloze-table tr:last-child .demo-table-header,.content-demo .demo-cloze-table tr:last-child .demo-table-cell{border-bottom:0}
+
+      .content-demo .demo-order-container{margin:18px 0;display:grid;gap:18px}
+      .content-demo .demo-order-sentences{display:grid;gap:10px}
+      .content-demo .demo-order-sentence-card{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;line-height:1.5}
+      .content-demo .demo-order-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--color-primary);color:white;font-weight:700;font-size:13px;flex-shrink:0}
+      .content-demo .demo-order-text{flex:1;color:#334155;font-weight:500;padding-top:3px}
+      .content-demo .demo-order-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:16px;background:#f1f5f9;border-radius:12px}
+      .content-demo .demo-order-slot{display:flex;flex-direction:column;gap:6px}
+      .content-demo .demo-order-slot-label{font-size:12px;font-weight:700;color:#475569}
+      .content-demo .demo-order-slot select{width:100%;min-height:40px;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;background:white;font-weight:600}
+
+      .content-demo .demo-picture-grid .demo-prompt-row .demo-lines{font-weight:600;letter-spacing:0.5px}
       @media(max-width:900px){.content-demo .demo-layout{grid-template-columns:1fr}.content-demo .demo-layout aside{display:none}.content-demo .demo-main{grid-column:1}}
       @media(max-width:600px){.content-demo .demo-picture-grid{grid-template-columns:1fr}.content-demo .demo-vocab-grid{gap:0 10px}.content-demo .demo-question{min-width:0}.content-demo .demo-question input,.content-demo .demo-question select{min-width:0}.content-demo .demo-inline input{width:120px}.content-demo .demo-tabs{padding:8px 12px}.content-demo .exercise-head{gap:8px}.content-demo .demo-cloze{line-height:3.2}.content-demo .demo-top nav{flex-shrink:0}}
     `;
