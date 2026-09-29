@@ -340,6 +340,7 @@ export function groupSections(form, bypass = false) {
 export async function mount(course) {
   if (!['03','34','45'].includes(course)) throw new Error('Unknown demo course');
   const config = window.WEBTEST_34_PREVIEW_CONFIG || {};
+  const queryParams = new URLSearchParams(location.search || '');
   const rawHash = location.hash.replace(/^#/, '').trim();
   const hashParams = new URLSearchParams(rawHash);
   const hashToken = rawHash.includes('=') ? hashParams.get('test') : (rawHash.includes('-') ? rawHash : '');
@@ -498,7 +499,7 @@ export async function mount(course) {
             </div>
 
             <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:20px">
-              <a href="?demoCourse=${course}" style="color:#64748b;font-size:13px;text-decoration:underline">Chuyển sang chế độ duyệt nhanh đề</a>
+              <a href="?course=${course}&test=${testNum}" style="color:#64748b;font-size:13px;text-decoration:underline">Chuyển sang chế độ duyệt nhanh đề</a>
               <button type="button" class="btn btn-primary" id="startExamBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Bắt đầu làm bài →</button>
             </div>
           </div>

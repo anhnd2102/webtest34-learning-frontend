@@ -431,8 +431,9 @@
   const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
   if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs?rev=20260923-utf8-result-v1').then(module => module.mount(demoCourse)).catch(() => {
-      document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại.';
+    import('./content-preview.mjs?rev=20260930-course34-v3').then(module => module.mount(demoCourse)).catch((err) => {
+      console.error('Mount error:', err);
+      document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });
     return;
   }
