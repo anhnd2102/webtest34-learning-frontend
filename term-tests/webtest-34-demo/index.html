@@ -426,8 +426,9 @@
 
 <script>
 (() => {
-  const demoCourse = new URLSearchParams(location.search).get('demoCourse');
-  const testMode = new URLSearchParams(location.search).get('test') === '2' ? 'test2' : 'test1';
+  const search = new URLSearchParams(location.search);
+  const demoCourse = search.get('demoCourse') || search.get('course');
+  const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
   if (['03', '34', '45'].includes(demoCourse)) {
     import('./content-preview.mjs?rev=20260923-utf8-result-v1').then(module => module.mount(demoCourse)).catch(() => {

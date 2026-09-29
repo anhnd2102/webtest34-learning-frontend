@@ -340,11 +340,12 @@ export function groupSections(form, bypass = false) {
 export async function mount(course) {
   if (!['03','34','45'].includes(course)) throw new Error('Unknown demo course');
   const config = window.WEBTEST_34_PREVIEW_CONFIG || {};
-  const hashParams = new URLSearchParams(location.hash.replace(/^#/, ''));
-  const queryParams = new URLSearchParams(location.search || '');
-  const testToken = hashParams.get('test') || queryParams.get('test') || config.LEARNING_TEST_TOKEN || '';
+  const rawHash = location.hash.replace(/^#/, '').trim();
+  const hashParams = new URLSearchParams(rawHash);
+  const hashToken = rawHash.includes('=') ? hashParams.get('test') : (rawHash.includes('-') ? rawHash : '');
+  const testToken = hashToken || hashParams.get('test') || queryParams.get('test') || config.LEARNING_TEST_TOKEN || '';
 
-  let testNum = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || 1;
+  let testNum = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || (Number(queryParams.get('test')) && Number(queryParams.get('test')) <= 10 ? Number(queryParams.get('test')) : 0) || 1;
   const phaseParam = queryParams.get('phase');
   if ((course === '34' || course === '45') && phaseParam === '2' && testNum <= 2) {
     testNum = testNum + 4;
