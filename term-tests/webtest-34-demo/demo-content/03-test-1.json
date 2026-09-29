@@ -3,7 +3,7 @@
   "course": "03",
   "phase": null,
   "testNumber": 1,
-  "sourceHash": "a2a81605659447cc1a938c1ff5f83ef8944cd0dd3e350f17f8b951e8c88391b5",
+  "sourceHash": "8addc46928d1c27f89724db8f3880bcc8de551d0f34a4629cb4ac66e7847d876",
   "durationMinutes": 90,
   "groups": [
     {
@@ -40,7 +40,7 @@
           "sourceRef": null
         }
       ],
-      "audioPath": "assets/demo-audio/03/listening.mp3",
+      "audioPath": "assets/03/test-1/listening.mp3",
       "audioHash": "859b109fe8e497c3017462cc44124e7fd726960f302fe2333d6a60f7cabf835c",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
@@ -108,7 +108,7 @@
           "sourceRef": "M32"
         }
       ],
-      "audioPath": "assets/demo-audio/03/listening.mp3",
+      "audioPath": "assets/03/test-1/listening.mp3",
       "audioHash": "859b109fe8e497c3017462cc44124e7fd726960f302fe2333d6a60f7cabf835c",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
@@ -1201,7 +1201,7 @@
           ]
         }
       ],
-      "audioPath": "assets/demo-audio/03/vocabulary.mp3",
+      "audioPath": "assets/03/test-1/vocabulary.mp3",
       "audioHash": "d96eac52709081a9badf89266a37059d9be206b6176eef8786b05a3c0625ca3e",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },

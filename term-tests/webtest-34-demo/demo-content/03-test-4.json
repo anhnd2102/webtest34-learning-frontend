@@ -3,7 +3,7 @@
   "course": "03",
   "phase": null,
   "testNumber": 4,
-  "sourceHash": "258bfb955cf1484f0b7fad69f4eb123c2e9780b3d0aaf0cd1b97ccde7db33a27",
+  "sourceHash": "20cc9ad946375067290899d787096ccf9c051a5caeef9dc1016010a1541d0e9b",
   "durationMinutes": 90,
   "groups": [
     {
@@ -11,26 +11,26 @@
       "title": "Listening · Điền từ",
       "instructions": "🔉 Exercise 1: Listen and fill in the blanks with suitable words or phrases (Nghe và điền vào chỗ trống với từ hoặc cụm từ thích hợp) 5 điểm",
       "context": "Let’s talk about my Tet Holidays! I have been to Hanoi to go to university for 3 years, so I often come back to my hometown on Tet Holidays. On these occasions, I visit my parents and my relatives many times. However, during the last Tet holiday, I (1)____ when I decided not to go home. \nMy friends and I went for a trip to a rural area in the North of Vietnam. This area is great to (2)____ that you cannot find anywhere. On the day we traveled, in the early morning, we woke up early to get ready. When we arrived I was surprised because this place was changing. (3)____ anymore, with a lot of modern buildings and vehicles. (4)____ selling a lot of items. I was shocked but I still took some photos to keep memories. On the second day, it rained all day and I had to spend the trip at the hotel watching the rain. (5)____",
-      "audioPath": "assets/demo-audio/03/test-4/listening.mp3",
+      "audioPath": "assets/03/test-4/listening.mp3",
       "items": [
         {
-          "id": "29aa6bb3-b6cd-498e-a68b-d9ecdaa6cb51",
+          "id": "9d4ca88a-0572-4f90-803f-a1fffe329ec4",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "8a8793f1-ec8c-4d2a-9113-2bb80677bd87",
+          "id": "099a50b8-2f7d-4014-8f30-a13630c5c5fd",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "4c6c58fc-c51c-49f9-8ce3-ea465971200f",
+          "id": "d2fddc2e-3bd4-48c2-a827-c156eb9e43da",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "5d1cb0bc-52a1-4837-9a4b-9246ed62e8c1",
+          "id": "f655c875-012a-454c-8bd9-4267bd36c938",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "d41ade2a-a09b-41b2-b77f-14b85c974855",
+          "id": "56bc2d88-9444-486f-9d7c-85f679a5f284",
           "prompt": "Chỗ trống (5)"
         }
       ]
@@ -40,50 +40,50 @@
       "title": "Listening · Trả lời tiếng Việt",
       "instructions": "Exercise 2: Answer these questions in Vietnamese (Trả lời các câu hỏi sau bằng tiếng Việt) 5 điểm",
       "context": "",
-      "audioPath": "assets/demo-audio/03/test-4/listening.mp3",
+      "audioPath": "assets/03/test-4/listening.mp3",
       "items": [
         {
-          "id": "03a77dde-46a9-48a4-abca-8e8177b2dd36",
+          "id": "be4ac02d-0f74-4452-9403-5436dc4763ba",
           "prompt": "1. (a) Trong câu “I have been to Hanoi to go to university for 3 years”, thì động từ được sử dụng là gì?",
           "long": false
         },
         {
-          "id": "ddabc36f-cc0d-41fe-aa99-82930789f1ff",
+          "id": "a99cfb69-0414-4d97-b40d-a2c3cb1d8d0a",
           "prompt": "1. (b) Thì này dùng để nói đến việc như thế nào?",
           "long": true
         },
         {
-          "id": "b6e309d5-0442-4226-bbc3-750477a4310a",
+          "id": "4335fc86-23d0-4f3f-879d-3c2ff54ee9e5",
           "prompt": "2. (a) Trong câu “It was not peaceful anymore, with a lot of modern buildings and vehicles”, “it” ở đây chỉ cái gì?",
           "long": false
         },
         {
-          "id": "8fc49574-1949-42c5-97b5-509854e1a730",
+          "id": "d7015d32-224d-4cc0-9db1-deacdc3cd456",
           "prompt": "2. (b) Có thể thay “it was” bằng “there was” được không?",
           "long": false
         },
         {
-          "id": "15d4c1c5-bd68-4c03-a8c6-41c1c2878fb1",
+          "id": "d4631942-84a3-4aac-819e-80357b1da116",
           "prompt": "2. (c) Vì sao thay được/không thay được?",
           "long": true
         },
         {
-          "id": "04735e6e-87fc-44d6-b105-054683c611f2",
+          "id": "a0363aca-1b0c-4800-876f-9005b78e5a85",
           "prompt": "3. Trong câu dưới đây, hai từ “early” là trạng từ hay tính từ?\n“On the day we traveled, in the early (1) morning, we woke up early (2) to get ready.”\nearly (1):",
           "long": false
         },
         {
-          "id": "59997aad-f976-4e7e-b487-df4006a21dba",
+          "id": "dee9a526-dbe1-4371-a8e2-4afcedb75c99",
           "prompt": "3. Trong câu dưới đây, hai từ “early” là trạng từ hay tính từ?\n“On the day we traveled, in the early (1) morning, we woke up early (2) to get ready.”\nearly (2):",
           "long": false
         },
         {
-          "id": "6cd04134-054f-4320-98f4-c671afb1f372",
+          "id": "67a62683-c94c-4134-81dc-0e13d6e5df5f",
           "prompt": "4. (a) Câu “I was shocked but I still took some photos to keep memories” có thể tách thành hai câu “I was shocked.” và “But I still took some photos to keep memories.” được không?",
           "long": false
         },
         {
-          "id": "181f71bc-f67c-43b8-a4be-dae5f8a8a83e",
+          "id": "6138ebb9-ba76-4af8-b16c-5132a162c7d5",
           "prompt": "4. (b) Vì sao?",
           "long": true
         }
@@ -94,14 +94,14 @@
       "title": "Vocabulary · Nghe từ và chọn nghĩa",
       "instructions": "🔉 Exercise 1: Listen and note down the words/phrases you hear from the recording (10 điểm)",
       "context": "",
-      "audioPath": "assets/demo-audio/03/test-4/vocabulary.mp3",
+      "audioPath": "assets/03/test-4/vocabulary.mp3",
       "items": [
         {
-          "id": "920ef8e2-00bc-4ab0-9cc0-0a51733e69b8",
+          "id": "76e8cfd7-4413-4311-9872-b5a88db4537d",
           "prompt": "1. Từ/cụm từ nghe được"
         },
         {
-          "id": "e5f3330d-ed53-4789-bcbe-5840b1ac681a",
+          "id": "c503a4c0-eb6a-4f20-84c3-12b28171d66f",
           "prompt": "1. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -167,11 +167,11 @@
           ]
         },
         {
-          "id": "07c2623f-7f8b-4b11-8261-b5598ab158dc",
+          "id": "89e50d48-2634-46ab-8715-d740840977a5",
           "prompt": "2. Từ/cụm từ nghe được"
         },
         {
-          "id": "2201ae74-48ba-474d-a4a0-499f8c08dd66",
+          "id": "36719322-11cc-491e-9af6-2102aa1e5a0c",
           "prompt": "2. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -237,11 +237,11 @@
           ]
         },
         {
-          "id": "9149ab10-56f5-4bc5-93ca-0c5954f9af9a",
+          "id": "f6fbc897-ffe5-4f53-b863-17057c372074",
           "prompt": "3. Từ/cụm từ nghe được"
         },
         {
-          "id": "d9933b83-5273-4590-832e-3b29d7d5edcd",
+          "id": "399f90c5-7b03-4587-a091-dad59be84574",
           "prompt": "3. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -307,11 +307,11 @@
           ]
         },
         {
-          "id": "2930fa66-d1ad-44b8-a24a-aa2be9780869",
+          "id": "7b7e756e-8e66-4dcd-8de3-c27b0728a5d2",
           "prompt": "4. Từ/cụm từ nghe được"
         },
         {
-          "id": "18fda041-2b08-46dc-b5ee-cdd54deb54d3",
+          "id": "51187759-ddaa-473a-9616-bf039ec8c72b",
           "prompt": "4. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -377,11 +377,11 @@
           ]
         },
         {
-          "id": "da85526c-9044-4ab7-9821-8dd8fe85e89f",
+          "id": "5a722df2-65d1-4180-b3b6-fc9cf95640b2",
           "prompt": "5. Từ/cụm từ nghe được"
         },
         {
-          "id": "6c157712-5567-423c-9c56-8fc4e0368fed",
+          "id": "ab481bdf-4e0d-47c1-b00e-b2e20147d2bd",
           "prompt": "5. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -447,11 +447,11 @@
           ]
         },
         {
-          "id": "490c8e1e-791e-4300-b349-201418bb96db",
+          "id": "f97f5685-2e48-44b5-b997-4f9960a5d629",
           "prompt": "6. Từ/cụm từ nghe được"
         },
         {
-          "id": "0f69f350-135e-4a5e-8a5d-12f0075f6017",
+          "id": "e0a329aa-86ca-4ab5-b6bd-42f71d1d8414",
           "prompt": "6. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -517,11 +517,11 @@
           ]
         },
         {
-          "id": "f0bf10b2-1a06-4be4-9461-2e94cf058b99",
+          "id": "5b1bf7de-2e31-42b0-8981-57fedad96239",
           "prompt": "7. Từ/cụm từ nghe được"
         },
         {
-          "id": "b158ea8d-0b37-43f1-b97e-f1358c7ac9dd",
+          "id": "747a80df-31d0-4d4f-8789-0379d418212d",
           "prompt": "7. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -587,11 +587,11 @@
           ]
         },
         {
-          "id": "44c0f860-6a17-47f8-b1f3-683fcbb7488d",
+          "id": "a60db32c-c9e9-4b40-aab8-c0233ad315b4",
           "prompt": "8. Từ/cụm từ nghe được"
         },
         {
-          "id": "e1b2b02e-1c9d-4159-8c93-30d3804f01c2",
+          "id": "cfdf7967-0f61-433b-8a90-5ceff537f9ed",
           "prompt": "8. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -657,11 +657,11 @@
           ]
         },
         {
-          "id": "a154eb52-414d-4436-a007-8410d514fa56",
+          "id": "8fac00e6-56b7-4a38-bf75-64729a328b5a",
           "prompt": "9. Từ/cụm từ nghe được"
         },
         {
-          "id": "7474801a-d525-4574-9723-0159498c6dfe",
+          "id": "9f777359-021c-4c71-8aab-25915e6cc13e",
           "prompt": "9. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -727,11 +727,11 @@
           ]
         },
         {
-          "id": "85b8eed7-ed14-4c71-abff-4f6eeb5f93a1",
+          "id": "d92c4467-a3c0-4658-8030-ad07f664ab30",
           "prompt": "10. Từ/cụm từ nghe được"
         },
         {
-          "id": "b4d5e33a-0279-45f0-8ea7-733e16f0c398",
+          "id": "09b3d9d3-655c-46e7-88a8-118526495d12",
           "prompt": "10. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -797,11 +797,11 @@
           ]
         },
         {
-          "id": "a9910ce3-1bbd-47b7-9f39-8c66ad6f4f69",
+          "id": "b7184775-1c23-4b3e-a053-3a7e43f8af7d",
           "prompt": "11. Từ/cụm từ nghe được"
         },
         {
-          "id": "8859836d-d1f5-423f-afb0-fafb745beabc",
+          "id": "841e8dca-ec3b-4d60-99f6-cff238851418",
           "prompt": "11. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -867,11 +867,11 @@
           ]
         },
         {
-          "id": "cbe2840e-17f8-4da7-88f7-2c2f56835a99",
+          "id": "bf5f5c92-e0ac-45f0-b0c9-0fdbbcbb6ce9",
           "prompt": "12. Từ/cụm từ nghe được"
         },
         {
-          "id": "d976f7f5-a6c6-49a1-8982-2dfa2f7c195a",
+          "id": "19b2019e-6a95-4a79-86a2-39ad62602362",
           "prompt": "12. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -937,11 +937,11 @@
           ]
         },
         {
-          "id": "02030096-5426-4ac3-b2c9-ec18ae75df65",
+          "id": "8759b336-eb04-47ea-9817-deb97dc06f90",
           "prompt": "13. Từ/cụm từ nghe được"
         },
         {
-          "id": "71c490b8-83eb-45b4-98c1-8ee61f71c238",
+          "id": "21a25c67-057e-4c1f-8f7c-9198b992f1bc",
           "prompt": "13. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -1007,11 +1007,11 @@
           ]
         },
         {
-          "id": "8792b8e2-cf2a-465f-8763-3a2f5fb3a386",
+          "id": "5ffe1c01-f281-422b-b79d-613a11ec2b0f",
           "prompt": "14. Từ/cụm từ nghe được"
         },
         {
-          "id": "eb415e94-3c4d-4f89-a571-f34c3eb4c0ef",
+          "id": "1f5e6f99-819b-40a2-b85f-9ffa261f45d4",
           "prompt": "14. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -1077,11 +1077,11 @@
           ]
         },
         {
-          "id": "ad544a68-569d-4c8c-b3ed-d4fc23abdee3",
+          "id": "137ada2a-6f57-400d-a441-c10bad1db36f",
           "prompt": "15. Từ/cụm từ nghe được"
         },
         {
-          "id": "7a68551e-3f9d-4f06-ac4d-bcda78f33079",
+          "id": "af2a2dc9-430b-4e38-9a1e-f8cdde829a28",
           "prompt": "15. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -1155,52 +1155,52 @@
       "context": "",
       "items": [
         {
-          "id": "16d77250-3eae-45cf-be44-7ee2866d163f",
+          "id": "53b373fd-9647-42e8-81ec-be9a2f9d8df8",
           "prompt": "1. a _ _ _ _ n",
           "image": "assets/03/test-4/pic-1.png"
         },
         {
-          "id": "da72624e-570d-43b7-88fb-32587bc4059e",
+          "id": "764bb9d2-0713-4b4c-a738-0a3363e16e16",
           "prompt": "2. t _ _ p _ _ _ t _ _ _",
           "image": "assets/03/test-4/pic-2.png"
         },
         {
-          "id": "a6a1fd5f-5c81-49c2-80df-8759b404a9a3",
+          "id": "ac0d5887-b9a2-453c-954c-7f4479f3a007",
           "prompt": "3. w _ _ _ _",
           "image": "assets/03/test-4/pic-3.png"
         },
         {
-          "id": "1d50c8cc-b0fd-4b0b-8517-f1ae10e97358",
+          "id": "20aa1cd1-c116-4c26-a38f-189e52b55df1",
           "prompt": "4. s _ _ _ _ _ _",
           "image": "assets/03/test-4/pic-4.png"
         },
         {
-          "id": "8229fb84-920b-4d86-8cef-556166ddd3c7",
+          "id": "65327c17-4633-47de-803d-78abef453439",
           "prompt": "5. w _ _ d _ _ _ _",
           "image": "assets/03/test-4/pic-5.png"
         },
         {
-          "id": "0eacda48-4559-42ef-b57b-a7b34150544e",
+          "id": "72878f16-14e6-4175-906c-0064afd4c5b9",
           "prompt": "6. a _ _ _ t _ _ _ _",
           "image": "assets/03/test-4/pic-6.png"
         },
         {
-          "id": "45f13fb2-9847-4028-93c0-8326268d1bfc",
+          "id": "549fe347-f5ac-4267-964f-ec1b48129603",
           "prompt": "7. g_  t_  t_ _  \nm_ _ _ _ _",
           "image": "assets/03/test-4/pic-7.png"
         },
         {
-          "id": "218a1c03-01a2-4c41-ac38-dbfba0dcf7f6",
+          "id": "e5b91f97-4602-498a-ac69-0deadb63cb95",
           "prompt": "8. m _ _ - a_ _ _ _ _ \nf _ _ _ _ _ _ _",
           "image": "assets/03/test-4/pic-8.png"
         },
         {
-          "id": "2de96594-d6a5-40ea-92ca-04d8190f4e4e",
+          "id": "2ddf0716-9db7-45cc-8522-a6c6a381de83",
           "prompt": "9. n _ _ _ _ _ _ _ \n_ _ _",
           "image": "assets/03/test-4/pic-9.png"
         },
         {
-          "id": "f3da6e96-3a06-4701-b9ed-f91f99232c64",
+          "id": "71733ccd-7044-4306-8835-b4d337590a3b",
           "prompt": "10. c _ _ _ _ _",
           "image": "assets/03/test-4/pic-10.png"
         }
@@ -1213,7 +1213,7 @@
       "context": "",
       "items": [
         {
-          "id": "8aa26015-4a7c-4529-aec1-acaaca90f4d6",
+          "id": "4b3da81a-5cf1-4800-a63f-41899d3f77b7",
           "prompt": "When it rains, I need to ........ to avoid getting wet.",
           "options": [
             "bring an umbrella",
@@ -1223,7 +1223,7 @@
           ]
         },
         {
-          "id": "540fd5c3-ad1b-4bae-bbde-83018906ac4b",
+          "id": "9d8b2a1c-8ddb-47bb-a6f8-0c2372c208a6",
           "prompt": "Last winter, there was a lot of ....., so it's not too cold.",
           "options": [
             "snow",
@@ -1233,7 +1233,7 @@
           ]
         },
         {
-          "id": "e82f8234-61ec-41fb-9747-20e8c0fbae71",
+          "id": "95dddeb6-fb67-49f6-857e-5a4082dc507c",
           "prompt": "Family photos bring many ..........",
           "options": [
             "happy memories",
@@ -1243,7 +1243,7 @@
           ]
         },
         {
-          "id": "67fb0204-617d-4187-b674-d8b09979bcbd",
+          "id": "b3a63fb0-8a1a-464e-bbda-dbafcedfeb1d",
           "prompt": "......... is good for your health.",
           "options": [
             "Going for a walk",
@@ -1253,7 +1253,7 @@
           ]
         },
         {
-          "id": "aebc9ba7-0689-4022-8de3-db4fddedf4db",
+          "id": "13d7c6b1-e895-44ef-9210-b8f15df384d5",
           "prompt": "I had ...... when I travelled alone. I loved going on a vacation alone.",
           "options": [
             "beautiful beaches",
@@ -1271,43 +1271,43 @@
       "context": "",
       "items": [
         {
-          "id": "970a9c75-2cd1-4078-9350-0e0aadda4772",
+          "id": "87d2d002-4448-499d-85c1-c5fa4597440b",
           "prompt": "1. The boys ____ (give) many problems for their parents."
         },
         {
-          "id": "f43bbf3c-9fe8-44e1-9698-23d02044b208",
+          "id": "16df2191-34e3-4792-9d57-6d112cc2f779",
           "prompt": "2. It ____ (be) warm last month."
         },
         {
-          "id": "86c3db13-9290-4f0b-906e-b6a329ead24b",
+          "id": "0484b4fb-5b0a-4bf8-a81c-c0a66a85fc2c",
           "prompt": "3. They ____ (prepare) a lot of food for a long time."
         },
         {
-          "id": "2261a6c6-c489-436e-88a8-27f69c0c0903",
+          "id": "35e88ef3-6340-4f19-b4a1-5a40d1a80b91",
           "prompt": "4. The pupils ____ (study) for their exam last week."
         },
         {
-          "id": "cc854dff-1c24-4cfc-91b0-cb46dcd72502",
+          "id": "1f2c2990-042d-4d86-9a5a-d7f96dbd5db8",
           "prompt": "5. ____ (do) a part-time job when you were in university?"
         },
         {
-          "id": "466b1c07-c005-4c97-bbb9-c9761ae4a833",
+          "id": "ff06f222-18ba-4835-a40f-ca04f8d3baa8",
           "prompt": "6. They ____ (not be) in London for six months."
         },
         {
-          "id": "c65ee8aa-3791-4ecf-aaf2-d7e6c44012e4",
+          "id": "9d1dba77-afbd-4cbc-8fd5-f2e5f31d621b",
           "prompt": "7. She ____ (not leave) her phone in a taxi when she came home from the airport."
         },
         {
-          "id": "366618cd-a416-4503-bc25-83772f435950",
+          "id": "fe29fff7-bb0c-4bea-985f-2152ea11946e",
           "prompt": "8. We ____ (lose) our tickets, now we can’t go to the cinema."
         },
         {
-          "id": "ac6bb8ef-1de9-4ac5-a538-7e226335019b",
+          "id": "bce6ef58-d13d-428e-97fd-8e8352f55347",
           "prompt": "9. ____ (he/meet) your family yet?"
         },
         {
-          "id": "316317f4-1a86-4921-8ced-21a085b5fd53",
+          "id": "d10c2a8a-9a0f-49f8-b930-6e2814c5755d",
           "prompt": "10. How long ____ (they/live) in Paris?"
         }
       ]
@@ -1319,43 +1319,43 @@
       "context": "",
       "items": [
         {
-          "id": "c751b184-4fc5-4cc3-bd54-0399d6390ac8",
+          "id": "004355a0-363b-4d88-b601-ba1c9e873072",
           "prompt": "1. There is a lot of students in our class.\nLỗi sai"
         },
         {
-          "id": "7ae56a1e-1a59-430a-917b-ae825d3aeb48",
+          "id": "331d111b-93fa-4e03-b85b-540d7ca11372",
           "prompt": "1. There is a lot of students in our class.\nPhần sửa đúng"
         },
         {
-          "id": "4677e955-ab01-4c9a-999d-fab92b6ee75a",
+          "id": "4b9721f1-2edb-48bd-b418-7f66779e2648",
           "prompt": "2. It’s a restaurant on White street.\nLỗi sai"
         },
         {
-          "id": "4ecaf90c-0df2-4bb3-aedf-afcec0b31c14",
+          "id": "97b393df-cda1-4ff1-8956-53f0293b52be",
           "prompt": "2. It’s a restaurant on White street.\nPhần sửa đúng"
         },
         {
-          "id": "4b51df9b-44fd-4516-a96d-325212f0ac7b",
+          "id": "5ba5a7b0-9f88-4a39-b606-f7e09caf4476",
           "prompt": "3. There’s 10 kilometers from my house to school.\nLỗi sai"
         },
         {
-          "id": "2dcb0a74-cbaa-4686-a837-c8a285c97d24",
+          "id": "54329dc1-637c-4f7c-8eb2-cbf25fa61e32",
           "prompt": "3. There’s 10 kilometers from my house to school.\nPhần sửa đúng"
         },
         {
-          "id": "c9292afa-d1be-423c-96c7-457568330b5a",
+          "id": "049b40d0-1e5c-4a28-8ccf-6e15a6ee8e87",
           "prompt": "4. It is a little snow, so it’s not cold.\nLỗi sai"
         },
         {
-          "id": "a38008a1-bea3-49e4-9399-b9bde1b6114f",
+          "id": "ecb481df-f032-4b2d-82a1-56410c3fff75",
           "prompt": "4. It is a little snow, so it’s not cold.\nPhần sửa đúng"
         },
         {
-          "id": "df4eb773-f5c9-4909-84a7-1b7e6a7467d1",
+          "id": "e3e6c268-c4a8-4dbc-9431-1b91add851d3",
           "prompt": "5. It’s not very late, we must go home.\nLỗi sai"
         },
         {
-          "id": "582d811f-46f1-49cb-9e05-e5a94e095c61",
+          "id": "ca38c2f8-c433-476d-a87a-7d876cb3662d",
           "prompt": "5. It’s not very late, we must go home.\nPhần sửa đúng"
         }
       ]
@@ -1367,23 +1367,23 @@
       "context": "",
       "items": [
         {
-          "id": "b76863d6-70eb-4589-b3dd-007f1a856803",
+          "id": "8408dad2-0aa4-44da-aad5-bcadca80d0d3",
           "prompt": "1. sunny/be/a/day/beautiful/and/yesterday."
         },
         {
-          "id": "f5dd30f3-debd-4136-947b-ec9ea4dad664",
+          "id": "99cd7d60-1506-4efc-87da-ea627076dabc",
           "prompt": "2. car/buy/a/nice/really/I."
         },
         {
-          "id": "9f255de2-3577-42e2-8a7c-0070a0ef4e65",
+          "id": "c8b6b4e0-189f-4315-951a-c33e7a94c439",
           "prompt": "3. great/it/be/go out/warm/this/weather/in/to."
         },
         {
-          "id": "9e4c38a9-8c08-4407-a86b-c8c7bf0152dd",
+          "id": "90c270f2-369f-4891-b4c9-140be3fc1ce6",
           "prompt": "4. be/never/I/big/this/restaurant/before/to."
         },
         {
-          "id": "e15b8979-e163-49ae-ab3a-e5cfb9525dce",
+          "id": "b09d1d70-d48b-439e-981f-1f016c7a44f9",
           "prompt": "5. you/watch/extremely/an/movie/good/ever?"
         }
       ]
@@ -1395,27 +1395,27 @@
       "context": "",
       "items": [
         {
-          "id": "ba0a743f-6f96-4107-a78b-34acf7110a09",
+          "id": "ee580edc-a3e6-4bae-9847-48bebbdc0b62",
           "prompt": "1. Trời khá nóng và nhiều mưa vào mùa hè. Đường phố thường trơn trượt và bẩn nên anh ấy hay ở nhà và ngắm mưa.",
           "long": true
         },
         {
-          "id": "5800fd45-ed62-4412-818c-5b260ca8868b",
+          "id": "12fcfb13-2067-47d3-a223-771d39f4fbba",
           "prompt": "2. Ngọc đang sống ở một căn hộ ở Hà Nội. Nó không có nhiều không gian nên cô ấy muốn sống ở quê. Khoảng cách từ Hà Nội đến quê cô ấy là 90 km.",
           "long": true
         },
         {
-          "id": "8ebe2d51-45d4-48ed-98c4-c3ec25ba19f7",
+          "id": "44e04623-44a7-4166-84ec-ceec046a5604",
           "prompt": "3. Anh ấy đi ăn nhà hàng với bạn bè mỗi tuần một lần. Có một nhà hàng ở trung tâm thành phố, nó có những món ăn cực kỳ ngon. Họ ăn ở đó được rất lâu rồi.",
           "long": true
         },
         {
-          "id": "551c3013-13a4-4754-b03d-553089591d7f",
+          "id": "93bd0d7a-ff61-4352-b5f0-774367c1acc5",
           "prompt": "4. Long mới chỉ đi đến các thành phố và các tỉnh trong nước. Anh ấy chưa đi nước ngoài bao giờ. Anh ấy mong có cơ hội đi du lịch nước ngoài trong tương lai.",
           "long": true
         },
         {
-          "id": "5a8fc757-f8f6-4094-82e3-49934c22e590",
+          "id": "2eb27c14-b9cc-429f-9483-dd21307224b7",
           "prompt": "5. Mẹ tôi luôn luôn bận rộn với công việc. Bà ấy chưa có thời gian đi du lịch. Bà ấy đã luôn mơ được đến Ý du lịch kể từ khi còn trẻ bởi vì nước Ý nổi tiếng vì cảnh đẹp.",
           "long": true
         }
@@ -1428,27 +1428,27 @@
       "context": "",
       "items": [
         {
-          "id": "e9b72d1d-f984-4680-9722-8d28efff151e",
+          "id": "a7f36d36-8aa9-4f75-acf5-d362bcd314c4",
           "prompt": "1. Tell me about your house\nGợi ý: Hints:; nhà to/nhỏ/hiện đại; có các phòng nào (phòng khách, phòng ngủ…); ở ngoại ô/trung tâm thành phố; nó thoải mái/ấm cúng/tiện lợi; đã sống ở đây được bao nhiêu lâu",
           "long": true
         },
         {
-          "id": "d956c7ac-635c-49f0-8edb-c07fcc1bd0cf",
+          "id": "33a1853a-588a-4ed8-af9a-2992ce164e4b",
           "prompt": "2. Where do you often go on the weekend?\nGợi ý: đến rạp chiếu phim khi có phim mới; Chỉ tốn… phút để đến rạp phim ➔ đi xem phim một cách dễ dàng; thường đi vs …. nhưng thi thoảng đi vs ….; xem phim giúp tôi thế nào (ví dụ: thư giãn, vui vẻ, v.v.)",
           "long": true
         },
         {
-          "id": "ff8e6cb6-30e2-4819-ae0b-36b834d95755",
+          "id": "af15b883-b15c-4410-b41e-5b8989eee9c8",
           "prompt": "3. What is your favorite season?\nGợi ý: mùa yêu thích là mùa hè bởi vì thời tiết rất đẹp; tháng 6-7, thời tiết nhiều nắng; tháng 8-9, trời hay mưa to; nhiệt độ luôn luôn cao ➔ phải bật điều hòa cả ngày",
           "long": true
         },
         {
-          "id": "1b74d44d-554f-421a-a166-38fd23404ba6",
+          "id": "939c2a3f-23b5-4390-9e4a-20a44228d474",
           "prompt": "4. How many cities and provinces in Vietnam have you been to?\nGợi ý: Tôi từng đến…. tỉnh và thành phố; Tôi thích…. vì nó rất yên bình/hiện đại/tiện lợi..; Tôi mong được sống ở đó trong tương lai vì tôi muốn.. (ví dụ: sống gần thiên nhiên/có những trải nghiệm tuyệt vời/..)",
           "long": true
         },
         {
-          "id": "3dffa8eb-4d53-4820-9712-05d6e3dba379",
+          "id": "c59bb35d-b1d1-40d8-9cd5-94b3d12ca2c3",
           "prompt": "5. Have you ever been abroad?\nGợi ý: tôi đã từng đến Thái Lan và nó rất đẹp; có nhiều hoạt động thú vị ở đây như …. (ví dụ: đi mua sắm, ngắm cảnh, đi bơi,chụp ảnh v.v.); có nhiều trải nghiệm khó quên  ở đó; Nhưng trời rất nắng khi tôi ở Thái năm ngoái/lúc đó ➔ không cảm thấy dễ chịu; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
           "long": true
         }

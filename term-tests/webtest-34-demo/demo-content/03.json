@@ -41,7 +41,7 @@
           "sourceRef": null
         }
       ],
-      "audioPath": "assets/demo-audio/03/listening.mp3",
+      "audioPath": "assets/03/test-1/listening.mp3",
       "audioHash": "859b109fe8e497c3017462cc44124e7fd726960f302fe2333d6a60f7cabf835c",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
@@ -109,7 +109,7 @@
           "sourceRef": "M32"
         }
       ],
-      "audioPath": "assets/demo-audio/03/listening.mp3",
+      "audioPath": "assets/03/test-1/listening.mp3",
       "audioHash": "859b109fe8e497c3017462cc44124e7fd726960f302fe2333d6a60f7cabf835c",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
@@ -1202,7 +1202,7 @@
           ]
         }
       ],
-      "audioPath": "assets/demo-audio/03/vocabulary.mp3",
+      "audioPath": "assets/03/test-1/vocabulary.mp3",
       "audioHash": "d96eac52709081a9badf89266a37059d9be206b6176eef8786b05a3c0625ca3e",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
