@@ -3,1517 +3,3251 @@
   "course": "34",
   "phase": 1,
   "testNumber": 3,
-  "sourceHash": "de5a3c213c72651046f0c213343d02e952dd200a0927cfc3ecbfc6f17efd2dfc",
-  "durationMinutes": 120,
+  "sourceHash": "2360c90d0a830bff9a267915c5c7d8ec2bdd4a030290a1a2b8d603bfae6661a9",
+  "durationMinutes": 90,
   "groups": [
     {
-      "id": "vocabulary-nghe-t-v-ch-n-ngh-a",
+      "id": "vocabulary-listen",
       "title": "Vocabulary · Nghe từ và chọn nghĩa",
       "instructions": "EXERCISE 1 (25 words = 12.5 points): Listen and note down the words/phrases you hear from the recording",
       "context": "",
-      "audioPath": "assets/demo-audio/34/Test 3 (Phase 1)_Full.MP3",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
       "items": [
         {
-          "id": "1f60e540-aa23-47e8-89dc-53c314015a7e",
-          "prompt": "1. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-1",
+          "prompt": "1. Từ/cụm từ nghe được"
         },
         {
-          "id": "0a584536-75b8-4b07-954e-bb5cc1a03220",
+          "id": "vocabulary-listen-2",
           "prompt": "1. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "34a1302a-9e58-4f44-9dd6-15c8b6eb1290",
-          "prompt": "2. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-3",
+          "prompt": "2. Từ/cụm từ nghe được"
         },
         {
-          "id": "1635f234-c9d1-4ed5-a458-34841a9886bf",
+          "id": "vocabulary-listen-4",
           "prompt": "2. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "888c0dc6-8393-4e94-89cc-f24058001b24",
-          "prompt": "3. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-5",
+          "prompt": "3. Từ/cụm từ nghe được"
         },
         {
-          "id": "a430a0e6-da74-473c-a178-68a64f1b81d7",
+          "id": "vocabulary-listen-6",
           "prompt": "3. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "7767c261-c02b-4b9b-9510-2b34d326595d",
-          "prompt": "4. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-7",
+          "prompt": "4. Từ/cụm từ nghe được"
         },
         {
-          "id": "ace9e060-c25d-426a-9203-2c763a913852",
+          "id": "vocabulary-listen-8",
           "prompt": "4. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "cd0d07de-d55c-4787-91f6-66e94f583c6c",
-          "prompt": "5. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-9",
+          "prompt": "5. Từ/cụm từ nghe được"
         },
         {
-          "id": "e7c19a95-434d-4d20-80b6-5f5a42ff0ab8",
+          "id": "vocabulary-listen-10",
           "prompt": "5. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "b05af962-141d-4ad6-abed-74e9d57b4bda",
-          "prompt": "6. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-11",
+          "prompt": "6. Từ/cụm từ nghe được"
         },
         {
-          "id": "55df397a-4c15-4b44-b1f5-2ea70b4b3872",
+          "id": "vocabulary-listen-12",
           "prompt": "6. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "94e8e579-2536-49af-870f-6c88521677dd",
-          "prompt": "7. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-13",
+          "prompt": "7. Từ/cụm từ nghe được"
         },
         {
-          "id": "5c6b7c2b-8b0a-4ce3-8e99-e1227c2adfa0",
+          "id": "vocabulary-listen-14",
           "prompt": "7. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "03408051-03fb-433f-88e8-fd08507b4d35",
-          "prompt": "8. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-15",
+          "prompt": "8. Từ/cụm từ nghe được"
         },
         {
-          "id": "a70e534c-e2a1-4dbd-9e17-41ff528c6dab",
+          "id": "vocabulary-listen-16",
           "prompt": "8. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "5e9873f5-52ff-4ce6-a34e-5e25df6007a4",
-          "prompt": "9. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-17",
+          "prompt": "9. Từ/cụm từ nghe được"
         },
         {
-          "id": "fc76e710-42a5-4c0c-a57f-d0cf33d08353",
+          "id": "vocabulary-listen-18",
           "prompt": "9. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "debd35f2-0277-40a6-aaa5-6776a064fa87",
-          "prompt": "10. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-19",
+          "prompt": "10. Từ/cụm từ nghe được"
         },
         {
-          "id": "91a422fd-23cb-41de-a25d-4df873a995cd",
+          "id": "vocabulary-listen-20",
           "prompt": "10. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "a74cd680-ea97-4e1e-98db-5afaec794454",
-          "prompt": "11. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-21",
+          "prompt": "11. Từ/cụm từ nghe được"
         },
         {
-          "id": "6ead0608-1bf9-4e42-9ac6-5e262231bf4c",
+          "id": "vocabulary-listen-22",
           "prompt": "11. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "e4933d89-c74d-419d-a7cc-f5b64c7cbfab",
-          "prompt": "12. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-23",
+          "prompt": "12. Từ/cụm từ nghe được"
         },
         {
-          "id": "91a56c26-d8a9-412b-9c0b-16013ae840a4",
+          "id": "vocabulary-listen-24",
           "prompt": "12. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "09622434-014b-4c7e-a7c2-124f50fe8556",
-          "prompt": "13. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-25",
+          "prompt": "13. Từ/cụm từ nghe được"
         },
         {
-          "id": "40864aa8-0eed-4373-8bba-6c1d24a29f9b",
+          "id": "vocabulary-listen-26",
           "prompt": "13. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "bf86e990-7197-4bb8-9c7c-401bfe7cf640",
-          "prompt": "14. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-27",
+          "prompt": "14. Từ/cụm từ nghe được"
         },
         {
-          "id": "b24931c6-51af-42e9-bd8c-aea4e05231e9",
+          "id": "vocabulary-listen-28",
           "prompt": "14. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "c0b59f98-b491-45ab-abdc-9a17b66dded0",
-          "prompt": "15. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-29",
+          "prompt": "15. Từ/cụm từ nghe được"
         },
         {
-          "id": "58690f1f-298c-4887-adb5-50dc04135e11",
+          "id": "vocabulary-listen-30",
           "prompt": "15. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "fac657ee-bbce-4bed-9ab8-1b93fa8ebcfd",
-          "prompt": "16. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-31",
+          "prompt": "16. Từ/cụm từ nghe được"
         },
         {
-          "id": "f829fe9f-1a88-48ec-8539-db1af85580e2",
+          "id": "vocabulary-listen-32",
           "prompt": "16. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "f71d938c-7f46-49c5-a875-2e57e77f8d20",
-          "prompt": "17. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-33",
+          "prompt": "17. Từ/cụm từ nghe được"
         },
         {
-          "id": "0d005bb3-a2a2-4bdf-85e0-9c898aed1d12",
+          "id": "vocabulary-listen-34",
           "prompt": "17. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "e8866568-f262-4d3e-a813-96eafa481ade",
-          "prompt": "18. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-35",
+          "prompt": "18. Từ/cụm từ nghe được"
         },
         {
-          "id": "3acc8070-06cf-44d0-b44b-2a3a0d5db379",
+          "id": "vocabulary-listen-36",
           "prompt": "18. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "7e2dafac-aeb4-4125-aaed-f25236d15eec",
-          "prompt": "19. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-37",
+          "prompt": "19. Từ/cụm từ nghe được"
         },
         {
-          "id": "fe38d03b-3d13-4f6e-87bc-fd5b96f1a324",
+          "id": "vocabulary-listen-38",
           "prompt": "19. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "8f2a1d2d-a407-4a20-947f-78efd01279a9",
-          "prompt": "20. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-39",
+          "prompt": "20. Từ/cụm từ nghe được"
         },
         {
-          "id": "b69f5876-4cf7-4f53-b0e1-cb9819d64c63",
+          "id": "vocabulary-listen-40",
           "prompt": "20. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "0555624b-2c89-4c9f-8174-71e6c6e33419",
-          "prompt": "21. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-41",
+          "prompt": "21. Từ/cụm từ nghe được"
         },
         {
-          "id": "d8b09656-985f-419f-aabf-5b5292ac5b89",
+          "id": "vocabulary-listen-42",
           "prompt": "21. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "cd2c8d07-5c31-4746-bd94-0911a06bcf9b",
-          "prompt": "22. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-43",
+          "prompt": "22. Từ/cụm từ nghe được"
         },
         {
-          "id": "e0d6deb0-b771-48b4-82c6-c09513de8f4c",
+          "id": "vocabulary-listen-44",
           "prompt": "22. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "9922874a-1e8e-4c81-854c-7b9dcf3e3f92",
-          "prompt": "23. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-45",
+          "prompt": "23. Từ/cụm từ nghe được"
         },
         {
-          "id": "589a5ca0-0f5a-490c-8cce-11d5a7b6c1ec",
+          "id": "vocabulary-listen-46",
           "prompt": "23. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "11e1fe74-6d76-47a6-86b5-bc63872a2aa4",
-          "prompt": "24. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-47",
+          "prompt": "24. Từ/cụm từ nghe được"
         },
         {
-          "id": "15bf4e41-b852-485f-b404-d6b67640948e",
+          "id": "vocabulary-listen-48",
           "prompt": "24. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         },
         {
-          "id": "489563b8-f24b-496a-8752-40db5d8e4205",
-          "prompt": "25. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "vocabulary-listen-49",
+          "prompt": "25. Từ/cụm từ nghe được"
         },
         {
-          "id": "73dfb89e-66e9-4469-83b2-2b926299f8b1",
+          "id": "vocabulary-listen-50",
           "prompt": "25. Chọn nghĩa tiếng Việt",
           "options": [
             {
-              "id": "A",
-              "label": "A"
+              "id": "meaning-01",
+              "label": "Nghĩa tiếng Việt 1"
             },
             {
-              "id": "B",
-              "label": "B"
+              "id": "meaning-02",
+              "label": "Nghĩa tiếng Việt 2"
             },
             {
-              "id": "C",
-              "label": "C"
+              "id": "meaning-03",
+              "label": "Nghĩa tiếng Việt 3"
             },
             {
-              "id": "D",
-              "label": "D"
+              "id": "meaning-04",
+              "label": "Nghĩa tiếng Việt 4"
+            },
+            {
+              "id": "meaning-05",
+              "label": "Nghĩa tiếng Việt 5"
+            },
+            {
+              "id": "meaning-06",
+              "label": "Nghĩa tiếng Việt 6"
+            },
+            {
+              "id": "meaning-07",
+              "label": "Nghĩa tiếng Việt 7"
+            },
+            {
+              "id": "meaning-08",
+              "label": "Nghĩa tiếng Việt 8"
+            },
+            {
+              "id": "meaning-09",
+              "label": "Nghĩa tiếng Việt 9"
+            },
+            {
+              "id": "meaning-10",
+              "label": "Nghĩa tiếng Việt 10"
+            },
+            {
+              "id": "meaning-11",
+              "label": "Nghĩa tiếng Việt 11"
+            },
+            {
+              "id": "meaning-12",
+              "label": "Nghĩa tiếng Việt 12"
+            },
+            {
+              "id": "meaning-13",
+              "label": "Nghĩa tiếng Việt 13"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Nghĩa tiếng Việt 14"
+            },
+            {
+              "id": "meaning-15",
+              "label": "Nghĩa tiếng Việt 15"
+            },
+            {
+              "id": "meaning-16",
+              "label": "Nghĩa tiếng Việt 16"
+            },
+            {
+              "id": "meaning-17",
+              "label": "Nghĩa tiếng Việt 17"
+            },
+            {
+              "id": "meaning-18",
+              "label": "Nghĩa tiếng Việt 18"
+            },
+            {
+              "id": "meaning-19",
+              "label": "Nghĩa tiếng Việt 19"
+            },
+            {
+              "id": "meaning-20",
+              "label": "Nghĩa tiếng Việt 20"
+            },
+            {
+              "id": "meaning-21",
+              "label": "Nghĩa tiếng Việt 21"
+            },
+            {
+              "id": "meaning-22",
+              "label": "Nghĩa tiếng Việt 22"
+            },
+            {
+              "id": "meaning-23",
+              "label": "Nghĩa tiếng Việt 23"
+            },
+            {
+              "id": "meaning-24",
+              "label": "Nghĩa tiếng Việt 24"
+            },
+            {
+              "id": "meaning-25",
+              "label": "Nghĩa tiếng Việt 25"
             }
-          ],
-          "long": false
+          ]
         }
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-qua-nh",
+      "id": "vocabulary-picture",
       "title": "Vocabulary · Từ vựng qua ảnh",
-      "instructions": "EXERCISE 2 (25 words = 12.5 points): PICTORIAL WORDS: Look at the pictures and write down the words/phrases they represent",
+      "instructions": "EXERCISE 2 (25 words = 12.5 points): PICTORIAL WORDS: Look at the pictures and write down the words/ phrases they represent",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "084476e9-c34c-4d22-8aa5-a2b94b7681f0",
-          "prompt": "Hình ảnh (1)",
-          "options": [],
-          "long": false
+          "id": "ba13f710-da90-4b7d-bbf8-0a1d048fec60",
+          "prompt": "1. S_____ k___ in some countries often ride their bikes to school.",
+          "image": "assets/34/test-3/pic-1.png"
         },
         {
-          "id": "560c8172-964d-44ff-abab-df4cfb15585a",
-          "prompt": "Hình ảnh (2)",
-          "options": [],
-          "long": false
+          "id": "936e8658-647c-443e-83f0-ff9a14648386",
+          "prompt": "2. There is an a________ b_______ near my house.",
+          "image": "assets/34/test-3/pic-2.png"
         },
         {
-          "id": "5cc7ec19-9025-4174-8446-bd67d51c75e2",
-          "prompt": "Hình ảnh (3)",
-          "options": [],
-          "long": false
+          "id": "77cb898a-b7a2-4744-81f4-c8a878f25774",
+          "prompt": "3.Last year, I traveled to a mountainous area and experienced m_______ c______ there.",
+          "image": "assets/34/test-3/pic-3.png"
         },
         {
-          "id": "8fe27725-8f37-4cbf-a58f-e62a1f7d60ef",
-          "prompt": "Hình ảnh (4)",
-          "options": [],
-          "long": false
+          "id": "41b58711-836b-493e-a8f2-40acff833b99",
+          "prompt": "4. W___ _ w__ y____, I used to play computer games a lot.",
+          "image": "assets/34/test-3/pic-4.png"
         },
         {
-          "id": "9a9e549a-2dcd-4b48-8b20-a471184cac0c",
-          "prompt": "Hình ảnh (5)",
-          "options": [],
-          "long": false
+          "id": "96f52626-9b34-4239-b81a-f27a3b103aa5",
+          "prompt": "5. He is a c_______ student because he has a lot of ideas.",
+          "image": "assets/34/test-3/pic-5.png"
         },
         {
-          "id": "c4a67e8f-3862-4595-9dac-4a615a7f6ed0",
-          "prompt": "Hình ảnh (6)",
-          "options": [],
-          "long": false
+          "id": "48cd4046-0914-4e17-99f6-e23592ce805c",
+          "prompt": "6. Fish is never my favorite d___",
+          "image": "assets/34/test-3/pic-6.png"
         },
         {
-          "id": "37db4316-536e-472e-94a0-0ae6770821a7",
-          "prompt": "Hình ảnh (7)",
-          "options": [],
-          "long": false
+          "id": "0b5f74fb-bb11-46e2-9983-9598f7a9fdb5",
+          "prompt": "7. My teacher is usually e________ in class. He uses a lot of gestures and acting.",
+          "image": "assets/34/test-3/pic-7.png"
         },
         {
-          "id": "686f5aee-264b-46b1-bf7d-e96e65b0b120",
-          "prompt": "Hình ảnh (8)",
-          "options": [],
-          "long": false
+          "id": "f55a8302-3a39-4e76-b0c7-9a818bd8731e",
+          "prompt": "8. The shop offered us e________ s______, so we gave it a 5-star review.",
+          "image": "assets/34/test-3/pic-8.png"
         },
         {
-          "id": "163d75e0-9ba2-4a13-ab64-ae1cd0903dd1",
-          "prompt": "Hình ảnh (9)",
-          "options": [],
-          "long": false
+          "id": "696d482e-6aaf-42bc-8e72-542cb09eb760",
+          "prompt": "9. We often g_ o_ h______ twice a year.",
+          "image": "assets/34/test-3/pic-9.png"
         },
         {
-          "id": "f391f81f-6350-4861-9360-26592105e335",
-          "prompt": "Hình ảnh (10)",
-          "options": [],
-          "long": false
+          "id": "b7f742d7-bd49-437c-b49d-27b248f58016",
+          "prompt": "10. They usually e__ o__ at a seafood restaurant on the weekend.",
+          "image": "assets/34/test-3/pic-10.png"
         },
         {
-          "id": "8140ccec-d90c-447a-a1e8-63a84361d57f",
-          "prompt": "Hình ảnh (11)",
-          "options": [],
-          "long": false
+          "id": "6b5a9045-f3e9-4ab4-a34a-ca9500f81aee",
+          "prompt": "11. I love living in a h___-r___ b_______ in the city",
+          "image": "assets/34/test-3/pic-11.png"
         },
         {
-          "id": "a97056f9-3d90-4779-8da8-796528cab9df",
-          "prompt": "Hình ảnh (12)",
-          "options": [],
-          "long": false
+          "id": "49d87a39-4fcd-46a1-8490-3506b07a205d",
+          "prompt": "12. She needs a lot of i__________ to cook Phở",
+          "image": "assets/34/test-3/pic-12.png"
         },
         {
-          "id": "9337a42f-c931-4776-811f-f3df6b9a0ae5",
-          "prompt": "Hình ảnh (13)",
-          "options": [],
-          "long": false
+          "id": "d088f5f2-28f8-48f4-b795-6354b7a6e795",
+          "prompt": "13. Noises from outside may k___ s_______ f___ concentratin",
+          "image": "assets/34/test-3/pic-13.png"
         },
         {
-          "id": "03827e4c-ba98-4bad-84e1-84daa3ed258c",
-          "prompt": "Hình ảnh (14)",
-          "options": [],
-          "long": false
+          "id": "13fd65d4-4d49-4434-a549-f22c2d6a8015",
+          "prompt": "14. The road is n_____, so large trucks are not allowed to travel there.",
+          "image": "assets/34/test-3/pic-14.png"
         },
         {
-          "id": "783ea8d3-39b5-4104-9ed2-86750547729c",
-          "prompt": "Hình ảnh (15)",
-          "options": [],
-          "long": false
+          "id": "9a583f14-db71-499c-ae78-cd529dfa3ecf",
+          "prompt": "15. There are five g__________ in my house",
+          "image": "assets/34/test-3/pic-15.png"
         },
         {
-          "id": "742eb2b9-70bf-4bc8-a60b-26073297c905",
-          "prompt": "Hình ảnh (16)",
-          "options": [],
-          "long": false
+          "id": "6a86620e-29f2-46b5-8d18-84bd536c82e9",
+          "prompt": "16. She eats a lot, so now she is o_________",
+          "image": "assets/34/test-3/pic-16.png"
         },
         {
-          "id": "506532be-3c52-4355-a483-6ad8ed1ecdda",
-          "prompt": "Hình ảnh (17)",
-          "options": [],
-          "long": false
+          "id": "a1859ed8-e839-4ae1-8b5a-f9814bf59d26",
+          "prompt": "17. Because my teacher is p______, he can help me correct many mistakes in my homework",
+          "image": "assets/34/test-3/pic-17.png"
         },
         {
-          "id": "9fea8636-62be-407d-98a6-3d5ff2adfcc9",
-          "prompt": "Hình ảnh (18)",
-          "options": [],
-          "long": false
+          "id": "d0dc8930-dcac-457c-b3e8-d1260239fa09",
+          "prompt": "18. Using Tiktok is p______ w___ young people",
+          "image": "assets/34/test-3/pic-18.png"
         },
         {
-          "id": "42255086-4416-406d-a3ae-5483ff964604",
-          "prompt": "Hình ảnh (19)",
-          "options": [],
-          "long": false
+          "id": "99f90e95-b022-44ad-a1e0-01a8dc5161c9",
+          "prompt": "19. My grandparents used to p____ t____ in our garden",
+          "image": "assets/34/test-3/pic-19.png"
         },
         {
-          "id": "3a864af9-affe-45c6-8d07-81be3a372bf7",
-          "prompt": "Hình ảnh (20)",
-          "options": [],
-          "long": false
+          "id": "3ff655d9-5e38-45eb-a5f0-218c5029992f",
+          "prompt": "20.They usually s_______ talk about their teacher, so he doesn’t know",
+          "image": "assets/34/test-3/pic-20.png"
         },
         {
-          "id": "71511b75-a88b-4dc9-80f6-b62b807021ab",
-          "prompt": "Hình ảnh (21)",
-          "options": [],
-          "long": false
+          "id": "79fe29f6-0373-4510-9cc7-9acbafde5062",
+          "prompt": "21. He used to be s__ and didn’t talk much to his friends when he was small",
+          "image": "assets/34/test-3/pic-21.png"
         },
         {
-          "id": "eee2a86a-9e98-4afd-9ca9-ab7b41d562c5",
-          "prompt": "Hình ảnh (22)",
-          "options": [],
-          "long": false
+          "id": "b1c2a261-32ea-4b3f-b675-1f8269cfc5e8",
+          "prompt": "22. She often calls her parents to k___ i_ t____ with them",
+          "image": "assets/34/test-3/pic-22.png"
         },
         {
-          "id": "b2d4f2dd-97bc-4a28-890c-58a71dd11aab",
-          "prompt": "Hình ảnh (23)",
-          "options": [],
-          "long": false
+          "id": "628ba309-c4f8-4534-9ebb-23f9cd4f1616",
+          "prompt": "23. He is really c________ because he can speak in front of people without getting worried",
+          "image": "assets/34/test-3/pic-23.png"
         },
         {
-          "id": "5e4f01c2-2602-4a45-bf2e-ad32864ad00f",
-          "prompt": "Hình ảnh (24)",
-          "options": [],
-          "long": false
+          "id": "1269322a-b70b-4d28-85d3-85865f7c0b12",
+          "prompt": "24. I like to c____ u_ w___ my friends every month",
+          "image": "assets/34/test-3/pic-24.png"
         },
         {
-          "id": "e06a4972-b8cb-457f-9903-7477f4db324d",
-          "prompt": "Hình ảnh (25)",
-          "options": [],
-          "long": false
+          "id": "181f376c-297a-4a84-a50f-57a212656e75",
+          "prompt": "25. There is a w___ h______ at my school so students can get access to the Internet",
+          "image": "assets/34/test-3/pic-25.png"
         }
       ]
     },
     {
-      "id": "listening-s-p-x-p",
-      "title": "Listening · Sắp xếp",
-      "instructions": "Listen and put the events in the correct order (5 điểm)",
-      "context": "",
-      "audioPath": "assets/demo-audio/34/Test 3 (Phase 1)_Full.MP3",
-      "items": [
-        {
-          "id": "2c2983a4-404c-4a95-a2bf-0b421b34cd96",
-          "prompt": "Vị trí 1",
-          "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            },
-            {
-              "id": "E",
-              "label": "E"
-            }
-          ],
-          "long": false
-        },
-        {
-          "id": "b77e8040-65a6-4687-bbb7-4cabdd0be605",
-          "prompt": "Vị trí 2",
-          "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            },
-            {
-              "id": "E",
-              "label": "E"
-            }
-          ],
-          "long": false
-        },
-        {
-          "id": "95d9657a-6bd0-4f17-acc9-d04859e3371f",
-          "prompt": "Vị trí 3",
-          "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            },
-            {
-              "id": "E",
-              "label": "E"
-            }
-          ],
-          "long": false
-        },
-        {
-          "id": "3064b93e-bb65-4b75-8bd7-25a9c14acba5",
-          "prompt": "Vị trí 4",
-          "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            },
-            {
-              "id": "E",
-              "label": "E"
-            }
-          ],
-          "long": false
-        },
-        {
-          "id": "d77cae44-249b-45f7-906d-f2450d63a37f",
-          "prompt": "Vị trí 5",
-          "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            },
-            {
-              "id": "E",
-              "label": "E"
-            }
-          ],
-          "long": false
-        }
-      ]
-    },
-    {
-      "id": "listening-i-n-b-ng",
-      "title": "Listening · Điền bảng",
-      "instructions": "Listen and complete the table below. Write NO MORE THAN ONE WORD for each answer (5 điểm)",
-      "context": "",
-      "audioPath": "assets/demo-audio/34/Test 3 (Phase 1)_Full.MP3",
-      "items": [
-        {
-          "id": "a62af25b-0f91-4e0c-b76f-083f389f1800",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "febca101-afd5-4de4-bb3e-c4504616ecfb",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "019c6553-91ce-4028-a39d-386293bd0b8b",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "cdb8f1dc-421b-431d-af2d-457c464d7099",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
-        },
-        {
-          "id": "adfe01d8-45cd-4cd8-b3a2-1b88c0afa5b9",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
-        }
-      ]
-    },
-    {
-      "id": "listening-ng-sai",
+      "id": "listening-tf",
       "title": "Listening · Đúng/Sai",
-      "instructions": "Listen and decide whether the statements are True (T) or False (F) (5 điểm)",
+      "instructions": "Listen and mark these sentences as T (true) or F (false). You have 30 seconds to read the questions  (nghe và đánh dấu Đúng/ Sai cho câu 1 đến câu 5. Bạn có 30s để đọc câu hỏi)",
       "context": "",
-      "audioPath": "assets/demo-audio/34/Test 3 (Phase 1)_Full.MP3",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
       "items": [
         {
-          "id": "67b3babd-e1a5-4c16-9b8c-7ce3cca66a7d",
-          "prompt": "Câu 1",
+          "id": "968a1f50-190a-42e1-9aaa-5d3f672b14bd",
+          "prompt": "1. Port Anderson is the place where Sheena’s family is planning to move to.",
           "options": [
-            {
-              "id": "A",
-              "label": "T"
-            },
-            {
-              "id": "B",
-              "label": "F"
-            }
-          ],
-          "long": false
+            "True",
+            "False"
+          ]
         },
         {
-          "id": "4a90ee3d-145a-4835-abf5-e9dbf160ce3d",
-          "prompt": "Câu 2",
+          "id": "54d0b2f7-9eed-4444-89f2-d8306bc19f15",
+          "prompt": "2. Sheena has already hired a moving van.",
           "options": [
-            {
-              "id": "A",
-              "label": "T"
-            },
-            {
-              "id": "B",
-              "label": "F"
-            }
-          ],
-          "long": false
+            "True",
+            "False"
+          ]
         },
         {
-          "id": "56df2535-c45d-42b6-9659-703f092890f2",
-          "prompt": "Câu 3",
+          "id": "fa836ea7-3f7f-430b-b79f-7815237eb20b",
+          "prompt": "3. Mark’s sister used a cargo plane to help move her things to Dallas.",
           "options": [
-            {
-              "id": "A",
-              "label": "T"
-            },
-            {
-              "id": "B",
-              "label": "F"
-            }
-          ],
-          "long": false
+            "True",
+            "False"
+          ]
         },
         {
-          "id": "bef9071c-738d-4357-99d8-c5dfcad576ef",
-          "prompt": "Câu 4",
+          "id": "d483cc6c-4d5e-4ebd-9f9f-9fe8b4fad75e",
+          "prompt": "4. Mark will be moving next Saturday.",
           "options": [
-            {
-              "id": "A",
-              "label": "T"
-            },
-            {
-              "id": "B",
-              "label": "F"
-            }
-          ],
-          "long": false
+            "True",
+            "False"
+          ]
         },
         {
-          "id": "4b95d713-e6f7-42f3-91d9-07d38cee6302",
-          "prompt": "Câu 5",
+          "id": "5cb3e50f-4753-4cd4-878f-f3290c4164b5",
+          "prompt": "5. Mark offers to help Sheena transport some of her things.",
           "options": [
-            {
-              "id": "A",
-              "label": "T"
-            },
-            {
-              "id": "B",
-              "label": "F"
-            }
-          ],
-          "long": false
+            "True",
+            "False"
+          ]
         }
       ]
     },
     {
-      "id": "pronunciation-phi-n-m-t",
+      "id": "listening-choice",
+      "title": "Listening · Chọn đáp án",
+      "instructions": "Listen and choose the correct answer A,B or C. You have 60 seconds to read the questions (Nghe và chọn đáp án đúng A,B, hoặc C. Bạn có 60s để đọc câu hỏi)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
+      "items": [
+        {
+          "id": "b037609c-716b-45cb-9754-ed9a6da414e9",
+          "prompt": "Listen and choose the correct answer A,B or C. You have 60 seconds to read the questions (Nghe và chọn đáp án đúng A,B, hoặc C. Bạn có 60s để đọc câu hỏi)",
+          "options": [
+            "Option A",
+            "Question 1: Who visited his/her relatives in Sydney?\nA. Shelly\nB. Carl\nC. Jeremy",
+            "Question 2: What did Carl do during his vacation?\nA. Walked through dried forests\nB. Swam in the lake\nC. Took a trip to Brisbane"
+          ]
+        },
+        {
+          "id": "30b0c321-8339-4be8-880e-de167cf13560",
+          "prompt": "Question 1: Who visited his/her relatives in Sydney?\nA. Shelly\nB. Carl\nC. Jeremy",
+          "options": [
+            "Question 2: What did Carl do during his vacation?\nA. Walked through dried forests\nB. Swam in the lake\nC. Took a trip to Brisbane",
+            "Question 3: How much did Shelly pay for a round trip ticket to Bangkok?\nA. $500\nB. $800\nC. $1000",
+            "Question 4: Which part of the trip did Shelly love the most?\nA. The beach\nB. Delicious food\nC. Elephant riding"
+          ]
+        },
+        {
+          "id": "239dd42b-5f3d-4dfc-a331-07b492641153",
+          "prompt": "Question 2: What did Carl do during his vacation?\nA. Walked through dried forests\nB. Swam in the lake\nC. Took a trip to Brisbane",
+          "options": [
+            "Question 3: How much did Shelly pay for a round trip ticket to Bangkok?\nA. $500\nB. $800\nC. $1000",
+            "Question 4: Which part of the trip did Shelly love the most?\nA. The beach\nB. Delicious food\nC. Elephant riding",
+            "Question 5: Which of the following did Shelly dislike about her trip?\nA. The airline lost some of her luggage\nB. The airline lost her her father and sister’s luggage\nC. The airline could not find her luggage"
+          ]
+        },
+        {
+          "id": "afc22777-037a-4c97-8963-f0e93a7221a6",
+          "prompt": "Question 3: How much did Shelly pay for a round trip ticket to Bangkok?\nA. $500\nB. $800\nC. $1000",
+          "options": [
+            "Question 4: Which part of the trip did Shelly love the most?\nA. The beach\nB. Delicious food\nC. Elephant riding",
+            "Question 5: Which of the following did Shelly dislike about her trip?\nA. The airline lost some of her luggage\nB. The airline lost her her father and sister’s luggage\nC. The airline could not find her luggage",
+            "Option C"
+          ]
+        },
+        {
+          "id": "79138fe5-4148-402a-93bd-a8f93d36fc39",
+          "prompt": "Question 4: Which part of the trip did Shelly love the most?\nA. The beach\nB. Delicious food\nC. Elephant riding",
+          "options": [
+            "Question 5: Which of the following did Shelly dislike about her trip?\nA. The airline lost some of her luggage\nB. The airline lost her her father and sister’s luggage\nC. The airline could not find her luggage",
+            "Option B",
+            "Option C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "listening-gap",
+      "title": "Listening · Điền bảng",
+      "instructions": "Listen and complete the table below (Write ONE WORD ONLY for each answer). You have 60 seconds to read the questions. (Nghe và hoàn thành bảng dưới đây (CHỈ VIẾT MỘT TỪ cho mỗi câu trả lời). Bạn có 60 giây để đọc câu hỏi)",
+      "context": "One-week cruise\nMiami, Florida\nsix (1) __________ Caribbean islands\n- A wide range of food for breakfast, (2) __________, and dinner.\n- Music and dance shows every evening.\n- Kid shows  with characters (Mickey Mouse, Goofy, and Elmo).\n- Children can also play (3) __________, go swimming, or join classes\n- Parents can enjoy activities with their children\n- Parents can relax on the ship's deck in (4) __________\nShop, swim, and enjoy fresh food\nLearn about island’s life\nHave up to seven hours a day to (5) __________ islands",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
+      "items": [
+        {
+          "id": "04a08708-32af-4ead-8044-4684500ddb9b",
+          "prompt": "Chỗ trống (1)",
+          "maxWords": 1
+        },
+        {
+          "id": "420f4336-c236-40ae-b787-558e4ce683dc",
+          "prompt": "Chỗ trống (2)",
+          "maxWords": 1
+        },
+        {
+          "id": "bd0b0f16-5c74-42c8-a7d0-cc67155db033",
+          "prompt": "Chỗ trống (3)",
+          "maxWords": 1
+        },
+        {
+          "id": "d0f90717-b560-493a-9104-7c782c2ce45f",
+          "prompt": "Chỗ trống (4)",
+          "maxWords": 1
+        },
+        {
+          "id": "370da19d-e3b6-472e-8144-769528b845c7",
+          "prompt": "Chỗ trống (5)",
+          "maxWords": 1
+        }
+      ]
+    },
+    {
+      "id": "pronunciation-word",
       "title": "Pronunciation · Phiên âm → từ",
-      "instructions": "Nhìn vào phiên âm IPA và viết lại từ tiếng Anh tương ứng (5 điểm)",
+      "instructions": "Part 1 (10 words= 5 points) – provide the words for the following phonetic transcript",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "6085dde6-ee38-448e-a8e3-265e9349c44a",
-          "prompt": "Từ 1",
-          "options": [],
-          "long": false
+          "id": "9b60defd-2e9f-48dc-8d7d-714ba90b524c",
+          "prompt": "/taɪm/"
         },
         {
-          "id": "51e364e5-fbf7-4787-b74a-5c6978b0ccb1",
-          "prompt": "Từ 2",
-          "options": [],
-          "long": false
+          "id": "15e952fd-0915-4f96-8a89-28a0c39fc239",
+          "prompt": "/kənˈviːniənt/"
         },
         {
-          "id": "77894f07-76b8-4069-af51-eecbe5e1deb4",
-          "prompt": "Từ 3",
-          "options": [],
-          "long": false
+          "id": "b4050bd8-b86e-43f9-b343-44f0e1ae950c",
+          "prompt": "/ˈɪntrəstɪŋ/"
         },
         {
-          "id": "f451c9cd-dbea-453a-9805-dfbaa6dd4e7f",
-          "prompt": "Từ 4",
-          "options": [],
-          "long": false
+          "id": "ff10857b-19af-43f8-bce8-b3968251150f",
+          "prompt": "/hɔːl/"
         },
         {
-          "id": "3ee4ec37-2481-4539-aa64-fa6a6ebc60c5",
-          "prompt": "Từ 5",
-          "options": [],
-          "long": false
+          "id": "77b51cd2-17d4-4c69-b522-1ea222ecc0c3",
+          "prompt": "/wər/"
         },
         {
-          "id": "aca0f6f0-2c04-44ee-9f41-ef7fb7858f5b",
-          "prompt": "Từ 6",
-          "options": [],
-          "long": false
+          "id": "82bab500-29df-4ce7-b798-1fb467b69aa1",
+          "prompt": "/ʌnˈpleznt/"
         },
         {
-          "id": "8fdb0996-02c0-4b96-8cdb-ad27e78adb5d",
-          "prompt": "Từ 7",
-          "options": [],
-          "long": false
+          "id": "88d2c8f6-3e46-4752-bd96-b56fbd52eb7b",
+          "prompt": "/ˈreɪnfɔːrɪst/"
         },
         {
-          "id": "a80347c2-3aaf-45a9-87d9-ef7b592a8827",
-          "prompt": "Từ 8",
-          "options": [],
-          "long": false
+          "id": "4e1d73fa-6970-4ded-a942-439f83759eee",
+          "prompt": "/ɪkˈsplɔːr/"
         },
         {
-          "id": "741d5ca2-2403-4e79-89ec-d61569f7cd53",
-          "prompt": "Từ 9",
-          "options": [],
-          "long": false
+          "id": "09346121-32d2-4e3a-b743-e00ae583aada",
+          "prompt": "/vəˈraɪəti/"
         },
         {
-          "id": "55dbbedb-719d-4f03-a4ee-9ff8658da48a",
-          "prompt": "Từ 10",
-          "options": [],
-          "long": false
+          "id": "06e3fc89-87b2-41f3-b25e-b045d9599e5e",
+          "prompt": "/waɪd/"
         }
       ]
     },
     {
-      "id": "pronunciation-ch-n-phi-n-m",
+      "id": "pronunciation-choice",
       "title": "Pronunciation · Chọn phiên âm",
-      "instructions": "Chọn cách phát âm / phiên âm đúng cho từ được gạch chân (5 điểm)",
+      "instructions": "Part 2 (10 words=5 points) - provide the phonetic transcript for the following words",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "19507bd7-ac4b-49f0-b44c-5d36bf8509c9",
-          "prompt": "Câu 1",
+          "id": "46ab3b65-9571-49c9-abdc-a27c49655bce",
+          "prompt": "transport",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/ˈtrenspɔːrt/",
+            "/ˈtrænspɔːrt/",
+            "/ˈtrænpɔːrt/"
+          ]
         },
         {
-          "id": "a2271643-5b0a-4d6c-9144-05ae64f493f8",
-          "prompt": "Câu 2",
+          "id": "5124b4f3-02be-4105-8af1-8dd21a23cd88",
+          "prompt": "heavy",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/ˈhevi/",
+            "/ˈhævi/",
+            "/ˈhi:vi/"
+          ]
         },
         {
-          "id": "f631fe8d-6b8f-4d99-b748-e3461c0b3d7f",
-          "prompt": "Câu 3",
+          "id": "b548913c-43a9-4f2c-979c-2663e9a24316",
+          "prompt": "junk",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/dʒʌŋk/",
+            "/ʒʌŋk/",
+            "/jʌŋk/"
+          ]
         },
         {
-          "id": "477a76c6-57db-4e85-afa8-ab9f613ce67f",
-          "prompt": "Câu 4",
+          "id": "47dde765-3938-4117-bd2d-3418071c935f",
+          "prompt": "family",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/ˈfɑːməli/",
+            "/ˈfæməli/",
+            "/ˈfeməli/"
+          ]
         },
         {
-          "id": "4782068e-c58d-4e51-84c5-4d7fbb8971d8",
-          "prompt": "Câu 5",
+          "id": "cd5b2477-869b-4685-8b1a-d26441dbe4b4",
+          "prompt": "relative",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/ˈreleɪtɪv/",
+            "/ˈrɪlətɪv/",
+            "/ˈrelətɪv/"
+          ]
         },
         {
-          "id": "9c769091-87a7-4675-8883-d95131c9c8cd",
-          "prompt": "Câu 6",
+          "id": "0eafd35c-0a50-4f46-a6a4-29c37e399ce4",
+          "prompt": "work",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/wɜːrk/",
+            "/wɑːrk/",
+            "/wərk/"
+          ]
         },
         {
-          "id": "2d0f8dbe-fbaf-497d-8b97-11dba1c9d912",
-          "prompt": "Câu 7",
+          "id": "894241c8-f72c-4498-912f-9dcf82233da9",
+          "prompt": "surprised",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/sərˈpraɪsd/",
+            "/sʌˈpraɪzd/",
+            "/sərˈpraɪzd/"
+          ]
         },
         {
-          "id": "9185f2e3-1515-4455-8b9c-ba58b6ddd10d",
-          "prompt": "Câu 8",
+          "id": "65c6125f-3676-4a7b-a971-28cf968e9154",
+          "prompt": "forget",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/fɔːrˈɡet/",
+            "/fərˈɡet/",
+            "/fɑːrˈɡet/"
+          ]
         },
         {
-          "id": "0b87f57f-f9d1-435e-bbfc-7a3a158a2d4b",
-          "prompt": "Câu 9",
+          "id": "27fd3633-5b40-4093-b79b-4aa61062f109",
+          "prompt": "dancing",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/ˈdænsi:ŋ/",
+            "/ˈdænsɪŋ/",
+            "/ˈdensɪŋ/"
+          ]
         },
         {
-          "id": "0140a503-4a6e-4688-b792-e49e13dabffb",
-          "prompt": "Câu 10",
+          "id": "b37b4bb2-f29b-4518-9c23-fb399fa0af43",
+          "prompt": "television",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            }
-          ],
-          "long": false
+            "/ˈtelɪvɪʒn/",
+            "/ˈtelɪvɪdʒn/",
+            "/ˈtelevɪʒn/"
+          ]
         }
       ]
     },
     {
-      "id": "translation-d-ch-vi-t-anh",
+      "id": "translation",
       "title": "Translation · Dịch Việt–Anh",
-      "instructions": "Dịch các câu sau sang tiếng Anh hoàn chỉnh (16 điểm)",
+      "instructions": "EXERCISE 5 (8 sentences = 32 points): Vietnamese - English Translation (Chú ý viết cả câu, có dấu câu)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "af29fcf1-1752-471b-8ce0-61dc66e11608",
-          "prompt": "Dịch câu 1 sang tiếng Anh.",
-          "options": [],
+          "id": "2f86ff04-9e13-4090-9ccb-8ae776b89095",
+          "prompt": "1. Lâu (lắm) rồi tớ chưa mua/mới mua được bộ nội thất với mức giá được giảm.\nSuggested vocab: bộ (gì đó)~ a set of something",
           "long": true
         },
         {
-          "id": "1ae2a776-48cc-4235-b7b4-2182ce673281",
-          "prompt": "Dịch câu 2 sang tiếng Anh.",
-          "options": [],
+          "id": "1cc5ecb0-1238-49fe-a8d0-9f1c6d697363",
+          "prompt": "2. Bạn đang cân nhắc chuyển đồ đạc của mình đến nhà mới vào thứ mấy?",
           "long": true
         },
         {
-          "id": "8933366b-0d14-487c-8680-2a00c0d14aaa",
-          "prompt": "Dịch câu 3 sang tiếng Anh.",
-          "options": [],
+          "id": "d2bbdbfe-8ed7-49eb-b433-0fa84121a832",
+          "prompt": "3. Cuối cùng thì/rốt cuộc thì, chúng tôi đã có thể tìm được hành lý của mình sau khi hãng hàng không đã đánh mất chúng.\nNote: việc \"tìm được hành lý\" đã xảy ra trong quá khứ",
           "long": true
         },
         {
-          "id": "dcd2da65-2c9a-4cd5-ab43-432c9276807b",
-          "prompt": "Dịch câu 4 sang tiếng Anh.",
-          "options": [],
+          "id": "665e3227-5a58-47b2-b6a1-ef73bf205bda",
+          "prompt": "4. Điều thật sự tuyệt vời là vé máy bay khá là rẻ, nên tớ đã không phải đi tàu đến đấy.",
           "long": true
         },
         {
-          "id": "f5401fb7-3ead-48ca-9e80-961d0e715f19",
-          "prompt": "Dịch câu 5 sang tiếng Anh.",
-          "options": [],
+          "id": "f3fc0c1d-ab98-48c8-8700-4b87c1d8f15e",
+          "prompt": "5. Năm ngoái khi cậu đi nghỉ, cậu mất bao lâu để sắp xếp gói ghém đồ đạc đấy?",
           "long": true
         },
         {
-          "id": "6cfa5c86-7c7a-4d1c-927f-5a9f9a0def28",
-          "prompt": "Dịch câu 6 sang tiếng Anh.",
-          "options": [],
+          "id": "f3a1b7bf-96da-4eac-8fdd-82fecc6eff11",
+          "prompt": "6. Ở trên đảo, trẻ em có thể khám phá thiên nhiên, trong khi bố mẹ chúng thưởng thức đồ ăn tươi.\nNote: Thiên nhiên - Nature",
           "long": true
         },
         {
-          "id": "9a64ba72-e5c7-4e95-9471-9e2a36eb1824",
-          "prompt": "Dịch câu 7 sang tiếng Anh.",
-          "options": [],
+          "id": "2387bcc3-2561-4618-a4ec-96845c05f338",
+          "prompt": "7. (Kể) từ khi tôi còn bé, tôi luôn muốn được đi nghỉ một chuyến ba ngày ở Vịnh Hạ Long. Địa điểm này nghe có vẻ như là một địa điểm du lịch tuyệt vời.\nNote: Vịnh - Bay",
           "long": true
         },
         {
-          "id": "a82ed5e1-2ed8-483a-94d5-727ae2806d69",
-          "prompt": "Dịch câu 8 sang tiếng Anh.",
-          "options": [],
+          "id": "7f53204f-1371-4e97-85c0-4e32dadd9f18",
+          "prompt": "8. Với 2 tiếng mỗi ngày, cậu sẽ có thể thưởng thức được nhiều các hoạt động đa dạng khác nhau trên cả cái đảo này.",
           "long": true
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Viết câu trả lời theo ý tưởng và gợi ý trong đề (tối thiểu 30 từ mỗi câu). Bài thi được chấm bằng AI (18 điểm).",
+      "instructions": "Answer the speaking questions in English. AI automated grading (18 points)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "9eb98428-0477-41ee-8114-6e5c4f7c8403",
+          "id": "63ea6799-64c6-4442-9b05-94ca9a006dd6",
           "prompt": "1.  Why do some people enjoy going to entertainment complexes (E.g. Aeon mall Long Bien)? (6 points)\nNote: package holiday ~ du lịch trọn gói\nSuggested Ideas\nSuggested Vocab:",
-          "options": [],
           "long": true
         },
         {
-          "id": "d9106b74-b51a-4d34-8e96-b87147cac4d8",
+          "id": "17283736-1c7e-4eb6-9b62-86f8e593c81c",
           "prompt": "2. When was the last time your family moved to a new place?\nSuggested Ideas\nSuggested Vocab:",
-          "options": [],
           "long": true
         },
         {
-          "id": "a2133be8-26a9-4992-aca0-19b3e9485d58",
+          "id": "16dd1e26-1ba5-4eeb-9d21-2ff59ff0e8a3",
           "prompt": "3. How have holiday vacations in Vietnam changed since you were little/in the last 5 years?\nSuggested Ideas\nSuggested Vocab:",
-          "options": [],
           "long": true
         }
       ]

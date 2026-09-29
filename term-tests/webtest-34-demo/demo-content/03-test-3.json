@@ -3,720 +3,1438 @@
   "course": "03",
   "phase": null,
   "testNumber": 3,
-  "sourceHash": "711cf751122dc498e2204a302aadd1a2272e223a33daf10709dad1da922a9dde",
+  "sourceHash": "d2fb1eef2e724009dc720444740c5d7318034d548d52b9aaf53f87493dc381f5",
   "durationMinutes": 90,
   "groups": [
     {
-      "id": "listening-i-n-t",
+      "id": "listening-gap",
       "title": "Listening · Điền từ",
       "instructions": "🔉 Exercise 1: Listen and fill in the blanks with suitable words or phrases (Nghe và điền vào chỗ trống với từ hoặc cụm từ thích hợp) 5 điểm",
-      "context": "",
-      "audioPath": "assets/demo-audio/03/Test_3_ex_1_enhanced.mp3",
+      "context": "Today, I’m going to talk about Cristiano Ronaldo, a really (1)____  in the football world. At the age of 18, he began playing for a local club and he (2)____, which helped him stand out among his teammates. He also followed a really strict diet - He never drank bubble tea or soft drinks, and always chose (3)____, like fruits, meat, and vegetables, for his meals. He was really busy with his practice but he still tried to find time for cooking at home, even on special occasions like his birthday parties. Eating healthy foods was one of the reasons why Ronaldo has become the best football player in the world. Besides sports, Ronaldo is also a big fan of (4)____ He enjoys going to the shopping mall and (5)____ People often see him going shopping with his girlfriend.",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "042d42e6-c9af-402a-83dd-2a99f7278045",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "2627b19a-fe0f-45da-9dba-5ea0db0d64bd",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "f14f8e9f-f8b7-41fc-af85-916b570ff288",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "7a2c875d-059c-4978-9573-79930fea5e78",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "410ea362-0325-4e33-838a-8732efe0a4e4",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "59b2aa9d-f9cd-4e7a-a7f1-4aab9b56eb60",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "94272dd1-7f4c-4861-a02d-d030728ad15d",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "44cfa66f-bba2-428a-b3b9-ff743e974644",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "b85e2a10-d083-4e68-b8de-e3c3628d3f96",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "1ace0eaf-13d8-4f30-bc54-6e096fd453df",
+          "prompt": "Chỗ trống (5)"
         }
       ]
     },
     {
-      "id": "listening-tr-l-i-ti-ng-vi-t",
+      "id": "listening-vi",
       "title": "Listening · Trả lời tiếng Việt",
       "instructions": "Exercise 2: Answer these questions in Vietnamese (Trả lời các câu hỏi sau bằng tiếng Việt) 5 điểm",
       "context": "",
-      "audioPath": "assets/demo-audio/03/Test_3_ex_1_enhanced.mp3",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "8eb2359c-a7b0-441e-908a-7552836fe8e9",
-          "prompt": " Trong câu “ When he was 18, he began playing for a local club..”, dấu hiệu nào về mặt thời gian cho biết câu này đang nói về hành động trong thời điểm trong quá khứ?",
-          "options": [],
+          "id": "6d0b9890-816a-4650-9bd3-51abd8bd2da2",
+          "prompt": "1. Trong câu “ When he was 18, he began playing for a local club..”, dấu hiệu nào về mặt thời gian cho biết câu này đang nói về hành động trong thời điểm trong quá khứ?",
           "long": true
         },
         {
-          "id": "f59557b1-5550-4b95-85c2-f0e9b2d6e59e",
-          "prompt": "Vì sao?",
-          "options": [],
+          "id": "788072cc-5c61-4f73-bed3-b4f99f741882",
+          "prompt": "2. (a) Câu “ When he was 18, he began playing for a local club..” có thể tách thành hai câu \n“When he was 18.” và \n“He began playing for a local club.” được không?",
+          "long": false
+        },
+        {
+          "id": "dc51e896-c3df-4d10-8365-dcde1db77a2e",
+          "prompt": "2. (b) Vì sao?",
           "long": true
         },
         {
-          "id": "21954d18-11b1-428d-ac56-3d023f38c7de",
-          "prompt": "Tại sao trong câu “He also followed a really strict diet - He never drank bubble tea or soft drinks…” không có dấu hiệu về thời gian trong quá khứ mà lại chia thì Quá Khứ Đơn",
-          "options": [],
+          "id": "356117da-5819-4580-88d8-78fad9ce29ed",
+          "prompt": "3. Tại sao trong câu “He also followed a really strict diet - He never drank bubble tea or soft drinks…” không có dấu hiệu về thời gian trong quá khứ mà lại chia thì Quá Khứ Đơn?",
           "long": true
         },
         {
-          "id": "2444083d-cb9f-4861-a05e-36f64b9b1cff",
-          "prompt": "Trong câu “Eating healthy foods was one of the reasons…” tại sao động từ lại chia số ít “was” dù trước đó có danh từ số nhiều “foods”",
-          "options": [],
+          "id": "5dc7e96c-87c4-4556-8889-3cc325fff64d",
+          "prompt": "4. Trong câu “People often see him going shopping with his girlfriend”, tại sao “people” (một từ không có “s” ở cuối - báo hiệu danh từ số nhiều) lại không được chia động từ là “sees”?",
           "long": true
         },
         {
-          "id": "53930b81-0c2f-45e8-9898-547ad299738e",
-          "prompt": "Câu hỏi tiếng Việt 5",
-          "options": [],
+          "id": "f06e94fa-6967-453f-b71b-89c87dd56e3e",
+          "prompt": "5. Trong câu “Eating healthy foods was one of the reasons…” tại sao động từ lại chia số ít “was” dù trước đó có danh từ số nhiều “foods”?",
           "long": true
         }
       ]
     },
     {
-      "id": "vocabulary-nghe-t-v-vi-t-ngh-a",
+      "id": "vocabulary-listen",
       "title": "Vocabulary · Nghe từ và viết nghĩa",
       "instructions": "🔉 Exercise 1: Listen and note down the words/phrases you hear from the recording (10 điểm)",
       "context": "",
-      "audioPath": "assets/demo-audio/03/Test_3_SS_Vocab.mp3",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "aac53385-52ab-41e5-aba2-d5471823e8ef",
-          "prompt": "1. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "eaa52eda-5d0f-4abf-ac26-2abe63dcaa22",
+          "prompt": "1. Từ/cụm từ nghe được"
         },
         {
-          "id": "5421f439-b6dd-4381-ac2e-514d42675ca8",
-          "prompt": "1. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "f91553a3-fc2e-44d7-85e4-5cdff719da35",
+          "prompt": "1. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "5ca91a68-7b2f-4422-9b34-8f5d7dc846d9",
-          "prompt": "2. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "29be5b64-9762-4be8-a19d-f38095418a81",
+          "prompt": "2. Từ/cụm từ nghe được"
         },
         {
-          "id": "32a71321-e2cf-4645-9b50-4f02830dd759",
-          "prompt": "2. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "b233566c-6042-49be-ba23-fb2a0887f40a",
+          "prompt": "2. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "da09ec31-310a-4892-9ad8-0f3f8a6e9ec9",
-          "prompt": "3. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "e1a8792b-595c-42da-9907-19ef231c4092",
+          "prompt": "3. Từ/cụm từ nghe được"
         },
         {
-          "id": "ad48883d-4feb-416d-85d4-e3c319d28d0b",
-          "prompt": "3. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "74cecf2f-ab70-4311-9439-78a6782e0414",
+          "prompt": "3. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "3b2dd18b-adbf-43a5-a879-c579fb1ba703",
-          "prompt": "4. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "aec1e405-2230-4853-9f4b-6acdddf9b613",
+          "prompt": "4. Từ/cụm từ nghe được"
         },
         {
-          "id": "0743ff2a-4ae7-41b7-bf11-3ad1aff63677",
-          "prompt": "4. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "74300fee-a564-4d38-a92d-9ee5d0e58361",
+          "prompt": "4. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "af3f27c1-92dd-458e-944a-9035f97e8149",
-          "prompt": "5. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "a4481129-3f45-48c0-9abc-cb04f54378bd",
+          "prompt": "5. Từ/cụm từ nghe được"
         },
         {
-          "id": "bcff09cf-c884-4e81-a339-b11fd028b8d4",
-          "prompt": "5. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "6734ddb8-7a5a-476c-8a42-60321e25bcf5",
+          "prompt": "5. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "beb48085-6a84-488a-9fb7-7f23e8e70219",
-          "prompt": "6. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "089b9ae8-8ab4-4dc3-9aef-a1d4e55f3221",
+          "prompt": "6. Từ/cụm từ nghe được"
         },
         {
-          "id": "6cbfa9f4-6652-43f1-b02f-8e8cee085abd",
-          "prompt": "6. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "ca1398a1-b637-4814-bb3a-deeda6429ecf",
+          "prompt": "6. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "76fa28c5-d60f-45cc-b265-aec4e6eb134f",
-          "prompt": "7. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "97dd566e-6b38-4887-80b5-4a126dbbb479",
+          "prompt": "7. Từ/cụm từ nghe được"
         },
         {
-          "id": "a8812b32-4f48-4908-8fa6-cbd572b39b0f",
-          "prompt": "7. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "d8ae1adb-251f-4531-a2c5-b46834108d8e",
+          "prompt": "7. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "13b31d57-ed89-4ccd-b37c-0bd5c93ec082",
-          "prompt": "8. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "88fd6cbb-e028-46d0-94a6-d2c642677d12",
+          "prompt": "8. Từ/cụm từ nghe được"
         },
         {
-          "id": "613b6d5b-3d7a-41ea-932b-cd77a1c4f3d0",
-          "prompt": "8. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "8cc5b260-3536-4258-a475-25fd5e819997",
+          "prompt": "8. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "436c5a45-2534-4401-93f5-de53a0f1b376",
-          "prompt": "9. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "f0b19d8e-2417-439c-add3-2cfa1267e194",
+          "prompt": "9. Từ/cụm từ nghe được"
         },
         {
-          "id": "3fa19985-0536-477f-a544-2bbecd6c7fb4",
-          "prompt": "9. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "1a8a7486-75d8-4d50-b63b-25ec4c3d78f1",
+          "prompt": "9. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "4e0f2fa5-de78-45dd-8e84-925f6b27901c",
-          "prompt": "10. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "fa3639c8-3a67-490b-b758-8c18d3f9328a",
+          "prompt": "10. Từ/cụm từ nghe được"
         },
         {
-          "id": "b76ed6dc-0381-461d-8d70-a51e0905b1cc",
-          "prompt": "10. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "c542304a-6a28-42ac-87ae-3a8829735cb1",
+          "prompt": "10. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "dbbb67dc-73fe-4585-9add-455f4a361f18",
-          "prompt": "11. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "45932dd6-4056-4ba4-b924-3fa8346cef94",
+          "prompt": "11. Từ/cụm từ nghe được"
         },
         {
-          "id": "5e3a1321-f65b-4664-b0cd-a88c082f1fb2",
-          "prompt": "11. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "ac4193c2-3ae0-4982-bdd0-cd4de6a5e8bc",
+          "prompt": "11. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "cfdf2ced-5a1f-40a2-8a83-391453384f7b",
-          "prompt": "12. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "1070cf9b-37ef-4fea-a697-24bd2370737c",
+          "prompt": "12. Từ/cụm từ nghe được"
         },
         {
-          "id": "42e5de66-0132-473f-a725-c852afa4c1dc",
-          "prompt": "12. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "d4d2a147-baf7-4ff2-b94a-79d7492f8b82",
+          "prompt": "12. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "2971cca7-41a5-46e6-8fa3-7b75021817db",
-          "prompt": "13. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "5bb2eabc-c2e0-4b3c-83db-a9bd6c348293",
+          "prompt": "13. Từ/cụm từ nghe được"
         },
         {
-          "id": "59fa761f-da8e-4dc6-a41b-1142463b2c72",
-          "prompt": "13. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "830b3166-8d62-4886-b2a7-8e312d61d174",
+          "prompt": "13. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "1de23230-12da-4752-b39d-4e74920df525",
-          "prompt": "14. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "dfca33d5-423b-4dd3-b179-a25ab7979413",
+          "prompt": "14. Từ/cụm từ nghe được"
         },
         {
-          "id": "245d2166-dc80-4ea7-9b4a-50509e106d1c",
-          "prompt": "14. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "e0e958f9-2c29-4223-98ad-f4a12add79a6",
+          "prompt": "14. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         },
         {
-          "id": "c8e98186-7076-4bfc-8cc8-8b82d5f1dfa6",
-          "prompt": "15. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "a44cbd0c-4e52-4d85-8389-2b60ff5d1786",
+          "prompt": "15. Từ/cụm từ nghe được"
         },
         {
-          "id": "c2c50f33-3a81-4ee3-ae79-7382ce354889",
-          "prompt": "15. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "9d69bf6b-1735-4217-81a2-c1751649aa70",
+          "prompt": "15. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "cà phê"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cầu lông"
+            },
+            {
+              "id": "meaning-03",
+              "label": "chạy bộ"
+            },
+            {
+              "id": "meaning-04",
+              "label": "chơi thể thao"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đèn bàn"
+            },
+            {
+              "id": "meaning-06",
+              "label": "giữ dáng"
+            },
+            {
+              "id": "meaning-07",
+              "label": "hoa quả"
+            },
+            {
+              "id": "meaning-08",
+              "label": "hợp"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nước"
+            },
+            {
+              "id": "meaning-10",
+              "label": "quá đắng"
+            },
+            {
+              "id": "meaning-11",
+              "label": "quần áo"
+            },
+            {
+              "id": "meaning-12",
+              "label": "sinh tố"
+            },
+            {
+              "id": "meaning-13",
+              "label": "trọng lượng"
+            },
+            {
+              "id": "meaning-14",
+              "label": "trung tâm thương mại"
+            },
+            {
+              "id": "meaning-15",
+              "label": "vận động viên"
+            }
+          ]
         }
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-qua-nh",
+      "id": "vocabulary-picture",
       "title": "Vocabulary · Từ vựng qua ảnh",
       "instructions": "Exercise 2: Look at the pictures and write down the suitable words/ phrases (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "bb92e72d-94d5-423e-9d62-c4eaea06bc65",
-          "prompt": "Hình ảnh (1)",
-          "options": [],
-          "long": false
+          "id": "54b803f1-fc5c-442e-84ef-09a12e36d813",
+          "prompt": "1. v _ g _ t _ _ _ _ _",
+          "image": "assets/03/test-3/pic-1.png"
         },
         {
-          "id": "90a36f98-dd6b-4e86-ab84-975d30be2938",
-          "prompt": "Hình ảnh (2)",
-          "options": [],
-          "long": false
+          "id": "2d6958d2-e91c-4b35-a208-5abfc7aed093",
+          "prompt": "2. b _ _ _ _ e       t _ _",
+          "image": "assets/03/test-3/pic-2.png"
         },
         {
-          "id": "b171d4f3-ddde-4cbc-b44a-4e0073696033",
-          "prompt": "Hình ảnh (3)",
-          "options": [],
-          "long": false
+          "id": "81bb7188-b698-458e-a513-f7df5344420c",
+          "prompt": "3. n _ o _ _ _     s _ _ _",
+          "image": "assets/03/test-3/pic-3.png"
         },
         {
-          "id": "100de0ae-8dab-4520-a2c1-51c7334460d5",
-          "prompt": "Hình ảnh (4)",
-          "options": [],
-          "long": false
+          "id": "7dc25ace-6bf4-470b-b3bf-1b6f0ba4e98a",
+          "prompt": "4. s _ _ _ _ o _",
+          "image": "assets/03/test-3/pic-4.png"
         },
         {
-          "id": "8be1a6b7-0d5f-45c1-bf6b-632321e0e3ff",
-          "prompt": "Hình ảnh (5)",
-          "options": [],
-          "long": false
+          "id": "85fbe6ad-ef80-48b6-9437-378d2a351210",
+          "prompt": "5. m _ _ _ _ _       p _ _ _ _",
+          "image": "assets/03/test-3/pic-5.png"
         },
         {
-          "id": "7b384cd0-7401-4cbc-bc42-5d5a79b0ae1c",
-          "prompt": "Hình ảnh (6)",
-          "options": [],
-          "long": false
+          "id": "cc858603-29ff-4d23-a944-89456552303f",
+          "prompt": "6. c _ _ i _",
+          "image": "assets/03/test-3/pic-6.png"
         },
         {
-          "id": "8e9f22d6-435d-477e-910c-9a59ee05dcc1",
-          "prompt": "Hình ảnh (7)",
-          "options": [],
-          "long": false
+          "id": "bb0b02e6-a49e-4c33-a338-24584c1f671e",
+          "prompt": "7. h _ _ _ b _ _",
+          "image": "assets/03/test-3/pic-7.png"
         },
         {
-          "id": "d375c5da-9cf3-4b07-a3d1-3891c0756836",
-          "prompt": "Hình ảnh (8)",
-          "options": [],
-          "long": false
+          "id": "9436d4d8-6b46-4441-a626-9e4ac095e5de",
+          "prompt": "8. t _ _ _ _    t _ _ _ _ _",
+          "image": "assets/03/test-3/pic-8.png"
         },
         {
-          "id": "8a87bb76-5f4b-450b-80fb-abd61a1f256b",
-          "prompt": "Hình ảnh (9)",
-          "options": [],
-          "long": false
+          "id": "43ac0c27-55cc-4088-9d9b-dec8552d3fde",
+          "prompt": "9. l _ _ _    wei _ _ _ _",
+          "image": "assets/03/test-3/pic-9.png"
         },
         {
-          "id": "28c7e8e1-3dd2-4333-9c49-0747cb69c099",
-          "prompt": "Hình ảnh (10)",
-          "options": [],
-          "long": false
+          "id": "0d19ecf2-f86d-4a8c-9d66-ec0460632de0",
+          "prompt": "10. _ _ _ _ _ _ _ _ _ _",
+          "image": "assets/03/test-3/pic-10.png"
         }
       ]
     },
     {
-      "id": "vocabulary-ch-n-p-n",
+      "id": "vocabulary-choice",
       "title": "Vocabulary · Chọn đáp án",
       "instructions": "Exercise 3: Choose the correct answer (Chọn đáp án đúng) 5 điểm",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "5f3a9132-697d-4f95-b514-34ecec0157fb",
-          "prompt": "Câu 1",
+          "id": "4fd6932c-6924-4395-b2c7-2048ca1453de",
+          "prompt": "At the moment I am …… work so I don’t have time to cook.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "very busy",
+            "busy with",
+            "energetic with",
+            "very energetic"
+          ]
         },
         {
-          "id": "57ac440b-c982-403e-a414-7ad38f1ea819",
-          "prompt": "Câu 2",
+          "id": "40a7e92f-8629-430e-8f03-ce55b8850847",
+          "prompt": "I love eating fish. It is  ……",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "bad",
+            "comfortable",
+            "warm",
+            "delicious"
+          ]
         },
         {
-          "id": "9a4942aa-a38e-49c8-ba39-8b2f678661da",
-          "prompt": "Câu 3",
+          "id": "b8544f92-1fa1-451d-b4b9-cb5b4d6c48a7",
+          "prompt": "It was very cold yesterday so I wore a …… when I went out.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "T-shirt",
+            "watch",
+            "jacket",
+            "gift"
+          ]
         },
         {
-          "id": "eab476bb-21c6-4a4f-87eb-55386bfe4a00",
-          "prompt": "Câu 4",
+          "id": "27b47644-ff73-4b58-9b40-24725cb39961",
+          "prompt": "Hung goes ……… three times a week. He loves riding his bike around town.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "swimming",
+            "running",
+            "jogging",
+            "cycling"
+          ]
         },
         {
-          "id": "bb010aeb-777f-41c0-b5ee-6dc745aa1b7c",
-          "prompt": "Câu 5",
+          "id": "f339aa5e-0443-4515-a9f8-557c579b537b",
+          "prompt": "Playing sports helps people to build up ………",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "benefits",
+            "muscles",
+            "weights",
+            "health"
+          ]
         }
       ]
     },
     {
-      "id": "grammar-chia-ng-t",
+      "id": "grammar-verb",
       "title": "Grammar · Chia động từ",
       "instructions": "Exercise 1: Complete the sentences using words in the brackets (10 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "5380e87f-4ed6-4573-9d3b-0270b4b4486b",
-          "prompt": "Câu 1",
-          "options": [],
-          "long": false
+          "id": "dd5e7013-9772-44ce-baa9-c92ad41124d3",
+          "prompt": "1. He ____(travel) abroad last year. He ____ (visit) a lot of countries."
         },
         {
-          "id": "b81aabce-fce2-4e94-a508-e1252ddb4d8b",
-          "prompt": "Câu 2",
-          "options": [],
-          "long": false
+          "id": "ed5bb29b-6b3a-4b0d-b5b6-f7ee44b1ad2b",
+          "prompt": "2. Sia ____ (not/attend) the Spanish class because she ____ (be) sick."
         },
         {
-          "id": "4c6e827a-10d5-4982-82e1-1ebc4af5e834",
-          "prompt": "Câu 3",
-          "options": [],
-          "long": false
+          "id": "66f1888b-2c1f-43bb-bcba-40dd1510306d",
+          "prompt": "3. Sam ____ (swim) in the river this morning because the weather ____ (turn) hot."
         },
         {
-          "id": "b5854f06-afa6-4e08-b76d-a2327080879e",
-          "prompt": "Câu 4",
-          "options": [],
-          "long": false
+          "id": "2ff7b88a-d08e-4666-9555-733f7bfa7fc8",
+          "prompt": "4. Where ____ (she/be) when you ____ (arrive) the airport?"
         },
         {
-          "id": "4f9c7ee6-ce25-4425-bb32-0305719f29dc",
-          "prompt": "Câu 5",
-          "options": [],
-          "long": false
+          "id": "ecb80aa8-7f14-4fb3-8725-0f579a995f10",
+          "prompt": "5. Hien ____ (go on) a vacation last weekend. She wasn’t at home when we ____ (call) her."
         },
         {
-          "id": "49bb9423-9a63-4afe-817f-8e3c29976689",
-          "prompt": "Câu 6",
-          "options": [],
-          "long": false
+          "id": "1907fd4e-9113-4313-971d-9c5c225e569b",
+          "prompt": "6. ____ (you/borrow) my book last week? – No, I ____ (not)"
         },
         {
-          "id": "a068b7f7-9555-40b1-b51e-d9687fde2eaf",
-          "prompt": "Câu 7",
-          "options": [],
-          "long": false
+          "id": "617b7d16-c5d2-4dc2-9c59-412bf6e6f132",
+          "prompt": "7. They ____ (come) back home and ____ (play) computer games."
         },
         {
-          "id": "f0ec680e-ace4-4639-9831-5ab640ed2311",
-          "prompt": "Câu 8",
-          "options": [],
-          "long": false
+          "id": "9e42b0d0-e20b-4b1a-bbc9-002867a4f420",
+          "prompt": "8. I ____ (can) come to the party because I ____ (finish) my homework."
         },
         {
-          "id": "f2dc7eca-85dd-493b-a05b-5da130b271dc",
-          "prompt": "Câu 9",
-          "options": [],
-          "long": false
+          "id": "d4ae359b-6b00-44d0-9575-aa72d1fd0b52",
+          "prompt": "9. Peter ____ (not/review) for the exam. He ____ (not/can) pass it."
         },
         {
-          "id": "d800f63d-3524-4572-b2f3-0666c87f2b91",
-          "prompt": "Câu 10",
-          "options": [],
-          "long": false
+          "id": "288d19ae-9796-4eb0-81be-97401b2f9fc2",
+          "prompt": "10. Ha and Huong were at the beach yesterday. They ____ (walk) and ____ (pick up) seashells."
         }
       ]
     },
     {
-      "id": "grammar-t-m-v-s-a-l-i",
+      "id": "grammar-correction",
       "title": "Grammar · Tìm và sửa lỗi",
-      "instructions": "Exercise 2: Find and correct the mistakes in the sentences below (5 điểm)",
+      "instructions": "Exercise 2: Each sentence has one mistake. Find the mistake and correct it (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "63d47585-2df8-42a5-9fcb-448dd5127280",
-          "prompt": "Câu 1\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "fe1cb0ae-b343-4cdf-9a3c-799399753df2",
+          "prompt": "1. We have two knife in the kitchen.\nLỗi sai"
         },
         {
-          "id": "876b9abd-32ec-4bee-a682-f358ac7abdd4",
-          "prompt": "Câu 1\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "d60e168d-8c1b-4834-af77-ea4731c662dc",
+          "prompt": "1. We have two knife in the kitchen.\nPhần sửa đúng"
         },
         {
-          "id": "bf188ee7-3761-407f-b10b-5116e96285f9",
-          "prompt": "Câu 2\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "9d3f5575-b100-4cee-be40-ff9024f68504",
+          "prompt": "2. Danny bought five bottle of water in the supermarket.\nLỗi sai"
         },
         {
-          "id": "2f72e5d8-5d3e-40e8-9287-4cd9b023f978",
-          "prompt": "Câu 2\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "25d3ef37-6435-41e9-8a4f-497c3d717ede",
+          "prompt": "2. Danny bought five bottle of water in the supermarket.\nPhần sửa đúng"
         },
         {
-          "id": "982a84b8-e832-4814-a5bf-e4ccbaf1585c",
-          "prompt": "Câu 3\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "a983bb4c-d8de-4b50-8591-147c50278b16",
+          "prompt": "3. We gave them lots of egg to cook breakfast.\nLỗi sai"
         },
         {
-          "id": "3c1177b6-bc2d-469d-bf87-dbb421412626",
-          "prompt": "Câu 3\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "977a0846-cdeb-4230-9ca0-abe5ce0eefa6",
+          "prompt": "3. We gave them lots of egg to cook breakfast.\nPhần sửa đúng"
         },
         {
-          "id": "6b3ee266-9fc8-4f1b-b015-b243a18485d1",
-          "prompt": "Câu 4\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "92ebbcac-3c38-4b2f-95eb-04cb46f655c4",
+          "prompt": "4. What would you like? - I’d like a water.\nLỗi sai"
         },
         {
-          "id": "330f3635-11d1-418e-ba27-ff6acdfc1b7f",
-          "prompt": "Câu 4\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "9c4c2970-dd0e-40ea-9b13-b57ab2e923b0",
+          "prompt": "4. What would you like? - I’d like a water.\nPhần sửa đúng"
         },
         {
-          "id": "75bb510b-e8f1-476c-b531-c2a3b2547895",
-          "prompt": "Câu 5\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "05019cc8-0bf6-4174-af90-ec31cbb058b5",
+          "prompt": "5. I borrowed some moneys from my parents.\nLỗi sai"
         },
         {
-          "id": "05348d82-f01f-4912-99e6-74e5cbd82743",
-          "prompt": "Câu 5\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "69ee4947-eace-4045-b74e-e66c9a834d65",
+          "prompt": "5. I borrowed some moneys from my parents.\nPhần sửa đúng"
         }
       ]
     },
     {
-      "id": "grammar-s-p-x-p-c-u",
+      "id": "grammar-order",
       "title": "Grammar · Sắp xếp câu",
-      "instructions": "Exercise 3: Put the words in the correct order to make complete sentences (5 điểm)",
+      "instructions": "Exercise 3: Arrange these words to make a correct sentence (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "d9a446b6-1ed8-40ce-a132-8ecffd525bf3",
-          "prompt": "Câu 1",
-          "options": [],
-          "long": false
+          "id": "f25ea865-934b-4f00-8ee4-248a838fcd3f",
+          "prompt": "1. eat/Loan/fish/yesterday."
         },
         {
-          "id": "8180583d-8c3e-43ef-b8eb-ed14861122d0",
-          "prompt": "Câu 2",
-          "options": [],
-          "long": false
+          "id": "5946b66b-fa7f-4aaf-8720-47c1f241160d",
+          "prompt": "2. see/can’t/last/his/parents/Terry/night."
         },
         {
-          "id": "f54b2464-77ce-4743-bd3f-cf91903cec87",
-          "prompt": "Câu 3",
-          "options": [],
-          "long": false
+          "id": "11db249f-5041-4643-b6ff-a6fb733752fe",
+          "prompt": "3. 2001/Tam/in/lived/city/center/in/the."
         },
         {
-          "id": "c208951d-84fc-47d6-8076-ee57bde28c3d",
-          "prompt": "Câu 4",
-          "options": [],
-          "long": false
+          "id": "eb1226d1-fd9f-4ea2-a93e-9c3e67c8a8cd",
+          "prompt": "4. last/play/night/they/football."
         },
         {
-          "id": "d56d39ca-a281-4ef9-a0a3-7da3f443b81a",
-          "prompt": "Câu 5",
-          "options": [],
-          "long": false
+          "id": "d26c514f-0787-4652-8cf5-6d0adc501791",
+          "prompt": "5. doctor/had/Tracy/had/to/see/a/she/because/year,/an/Last/accident."
         }
       ]
     },
     {
-      "id": "writing-d-ch-vi-t-anh",
+      "id": "writing",
       "title": "Writing · Dịch Việt–Anh",
-      "instructions": "Dịch các câu sau sang tiếng Anh (25 điểm)",
+      "instructions": "Translate the following sentences into English (Dịch các câu sau sang tiếng Anh) 25 điểm",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "3e217071-588c-4e30-ad40-0b2cf2977b5d",
-          "prompt": "Dịch câu 1 sang tiếng Anh.",
-          "options": [],
+          "id": "b4bcb754-56bb-4c45-babb-b897c87ab824",
+          "prompt": "1. Linh mua hai cái đèn bàn ở trung tâm thương mại vào tháng trước. Chúng rất đắt và không có giảm giá.",
           "long": true
         },
         {
-          "id": "f6c663b5-f5c2-4662-a074-756d2b18e6e3",
-          "prompt": "Dịch câu 2 sang tiếng Anh.",
-          "options": [],
+          "id": "7c94bfc6-ae33-413c-b28a-64ab14585d52",
+          "prompt": "2. Peter thích mặc màu đen. Quần áo của anh ấy toàn màu đen. Màu này hợp với anh ấy. Anh ấy cảm thấy thoải mái khi mặc quần áo đen với giày chạy màu trắng.",
           "long": true
         },
         {
-          "id": "d8fa4741-4eab-4470-b4ca-e4918915776c",
-          "prompt": "Dịch câu 3 sang tiếng Anh.",
-          "options": [],
+          "id": "82281901-196e-437c-aba6-f15c8efb9d98",
+          "prompt": "3. Tại sao nhiều người thích ăn đồ ăn nhanh? Bởi vì họ thích vị của nó. Họ không thích sa lát bởi vì nó không ngon đối với họ.",
           "long": true
         },
         {
-          "id": "472108cd-95b9-4746-a9a8-b77dee96e1aa",
-          "prompt": "Dịch câu 4 sang tiếng Anh.",
-          "options": [],
+          "id": "4d819bd6-b6b7-496e-a23a-b03ed22b6d45",
+          "prompt": "4. Hai tháng trước Jack rất bận. Anh ấy không thể dành thời gian cho thể thao nên anh ấy không giỏi chơi chúng. Bây giờ anh ấy thường xuyên chơi đá bóng với các đồng nghiệp vào cuối tuần.",
           "long": true
         },
         {
-          "id": "e8bcbe65-1ee7-44f7-a447-41fbc56abb6b",
-          "prompt": "Dịch câu 5 sang tiếng Anh.",
-          "options": [],
+          "id": "5502c9a3-c502-458c-8705-d59b60eb3efd",
+          "prompt": "5. Tần suất Thịnh đi tập gym thế nào? Anh ấy tập gym 5 lần một tuần. Đi tập gym giúp Thịnh cảm thấy tràn đầy năng lượng, sống khỏe mạnh và thư giãn.",
           "long": true
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Trả lời các câu hỏi sau bằng tiếng Anh (Tối thiểu 25 từ cho mỗi câu). Bài làm được chấm bằng AI (25 điểm).",
+      "instructions": "Answer these questions using your own ideas or hints (25 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "d7edbcf5-c416-4cad-b3c8-4f3035ab6ad5",
+          "id": "6a3b7823-76aa-46df-bccb-23e1787878d9",
           "prompt": "1. What’s your favorite food and drink? Why?\nGợi ý: Hints:; món ăn ưa thích của tôi là … + giải thích vì sao; đồ uống ưa thích của tôi là; thích vị của nó vì sao?",
-          "options": [],
           "long": true
         },
         {
-          "id": "75050fe5-146e-4daf-a225-14fc072053de",
+          "id": "8dc4cc92-76f4-46c1-8816-2a49b48c58c6",
           "prompt": "2. How often do you eat in a restaurant?\nGợi ý: Hints:; tần suất ăn ở nhà hàng như thế nào; ăn ở ngoài với ai; ăn món gì",
-          "options": [],
           "long": true
         },
         {
-          "id": "ff8be7ec-1e2d-498c-b86c-c43a1d0841e1",
+          "id": "d712bb76-790b-4bf7-92e9-1cb8f8d08f94",
           "prompt": "3. Who did you often go shopping for clothes with?\nGợi ý: Hints:; Đã thường đi mua sắm với ai; Cả hai chúng tôi đều thích thời trang; nên (so) tôi rất thích đi mua sắm với anh ấy/cô ấy",
-          "options": [],
           "long": true
         },
         {
-          "id": "116797bf-1582-43cc-b0de-c11b102c079f",
+          "id": "321446c7-552f-4f27-b38b-6a432d904728",
           "prompt": "4. What clothes did you buy the last time you went to a shopping mall?\nGợi ý: Hints:; Đã mua……..(liệt kê các đồ quần áo đã mua); Chiếc áo/ quần rất thoải mái, dễ mặc, và không đắt tiền (yêu cầu nêu cả 3 thông tin); Rất phấn khích vì món đồ; Mặc nó hàng ngày và cả các dịp đặc biệt",
-          "options": [],
           "long": true
         },
         {
-          "id": "368c2971-b526-459a-aec5-aae419521ca7",
+          "id": "65c2dc31-f0c6-4c8d-bd73-a899287c0826",
           "prompt": "5. Did you like sports when you were a child?\nGợi ý: Hints:; Khi tôi còn nhỏ → thường chơi …; Nó đã giúp tôi + (nêu ra ít nhất 2 lợi ích của thể thao); Tôi đã thường xuyên xem các trận đấu và cổ vũ cho đội tôi yêu thích; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
-          "options": [],
           "long": true
         }
       ]

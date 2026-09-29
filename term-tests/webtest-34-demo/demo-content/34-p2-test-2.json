@@ -1,0 +1,455 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "34",
+  "phase": 2,
+  "testNumber": 6,
+  "sourceHash": "5ac191f2f4da0429af64340823fe1e1ba5f9801c3a868f1aba051ee9691c7fad",
+  "durationMinutes": 90,
+  "groups": [
+    {
+      "id": "listening-gap",
+      "title": "Listening · Điền từ",
+      "instructions": "Listen and fill in the blanks with suitable words (10 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
+      "items": [
+        {
+          "id": "32dcae99-b5a6-4134-a036-7f5cd809515f",
+          "prompt": "Chỗ trống (1)"
+        },
+        {
+          "id": "3f56b976-e68e-44df-bd6b-c4cd5b081d89",
+          "prompt": "Chỗ trống (2)"
+        },
+        {
+          "id": "94344c65-018f-474a-a15d-e3d99979ce59",
+          "prompt": "Chỗ trống (3)"
+        },
+        {
+          "id": "40363ca9-4848-4598-a2ce-2b8a5971817a",
+          "prompt": "Chỗ trống (4)"
+        },
+        {
+          "id": "777167ef-76a3-4086-a07a-6ef07b27634c",
+          "prompt": "Chỗ trống (5)"
+        },
+        {
+          "id": "bd90ba00-f0b4-4e27-a898-338ec76ff99f",
+          "prompt": "Chỗ trống (6)"
+        },
+        {
+          "id": "acb28704-add2-4040-808f-5ab2728771bf",
+          "prompt": "Chỗ trống (7)"
+        },
+        {
+          "id": "c7837a6d-9a7d-44e3-a1f9-416f93054160",
+          "prompt": "Chỗ trống (8)"
+        },
+        {
+          "id": "94df8f80-aaa6-4495-b53d-fe597a59be82",
+          "prompt": "Chỗ trống (9)"
+        },
+        {
+          "id": "0e8ddbc5-b31a-4c28-9805-0e9e6ac1f9f7",
+          "prompt": "Chỗ trống (10)"
+        }
+      ]
+    },
+    {
+      "id": "listening-choice",
+      "title": "Listening · Chọn đáp án",
+      "instructions": "Listen and choose the correct answer (10 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
+      "items": [
+        {
+          "id": "9eb978c2-885a-43df-ad31-1971969857ac",
+          "prompt": "Question 1",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "1d846345-6a51-4639-91b8-98daa267bd4c",
+          "prompt": "Question 2",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "8f4c4f59-1ba4-46a1-a503-2cbb167158dc",
+          "prompt": "Question 3",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "9af4edf2-587b-487f-8c60-29039c6df5d9",
+          "prompt": "Question 4",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "7bbe9973-9475-4072-b83d-4affadd53025",
+          "prompt": "Because of its unusual size.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "e8f27b6b-44e2-4c01-8e36-e78bd8796790",
+          "prompt": "Question 6",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "f413706d-1982-4088-b0dc-678eb7bb1e2f",
+          "prompt": "Question 7",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "132ad780-c4a1-4b9d-a653-60d44543ef39",
+          "prompt": "A fun adventure.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "562b8f42-dc42-40d2-810f-46496e722fbe",
+          "prompt": "By speaking long lines.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "6ac6e346-9b8d-4341-ae15-9419a7718040",
+          "prompt": "Question 10",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grammar-choice",
+      "title": "Grammar · Trắc nghiệm",
+      "instructions": "Choose the best answer to complete each sentence (18 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "db04b672-051d-400f-8f19-8c37cecbfa12",
+          "prompt": "The temperature will drop significantly.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "8562342b-2ebe-4913-8e0a-b204f9e28397",
+          "prompt": "To keep some drinks cold.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "1a4f3c38-f189-46d9-ad65-96f38d5173f5",
+          "prompt": "From a local store near the lake.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "2e924466-d2f2-4933-a58d-a16d93b0d52f",
+          "prompt": "Sentence 4",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "7eb75219-3915-49ea-8ffd-06194ec86e6d",
+          "prompt": "They are not necessary for this trip.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "696e14da-70c7-47e3-8e71-f16368ac3405",
+          "prompt": "Excited and prepared.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "7ec85754-5f7f-49f2-927c-f78a392bd176",
+          "prompt": "Sentence 7",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "1147051b-0f51-486e-b479-50ba9300e00e",
+          "prompt": "Sentence 8",
+          "options": [
+            "B. am spending",
+            "D. was spending",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "49b68c48-9b59-42e8-a0c8-9490584b7ec9",
+          "prompt": "Sentence 9",
+          "options": [
+            "B. are preparing",
+            "D. have prepared",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "cec764fb-6a21-4e8e-b508-ca64dff174b1",
+          "prompt": "Sentence 10",
+          "options": [
+            "B. don’t go",
+            "D. haven’t gone",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "944f3f72-86fa-45eb-8c1c-42cfa0254c29",
+          "prompt": "Sentence 11",
+          "options": [
+            "B. was performing",
+            "D. has performed",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "bcd4b110-8d6c-48e3-b2f7-5a0e99ded9b0",
+          "prompt": "Sentence 12",
+          "options": [
+            "B. couldn’t",
+            "D. ought not",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "77f6b5ad-8c7f-477b-ba5d-75f2f92b1ecd",
+          "prompt": "Sentence 13",
+          "options": [
+            "B. go",
+            "D. went",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "0e4cd378-b419-40f3-a6fc-e4f126cf9d9f",
+          "prompt": "Sentence 14",
+          "options": [
+            "B. was painted",
+            "D. is painting",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "3c2096f6-d077-4d2c-a641-9a50c1813951",
+          "prompt": "Sentence 15",
+          "options": [
+            "B. with",
+            "D. through",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "d0f07c48-d41a-4a1c-a06f-b621c5d02ad9",
+          "prompt": "Sentence 16",
+          "options": [
+            "B. such a",
+            "D. very",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "07570a58-1ec7-4f32-8fdc-a544a91b5af5",
+          "prompt": "Sentence 17",
+          "options": [
+            "B. such",
+            "D. too",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "14b59ec0-44f5-4d19-b16c-6a665d58fdc5",
+          "prompt": "Sentence 18",
+          "options": [
+            "B. to argue",
+            "D. argued",
+            "Option C",
+            "Option D"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grammar-gap",
+      "title": "Grammar · Điền từ vào đoạn văn",
+      "instructions": "Fill in the blanks with the correct form of words (10 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "2008727e-050d-4de4-9542-02a4bbb2b799",
+          "prompt": "Chỗ trống (1)"
+        },
+        {
+          "id": "710c3e73-e4ee-4b5e-aaa1-034a79d5f15c",
+          "prompt": "Chỗ trống (2)"
+        },
+        {
+          "id": "3f489359-29ce-4670-b15e-51178bae45dc",
+          "prompt": "Chỗ trống (3)"
+        },
+        {
+          "id": "f51dd88e-e1cf-4aae-9243-24dea80bd9f3",
+          "prompt": "Chỗ trống (4)"
+        },
+        {
+          "id": "d824fcf9-c05b-4dc2-aa89-690a2df62b68",
+          "prompt": "Chỗ trống (5)"
+        },
+        {
+          "id": "758fad2f-ecbb-4988-8ac1-8c70791a74d4",
+          "prompt": "Chỗ trống (6)"
+        },
+        {
+          "id": "f34df2c5-df5f-4504-a3e6-6b6ecc2f16c4",
+          "prompt": "Chỗ trống (7)"
+        },
+        {
+          "id": "f7533008-eea4-438b-9d4a-e4785be5a7e7",
+          "prompt": "Chỗ trống (8)"
+        },
+        {
+          "id": "3ca0b1f6-e584-413d-8aa4-b2cead875847",
+          "prompt": "Chỗ trống (9)"
+        },
+        {
+          "id": "a6b8b827-9311-4834-a79a-15f7be651f7c",
+          "prompt": "Chỗ trống (10)"
+        }
+      ]
+    },
+    {
+      "id": "translation",
+      "title": "Translation · Dịch câu",
+      "instructions": "Translate the following sentences into English (28 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "d501c108-f79d-4ae8-aac6-b9b85907b7a1",
+          "prompt": "D. that",
+          "long": true
+        },
+        {
+          "id": "311a79fa-1ac5-4e4d-b91b-997d4ab12205",
+          "prompt": "Dịch câu 2 sang tiếng Anh.",
+          "long": true
+        },
+        {
+          "id": "751cf2b7-b0b3-4165-af98-1e044e62772a",
+          "prompt": "Dịch câu 3 sang tiếng Anh.",
+          "long": true
+        },
+        {
+          "id": "8311344e-d448-41bb-8179-4e59f5e4dc16",
+          "prompt": "B. which",
+          "long": true
+        },
+        {
+          "id": "f626611c-714e-409c-bea8-621051e671f3",
+          "prompt": "D. her",
+          "long": true
+        },
+        {
+          "id": "ed18e75d-1917-4e80-8c9a-d4c9956cbf37",
+          "prompt": "Dịch câu 6 sang tiếng Anh.",
+          "long": true
+        },
+        {
+          "id": "23c9e481-5586-4270-b741-2ddbe5027453",
+          "prompt": "Dịch câu 7 sang tiếng Anh.",
+          "long": true
+        }
+      ]
+    },
+    {
+      "id": "speaking",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Answer the speaking questions (24 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "e5080f2b-b972-4c3d-b1e8-94cebecb5247",
+          "prompt": "Part 1: Trả lời câu hỏi Speaking theo chủ đề.",
+          "long": true
+        },
+        {
+          "id": "9b9b859d-e10f-4f94-89cd-236dff8fcfff",
+          "prompt": "Part 2: Trả lời câu hỏi Speaking theo chủ đề.",
+          "long": true
+        }
+      ]
+    }
+  ]
+}

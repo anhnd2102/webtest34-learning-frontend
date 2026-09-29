@@ -3,720 +3,1453 @@
   "course": "03",
   "phase": null,
   "testNumber": 4,
-  "sourceHash": "99f67c105b6ed432390461275f9a75b92860cd82a8da159d88369f72a35f35d5",
+  "sourceHash": "0bd4d63800d48abe46985381a6be8da4cee77eadbe40792004d49d19dce99767",
   "durationMinutes": 90,
   "groups": [
     {
-      "id": "listening-i-n-t",
+      "id": "listening-gap",
       "title": "Listening · Điền từ",
       "instructions": "🔉 Exercise 1: Listen and fill in the blanks with suitable words or phrases (Nghe và điền vào chỗ trống với từ hoặc cụm từ thích hợp) 5 điểm",
-      "context": "",
-      "audioPath": "assets/demo-audio/03/test_4_Listening.mp3",
+      "context": "Let’s talk about my Tet Holidays! I have been to Hanoi to go to university for 3 years, so I often come back to my hometown on Tet Holidays. On these occasions, I visit my parents and my relatives many times. However, during the last Tet holiday, I (1)____ when I decided not to go home. \nMy friends and I went for a trip to a rural area in the North of Vietnam. This area is great to (2)____ that you cannot find anywhere. On the day we traveled, in the early morning, we woke up early to get ready. When we arrived I was surprised because this place was changing. (3)____ anymore, with a lot of modern buildings and vehicles. (4)____ selling a lot of items. I was shocked but I still took some photos to keep memories. On the second day, it rained all day and I had to spend the trip at the hotel watching the rain. (5)____",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "bd21f415-7112-46ac-9e80-2e12baf75330",
-          "prompt": "Chỗ trống (1)",
-          "options": [],
-          "long": false
+          "id": "384f1e06-3976-4790-94d9-5831c1ad0e8f",
+          "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "6414ef04-2d4d-487b-a7c2-a1ac2b0096c6",
-          "prompt": "Chỗ trống (2)",
-          "options": [],
-          "long": false
+          "id": "c516cd0c-82a6-4732-bf18-fd95f8fe17b4",
+          "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "68b10365-e097-4a3a-b59c-c4ef5d2970c4",
-          "prompt": "Chỗ trống (3)",
-          "options": [],
-          "long": false
+          "id": "16edb591-8603-4f2f-a6bf-75f26f8a2f18",
+          "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "a82fbb2a-7c0a-4763-bab6-85be053db3f3",
-          "prompt": "Chỗ trống (4)",
-          "options": [],
-          "long": false
+          "id": "0126c93c-eb9b-4a86-9f48-5c0eec259f4c",
+          "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "d0da0898-fd20-4daa-844f-7b0b75aa1096",
-          "prompt": "Chỗ trống (5)",
-          "options": [],
-          "long": false
+          "id": "386ef635-aed8-468d-94e8-85fa70cce2fd",
+          "prompt": "Chỗ trống (5)"
         }
       ]
     },
     {
-      "id": "listening-tr-l-i-ti-ng-vi-t",
+      "id": "listening-vi",
       "title": "Listening · Trả lời tiếng Việt",
       "instructions": "Exercise 2: Answer these questions in Vietnamese (Trả lời các câu hỏi sau bằng tiếng Việt) 5 điểm",
       "context": "",
-      "audioPath": "assets/demo-audio/03/test_4_Listening.mp3",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "267d34a6-b338-4ea6-b7de-ac37f80dc015",
-          "prompt": "Trong câu “I have been to Hanoi to go to university for 3 years”, thì động từ được sử dụng là gì?",
-          "options": [],
+          "id": "321b53c0-7488-401f-a2e0-b198382bd91d",
+          "prompt": "1. (a) Trong câu “I have been to Hanoi to go to university for 3 years”, thì động từ được sử dụng là gì?",
+          "long": false
+        },
+        {
+          "id": "506ffb7e-e802-4ddb-bb08-d6386ea8a3cf",
+          "prompt": "1. (b) Thì này dùng để nói đến việc như thế nào?",
           "long": true
         },
         {
-          "id": "921cb3d4-f0ab-4ff8-829e-42913cb90fa8",
-          "prompt": "Trong câu “It was not peaceful anymore, with a lot of modern buildings and vehicles”, “it” ở đây chỉ cái gì?",
-          "options": [],
+          "id": "0a1b801c-0dbe-4e4b-96e7-d6b8d5eecbe6",
+          "prompt": "2. (a) Trong câu “It was not peaceful anymore, with a lot of modern buildings and vehicles”, “it” ở đây chỉ cái gì?",
+          "long": false
+        },
+        {
+          "id": "c93014ee-e447-45e3-95c0-54eb86a41014",
+          "prompt": "2. (b) Có thể thay “it was” bằng “there was” được không?",
+          "long": false
+        },
+        {
+          "id": "aa814d10-1fc8-46f6-a5fb-65ffd8c4db3e",
+          "prompt": "2. (c) Vì sao thay được/không thay được?",
           "long": true
         },
         {
-          "id": "c59ab984-4a29-48de-a5ba-0a95409ffe9b",
-          "prompt": "có thể thay “it was” bằng “there was” được không?",
-          "options": [],
-          "long": true
+          "id": "815965f5-40f4-4eb4-a0a9-1ae3f15bcb60",
+          "prompt": "3. Trong câu dưới đây, hai từ “early” là trạng từ hay tính từ?\n“On the day we traveled, in the early (1) morning, we woke up early (2) to get ready.”\nearly (1):",
+          "long": false
         },
         {
-          "id": "51701eff-501e-4aea-80e5-a024f8b780f3",
-          "prompt": "Trong câu dưới đây, hai từ “early” là trạng từ hay tính từ?\n    “On the day we traveled, in the early (1) morning, we woke up early (2) to get ready.”",
-          "options": [],
-          "long": true
+          "id": "27290b33-87da-48da-935f-9bf2b276f54d",
+          "prompt": "3. Trong câu dưới đây, hai từ “early” là trạng từ hay tính từ?\n“On the day we traveled, in the early (1) morning, we woke up early (2) to get ready.”\nearly (2):",
+          "long": false
         },
         {
-          "id": "9b8de62c-5037-4cf3-85ca-3c1ab8ec3e3c",
-          "prompt": "Câu hỏi tiếng Việt 5",
-          "options": [],
+          "id": "f153011a-5358-41f5-9c43-98a648bd9ca5",
+          "prompt": "4. (a) Câu “I was shocked but I still took some photos to keep memories” có thể tách thành hai câu “I was shocked.” và “But I still took some photos to keep memories.” được không?",
+          "long": false
+        },
+        {
+          "id": "8f83b65e-7703-4e72-bdb5-5ffec253c336",
+          "prompt": "4. (b) Vì sao?",
           "long": true
         }
       ]
     },
     {
-      "id": "vocabulary-nghe-t-v-vi-t-ngh-a",
+      "id": "vocabulary-listen",
       "title": "Vocabulary · Nghe từ và viết nghĩa",
       "instructions": "🔉 Exercise 1: Listen and note down the words/phrases you hear from the recording (10 điểm)",
       "context": "",
-      "audioPath": "assets/demo-audio/03/Test4_SS_Vocab.mp3",
+      "audioPath": "assets/demo-audio/03/listening.mp3",
       "items": [
         {
-          "id": "fea17078-209d-4b84-b545-2b1c5db8eb1e",
-          "prompt": "1. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "ac91d680-dad5-4c91-b801-54b7d0da8469",
+          "prompt": "1. Từ/cụm từ nghe được"
         },
         {
-          "id": "438571a1-7116-4d9a-ba5d-51e131accd34",
-          "prompt": "1. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "242f599d-2e3a-4af6-9d7e-7840fd459f2c",
+          "prompt": "1. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "afaa88df-1282-4f13-ad8d-30f829390f32",
-          "prompt": "2. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "d5028471-d58d-4e13-b055-84240c2ed488",
+          "prompt": "2. Từ/cụm từ nghe được"
         },
         {
-          "id": "b59a9f87-c16a-4981-b2cd-054b480f7b1c",
-          "prompt": "2. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "51ff1fe2-0a51-4bd9-9495-c1d86313ac87",
+          "prompt": "2. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "200f538b-8361-4c26-9f29-8f55f3ef65f3",
-          "prompt": "3. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "c5e4d91c-bef3-4a9c-af4a-a300da6b0d70",
+          "prompt": "3. Từ/cụm từ nghe được"
         },
         {
-          "id": "57af00bb-c1ac-4e48-a7ca-49db1d3186dd",
-          "prompt": "3. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "fdc7028b-5d68-40c2-8646-1470b77a1fb4",
+          "prompt": "3. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "8602d1d1-ab89-40b5-a3a4-b0ae4e74463a",
-          "prompt": "4. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "1a7c2141-2914-4ba9-a150-1f17f7b33605",
+          "prompt": "4. Từ/cụm từ nghe được"
         },
         {
-          "id": "658161cf-00ff-412a-9a0e-0009c0011cdd",
-          "prompt": "4. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "61e598e0-4fe9-4f5e-ad00-d5e5262a58ae",
+          "prompt": "4. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "45137791-d5d0-471f-9687-249b8e1de7c3",
-          "prompt": "5. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "4c769f8b-b315-4c09-8bd7-adfb51a2a57d",
+          "prompt": "5. Từ/cụm từ nghe được"
         },
         {
-          "id": "721c0efc-0ade-4ad9-bdf4-ba92b66fba4f",
-          "prompt": "5. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "af0de13c-f7ac-4783-b4c6-b7ae1c6ca8a4",
+          "prompt": "5. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "0efde917-45b8-4022-b135-ceba6b0606d2",
-          "prompt": "6. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "c49d31d3-0cb5-49aa-946f-3babef94b933",
+          "prompt": "6. Từ/cụm từ nghe được"
         },
         {
-          "id": "55dfbce1-5783-4dd3-aa04-0e218d6b0e14",
-          "prompt": "6. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "4d41556d-a9f9-49a6-b40d-c9bfa50701f5",
+          "prompt": "6. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "d7851d8f-bd7e-4a8d-b969-8058ba65c682",
-          "prompt": "7. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "a8ed30f8-a65c-437b-bacc-422076c72124",
+          "prompt": "7. Từ/cụm từ nghe được"
         },
         {
-          "id": "539835bc-a5ea-492a-887c-70d26c1e3c62",
-          "prompt": "7. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "52de6330-18eb-4417-92b4-4fd8a0a5d2a5",
+          "prompt": "7. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "cf57417c-513d-498b-a301-1de1801e278c",
-          "prompt": "8. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "3b371d5b-c3ce-4136-959d-a908efb6a510",
+          "prompt": "8. Từ/cụm từ nghe được"
         },
         {
-          "id": "239c4b10-35f4-4822-ae5c-37d45e6a747a",
-          "prompt": "8. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "7804b5f1-9558-4274-8661-b987579ef682",
+          "prompt": "8. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "433a887e-6958-46e7-aeba-a4e5606da371",
-          "prompt": "9. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "49405afc-c6c4-4380-ae45-79c11735c31b",
+          "prompt": "9. Từ/cụm từ nghe được"
         },
         {
-          "id": "7e3eb169-a6de-46d6-b473-3fcb155d48c7",
-          "prompt": "9. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "ac77c970-0c64-483a-a2ae-33bd65ee5ff5",
+          "prompt": "9. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "29861360-383c-4091-bcc0-b99fd3f9c4a1",
-          "prompt": "10. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "f6137060-36ff-416d-9b3e-a9b9141bc9cc",
+          "prompt": "10. Từ/cụm từ nghe được"
         },
         {
-          "id": "8a0be45e-0e2c-4c1b-8a59-dc607880dac3",
-          "prompt": "10. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "77c1c13f-004e-4f5e-a5fc-e79b9c47818f",
+          "prompt": "10. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "ff1d2db5-40f6-4e68-8c15-e4343c453f44",
-          "prompt": "11. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "d2dd255a-43a4-4b9d-b782-7164af7b034c",
+          "prompt": "11. Từ/cụm từ nghe được"
         },
         {
-          "id": "de04a623-4ebe-4ffe-b893-2b70ccf900c1",
-          "prompt": "11. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "fd7c881a-70d7-418a-9b46-5d5b6f2db58e",
+          "prompt": "11. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "7bb9bca4-2516-48de-b9fc-d9682e00f23f",
-          "prompt": "12. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "21b41af1-7329-4641-9aeb-77577aef1aae",
+          "prompt": "12. Từ/cụm từ nghe được"
         },
         {
-          "id": "f83d0f6b-b985-46db-b9ce-5a233a390eef",
-          "prompt": "12. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "a523ecde-0879-40e7-bdd4-8be2e3f81b9f",
+          "prompt": "12. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "52fdfebe-0715-4582-84ce-5d7863f156b6",
-          "prompt": "13. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "64f6ffe7-b7c5-4652-8474-c3b92817c2f9",
+          "prompt": "13. Từ/cụm từ nghe được"
         },
         {
-          "id": "f93ee7b2-7981-4b71-8de1-8d032fc5d934",
-          "prompt": "13. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "4e1f25c5-b452-4997-a415-794edae147aa",
+          "prompt": "13. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "49a592fa-a3d7-495b-befd-b1ff24e43c02",
-          "prompt": "14. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "b9c53119-041d-41bf-a328-f1b35d9a38b6",
+          "prompt": "14. Từ/cụm từ nghe được"
         },
         {
-          "id": "b626e800-86d8-40ba-9044-66c00fc8699c",
-          "prompt": "14. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "7001ae57-7d6b-47df-acfc-a4002ff3f88f",
+          "prompt": "14. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         },
         {
-          "id": "3cbbff9d-febb-4303-b39c-318cb8ac6a14",
-          "prompt": "15. Từ/cụm từ nghe được",
-          "options": [],
-          "long": false
+          "id": "8331a352-c402-4662-9250-f4063d4be280",
+          "prompt": "15. Từ/cụm từ nghe được"
         },
         {
-          "id": "632930cd-f16a-43ee-91ae-1ab07ddb640a",
-          "prompt": "15. Nghĩa tiếng Việt",
-          "options": [],
-          "long": false
+          "id": "f8f01d8c-39d1-45cb-a578-a04c3f066bb1",
+          "prompt": "15. Chọn nghĩa tiếng Việt",
+          "options": [
+            {
+              "id": "meaning-01",
+              "label": "bơi ở biển"
+            },
+            {
+              "id": "meaning-02",
+              "label": "cẩn thận"
+            },
+            {
+              "id": "meaning-03",
+              "label": "dự báo thời tiết"
+            },
+            {
+              "id": "meaning-04",
+              "label": "đi biển"
+            },
+            {
+              "id": "meaning-05",
+              "label": "đi dạo"
+            },
+            {
+              "id": "meaning-06",
+              "label": "địa điểm yêu thích"
+            },
+            {
+              "id": "meaning-07",
+              "label": "giáng sinh"
+            },
+            {
+              "id": "meaning-08",
+              "label": "mùa"
+            },
+            {
+              "id": "meaning-09",
+              "label": "nhà hàng"
+            },
+            {
+              "id": "meaning-10",
+              "label": "nhiệt độ"
+            },
+            {
+              "id": "meaning-11",
+              "label": "nhiều mưa"
+            },
+            {
+              "id": "meaning-12",
+              "label": "ở khách sạn"
+            },
+            {
+              "id": "meaning-13",
+              "label": "siêu thị"
+            },
+            {
+              "id": "meaning-14",
+              "label": "Tết Âm lịch"
+            },
+            {
+              "id": "meaning-15",
+              "label": "tỉnh"
+            }
+          ]
         }
       ]
     },
     {
-      "id": "vocabulary-t-v-ng-qua-nh",
+      "id": "vocabulary-picture",
       "title": "Vocabulary · Từ vựng qua ảnh",
       "instructions": "Exercise 2: Look at the pictures and write down the suitable words/ phrases (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "d8e882f3-bb93-493e-8d16-aa7bddc886ae",
-          "prompt": "Hình ảnh (1)",
-          "options": [],
-          "long": false
+          "id": "fa92b7d0-c10a-46bf-bc95-11b0c6f64894",
+          "prompt": "1. a _ _ _ _ n",
+          "image": "assets/03/test-4/pic-1.png"
         },
         {
-          "id": "59b85c71-55a1-45cc-8274-bea02ea5cb87",
-          "prompt": "Hình ảnh (2)",
-          "options": [],
-          "long": false
+          "id": "d2858b6d-16f4-4369-9cd6-607de9d06ace",
+          "prompt": "2. t _ _ p _ _ _ t _ _ _",
+          "image": "assets/03/test-4/pic-2.png"
         },
         {
-          "id": "40b6832a-8da5-469e-9bfb-2563f562d0bf",
-          "prompt": "Hình ảnh (3)",
-          "options": [],
-          "long": false
+          "id": "232510bd-a0a2-4b26-a367-ce96709ad7b5",
+          "prompt": "3. w _ _ _ _",
+          "image": "assets/03/test-4/pic-3.png"
         },
         {
-          "id": "91c6d1fa-4917-40ca-8d20-6715a8a640e0",
-          "prompt": "Hình ảnh (4)",
-          "options": [],
-          "long": false
+          "id": "353b3e3c-377d-40f4-93e7-8257a009f371",
+          "prompt": "4. s _ _ _ _ _ _",
+          "image": "assets/03/test-4/pic-4.png"
         },
         {
-          "id": "3dd2b1f4-8069-4d34-b7eb-e7645a970d96",
-          "prompt": "Hình ảnh (5)",
-          "options": [],
-          "long": false
+          "id": "e01e5a1a-9a8e-4cd9-8dfb-17db1d7cff64",
+          "prompt": "5. w _ _ d _ _ _ _",
+          "image": "assets/03/test-4/pic-5.png"
         },
         {
-          "id": "e9200d1a-21ff-476c-bdec-9c4c530eaa80",
-          "prompt": "Hình ảnh (6)",
-          "options": [],
-          "long": false
+          "id": "76589eb4-eaad-437e-8e68-edff56b70809",
+          "prompt": "6. a _ _ _ t _ _ _ _",
+          "image": "assets/03/test-4/pic-6.png"
         },
         {
-          "id": "79a4becd-35b7-4c20-bfcb-44986e55616d",
-          "prompt": "Hình ảnh (7)",
-          "options": [],
-          "long": false
+          "id": "4fad7d6d-5148-4a14-a95c-e6ef77b56d2f",
+          "prompt": "7. g_  t_  t_ _  \nm_ _ _ _ _",
+          "image": "assets/03/test-4/pic-7.png"
         },
         {
-          "id": "f6cad60e-17e2-4fe3-a16f-b192902671cf",
-          "prompt": "Hình ảnh (8)",
-          "options": [],
-          "long": false
+          "id": "0c9a4f44-a9ae-476c-90b7-a8da62808ea5",
+          "prompt": "8. m _ _ - a_ _ _ _ _ \nf _ _ _ _ _ _ _",
+          "image": "assets/03/test-4/pic-8.png"
         },
         {
-          "id": "67b989ff-aff8-485e-a0b6-7a7e951830ed",
-          "prompt": "Hình ảnh (9)",
-          "options": [],
-          "long": false
+          "id": "8e3c85e3-eb63-4cb2-adc8-4c950a894ef4",
+          "prompt": "9. n _ _ _ _ _ _ _ \n_ _ _",
+          "image": "assets/03/test-4/pic-9.png"
         },
         {
-          "id": "7318b348-37ad-419e-92b9-48e9023f63a8",
-          "prompt": "Hình ảnh (10)",
-          "options": [],
-          "long": false
+          "id": "62647195-536b-4ed2-b611-65f949dff4a0",
+          "prompt": "10. c _ _ _ _ _",
+          "image": "assets/03/test-4/pic-10.png"
         }
       ]
     },
     {
-      "id": "vocabulary-ch-n-p-n",
+      "id": "vocabulary-choice",
       "title": "Vocabulary · Chọn đáp án",
       "instructions": "Exercise 3: Choose the correct answer (Chọn đáp án đúng) 5 điểm",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "6872a634-7ddd-4f11-9f2c-9f8e4d59688d",
-          "prompt": "Câu 1",
+          "id": "dbb42036-6aba-4280-a3d5-80d94bb1ad0f",
+          "prompt": "When it rains, I need to ........ to avoid getting wet.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "bring an umbrella",
+            "wear warm clothes",
+            "wear sunglasses",
+            "go outside"
+          ]
         },
         {
-          "id": "cad89469-ec94-4d99-9082-607b0b4ab8ed",
-          "prompt": "Câu 2",
+          "id": "9eb4f87f-438f-40b3-8e69-1deb19b79391",
+          "prompt": "Last winter, there was a lot of ....., so it's not too cold.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "snow",
+            "cloud",
+            "wind",
+            "sunshine"
+          ]
         },
         {
-          "id": "cb5f2823-860e-456c-b706-89502579ec30",
-          "prompt": "Câu 3",
+          "id": "03e7c13b-1cee-42d5-b29c-1b27a9eadd2f",
+          "prompt": "Family photos bring many ..........",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "happy memories",
+            "convenient locations",
+            "cozy houses",
+            "comfortable space"
+          ]
         },
         {
-          "id": "fee88ab4-d568-402b-bdc4-4dc4e88029f8",
-          "prompt": "Câu 4",
+          "id": "6292efce-059c-410e-ab77-6e33f5d77a75",
+          "prompt": "......... is good for your health.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "Going for a walk",
+            "Going home",
+            "Going to the restaurant",
+            "Going to the cinema"
+          ]
         },
         {
-          "id": "6e994e54-2677-4ee5-9660-89feeaf99ed1",
-          "prompt": "Câu 5",
+          "id": "4ce69ef4-7e50-4ce6-9231-319fea27f33a",
+          "prompt": "I had ...... when I travelled alone. I loved going on a vacation alone.",
           "options": [
-            {
-              "id": "A",
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "label": "D"
-            }
-          ],
-          "long": false
+            "beautiful beaches",
+            "friendly people",
+            "great experiences",
+            "nice weather"
+          ]
         }
       ]
     },
     {
-      "id": "grammar-chia-ng-t",
+      "id": "grammar-verb",
       "title": "Grammar · Chia động từ",
       "instructions": "Exercise 1: Complete the sentences using words in the brackets (10 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "f19a4fa5-4416-4125-9ed4-e527194ed9b0",
-          "prompt": "Câu 1",
-          "options": [],
-          "long": false
+          "id": "0bae0967-49fc-4466-880a-b015575df004",
+          "prompt": "1. The boys ____ (give) many problems for their parents."
         },
         {
-          "id": "83116e06-4d3f-49e8-84f8-da0a357b8f86",
-          "prompt": "Câu 2",
-          "options": [],
-          "long": false
+          "id": "2af128cd-4b4b-4dfc-ba90-20d60b4b8ad4",
+          "prompt": "2. It ____ (be) warm last month."
         },
         {
-          "id": "f245f07c-5128-4f8b-9e28-18fa5ad52718",
-          "prompt": "Câu 3",
-          "options": [],
-          "long": false
+          "id": "7ba26411-d8c0-4e51-9846-c36b6d23ea19",
+          "prompt": "3. They ____ (prepare) a lot of food for a long time."
         },
         {
-          "id": "06e072d5-5032-4c64-a011-68894c1926cf",
-          "prompt": "Câu 4",
-          "options": [],
-          "long": false
+          "id": "f6742f56-bd7a-44c2-a18a-2ca4fc0ba1b2",
+          "prompt": "4. The pupils ____ (study) for their exam last week."
         },
         {
-          "id": "ebbcbcf8-72ea-4c65-bf0e-7c8d100a4d69",
-          "prompt": "Câu 5",
-          "options": [],
-          "long": false
+          "id": "9acceffb-5ad9-4c29-8bf9-abf9a7b5359b",
+          "prompt": "5. ____ (do) a part-time job when you were in university?"
         },
         {
-          "id": "bb27907f-1bcd-4ed7-a3df-0bc777286183",
-          "prompt": "Câu 6",
-          "options": [],
-          "long": false
+          "id": "0fa731a3-befd-487b-914c-9872fa5b67dc",
+          "prompt": "6. They ____ (not be) in London for six months."
         },
         {
-          "id": "09676590-14a3-498a-8ef1-fad79cc12df4",
-          "prompt": "Câu 7",
-          "options": [],
-          "long": false
+          "id": "745f4862-c00b-4df3-9615-7ee6e37a704e",
+          "prompt": "7. She ____ (not leave) her phone in a taxi when she came home from the airport."
         },
         {
-          "id": "1a97352e-5f9e-4ad3-8f6f-7f83d4145803",
-          "prompt": "Câu 8",
-          "options": [],
-          "long": false
+          "id": "25665681-b563-42f1-aa27-e47ae83d8615",
+          "prompt": "8. We ____ (lose) our tickets, now we can’t go to the cinema."
         },
         {
-          "id": "9ad88e51-a25a-4c4c-9ed4-5dee94b3c2b3",
-          "prompt": "Câu 9",
-          "options": [],
-          "long": false
+          "id": "1c20b626-22e2-44e2-8893-f7e913f8016d",
+          "prompt": "9. ____ (he/meet) your family yet?"
         },
         {
-          "id": "9817d117-7fb4-449d-9117-6d54ec8e427a",
-          "prompt": "Câu 10",
-          "options": [],
-          "long": false
+          "id": "640035ef-fe29-484a-b474-3d06d71d95cf",
+          "prompt": "10. How long ____ (they/live) in Paris?"
         }
       ]
     },
     {
-      "id": "grammar-t-m-v-s-a-l-i",
+      "id": "grammar-correction",
       "title": "Grammar · Tìm và sửa lỗi",
-      "instructions": "Exercise 2: Find and correct the mistakes in the sentences below (5 điểm)",
+      "instructions": "Exercise 2: Each sentence has one mistake. Find the mistake and correct it (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "df0c56cb-dbef-4803-80e5-c196d8d7cad0",
-          "prompt": "Câu 1\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "08e69512-4977-4c5d-b74b-5b5e7fa7a3c6",
+          "prompt": "1. There is a lot of students in our class.\nLỗi sai"
         },
         {
-          "id": "be2407e5-068c-41b8-a972-95f66b6a0129",
-          "prompt": "Câu 1\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "1a65b606-51a3-4e25-b47e-0df665f4425a",
+          "prompt": "1. There is a lot of students in our class.\nPhần sửa đúng"
         },
         {
-          "id": "14e2ae12-5974-4137-85c5-1bf73b2ec231",
-          "prompt": "Câu 2\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "a047fac9-5e15-4220-b850-d403ed66b700",
+          "prompt": "2. It’s a restaurant on White street.\nLỗi sai"
         },
         {
-          "id": "f7ac437f-3a35-471d-b44c-43d7b26c14fb",
-          "prompt": "Câu 2\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "bac4a4a7-f004-40dc-a63a-ad89ca35d960",
+          "prompt": "2. It’s a restaurant on White street.\nPhần sửa đúng"
         },
         {
-          "id": "3cc8f9fc-eb98-4f74-9ca2-ae78bba4a5e0",
-          "prompt": "Câu 3\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "45e8aaea-c7b3-4e5a-90cd-8a9f2804a727",
+          "prompt": "3. There’s 10 kilometers from my house to school.\nLỗi sai"
         },
         {
-          "id": "1e908a46-1cc7-4916-80ac-5aacb7a8dbc3",
-          "prompt": "Câu 3\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "b1a66f9e-b2cf-4ddf-b662-60b4d1a8e09c",
+          "prompt": "3. There’s 10 kilometers from my house to school.\nPhần sửa đúng"
         },
         {
-          "id": "82727b68-ea8f-476b-99f1-1d9ba8815421",
-          "prompt": "Câu 4\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "e484f18b-1603-4d41-ab8b-184305856219",
+          "prompt": "4. It is a little snow, so it’s not cold.\nLỗi sai"
         },
         {
-          "id": "f2ef37a6-1cb4-4117-ae8e-e55719b49fc3",
-          "prompt": "Câu 4\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "5dd79b35-0526-4593-afc1-abd02da939f5",
+          "prompt": "4. It is a little snow, so it’s not cold.\nPhần sửa đúng"
         },
         {
-          "id": "0551328d-e749-4c8f-9649-6a3485081188",
-          "prompt": "Câu 5\nLỗi sai",
-          "options": [],
-          "long": false
+          "id": "7c2e5ef7-716d-4f63-b7cd-1c1313f76287",
+          "prompt": "5. It’s not very late, we must go home.\nLỗi sai"
         },
         {
-          "id": "d7713ebe-358b-4b26-8312-fbafbefe424e",
-          "prompt": "Câu 5\nPhần sửa đúng",
-          "options": [],
-          "long": false
+          "id": "97de7a72-4496-48f7-b9c9-4ccc4845c590",
+          "prompt": "5. It’s not very late, we must go home.\nPhần sửa đúng"
         }
       ]
     },
     {
-      "id": "grammar-s-p-x-p-c-u",
+      "id": "grammar-order",
       "title": "Grammar · Sắp xếp câu",
-      "instructions": "Exercise 3: Put the words in the correct order to make complete sentences (5 điểm)",
+      "instructions": "Exercise 3: Arrange these words to make a correct sentence (5 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "93cc3cdf-754c-4178-bdce-68585df97a30",
-          "prompt": "Câu 1",
-          "options": [],
-          "long": false
+          "id": "c2232940-6db5-42e9-9e37-843d989abfe0",
+          "prompt": "1. sunny/be/a/day/beautiful/and/yesterday."
         },
         {
-          "id": "f9b82aff-c300-46e2-906b-fee4e1857582",
-          "prompt": "Câu 2",
-          "options": [],
-          "long": false
+          "id": "41421d12-62c6-46f3-900c-05105840b90e",
+          "prompt": "2. car/buy/a/nice/really/I."
         },
         {
-          "id": "162f95df-cdf1-40f4-8853-b0c52fec5f2c",
-          "prompt": "Câu 3",
-          "options": [],
-          "long": false
+          "id": "1ef93945-351c-48b9-a390-6e7e6530e4c3",
+          "prompt": "3. great/it/be/go out/warm/this/weather/in/to."
         },
         {
-          "id": "3eceb2e8-bca7-4b39-8975-4b87fbbb333c",
-          "prompt": "Câu 4",
-          "options": [],
-          "long": false
+          "id": "f07ce141-2d72-42dc-8a25-8dc0a4b5fac5",
+          "prompt": "4. be/never/I/big/this/restaurant/before/to."
         },
         {
-          "id": "768267a5-f36b-4cf8-b981-60b3d12a8046",
-          "prompt": "Câu 5",
-          "options": [],
-          "long": false
+          "id": "1afc904d-08e6-495a-8f42-fd8f291f9292",
+          "prompt": "5. you/watch/extremely/an/movie/good/ever?"
         }
       ]
     },
     {
-      "id": "writing-d-ch-vi-t-anh",
+      "id": "writing",
       "title": "Writing · Dịch Việt–Anh",
-      "instructions": "Dịch các câu sau sang tiếng Anh (25 điểm)",
+      "instructions": "Translate the following sentences into English (Dịch các câu sau sang tiếng Anh) 25 điểm",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "cd717ba3-e90d-4608-b619-d3c09dae8587",
-          "prompt": "Dịch câu 1 sang tiếng Anh.",
-          "options": [],
+          "id": "b9a347e5-2c1e-4c7d-aa5f-0e2e1a6603e8",
+          "prompt": "1. Trời khá nóng và nhiều mưa vào mùa hè. Đường phố thường trơn trượt và bẩn nên anh ấy hay ở nhà và ngắm mưa.",
           "long": true
         },
         {
-          "id": "1829e6b8-ca1b-4fb2-a28c-b5d0bf3e00ed",
-          "prompt": "Dịch câu 2 sang tiếng Anh.",
-          "options": [],
+          "id": "f892d4dc-a297-4591-93d2-8ab86a10a7f9",
+          "prompt": "2. Ngọc đang sống ở một căn hộ ở Hà Nội. Nó không có nhiều không gian nên cô ấy muốn sống ở quê. Khoảng cách từ Hà Nội đến quê cô ấy là 90 km.",
           "long": true
         },
         {
-          "id": "70641e41-907c-40b5-bb1e-a2b16f082172",
-          "prompt": "Dịch câu 3 sang tiếng Anh.",
-          "options": [],
+          "id": "2c314dd6-9bbd-41cc-8119-e1bb24d88b78",
+          "prompt": "3. Anh ấy đi ăn nhà hàng với bạn bè mỗi tuần một lần. Có một nhà hàng ở trung tâm thành phố, nó có những món ăn cực kỳ ngon. Họ ăn ở đó được rất lâu rồi.",
           "long": true
         },
         {
-          "id": "698fb16e-94c6-4131-9770-88e4226a51bb",
-          "prompt": "Dịch câu 4 sang tiếng Anh.",
-          "options": [],
+          "id": "d91f2d4d-23bf-4088-a4ba-2cf188557298",
+          "prompt": "4. Long mới chỉ đi đến các thành phố và các tỉnh trong nước. Anh ấy chưa đi nước ngoài bao giờ. Anh ấy mong có cơ hội đi du lịch nước ngoài trong tương lai.",
           "long": true
         },
         {
-          "id": "c65623fd-30cb-4f00-b06b-149ba94f4713",
-          "prompt": "Dịch câu 5 sang tiếng Anh.",
-          "options": [],
+          "id": "55f64584-d7aa-4cb4-953d-f5985100e847",
+          "prompt": "5. Mẹ tôi luôn luôn bận rộn với công việc. Bà ấy chưa có thời gian đi du lịch. Bà ấy đã luôn mơ được đến Ý du lịch kể từ khi còn trẻ bởi vì nước Ý nổi tiếng vì cảnh đẹp.",
           "long": true
         }
       ]
     },
     {
-      "id": "speaking-tr-l-i-vi-t",
+      "id": "speaking",
       "title": "Speaking · Trả lời viết",
-      "instructions": "Trả lời các câu hỏi sau bằng tiếng Anh (Tối thiểu 30 từ cho mỗi câu). Bài làm được chấm bằng AI (25 điểm).",
+      "instructions": "Answer these questions using your own ideas or hints (25 điểm)",
       "context": "",
-      "audioPath": "",
       "items": [
         {
-          "id": "4786ddf7-8e71-4927-93fd-542bd8bd6cc2",
+          "id": "3aa9a2ae-419f-4fb6-b4bd-63e5f83a6b36",
           "prompt": "1. Tell me about your house\nGợi ý: Hints:; nhà to/nhỏ/hiện đại; có các phòng nào (phòng khách, phòng ngủ…); ở ngoại ô/trung tâm thành phố; nó thoải mái/ấm cúng/tiện lợi; đã sống ở đây được bao nhiêu lâu",
-          "options": [],
           "long": true
         },
         {
-          "id": "b0133900-426e-4118-91d2-f9631cb132ab",
+          "id": "895581fe-94af-4684-9880-139fcd28c9c8",
           "prompt": "2. Where do you often go on the weekend?\nGợi ý: đến rạp chiếu phim khi có phim mới; Chỉ tốn… phút để đến rạp phim ➔ đi xem phim một cách dễ dàng; thường đi vs …. nhưng thi thoảng đi vs ….; xem phim giúp tôi thế nào (ví dụ: thư giãn, vui vẻ, v.v.)",
-          "options": [],
           "long": true
         },
         {
-          "id": "04689b5c-b170-4cac-9edd-6544bb47a571",
+          "id": "f7ea844e-9772-48cd-816b-291a12443e04",
           "prompt": "3. What is your favorite season?\nGợi ý: mùa yêu thích là mùa hè bởi vì thời tiết rất đẹp; tháng 6-7, thời tiết nhiều nắng; tháng 8-9, trời hay mưa to; nhiệt độ luôn luôn cao ➔ phải bật điều hòa cả ngày",
-          "options": [],
           "long": true
         },
         {
-          "id": "efb9f0c7-3d0c-4301-9748-c5259644fc72",
+          "id": "550cae50-6e51-4e04-838d-7ad3e2234b55",
           "prompt": "4. How many cities and provinces in Vietnam have you been to?\nGợi ý: Tôi từng đến…. tỉnh và thành phố; Tôi thích…. vì nó rất yên bình/hiện đại/tiện lợi..; Tôi mong được sống ở đó trong tương lai vì tôi muốn.. (ví dụ: sống gần thiên nhiên/có những trải nghiệm tuyệt vời/..)",
-          "options": [],
           "long": true
         },
         {
-          "id": "ad9aec76-89ed-4a6d-bd83-e663390a860a",
+          "id": "7e4af558-21db-43f5-8d19-e9f1d903fdfa",
           "prompt": "5. Have you ever been abroad?\nGợi ý: tôi đã từng đến Thái Lan và nó rất đẹp; có nhiều hoạt động thú vị ở đây như …. (ví dụ: đi mua sắm, ngắm cảnh, đi bơi,chụp ảnh v.v.); có nhiều trải nghiệm khó quên  ở đó; Nhưng trời rất nắng khi tôi ở Thái năm ngoái/lúc đó ➔ không cảm thấy dễ chịu; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
-          "options": [],
           "long": true
         }
       ]

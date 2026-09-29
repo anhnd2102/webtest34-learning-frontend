@@ -1,0 +1,455 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "34",
+  "phase": 2,
+  "testNumber": 5,
+  "sourceHash": "fbb18faf52f8069aa124fbb0db876d1af16fcd4fd3623e80ee11c98a105434a2",
+  "durationMinutes": 90,
+  "groups": [
+    {
+      "id": "listening-gap",
+      "title": "Listening · Điền từ",
+      "instructions": "Listen and fill in the blanks with suitable words (10 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
+      "items": [
+        {
+          "id": "0623ac1d-fc90-45c0-b9f6-79c305478b32",
+          "prompt": "Chỗ trống (1)"
+        },
+        {
+          "id": "cf06f347-fb95-4a7f-83f9-3980553bad65",
+          "prompt": "Chỗ trống (2)"
+        },
+        {
+          "id": "b2aa46e9-9c81-4b60-8fed-445a0896bafb",
+          "prompt": "Chỗ trống (3)"
+        },
+        {
+          "id": "a40fd110-b08b-4dd2-b16c-e2f7aa8dff9c",
+          "prompt": "Chỗ trống (4)"
+        },
+        {
+          "id": "7d82d210-9063-4871-a40a-fb86b2da16f1",
+          "prompt": "Chỗ trống (5)"
+        },
+        {
+          "id": "48672515-db7b-48ec-a586-d14f3966c477",
+          "prompt": "Chỗ trống (6)"
+        },
+        {
+          "id": "b95db9e4-c920-4124-93c7-f0d3ccb5752f",
+          "prompt": "Chỗ trống (7)"
+        },
+        {
+          "id": "59e396ba-3087-4b87-b259-20a184e3770a",
+          "prompt": "Chỗ trống (8)"
+        },
+        {
+          "id": "df75aa54-6819-421f-ac30-75327cd5bac0",
+          "prompt": "Chỗ trống (9)"
+        },
+        {
+          "id": "ba9911b8-9b55-4261-b110-fb70a20288c7",
+          "prompt": "Chỗ trống (10)"
+        }
+      ]
+    },
+    {
+      "id": "listening-choice",
+      "title": "Listening · Chọn đáp án",
+      "instructions": "Listen and choose the correct answer (10 điểm)",
+      "context": "",
+      "audioPath": "assets/demo-audio/34/listening.mp3",
+      "items": [
+        {
+          "id": "7d3ef50c-1276-445a-a40c-be175a344d04",
+          "prompt": "9. My parents usually encourage me to do ______. They want to build my ______ in science.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "132667e1-9677-4b29-aacc-550b65b18c72",
+          "prompt": "Question 2",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "ba35250c-ad8a-4087-b231-2652bc8acc84",
+          "prompt": "Question 3",
+          "options": [
+            "Option A",
+            "Option B",
+            "She told him to check his thermometer."
+          ]
+        },
+        {
+          "id": "c9054f59-b80f-4e95-8f9b-0ad9c52e1e91",
+          "prompt": "She told him to take his temperature.",
+          "options": [
+            "She told him to make sure he did not have a fever.",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "f5b23e94-8731-4e81-b0e1-76b046a3dcc9",
+          "prompt": "To call his teacher",
+          "options": [
+            "To check his temperature",
+            "To call a doctor",
+            "Option C"
+          ]
+        },
+        {
+          "id": "0d651592-05ed-45b2-9b56-8ec311378b7c",
+          "prompt": "Part 2:",
+          "options": [
+            "Option A",
+            "She shot the ball.",
+            "She laid flat on her back."
+          ]
+        },
+        {
+          "id": "9fd1a9f0-1d9a-4fb5-a420-a714b473dfc5",
+          "prompt": "She had a foot injury.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Her teammates"
+          ]
+        },
+        {
+          "id": "004ee44a-b841-4064-8f07-45b6f3926e30",
+          "prompt": "Her team doctor",
+          "options": [
+            "Her team",
+            "Option B",
+            "Option C"
+          ]
+        },
+        {
+          "id": "949e51c7-c75a-4a88-b5e8-b6b011a2964c",
+          "prompt": "Julia should sit out the rest of the game.",
+          "options": [
+            "Julia should see him the next day.",
+            "Julia should be disappointed.",
+            "Option C"
+          ]
+        },
+        {
+          "id": "ea9f1087-898e-44f4-bf12-6683ae1b9e25",
+          "prompt": "Part 3:",
+          "options": [
+            "Option A",
+            "People can receive emails quickly.",
+            "People can communicate with strangers."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grammar-choice",
+      "title": "Grammar · Trắc nghiệm",
+      "instructions": "Choose the best answer to complete each sentence (18 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "bb897b8b-5a90-49f4-9d6b-9fac0089884e",
+          "prompt": "They can send messages to many people at the same time.",
+          "options": [
+            "Option A",
+            "Option B",
+            "People become unhealthy.",
+            "People become lonely."
+          ]
+        },
+        {
+          "id": "5c385d2d-4908-452e-a80a-6da624305d1e",
+          "prompt": "People become lonely.",
+          "options": [
+            "People become family-oriented.",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "63ba0468-a147-4001-bc5d-ca94730d06db",
+          "prompt": "1. What did Tim do with his tenth birthday gift?",
+          "options": [
+            "He traded it for a set of video games.",
+            "He did experiments with it.",
+            "He didn’t use it.",
+            "Option D"
+          ]
+        },
+        {
+          "id": "fa4ff2dd-6e15-423e-81a9-8a67d2be9da7",
+          "prompt": "Sentence 4",
+          "options": [
+            "Option A",
+            "Tim’s interest was only in video games.",
+            "Tim lost confidence in science.",
+            "Tim thought math was boring."
+          ]
+        },
+        {
+          "id": "b404c47b-cd15-42b1-92ad-9389c38b3287",
+          "prompt": "Tim thought math was boring.",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "2404bc62-4a21-4dc7-a546-0af93132c7e9",
+          "prompt": "Exercise 1: Choose the most suitable answer (18 points)",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "02afe936-0e13-4e81-9698-8c9958b4c6df",
+          "prompt": "Sentence 7",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "ce08068c-7d4d-44ee-942c-be0eeb24cb2b",
+          "prompt": "Sentence 8",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "47b6920a-f852-4b88-9c4c-61536a9363e1",
+          "prompt": "C. less careful/ probably won’t",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "afc0c440-fb95-4755-a0bb-df54ff0b7315",
+          "prompt": "C. painfully slow process",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "92ef2c7c-c30e-4850-bafe-3c9890d4a8b8",
+          "prompt": "C. well extremely",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "6df5e1c1-7569-41bc-9643-c7f668efb0d9",
+          "prompt": "C. hardly/hardly",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "f0b0234f-37de-4275-8449-d9fef117af22",
+          "prompt": "C. in",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "6355d1a7-3159-452f-88a4-43323d85c9ad",
+          "prompt": "C. terrifying",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "c674a915-45e9-4de3-a64d-4e25313eec21",
+          "prompt": "C. really gets upset",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "49e7e734-0eb8-4947-afc9-4e44a4af2800",
+          "prompt": "C. It seems like",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "53110953-89d7-46ac-acc9-4f992d3cfd9f",
+          "prompt": "C. There were",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        },
+        {
+          "id": "94cd10a5-4532-4976-b04a-a01578964583",
+          "prompt": "C. There isn't",
+          "options": [
+            "Option A",
+            "Option B",
+            "Option C",
+            "Option D"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grammar-gap",
+      "title": "Grammar · Điền từ vào đoạn văn",
+      "instructions": "Fill in the blanks with the correct form of words (10 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "06e96119-6f00-446c-817e-dc5f33cd1fc5",
+          "prompt": "Chỗ trống (1)"
+        },
+        {
+          "id": "c1a52074-e17f-483b-993e-988bcc15e200",
+          "prompt": "Chỗ trống (2)"
+        },
+        {
+          "id": "6315bf31-761f-4e1c-812a-ccbc0fca6e47",
+          "prompt": "Chỗ trống (3)"
+        },
+        {
+          "id": "34037db0-5999-44ed-9286-777ef95a02e3",
+          "prompt": "Chỗ trống (4)"
+        },
+        {
+          "id": "018f229a-4eb9-4ada-b4d9-1582a0faaa76",
+          "prompt": "Chỗ trống (5)"
+        },
+        {
+          "id": "a8f319eb-96a9-4238-8400-8e33d1d23feb",
+          "prompt": "Chỗ trống (6)"
+        },
+        {
+          "id": "074de6bf-426b-4b39-9fa9-aa34559f224c",
+          "prompt": "Chỗ trống (7)"
+        },
+        {
+          "id": "8c8bed49-177e-42d3-97bb-278cd6f1fa6b",
+          "prompt": "Chỗ trống (8)"
+        },
+        {
+          "id": "b0f49cdb-c916-472a-8782-bf4736dd714e",
+          "prompt": "Chỗ trống (9)"
+        },
+        {
+          "id": "54549d45-d3a1-4a4b-befa-dec62e9b0d67",
+          "prompt": "Chỗ trống (10)"
+        }
+      ]
+    },
+    {
+      "id": "translation",
+      "title": "Translation · Dịch câu",
+      "instructions": "Translate the following sentences into English (28 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "5d4c09f3-170a-4548-a37e-873b3ec75b03",
+          "prompt": "23. There’s plenty of food, you can have ____________ you want.",
+          "long": true
+        },
+        {
+          "id": "fee2c997-1d0e-416a-97b8-f49bcb0c064a",
+          "prompt": "A. as much as",
+          "long": true
+        },
+        {
+          "id": "8b370389-48fa-4a5f-8723-cc2d558544ea",
+          "prompt": "C. as many as",
+          "long": true
+        },
+        {
+          "id": "042f85fe-00c3-4831-93e6-0293df09d6a9",
+          "prompt": "Dịch câu 4 sang tiếng Anh.",
+          "long": true
+        },
+        {
+          "id": "15a86ab3-2d2c-4522-83ef-bbd7f4266293",
+          "prompt": "24. As the argument went on, Peter became ____________.",
+          "long": true
+        },
+        {
+          "id": "51491ba8-596d-4bec-8282-554e044552c1",
+          "prompt": "A. tireder and tireder",
+          "long": true
+        },
+        {
+          "id": "072e48ac-e0c4-4087-9f6f-f13bcdf5ec37",
+          "prompt": "C. the more tired",
+          "long": true
+        }
+      ]
+    },
+    {
+      "id": "speaking",
+      "title": "Speaking · Trả lời viết",
+      "instructions": "Answer the speaking questions (24 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "ddbf8b7c-26bf-4841-9ebc-0ff7fe0e6b77",
+          "prompt": "Part 1: Trả lời câu hỏi Speaking theo chủ đề.",
+          "long": true
+        },
+        {
+          "id": "903cec2f-4cfe-428b-bf3d-5b13ddb49543",
+          "prompt": "Part 2: Trả lời câu hỏi Speaking theo chủ đề.",
+          "long": true
+        }
+      ]
+    }
+  ]
+}
