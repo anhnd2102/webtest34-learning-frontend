@@ -132,12 +132,56 @@ test('audio exercises stay hidden until their shared recording starts', () => {
 });
 
 test('all production audio paths resolve to supplied files', async () => {
-  for (const course of ['03', '45']) {
+  for (const course of ['03', '34', '45']) {
     const form = await load(course);
     for (const path of new Set(form.groups.map(group => group.audioPath).filter(Boolean))) {
       await fs.access(new URL(`../term-tests/webtest-34-demo/${path}`, import.meta.url));
     }
   }
+  for (let t = 1; t <= 4; t++) {
+    const form = await fs.readFile(new URL(`../term-tests/webtest-34-demo/demo-content/34-test-${t}.json`, import.meta.url), 'utf8').then(JSON.parse);
+    for (const path of new Set(form.groups.map(group => group.audioPath).filter(Boolean))) {
+      await fs.access(new URL(`../term-tests/webtest-34-demo/${path}`, import.meta.url));
+    }
+  }
+});
+
+test('Course 34 listening-gap renders exam table grid layout', async () => {
+  const form = await fs.readFile(new URL('../term-tests/webtest-34-demo/demo-content/34-test-2.json', import.meta.url), 'utf8').then(JSON.parse);
+  const gapGroup = form.groups.find(g => g.id === 'listening-gap');
+  assert.ok(gapGroup.table);
+  assert.equal(gapGroup.table.title, 'The Active Leisure Center');
+  assert.equal(gapGroup.table.rows.length, 4);
+  const rendered = groupBody(gapGroup, '34');
+  assert.match(rendered, /demo-table-wrapper/);
+  assert.match(rendered, /demo-cloze-table/);
+  assert.match(rendered, /Outdoor facility/);
+  assert.match(rendered, /data-demo-answer=/);
+});
+
+test('Course 34 listening-order renders sentence cards and sequence dropdowns', async () => {
+  const form = await fs.readFile(new URL('../term-tests/webtest-34-demo/demo-content/34-test-1.json', import.meta.url), 'utf8').then(JSON.parse);
+  const orderGroup = form.groups.find(g => g.id === 'listening-order');
+  const rendered = groupBody(orderGroup, '34');
+  assert.match(rendered, /demo-order-container/);
+  assert.match(rendered, /demo-order-sentence-card/);
+  assert.match(rendered, /demo-order-slot/);
+  assert.match(rendered, /Vị trí 1/);
+});
+
+test('Course 34 Test 4 listening-choice renders MCQ radio options without prompt collisions', async () => {
+  const form = await fs.readFile(new URL('../term-tests/webtest-34-demo/demo-content/34-test-4.json', import.meta.url), 'utf8').then(JSON.parse);
+  const mcqGroup = form.groups.find(g => g.id === 'listening-choice');
+  assert.equal(mcqGroup.items.length, 5);
+  assert.equal(mcqGroup.items[0].prompt, '1. What does Debra Garrel consider as an adventure?');
+  assert.deepEqual(mcqGroup.items[0].options, [
+    'A. Studying communications at university',
+    'B. Making friends with people every day',
+    'C. Seeing new people daily while studying at university'
+  ]);
+  const rendered = groupBody(mcqGroup, '34');
+  assert.match(rendered, /demo-choice/);
+  assert.match(rendered, /Studying communications at university/);
 });
 
 test('demo entries delegate to the canonical page and branch before Learning initialization', async () => {
