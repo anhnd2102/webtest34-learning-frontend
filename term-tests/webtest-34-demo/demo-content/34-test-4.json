@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 1,
   "testNumber": 4,
-  "sourceHash": "0323407c9a57211344de3168c5a101381b807aa25fc65081628ddfb2fbf636ce",
+  "sourceHash": "ee29c0c3a95669a57048d76d621f8dbb042f69475c77a73bdee03889168c7a31",
   "durationMinutes": 90,
   "groups": [
     {
@@ -2772,127 +2772,127 @@
       "context": "",
       "items": [
         {
-          "id": "eeb4a701-7cd0-4e2f-aa40-6b3d8a56684c",
+          "id": "0815549c-d1a2-4ed5-baaf-2491ee701a00",
           "prompt": "1.The trend is S_ _ _ _\n*trend: xu hướng",
           "image": "assets/34/test-4/pic-1.png"
         },
         {
-          "id": "1f108102-68e7-423e-be64-a07d8ba2a48f",
+          "id": "e2b6e4ce-392f-423c-86b5-afd908db99b4",
           "prompt": "2. Hoa should study harder to g_ _ _ _ _ _ _ from her university",
           "image": "assets/34/test-4/pic-2.png"
         },
         {
-          "id": "0ed64946-2c1f-4044-bf60-0aa2e13e0e7d",
+          "id": "85632bb2-f366-4d6f-a9ad-9506097fe5af",
           "prompt": "3.There are many M_ _ _ _ _ _ I_ _ _ _ _ _ _ _ _, such as guitar or piano.",
           "image": "assets/34/test-4/pic-3.png"
         },
         {
-          "id": "c762919d-b9b9-4782-8228-8e0c3b7500ff",
+          "id": "c25375cf-9ba9-4239-8aef-59ed3b2cf345",
           "prompt": "4. Don’t get too stressed. C_ _ _ D_ _ _ please!",
           "image": "assets/34/test-4/pic-4.png"
         },
         {
-          "id": "d6d72657-1b9b-43cd-bf03-52de81912bc3",
+          "id": "989f37ab-c353-420e-bbd5-d7e057979e4d",
           "prompt": "5. Now, it is so expensive to R_ _ _ _ C_ _ _ _ _ _ _",
           "image": "assets/34/test-4/pic-5.png"
         },
         {
-          "id": "bff3b2fa-005c-47c6-8f4a-15ff00f78168",
+          "id": "4c6a26ea-8755-4b9c-b6d0-11fca5d74709",
           "prompt": "6. If you have a H_ _ _-P_ _ _ _ _ J_ _, you can earn so much money.",
           "image": "assets/34/test-4/pic-6.png"
         },
         {
-          "id": "c03709b9-5914-4488-b0d4-00a58354eb99",
+          "id": "48469d7f-95ab-4a04-9560-a3d1e977f357",
           "prompt": "7. I often E_ _ _ _ _ M_ K_ _ _ _ _ _ _ _ by reading books.",
           "image": "assets/34/test-4/pic-7.png"
         },
         {
-          "id": "59d4d08a-b004-4583-b060-18df44b532c4",
+          "id": "30e46bb9-335d-4207-bcc8-a4e19d2095ca",
           "prompt": "8. If you want to afford a house, you should start to S_ _ _ U_ M_ _ _ _",
           "image": "assets/34/test-4/pic-8.png"
         },
         {
-          "id": "85e1fbaf-d370-48c0-b1ba-cbf88820593a",
+          "id": "1f40fbcd-709a-4d44-a723-8d60b88c4e7f",
           "prompt": "9. It is hard to make a S_ _ _ _ _ _ _ _, because you have to get used to many difficult techniques.",
           "image": "assets/34/test-4/pic-9.png"
         },
         {
-          "id": "0bc3aca1-2d93-4f63-948e-5193f47b6561",
+          "id": "a77f3c12-542e-4ae4-9662-44f0d3024231",
           "prompt": "10. Nam has always wanted to S_ _ _ _ a_ _ _ _ _ in the UK.",
           "image": "assets/34/test-4/pic-10.png"
         },
         {
-          "id": "9210489d-e4f2-46b7-9cbf-80ebd4538247",
+          "id": "1a87d969-f3f1-4181-b65f-8677ba6c0222",
           "prompt": "11. Listening to music can help E_ _ _ _ _ _ _ P_ _ _ _ _, and raise their spirits.",
           "image": "assets/34/test-4/pic-11.png"
         },
         {
-          "id": "73da33d7-3a6d-4e34-bf05-73fec76e0282",
+          "id": "5947a1cd-8ef4-4257-8917-f76e28cfb0f5",
           "prompt": "12. If you want to B_ _ _ _ U_ M_ _ _ _ _ _, you can go to a fitness center.",
           "image": "assets/34/test-4/pic-12.png"
         },
         {
-          "id": "70f13f24-4a81-413f-84d3-6036470b2a95",
+          "id": "95016d9b-365c-444f-91a5-8831e4874646",
           "prompt": "13. You should S_ _ _ _ _ H_ _ _ if you want to have high scores in this test.",
           "image": "assets/34/test-4/pic-13.png"
         },
         {
-          "id": "60117612-bfc5-4d9d-a6d1-edabaa1b7962",
+          "id": "e81d54da-c57d-4a74-9d6d-309e569efdd0",
           "prompt": "14. The teacher’s question is C_ _ _ _ _ _ _ _ , so Nam doesn't understand at all",
           "image": "assets/34/test-4/pic-14.png"
         },
         {
-          "id": "9b998df2-1ca3-46fc-96d3-c7e5a8802829",
+          "id": "60914582-a56f-44df-a85f-41b360ca8b96",
           "prompt": "15. I feel very tired, perhaps it’s because I often S_ _ _ _ _ F_ _ _ S_ _ _ _ _",
           "image": "assets/34/test-4/pic-15.png"
         },
         {
-          "id": "875d6e9c-9659-42dc-ab62-464cd9a94a42",
+          "id": "6fec62c2-8a54-4470-81fe-9ddddd583095",
           "prompt": "16.A U_ _ _ _ _ _ _ _ _ D_ _ _ _ _ is very important because it can help you get a great job.",
           "image": "assets/34/test-4/pic-16.png"
         },
         {
-          "id": "14b6f89b-8d8d-464e-b063-a00a893b6b96",
+          "id": "b50252d4-c2a4-41f7-aa64-ab8f83b34dab",
           "prompt": "17. Don’t let a S_ _ _ _ _ _ _ come into your home, because it is dangerous.",
           "image": "assets/34/test-4/pic-17.png"
         },
         {
-          "id": "b63443e8-1daf-4e63-8f73-b31f5011b61b",
+          "id": "936c1df3-1913-43f7-a253-5d90de8aa8d8",
           "prompt": "18. Nam has been unemployed for months. He should start to L_ _ _ F_ _  _  J_ _",
           "image": "assets/34/test-4/pic-18.png"
         },
         {
-          "id": "317fbab1-3194-4756-944e-3d546566ff5b",
+          "id": "3b232791-7711-4c36-8ee8-cf2af5507ba6",
           "prompt": "19. Math is so difficult, and I often M_ _ _ M_ _ _ _ _ _ _ when I learn Math",
           "image": "assets/34/test-4/pic-19.png"
         },
         {
-          "id": "e3946099-cf40-47ee-b47e-3337899542d9",
+          "id": "160eb59f-eccc-4d6b-a466-90cf7bf7ae36",
           "prompt": "20.I want to be a V_ _ _ _ _ _ _ _ at a hospital to help patients there.",
           "image": "assets/34/test-4/pic-20.png"
         },
         {
-          "id": "4e677119-f291-493c-84af-bdc259613559",
+          "id": "6d7c140d-d567-45f8-988e-0979718e58c9",
           "prompt": "21. I hope to buy an a_ _ _ _ _ _ _ _ in the suburbs",
           "image": "assets/34/test-4/pic-21.png"
         },
         {
-          "id": "562bce05-8ffd-4fcd-bbc2-efac9b019350",
+          "id": "0b7a2d4f-0737-46db-be6d-310b417d8715",
           "prompt": "22. I believe if I strive hard, I can get a S_ _ _ _ _ _ _ _ _ _ at a university in the USA.",
           "image": "assets/34/test-4/pic-22.png"
         },
         {
-          "id": "faa01b3c-b85b-44a2-9454-154597fa40bf",
+          "id": "9bbbcdae-2831-433c-bca4-d262363b6cc6",
           "prompt": "23. Thu is p_ _ _ _ _ _ _ _ _ in English. She can write and speak English well, so she gets a great job.",
           "image": "assets/34/test-4/pic-23.png"
         },
         {
-          "id": "b9d97f8b-b266-4e97-a04e-e382705084bf",
+          "id": "982f18e4-5bc5-4781-b47d-df27ef0c204d",
           "prompt": "24. My P_ _ _ _ _ _ in life is to become a doctor.",
           "image": "assets/34/test-4/pic-24.png"
         },
         {
-          "id": "07e6bb37-e15e-436b-97c6-f28eca88f895",
+          "id": "5cecd986-81f1-4316-be13-2de4617168dc",
           "prompt": "25. Thu is such a B_ _ _ E_ _ _ _ _ _ _ because she has little time for herself and her family.",
           "image": "assets/34/test-4/pic-25.png"
         }
@@ -2906,7 +2906,7 @@
       "audioPath": "assets/34/test-4/listening.mp3",
       "items": [
         {
-          "id": "993d9b19-4f6b-4297-aa3a-ece4f02b7d60",
+          "id": "0175ce04-182c-461d-867e-6102c8fe84cc",
           "prompt": "1. What does Debra Garrel consider as an adventure?",
           "options": [
             "A. Studying communications at university",
@@ -2915,7 +2915,7 @@
           ]
         },
         {
-          "id": "4067b87c-eb30-4405-a406-170d90df626b",
+          "id": "e6dcd69c-9d40-4bcd-893a-deea0c455f2d",
           "prompt": "2. Which is NOT the experience that Debra had during her childhood?",
           "options": [
             "A. Living in many countries, including England",
@@ -2924,7 +2924,7 @@
           ]
         },
         {
-          "id": "4a29879d-f3f8-4cdb-9b7f-976c17daa2a3",
+          "id": "9f734e18-b1cf-483b-bf01-076791ff1550",
           "prompt": "3. What happened when Debra left a place?",
           "options": [
             "A. She felt that saying goodbye was not really hard",
@@ -2933,7 +2933,7 @@
           ]
         },
         {
-          "id": "2b13193e-e155-4a58-ab79-97645aedd186",
+          "id": "985134b3-3577-41d3-8458-c6e27c4eb010",
           "prompt": "4. Why does Debra study communications?",
           "options": [
             "A. She loves listening to her friends' old stories",
@@ -2942,7 +2942,7 @@
           ]
         },
         {
-          "id": "e10f655b-766b-4ed1-abba-c82a01f816f3",
+          "id": "6f0cad86-cf3a-4898-bf7b-e5ba50bc6815",
           "prompt": "5. What is Debra’s attitude towards meeting people ?",
           "options": [
             "A. She does not want to meet people with the same hobbies as hers",
@@ -2977,27 +2977,27 @@
       "audioPath": "assets/34/test-4/listening.mp3",
       "items": [
         {
-          "id": "a4c1b67f-902f-4190-a3bf-e04af4b8def1",
+          "id": "2deeb857-21ef-4a64-8b66-ad802256be9e",
           "prompt": "Chỗ trống (1)",
           "maxWords": 1
         },
         {
-          "id": "ed2e8a1a-900c-4218-aab3-4fdac5935e79",
+          "id": "224d3c67-e035-4702-87b1-43cf2eefa3a2",
           "prompt": "Chỗ trống (2)",
           "maxWords": 1
         },
         {
-          "id": "7427ad89-ba78-461b-a044-192473b5fa7d",
+          "id": "6ec7fd29-9ea5-4abb-bebe-58f65ab388a7",
           "prompt": "Chỗ trống (3)",
           "maxWords": 1
         },
         {
-          "id": "5853ea99-436a-45ac-abf4-bef727bc6387",
+          "id": "6631bbaa-2318-4d3d-b8d5-c075989c5c11",
           "prompt": "Chỗ trống (4)",
           "maxWords": 1
         },
         {
-          "id": "5ff5d883-3878-4a2d-8da0-e301910512e5",
+          "id": "b5ebe22d-0d48-4939-bc7e-2f7c39eacdb6",
           "prompt": "Chỗ trống (5)",
           "maxWords": 1
         }
@@ -3011,7 +3011,7 @@
       "audioPath": "assets/34/test-4/listening.mp3",
       "items": [
         {
-          "id": "9c5c6bfb-0553-4f90-9b48-4547da56a4a8",
+          "id": "ae143351-c813-4574-af8a-3107cd5123c7",
           "prompt": "Vị trí 1",
           "options": [
             "A",
@@ -3022,7 +3022,7 @@
           ]
         },
         {
-          "id": "00a2aefd-e360-412c-8fd3-71f72ea2f7cf",
+          "id": "cefa827e-f92c-4d3b-bca4-533dcf187c19",
           "prompt": "Vị trí 2",
           "options": [
             "A",
@@ -3033,7 +3033,7 @@
           ]
         },
         {
-          "id": "8f204275-3181-4938-887e-f81cc8b6e0a4",
+          "id": "f32641a4-ceb9-4253-8d21-461e7d4bb6ec",
           "prompt": "Vị trí 3",
           "options": [
             "A",
@@ -3044,7 +3044,7 @@
           ]
         },
         {
-          "id": "227b6b13-ac1c-4104-adaf-3b09be341b6a",
+          "id": "de1a84be-63bf-42c3-9ab0-98d07305f700",
           "prompt": "Vị trí 4",
           "options": [
             "A",
@@ -3055,7 +3055,7 @@
           ]
         },
         {
-          "id": "33d5dc42-f6ab-4418-a062-edaf9a29cb2d",
+          "id": "28ae2925-1243-428f-a466-5327c10e17e3",
           "prompt": "Vị trí 5",
           "options": [
             "A",
@@ -3074,43 +3074,43 @@
       "context": "",
       "items": [
         {
-          "id": "19a5835f-da8b-4fe1-8d0a-43ec07286a52",
+          "id": "19702c0c-0698-44b5-8b99-0614c3fd730f",
           "prompt": "/ˌɡʊdˈbaɪ/"
         },
         {
-          "id": "385fe063-d35c-4442-8d6e-ae82bd46e3ee",
+          "id": "c22bad24-ca05-4243-919b-f8d1a8db6cae",
           "prompt": "/æsk/"
         },
         {
-          "id": "38892876-44ce-4274-ac25-792a8ab17d5d",
+          "id": "50359ccb-8289-48de-aa0e-659fcba0201f",
           "prompt": "/ˈpiːpl/"
         },
         {
-          "id": "c4d3c500-7698-455a-b1ca-212cbe493b19",
+          "id": "aa30822a-8384-46b2-abfd-297f9ba9b5c1",
           "prompt": "/ɪmˈpeɪʃnt/"
         },
         {
-          "id": "dbf83fcc-4f8b-4cbd-9f89-5011b1813078",
+          "id": "b23c42e2-829c-4b39-8a1b-b8e36cdfb4c5",
           "prompt": "/lɑːrdʒ/"
         },
         {
-          "id": "0494528c-1136-4a7b-af7a-cf95640d6727",
+          "id": "8d7a46bb-ab67-43ef-8c8f-a03451c16017",
           "prompt": "/tʃuːz/"
         },
         {
-          "id": "9b5116ae-e895-4af3-b7dc-86c1779050a8",
+          "id": "ef36ed89-4f59-4bc7-8a5c-7861105293ae",
           "prompt": "/dʒɑːb/"
         },
         {
-          "id": "8552a355-f7a5-4bbe-9ef0-161c9f7e18b0",
+          "id": "fd34309d-afa1-4980-89f6-0dd64b66bf4c",
           "prompt": "/θɪŋk/"
         },
         {
-          "id": "ff773491-7e4c-4a82-adbe-51113ef2c3b4",
+          "id": "149118e8-7183-43a2-8e5a-ec52e0f512f6",
           "prompt": "/ðer/"
         },
         {
-          "id": "0b437313-dc4a-4d2c-bb8b-103c3fdf5025",
+          "id": "03b0429c-a179-4f4a-8d58-470b07546634",
           "prompt": "/frʌnt/"
         }
       ]
@@ -3122,7 +3122,7 @@
       "context": "",
       "items": [
         {
-          "id": "a69f5dec-985c-4ccf-b805-f328bc40e839",
+          "id": "6964609d-a273-4bce-ba68-1ba00fe18bbd",
           "prompt": "about",
           "options": [
             "/əˈbaɒt/",
@@ -3131,7 +3131,7 @@
           ]
         },
         {
-          "id": "d6bbc3a6-dde1-4127-ab57-8885f9efb7a9",
+          "id": "dd7b9e23-17d2-414a-b9a0-213adb98f5c3",
           "prompt": "growing",
           "options": [
             "/ˈɡrʊɪŋ/",
@@ -3140,7 +3140,7 @@
           ]
         },
         {
-          "id": "7c43c9c6-e812-4b1f-b1d0-73f16bf4fa12",
+          "id": "023e941a-0a47-4efc-acc8-5dbc49a2aec9",
           "prompt": "keep",
           "options": [
             "/kep/",
@@ -3149,7 +3149,7 @@
           ]
         },
         {
-          "id": "922ce25e-6219-4b8d-a8ab-cd4f7c77dc9c",
+          "id": "36f789d0-a20a-4088-860b-47d4090cf2ef",
           "prompt": "change",
           "options": [
             "/tʃeɪndʒ/",
@@ -3158,7 +3158,7 @@
           ]
         },
         {
-          "id": "92453c47-a93f-446c-82d1-3b1b0b507094",
+          "id": "d3de45aa-7b27-4ba1-9beb-82818ff07ea9",
           "prompt": "emotion",
           "options": [
             "/ɪˈməʊsn/",
@@ -3167,7 +3167,7 @@
           ]
         },
         {
-          "id": "adebaf01-ee96-4c3d-94b7-d69d7d6643de",
+          "id": "811d0838-7f14-42af-a964-7a92646100fb",
           "prompt": "large",
           "options": [
             "/lɑːrdʒ/",
@@ -3176,7 +3176,7 @@
           ]
         },
         {
-          "id": "45d5c66b-db42-4028-8b01-93e62973dccc",
+          "id": "1f363bfb-e14d-49f8-8461-76e60e99ddf4",
           "prompt": "have",
           "options": [
             "/hɑːv/",
@@ -3185,7 +3185,7 @@
           ]
         },
         {
-          "id": "48165f0b-a6fc-4148-8ebc-f72fb2f73e84",
+          "id": "124fa55b-7d7a-4d94-9482-d71a4a24369f",
           "prompt": "afraid",
           "options": [
             "/əˈfraɪd/",
@@ -3194,7 +3194,7 @@
           ]
         },
         {
-          "id": "fabe3c84-93bc-497f-9cb2-0be42440e2bc",
+          "id": "41c147c5-ab7b-4750-9989-18253014e37d",
           "prompt": "through",
           "options": [
             "/thruː/",
@@ -3203,7 +3203,7 @@
           ]
         },
         {
-          "id": "42682d5f-fe34-4132-b7f8-06a6b3de6810",
+          "id": "2fa94f96-8a61-44f6-a589-9978a84ccebe",
           "prompt": "that",
           "options": [
             "/ðæt/",
@@ -3220,42 +3220,42 @@
       "context": "",
       "items": [
         {
-          "id": "0cf8d954-ed30-4c6b-be74-c01998efec81",
+          "id": "62440d6e-47c2-4962-9ce8-0c69f7d897d3",
           "prompt": "1. Bạn có phải là một người mà đặc biệt giỏi điều khiển cảm xúc không?",
           "long": true
         },
         {
-          "id": "31c6619f-159b-4a8b-b0b6-d2c3277f89e4",
+          "id": "8881222f-acf9-4850-a1bd-c6f604d9da53",
           "prompt": "2. Yếu tố quan trọng nhất là, bạn không nên chọn một công việc chỉ vì nó trả lương cao. Vì nếu bạn làm như vậy, bạn có lẽ sẽ không hạnh phúc.",
           "long": true
         },
         {
-          "id": "e19ff459-5bac-4d82-bd47-c932108dacde",
+          "id": "4c9a74c2-63a4-48c7-bce6-361d310bd6a2",
           "prompt": "3. Có quá nhiều việc để làm và quá nhiều thứ để xem xét khi chọn một nghề nghiệp. Hãy nhớ rằng, nó là một thứ mà bạn sẽ làm gần như mọi ngày.",
           "long": true
         },
         {
-          "id": "f242cf27-a480-492c-81b4-24f6017ad993",
+          "id": "0b857028-ec7d-44c2-9900-d75015fd2829",
           "prompt": "4. Bạn nên truyền (gửi) loại thông điệp gì qua ngôn ngữ cơ thể nếu muốn giao tiếp tốt hơn?",
           "long": true
         },
         {
-          "id": "77c8d78b-5bf1-49a9-9ae1-ae77583e767e",
+          "id": "ea0304f3-4b81-4da6-be3d-86fee8a1c2c7",
           "prompt": "5. Hãy nhớ rằng, bạn sẽ không cải thiện được cái cách mà bạn giao tiếp nếu như bạn không nhìn trực tiếp vào mắt người mà bạn nói chuyện cùng.",
           "long": true
         },
         {
-          "id": "79fde297-32fd-4181-a636-2cba5458d535",
+          "id": "1d3f9183-5056-44cb-ab7a-aae96f363a49",
           "prompt": "6. Bạn đã bao giờ cảm thấy hai cánh tay đan chéo nhau là biểu hiện người đó không thân thiện chưa?",
           "long": true
         },
         {
-          "id": "f63c5720-12c8-4c0a-9ec6-6de04066a1b6",
+          "id": "5a63dd28-e760-4521-9511-76d95ceafb8f",
           "prompt": "7. Rõ ràng là việc học về các nền văn hóa khác nhau là khá tốt cho một trí óc của một sinh viên 21 tuổi như mình.",
           "long": true
         },
         {
-          "id": "dca28a6b-fa90-4b5b-a2a2-a8adf8099b17",
+          "id": "77840fdc-ce4f-417a-8df3-bf227a214595",
           "prompt": "8. Dường như phần khó nhất của việc rời khỏi một nơi là bạn phải làm quen với môi trường mới. Đó dường như là lí do mà bạn nên nhắc nhở bản thân rằng bạn sẽ làm quen được nhiều bạn mới.",
           "long": true
         }
@@ -3268,17 +3268,17 @@
       "context": "",
       "items": [
         {
-          "id": "c51aadd0-08b0-4faa-adc8-ac119eab453f",
+          "id": "07e519a1-b86a-4130-ba05-683f2cce5ac0",
           "prompt": "1. How important is it to choose the right career? (6 points)\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         },
         {
-          "id": "59397ee0-6cf6-4aac-bfd6-f1eeabb921a6",
+          "id": "3193d0a9-a09f-468a-b5ac-da874c5e5bbf",
           "prompt": "2. What do you hope to do in the future if you have a lot of money? (6 points)\nSuggested Ideas",
           "long": true
         },
         {
-          "id": "cae13e8d-1bca-4b32-ab8d-6fab7fe4d1fd",
+          "id": "b911ba0c-3238-4fba-986e-93f6e493e618",
           "prompt": "3. Is it difficult to understand body language? (6 points)\nSuggested Ideas",
           "long": true
         }

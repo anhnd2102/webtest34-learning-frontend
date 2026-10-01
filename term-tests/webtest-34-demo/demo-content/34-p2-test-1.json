@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 2,
   "testNumber": 5,
-  "sourceHash": "fe91867746b10b2dfa329a428195e18e14a7cacf84ad25fb061a0bc1ec565ef2",
+  "sourceHash": "a478aea2bbff13ba72f08d7fb0a46b024e41b16fade7f06441b6510743782461",
   "durationMinutes": 90,
   "groups": [
     {
@@ -14,83 +14,83 @@
       "audioPath": "assets/34/p2-test-1/listening.mp3",
       "items": [
         {
-          "id": "fc3d4e01-a774-472b-a2a6-5f67f235b962",
+          "id": "955fed1f-7447-4e1c-ad7c-6f0bf3835c54",
           "prompt": "Câu 1 - Chỗ trống (1)"
         },
         {
-          "id": "8e6a759b-4cb0-470c-b781-57c386669b6b",
+          "id": "31fbbc43-cab7-4b28-be2f-050a57247353",
           "prompt": "Câu 1 - Chỗ trống (2)"
         },
         {
-          "id": "e161e61f-b74f-4067-bd9f-976864e36fed",
+          "id": "ecc28430-777c-4a3c-8ca5-c4d8439083d3",
           "prompt": "Câu 2 - Chỗ trống (3)"
         },
         {
-          "id": "08eebb48-4d3b-4ba8-857d-de9aaf53e978",
+          "id": "a67c53e1-fbd0-43dc-b00e-c893bf32c8d5",
           "prompt": "Câu 2 - Chỗ trống (4)"
         },
         {
-          "id": "7650fdf9-dd7f-4727-8387-d259dec1275b",
+          "id": "6b7134dd-6e61-4b93-b6c8-e2b52382d73f",
           "prompt": "Câu 3 - Chỗ trống (5)"
         },
         {
-          "id": "e5ff4afd-2c7d-48ef-8371-46b8b28fc32e",
+          "id": "6776a835-fb36-45cd-8216-a1d593d5ce6f",
           "prompt": "Câu 3 - Chỗ trống (6)"
         },
         {
-          "id": "a15f531a-50b2-4015-b696-cee16c14171a",
+          "id": "7de6d293-f996-40a1-961a-18c35ab2076b",
           "prompt": "Câu 4 - Chỗ trống (7)"
         },
         {
-          "id": "b48c8d3f-2db2-405f-9b2d-a61afe19b342",
+          "id": "256ec49d-7467-43b1-98dd-821482c46b54",
           "prompt": "Câu 4 - Chỗ trống (8)"
         },
         {
-          "id": "e32e33a9-57c2-4e80-849a-c2ec96c8b64b",
+          "id": "d55bacbe-f252-4c62-9f26-241068b15619",
           "prompt": "Câu 5 - Chỗ trống (9)"
         },
         {
-          "id": "c01ec375-c4ab-41fc-ab7a-00c9339a1511",
+          "id": "ed2b84ca-88fa-4f7c-8b3b-3be085e64496",
           "prompt": "Câu 5 - Chỗ trống (10)"
         },
         {
-          "id": "53260a43-7d96-46e4-9e82-c5fa5165870c",
+          "id": "fd577969-587d-40f2-a981-8100c0f48061",
           "prompt": "Câu 6 - Chỗ trống (11)"
         },
         {
-          "id": "e0597deb-774e-40f1-a4df-8a1a5fc82f3e",
+          "id": "fd32a703-6c21-46af-982d-f9c04fcc9939",
           "prompt": "Câu 6 - Chỗ trống (12)"
         },
         {
-          "id": "6b0a4285-cd40-4457-ae53-792f2fc62232",
+          "id": "ccca65da-ac61-483c-aa0a-99177a541a3e",
           "prompt": "Câu 7 - Chỗ trống (13)"
         },
         {
-          "id": "5c693f01-07b6-4cb9-8aaf-63b49d768e9c",
+          "id": "874a1bf8-3eb5-4d46-9e84-2db3a0bdb994",
           "prompt": "Câu 7 - Chỗ trống (14)"
         },
         {
-          "id": "d3669a68-1c9e-4db3-8f64-86d65f82da5e",
+          "id": "9ac84d2b-3625-4482-9991-4218abf4c7d1",
           "prompt": "Câu 8 - Chỗ trống (15)"
         },
         {
-          "id": "be3deb73-4e99-40d3-8326-c306787e6f71",
+          "id": "e50bfb62-fc1d-44f2-a9d4-7df3be44c58b",
           "prompt": "Câu 8 - Chỗ trống (16)"
         },
         {
-          "id": "454ee533-83ce-41ed-9177-935da1a30cad",
+          "id": "66fa08f0-24be-44bd-aa3d-3434973b7e08",
           "prompt": "Câu 9 - Chỗ trống (17)"
         },
         {
-          "id": "c2ae403a-5e75-47ff-b954-d0fca1bb72f7",
+          "id": "17e21ecc-0b76-412a-826b-12d75d28a540",
           "prompt": "Câu 9 - Chỗ trống (18)"
         },
         {
-          "id": "a4fce31c-3140-40c8-a049-3d459f42f536",
+          "id": "34588a25-9a3e-4f47-9c61-984a9227cfbb",
           "prompt": "Câu 10 - Chỗ trống (19)"
         },
         {
-          "id": "f198386d-677f-45b6-a344-ffa7a4a6ee3f",
+          "id": "00331872-ae59-4a5d-8cbc-349429b5a196",
           "prompt": "Câu 10 - Chỗ trống (20)"
         }
       ]
@@ -103,7 +103,7 @@
       "audioPath": "assets/34/p2-test-1/listening.mp3",
       "items": [
         {
-          "id": "855f19e6-98a8-45e4-b355-99019d33953b",
+          "id": "2641ec8d-e181-45a6-a886-c2af5e66f4a9",
           "prompt": "1. What did Steward’s mother tell him to do when he did not feel well?",
           "options": [
             "A. She told him to check his thermometer.",
@@ -112,7 +112,7 @@
           ]
         },
         {
-          "id": "cc667b3f-c281-4cd5-b199-c86a2f209349",
+          "id": "4662dab1-cce0-49ef-856f-893e5551edf7",
           "prompt": "2. What did Steward remind his mother to do?",
           "options": [
             "A. To call his teacher",
@@ -121,7 +121,7 @@
           ]
         },
         {
-          "id": "10acb42f-9480-4e42-8468-29be684ba813",
+          "id": "97339427-aa55-420f-b6b5-6207aa32d20a",
           "prompt": "1. Why could not Julia continue the match?",
           "options": [
             "A. She shot the ball.",
@@ -130,7 +130,7 @@
           ]
         },
         {
-          "id": "14b18d61-960f-4b01-8eda-530009840e38",
+          "id": "832642b6-b882-45be-bf95-0b80a463c63b",
           "prompt": "2. Who helped Julia get out of the court?",
           "options": [
             "A. Her teammates",
@@ -139,7 +139,7 @@
           ]
         },
         {
-          "id": "47ecd419-d914-4c26-851c-a014ff9a3325",
+          "id": "54c8e519-c077-43db-98b8-44ea32099cba",
           "prompt": "3. Which of the following is NOT the doctor’s advice?",
           "options": [
             "A. Julia should sit out the rest of the game.",
@@ -148,7 +148,7 @@
           ]
         },
         {
-          "id": "6f970224-777e-4a56-922c-1c0ab3210cf1",
+          "id": "47f6938d-b1d0-4ce3-b59d-0bd0dab622c8",
           "prompt": "1. How has communication changed?",
           "options": [
             "A. People can receive emails quickly.",
@@ -157,7 +157,7 @@
           ]
         },
         {
-          "id": "ac3a3d94-b674-487c-b165-4c6acca87003",
+          "id": "1198ed19-0032-4d5d-a73f-65bc5e87cfd0",
           "prompt": "2. What can people do in chat rooms?",
           "options": [
             "A. They can talk to many people face to face.",
@@ -166,7 +166,7 @@
           ]
         },
         {
-          "id": "7acbe96e-beb1-4cd2-906d-edb0885dd85a",
+          "id": "82d86aa9-1b6f-4ca3-bf57-9a1a317cde1d",
           "prompt": "3. Which of the following is the effect of online communication?",
           "options": [
             "A. People become unhealthy.",
@@ -175,7 +175,7 @@
           ]
         },
         {
-          "id": "a8eadedf-0cf4-4e8a-af53-b9dead80ede3",
+          "id": "b891bdca-4124-4d88-8441-db3b4f9ec969",
           "prompt": "1. What did Tim do with his tenth birthday gift?",
           "options": [
             "A. He traded it for a set of video games.",
@@ -184,7 +184,7 @@
           ]
         },
         {
-          "id": "c1650a6b-6648-47ac-abeb-cb02e30a4b97",
+          "id": "14cdcb80-242e-4866-8e0e-9700478c71e5",
           "prompt": "2. Why were Tim’s parents unhappy?",
           "options": [
             "A. Tim’s interest was only in video games.",
@@ -201,7 +201,7 @@
       "context": "",
       "items": [
         {
-          "id": "41dfa608-8f73-410f-aab0-6685942a4132",
+          "id": "876b55f7-30f7-4851-95f8-857b477aa272",
           "prompt": "1. They don't ____________ about the future of the company.",
           "options": [
             "A. seem to confident",
@@ -211,7 +211,7 @@
           ]
         },
         {
-          "id": "9afeed24-33d7-41f2-935f-a9e7c6b0dd00",
+          "id": "a71a2aa0-729c-457e-8367-383677e8eda7",
           "prompt": "2. I am going to tell you something very important, so please _________________",
           "options": [
             "A. hear careful",
@@ -221,7 +221,7 @@
           ]
         },
         {
-          "id": "e9989104-bebe-46d8-8ee3-960f4f8debfb",
+          "id": "c4df6a3f-68a9-4dae-93fe-2a5f180344e1",
           "prompt": "3. Think about it ____________ before deciding.",
           "options": [
             "Otherwise, you ____________ make the right decision.",
@@ -231,7 +231,7 @@
           ]
         },
         {
-          "id": "0d457b7d-23d9-4c1d-bd26-e05253da1c5f",
+          "id": "15b5b83f-0771-4e62-86df-9527f33612e5",
           "prompt": "4. Collecting data is a _______________.",
           "options": [
             "A. slow painfully process",
@@ -241,7 +241,7 @@
           ]
         },
         {
-          "id": "f9140b1e-c75c-47fd-8e11-7800bed0c877",
+          "id": "4c992d0e-c02e-4dcb-bcb8-c09c4d219786",
           "prompt": "5. Their new tablet is selling __________.",
           "options": [
             "A. extreme well",
@@ -251,7 +251,7 @@
           ]
         },
         {
-          "id": "16e1ce6e-102a-4c59-ae86-55310f20b13b",
+          "id": "01841ea9-a775-42f2-8df2-a403f6f219c1",
           "prompt": "6. He tried very _____ at work, but he ______ had any chance to get promoted.",
           "options": [
             "A. hard/hardly",
@@ -261,7 +261,7 @@
           ]
         },
         {
-          "id": "5a0d6993-4c06-404b-b7ff-169d3e7d6b27",
+          "id": "cdbb727c-8ece-41a9-94bb-252f6f751544",
           "prompt": "7. She was excited _________ the trip because she was going to learn to ski.",
           "options": [
             "A. about",
@@ -271,7 +271,7 @@
           ]
         },
         {
-          "id": "bd6794dc-d73d-4a9b-8076-f3f4f96d1ff1",
+          "id": "607567a1-71b6-458f-9be9-bbb511b5d6bf",
           "prompt": "8. I gave her an article that I thought she would find _________.",
           "options": [
             "A. amused",
@@ -281,7 +281,7 @@
           ]
         },
         {
-          "id": "87dfaf24-c300-4ebc-b01c-a6c7fe098b69",
+          "id": "98308abd-7185-43af-95d4-cd7213411a5e",
           "prompt": "9. He ____________ if you mention his baldness.",
           "options": [
             "A. get upset really",
@@ -291,7 +291,7 @@
           ]
         },
         {
-          "id": "5bb43b3b-7077-4337-b7b7-328ee2cf7587",
+          "id": "5d2ab9c8-59d7-413c-b602-df6a4c4945aa",
           "prompt": "10. ____________ a problem with finding a date for the meeting.",
           "options": [
             "A. It seemed like",
@@ -301,7 +301,7 @@
           ]
         },
         {
-          "id": "313b7e38-4059-433a-b68f-a94022f17359",
+          "id": "5aa7b05f-933c-46c4-9adf-4257444f158b",
           "prompt": "11. ____________ a cinema here, but it was replaced by a shopping mall.",
           "options": [
             "A. It has been",
@@ -311,7 +311,7 @@
           ]
         },
         {
-          "id": "ecb188f3-242e-4054-a3ed-62a05ba7bfa9",
+          "id": "dc4de804-7399-4c9d-9eb0-f43f3b14c526",
           "prompt": "12. ______ kind of them to let us stay there.",
           "options": [
             "A. There is",
@@ -321,7 +321,7 @@
           ]
         },
         {
-          "id": "444f78b3-6ab5-466a-8b74-e3e0606e5d87",
+          "id": "b2474e01-45e7-4a2e-92b6-c8b8a254043a",
           "prompt": "13. Here's ____________news you might be interested in.",
           "options": [
             "A. some",
@@ -331,7 +331,7 @@
           ]
         },
         {
-          "id": "c4790b4b-2d7a-467d-83b9-5aec0c334fab",
+          "id": "5a0d1e78-d006-4dc2-b52a-7fac256676cf",
           "prompt": "14. Could you give me ____________idea of when the construction work will finish?",
           "options": [
             "A. any",
@@ -341,7 +341,7 @@
           ]
         },
         {
-          "id": "43639c5b-6330-4ba6-8cdc-a6a346235ed9",
+          "id": "2ea9e8f0-8be3-4c5b-adf4-e172530041ae",
           "prompt": "15. ____________food would be better than nothing at all.",
           "options": [
             "A. some of the",
@@ -351,7 +351,7 @@
           ]
         },
         {
-          "id": "b75c37db-dc1f-4b2e-94c7-e4bb69b7eecc",
+          "id": "e151f216-68fa-4dbc-8ab6-c6f00b0fb53e",
           "prompt": "16. There was _________ traffic that we were an hour late.",
           "options": [
             "A. so much",
@@ -361,7 +361,7 @@
           ]
         },
         {
-          "id": "6627e5c0-fff8-43ca-b727-4031a76ef9b0",
+          "id": "1f711e1f-416f-45a7-a37b-aa673919787e",
           "prompt": "17. If you can't fit all the bags in your car, I can take __________ in mine.",
           "options": [
             "A. a little",
@@ -371,7 +371,7 @@
           ]
         },
         {
-          "id": "cf4e06cc-cc43-4dae-9f06-ca221290707b",
+          "id": "c0349c26-abb9-40a1-adc6-2957f477f420",
           "prompt": "18. I’m not very happy about it but I suppose I have ____________ choice",
           "options": [
             "A. a few",
@@ -381,7 +381,7 @@
           ]
         },
         {
-          "id": "d5a35939-e63e-43f0-a165-3848422abe55",
+          "id": "ce680e99-2ee4-438d-a625-943844cdd0be",
           "prompt": "19. I work ____________ than I did last year.",
           "options": [
             "A. much hard",
@@ -391,7 +391,7 @@
           ]
         },
         {
-          "id": "240b21ba-b994-4b9a-835b-afb401dd3b88",
+          "id": "4f708089-d228-4c0a-abaf-eb221ac4bfad",
           "prompt": "20. We have to work much longer each day _______ in my old job.",
           "options": [
             "A. from",
@@ -401,7 +401,7 @@
           ]
         },
         {
-          "id": "264aedee-a4c2-4459-97f0-43afb36b6b1a",
+          "id": "817c0ed7-dbc9-4d97-bdc7-b39ae1b56a74",
           "prompt": "21. Yesterday was ____________ day of her life, she won a lottery.",
           "options": [
             "A. the luckiest",
@@ -411,7 +411,7 @@
           ]
         },
         {
-          "id": "3808b959-9049-4bb4-b4ee-2f273156e635",
+          "id": "a5c06069-9be8-4c6e-b51a-3065c0f18433",
           "prompt": "22. The city centre was ____________ usual. There were ____________ people yesterday.",
           "options": [
             "A. as twice crowded/ a lot fewer",
@@ -421,7 +421,7 @@
           ]
         },
         {
-          "id": "39af92c0-589a-46c4-94fd-565cae374cd5",
+          "id": "1c783d61-581f-49bf-9f03-159547ff0554",
           "prompt": "23. There’s plenty of food, you can have ____________ you want.",
           "options": [
             "A. as much as",
@@ -431,7 +431,7 @@
           ]
         },
         {
-          "id": "fedb1287-0bca-4507-96ea-d8bf2e573a95",
+          "id": "48818fb1-ab2c-49d0-b3e5-4cd2a3197001",
           "prompt": "24. As the argument went on, Peter became ____________.",
           "options": [
             "A. tireder and tireder",
@@ -449,35 +449,35 @@
       "context": "Ví dụ: He father is a doctor in a famous hospital. -> Lỗi: He | Sửa: His\nNếu câu đúng điền X vào ô lỗi.",
       "items": [
         {
-          "id": "f6dd4cf1-a6b5-4ef3-9dd7-82a248663a32",
+          "id": "829858f8-a756-4d45-8f99-9c78ba16191e",
           "prompt": "1. I rarely cook on weekdays because it’s much easier going to the supermarket for a ready-to-go meal."
         },
         {
-          "id": "5b5410c0-c331-48fa-99f8-6f9bfb3bfc58",
+          "id": "70829ad4-1bb9-456a-8801-4b2e7c5e81c2",
           "prompt": "2. There was hardly no one on the beach. It was almost deserted."
         },
         {
-          "id": "48aba631-138e-4e75-85e5-2fb5d1efdb63",
+          "id": "33c57cda-d4dd-48cf-9469-7cc5b9e563ac",
           "prompt": "3. I am sorry I am late. I got here as fastly as possible."
         },
         {
-          "id": "1b0c8d7e-0138-4119-ab57-145df6b8b760",
+          "id": "866f05f5-2910-4311-bb26-47bd73b380e9",
           "prompt": "4. It was very disappointed not to be selected for the basketball team."
         },
         {
-          "id": "cfdafc84-a88b-4e93-9e97-b95a86652c10",
+          "id": "906ee1a4-e24e-4407-9f4c-d141a2f80686",
           "prompt": "5. Most people I had invited turned up."
         },
         {
-          "id": "e97ee020-56a8-4d98-b52f-4c23abd5f338",
+          "id": "5773a04e-a6c3-4dbc-9cf3-6926b1f9a297",
           "prompt": "6. You can ask as a lot of questions as you want."
         },
         {
-          "id": "84a6edea-dd1a-412e-b751-f7532e8dd1e2",
+          "id": "e5b4f2e0-ee51-48f8-a6f2-a9252a6a52f5",
           "prompt": "7. The more I get to know about him, the fewer I understand what he thinks."
         },
         {
-          "id": "5a580286-6c7c-49fa-9977-d32d31d8af76",
+          "id": "1295aa8d-9b02-40c3-90c8-dfc5be565f57",
           "prompt": "8. I had a fever before the test, so I did the most badly in the whole class."
         }
       ]
@@ -489,42 +489,42 @@
       "context": "",
       "items": [
         {
-          "id": "0b347fc5-c97e-433d-ae0a-6e24b26d5003",
+          "id": "cc65d4e7-1e87-4b10-8780-511fba89e642",
           "prompt": "1. receive/ an/ any/ It/ without/ injury/ be/ hard/ sports/ play/\n(Thật khó để chơi thể thao mà không bị chấn thương)",
           "long": true
         },
         {
-          "id": "402b2a98-80cc-462c-beb3-254716812714",
+          "id": "5670079a-3a86-4bf0-b9a3-c66e2bf4545a",
           "prompt": "2. Although/ class./ he/ to/ go/ not/ feel/ still/ good/ he\n(Mặc dù anh ta thấy không khỏe, anh ta vẫn đến lớp)",
           "long": true
         },
         {
-          "id": "2171c4dc-938c-48c6-b78c-ef549e429b05",
+          "id": "a0a356bf-b4d7-42d1-aafa-f6430f4fae00",
           "prompt": "3. university./ popular/ sport/ students/ an/ with/ extremely/ in/ second-year/ Basketball/ my/ be/\n(Bóng rổ là môn thể thao cực kỳ phổ biến với sinh viên năm thứ hai ở trường đại học của tôi)",
           "long": true
         },
         {
-          "id": "795755c4-4aeb-4bbc-b512-e8d4043d60c9",
+          "id": "71cf1c68-aef7-4c0f-9faf-dc491e6da45a",
           "prompt": "4. you./ As/ call/ soon/ we/ as/ we/ news/ hear/ any\n(Ngay khi chúng tôi nghe được tin tức gì, chúng tôi sẽ gọi cho bạn)",
           "long": true
         },
         {
-          "id": "8d04c116-04a0-48a3-840b-632fdae1ea87",
+          "id": "ff8620d6-63c5-4d1d-aafb-a47c9e517dea",
           "prompt": "5. usual/ be/ When/ physical/ taking part in/ than/ you/ your/ temperature/ high/ activity/ a/ often/ is\n(Khi bạn tham gia hoạt động thể chất, nhiệt độ cơ thể của bạn thường cao hơn bình thường)",
           "long": true
         },
         {
-          "id": "92224dd1-91ef-4521-830a-723860657e40",
+          "id": "f01d3b9d-9d24-47c0-b788-484ed381402c",
           "prompt": "6. be/ harmful/ some/ In/ using/ ways/ other/ but/ is/ could/ positive/ it/ smartphones/ ways/ in/\n(Ở một khía cạnh nào đó, sử dụng điện thoại thông minh là tích cực nhưng ở những khía cạnh khác, nó có thể gây hại)",
           "long": true
         },
         {
-          "id": "162de19d-188d-4af1-b262-50274b96ae45",
+          "id": "7fa0b95b-f758-4037-a042-2a1b21ef2cd3",
           "prompt": "7. as/ as/ be/ at/ just/ boys/ good/ maths/ Girls/ doing\n(Con gái cũng giỏi toán như con trai)",
           "long": true
         },
         {
-          "id": "043a3eac-e50b-4843-b113-66c1595d7998",
+          "id": "5758796c-134c-4ca2-b7ef-b00b66b3ab2b",
           "prompt": "8. means/ of/ The/ already/ communication/ Internet/ the/ most/ become/ popular/ have/\n(Internet đã trở thành phương tiện liên lạc phổ biến nhất)",
           "long": true
         }
@@ -537,42 +537,42 @@
       "context": "",
       "items": [
         {
-          "id": "494df502-4e8e-4c7f-a78a-6543a6d45eb4",
+          "id": "747ca643-e584-4b1c-bd8e-4144199d9c03",
           "prompt": "1. Thật là kinh khủng khi tôi đã phải nghỉ học ở nhà quá lâu vì tôi cảm thấy không khỏe. Tôi đã bỏ lỡ một trận đấu bóng rổ quan trọng với đội X. Khi quay trở lại, tôi không thể bắt kịp với các đồng đội. Điều đó thật đáng thất vọng.",
           "long": true
         },
         {
-          "id": "fde44af6-e460-4206-bb23-c461e4ed7e41",
+          "id": "117e14ad-28f0-4c5e-a7fa-8205af2fc537",
           "prompt": "2. Chắc chắn rằng, điện thoại di động đã làm cho cuộc sống của chúng ta trở nên dễ dàng hơn. Tuy nhiên, điều này không có nghĩa là không ai chỉ trích việc sử dụng điện thoại quá nhiều. Chúng ta nên nhắc nhở bản thân sử dụng điện thoại một cách khôn ngoan.\n\nGợi ý: the overuse of sth: sử dụng cái gì quá nhiều / mean: có nghĩa",
           "long": true
         },
         {
-          "id": "014c3c9b-838f-4cff-b704-ceb87e0c00a0",
+          "id": "f8cd1fb9-3733-4221-a12e-ca26db47acb3",
           "prompt": "3. Ở Việt Nam, hầu hết các bạn nữ không thích môn khoa học nhiều như các bạn nam, bởi vì bố mẹ họ không khuyến khích họ làm các thí nghiệm khoa học hay học toán. Tuy nhiên, học toán và khoa học giúp các bạn nữ xây dựng sự tự tin.",
           "long": true
         },
         {
-          "id": "021f6fc8-7db0-47c1-88ca-068ffd3b90ff",
+          "id": "2893cd06-c68f-4a0e-84c4-ca05f2d82812",
           "prompt": "4. Nhiều người trẻ quen với việc sử dụng điện thoại để giao tiếp. Tuy nhiên, một số người già thích nói chuyện trực tiếp hơn.",
           "long": true
         },
         {
-          "id": "d505ce2e-c46f-46f9-addc-8afdf58575fa",
+          "id": "685277f6-84da-4071-b3d7-baff935f98ad",
           "prompt": "5. Hàng triệu người trên khắp thế giới có thể hưởng lợi từ các nghiên cứu khoa học. Trước đây/trong quá khứ, mất rất lâu để mọi người có thể hồi phục khỏi một số bệnh như cảm cúm hay cảm lạnh. Hiện tại, bạn chỉ cần uống thuốc kịp thời để cảm thấy tốt hơn.\n\nGợi ý: such as: như là / disease: bệnh",
           "long": true
         },
         {
-          "id": "523eb83a-fd41-46db-89e7-039559ae576f",
+          "id": "7bb270d2-1a65-4a1e-85ac-780c03c32bc5",
           "prompt": "6. Có một nhà hàng hải sản mới ở gần nhà tôi. Nó/nhà hàng đó có một vài món ăn khá ngon nhưng cực kỳ đắt, và thật ngạc nhiên là ở đó chẳng có cái gì để uống cả.",
           "long": true
         },
         {
-          "id": "64ff1df8-d277-4f27-b36e-b93f148daeec",
+          "id": "1e191d1c-c7f2-40a6-81c7-9ada53ecb4be",
           "prompt": "7. Mọi người đều ấn tượng với điểm số bài kiểm tra của cô ấy bởi vì không học sinh nào trong lớp học đó có thể làm bài (kiểm tra) tốt.",
           "long": true
         },
         {
-          "id": "7968f781-e7db-42ff-b5e3-9947f585c135",
+          "id": "1d3f0759-fb62-48e1-a273-699629bed719",
           "prompt": "8. Trong trận bóng đá tối qua, vì chạy quá nhanh nên tôi đã bị thương ở mắt cá chân. Bác sĩ đã chườm đá lên mắt cá chân của tôi và vết sưng đã giảm đi nhưng tôi không thể tiếp tục trận đấu nữa.\n\nGợi ý: continue + Ving: tiếp tục làm gì",
           "long": true
         }
@@ -585,12 +585,12 @@
       "context": "",
       "items": [
         {
-          "id": "8d533231-64e1-4144-a230-f8b92bf65665",
+          "id": "d3997919-a7d0-4524-94f6-f11333bdbf50",
           "prompt": "Part 1: Answer this speaking question with suggested ideas (30s prep, 1-2 min speaking):\n'Is math difficult for children to learn?'\nSuggested ideas:\n- Mức độ khó của việc học toán với trẻ em?\n- Lúc mới học, trẻ em gặp khó khăn gì khi học?\n- Sau một thời gian, trẻ em sẽ thấy môn toán như thế nào?",
           "long": true
         },
         {
-          "id": "02891c71-ea25-4216-a8d6-d39e08ab553f",
+          "id": "8c0742ce-2db3-47e6-8795-f6cc2f0d4378",
           "prompt": "Part 2: Answer this speaking question with suggested ideas (30s prep, 1-2 min speaking):\n'How important is online communication in your life?'\nSuggested ideas:\n- Mức độ quan trọng của online communication?\n- Online communication quan trọng với ai?\n- Online communication quan trọng như thế nào?",
           "long": true
         }

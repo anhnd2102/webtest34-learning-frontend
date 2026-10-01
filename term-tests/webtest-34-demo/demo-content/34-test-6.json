@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 2,
   "testNumber": 6,
-  "sourceHash": "0971c5463b29a5125ce168d9e02b10ec004a2404d16b0ca7527353ebd80aa777",
+  "sourceHash": "8e7ba3c86145e5ffc60419d67d5f7d01376da3d6b7d4d953257630a9ddc178c8",
   "durationMinutes": 90,
   "groups": [
     {
@@ -14,83 +14,83 @@
       "audioPath": "assets/34/p2-test-2/listening.mp3",
       "items": [
         {
-          "id": "19c66334-fa76-41fa-8996-fb432a3bc92c",
+          "id": "eda743bf-c674-47ed-b656-4aef15436056",
           "prompt": "Câu 1 - Chỗ trống (1)"
         },
         {
-          "id": "d1971a1c-1fad-4ab7-b5c8-5063852ad559",
+          "id": "a6834c67-e306-4008-8cf6-7f76b3d79f2d",
           "prompt": "Câu 1 - Chỗ trống (2)"
         },
         {
-          "id": "d4157303-02c5-4aae-be9b-69117a439049",
+          "id": "7fd5c5de-ba50-411d-b166-dbe751bccd7d",
           "prompt": "Câu 2 - Chỗ trống (3)"
         },
         {
-          "id": "44161600-e702-4944-b7d9-199e84fbcbe4",
+          "id": "3f505fe7-6249-40b1-8426-b87d01b66ea5",
           "prompt": "Câu 2 - Chỗ trống (4)"
         },
         {
-          "id": "25771108-6005-4275-89c9-6768c9416f66",
+          "id": "cac63884-70e7-4739-bb8c-86f1ffdb6935",
           "prompt": "Câu 3 - Chỗ trống (5)"
         },
         {
-          "id": "9a0ec893-35a0-4aa6-88f7-722ab2cb998a",
+          "id": "3593eef4-9a77-4af0-a122-620db1f50840",
           "prompt": "Câu 3 - Chỗ trống (6)"
         },
         {
-          "id": "1cb49886-6d63-456d-a56b-3093099f9d04",
+          "id": "b4e351cb-c1c3-44fa-9600-9970c5752906",
           "prompt": "Câu 4 - Chỗ trống (7)"
         },
         {
-          "id": "a5e7f8ba-84d4-41cc-894a-07549c29c4ab",
+          "id": "0defe050-499c-4a3b-8b1d-393714f3fc2d",
           "prompt": "Câu 4 - Chỗ trống (8)"
         },
         {
-          "id": "2d700d52-6830-4a7e-9858-94146f2aa7e0",
+          "id": "821ba52a-af22-423b-ad54-89984ac62183",
           "prompt": "Câu 5 - Chỗ trống (9)"
         },
         {
-          "id": "d31267cb-cda2-4cb1-9590-c0cafefbc6d3",
+          "id": "168c7f9f-69bf-4450-9dce-69a125a1a34b",
           "prompt": "Câu 5 - Chỗ trống (10)"
         },
         {
-          "id": "ee02dc06-3ac3-4ed9-80a1-81ad33bb6d89",
+          "id": "67214009-8510-4463-91d6-dfea75dd3bf8",
           "prompt": "Câu 6 - Chỗ trống (11)"
         },
         {
-          "id": "0d8382fe-191d-494f-9f90-5d2ce1470944",
+          "id": "dae22e5d-0bc8-405c-bbd4-4122fa2c9258",
           "prompt": "Câu 6 - Chỗ trống (12)"
         },
         {
-          "id": "e00558c4-fecf-4a0b-83cc-462b91571ece",
+          "id": "31c1ff00-afe4-4aa4-8d8e-db56481c82fc",
           "prompt": "Câu 7 - Chỗ trống (13)"
         },
         {
-          "id": "5d1fa840-f4a3-40af-816d-5483b7b44b0b",
+          "id": "53144425-dfb5-40ba-88dd-f15609e82507",
           "prompt": "Câu 7 - Chỗ trống (14)"
         },
         {
-          "id": "464d2b70-183d-4f9b-b705-a7d3169cc429",
+          "id": "9f4169e6-10c4-4e9d-80ee-500c0e48c7fb",
           "prompt": "Câu 8 - Chỗ trống (15)"
         },
         {
-          "id": "4831d762-136f-4f50-96fa-cf9b5007f740",
+          "id": "60c24cf2-5f1d-46fd-85f9-21761a02fb43",
           "prompt": "Câu 8 - Chỗ trống (16)"
         },
         {
-          "id": "01e8e8d3-5313-449f-8622-c062aef8d825",
+          "id": "0a07c4ff-db5c-48f5-8854-8b28bfd4738b",
           "prompt": "Câu 9 - Chỗ trống (17)"
         },
         {
-          "id": "db265fc3-dec8-47ed-b9cb-585917dc87dd",
+          "id": "cab7124e-7b22-40b4-9403-edb333ef44b2",
           "prompt": "Câu 9 - Chỗ trống (18)"
         },
         {
-          "id": "04601f8a-fffb-4510-a024-1a1cb4eacd16",
+          "id": "0c360c8d-c245-4cec-831a-97fcb26bd9d1",
           "prompt": "Câu 10 - Chỗ trống (19)"
         },
         {
-          "id": "11b917ba-c07d-4eae-8261-6d25357a3307",
+          "id": "2cab97c5-514e-4f7b-a410-2993de09a08b",
           "prompt": "Câu 10 - Chỗ trống (20)"
         }
       ]
@@ -103,7 +103,7 @@
       "audioPath": "assets/34/p2-test-2/listening.mp3",
       "items": [
         {
-          "id": "1dbac2ef-dcd4-4b3a-82f5-5daf097f0669",
+          "id": "681e6a9a-bab2-4b34-95fe-ab6cd5c41aee",
           "prompt": "Why is the new portrait in the gallery becoming popular?",
           "options": [
             "A. Because of its unusual size.",
@@ -112,7 +112,7 @@
           ]
         },
         {
-          "id": "baee43b9-a681-4d18-bb93-45a3416a579d",
+          "id": "e2155ebe-0630-489d-8a32-d852ba6647f8",
           "prompt": "What did the artist use to create the painting?",
           "options": [
             "A. Oil on wood.",
@@ -121,7 +121,7 @@
           ]
         },
         {
-          "id": "18e18d1e-640a-4811-91db-cb427baa6e43",
+          "id": "50d3f2cb-8e01-4554-abac-79c55d3bc0ad",
           "prompt": "What kind of play is the drama club’s new production?",
           "options": [
             "A. A tragedy.",
@@ -130,7 +130,7 @@
           ]
         },
         {
-          "id": "c2fea2bf-2a33-40b9-b760-0b259029a00b",
+          "id": "d79e443a-4d43-49a4-9702-082ea6adacad",
           "prompt": "How did the cast mainly express their emotions?",
           "options": [
             "A. By speaking long lines.",
@@ -139,7 +139,7 @@
           ]
         },
         {
-          "id": "aba1f973-a605-41bb-9eed-8a46b8a3fd6f",
+          "id": "6af59514-1ab2-4712-b7af-b8cf3fbdede6",
           "prompt": "Why was the audience unhappy during the first scene?",
           "options": [
             "A. The cast did not have enthusiasm.",
@@ -148,7 +148,7 @@
           ]
         },
         {
-          "id": "9e1c8288-51cc-4d1e-9c7b-bebcd241d81d",
+          "id": "e010d531-825a-48f8-8d03-6fb34725b370",
           "prompt": "What does the weather forecast say about the weekend?",
           "options": [
             "A. There will be heavy rain all day.",
@@ -157,7 +157,7 @@
           ]
         },
         {
-          "id": "34202d9f-4e4a-4497-b3e0-bc95adc6f230",
+          "id": "9dcb490e-f30b-475d-8334-87613a6f3409",
           "prompt": "Why does the speaker suggest bringing a cooler?",
           "options": [
             "A. To keep the food fresh.",
@@ -166,7 +166,7 @@
           ]
         },
         {
-          "id": "9341e70c-1f55-4d97-b2d5-7ea7053ac12f",
+          "id": "1f822a02-2651-428e-8182-e66a4aa58a6e",
           "prompt": "Where will the group get the tent?",
           "options": [
             "A. From a local store near the lake.",
@@ -175,7 +175,7 @@
           ]
         },
         {
-          "id": "f39953ca-16bd-4219-9322-94bd14a0fac2",
+          "id": "2d05b9b4-9442-402e-8474-9959f5dca54e",
           "prompt": "What does the speaker say about umbrellas?",
           "options": [
             "A. They are the most important items.",
@@ -184,7 +184,7 @@
           ]
         },
         {
-          "id": "004acfaf-3614-4af1-bde3-60670e09e272",
+          "id": "a1485439-1fd7-4333-8462-080cf24bc326",
           "prompt": "How does the speaker feel about the upcoming trip?",
           "options": [
             "A. Worried about the weather.",
@@ -201,7 +201,7 @@
       "context": "",
       "items": [
         {
-          "id": "a307e9c1-1092-4a93-8766-36fd2f493191",
+          "id": "0159874d-931f-4a22-b733-df1b0d99595b",
           "prompt": "I __________ a lot of time painting portraits lately.",
           "options": [
             "A. spend",
@@ -211,7 +211,7 @@
           ]
         },
         {
-          "id": "6d6157ac-324e-41de-bc7a-61350032c053",
+          "id": "03142f64-d2e2-4ea7-a244-cdf97b8cbed8",
           "prompt": "“Could you ask the actors to come here?” – “I can’t interrupt them. They __________ their costumes for the play.”",
           "options": [
             "A. prepare",
@@ -221,7 +221,7 @@
           ]
         },
         {
-          "id": "5297f788-c68c-4b3a-9054-55b4674abf64",
+          "id": "e91bedf7-d9a8-4748-b487-6fb6d755ed10",
           "prompt": "I don’t know what to expect on this trip because I __________ on a long car trip like this.",
           "options": [
             "A. didn’t go",
@@ -231,7 +231,7 @@
           ]
         },
         {
-          "id": "d3633f96-2b90-4e5f-90ed-a8a694d74f81",
+          "id": "a78c04c9-7dfe-4079-84ad-effae909e8eb",
           "prompt": "While the actress __________ on stage, the lights suddenly went out.",
           "options": [
             "A. performed",
@@ -241,7 +241,7 @@
           ]
         },
         {
-          "id": "136b49cf-6a12-427f-b10c-74e5e5450b28",
+          "id": "715e60e7-d7e8-4c15-80b4-9c358c68dbf6",
           "prompt": "I’m sorry, but you __________ go on stage without your costume.",
           "options": [
             "A. hasn’t to",
@@ -251,7 +251,7 @@
           ]
         },
         {
-          "id": "74280e47-6c5d-4b39-a540-4eaa3e84a434",
+          "id": "1df6cc23-5f0d-43d8-89c0-f226bc8aceb5",
           "prompt": "Next weekend, we __________ camping near the lake. We’ve got our tent ready.",
           "options": [
             "A. will go",
@@ -261,7 +261,7 @@
           ]
         },
         {
-          "id": "e4326360-f7c2-4a35-8776-a05a1c485011",
+          "id": "fb4bcafd-a075-4580-b158-4ee29666b8c9",
           "prompt": "The famous portrait __________ by Leonardo da Vinci in the 16th century.",
           "options": [
             "A. painted",
@@ -271,7 +271,7 @@
           ]
         },
         {
-          "id": "2fa67a2f-f92a-4225-ad13-be83a8a12ade",
+          "id": "c4a2891f-5e27-4680-be6c-860c03d49aa4",
           "prompt": "This beautiful landscape was painted __________ oil paint.",
           "options": [
             "A. by",
@@ -281,7 +281,7 @@
           ]
         },
         {
-          "id": "94c343d3-6765-45e5-a665-82f75bc3d328",
+          "id": "3e41a44e-7e90-4f0f-9378-e137105174e7",
           "prompt": "It was __________ unusual smile that people still talk about it today.",
           "options": [
             "A. so",
@@ -291,7 +291,7 @@
           ]
         },
         {
-          "id": "e2af7e75-e823-4e23-92b2-e7d17876a43d",
+          "id": "aeaa3ce3-2768-45dc-9434-fa08695e8645",
           "prompt": "The weather was __________ fine that we decided to get packing immediately.",
           "options": [
             "A. so",
@@ -301,7 +301,7 @@
           ]
         },
         {
-          "id": "ab471f20-5868-451c-8c9a-dcd69addd301",
+          "id": "a85bf0ed-ceeb-4080-aaa1-86a3637e528f",
           "prompt": "The actors finally gave up __________ because it was too late.",
           "options": [
             "A. argue",
@@ -311,7 +311,7 @@
           ]
         },
         {
-          "id": "4dfc694b-8c98-47b2-838e-e36c1aa065a0",
+          "id": "768e5370-9547-490c-94d5-d6c31954ab9e",
           "prompt": "I look forward __________ from you about the camping trip.",
           "options": [
             "A. hearing",
@@ -321,7 +321,7 @@
           ]
         },
         {
-          "id": "c23e4329-8294-4d6a-bf06-e7f35dff1f01",
+          "id": "cf1a311c-7a98-4928-8b7a-80e90b837da3",
           "prompt": "Despite feeling sick, the main actor managed __________ a great performance.",
           "options": [
             "A. giving",
@@ -331,7 +331,7 @@
           ]
         },
         {
-          "id": "598f58cf-f3bb-4020-b7f7-ff5ee25645fa",
+          "id": "2c637844-fec1-44d2-acae-377fc7461477",
           "prompt": "Do you remember __________ to the art gallery when you were young?",
           "options": [
             "A. go",
@@ -341,7 +341,7 @@
           ]
         },
         {
-          "id": "2a23ca70-919e-4ee1-b3b1-3df4a2027edc",
+          "id": "98fe1044-c859-44f2-8315-170186033512",
           "prompt": "The comic character made everyone in the audience __________ at her jokes.",
           "options": [
             "A. laughing",
@@ -351,7 +351,7 @@
           ]
         },
         {
-          "id": "2591c848-5c44-4651-9d0d-202a3cc4517d",
+          "id": "28c482ac-7c0f-4454-87e2-5e18efea5f3e",
           "prompt": "Unluckily, we don’t have __________ to buy more oil paint.",
           "options": [
             "A. enough money",
@@ -361,7 +361,7 @@
           ]
         },
         {
-          "id": "f4687cf6-1cb6-4452-853c-678012ccdeaa",
+          "id": "eee506a0-4f3d-4e7d-bd48-e9bc7725940c",
           "prompt": "I’m afraid this sleeping bag is not __________ for a cold night.",
           "options": [
             "A. enough warm",
@@ -371,7 +371,7 @@
           ]
         },
         {
-          "id": "9a614f68-87c9-4480-ae89-260f2f8ad19c",
+          "id": "374c867a-4f21-42da-a21d-1f21bf5a983c",
           "prompt": "The water in the lake is __________ to swim in today.",
           "options": [
             "A. too cold",
@@ -381,7 +381,7 @@
           ]
         },
         {
-          "id": "cd6fcf05-78d9-4799-83fa-65a92a3e06da",
+          "id": "5199911b-00eb-4b7b-922e-a7521ca1082d",
           "prompt": "The actors need to prepare __________ for the final performance.",
           "options": [
             "A. itself",
@@ -391,7 +391,7 @@
           ]
         },
         {
-          "id": "b2ba6eec-94d9-4d82-b305-9700dd4a039d",
+          "id": "3b9f502a-f3c2-41ea-96b3-7cf00026bb31",
           "prompt": "Romeo and Juliet, __________ is a famous tragedy, is my favorite play.",
           "options": [
             "A. who",
@@ -401,7 +401,7 @@
           ]
         },
         {
-          "id": "f771845a-6162-4a12-8b72-e97efc2df981",
+          "id": "6099d35c-3945-4144-b930-a4775010ea62",
           "prompt": "The Louvre is an art museum __________ you can see the Mona Lisa.",
           "options": [
             "A. which",
@@ -411,7 +411,7 @@
           ]
         },
         {
-          "id": "ad8d0d0b-2aa2-4440-8c73-0f2dbb48f273",
+          "id": "c3b14cb4-847b-4878-917b-e66467f696c4",
           "prompt": "The artist __________ paintings are very famous lives in Italy.",
           "options": [
             "A. who",
@@ -421,7 +421,7 @@
           ]
         },
         {
-          "id": "2cee1be7-39a4-4fb7-8298-bea0d814026a",
+          "id": "53bb74d9-5cf0-4b52-9905-f5c250570f9d",
           "prompt": "The cast performed a famous play for the local people and gave __________ a great time.",
           "options": [
             "A. they",
@@ -431,7 +431,7 @@
           ]
         },
         {
-          "id": "1024b33f-29ec-4815-a51b-0641c9fe56d2",
+          "id": "1430f195-84ff-4d3b-a662-42645a0ef18b",
           "prompt": "Leonardo, __________ painted this landscape, was very arrogant.",
           "options": [
             "A. who",
@@ -449,52 +449,52 @@
       "context": "Viết tiếp hoặc viết lại câu theo gợi ý mà không làm thay đổi nghĩa.",
       "items": [
         {
-          "id": "7719b916-cf9f-4942-b7ce-da41aa6ebd3b",
+          "id": "3aefb440-8feb-48b8-9633-12a199f2f3f2",
           "prompt": "1. They were wearing beautiful costumes when they performed on stage.\nGợi ý: Sử dụng câu bị động",
           "long": false
         },
         {
-          "id": "d09859ea-bcfc-4572-a78e-2193a3572589",
+          "id": "a40742f5-e2cf-48e8-8033-62f24c26ad80",
           "prompt": "2. The play was so sad that many people in the audience cried.\nGợi ý: Sử  dụng cấu trúc so/such  ... that..",
           "long": false
         },
         {
-          "id": "ebc713d5-ec7b-426f-b5ec-72f8a71e822c",
+          "id": "c089d875-ac64-460d-9ed4-4037c2565b22",
           "prompt": "3. The weather is too rainy for us to go camping.\nGợi ý: Sử dụng cấu trúc so/such  ... that..",
           "long": false
         },
         {
-          "id": "12af6f0c-b104-41f7-9f95-3ba74543d2e5",
+          "id": "d3725cf4-7e14-443b-92c8-d57779f8120e",
           "prompt": "4. Leonardo da Vinci was a great artist. He painted the Mona Lisa.\nGợi ý: Sử  dụng kiến thức mệnh đề quan hệ",
           "long": false
         },
         {
-          "id": "9e53fbab-d0ea-411d-a479-18248ae8e21f",
+          "id": "ea63505a-796b-455a-bb89-1e66165c3ecc",
           "prompt": "5. I don’t want to pack my bags tonight - let’s do it tomorrow.\nGợi ý: Sử dụng kiến thức to V/Ving",
           "long": false
         },
         {
-          "id": "72d9c02e-e314-45b7-ba0a-245c17f7aa3e",
+          "id": "dc1a7c6b-9c59-4b68-8b02-e31a602fef3d",
           "prompt": "6. My advice is that you shouldn’t pack too many heavy things for the hike.\nGợi ý: Sử dụng kiến thức về động từ khuyết thiếu",
           "long": false
         },
         {
-          "id": "b841c8b6-8e8e-43a2-8e4d-4f2dd0b7f77e",
+          "id": "896d592c-3ff5-4f08-8ed3-4620abd9279f",
           "prompt": "7. Did the artist use oil paint to create this portrait?\nGợi ý: Sử dụng kiến thức câu bị động",
           "long": false
         },
         {
-          "id": "4912ae46-c711-481c-97a4-0616ff18a525",
+          "id": "5b024cb7-dc99-4d06-839e-cdc3c8ab05ff",
           "prompt": "8. The tent is not big enough for all of us to sleep in.\nGợi ý: Sử dụng kiến thức về too/enough",
           "long": false
         },
         {
-          "id": "d95d1fb9-541d-4b5e-a32f-29c7166544dc",
+          "id": "5c1e7fed-c285-4107-85d2-b54312f5fa42",
           "prompt": "9. I started looking forward to this trip two weeks ago.\nGợi ý: Sử dụng kiến thức về thì hiện tại hoàn thành",
           "long": false
         },
         {
-          "id": "dd17f416-d056-448a-8442-dc64c4a251f4",
+          "id": "cf8d6f5f-d0ad-465d-b453-04a46a33e056",
           "prompt": "10. This landscape painting is very expensive. I bought it at the gallery.\nGợi ý: Sử dụng kiến thức về mệnh đề quan hệ",
           "long": false
         }
@@ -507,42 +507,42 @@
       "context": "",
       "items": [
         {
-          "id": "6fbd5f0a-0431-45b6-b5de-0a75e9bcf51a",
+          "id": "8acfeffa-587c-440c-b529-ec9b1ed9e960",
           "prompt": "1. Nam, người mà luôn luôn phàn nàn về cô Hoa, trông rất kiêu ngạo\n(Gợi ý: Sử dụng mệnh đề quan hệ; Cấu trúc phàn nàn)",
           "long": true
         },
         {
-          "id": "da45dd12-125d-40b9-9fe9-999ea34222a6",
+          "id": "11f9333c-8067-4c8e-a97e-c52056a063ca",
           "prompt": "2. Bức chân dung được vẽ bởi một nghệ sĩ nổi tiếng. Nó cuốn hút đến nỗi mà mọi người đều muốn xem nó.\n(Gợi ý: Sử dụng Câu bị động; Sử dụng cấu trúc “quá đến nỗi mà”; Admire (v): chiêm ngưỡng/ ngưỡng mộ)",
           "long": true
         },
         {
-          "id": "8b2e576c-9c0f-4069-90f9-cf86817db5b7",
+          "id": "8c003786-6af3-4224-8b61-f0ac985221e4",
           "prompt": "3. Trong lúc mọi người đang nói chuyện thì vở kịch bắt đầu. Nó đã khiến họ im lặng.\n(Gợi ý: Sử dụng Quá khứ tiếp diễn; Sử dụng cấu trúc khiến ai làm gì/như nào; Silent (adj): im lặng)",
           "long": true
         },
         {
-          "id": "c9bcc39e-938f-49da-97ca-c7bcd5e77b63",
+          "id": "c36af51c-abfe-4568-8a7c-af3fdbefb5a5",
           "prompt": "4. Gia đình của cô ấy đang mong đợi chuyến đi này. Lâu lắm rồi họ chưa dành thời gian đi du lịch cùng với nhau.\n(Gợi ý: Sử dụng cấu trúc mong đợi điều gì; Sử dụng thì hiện tại hoàn thành)",
           "long": true
         },
         {
-          "id": "c5b482ad-de0a-47d6-97c2-d4b64b1e0dc6",
+          "id": "eae09865-e051-4dec-9954-a8c1b2ab3206",
           "prompt": "5. Tôi sẽ không bao giờ quên việc chơi đùa cùng người bạn thời thơ ấu mà tôi đã gặp ở trường mẫu giáo. Chúng tôi đã từng có một khoảng thời gian tuyệt vời.\n(Gợi ý: Sử dụng cấu trúc quên làm gì/đã làm gì; Sử dụng mệnh đề quan hệ)",
           "long": true
         },
         {
-          "id": "61b4e166-1077-49d5-82c7-c5f30d014d99",
+          "id": "038a7c8f-aac1-418c-b7c0-329c4b898d15",
           "prompt": "6. Tôi sẽ không chơi Pickleball với anh ta, vì mai tôi sẽ có một bài kiểm tra tiếng Anh quan trọng. Tôi cần tập trung vào việc ôn tập và chuẩn bị cho nó.\n(Gợi ý: Sử dụng cấu trúc về tương lai; Sử dụng động từ khuyết thiếu)",
           "long": true
         },
         {
-          "id": "ac420c12-19b8-4e8d-9aa8-b31e017a07d1",
+          "id": "ca361364-ebd0-4248-ae13-39064a2c3a92",
           "prompt": "7. Chiếc điện thoại này quá đắt để tôi có thể tự mua. Tôi nghĩ tôi nên bắt đầu tiết kiệm tiền ngay bây giờ.\n(Gợi ý: Sử dụng cấu trúc “quá... để làm gì”; Sử dụng cấu trúc V + V-ing)",
           "long": true
         },
         {
-          "id": "bbf6fb34-e390-4805-a127-d59a3a4f3d53",
+          "id": "cbfff015-29e6-4410-ad4d-82d58cc2d13d",
           "prompt": "8. Dự báo thời tiết nói rằng ngày mai trời sẽ mưa. Thời tiết sẽ tệ đến nỗi mà chúng ta nên ở nhà để tránh bị ốm.\n(Gợi ý: Sử dụng thì tương lai; Sử dụng cấu trúc tránh làm gì)",
           "long": true
         }
@@ -555,12 +555,12 @@
       "context": "",
       "items": [
         {
-          "id": "4c864dbe-008a-4091-9f7c-772d5f50fdcd",
+          "id": "9cd8eecc-431f-4030-a3b3-e7b8311b5278",
           "prompt": "Part 1: Answer this speaking question with suggested ideas (30s prep, 1-2 min speaking):\n'Describe a live performance or theatrical play that you watched'\nSuggested ideas:\n- Em thích xem biểu diễn trực tiếp trên sân khấu hay xem qua màn ảnh hơn?\n- Dàn diễn viên hay kịch bản thu hút em hơn?\n- Âm thanh hoặc ánh sáng ở đó có gì đặc biệt khiến em ấn tượng không?\n- Cảm xúc của em lúc đó như thế nào?",
           "long": true
         },
         {
-          "id": "0955c603-aed0-49be-9949-4d6f4043eebf",
+          "id": "15f83161-5aba-46ce-9027-f0f3490e66bf",
           "prompt": "Part 2: Answer this speaking question with suggested ideas (30s prep, 1-2 min speaking):\n'Talk about camping and outdoor activities'\nSuggested ideas:\n- Giới trẻ Việt Nam có thường tìm đến những nơi có trời quang đãng để cắm trại không?\n- Việc chuẩn bị đồ đạc có tốn kém hay khó khăn quá không?\n- Thời tiết ở Việt Nam có đủ tốt để đi cắm trại quanh năm không?\n- Hoạt động này thường dành cho ai?",
           "long": true
         }

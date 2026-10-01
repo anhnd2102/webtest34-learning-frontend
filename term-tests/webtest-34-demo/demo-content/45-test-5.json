@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 2,
   "testNumber": 5,
-  "sourceHash": "ff6f9799be869149edbeae2fdfa3072680e85b7601aec9847e38b4b0f88538c3",
+  "sourceHash": "25ca064c3b76cfe58f2c678460fcbaa48cb2be923929b7bc783be75c8dcb43b9",
   "durationMinutes": 70,
   "groups": [
     {
@@ -13,35 +13,35 @@
       "context": "[ Từ gợi ý: aim | devoted | focus | concerned | address | purpose | consists | divided ]\n\nThe (1) ______ of this paper is to consider the nature of moral education in early childhood.\n\nThe first section (2) ______ with historical background. It (3) ______ of five main parts.\n\nThe second section (4) ______ to review the current situation in schools.\n\nThe third section is (5) ______ to an analysis of the problems.\n\nThe paper is (6) ______ into three parts: first, a survey of the literature; second, our own research; third, conclusions.\n\nIn the following section we shall (7) ______ on primary schools.\n\nFinally, the paper will (8) ______ the implications of our findings for policy-makers.",
       "items": [
         {
-          "id": "3d2e4e60-3814-4983-817f-f1901efe048a",
+          "id": "5df76703-d0f5-489e-8283-4448fd1e8e50",
           "prompt": "Câu 1 - Chỗ trống (1)"
         },
         {
-          "id": "78da498b-cacd-4e4b-aceb-28619fd6dcb3",
+          "id": "6bf82984-b4d5-4454-b348-802a2e8fef2e",
           "prompt": "Câu 2 - Chỗ trống (2)"
         },
         {
-          "id": "b62fd1e3-83b0-4303-9db4-eafc4f887c3d",
+          "id": "06dcfcc7-0a22-4260-8547-01e65543186c",
           "prompt": "Câu 3 - Chỗ trống (3)"
         },
         {
-          "id": "e0e42c1a-c26d-4478-9864-84c57769669f",
+          "id": "b679bd9a-4c5b-42ad-b7dd-ec797004009f",
           "prompt": "Câu 4 - Chỗ trống (4)"
         },
         {
-          "id": "3085f609-1117-490b-9a9f-54f6131fe757",
+          "id": "1aa0e7b5-9d16-4eb8-a1ae-e5b1ee114987",
           "prompt": "Câu 5 - Chỗ trống (5)"
         },
         {
-          "id": "f6d002c1-4d4b-4582-9402-a68de9bdfec8",
+          "id": "efdd2fe4-4595-499b-9957-d5297264862b",
           "prompt": "Câu 6 - Chỗ trống (6)"
         },
         {
-          "id": "107c5125-4a03-4a75-984e-1317f93314d5",
+          "id": "6a0ea7bc-e152-4fa4-8a3d-78032eb73019",
           "prompt": "Câu 7 - Chỗ trống (7)"
         },
         {
-          "id": "b8b3dfa4-14c0-427a-9f8a-545e8ae34115",
+          "id": "ddac559b-21c8-47f5-a522-2ddd37e4ac84",
           "prompt": "Câu 8 - Chỗ trống (8)"
         }
       ]
@@ -53,7 +53,7 @@
       "context": "",
       "items": [
         {
-          "id": "022a242d-a4bc-426c-b20a-c00b375030af",
+          "id": "fc0cebc6-a877-4bf8-9416-cc2e50bb5cd3",
           "prompt": "9. De Routa’s work in the 1970s influenced on / to / - the whole field of psychology.",
           "options": [
             "A. on",
@@ -62,7 +62,7 @@
           ]
         },
         {
-          "id": "65d4a1cb-1b2a-4d44-8063-5c117ef0dfea",
+          "id": "79ffc98f-fdb5-40ed-878b-bc2d3e778099",
           "prompt": "10. The acid seemed to have no affect / effect whatsoever on the metal.",
           "options": [
             "A. affect",
@@ -70,7 +70,7 @@
           ]
         },
         {
-          "id": "8250f6a2-b223-4cac-afa6-6cde36f1138c",
+          "id": "b9652cab-4d1b-4ff4-a0fb-d163d57b288f",
           "prompt": "11. Everyone hoped for a positive outcome upon / off / to the talks.",
           "options": [
             "A. upon",
@@ -79,7 +79,7 @@
           ]
         },
         {
-          "id": "c4b0aea2-9fbf-410f-9383-8ebdda95bbc5",
+          "id": "54612dfb-740b-4bec-9de9-532c6ca768f8",
           "prompt": "12. The reason for / to / of the failure of the project was poor planning.",
           "options": [
             "A. for",
@@ -88,7 +88,7 @@
           ]
         },
         {
-          "id": "250adeb8-9bb4-4ed9-9991-b3c56a0f4abb",
+          "id": "e8bd9ac7-ce9d-4b97-a7e7-423d342ba4fc",
           "prompt": "13. The impact of global warming for / on / to the polar ice caps is catastrophic.",
           "options": [
             "A. for",
@@ -105,23 +105,23 @@
       "context": "",
       "items": [
         {
-          "id": "c0308d43-757e-4e93-9786-39da98033a58",
+          "id": "e289d4d2-8908-4333-bddc-c619c04aa29e",
           "prompt": "14. The pros and ______"
         },
         {
-          "id": "da5cfcdc-1d62-4cf3-b185-b9db754481b9",
+          "id": "a1a1a1c7-ab75-43a4-9bfe-3d20eef92c7a",
           "prompt": "15. At the same ______"
         },
         {
-          "id": "db91daa8-08f3-44cb-a0ea-683021227816",
+          "id": "58fdd180-b48e-41ef-90e8-2edfbdc38c8e",
           "prompt": "16. As well ______"
         },
         {
-          "id": "8ac62006-2225-4bf0-a61e-cb285a069516",
+          "id": "7f98569d-6cbf-4664-8868-a80c01ce3b30",
           "prompt": "17. The extent to ______"
         },
         {
-          "id": "1afd5f9c-429f-405d-83e0-4f4b53723726",
+          "id": "08632e9c-539d-46d9-ab88-b3ec64bf7161",
           "prompt": "18. In addition ______"
         }
       ]
@@ -133,7 +133,7 @@
       "context": "",
       "items": [
         {
-          "id": "9d7f69c6-ada0-4b98-b07d-7c249794462e",
+          "id": "ff40c07e-ba4e-4100-ba27-845d58404ae1",
           "prompt": "19. Take / Put / Look, for example, the case of Megginson and Morgan (2006).",
           "options": [
             "A. Take",
@@ -142,7 +142,7 @@
           ]
         },
         {
-          "id": "2004ff5b-e4e9-482d-a216-4046d9e3eccd",
+          "id": "2bf032d8-8e00-4c8d-af9b-a2843f3f2299",
           "prompt": "20. At first / Firstly I would like to discuss the nature of the research.",
           "options": [
             "A. At first",
@@ -150,7 +150,7 @@
           ]
         },
         {
-          "id": "8c058ba7-25f8-4563-b226-de6b72518e4a",
+          "id": "18277dd7-4963-4ce4-8273-8e34b454d2ef",
           "prompt": "21. The article concerns / devotes / addresses the issue of primary school funding.",
           "options": [
             "A. concerns",
@@ -159,7 +159,7 @@
           ]
         },
         {
-          "id": "65ef0f21-b5c5-4d04-a46d-a4091b5d0e85",
+          "id": "7c506945-2268-4950-9826-77a8590175ec",
           "prompt": "22. Look at Figure 3 under / below / beneath for more details.",
           "options": [
             "A. under",
@@ -168,7 +168,7 @@
           ]
         },
         {
-          "id": "afddecc4-27e7-43fd-a50f-36c719e0d42f",
+          "id": "e4374646-fe03-43c3-997d-99f5713f3849",
           "prompt": "23. In the following / preceding section we shall deal with data collection.",
           "options": [
             "A. following",
@@ -184,23 +184,23 @@
       "context": "",
       "items": [
         {
-          "id": "b92dda15-19f9-4412-bef4-2792392f2997",
+          "id": "0cc0d599-3ac4-48f3-9579-f2775fecbe9b",
           "prompt": "24. The study looked at the different life chances of children as ______ to adults."
         },
         {
-          "id": "b67a2340-cdf8-4fdc-9ed0-20617f564fca",
+          "id": "e1870e88-c568-46b3-b22d-0b1f1d2b0d53",
           "prompt": "25. The results showed a marked ______ between the two experimental groups."
         },
         {
-          "id": "cda6676f-8f45-45cc-bb3d-78af5f455581",
+          "id": "c2e84049-2c97-43ea-b82c-91ea265f7315",
           "prompt": "26. The title of her paper was: “Retail price differences ______ with wholesale”."
         },
         {
-          "id": "cdc042a1-1fc4-4a3f-b2ed-39051b19cdeb",
+          "id": "eb75c594-a135-43f1-873c-03cbce118c13",
           "prompt": "27. My project was a ______ of different styles of industrial architecture."
         },
         {
-          "id": "fa37be02-7b62-4db8-a2ce-a778b6ec93ca",
+          "id": "b8b59eff-880e-471d-bd7b-287485a49ade",
           "prompt": "28. The result of the second experiment was very different ______ the first."
         }
       ]
@@ -213,19 +213,19 @@
       "audioPath": "assets/45/p2-test-1/listening.mp3",
       "items": [
         {
-          "id": "b31d5363-f715-462b-afc2-8275de5d2648",
+          "id": "be1c0caa-0bc5-4143-9d1b-1be19e4b37df",
           "prompt": "1. Passenger name(s): Susan Field and James (1) ______"
         },
         {
-          "id": "58df4ce0-0b5b-4cf7-9bea-8ddad1fe9024",
+          "id": "6beda52a-118f-4928-87ff-d72f309fbfb7",
           "prompt": "2. Contact telephone number: 07988 (2) ______"
         },
         {
-          "id": "e4dce27c-2ce7-4c88-9d7c-2d6643ec73bd",
+          "id": "37b3cf09-8510-465b-b6ce-d9a2dd7adb31",
           "prompt": "3. Hotel: (3) ______"
         },
         {
-          "id": "665ba56a-e968-4617-85c0-b673b3b7178a",
+          "id": "3f27c837-2b4a-47df-8d0f-468f9b969278",
           "prompt": "4. Bus tour time: (4) ______ p.m."
         }
       ]
@@ -238,7 +238,7 @@
       "audioPath": "assets/45/p2-test-1/listening.mp3",
       "items": [
         {
-          "id": "82dbc5fd-bb1f-427b-ad57-bb7edaeddd51",
+          "id": "532e41bb-e9ef-4b91-a064-6a655e5d1874",
           "prompt": "5. Why does a ticket for the museum cost £10?",
           "options": [
             "A. The money is needed to fix parts of the building.",
@@ -247,7 +247,7 @@
           ]
         },
         {
-          "id": "3914b644-f0c9-4a49-970d-6cb24b4dd0b2",
+          "id": "8054ead4-b941-4eba-833f-09490d0bee93",
           "prompt": "6. The tourist office assistant suggests going to the next town for a good restaurant because",
           "options": [
             "A. they overlook the sea.",
@@ -265,7 +265,7 @@
       "audioPath": "assets/45/p2-test-1/listening.mp3",
       "items": [
         {
-          "id": "00e65a94-a13c-4bc3-972f-9069ff572c09",
+          "id": "1f361c3e-4e53-4f3c-8c03-f576936d85f6",
           "prompt": "7. The Belleview",
           "options": [
             "A. Visited by famous people in entertainment",
@@ -276,7 +276,7 @@
           ]
         },
         {
-          "id": "820edc56-29b7-491a-8985-c2d4385aa281",
+          "id": "09d524a8-120f-4ed1-95c8-fa157d7b8026",
           "prompt": "8. The Lighthouse Café",
           "options": [
             "A. Visited by famous people in entertainment",
@@ -287,7 +287,7 @@
           ]
         },
         {
-          "id": "f027a164-18bd-4c7c-a7e8-cde87921daf7",
+          "id": "73ef8b23-9606-4972-871d-4f5ebf66fd65",
           "prompt": "9. Harvey's",
           "options": [
             "A. Visited by famous people in entertainment",
@@ -298,7 +298,7 @@
           ]
         },
         {
-          "id": "20c18039-7768-4e25-9f99-d8709f3c5783",
+          "id": "4ad71c65-6af8-4056-aad2-aa409b70f1ae",
           "prompt": "10. Stonecroft House",
           "options": [
             "A. Visited by famous people in entertainment",
@@ -317,7 +317,7 @@
       "context": "Reading Passage 3: High-tech Crime-Fighting Tools\n\nParagraph A:\nCrime-fighting technology is getting more sophisticated and rightly so. The police need to be equipped for the 21st century. In Britain we've already got the world's biggest DNA database. By next year the state will have access to the genetic data of 4.25m people: one British-based person in 14. Hundreds of thousands of those on the database will never have been charged with a crime.\n\nParagraph B:\nBritain is also reported to have more than 4 million CCTV (closed circuit television) cameras. There is a continuing debate about the effectiveness of CCTV. Some evidence suggests that it is helpful in reducing shoplifting and car crime. It has also been used to successfully identify terrorists and murderers. However, many claim that better lighting is just as effective to prevent crime and that cameras could displace crime. An internal police report said that only one crime was solved for every 1,000 cameras in London in 2007. In short, there is conflicting evidence about the effectiveness of cameras, so it is likely that the debate will continue.\n\nParagraph C:\nProfessor Mike Press, who has spent the past decade studying how design can contribute to crime reduction, said that, in order for CCTV to have any effect, it must be used in a targeted way. For example, a scheme in Manchester records every licence plate at the entrance of a shopping complex and alerts police when one is found to belong to an untaxed or stolen car. This is an effective example of monitoring, he said. Most schemes that simply record city centres continually - often not being watched - do not produce results. CCTV can also have the opposite effect of that intended, by giving citizens a false sense of security and encouraging them to be careless with property and personal safety. Professor Press said: 'All the evidence suggests that CCTV alone makes no positive impact on crime reduction and prevention at all. The weight of evidence would suggest the investment is more or less a waste of money unless you have lots of other things in place.' He believes that much of the increase is driven by the marketing efforts of security companies who promote the crime-reducing benefits of their products. He described it as a 'lazy approach to crime prevention' and said that authorities should instead be focusing on how to alter the environment to reduce crime.\n\nParagraph D:\nBut in reality, this is not what is happening. Instead, police are considering using more technology. Police forces have recently begun experimenting with cameras in their helmets. The footage will be stored on police computers, along with the footage from thousands of CCTV cameras and millions of pictures from numberplate recognition cameras used increasingly to check up on motorists.\n\nParagraph E:\nAnd now another type of technology is being introduced. It's called the Microdrone and it's a toy-sized remote-control craft that hovers above streets or crowds to film what's going on beneath. The Microdrone has already been used to monitor rock festivals, but its supplier has also been in discussions to supply it to the Metropolitan Police, and Soca, the Serious Organised Crime Agency. The drones are small enough to be unnoticed by people on the ground when they are flying at 350ft. They contain high-resolution video surveillance equipment and an infrared night vision capability, so even in darkness they give their operators a bird's-eye view of locations while remaining virtually undetectable.\n\nParagraph F:\nThe worrying thing is, who will get access to this technology? Merseyside police are already employing two of the devices as part of a pilot scheme to watch football crowds and city parks looking for antisocial behaviour. It is not just about crime detection: West Midlands fire brigade is about to lease a drone, for example, to get a better view of fire and flood scenes and aid rescue attempts; the Environment Agency is considering their use for monitoring of illegal fly tipping and oil spills. The company that makes the drone says it has no plans to license the equipment to individuals or private companies, which hopefully will prevent private security firms from getting their hands on them. But what about local authorities? In theory, this technology could be used against motorists. And where will the surveillance society end? Already there are plans to introduce 'smart water' containing a unique DNA code identifier that when sprayed on a suspect will cling to their clothes and skin and allow officers to identify them later. As long as high-tech tools are being used in the fight against crime and terrorism, fine. But if it's another weapon to be used to invade our privacy then we don't want it.\n\nGlossary:\n- drone: a remote-controlled pilotless aircraft\n- 350ft: about 107 meters\n- bird's-eye view: a view from above\n- fly-tipping: illegally dumping waste (British English)",
       "items": [
         {
-          "id": "c6a9ae82-ecd0-4aff-a27d-806b31cb452b",
+          "id": "78ff3ad8-4c44-43c6-91f9-198124d2c5aa",
           "prompt": "28. Paragraph B",
           "options": [
             "i. The spy in the sky",
@@ -332,7 +332,7 @@
           ]
         },
         {
-          "id": "d959556b-302e-4a3c-a070-308a3b4e1065",
+          "id": "0a8497f5-9e78-44c9-84b5-7f33d7327d73",
           "prompt": "29. Paragraph C",
           "options": [
             "i. The spy in the sky",
@@ -347,7 +347,7 @@
           ]
         },
         {
-          "id": "465bf400-19e8-4f25-b6c5-4b56099a4cc9",
+          "id": "a18a284a-2fb0-49e9-8b9d-77e9358416c8",
           "prompt": "30. Paragraph D",
           "options": [
             "i. The spy in the sky",
@@ -362,7 +362,7 @@
           ]
         },
         {
-          "id": "bf920b14-946c-403b-8bb5-170720b0ab42",
+          "id": "3c88d58f-6b0e-4a86-a02c-99d70f6cc0d8",
           "prompt": "31. Paragraph E",
           "options": [
             "i. The spy in the sky",
@@ -377,7 +377,7 @@
           ]
         },
         {
-          "id": "3aad4fd0-86cd-476b-8aa7-4545dc957d68",
+          "id": "a1e04845-896d-4107-837d-0d2e66576f14",
           "prompt": "32. Paragraph F",
           "options": [
             "i. The spy in the sky",
@@ -400,7 +400,7 @@
       "context": "",
       "items": [
         {
-          "id": "068880e5-25e0-4c63-a4b7-b38a10e9cc69",
+          "id": "e7c74bb3-0589-43be-ae12-6a52247d460b",
           "prompt": "33. Britain has already got",
           "options": [
             "A. four million CCTV cameras.",
@@ -410,7 +410,7 @@
           ]
         },
         {
-          "id": "9ea4180d-b47f-47dd-81f5-48883d66be60",
+          "id": "b41864f3-84a2-498a-99bb-7a3c05d7675e",
           "prompt": "34. Professor Press",
           "options": [
             "A. works at the University of Manchester.",
@@ -420,7 +420,7 @@
           ]
         },
         {
-          "id": "0727df4d-9735-4c10-b05d-ca27869e2a2a",
+          "id": "aec4ab8f-a20d-4dc8-a3bb-b624b80eb4e2",
           "prompt": "35. The Microdrone is",
           "options": [
             "A. a type of toy in the shape of a plane.",
@@ -438,11 +438,11 @@
       "context": "",
       "items": [
         {
-          "id": "b09eff17-990d-4e5a-98e5-138e0f332435",
+          "id": "f1185bd4-010f-4767-8319-0acdad4a669e",
           "prompt": "36. Give examples of 2 events where technology is used to watch crowds."
         },
         {
-          "id": "43f29cd7-75f5-461d-9913-82c438fbf872",
+          "id": "399f74b1-d563-4b16-bee8-c0426119bfcc",
           "prompt": "37. According to the passage, who do we not want to use the Microdrone?"
         }
       ]
@@ -454,7 +454,7 @@
       "context": "",
       "items": [
         {
-          "id": "7256af2f-eb37-4541-b602-44bc40ad4dbc",
+          "id": "c537fd85-b6b2-41e1-95ec-b88c1cf30d9e",
           "prompt": "38. The British authorities use too much technology to monitor their citizens.",
           "options": [
             "YES",
@@ -463,7 +463,7 @@
           ]
         },
         {
-          "id": "d8b23e87-cab5-4993-ad24-59d0cf5cc57b",
+          "id": "f1ba9961-cf92-4f55-a323-6d554acf7eb0",
           "prompt": "39. Microdrone is currently not used to check drivers.",
           "options": [
             "YES",
@@ -472,7 +472,7 @@
           ]
         },
         {
-          "id": "c2e0d067-8e2d-4693-8241-e1d933e52f2f",
+          "id": "5e718a09-de1c-42f9-826f-3e15017bebdb",
           "prompt": "40. Technology should not be used to check on people's private affairs.",
           "options": [
             "YES",
@@ -489,42 +489,42 @@
       "context": "Đề bài luận IELTS Task 2:\n\"Nowadays animal experiments are widely used to develop new medicines and to test the safety of other products. Some people argue that these experiments should be banned because it is morally wrong to cause animals to suffer, while others are in favour of them because of their benefits to humanity. Discuss both views and give your own opinion.\"\n\nYêu cầu: Dịch các câu sau sang tiếng Anh hoàn chỉnh (đảm bảo tính mạch lạc, ngữ pháp chuẩn và từ vựng học thuật).",
       "items": [
         {
-          "id": "e3dbc320-a6fd-41b2-86e6-fa5c6ece2f13",
+          "id": "36745dfe-a0eb-4ac4-b6a3-2a36bb0d5963",
           "prompt": "1. (Body 1 - Câu 1) Một mặt, có những tranh luận đạo đức chống lại việc thí nghiệm trên động vật.",
           "long": true
         },
         {
-          "id": "e8924de5-5bd5-498c-bcc5-31a6e24649a6",
+          "id": "2b110228-4467-4426-802c-ca36b8cd3c1e",
           "prompt": "2. (Body 1 - Câu 2) Để trích dẫn một ví dụ thường thấy của phương thức này, chuột thí nghiệm có thể được tiêm những loại thuốc mới trước khi chúng ta biết tác dụng phụ của chúng là gì.",
           "long": true
         },
         {
-          "id": "5b9ae02e-2219-434f-a255-8bca8c0d4dd0",
+          "id": "6518d2b7-25cc-4f2e-9fe6-8771a6df62e8",
           "prompt": "3. (Body 1 - Câu 3) Những người phản đối những thí nghiệm như thế tranh luận rằng con người không có quyền ép các sinh vật phải chịu đau đớn.",
           "long": true
         },
         {
-          "id": "90d6dd11-86ea-4779-854e-ebd5256c47c9",
+          "id": "c83ed6e2-e553-4866-8fb2-c5801d51dcc7",
           "prompt": "4. (Body 1 - Câu 4) Họ tin rằng các lợi ích con người thu được không khiến việc động vật phải chịu đau đớn trở nên có thể chấp nhận được, và mạng sống của tất cả các sinh vật đều phải được tôn trọng.",
           "long": true
         },
         {
-          "id": "1923d80f-7081-474e-94e5-1aec5a96570f",
+          "id": "f0927b9e-762c-4f26-a0ae-f0098f2df563",
           "prompt": "5. (Body 2 - Câu 1) Mặt khác, các phương pháp thay thế đáng tin cậy đối với việc thí nghiệm trên động vật có thể sẽ không xuất hiện trong tương lai gần.",
           "long": true
         },
         {
-          "id": "5e39dcb6-2742-4a1c-9c2a-0773cac9bee0",
+          "id": "31e31c4e-b0dc-4c9b-a848-9c60d143b508",
           "prompt": "6. (Body 2 - Câu 2) Những người ủng hộ việc sử dụng động vật trong nghiên cứu y tế tin rằng một mức độ đau đớn nhất định là không thể tránh khỏi nếu chúng ta muốn cứu mạng con người.",
           "long": true
         },
         {
-          "id": "ce180b72-8a64-4930-8056-ab6032ba96e8",
+          "id": "24cf1ee3-44aa-4d2b-9596-6aea47ff0e21",
           "prompt": "7. (Body 2 - Câu 3) Họ tranh luận rằng những người phản đối thí nghiệm như vậy có thể sẽ cảm thấy khác nếu một thành viên trong gia đình họ cần một biện pháp điều trị y tế mang tính sống còn.",
           "long": true
         },
         {
-          "id": "6c63bcfe-c8f9-4f86-84e7-4ebd029825d3",
+          "id": "0bbc32c5-0ba8-4a15-83bf-ced9fdf88806",
           "prompt": "8. (Body 2 - Câu 4) Trên phương diện cá nhân, tôi đồng ý với việc cấm thí nghiệm trên động vật cho mục đích phi y tế, nhưng tôi nghĩ thí nghiệm y tế cho đến nay vẫn là điều cần thiết.",
           "long": true
         }
