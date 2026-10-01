@@ -90,10 +90,21 @@ export function clozeSegments(text, ids, numbered = true) {
   const segments = [];
   const seen = new Set();
   let previous = 0;
+  let baseOffset = 0;
+  if (numbered) {
+    const allNums = [...text.matchAll(pattern)].map(m => Number(m[1]));
+    if (allNums.length) {
+      const minNum = Math.min(...allNums);
+      if (minNum > 1 && Math.max(...allNums) - minNum + 1 <= ids.length) {
+        baseOffset = minNum - 1;
+      }
+    }
+  }
   for (const match of text.matchAll(pattern)) {
-    const index = numbered ? Number(match[1]) - 1 : seen.size;
+    const rawNum = numbered ? Number(match[1]) : seen.size + 1;
+    const index = numbered ? (rawNum - 1 - baseOffset) : seen.size;
     if (!ids[index] || seen.has(ids[index])) return null;
-    segments.push(text.slice(previous, match.index), { id: ids[index], number: index + 1 });
+    segments.push(text.slice(previous, match.index), { id: ids[index], number: rawNum });
     seen.add(ids[index]); previous = match.index + match[0].length;
   }
   if (seen.size !== ids.length || !seen.size) return null;
@@ -102,7 +113,7 @@ export function clozeSegments(text, ids, numbered = true) {
 }
 
 const sectionKey = group => group.id.split('-')[0];
-const sectionLabels = { vocabulary: 'Vocabulary', listening: 'Listening', grammar: 'Grammar', pronunciation: 'Pronunciation', translation: 'Translation', writing: 'Writing', speaking: 'Speaking' };
+const sectionLabels = { vocabulary: 'Vocabulary', listening: 'Listening', grammar: 'Grammar', pronunciation: 'Pronunciation', translation: 'Translation', writing: 'Writing', speaking: 'Speaking', reading: 'Reading' };
 export function choiceLayout(options) {
   const labels=options.map(option=>String(typeof option==='string'?option:option.label).trim());
   const compact=labels.every(label=>label.length<=16&&!/[\r\n]/.test(label));
@@ -113,7 +124,11 @@ function answerField(item, inline = false, cards = false) {
   const attributes = `id="${escape(item.id)}" data-demo-answer="${escape(item.id)}" aria-label="${escape(item.prompt)}"`;
   if (item.options && cards) {
     const layout=choiceLayout(item.options);
-    return `<input type="hidden" ${attributes}><div class="demo-choice-grid" data-columns="${layout.columns}" data-compact="${layout.compact}" role="radiogroup" aria-label="${escape(item.prompt)}">${item.options.map((option,index)=>`<label class="demo-choice"><input type="radio" name="${escape(item.id)}" data-demo-choice="${escape(item.id)}" value="${escape(optionId(option))}"><span class="demo-choice-letter">${String.fromCharCode(65+index)}</span><span>${escape(typeof option==='string'?option:option.label)}</span></label>`).join('')}</div><button type="button" class="demo-clear-choice" data-demo-clear="${escape(item.id)}" aria-label="Bỏ chọn: ${escape(item.prompt)}">Bỏ chọn</button>`;
+    const cleanLabel = opt => {
+      const raw = typeof opt === 'string' ? opt : (opt?.label ?? '');
+      return raw.replace(/^[A-D][.)]\s*/i, '');
+    };
+    return `<input type="hidden" ${attributes}><div class="demo-choice-grid" data-columns="${layout.columns}" data-compact="${layout.compact}" role="radiogroup" aria-label="${escape(item.prompt)}">${item.options.map((option,index)=>`<label class="demo-choice"><input type="radio" name="${escape(item.id)}" data-demo-choice="${escape(item.id)}" value="${escape(optionId(option))}"><span class="demo-choice-letter">${String.fromCharCode(65+index)}</span><span>${escape(cleanLabel(option))}</span></label>`).join('')}</div><button type="button" class="demo-clear-choice" data-demo-clear="${escape(item.id)}" aria-label="Bỏ chọn: ${escape(item.prompt)}">Bỏ chọn</button>`;
   }
   if (item.options) return `<select ${attributes}><option value="">— Chọn đáp án —</option>${item.options.map(option=>`<option value="${escape(optionId(option))}">${escape(typeof option === 'string' ? option : option.label)}</option>`).join('')}</select>`;
   if (item.long) return `<textarea ${attributes} maxlength="12000" rows="4" placeholder="Viết câu trả lời"></textarea>`;
@@ -122,6 +137,30 @@ function answerField(item, inline = false, cards = false) {
 function clozeMarkup(segments, items, numbered = true) {
   return segments.map(segment => typeof segment === 'string' ? escape(segment) : `<span class="demo-question demo-inline">${numbered ? `<span class="demo-blank-number">(${segment.number})</span>` : ''}${answerField(items.find(item => item.id === segment.id), true)}</span>`).join('');
 }
+function extractWordBank(context) {
+  if (!context) return null;
+  const bracketMatch = context.match(/^\s*\[?\s*(Từ|Động từ)\s*gợi\s*ý\s*:\s*([^\]\n]+)\]?\s*\n*/i);
+  if (bracketMatch) {
+    const label = bracketMatch[1].toLowerCase().includes('động') ? 'Động từ gợi ý' : 'Từ gợi ý';
+    const words = bracketMatch[2].split(/\s*[|,\/]\s*/).map(w => w.trim()).filter(Boolean);
+    const body = context.slice(bracketMatch[0].length).trim();
+    return { label, words, body };
+  }
+  const lines = context.split('\n');
+  const firstSentence = lines.findIndex(line => /^\s*-\s+/.test(line));
+  if (firstSentence > 0) {
+    const bank = lines.slice(0, firstSentence).map(line => line.trim()).filter(Boolean);
+    if (bank.every(word => /^[a-z ]+$/i.test(word))) {
+      return {
+        label: 'Động từ gợi ý',
+        words: bank,
+        body: lines.slice(firstSentence).join('\n')
+      };
+    }
+  }
+  return null;
+}
+
 export function groupBody(group) {
   if (group.id==='grammar-correction' && group.items.length%2===0) {
     const pairs=[];
@@ -134,13 +173,12 @@ export function groupBody(group) {
     }
     if(pairs.length===group.items.length/2)return `<div class="demo-correction-list">${pairs.join('')}</div>`;
   }
-  if (group.id === 'grammar-perfect' && group.context) {
-    const lines=group.context.split('\n');
-    const firstSentence=lines.findIndex(line=>/^\s*-\s+/.test(line));
-    const bank=lines.slice(0,firstSentence).map(line=>line.trim()).filter(Boolean);
-    const segments=firstSentence>0 && bank.every(word=>/^[a-z ]+$/i.test(word))
-      ? clozeSegments(lines.slice(firstSentence).join('\n'),group.items.map(item=>item.id)) : null;
-    if (segments) return `<div class="demo-word-bank" aria-label="Động từ gợi ý"><strong>Động từ gợi ý</strong><div class="demo-word-bank-list">${bank.map(word=>`<span>${escape(word)}</span>`).join('')}</div></div><div class="demo-cloze demo-cloze-sentences">${clozeMarkup(segments,group.items).split('\n').map(sentence=>`<p class="demo-cloze-line">${sentence.replace(/^\s*-\s*/, '')}</p>`).join('')}</div>`;
+  const bankInfo = extractWordBank(group.context);
+  if (bankInfo) {
+    const segments = clozeSegments(bankInfo.body, group.items.map(item => item.id));
+    if (segments) {
+      return `<div class="demo-word-bank" aria-label="${escape(bankInfo.label)}"><strong>${escape(bankInfo.label)}</strong><div class="demo-word-bank-list">${bankInfo.words.map(word=>`<span>${escape(word)}</span>`).join('')}</div></div><div class="demo-cloze demo-cloze-sentences">${clozeMarkup(segments,group.items).split('\n').map(l => l.trim()).filter(Boolean).map(sentence=>`<p class="demo-cloze-line">${sentence.replace(/^\s*-\s*/, '')}</p>`).join('')}</div>`;
+    }
   }
   if (group.table && Array.isArray(group.table.rows)) {
     const pattern = /\((\d+)\)\s*[_\.\u2026]{2,}/g;
@@ -163,6 +201,22 @@ export function groupBody(group) {
       html += escape(text.slice(last)).replace(/\n/g, '<br>');
       return html;
     };
+
+    if (group.table.columns && Array.isArray(group.table.columns)) {
+      return `<div class="demo-table-wrapper">
+        ${group.table.title ? `<div class="demo-table-title">${escape(group.table.title)}</div>` : ''}
+        <table class="demo-cloze-table">
+          <thead>
+            <tr>${group.table.columns.map(col => `<th class="demo-table-header">${escape(col)}</th>`).join('')}</tr>
+          </thead>
+          <tbody>
+            ${group.table.rows.map(row => `
+              <tr>${(row.cells || []).map(cell => `<td class="demo-table-cell">${renderCell(cell)}</td>`).join('')}</tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`;
+    }
 
     return `<div class="demo-table-wrapper">
       ${group.table.title ? `<div class="demo-table-title">${escape(group.table.title)}</div>` : ''}
@@ -202,8 +256,7 @@ export function groupBody(group) {
     </div>`;
   }
 
-  const inlineGroups = ['listening-gap', 'listening-notes', 'grammar-present', 'grammar-past', 'grammar-perfect'];
-  const numbered = group.context && inlineGroups.includes(group.id) ? clozeSegments(group.context, group.items.map(item => item.id)) : null;
+  const numbered = group.context ? clozeSegments(group.context, group.items.map(item => item.id)) : null;
   if (numbered) return `<div class="demo-context demo-lines demo-cloze">${clozeMarkup(numbered, group.items)}</div>`;
   if (['vocabulary-listen', 'vocabulary-picture'].includes(group.id)) {
     return `${group.context ? `<div class="demo-context demo-lines">${escape(group.context)}</div>` : ''}<div class="${group.id === 'vocabulary-listen' ? 'demo-vocab-grid' : 'demo-picture-grid'}">${group.items.map((item, index) => {
@@ -249,9 +302,12 @@ export function groupBody(group) {
     if (cluster.length === 1) {
       const item = cluster[0];
       const prompt = item.prompt.replace(/^\s*\d+[.)]\s*/, '');
-      const single = group.id === 'grammar-verb' ? clozeSegments(prompt, [item.id], false) : null;
+      const isChoiceGroup = group.id.includes('choice') || group.id.includes('matching') || group.id.includes('headings') || group.id.includes('info') || group.id.endsWith('-tf');
+      const single = (!item.options || !item.options.length) && /[_\.\u2026]{3,}/.test(prompt)
+        ? clozeSegments(prompt, [item.id], false)
+        : null;
       if (single) return `<div class="demo-cloze demo-sentence"><span class="qnum">${questionNumber}</span> ${clozeMarkup(single, [item], false)}</div>`;
-      const cards = ['vocabulary-choice', 'pronunciation-choice', 'listening-tf', 'listening-choice'].includes(group.id);
+      const cards = isChoiceGroup || ['vocabulary-choice', 'pronunciation-choice', 'listening-tf', 'listening-choice', 'grammar-choice', 'reading-choice', 'reading-tf'].includes(group.id);
       return `<div class="demo-question${cards ? ' demo-mcq-question' : ''}"><div class="demo-prompt-row"><span class="qnum">${questionNumber}</span><${cards ? 'div' : 'label'} ${cards ? '' : `for="${escape(item.id)}"`} class="demo-lines">${escape(prompt)}</${cards ? 'div' : 'label'}></div>
         ${item.targetWord ? `<p>Thay từ/cụm: <strong>${escape(item.targetWord)}</strong></p>` : ''}
         ${item.image ? `<img src="${escape(item.image)}" alt="Hình minh họa câu ${escape(item.prompt.split('.')[0])}" loading="lazy">` : ''}
@@ -310,6 +366,26 @@ export function groupBody(group) {
   return `${group.context ? `<div class="demo-context demo-lines">${escape(group.context)}</div>` : ''}<div>${rendered.join('')}</div>`;
 }
 
+export const CLOUDFLARE_R2_AUDIO_BASE = 'https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev';
+
+export function resolveAudioUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const clean = path.replace(/^\.?\//, '');
+  if (clean.includes('soundcheck')) return `${CLOUDFLARE_R2_AUDIO_BASE}/soundcheck.mp3`;
+  let match = clean.match(/^assets\/03\/test-(\d+)\/(listening|vocabulary)\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-03/test-${match[1]}/${match[2]}.mp3`;
+  match = clean.match(/^assets\/34\/test-(\d+)\/(listening|vocabulary)\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-1/test-${match[1]}/${match[2]}.mp3`;
+  match = clean.match(/^assets\/34\/p2-test-(\d+)\/listening\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-2/test-${match[1]}/listening.mp3`;
+  match = clean.match(/^assets\/45\/test-(\d+)\/listening\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-45/phase-1/test-${match[1]}/listening.mp3`;
+  match = clean.match(/^assets\/45\/p2-test-(\d+)\/listening\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-45/phase-2/test-${match[1]}/listening.mp3`;
+  return `${CLOUDFLARE_R2_AUDIO_BASE}/${clean}`;
+}
+
 export function groupSections(form, bypass = false) {
   const audioGates = new Map();
   for (const group of form.groups) {
@@ -323,7 +399,7 @@ export function groupSections(form, bypass = false) {
     const ownsAudio = gateId && !renderedAudio.has(gateId);
     if (ownsAudio) renderedAudio.add(gateId);
     const audioControl = ownsAudio
-      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">▶ Phát audio (nếu có)</button><audio preload="metadata" src="${escape(group.audioPath)}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">${bypass ? 'Đã mở khóa nội dung câu hỏi để kiểm tra.' : 'Nội dung bài nghe đang được khóa.'}</span></div>`
+      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">▶ Phát audio (nếu có)</button><audio preload="metadata" src="${escape(resolveAudioUrl(group.audioPath))}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">${bypass ? 'Đã mở khóa nội dung câu hỏi để kiểm tra.' : 'Nội dung bài nghe đang được khóa.'}</span></div>`
       : gateId
         ? `<p class="demo-notice demo-audio-linked">${bypass ? 'Bài nghe này dùng chung audio ở phần trên.' : 'Nhóm này sẽ mở khi audio ở phần trên bắt đầu phát.'}</p>`
         : group.audioRequired
@@ -364,6 +440,10 @@ export async function mount(course) {
 
   let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json`, import.meta.url);
   let response = await fetch(formUrl);
+  if (!response.ok && phaseParam === '2') {
+    formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json`, import.meta.url);
+    response = await fetch(formUrl);
+  }
   if (!response.ok) {
     formUrl = new URL(`./demo-content/${course}.json`, import.meta.url);
     response = await fetch(formUrl);
@@ -375,7 +455,8 @@ export async function mount(course) {
   try { state = sanitizeDraft(form, JSON.parse(localStorage.getItem(key))); }
   catch { state = sanitizeDraft(form, null); }
   const items = form.groups.flatMap(group => group.items);
-  const title = `Khóa ${course}${form.phase ? ` · Phase ${form.phase}` : ''} · Test ${form.testNumber || testNum}`;
+  const displayTestNum = form.phase === 2 && (form.testNumber > 4 || testNum > 4) ? (form.testNumber > 4 ? form.testNumber - 4 : testNum - 4) : (form.testNumber || testNum);
+  const title = `Khóa ${course}${form.phase ? ` · Phase ${form.phase}` : ''} · Test ${displayTestNum}`;
   const sections = [...new Set(form.groups.map(sectionKey))];
   let activeSection = sections[0];
 

@@ -1,0 +1,534 @@
+{
+  "schemaVersion": "Test1PublicDemoV1",
+  "course": "45",
+  "phase": 2,
+  "testNumber": 5,
+  "sourceHash": "ff6f9799be869149edbeae2fdfa3072680e85b7601aec9847e38b4b0f88538c3",
+  "durationMinutes": 70,
+  "groups": [
+    {
+      "id": "vocabulary-box",
+      "title": "Vocabulary · Điền từ vào đoạn văn",
+      "instructions": "Exercise 1: Choose a word from the box to fill in the missing gaps (1-8). (8 điểm)",
+      "context": "[ Từ gợi ý: aim | devoted | focus | concerned | address | purpose | consists | divided ]\n\nThe (1) ______ of this paper is to consider the nature of moral education in early childhood.\n\nThe first section (2) ______ with historical background. It (3) ______ of five main parts.\n\nThe second section (4) ______ to review the current situation in schools.\n\nThe third section is (5) ______ to an analysis of the problems.\n\nThe paper is (6) ______ into three parts: first, a survey of the literature; second, our own research; third, conclusions.\n\nIn the following section we shall (7) ______ on primary schools.\n\nFinally, the paper will (8) ______ the implications of our findings for policy-makers.",
+      "items": [
+        {
+          "id": "3d2e4e60-3814-4983-817f-f1901efe048a",
+          "prompt": "Câu 1 - Chỗ trống (1)"
+        },
+        {
+          "id": "78da498b-cacd-4e4b-aceb-28619fd6dcb3",
+          "prompt": "Câu 2 - Chỗ trống (2)"
+        },
+        {
+          "id": "b62fd1e3-83b0-4303-9db4-eafc4f887c3d",
+          "prompt": "Câu 3 - Chỗ trống (3)"
+        },
+        {
+          "id": "e0e42c1a-c26d-4478-9864-84c57769669f",
+          "prompt": "Câu 4 - Chỗ trống (4)"
+        },
+        {
+          "id": "3085f609-1117-490b-9a9f-54f6131fe757",
+          "prompt": "Câu 5 - Chỗ trống (5)"
+        },
+        {
+          "id": "f6d002c1-4d4b-4582-9402-a68de9bdfec8",
+          "prompt": "Câu 6 - Chỗ trống (6)"
+        },
+        {
+          "id": "107c5125-4a03-4a75-984e-1317f93314d5",
+          "prompt": "Câu 7 - Chỗ trống (7)"
+        },
+        {
+          "id": "b8b3dfa4-14c0-427a-9f8a-545e8ae34115",
+          "prompt": "Câu 8 - Chỗ trống (8)"
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-choice-1",
+      "title": "Vocabulary · Chọn từ in nghiêng",
+      "instructions": "Exercise 2: Choose the correct word in italics to complete each sentence. (5 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "022a242d-a4bc-426c-b20a-c00b375030af",
+          "prompt": "9. De Routa’s work in the 1970s influenced on / to / - the whole field of psychology.",
+          "options": [
+            "A. on",
+            "B. to",
+            "C. - (no preposition)"
+          ]
+        },
+        {
+          "id": "65d4a1cb-1b2a-4d44-8063-5c117ef0dfea",
+          "prompt": "10. The acid seemed to have no affect / effect whatsoever on the metal.",
+          "options": [
+            "A. affect",
+            "B. effect"
+          ]
+        },
+        {
+          "id": "8250f6a2-b223-4cac-afa6-6cde36f1138c",
+          "prompt": "11. Everyone hoped for a positive outcome upon / off / to the talks.",
+          "options": [
+            "A. upon",
+            "B. off",
+            "C. to"
+          ]
+        },
+        {
+          "id": "c4b0aea2-9fbf-410f-9383-8ebdda95bbc5",
+          "prompt": "12. The reason for / to / of the failure of the project was poor planning.",
+          "options": [
+            "A. for",
+            "B. to",
+            "C. of"
+          ]
+        },
+        {
+          "id": "250adeb8-9bb4-4ed9-9991-b3c56a0f4abb",
+          "prompt": "13. The impact of global warming for / on / to the polar ice caps is catastrophic.",
+          "options": [
+            "A. for",
+            "B. on",
+            "C. to"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-phrase",
+      "title": "Vocabulary · Hoàn thành cụm từ",
+      "instructions": "Exercise 3: Which word comes next in these phrases? (5 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "c0308d43-757e-4e93-9786-39da98033a58",
+          "prompt": "14. The pros and ______"
+        },
+        {
+          "id": "da5cfcdc-1d62-4cf3-b185-b9db754481b9",
+          "prompt": "15. At the same ______"
+        },
+        {
+          "id": "db91daa8-08f3-44cb-a0ea-683021227816",
+          "prompt": "16. As well ______"
+        },
+        {
+          "id": "8ac62006-2225-4bf0-a61e-cb285a069516",
+          "prompt": "17. The extent to ______"
+        },
+        {
+          "id": "1afd5f9c-429f-405d-83e0-4f4b53723726",
+          "prompt": "18. In addition ______"
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-choice-2",
+      "title": "Vocabulary · Chọn từ phù hợp",
+      "instructions": "Exercise 4: Choose the best word in italics to complete each sentence. (5 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "9d7f69c6-ada0-4b98-b07d-7c249794462e",
+          "prompt": "19. Take / Put / Look, for example, the case of Megginson and Morgan (2006).",
+          "options": [
+            "A. Take",
+            "B. Put",
+            "C. Look"
+          ]
+        },
+        {
+          "id": "2004ff5b-e4e9-482d-a216-4046d9e3eccd",
+          "prompt": "20. At first / Firstly I would like to discuss the nature of the research.",
+          "options": [
+            "A. At first",
+            "B. Firstly"
+          ]
+        },
+        {
+          "id": "8c058ba7-25f8-4563-b226-de6b72518e4a",
+          "prompt": "21. The article concerns / devotes / addresses the issue of primary school funding.",
+          "options": [
+            "A. concerns",
+            "B. devotes",
+            "C. addresses"
+          ]
+        },
+        {
+          "id": "65ef0f21-b5c5-4d04-a46d-a4091b5d0e85",
+          "prompt": "22. Look at Figure 3 under / below / beneath for more details.",
+          "options": [
+            "A. under",
+            "B. below",
+            "C. beneath"
+          ]
+        },
+        {
+          "id": "afddecc4-27e7-43fd-a50f-36c719e0d42f",
+          "prompt": "23. In the following / preceding section we shall deal with data collection.",
+          "options": [
+            "A. following",
+            "B. preceding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-gaps",
+      "title": "Vocabulary · Điền từ vào chỗ trống",
+      "instructions": "Exercise 5: Fill in the gaps with suitable words (5 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "b92dda15-19f9-4412-bef4-2792392f2997",
+          "prompt": "24. The study looked at the different life chances of children as ______ to adults."
+        },
+        {
+          "id": "b67a2340-cdf8-4fdc-9ed0-20617f564fca",
+          "prompt": "25. The results showed a marked ______ between the two experimental groups."
+        },
+        {
+          "id": "cda6676f-8f45-45cc-bb3d-78af5f455581",
+          "prompt": "26. The title of her paper was: “Retail price differences ______ with wholesale”."
+        },
+        {
+          "id": "cdc042a1-1fc4-4a3f-b2ed-39051b19cdeb",
+          "prompt": "27. My project was a ______ of different styles of industrial architecture."
+        },
+        {
+          "id": "fa37be02-7b62-4db8-a2ce-a778b6ec93ca",
+          "prompt": "28. The result of the second experiment was very different ______ the first."
+        }
+      ]
+    },
+    {
+      "id": "listening-form",
+      "title": "Listening · Section 1 (Form Completion)",
+      "instructions": "Complete the form below. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer. (4 điểm)",
+      "context": "City Bus Tour Booking Form\n----------------------------------------------------\nNumber of passengers: 2\nPassenger name(s): Susan Field and James (1) ______\nContact telephone number: 07988 (2) ______\nHotel: (3) ______\nBus tour time: (4) ______ p.m.\nBus tour date: 14th August\n----------------------------------------------------",
+      "audioPath": "assets/45/p2-test-1/listening.mp3",
+      "items": [
+        {
+          "id": "b31d5363-f715-462b-afc2-8275de5d2648",
+          "prompt": "1. Passenger name(s): Susan Field and James (1) ______"
+        },
+        {
+          "id": "58df4ce0-0b5b-4cf7-9bea-8ddad1fe9024",
+          "prompt": "2. Contact telephone number: 07988 (2) ______"
+        },
+        {
+          "id": "e4dce27c-2ce7-4c88-9d7c-2d6643ec73bd",
+          "prompt": "3. Hotel: (3) ______"
+        },
+        {
+          "id": "665ba56a-e968-4617-85c0-b673b3b7178a",
+          "prompt": "4. Bus tour time: (4) ______ p.m."
+        }
+      ]
+    },
+    {
+      "id": "listening-choice",
+      "title": "Listening · Section 2 (Multiple Choice)",
+      "instructions": "Choose the correct letter A, B or C. (2 điểm)",
+      "context": "",
+      "audioPath": "assets/45/p2-test-1/listening.mp3",
+      "items": [
+        {
+          "id": "82dbc5fd-bb1f-427b-ad57-bb7edaeddd51",
+          "prompt": "5. Why does a ticket for the museum cost £10?",
+          "options": [
+            "A. The money is needed to fix parts of the building.",
+            "B. The collection of Latin American art is unique.",
+            "C. It is the only art museum in Europe."
+          ]
+        },
+        {
+          "id": "3914b644-f0c9-4a49-970d-6cb24b4dd0b2",
+          "prompt": "6. The tourist office assistant suggests going to the next town for a good restaurant because",
+          "options": [
+            "A. they overlook the sea.",
+            "B. the restaurants are bigger.",
+            "C. there are more restaurants to choose from."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "listening-matching",
+      "title": "Listening · Section 3 (Matching)",
+      "instructions": "Match the restaurants with their descriptions (A-E). (4 điểm)",
+      "context": "Match the restaurants with their descriptions:\nA. It is visited by famous people who work in entertainment.\nB. This restaurant has recently been bought by a new family.\nC. One family has managed the restaurant for over 100 years.\nD. It is expensive but serves high quality food.\nE. It has been decorated in a modern style.",
+      "audioPath": "assets/45/p2-test-1/listening.mp3",
+      "items": [
+        {
+          "id": "00e65a94-a13c-4bc3-972f-9069ff572c09",
+          "prompt": "7. The Belleview",
+          "options": [
+            "A. Visited by famous people in entertainment",
+            "B. Recently bought by a new family",
+            "C. Managed by one family for over 100 years",
+            "D. Expensive but serves high quality food",
+            "E. Decorated in a modern style"
+          ]
+        },
+        {
+          "id": "820edc56-29b7-491a-8985-c2d4385aa281",
+          "prompt": "8. The Lighthouse Café",
+          "options": [
+            "A. Visited by famous people in entertainment",
+            "B. Recently bought by a new family",
+            "C. Managed by one family for over 100 years",
+            "D. Expensive but serves high quality food",
+            "E. Decorated in a modern style"
+          ]
+        },
+        {
+          "id": "f027a164-18bd-4c7c-a7e8-cde87921daf7",
+          "prompt": "9. Harvey's",
+          "options": [
+            "A. Visited by famous people in entertainment",
+            "B. Recently bought by a new family",
+            "C. Managed by one family for over 100 years",
+            "D. Expensive but serves high quality food",
+            "E. Decorated in a modern style"
+          ]
+        },
+        {
+          "id": "20c18039-7768-4e25-9f99-d8709f3c5783",
+          "prompt": "10. Stonecroft House",
+          "options": [
+            "A. Visited by famous people in entertainment",
+            "B. Recently bought by a new family",
+            "C. Managed by one family for over 100 years",
+            "D. Expensive but serves high quality food",
+            "E. Decorated in a modern style"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reading-headings",
+      "title": "Reading · Matching Headings",
+      "instructions": "Reading Passage 3 has six paragraphs A-F. Choose the most suitable headings for paragraphs B-F from the list of headings. (5 điểm)",
+      "context": "Reading Passage 3: High-tech Crime-Fighting Tools\n\nParagraph A:\nCrime-fighting technology is getting more sophisticated and rightly so. The police need to be equipped for the 21st century. In Britain we've already got the world's biggest DNA database. By next year the state will have access to the genetic data of 4.25m people: one British-based person in 14. Hundreds of thousands of those on the database will never have been charged with a crime.\n\nParagraph B:\nBritain is also reported to have more than 4 million CCTV (closed circuit television) cameras. There is a continuing debate about the effectiveness of CCTV. Some evidence suggests that it is helpful in reducing shoplifting and car crime. It has also been used to successfully identify terrorists and murderers. However, many claim that better lighting is just as effective to prevent crime and that cameras could displace crime. An internal police report said that only one crime was solved for every 1,000 cameras in London in 2007. In short, there is conflicting evidence about the effectiveness of cameras, so it is likely that the debate will continue.\n\nParagraph C:\nProfessor Mike Press, who has spent the past decade studying how design can contribute to crime reduction, said that, in order for CCTV to have any effect, it must be used in a targeted way. For example, a scheme in Manchester records every licence plate at the entrance of a shopping complex and alerts police when one is found to belong to an untaxed or stolen car. This is an effective example of monitoring, he said. Most schemes that simply record city centres continually - often not being watched - do not produce results. CCTV can also have the opposite effect of that intended, by giving citizens a false sense of security and encouraging them to be careless with property and personal safety. Professor Press said: 'All the evidence suggests that CCTV alone makes no positive impact on crime reduction and prevention at all. The weight of evidence would suggest the investment is more or less a waste of money unless you have lots of other things in place.' He believes that much of the increase is driven by the marketing efforts of security companies who promote the crime-reducing benefits of their products. He described it as a 'lazy approach to crime prevention' and said that authorities should instead be focusing on how to alter the environment to reduce crime.\n\nParagraph D:\nBut in reality, this is not what is happening. Instead, police are considering using more technology. Police forces have recently begun experimenting with cameras in their helmets. The footage will be stored on police computers, along with the footage from thousands of CCTV cameras and millions of pictures from numberplate recognition cameras used increasingly to check up on motorists.\n\nParagraph E:\nAnd now another type of technology is being introduced. It's called the Microdrone and it's a toy-sized remote-control craft that hovers above streets or crowds to film what's going on beneath. The Microdrone has already been used to monitor rock festivals, but its supplier has also been in discussions to supply it to the Metropolitan Police, and Soca, the Serious Organised Crime Agency. The drones are small enough to be unnoticed by people on the ground when they are flying at 350ft. They contain high-resolution video surveillance equipment and an infrared night vision capability, so even in darkness they give their operators a bird's-eye view of locations while remaining virtually undetectable.\n\nParagraph F:\nThe worrying thing is, who will get access to this technology? Merseyside police are already employing two of the devices as part of a pilot scheme to watch football crowds and city parks looking for antisocial behaviour. It is not just about crime detection: West Midlands fire brigade is about to lease a drone, for example, to get a better view of fire and flood scenes and aid rescue attempts; the Environment Agency is considering their use for monitoring of illegal fly tipping and oil spills. The company that makes the drone says it has no plans to license the equipment to individuals or private companies, which hopefully will prevent private security firms from getting their hands on them. But what about local authorities? In theory, this technology could be used against motorists. And where will the surveillance society end? Already there are plans to introduce 'smart water' containing a unique DNA code identifier that when sprayed on a suspect will cling to their clothes and skin and allow officers to identify them later. As long as high-tech tools are being used in the fight against crime and terrorism, fine. But if it's another weapon to be used to invade our privacy then we don't want it.\n\nGlossary:\n- drone: a remote-controlled pilotless aircraft\n- 350ft: about 107 meters\n- bird's-eye view: a view from above\n- fly-tipping: illegally dumping waste (British English)",
+      "items": [
+        {
+          "id": "c6a9ae82-ecd0-4aff-a27d-806b31cb452b",
+          "prompt": "28. Paragraph B",
+          "options": [
+            "i. The spy in the sky",
+            "ii. The spread of technology",
+            "iii. The limitations of cameras",
+            "iv. The cost of cameras",
+            "v. Robots solving serious crimes",
+            "vi. Lack of conclusive evidence",
+            "vii. Cars and cameras",
+            "viii. Advantages and disadvantages",
+            "x. A feeling of safety"
+          ]
+        },
+        {
+          "id": "d959556b-302e-4a3c-a070-308a3b4e1065",
+          "prompt": "29. Paragraph C",
+          "options": [
+            "i. The spy in the sky",
+            "ii. The spread of technology",
+            "iii. The limitations of cameras",
+            "iv. The cost of cameras",
+            "v. Robots solving serious crimes",
+            "vi. Lack of conclusive evidence",
+            "vii. Cars and cameras",
+            "viii. Advantages and disadvantages",
+            "x. A feeling of safety"
+          ]
+        },
+        {
+          "id": "465bf400-19e8-4f25-b6c5-4b56099a4cc9",
+          "prompt": "30. Paragraph D",
+          "options": [
+            "i. The spy in the sky",
+            "ii. The spread of technology",
+            "iii. The limitations of cameras",
+            "iv. The cost of cameras",
+            "v. Robots solving serious crimes",
+            "vi. Lack of conclusive evidence",
+            "vii. Cars and cameras",
+            "viii. Advantages and disadvantages",
+            "x. A feeling of safety"
+          ]
+        },
+        {
+          "id": "bf920b14-946c-403b-8bb5-170720b0ab42",
+          "prompt": "31. Paragraph E",
+          "options": [
+            "i. The spy in the sky",
+            "ii. The spread of technology",
+            "iii. The limitations of cameras",
+            "iv. The cost of cameras",
+            "v. Robots solving serious crimes",
+            "vi. Lack of conclusive evidence",
+            "vii. Cars and cameras",
+            "viii. Advantages and disadvantages",
+            "x. A feeling of safety"
+          ]
+        },
+        {
+          "id": "3aad4fd0-86cd-476b-8aa7-4545dc957d68",
+          "prompt": "32. Paragraph F",
+          "options": [
+            "i. The spy in the sky",
+            "ii. The spread of technology",
+            "iii. The limitations of cameras",
+            "iv. The cost of cameras",
+            "v. Robots solving serious crimes",
+            "vi. Lack of conclusive evidence",
+            "vii. Cars and cameras",
+            "viii. Advantages and disadvantages",
+            "x. A feeling of safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reading-choice",
+      "title": "Reading · Multiple Choice",
+      "instructions": "Choose the appropriate letters A-D to finish sentences 33-35. (3 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "068880e5-25e0-4c63-a4b7-b38a10e9cc69",
+          "prompt": "33. Britain has already got",
+          "options": [
+            "A. four million CCTV cameras.",
+            "B. more data about DNA than any other country.",
+            "C. the most sophisticated crime-fighting technology.",
+            "D. access to the genetic data of one in fourteen people living in Britain."
+          ]
+        },
+        {
+          "id": "9ea4180d-b47f-47dd-81f5-48883d66be60",
+          "prompt": "34. Professor Press",
+          "options": [
+            "A. works at the University of Manchester.",
+            "B. studies car-related crime.",
+            "C. is concerned about the negative impact of the use of CCTV.",
+            "D. feels that some marketing departments lie about the crime-reducing benefits."
+          ]
+        },
+        {
+          "id": "0727df4d-9735-4c10-b05d-ca27869e2a2a",
+          "prompt": "35. The Microdrone is",
+          "options": [
+            "A. a type of toy in the shape of a plane.",
+            "B. being used by the Metropolitan Police.",
+            "C. being used by the government.",
+            "D. able to film in the dark."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reading-short",
+      "title": "Reading · Short-Answer Questions",
+      "instructions": "Using NO MORE THAN THREE WORDS from the passage, answer the following questions. (2 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "b09eff17-990d-4e5a-98e5-138e0f332435",
+          "prompt": "36. Give examples of 2 events where technology is used to watch crowds."
+        },
+        {
+          "id": "43f29cd7-75f5-461d-9913-82c438fbf872",
+          "prompt": "37. According to the passage, who do we not want to use the Microdrone?"
+        }
+      ]
+    },
+    {
+      "id": "reading-tf",
+      "title": "Reading · YES / NO / NOT GIVEN",
+      "instructions": "Do the following statements agree with the views of the writer? Choose YES, NO, or NOT GIVEN. (3 điểm)",
+      "context": "",
+      "items": [
+        {
+          "id": "7256af2f-eb37-4541-b602-44bc40ad4dbc",
+          "prompt": "38. The British authorities use too much technology to monitor their citizens.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ]
+        },
+        {
+          "id": "d8b23e87-cab5-4993-ad24-59d0cf5cc57b",
+          "prompt": "39. Microdrone is currently not used to check drivers.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ]
+        },
+        {
+          "id": "c2e0d067-8e2d-4693-8241-e1d933e52f2f",
+          "prompt": "40. Technology should not be used to check on people's private affairs.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "writing-translation",
+      "title": "Writing · Dịch câu học thuật (Body 1 & Body 2)",
+      "instructions": "Dịch 8 câu sau sang tiếng Anh hoàn chỉnh (30 điểm). Chú ý viết cả câu, có dấu câu và dùng từ vựng học thuật.",
+      "context": "Đề bài luận IELTS Task 2:\n\"Nowadays animal experiments are widely used to develop new medicines and to test the safety of other products. Some people argue that these experiments should be banned because it is morally wrong to cause animals to suffer, while others are in favour of them because of their benefits to humanity. Discuss both views and give your own opinion.\"\n\nYêu cầu: Dịch các câu sau sang tiếng Anh hoàn chỉnh (đảm bảo tính mạch lạc, ngữ pháp chuẩn và từ vựng học thuật).",
+      "items": [
+        {
+          "id": "e3dbc320-a6fd-41b2-86e6-fa5c6ece2f13",
+          "prompt": "1. (Body 1 - Câu 1) Một mặt, có những tranh luận đạo đức chống lại việc thí nghiệm trên động vật.",
+          "long": true
+        },
+        {
+          "id": "e8924de5-5bd5-498c-bcc5-31a6e24649a6",
+          "prompt": "2. (Body 1 - Câu 2) Để trích dẫn một ví dụ thường thấy của phương thức này, chuột thí nghiệm có thể được tiêm những loại thuốc mới trước khi chúng ta biết tác dụng phụ của chúng là gì.",
+          "long": true
+        },
+        {
+          "id": "5b9ae02e-2219-434f-a255-8bca8c0d4dd0",
+          "prompt": "3. (Body 1 - Câu 3) Những người phản đối những thí nghiệm như thế tranh luận rằng con người không có quyền ép các sinh vật phải chịu đau đớn.",
+          "long": true
+        },
+        {
+          "id": "90d6dd11-86ea-4779-854e-ebd5256c47c9",
+          "prompt": "4. (Body 1 - Câu 4) Họ tin rằng các lợi ích con người thu được không khiến việc động vật phải chịu đau đớn trở nên có thể chấp nhận được, và mạng sống của tất cả các sinh vật đều phải được tôn trọng.",
+          "long": true
+        },
+        {
+          "id": "1923d80f-7081-474e-94e5-1aec5a96570f",
+          "prompt": "5. (Body 2 - Câu 1) Mặt khác, các phương pháp thay thế đáng tin cậy đối với việc thí nghiệm trên động vật có thể sẽ không xuất hiện trong tương lai gần.",
+          "long": true
+        },
+        {
+          "id": "5e39dcb6-2742-4a1c-9c2a-0773cac9bee0",
+          "prompt": "6. (Body 2 - Câu 2) Những người ủng hộ việc sử dụng động vật trong nghiên cứu y tế tin rằng một mức độ đau đớn nhất định là không thể tránh khỏi nếu chúng ta muốn cứu mạng con người.",
+          "long": true
+        },
+        {
+          "id": "ce180b72-8a64-4930-8056-ab6032ba96e8",
+          "prompt": "7. (Body 2 - Câu 3) Họ tranh luận rằng những người phản đối thí nghiệm như vậy có thể sẽ cảm thấy khác nếu một thành viên trong gia đình họ cần một biện pháp điều trị y tế mang tính sống còn.",
+          "long": true
+        },
+        {
+          "id": "6c63bcfe-c8f9-4f86-84e7-4ebd029825d3",
+          "prompt": "8. (Body 2 - Câu 4) Trên phương diện cá nhân, tôi đồng ý với việc cấm thí nghiệm trên động vật cho mục đích phi y tế, nhưng tôi nghĩ thí nghiệm y tế cho đến nay vẫn là điều cần thiết.",
+          "long": true
+        }
+      ]
+    }
+  ]
+}

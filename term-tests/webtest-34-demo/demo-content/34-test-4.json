@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 1,
   "testNumber": 4,
-  "sourceHash": "190983b5c44e0246268217a8d903250e78b81f3b9915b016db552c0adc599219",
+  "sourceHash": "0323407c9a57211344de3168c5a101381b807aa25fc65081628ddfb2fbf636ce",
   "durationMinutes": 90,
   "groups": [
     {
@@ -23,103 +23,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -133,103 +133,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -243,103 +243,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -353,103 +353,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -463,103 +463,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -573,103 +573,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -683,103 +683,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -793,103 +793,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -903,103 +903,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1013,103 +1013,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1123,103 +1123,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1233,103 +1233,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1343,103 +1343,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1453,103 +1453,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1563,103 +1563,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1673,103 +1673,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1783,103 +1783,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -1893,103 +1893,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -2003,103 +2003,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -2113,103 +2113,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -2223,103 +2223,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -2333,103 +2333,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -2443,103 +2443,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -2553,103 +2553,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         },
@@ -2663,103 +2663,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "Bằng thạc sĩ"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "cơ hội nghề nghiệp"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "Dành thời gian để làm gì"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "du học"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Đạt được"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "để khỏe mạnh"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "đòi hỏi làm việc nhóm"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gây lúng túng"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Giá trị của"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không quen thuộc"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "Làm quen với việc gì"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "một cách tương đối"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "người đồng đội tốt"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "Nhìn chung"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "Quen với việc gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "Suy nghĩ sâu xa về"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Sự an toàn"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "sự thành công nghề nghiệp"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "Tận tụy"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tham vọng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "thích ứng với"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Tổ chức phi chính phủ"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "Trải nghiệm không thể quên"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "Truyền cảm hứng"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "văn hóa địa phương"
             }
           ]
         }
@@ -2772,127 +2772,127 @@
       "context": "",
       "items": [
         {
-          "id": "cfcc11b9-c92e-4f23-8c10-32adc60abe95",
+          "id": "eeb4a701-7cd0-4e2f-aa40-6b3d8a56684c",
           "prompt": "1.The trend is S_ _ _ _\n*trend: xu hướng",
           "image": "assets/34/test-4/pic-1.png"
         },
         {
-          "id": "7bedfc93-8311-434b-97ae-4f50c0736067",
+          "id": "1f108102-68e7-423e-be64-a07d8ba2a48f",
           "prompt": "2. Hoa should study harder to g_ _ _ _ _ _ _ from her university",
           "image": "assets/34/test-4/pic-2.png"
         },
         {
-          "id": "a327249b-4c2f-44eb-8230-eb3fbc1bdac2",
+          "id": "0ed64946-2c1f-4044-bf60-0aa2e13e0e7d",
           "prompt": "3.There are many M_ _ _ _ _ _ I_ _ _ _ _ _ _ _ _, such as guitar or piano.",
           "image": "assets/34/test-4/pic-3.png"
         },
         {
-          "id": "ce096347-d7bb-49fd-9d6b-c86f14dad834",
+          "id": "c762919d-b9b9-4782-8228-8e0c3b7500ff",
           "prompt": "4. Don’t get too stressed. C_ _ _ D_ _ _ please!",
           "image": "assets/34/test-4/pic-4.png"
         },
         {
-          "id": "3bb229c0-d6c2-46a4-8ba8-ae175d082f6f",
+          "id": "d6d72657-1b9b-43cd-bf03-52de81912bc3",
           "prompt": "5. Now, it is so expensive to R_ _ _ _ C_ _ _ _ _ _ _",
           "image": "assets/34/test-4/pic-5.png"
         },
         {
-          "id": "e652145d-118b-41f0-a3f3-fd02ce4e114a",
+          "id": "bff3b2fa-005c-47c6-8f4a-15ff00f78168",
           "prompt": "6. If you have a H_ _ _-P_ _ _ _ _ J_ _, you can earn so much money.",
           "image": "assets/34/test-4/pic-6.png"
         },
         {
-          "id": "a1d7aacb-0f57-4369-929e-0b9cf8c880a2",
+          "id": "c03709b9-5914-4488-b0d4-00a58354eb99",
           "prompt": "7. I often E_ _ _ _ _ M_ K_ _ _ _ _ _ _ _ by reading books.",
           "image": "assets/34/test-4/pic-7.png"
         },
         {
-          "id": "3e5d1060-1041-46f3-abc5-967673724c05",
+          "id": "59d4d08a-b004-4583-b060-18df44b532c4",
           "prompt": "8. If you want to afford a house, you should start to S_ _ _ U_ M_ _ _ _",
           "image": "assets/34/test-4/pic-8.png"
         },
         {
-          "id": "27e57420-6b9b-492d-aa07-6075b206c67a",
+          "id": "85e1fbaf-d370-48c0-b1ba-cbf88820593a",
           "prompt": "9. It is hard to make a S_ _ _ _ _ _ _ _, because you have to get used to many difficult techniques.",
           "image": "assets/34/test-4/pic-9.png"
         },
         {
-          "id": "28b65b06-ebd9-4c20-92a3-487489f26699",
+          "id": "0bc3aca1-2d93-4f63-948e-5193f47b6561",
           "prompt": "10. Nam has always wanted to S_ _ _ _ a_ _ _ _ _ in the UK.",
           "image": "assets/34/test-4/pic-10.png"
         },
         {
-          "id": "d7e27602-9a1b-4562-b1cb-f65c0829020c",
+          "id": "9210489d-e4f2-46b7-9cbf-80ebd4538247",
           "prompt": "11. Listening to music can help E_ _ _ _ _ _ _ P_ _ _ _ _, and raise their spirits.",
           "image": "assets/34/test-4/pic-11.png"
         },
         {
-          "id": "9a59c0f0-7dbc-42ac-bf01-28ab486510d0",
+          "id": "73da33d7-3a6d-4e34-bf05-73fec76e0282",
           "prompt": "12. If you want to B_ _ _ _ U_ M_ _ _ _ _ _, you can go to a fitness center.",
           "image": "assets/34/test-4/pic-12.png"
         },
         {
-          "id": "b918c404-8608-47d4-8e2c-43898a6e3dab",
+          "id": "70f13f24-4a81-413f-84d3-6036470b2a95",
           "prompt": "13. You should S_ _ _ _ _ H_ _ _ if you want to have high scores in this test.",
           "image": "assets/34/test-4/pic-13.png"
         },
         {
-          "id": "e12be18a-416c-4b57-a909-c0341ca432e0",
+          "id": "60117612-bfc5-4d9d-a6d1-edabaa1b7962",
           "prompt": "14. The teacher’s question is C_ _ _ _ _ _ _ _ , so Nam doesn't understand at all",
           "image": "assets/34/test-4/pic-14.png"
         },
         {
-          "id": "be66652c-9991-4df2-b42a-7be6ad123dc4",
+          "id": "9b998df2-1ca3-46fc-96d3-c7e5a8802829",
           "prompt": "15. I feel very tired, perhaps it’s because I often S_ _ _ _ _ F_ _ _ S_ _ _ _ _",
           "image": "assets/34/test-4/pic-15.png"
         },
         {
-          "id": "219d9fd9-8ee7-4810-8820-039592482d8f",
+          "id": "875d6e9c-9659-42dc-ab62-464cd9a94a42",
           "prompt": "16.A U_ _ _ _ _ _ _ _ _ D_ _ _ _ _ is very important because it can help you get a great job.",
           "image": "assets/34/test-4/pic-16.png"
         },
         {
-          "id": "bd375aa1-a0b2-45ad-b7c5-86f43ba86b02",
+          "id": "14b6f89b-8d8d-464e-b063-a00a893b6b96",
           "prompt": "17. Don’t let a S_ _ _ _ _ _ _ come into your home, because it is dangerous.",
           "image": "assets/34/test-4/pic-17.png"
         },
         {
-          "id": "97a243fa-13b5-41ac-829f-732ff347c695",
+          "id": "b63443e8-1daf-4e63-8f73-b31f5011b61b",
           "prompt": "18. Nam has been unemployed for months. He should start to L_ _ _ F_ _  _  J_ _",
           "image": "assets/34/test-4/pic-18.png"
         },
         {
-          "id": "eeaeb68b-524b-467b-b14a-bd970d626408",
+          "id": "317fbab1-3194-4756-944e-3d546566ff5b",
           "prompt": "19. Math is so difficult, and I often M_ _ _ M_ _ _ _ _ _ _ when I learn Math",
           "image": "assets/34/test-4/pic-19.png"
         },
         {
-          "id": "d0e438a8-87b2-4dad-86f1-fd64dd66531f",
+          "id": "e3946099-cf40-47ee-b47e-3337899542d9",
           "prompt": "20.I want to be a V_ _ _ _ _ _ _ _ at a hospital to help patients there.",
           "image": "assets/34/test-4/pic-20.png"
         },
         {
-          "id": "ba9749cf-52a0-411b-8561-c0494f0d2561",
+          "id": "4e677119-f291-493c-84af-bdc259613559",
           "prompt": "21. I hope to buy an a_ _ _ _ _ _ _ _ in the suburbs",
           "image": "assets/34/test-4/pic-21.png"
         },
         {
-          "id": "011158fd-8c19-4a3d-9fb5-608b1e4738f0",
+          "id": "562bce05-8ffd-4fcd-bbc2-efac9b019350",
           "prompt": "22. I believe if I strive hard, I can get a S_ _ _ _ _ _ _ _ _ _ at a university in the USA.",
           "image": "assets/34/test-4/pic-22.png"
         },
         {
-          "id": "396b7b9b-c3aa-4b8f-8e9b-ec4071de93b2",
+          "id": "faa01b3c-b85b-44a2-9454-154597fa40bf",
           "prompt": "23. Thu is p_ _ _ _ _ _ _ _ _ in English. She can write and speak English well, so she gets a great job.",
           "image": "assets/34/test-4/pic-23.png"
         },
         {
-          "id": "36a2edaa-6042-4b35-b4de-bac80e56a861",
+          "id": "b9d97f8b-b266-4e97-a04e-e382705084bf",
           "prompt": "24. My P_ _ _ _ _ _ in life is to become a doctor.",
           "image": "assets/34/test-4/pic-24.png"
         },
         {
-          "id": "10c7fd26-d84f-4cff-8a20-b444ec2015a5",
+          "id": "07e6bb37-e15e-436b-97c6-f28eca88f895",
           "prompt": "25. Thu is such a B_ _ _ E_ _ _ _ _ _ _ because she has little time for herself and her family.",
           "image": "assets/34/test-4/pic-25.png"
         }
@@ -2903,10 +2903,10 @@
       "title": "Listening · Chọn đáp án",
       "instructions": "Choose the correct answer. You have 60 seconds to read the questions.\r\n(Chọn câu trả lời đúng. Bạn có 60s để đọc đề bài)",
       "context": "",
-      "audioPath": "assets/34/test-4/listening-1.mp3",
+      "audioPath": "assets/34/test-4/listening.mp3",
       "items": [
         {
-          "id": "198727ef-f84e-440e-b0c5-fbe26ef5a367",
+          "id": "993d9b19-4f6b-4297-aa3a-ece4f02b7d60",
           "prompt": "1. What does Debra Garrel consider as an adventure?",
           "options": [
             "A. Studying communications at university",
@@ -2915,7 +2915,7 @@
           ]
         },
         {
-          "id": "f11704c9-afe5-4522-b0ad-785ea2e2d6be",
+          "id": "4067b87c-eb30-4405-a406-170d90df626b",
           "prompt": "2. Which is NOT the experience that Debra had during her childhood?",
           "options": [
             "A. Living in many countries, including England",
@@ -2924,7 +2924,7 @@
           ]
         },
         {
-          "id": "b53d0824-5919-44d6-885c-f287bf0f4565",
+          "id": "4a29879d-f3f8-4cdb-9b7f-976c17daa2a3",
           "prompt": "3. What happened when Debra left a place?",
           "options": [
             "A. She felt that saying goodbye was not really hard",
@@ -2933,7 +2933,7 @@
           ]
         },
         {
-          "id": "f1081aec-c7b5-4ed4-9184-c9df2a8b68f6",
+          "id": "2b13193e-e155-4a58-ab79-97645aedd186",
           "prompt": "4. Why does Debra study communications?",
           "options": [
             "A. She loves listening to her friends' old stories",
@@ -2942,7 +2942,7 @@
           ]
         },
         {
-          "id": "10e17618-d568-41e8-a1d9-870f179c466c",
+          "id": "e10f655b-766b-4ed1-abba-c82a01f816f3",
           "prompt": "5. What is Debra’s attitude towards meeting people ?",
           "options": [
             "A. She does not want to meet people with the same hobbies as hers",
@@ -2974,30 +2974,30 @@
           }
         ]
       },
-      "audioPath": "assets/34/test-4/listening-2.mp3",
+      "audioPath": "assets/34/test-4/listening.mp3",
       "items": [
         {
-          "id": "7e7ddf6e-2f79-40a6-9b5d-e5b743f58e13",
+          "id": "a4c1b67f-902f-4190-a3bf-e04af4b8def1",
           "prompt": "Chỗ trống (1)",
           "maxWords": 1
         },
         {
-          "id": "91e84ff4-855a-4472-aed4-c4ad96064244",
+          "id": "ed2e8a1a-900c-4218-aab3-4fdac5935e79",
           "prompt": "Chỗ trống (2)",
           "maxWords": 1
         },
         {
-          "id": "ce14461d-0b4c-44f6-acfa-f15d80c7cc19",
+          "id": "7427ad89-ba78-461b-a044-192473b5fa7d",
           "prompt": "Chỗ trống (3)",
           "maxWords": 1
         },
         {
-          "id": "e7ffdc6d-671d-4556-b0bc-d72305630c81",
+          "id": "5853ea99-436a-45ac-abf4-bef727bc6387",
           "prompt": "Chỗ trống (4)",
           "maxWords": 1
         },
         {
-          "id": "9a9f2ee5-6af9-4fb4-b18f-3062f9009d50",
+          "id": "5ff5d883-3878-4a2d-8da0-e301910512e5",
           "prompt": "Chỗ trống (5)",
           "maxWords": 1
         }
@@ -3008,10 +3008,10 @@
       "title": "Listening · Sắp xếp",
       "instructions": "Listen and order the sentences from A to E. You have 30 seconds to read the questions \n(nghe và sắp xếp trật từ cho câu A đến câu E. Bạn có 30s để đọc câu hỏi)",
       "context": "A. Sometimes, there is no better way to communicate than talking.\nB. Avoiding eye contact is a sign that the person may be lying.\nC. The little importance of actual words used in a conversation.\nD. If a person is feeling scared, he may cross his arms in front of the body.\nE. A good understanding of body language may help with reading others’ thoughts.",
-      "audioPath": "assets/34/test-4/listening-3.mp3",
+      "audioPath": "assets/34/test-4/listening.mp3",
       "items": [
         {
-          "id": "54664235-eb57-473d-88a7-92559d35de50",
+          "id": "9c5c6bfb-0553-4f90-9b48-4547da56a4a8",
           "prompt": "Vị trí 1",
           "options": [
             "A",
@@ -3022,7 +3022,7 @@
           ]
         },
         {
-          "id": "38997c21-ecc1-4afe-9d1f-0dfa4a5ee2a8",
+          "id": "00a2aefd-e360-412c-8fd3-71f72ea2f7cf",
           "prompt": "Vị trí 2",
           "options": [
             "A",
@@ -3033,7 +3033,7 @@
           ]
         },
         {
-          "id": "53aa30d7-5594-4d55-bf44-59553f8ae477",
+          "id": "8f204275-3181-4938-887e-f81cc8b6e0a4",
           "prompt": "Vị trí 3",
           "options": [
             "A",
@@ -3044,7 +3044,7 @@
           ]
         },
         {
-          "id": "8693e6ee-e095-4698-93da-a1155da63ba5",
+          "id": "227b6b13-ac1c-4104-adaf-3b09be341b6a",
           "prompt": "Vị trí 4",
           "options": [
             "A",
@@ -3055,7 +3055,7 @@
           ]
         },
         {
-          "id": "4f071bca-5469-4dab-9de4-411b6f54ddb4",
+          "id": "33d5dc42-f6ab-4418-a062-edaf9a29cb2d",
           "prompt": "Vị trí 5",
           "options": [
             "A",
@@ -3074,43 +3074,43 @@
       "context": "",
       "items": [
         {
-          "id": "0a6f20ad-e70c-4c15-9f8a-21d0f34fa020",
+          "id": "19a5835f-da8b-4fe1-8d0a-43ec07286a52",
           "prompt": "/ˌɡʊdˈbaɪ/"
         },
         {
-          "id": "ba3e68f7-9a05-4ee7-b72f-5babc6330aa3",
+          "id": "385fe063-d35c-4442-8d6e-ae82bd46e3ee",
           "prompt": "/æsk/"
         },
         {
-          "id": "1815a027-11f7-4a9e-b887-4f2328cbd9fe",
+          "id": "38892876-44ce-4274-ac25-792a8ab17d5d",
           "prompt": "/ˈpiːpl/"
         },
         {
-          "id": "c7849c52-21e6-4833-81d0-90ee9b6c6ba9",
+          "id": "c4d3c500-7698-455a-b1ca-212cbe493b19",
           "prompt": "/ɪmˈpeɪʃnt/"
         },
         {
-          "id": "0d25f365-1f59-4bdc-93b1-630655b573fc",
+          "id": "dbf83fcc-4f8b-4cbd-9f89-5011b1813078",
           "prompt": "/lɑːrdʒ/"
         },
         {
-          "id": "ae811ab9-3ebe-44c3-a716-453d17b0b46a",
+          "id": "0494528c-1136-4a7b-af7a-cf95640d6727",
           "prompt": "/tʃuːz/"
         },
         {
-          "id": "0aefe650-5604-46b2-a976-1b034ab8c17d",
+          "id": "9b5116ae-e895-4af3-b7dc-86c1779050a8",
           "prompt": "/dʒɑːb/"
         },
         {
-          "id": "c0a4ed44-65a3-455e-b864-2f789d039aac",
+          "id": "8552a355-f7a5-4bbe-9ef0-161c9f7e18b0",
           "prompt": "/θɪŋk/"
         },
         {
-          "id": "71cfc53c-1bf1-4521-aba2-7b39a9b07f4c",
+          "id": "ff773491-7e4c-4a82-adbe-51113ef2c3b4",
           "prompt": "/ðer/"
         },
         {
-          "id": "a2710e8b-7a3a-49b2-96a5-bd72fc46fd4a",
+          "id": "0b437313-dc4a-4d2c-bb8b-103c3fdf5025",
           "prompt": "/frʌnt/"
         }
       ]
@@ -3122,7 +3122,7 @@
       "context": "",
       "items": [
         {
-          "id": "11e06f67-2688-4fe2-b782-8ee6fb21adbb",
+          "id": "a69f5dec-985c-4ccf-b805-f328bc40e839",
           "prompt": "about",
           "options": [
             "/əˈbaɒt/",
@@ -3131,7 +3131,7 @@
           ]
         },
         {
-          "id": "163aac22-b1f0-4589-8e5d-8ba44a376c93",
+          "id": "d6bbc3a6-dde1-4127-ab57-8885f9efb7a9",
           "prompt": "growing",
           "options": [
             "/ˈɡrʊɪŋ/",
@@ -3140,7 +3140,7 @@
           ]
         },
         {
-          "id": "f1939c99-26bd-4780-b11a-2fa35c10a8af",
+          "id": "7c43c9c6-e812-4b1f-b1d0-73f16bf4fa12",
           "prompt": "keep",
           "options": [
             "/kep/",
@@ -3149,7 +3149,7 @@
           ]
         },
         {
-          "id": "eacd4813-4ea3-4bf8-ab01-6bdf71d4c578",
+          "id": "922ce25e-6219-4b8d-a8ab-cd4f7c77dc9c",
           "prompt": "change",
           "options": [
             "/tʃeɪndʒ/",
@@ -3158,7 +3158,7 @@
           ]
         },
         {
-          "id": "70f7453b-cd08-4b94-8933-b83aac7013c2",
+          "id": "92453c47-a93f-446c-82d1-3b1b0b507094",
           "prompt": "emotion",
           "options": [
             "/ɪˈməʊsn/",
@@ -3167,7 +3167,7 @@
           ]
         },
         {
-          "id": "4569e7e7-4eff-4176-858d-4c9725eff2b9",
+          "id": "adebaf01-ee96-4c3d-94b7-d69d7d6643de",
           "prompt": "large",
           "options": [
             "/lɑːrdʒ/",
@@ -3176,7 +3176,7 @@
           ]
         },
         {
-          "id": "8871a376-7a9b-4111-8d3a-fbafa92dde93",
+          "id": "45d5c66b-db42-4028-8b01-93e62973dccc",
           "prompt": "have",
           "options": [
             "/hɑːv/",
@@ -3185,7 +3185,7 @@
           ]
         },
         {
-          "id": "4e9f6778-10e4-4462-bfcb-b804f061aab6",
+          "id": "48165f0b-a6fc-4148-8ebc-f72fb2f73e84",
           "prompt": "afraid",
           "options": [
             "/əˈfraɪd/",
@@ -3194,7 +3194,7 @@
           ]
         },
         {
-          "id": "d254c457-44f4-44e6-8f46-7852aa1410ce",
+          "id": "fabe3c84-93bc-497f-9cb2-0be42440e2bc",
           "prompt": "through",
           "options": [
             "/thruː/",
@@ -3203,7 +3203,7 @@
           ]
         },
         {
-          "id": "0afda636-3644-4cb0-b559-9fd04d482f64",
+          "id": "42682d5f-fe34-4132-b7f8-06a6b3de6810",
           "prompt": "that",
           "options": [
             "/ðæt/",
@@ -3220,42 +3220,42 @@
       "context": "",
       "items": [
         {
-          "id": "4d9d198d-31aa-49ad-8487-aa70b49c6516",
+          "id": "0cf8d954-ed30-4c6b-be74-c01998efec81",
           "prompt": "1. Bạn có phải là một người mà đặc biệt giỏi điều khiển cảm xúc không?",
           "long": true
         },
         {
-          "id": "8322fb9e-c102-4d65-8312-9988265bcc76",
+          "id": "31c6619f-159b-4a8b-b0b6-d2c3277f89e4",
           "prompt": "2. Yếu tố quan trọng nhất là, bạn không nên chọn một công việc chỉ vì nó trả lương cao. Vì nếu bạn làm như vậy, bạn có lẽ sẽ không hạnh phúc.",
           "long": true
         },
         {
-          "id": "bc4c7843-b83b-4c43-b670-6280d5fe3a07",
+          "id": "e19ff459-5bac-4d82-bd47-c932108dacde",
           "prompt": "3. Có quá nhiều việc để làm và quá nhiều thứ để xem xét khi chọn một nghề nghiệp. Hãy nhớ rằng, nó là một thứ mà bạn sẽ làm gần như mọi ngày.",
           "long": true
         },
         {
-          "id": "0a521b19-d1c6-4ede-bd1b-6dc3bbd2c044",
+          "id": "f242cf27-a480-492c-81b4-24f6017ad993",
           "prompt": "4. Bạn nên truyền (gửi) loại thông điệp gì qua ngôn ngữ cơ thể nếu muốn giao tiếp tốt hơn?",
           "long": true
         },
         {
-          "id": "2037d2cf-a090-4bc1-8f9d-2e059ed1e74a",
+          "id": "77c8d78b-5bf1-49a9-9ae1-ae77583e767e",
           "prompt": "5. Hãy nhớ rằng, bạn sẽ không cải thiện được cái cách mà bạn giao tiếp nếu như bạn không nhìn trực tiếp vào mắt người mà bạn nói chuyện cùng.",
           "long": true
         },
         {
-          "id": "5b16a8a1-b047-4ac7-aeff-630c461b5b7d",
+          "id": "79fde297-32fd-4181-a636-2cba5458d535",
           "prompt": "6. Bạn đã bao giờ cảm thấy hai cánh tay đan chéo nhau là biểu hiện người đó không thân thiện chưa?",
           "long": true
         },
         {
-          "id": "e4315849-e3ef-441c-bb0b-0618938e497c",
+          "id": "f63c5720-12c8-4c0a-9ec6-6de04066a1b6",
           "prompt": "7. Rõ ràng là việc học về các nền văn hóa khác nhau là khá tốt cho một trí óc của một sinh viên 21 tuổi như mình.",
           "long": true
         },
         {
-          "id": "45d5b1d2-0239-488c-88dd-8633f8f34e8f",
+          "id": "dca28a6b-fa90-4b5b-a2a2-a8adf8099b17",
           "prompt": "8. Dường như phần khó nhất của việc rời khỏi một nơi là bạn phải làm quen với môi trường mới. Đó dường như là lí do mà bạn nên nhắc nhở bản thân rằng bạn sẽ làm quen được nhiều bạn mới.",
           "long": true
         }
@@ -3268,17 +3268,17 @@
       "context": "",
       "items": [
         {
-          "id": "baa2bb8c-0e5f-4f6f-8eab-3a49592fa5eb",
+          "id": "c51aadd0-08b0-4faa-adc8-ac119eab453f",
           "prompt": "1. How important is it to choose the right career? (6 points)\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         },
         {
-          "id": "3ecdf3ca-8baa-46b6-a650-6bdd0e707d73",
+          "id": "59397ee0-6cf6-4aac-bfd6-f1eeabb921a6",
           "prompt": "2. What do you hope to do in the future if you have a lot of money? (6 points)\nSuggested Ideas",
           "long": true
         },
         {
-          "id": "c5442bf2-c52e-4df2-ad6f-538715a9b7c0",
+          "id": "cae13e8d-1bca-4b32-ab8d-6fab7fe4d1fd",
           "prompt": "3. Is it difficult to understand body language? (6 points)\nSuggested Ideas",
           "long": true
         }

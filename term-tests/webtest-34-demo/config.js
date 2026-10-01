@@ -29,14 +29,14 @@
     AUDIO: {
       // Bản nghe thử để học viên kiểm tra loa/âm lượng TRƯỚC khi bắt đầu phần nghe.
       soundcheck: {
-        remote: 'https://pub-7406d9d7254a4ef7b5d1ad82edb9964b.r2.dev/Audiotest_webtest/soundcheck.mp3'
+        remote: 'https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/soundcheck.mp3'
       },
       // Audio chính thức — mỗi phần phát ĐÚNG MỘT LẦN, không dừng/tua được.
       vocabulary: {
-        remote: 'https://pub-7406d9d7254a4ef7b5d1ad82edb9964b.r2.dev/Audiotest_webtest/Test1_Vocab.mp3'
+        remote: 'https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/course-34/phase-1/test-1/vocabulary.mp3'
       },
       listening: {
-        remote: 'https://pub-7406d9d7254a4ef7b5d1ad82edb9964b.r2.dev/Audiotest_webtest/Test1_Listening.mp3'
+        remote: 'https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/course-34/phase-1/test-1/listening.mp3'
       }
     }
   });

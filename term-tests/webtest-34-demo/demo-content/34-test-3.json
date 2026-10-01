@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 1,
   "testNumber": 3,
-  "sourceHash": "11eefab3851e1c69f3ef367d6ec95ddfeb6d3198938bebdfce894989d0ce32ad",
+  "sourceHash": "5b984da1a7faea8293d276cf0ac8bdf6ff602fb2c4324589a63d0bc1cefdc01c",
   "durationMinutes": 90,
   "groups": [
     {
@@ -23,103 +23,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -133,103 +133,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -243,103 +243,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -353,103 +353,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -463,103 +463,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -573,103 +573,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -683,103 +683,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -793,103 +793,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -903,103 +903,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1013,103 +1013,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1123,103 +1123,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1233,103 +1233,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1343,103 +1343,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1453,103 +1453,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1563,103 +1563,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1673,103 +1673,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1783,103 +1783,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -1893,103 +1893,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -2003,103 +2003,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -2113,103 +2113,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -2223,103 +2223,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -2333,103 +2333,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -2443,103 +2443,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -2553,103 +2553,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         },
@@ -2663,103 +2663,103 @@
           "options": [
             {
               "id": "meaning-01",
-              "label": "Nghĩa tiếng Việt 1"
+              "label": "bạn cùng lớp"
             },
             {
               "id": "meaning-02",
-              "label": "Nghĩa tiếng Việt 2"
+              "label": "bảo thủ"
             },
             {
               "id": "meaning-03",
-              "label": "Nghĩa tiếng Việt 3"
+              "label": "có khoảng thời gian tuyệt vời"
             },
             {
               "id": "meaning-04",
-              "label": "Nghĩa tiếng Việt 4"
+              "label": "có trách nhiệm"
             },
             {
               "id": "meaning-05",
-              "label": "Nghĩa tiếng Việt 5"
+              "label": "Cơ sở vật chất hiện đại"
             },
             {
               "id": "meaning-06",
-              "label": "Nghĩa tiếng Việt 6"
+              "label": "Cuối cùng thì"
             },
             {
               "id": "meaning-07",
-              "label": "Nghĩa tiếng Việt 7"
+              "label": "Đa dạng cái gì"
             },
             {
               "id": "meaning-08",
-              "label": "Nghĩa tiếng Việt 8"
+              "label": "Gợi sự thích thú"
             },
             {
               "id": "meaning-09",
-              "label": "Nghĩa tiếng Việt 9"
+              "label": "Háo hức làm gì"
             },
             {
               "id": "meaning-10",
-              "label": "Nghĩa tiếng Việt 10"
+              "label": "Không lâu trước kia"
             },
             {
               "id": "meaning-11",
-              "label": "Nghĩa tiếng Việt 11"
+              "label": "làm cảm thấy hài lòng, thỏa mãn"
             },
             {
               "id": "meaning-12",
-              "label": "Nghĩa tiếng Việt 12"
+              "label": "Làm từ ban đầu"
             },
             {
               "id": "meaning-13",
-              "label": "Nghĩa tiếng Việt 13"
+              "label": "Mọi thứ diễn ra theo dự định"
             },
             {
               "id": "meaning-14",
-              "label": "Nghĩa tiếng Việt 14"
+              "label": "nhờ vào cái gì"
             },
             {
               "id": "meaning-15",
-              "label": "Nghĩa tiếng Việt 15"
+              "label": "quen với cái gì"
             },
             {
               "id": "meaning-16",
-              "label": "Nghĩa tiếng Việt 16"
+              "label": "thay đổi rất nhiều"
             },
             {
               "id": "meaning-17",
-              "label": "Nghĩa tiếng Việt 17"
+              "label": "Thay thế cái gì bằng cái gì"
             },
             {
               "id": "meaning-18",
-              "label": "Nghĩa tiếng Việt 18"
+              "label": "Thú vị"
             },
             {
               "id": "meaning-19",
-              "label": "Nghĩa tiếng Việt 19"
+              "label": "tiếp cận với"
             },
             {
               "id": "meaning-20",
-              "label": "Nghĩa tiếng Việt 20"
+              "label": "Tòa nhà thấp tầng"
             },
             {
               "id": "meaning-21",
-              "label": "Nghĩa tiếng Việt 21"
+              "label": "Trong những năm gần đây"
             },
             {
               "id": "meaning-22",
-              "label": "Nghĩa tiếng Việt 22"
+              "label": "Trung tâm mua sắm"
             },
             {
               "id": "meaning-23",
-              "label": "Nghĩa tiếng Việt 23"
+              "label": "truyền cảm hứng"
             },
             {
               "id": "meaning-24",
-              "label": "Nghĩa tiếng Việt 24"
+              "label": "trưởng thành"
             },
             {
               "id": "meaning-25",
-              "label": "Nghĩa tiếng Việt 25"
+              "label": "tự thể hiện bản thân"
             }
           ]
         }
@@ -2772,127 +2772,127 @@
       "context": "",
       "items": [
         {
-          "id": "05856044-9170-4a7d-ab4a-b663e77feff8",
+          "id": "fd11e000-d2fd-4d3a-bb8c-fde9440f046e",
           "prompt": "1. S_ _ _ _ _ k_ _ _ in some countries often ride their bikes to school.",
           "image": "assets/34/test-3/pic-1.png"
         },
         {
-          "id": "dd82004e-ec5d-4993-96a6-3667dfb633e3",
+          "id": "fc225a13-0a5f-4ee9-90b8-c51063731d33",
           "prompt": "2. There is an a_ _ _ _ _ _ _ _ b_ _ _ _ _ _ _ near my house.",
           "image": "assets/34/test-3/pic-2.png"
         },
         {
-          "id": "2fd63659-c81f-4deb-b9a6-db971b951a17",
+          "id": "b88c96e2-fc6f-4d43-a73a-3322b9e2fd9f",
           "prompt": "3.Last year, I traveled to a mountainous area and experienced m_ _ _ _ _ _ _ c_ _ _ _ _ _ there.",
           "image": "assets/34/test-3/pic-3.png"
         },
         {
-          "id": "5c56a9b6-ee98-4337-9627-e329c89ddbdb",
+          "id": "b940e850-6438-4641-9af0-1aa2a42d12bb",
           "prompt": "4. W_ _ _ _ w_ _ y_ _ _ _, I used to play computer games a lot.",
           "image": "assets/34/test-3/pic-4.png"
         },
         {
-          "id": "13f2f4b3-ef70-4561-9308-b2fdd2b3a4ad",
+          "id": "242f7694-1832-4fe4-aff2-62bfe57a287c",
           "prompt": "5. He is a c_ _ _ _ _ _ _ student because he has a lot of ideas.",
           "image": "assets/34/test-3/pic-5.png"
         },
         {
-          "id": "363d371c-999b-4e48-90cb-3cd5fc306473",
+          "id": "2c4c5a86-eac7-48eb-ace7-692553494fac",
           "prompt": "6. Fish is never my favorite d_ _ _",
           "image": "assets/34/test-3/pic-6.png"
         },
         {
-          "id": "a97e26fc-cda9-4832-b4c9-03bd5dcd7fa0",
+          "id": "2b19143c-5801-45c0-80e7-bbb424220101",
           "prompt": "7. My teacher is usually e_ _ _ _ _ _ _ _ in class. He uses a lot of gestures and acting.",
           "image": "assets/34/test-3/pic-7.png"
         },
         {
-          "id": "c062c589-42e9-4daa-a82c-01a430c4c9cd",
+          "id": "4b626c68-0e3e-4b97-bb29-f7af5ca74158",
           "prompt": "8. The shop offered us e_ _ _ _ _ _ _ _ s_ _ _ _ _ _, so we gave it a 5-star review.",
           "image": "assets/34/test-3/pic-8.png"
         },
         {
-          "id": "24e6b8e7-7b0c-4079-9db6-0fab8044c527",
+          "id": "7c25c069-b19f-4136-a0c1-44fc8f3869a4",
           "prompt": "9. We often g_ o_ h_ _ _ _ _ _ twice a year.",
           "image": "assets/34/test-3/pic-9.png"
         },
         {
-          "id": "d89bb65a-96a6-4e41-98e6-8bc352617a51",
+          "id": "7d5c7e50-0e88-48c3-9194-b67a5f6bbeb4",
           "prompt": "10. They usually e_ _ o_ _ at a seafood restaurant on the weekend.",
           "image": "assets/34/test-3/pic-10.png"
         },
         {
-          "id": "21b48340-c3ef-44a9-b119-86b40ace2a73",
+          "id": "ac5a802f-86d7-4889-b2c9-05b173bd66b5",
           "prompt": "11. I love living in a h_ _ _-r_ _ _ b_ _ _ _ _ _ _ in the city",
           "image": "assets/34/test-3/pic-11.png"
         },
         {
-          "id": "c7398bb3-b15d-41ee-bcba-6b08d99866d0",
+          "id": "b0524bac-1d36-47f9-929a-191c0c9c23b3",
           "prompt": "12. She needs a lot of i_ _ _ _ _ _ _ _ _ _ to cook Phở",
           "image": "assets/34/test-3/pic-12.png"
         },
         {
-          "id": "8eb33912-6a41-41c6-ba69-7edb55fc1cc4",
+          "id": "cf4d54fa-79ab-440c-982b-9e81a52c6367",
           "prompt": "13. Noises from outside may k_ _ _ s_ _ _ _ _ _ _ f_ _ _ concentratin",
           "image": "assets/34/test-3/pic-13.png"
         },
         {
-          "id": "28371165-4fe9-4b13-b571-828ae993f82e",
+          "id": "92567f5a-3933-42bf-a7f0-a4787c71390a",
           "prompt": "14. The road is n_ _ _ _ _, so large trucks are not allowed to travel there.",
           "image": "assets/34/test-3/pic-14.png"
         },
         {
-          "id": "b13b0161-1ee5-465e-96a5-05e93b5e90aa",
+          "id": "94727848-ee16-4569-9e95-26b5d2cce5ae",
           "prompt": "15. There are five g_ _ _ _ _ _ _ _ _ _ in my house",
           "image": "assets/34/test-3/pic-15.png"
         },
         {
-          "id": "ef9f65e5-0657-4c4a-8a13-af6b342ee08b",
+          "id": "98df8d51-ba8b-4bc6-9330-3f376b78faa1",
           "prompt": "16. She eats a lot, so now she is o_ _ _ _ _ _ _ _ _",
           "image": "assets/34/test-3/pic-16.png"
         },
         {
-          "id": "499be8ee-5a6e-4e6b-8eb5-9f83086aa874",
+          "id": "38ee5efa-44d8-492d-8f3d-1ae77d45a6f3",
           "prompt": "17. Because my teacher is p_ _ _ _ _ _, he can help me correct many mistakes in my homework",
           "image": "assets/34/test-3/pic-17.png"
         },
         {
-          "id": "c1fd4bef-4fe6-46c6-8445-d40d3776de3b",
+          "id": "e34deeee-645f-40c7-8942-87807aa46a31",
           "prompt": "18. Using Tiktok is p_ _ _ _ _ _ w_ _ _ young people",
           "image": "assets/34/test-3/pic-18.png"
         },
         {
-          "id": "41c42b92-6368-4371-9e49-681fbe9a9afe",
+          "id": "39f460f5-f6b4-4ba5-ae60-29ec6a1128d1",
           "prompt": "19. My grandparents used to p_ _ _ _ t_ _ _ _ in our garden",
           "image": "assets/34/test-3/pic-19.png"
         },
         {
-          "id": "69f75d2c-2a16-4200-a948-c67640ff4953",
+          "id": "35918e13-91ac-445c-8a14-43e51a42b807",
           "prompt": "20.They usually s_ _ _ _ _ _ _ talk about their teacher, so he doesn’t know",
           "image": "assets/34/test-3/pic-20.png"
         },
         {
-          "id": "1bc079e3-d2ce-488d-a3b8-0fcdfba04d4c",
+          "id": "b65b7a78-0385-451f-8fea-b1385e909903",
           "prompt": "21. He used to be s_ _ and didn’t talk much to his friends when he was small",
           "image": "assets/34/test-3/pic-21.png"
         },
         {
-          "id": "3e4653dd-7774-4a03-ae19-53650191b7b2",
+          "id": "ce16f72c-3a10-415a-88a9-4063c0012a74",
           "prompt": "22. She often calls her parents to k_ _ _ i_ t_ _ _ _ with them",
           "image": "assets/34/test-3/pic-22.png"
         },
         {
-          "id": "f92c6d2c-cd57-4a2c-89d7-46d2f96457ab",
+          "id": "65f43d41-df97-4dde-8a0d-f58f73ca1f28",
           "prompt": "23. He is really c_ _ _ _ _ _ _ _ because he can speak in front of people without getting worried",
           "image": "assets/34/test-3/pic-23.png"
         },
         {
-          "id": "b1a778b6-0447-49d9-9fc3-eb0eaf1ac9d5",
+          "id": "e0be77dd-f868-45e6-a6ab-f4038d604b8f",
           "prompt": "24. I like to c_ _ _ _ u_ w_ _ _ my friends every month",
           "image": "assets/34/test-3/pic-24.png"
         },
         {
-          "id": "b74098b5-5e30-47a5-8663-99038d3c9b3a",
+          "id": "0a06a0f1-ba55-498f-8dc2-57720acf31b4",
           "prompt": "25. There is a w_ _ _ h_ _ _ _ _ _ at my school so students can get access to the Internet",
           "image": "assets/34/test-3/pic-25.png"
         }
@@ -2903,10 +2903,10 @@
       "title": "Listening · Đúng/Sai",
       "instructions": "Listen and mark these sentences as T (true) or F (false). You have 30 seconds to read the questions  (nghe và đánh dấu Đúng/ Sai cho câu 1 đến câu 5. Bạn có 30s để đọc câu hỏi)",
       "context": "",
-      "audioPath": "assets/34/test-3/listening-1.mp3",
+      "audioPath": "assets/34/test-3/listening.mp3",
       "items": [
         {
-          "id": "1313dbb6-1d17-494e-999f-c5e07b45a602",
+          "id": "9ba8037d-4114-480c-be36-27eec58403ad",
           "prompt": "1. Port Anderson is the place where Sheena’s family is planning to move to.",
           "options": [
             "True",
@@ -2914,7 +2914,7 @@
           ]
         },
         {
-          "id": "2028c3a0-de8b-4698-92ea-e655cee7607a",
+          "id": "b0cc298d-37e9-4f03-b5f4-ed9f2f68fa0d",
           "prompt": "2. Sheena has already hired a moving van.",
           "options": [
             "True",
@@ -2922,7 +2922,7 @@
           ]
         },
         {
-          "id": "29ccd561-0b3e-46de-8ac2-8c51dfd967a1",
+          "id": "a24e75ee-5300-4c7b-b153-02269eac8abb",
           "prompt": "3. Mark’s sister used a cargo plane to help move her things to Dallas.",
           "options": [
             "True",
@@ -2930,7 +2930,7 @@
           ]
         },
         {
-          "id": "332dec54-8267-4b14-a0be-ccf2b82000dc",
+          "id": "ae608dbe-d3dc-4696-bfa6-dcca06067c6b",
           "prompt": "4. Mark will be moving next Saturday.",
           "options": [
             "True",
@@ -2938,7 +2938,7 @@
           ]
         },
         {
-          "id": "f4c31ae4-57de-4e61-adf3-a0032254472f",
+          "id": "0ac29899-0490-48d2-b15b-a58bb2264f58",
           "prompt": "5. Mark offers to help Sheena transport some of her things.",
           "options": [
             "True",
@@ -2952,10 +2952,10 @@
       "title": "Listening · Chọn đáp án",
       "instructions": "Listen and choose the correct answer A,B or C. You have 60 seconds to read the questions (Nghe và chọn đáp án đúng A,B, hoặc C. Bạn có 60s để đọc câu hỏi)",
       "context": "",
-      "audioPath": "assets/34/test-3/listening-2.mp3",
+      "audioPath": "assets/34/test-3/listening.mp3",
       "items": [
         {
-          "id": "34961773-cb98-4776-a4ee-9b42d72b6746",
+          "id": "2e648a2a-0e3c-4f28-ad5f-2ef61e93cbbe",
           "prompt": "Question 1: Who visited his/her relatives in Sydney?",
           "options": [
             "A. Shelly",
@@ -2964,7 +2964,7 @@
           ]
         },
         {
-          "id": "8460a978-8b4c-4a06-9c2f-a2524b8dbb3e",
+          "id": "8384e745-89df-42a5-81d6-eea08d717e74",
           "prompt": "Question 2: What did Carl do during his vacation?",
           "options": [
             "A. Walked through dried forests",
@@ -2973,7 +2973,7 @@
           ]
         },
         {
-          "id": "bea50a9b-f857-46b2-adf8-e058b47dd572",
+          "id": "9c0d98ae-3c3a-4c4d-abe1-7669894f892b",
           "prompt": "Question 3: How much did Shelly pay for a round trip ticket to Bangkok?",
           "options": [
             "A. $500",
@@ -2982,7 +2982,7 @@
           ]
         },
         {
-          "id": "12f5aef7-d154-42e0-9ec4-50b13fde759e",
+          "id": "e475b38d-064e-4df0-81b0-5af0ab25b0f2",
           "prompt": "Question 4: Which part of the trip did Shelly love the most?",
           "options": [
             "A. The beach",
@@ -2991,7 +2991,7 @@
           ]
         },
         {
-          "id": "c4bebc2e-4e2a-4a4c-8e00-9fa437496c01",
+          "id": "bac659fe-5469-49ed-8565-e1b16f3c1654",
           "prompt": "Question 5: Which of the following did Shelly dislike about her trip?",
           "options": [
             "A. The airline lost some of her luggage",
@@ -3031,30 +3031,30 @@
           }
         ]
       },
-      "audioPath": "assets/34/test-3/listening-3.mp3",
+      "audioPath": "assets/34/test-3/listening.mp3",
       "items": [
         {
-          "id": "20a80bb8-eaf4-447e-98aa-4e35f00ff640",
+          "id": "0a0502b8-a55d-47d0-b7e7-e44b21af4111",
           "prompt": "Chỗ trống (1)",
           "maxWords": 1
         },
         {
-          "id": "fe57e525-e01d-49b6-a661-1337dc80a49c",
+          "id": "36d326d0-463d-4042-8ef6-b77de60a61d3",
           "prompt": "Chỗ trống (2)",
           "maxWords": 1
         },
         {
-          "id": "ab2c2b1b-e4c8-4aa6-b056-cac48c653502",
+          "id": "27e2ea4e-3035-4b09-b25a-77d801d5990b",
           "prompt": "Chỗ trống (3)",
           "maxWords": 1
         },
         {
-          "id": "1bc60581-c9db-4b17-8c0c-2f0efcf72b38",
+          "id": "7dc57ddb-68f2-4aac-bea2-7425ae003710",
           "prompt": "Chỗ trống (4)",
           "maxWords": 1
         },
         {
-          "id": "d8349b7d-9398-4f30-a3fb-5dc8cdc6b03d",
+          "id": "fc42b41f-e6dd-44fc-ac91-e5d6728bd261",
           "prompt": "Chỗ trống (5)",
           "maxWords": 1
         }
@@ -3067,43 +3067,43 @@
       "context": "",
       "items": [
         {
-          "id": "97349d34-f67e-461e-9dbd-2e9f60a8e531",
+          "id": "ab51d038-b7d9-4559-b6ff-4f35ce06711b",
           "prompt": "/taɪm/"
         },
         {
-          "id": "3bc3ff4d-71a1-4d5c-9157-899d00bc2b83",
+          "id": "e8d21832-76f0-4c1b-9d42-06eca8aa95c1",
           "prompt": "/kənˈviːniənt/"
         },
         {
-          "id": "d2d48be8-d22a-4741-9051-0c49da052890",
+          "id": "55ae6fa3-d2fd-4e0a-bed7-4edf6ca06b22",
           "prompt": "/ˈɪntrəstɪŋ/"
         },
         {
-          "id": "08545b0d-0573-40cc-9950-ce4aba9e6789",
+          "id": "ddc12585-cc7b-48b3-a3f5-ce6bad691cc2",
           "prompt": "/hɔːl/"
         },
         {
-          "id": "8e4b6147-4325-483c-84b6-9f83bc896434",
+          "id": "70917943-8ab4-4130-9557-55f4180787a3",
           "prompt": "/wər/"
         },
         {
-          "id": "a654bd83-8577-4132-b980-c60f7dfe124d",
+          "id": "92a7f4cb-b311-4b60-a2c2-cabea810c427",
           "prompt": "/ʌnˈpleznt/"
         },
         {
-          "id": "8a71d874-d63a-41fc-b66b-8c7ec71881f2",
+          "id": "3e701dda-d9c9-4d51-9566-a4935acafa63",
           "prompt": "/ˈreɪnfɔːrɪst/"
         },
         {
-          "id": "2279169f-e8a9-435e-ba9f-52f6f14f37c3",
+          "id": "5f711d92-e5b3-4c5f-bfac-694462285269",
           "prompt": "/ɪkˈsplɔːr/"
         },
         {
-          "id": "e697a04a-1e94-4e85-af1e-c4641b1253ef",
+          "id": "52437eaa-3b22-4191-92ec-92fb9170a6fd",
           "prompt": "/vəˈraɪəti/"
         },
         {
-          "id": "49c5d469-43a4-4461-9a6a-3c43e715f20b",
+          "id": "e4ed804e-1c9e-4601-bb3c-171248595019",
           "prompt": "/waɪd/"
         }
       ]
@@ -3115,7 +3115,7 @@
       "context": "",
       "items": [
         {
-          "id": "0a8489f2-9a5d-4774-a32b-c8b2c9e75263",
+          "id": "9d52bd1a-407c-4515-8eaa-e16b828ab384",
           "prompt": "transport",
           "options": [
             "/ˈtrenspɔːrt/",
@@ -3124,7 +3124,7 @@
           ]
         },
         {
-          "id": "a1d9afef-32a9-417d-8d28-ea9d990cad17",
+          "id": "01cb2a59-6b27-459f-9de5-6a86be7194c0",
           "prompt": "heavy",
           "options": [
             "/ˈhevi/",
@@ -3133,7 +3133,7 @@
           ]
         },
         {
-          "id": "24151db1-4a0f-48bd-a285-ed6b7bdee880",
+          "id": "355e4bf6-c557-48a3-89ed-a2f95f141256",
           "prompt": "junk",
           "options": [
             "/dʒʌŋk/",
@@ -3142,7 +3142,7 @@
           ]
         },
         {
-          "id": "e1ef286e-59f4-40c5-bf72-b2dbf6864366",
+          "id": "02cf77c4-60b7-4a30-a848-0f1af842b91f",
           "prompt": "family",
           "options": [
             "/ˈfɑːməli/",
@@ -3151,7 +3151,7 @@
           ]
         },
         {
-          "id": "a8dc5fd6-2329-41c1-9002-faea4fb33b2a",
+          "id": "53408de5-4f4c-4009-bed4-810c5290b421",
           "prompt": "relative",
           "options": [
             "/ˈreleɪtɪv/",
@@ -3160,7 +3160,7 @@
           ]
         },
         {
-          "id": "69bf74f7-57f0-4697-a94d-d6f4a9a91cdb",
+          "id": "2e67b0da-f695-4792-9490-cb95bac7d7a2",
           "prompt": "work",
           "options": [
             "/wɜːrk/",
@@ -3169,7 +3169,7 @@
           ]
         },
         {
-          "id": "378bb0f5-718b-44d1-adcb-231b893c76eb",
+          "id": "d9d5b2aa-b0ae-4b44-8c2d-90da0093018a",
           "prompt": "surprised",
           "options": [
             "/sərˈpraɪsd/",
@@ -3178,7 +3178,7 @@
           ]
         },
         {
-          "id": "90b5a327-2169-44f0-9285-d29c2b920725",
+          "id": "7d100310-facc-44b8-adfb-b9751f04fede",
           "prompt": "forget",
           "options": [
             "/fɔːrˈɡet/",
@@ -3187,7 +3187,7 @@
           ]
         },
         {
-          "id": "ed3db0bd-7f5d-476c-9273-8feeb74f68fc",
+          "id": "c44f9331-20a6-4f7e-b094-682835ad72ee",
           "prompt": "dancing",
           "options": [
             "/ˈdænsi:ŋ/",
@@ -3196,7 +3196,7 @@
           ]
         },
         {
-          "id": "2f71bcd9-7b9b-48d6-8813-6748c0cc6551",
+          "id": "e4e8cb43-1f7e-49b6-8e17-ec8289d1126b",
           "prompt": "television",
           "options": [
             "/ˈtelɪvɪʒn/",
@@ -3213,42 +3213,42 @@
       "context": "",
       "items": [
         {
-          "id": "8544c98a-0a4e-42b1-a920-711433dc14e1",
+          "id": "28103565-76ff-4e5c-a955-7f48858e039c",
           "prompt": "1. Lâu (lắm) rồi tớ chưa mua/mới mua được bộ nội thất với mức giá được giảm.\nSuggested vocab: bộ (gì đó)~ a set of something",
           "long": true
         },
         {
-          "id": "538928cc-fc7f-4dc8-b81e-96047107b69f",
+          "id": "18cb0900-7661-4f33-92b5-df799f8b5066",
           "prompt": "2. Bạn đang cân nhắc chuyển đồ đạc của mình đến nhà mới vào thứ mấy?",
           "long": true
         },
         {
-          "id": "ac7f2faf-cf08-42aa-844c-96f82f763557",
+          "id": "a228d589-1795-436f-b0af-8dc2dab72909",
           "prompt": "3. Cuối cùng thì/rốt cuộc thì, chúng tôi đã có thể tìm được hành lý của mình sau khi hãng hàng không đã đánh mất chúng.\nNote: việc \"tìm được hành lý\" đã xảy ra trong quá khứ",
           "long": true
         },
         {
-          "id": "ce51a24a-4c29-42d9-a999-aba603abc574",
+          "id": "a139438b-d56c-46e5-91bf-78c0bdc2cdcd",
           "prompt": "4. Điều thật sự tuyệt vời là vé máy bay khá là rẻ, nên tớ đã không phải đi tàu đến đấy.",
           "long": true
         },
         {
-          "id": "02fc949b-5d79-40e6-8bac-98c1e527cc0d",
+          "id": "c7ddf5a8-1524-485e-9088-5c5a8f0b5c49",
           "prompt": "5. Năm ngoái khi cậu đi nghỉ, cậu mất bao lâu để sắp xếp gói ghém đồ đạc đấy?",
           "long": true
         },
         {
-          "id": "9e4cda69-0398-495c-b17b-b37ac0e43e02",
+          "id": "bc31a28f-a028-478c-a308-e2661969e4da",
           "prompt": "6. Ở trên đảo, trẻ em có thể khám phá thiên nhiên, trong khi bố mẹ chúng thưởng thức đồ ăn tươi.\nNote: Thiên nhiên - Nature",
           "long": true
         },
         {
-          "id": "30563e3d-4eb6-40ca-9dc8-d313ec4025af",
+          "id": "3beab95f-32be-45cc-918b-f1ca483d7664",
           "prompt": "7. (Kể) từ khi tôi còn bé, tôi luôn muốn được đi nghỉ một chuyến ba ngày ở Vịnh Hạ Long. Địa điểm này nghe có vẻ như là một địa điểm du lịch tuyệt vời.\nNote: Vịnh - Bay",
           "long": true
         },
         {
-          "id": "0993ff0b-af50-43f8-a0ae-7cfc7229dc85",
+          "id": "335654d8-578c-4550-8b5c-a9361043b29a",
           "prompt": "8. Với 2 tiếng mỗi ngày, cậu sẽ có thể thưởng thức được nhiều các hoạt động đa dạng khác nhau trên cả cái đảo này.",
           "long": true
         }
@@ -3261,17 +3261,17 @@
       "context": "",
       "items": [
         {
-          "id": "b2d65b04-21a4-43ac-895f-78d4e8e237cb",
+          "id": "a5ee82a3-a140-45fd-b22c-75b88350ca86",
           "prompt": "1.  Why do some people enjoy going to entertainment complexes (E.g. Aeon mall Long Bien)? (6 points)\nNote: package holiday ~ du lịch trọn gói\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         },
         {
-          "id": "60b62346-3e37-4745-b073-93c0e219f87f",
+          "id": "ef6f1a8b-3d11-452c-bf24-af48805b31ff",
           "prompt": "2. When was the last time your family moved to a new place?\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         },
         {
-          "id": "3d9c89ee-57a1-4a03-a813-22de1792b6de",
+          "id": "9065b2f2-1dc8-48f5-8bc5-ecf801b6f2e5",
           "prompt": "3. How have holiday vacations in Vietnam changed since you were little/in the last 5 years?\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         }

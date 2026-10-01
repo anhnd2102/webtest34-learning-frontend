@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 1,
-  "sourceHash": "fded6b98fdf0b3b3cd572a3ef8be677ff761928ac85d47bc48ac3e7b29078458",
+  "sourceHash": "ee92945ea6159f0a19b964d9746e9ed0fcae24ade76ebd3eae416262782ac6e1",
   "durationMinutes": 120,
   "groups": [
     {
@@ -185,7 +185,7 @@
           "long": true
         }
       ],
-      "audioPath": "assets/demo-audio/45/dictation.mp3",
+      "audioPath": "assets/45/test-1/listening.mp3",
       "audioHash": "6ff7ce32af8b0da7fc981d14742f98a65ae43d81d970f51aa063da1420f8f56d",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
@@ -228,7 +228,7 @@
           "maxWords": 3
         }
       ],
-      "audioPath": "assets/demo-audio/45/comprehension.mp3",
+      "audioPath": "assets/45/test-1/listening.mp3",
       "audioHash": "3d9a4624a42bedae62297612ae97b147e92c38eca1d17e61e7e9594b7f4d96b1",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
@@ -271,7 +271,7 @@
           "maxWords": 2
         }
       ],
-      "audioPath": "assets/demo-audio/45/comprehension.mp3",
+      "audioPath": "assets/45/test-1/listening.mp3",
       "audioHash": "3d9a4624a42bedae62297612ae97b147e92c38eca1d17e61e7e9594b7f4d96b1",
       "audioReviewStatus": "mapped_by_filename_requires_listening_review"
     },
