@@ -3,7 +3,7 @@
   "course": "03",
   "phase": null,
   "testNumber": 2,
-  "sourceHash": "98c760169ae1fc77a4499a0bda2ae77261ea11260d8d0c44870847183f0cd0af",
+  "sourceHash": "e410a52daa49754684b79fbc7af2d5885a014d2c08586797517a78fb4d112be5",
   "durationMinutes": 90,
   "groups": [
     {
@@ -14,23 +14,23 @@
       "audioPath": "assets/03/test-2/listening.mp3",
       "items": [
         {
-          "id": "b8f149d2-2071-4f68-9e86-7cb54f8e89e7",
+          "id": "19c17105-b909-4522-b6a0-34f767c1b509",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "acdec294-d5a3-404c-a73e-387cdccd7b1e",
+          "id": "8d70f2b2-4eee-4d3f-9a70-7d8f4c46487e",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "54b35ec0-de18-4f2c-8c7a-1da7899c7f12",
+          "id": "2f29cbbe-90a8-47b1-a8da-789924e727e1",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "2727605a-d4a6-4659-b51f-eef2af4d81a6",
+          "id": "7abd2b17-732e-41b6-8c40-760b2ca15863",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "835aaaa3-6a71-4c96-9567-3152fd58d881",
+          "id": "2b4b64d4-ff4f-461a-837b-4eb6b3ad41cf",
           "prompt": "Chỗ trống (5)"
         }
       ]
@@ -43,57 +43,57 @@
       "audioPath": "assets/03/test-2/listening.mp3",
       "items": [
         {
-          "id": "5a2b7b67-55c6-49b4-82aa-463b37cb1d20",
+          "id": "bf85ef75-bce3-4b37-bb6b-888ea70d699a",
           "prompt": "1. (a) Ở câu “He has to work with numbers”, nếu thay “has to” bằng “must” thì nghĩa có giữ nguyên không?",
           "long": false
         },
         {
-          "id": "a509ceeb-2065-4df5-81d0-093894126166",
+          "id": "4cffc448-ab5a-49aa-a3f3-1d1aefc3df6b",
           "prompt": "1. (b) Tại sao?",
           "long": true
         },
         {
-          "id": "5e3995c7-ce2e-440c-88d7-021326ea3f1e",
+          "id": "29bb6331-247c-45dd-b05e-d416c35c5870",
           "prompt": "2. Tại sao câu “I know he is working hard for our family” không viết là “I am knowing he is working hard for our family” để diễn tả một việc đang diễn ra?",
           "long": true
         },
         {
-          "id": "e5d432b3-9eb0-41ed-889c-66633b8445ee",
+          "id": "00b9af0e-41bb-4d0b-9fe9-0d65eba6f991",
           "prompt": "3. (a) Tại sao trong câu “He says eating snacks and junk food is a waste of money” động từ lại chia là “is”?",
           "long": true
         },
         {
-          "id": "d7442d0b-b40a-4ac0-b5fe-6d4f23253fb8",
+          "id": "beafeeb6-14b8-4d7e-8715-993f9c6df246",
           "prompt": "3. (b) “Is” ở trên là động từ chính hay trợ động từ?",
           "long": false
         },
         {
-          "id": "913831d9-8cae-4b13-a65c-5d12eedc08ba",
+          "id": "1374b8d5-bb7e-4ba7-bb54-2656b3593ba9",
           "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nS (Chủ ngữ):",
           "long": false
         },
         {
-          "id": "309f8262-2fcc-4dba-bdcb-a650f7723de4",
+          "id": "a3972664-710c-459f-aa82-518ddac56371",
           "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nV (Động từ):",
           "long": false
         },
         {
-          "id": "c15aa58d-39ba-48e7-ad3d-3f34401e6adf",
+          "id": "b5acf846-d109-460e-ab30-035e48fa9cc9",
           "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nO (Tân ngữ):",
           "long": false
         },
         {
-          "id": "a09f2988-a687-41c2-be71-d3be5fc34e3f",
+          "id": "8b4d11cd-b58b-4416-8e64-b6298cdfeb5f",
           "prompt": "4. Xác định các thành phần của câu sau: “He chooses to eat at the office canteen” (nếu không có gì, điền \"x\")\nKhác (Thành phần khác):",
           "long": false
         },
         {
-          "id": "e6fcab13-9ba2-420a-9298-e2cf743aeab4",
+          "id": "7b219b1f-4f7b-4480-8dc7-a2e63861935e",
           "prompt": "5. Tìm câu có cấu trúc song song trong đoạn trên\nCâu 1:",
           "long": true
         },
         {
-          "id": "ed338a20-894a-4f9e-af53-a86b5eb9d79c",
+          "id": "6e45ca0a-f2a4-4e3b-9c43-e8bd0f16cd23",
           "prompt": "5. Tìm câu có cấu trúc song song trong đoạn trên\nCâu 2:",
           "long": true
         }
@@ -107,11 +107,11 @@
       "audioPath": "assets/03/test-2/vocabulary.mp3",
       "items": [
         {
-          "id": "de335d96-66c1-457d-8f45-b9c7818516b8",
+          "id": "28bf1cdb-53fd-492b-b6f5-e5a5e7867972",
           "prompt": "1. Từ/cụm từ nghe được"
         },
         {
-          "id": "eee5a047-ee7a-43b9-8d82-34f4e4b8e694",
+          "id": "d50d8bd4-2683-44de-b52c-6d5b58e818a7",
           "prompt": "1. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -177,11 +177,11 @@
           ]
         },
         {
-          "id": "0af70e1c-2c64-4b3a-be97-824f10999db0",
+          "id": "89aa3a33-ee42-4adf-b136-a996aa5f107b",
           "prompt": "2. Từ/cụm từ nghe được"
         },
         {
-          "id": "e5520881-e10e-4e5c-9f13-43d6d95f730d",
+          "id": "cece40da-3d1e-4f84-adc3-27ec642ad415",
           "prompt": "2. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -247,11 +247,11 @@
           ]
         },
         {
-          "id": "a33a595c-1570-411b-8feb-1122fa287677",
+          "id": "d28f0b0a-07f7-4505-9d54-2f08114e246c",
           "prompt": "3. Từ/cụm từ nghe được"
         },
         {
-          "id": "e8e714bf-1df6-4624-9c05-2e94fd0fb38d",
+          "id": "a662f4c5-1bcb-45bb-9708-887834cdea7e",
           "prompt": "3. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -317,11 +317,11 @@
           ]
         },
         {
-          "id": "8c5e35f3-e9b1-4ce7-ab3a-e34b42bd4705",
+          "id": "7186c242-641d-4011-b3ac-4c312bd894f4",
           "prompt": "4. Từ/cụm từ nghe được"
         },
         {
-          "id": "efa396fa-0e0b-43d8-bd48-a6701de46aea",
+          "id": "50011c0d-a9db-4c9c-90dc-ece1b0155ad8",
           "prompt": "4. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -387,11 +387,11 @@
           ]
         },
         {
-          "id": "a0652806-56d2-4ba3-84e3-e66744598a4c",
+          "id": "776fd8ea-6928-45aa-8823-0cb504a10823",
           "prompt": "5. Từ/cụm từ nghe được"
         },
         {
-          "id": "c3c21d15-ab2a-4698-a18e-4eccb8cdc21c",
+          "id": "488b8381-fddd-43e0-9b74-1a3bfa512baa",
           "prompt": "5. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -457,11 +457,11 @@
           ]
         },
         {
-          "id": "bd18dac1-7336-4263-bca0-ef7e4e613885",
+          "id": "7b1e1865-1411-4f72-83a3-54fd7bb0cada",
           "prompt": "6. Từ/cụm từ nghe được"
         },
         {
-          "id": "2ea1c2ec-c82b-414c-bece-7e50e3ad2790",
+          "id": "d0ee0412-2f8e-4b5b-bda9-6b6ba3b6453a",
           "prompt": "6. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -527,11 +527,11 @@
           ]
         },
         {
-          "id": "d5566f91-e274-4b3c-914b-5fe43e53fa83",
+          "id": "bd8f01ac-dbb0-42a0-a66e-feb4100cba48",
           "prompt": "7. Từ/cụm từ nghe được"
         },
         {
-          "id": "eb6f7c48-1dd7-470c-bdc6-a4e759dbf1a4",
+          "id": "3febb2b0-1290-4b47-bc4d-35888ffc2215",
           "prompt": "7. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -597,11 +597,11 @@
           ]
         },
         {
-          "id": "57f2b87c-3339-4099-8ae7-ef2d7ba8f7b8",
+          "id": "c96486c5-8c99-4f59-99fd-d95b81b2d4de",
           "prompt": "8. Từ/cụm từ nghe được"
         },
         {
-          "id": "8aa1253b-f7a0-4e21-9823-d0045bd8ad84",
+          "id": "4564cd75-c3e3-41b8-8be2-45767450eb33",
           "prompt": "8. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -667,11 +667,11 @@
           ]
         },
         {
-          "id": "f171ac4b-df3a-40ec-ba78-1741155d58aa",
+          "id": "bb8724e1-8dff-4d23-a8b6-e688c58472e7",
           "prompt": "9. Từ/cụm từ nghe được"
         },
         {
-          "id": "3d1394e6-72c9-417c-b10b-2ed9dc433bff",
+          "id": "e3907899-c685-464a-90c6-ad76b2147827",
           "prompt": "9. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -737,11 +737,11 @@
           ]
         },
         {
-          "id": "31600688-1dd1-44c4-8d49-e69ca47a774d",
+          "id": "4ed90e7a-134d-4a1c-91a1-0216f0bdb836",
           "prompt": "10. Từ/cụm từ nghe được"
         },
         {
-          "id": "e7b16ae4-b8ed-4e2a-8554-d2912e4b9cef",
+          "id": "8e6c8224-3005-45c1-b4ff-2bdbc320be8e",
           "prompt": "10. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -807,11 +807,11 @@
           ]
         },
         {
-          "id": "4099466c-0b19-476e-a3a8-f17b80b547cf",
+          "id": "77c691e3-3fbb-4598-b9fc-393769d3ac4f",
           "prompt": "11. Từ/cụm từ nghe được"
         },
         {
-          "id": "b2a6b219-df1c-4871-af3b-f75981ec171c",
+          "id": "30c05212-6197-4256-800e-ff5e424d6374",
           "prompt": "11. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -877,11 +877,11 @@
           ]
         },
         {
-          "id": "b2aeb762-772b-4615-9630-dae00a09c989",
+          "id": "ecc67ab3-058a-48dc-bca8-2f97ae0e1e80",
           "prompt": "12. Từ/cụm từ nghe được"
         },
         {
-          "id": "d0a18f01-637a-4d78-b909-97d74332183f",
+          "id": "0026ffad-f3c1-41e9-a9f6-3e6f428882a5",
           "prompt": "12. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -947,11 +947,11 @@
           ]
         },
         {
-          "id": "345bb245-aea6-45ac-bd67-140bbaa200a8",
+          "id": "b7966d4b-ef5b-4507-a58f-55c78658f2f8",
           "prompt": "13. Từ/cụm từ nghe được"
         },
         {
-          "id": "fa7a614c-d999-47eb-813c-ca1a363f832a",
+          "id": "0d3555fd-1fa8-466c-bc65-57d566e6bee3",
           "prompt": "13. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -1017,11 +1017,11 @@
           ]
         },
         {
-          "id": "8120e504-39de-4688-8c07-633015e35de3",
+          "id": "2a2cf31c-1956-480c-8eb9-72ddefe674bd",
           "prompt": "14. Từ/cụm từ nghe được"
         },
         {
-          "id": "5083664c-1d95-4882-ba5a-a6ca11e6f0e0",
+          "id": "9409d913-f115-4103-8926-608fb1793987",
           "prompt": "14. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -1087,11 +1087,11 @@
           ]
         },
         {
-          "id": "1d6db63c-1af6-4b3c-b866-11c090199fb8",
+          "id": "29f079ad-4db0-433a-bb7b-921e9a813989",
           "prompt": "15. Từ/cụm từ nghe được"
         },
         {
-          "id": "399cbeff-56bc-4036-9426-2c06a3c25380",
+          "id": "c02f4927-d5e3-45d0-8dce-ea575abdcc79",
           "prompt": "15. Chọn nghĩa tiếng Việt",
           "options": [
             {
@@ -1165,52 +1165,52 @@
       "context": "",
       "items": [
         {
-          "id": "f781f5b7-5fd1-448c-b1e2-a7ef9f92ba9a",
+          "id": "80cd7f2b-dd36-4d47-93eb-eecca8a768bb",
           "prompt": "1. s _ _ _   k _ r _ _ _ _",
           "image": "assets/03/test-2/pic-1.png"
         },
         {
-          "id": "f09ea128-05b0-4960-bd20-10b4521e8118",
+          "id": "f4af6920-6502-4273-99b6-18b1c0a36266",
           "prompt": "2. p _ _ _   c _ _ _ _",
           "image": "assets/03/test-2/pic-2.png"
         },
         {
-          "id": "f918e45d-9c8f-4b8d-aff8-2ccd72849086",
+          "id": "2e69537d-8873-4f1c-bfb4-402512f3814e",
           "prompt": "3. g _   t _   b _ _",
           "image": "assets/03/test-2/pic-3.png"
         },
         {
-          "id": "df4e4ae2-8157-48fb-a195-25d4cf17d223",
+          "id": "f8a32360-1c70-4275-9cf8-0258e9089018",
           "prompt": "4. g _  t _  w _ _ _",
           "image": "assets/03/test-2/pic-4.png"
         },
         {
-          "id": "5a1f8151-832f-414e-b47d-94f7e4eb6821",
+          "id": "7da69d59-9280-438c-98d3-88976507dcbf",
           "prompt": "5. h _ _ _   s _ _ _ _ _",
           "image": "assets/03/test-2/pic-5.png"
         },
         {
-          "id": "229a6f7b-0080-49e0-b4f6-82e45cda1898",
+          "id": "9ce4091a-7675-48f3-a4d2-7e1dfaa90bad",
           "prompt": "6. a _ s _ g _ m_ _ t",
           "image": "assets/03/test-2/pic-6.png"
         },
         {
-          "id": "6834655a-6976-4025-bcfe-dd49755feef4",
+          "id": "c4e35c0d-e44d-4f76-b403-dd2efae30a29",
           "prompt": "7. P _ _ s _ cs",
           "image": "assets/03/test-2/pic-7.png"
         },
         {
-          "id": "0ca9e1fc-cc75-48ea-9ca0-08f02ef2be03",
+          "id": "622840a2-0bfe-437f-a476-ffcf6c647e3c",
           "prompt": "8. a _ _ r _ _s",
           "image": "assets/03/test-2/pic-8.png"
         },
         {
-          "id": "636ace16-fe3e-4a12-ba3f-c4916e28900a",
+          "id": "ab456ddf-2ec3-489c-a7c8-1be8312885c0",
           "prompt": "9. w _ _ _ _ _",
           "image": "assets/03/test-2/pic-9.png"
         },
         {
-          "id": "61961517-4b8d-4c59-ab98-7016586e1f1d",
+          "id": "ed662fc2-b42b-4f91-be8e-800288e45abc",
           "prompt": "10. m _ _ _  \na lot of  m _ _ _ _",
           "image": "assets/03/test-2/pic-10.png"
         }
@@ -1223,7 +1223,7 @@
       "context": "",
       "items": [
         {
-          "id": "f650114f-057f-406e-9f30-b9da579502e3",
+          "id": "75aba09a-a6e7-4949-8f9a-01fa3a3ff780",
           "prompt": "It’s 7 a.m. Ha is ____.",
           "options": [
             "having dinner",
@@ -1233,7 +1233,7 @@
           ]
         },
         {
-          "id": "a11ce75a-e0e3-4633-821a-36f0ecd70282",
+          "id": "c0b5a85c-3c52-46b2-adaa-f0878b5bbc39",
           "prompt": "What does your brother do?",
           "options": [
             "He is a businessman.",
@@ -1243,7 +1243,7 @@
           ]
         },
         {
-          "id": "f4c07385-79e4-46a6-a788-a229ca3080b8",
+          "id": "5f4983bf-9b3a-4ce7-ba82-b9243ed619df",
           "prompt": "My ____ is to be a salesman.",
           "options": [
             "dreaming job",
@@ -1253,7 +1253,7 @@
           ]
         },
         {
-          "id": "549951fb-d28a-4418-aba0-62cad5efe8e3",
+          "id": "fa6f4b68-31f0-4fb8-80b3-4430ecb344cc",
           "prompt": "Linh wants to get good grades at school so she tries to ____.",
           "options": [
             "focus on her study",
@@ -1263,7 +1263,7 @@
           ]
         },
         {
-          "id": "8c0df65a-bdd6-439e-924a-61585b7649a4",
+          "id": "27e3df79-2ae5-4561-8210-5ce3bda01a27",
           "prompt": "I usually spend ____ at home.",
           "options": [
             "30 minutes to watch TV",
@@ -1281,43 +1281,43 @@
       "context": "",
       "items": [
         {
-          "id": "152a11f2-1e9f-4c03-a8cc-b62e5ce8438a",
+          "id": "7e0e0e54-f92d-4e23-8a10-6d4e0a70ca9a",
           "prompt": "1. Look! They ____(leave) the house."
         },
         {
-          "id": "ecd9ec21-c763-4dae-bfee-42490938d7f0",
+          "id": "b861636c-b157-4418-b713-38c24a4f9e01",
           "prompt": "2. Now, Samantha ____ (do) her homework."
         },
         {
-          "id": "008d6252-412f-468e-aa2c-02b3c685c759",
+          "id": "63a730bc-14b2-44a9-b0ea-b268808aa6f0",
           "prompt": "3. You don’t need to wear a raincoat because it ______(not rain) outside."
         },
         {
-          "id": "62c8542c-6e09-49f8-aeb5-8a983d4583fd",
+          "id": "4b12d31d-89fb-496b-8293-247df6303160",
           "prompt": "4. What ____ (this word/mean) in Vietnamese?"
         },
         {
-          "id": "03c55c77-fd30-4d42-972b-e93c49cd97e2",
+          "id": "f3e2ca85-2f11-4c80-94e0-483fbca9c725",
           "prompt": "5. Mary and Joe ____ (be) in a clothes shop at the moment."
         },
         {
-          "id": "5e382f11-85a4-4c92-bc50-c297cf53b600",
+          "id": "fa4db7b7-700a-4b36-99c1-f9bb6febcd72",
           "prompt": "6. “Can you speak more slowly, I ____(not understand)''"
         },
         {
-          "id": "f12486fb-d19a-4bbd-a639-c1de0e01c6da",
+          "id": "9c2ffcf6-f36c-42fb-807c-efdcf8e3f136",
           "prompt": "7. He ____ (not wash) the dishes at the moment because he is ill."
         },
         {
-          "id": "979debf6-98e9-4097-a9be-77173f1f2658",
+          "id": "d74081e4-439e-42fd-a2d1-469d9d889700",
           "prompt": "8. _____ (be) playing cards a fun game?"
         },
         {
-          "id": "62343277-4eff-4ff1-b4e7-8b8d404529a3",
+          "id": "38d2d647-3418-4324-8b8b-ed73904859c6",
           "prompt": "9. Her sister ____ (want) to improve her English."
         },
         {
-          "id": "17e9deca-57f9-44f1-bce1-9e6eb8fa393e",
+          "id": "74eafe38-b929-4c57-b991-0a442ad29ff0",
           "prompt": "10. He usually ____ (get up) early in the morning."
         }
       ]
@@ -1329,43 +1329,43 @@
       "context": "",
       "items": [
         {
-          "id": "2ead75b8-e731-4b69-9ec2-f52d54bf20c0",
+          "id": "cc7db65c-fe18-4251-ab66-f016b884a4c4",
           "prompt": "1. I can playing some sports such as football and volleyball.\nLỗi sai"
         },
         {
-          "id": "9194288a-57e5-4697-a96d-d6ea36c9528c",
+          "id": "a3f71980-2f6f-46df-ae8f-f79ee32da128",
           "prompt": "1. I can playing some sports such as football and volleyball.\nPhần sửa đúng"
         },
         {
-          "id": "3fedcdf9-1cf4-4bae-9302-ce2f211157a9",
+          "id": "cc589d7a-fd00-4997-94eb-45e19a6fb300",
           "prompt": "2. My company is not far, so I mustn’t go there by car.\nLỗi sai"
         },
         {
-          "id": "68f6272d-9810-4bc8-a46f-acd5114c61ba",
+          "id": "966bc9e2-d4ed-4d9b-9098-457402d02b79",
           "prompt": "2. My company is not far, so I mustn’t go there by car.\nPhần sửa đúng"
         },
         {
-          "id": "129bdda7-4ee8-4962-9124-7cfb18a4f507",
+          "id": "855c2a5d-3b6a-4b8e-a72e-6cbd0b9b7b94",
           "prompt": "3. Students has to do their homework every day.\nLỗi sai"
         },
         {
-          "id": "9947ecdb-f324-42ec-941c-07dc16aa114e",
+          "id": "2c78c053-49b2-4dd8-a7c7-294c5a591084",
           "prompt": "3. Students has to do their homework every day.\nPhần sửa đúng"
         },
         {
-          "id": "2525a089-7b20-42db-98b1-421c2742b3d0",
+          "id": "450ae270-4db5-4c33-b6c1-3ec3a8d5d787",
           "prompt": "4. You can finish your work today?\nLỗi sai"
         },
         {
-          "id": "6ee75e9a-4b3d-4f6f-9a6e-759ff83e1044",
+          "id": "f2cbd7b6-681f-4b5f-9543-c50a0bb0f886",
           "prompt": "4. You can finish your work today?\nPhần sửa đúng"
         },
         {
-          "id": "b6340e97-ba6e-42fd-95f1-f04814a7fd7f",
+          "id": "0bd2582a-7368-48f6-8287-2cd83ae63e08",
           "prompt": "5. He shouldn’t drink a lot of water and fruit juice.\nLỗi sai"
         },
         {
-          "id": "aae33317-c1ee-448f-a282-e0566ff52bc5",
+          "id": "7a9612c6-1a71-44d8-a1f5-df52ee4e65b0",
           "prompt": "5. He shouldn’t drink a lot of water and fruit juice.\nPhần sửa đúng"
         }
       ]
@@ -1377,23 +1377,23 @@
       "context": "",
       "items": [
         {
-          "id": "be976b9e-551c-43f1-8195-61fdd533111d",
+          "id": "7d33d04b-0a9a-476b-84c2-614198aa9976",
           "prompt": "1. like/lunch/with/having/your/you/friends?"
         },
         {
-          "id": "512fb0e5-21ce-447d-b1ec-d8c745ab306a",
+          "id": "56a62e33-a4c1-4d92-96ea-adc1277d4f60",
           "prompt": "2. often/finish/study/he/late/his."
         },
         {
-          "id": "c0693a9f-8df1-474d-bc55-0190ea1a07f8",
+          "id": "3a3deddb-89a0-41a1-9ae9-0351ab5c82ba",
           "prompt": "3. sleep/someone/sing/karaoke/cannot/because/she."
         },
         {
-          "id": "59845d50-3b98-43a2-9b45-b6dd9c6e90e0",
+          "id": "94d6a630-d488-4865-9838-1f60d5152a95",
           "prompt": "4. I / have/breakfast/at/today/every day/have/breakfast/at/7 o’clock/9/but/I."
         },
         {
-          "id": "9af91234-ee14-405b-99ac-b0088645d179",
+          "id": "0e09fb38-a59c-492a-8f92-71c1696468ad",
           "prompt": "5. Mr.A/teacher/a/helpful/gentle/and/be."
         }
       ]
@@ -1405,27 +1405,27 @@
       "context": "",
       "items": [
         {
-          "id": "62526dd0-d6ae-44d4-9413-4f2c4fe76605",
+          "id": "2792c179-1fd7-4437-b1c0-32d39fd050ba",
           "prompt": "1. Bây giờ là 10 giờ sáng. Thầy Toàn đang ở trường. Anh ấy đang chuẩn bị cho tiết học Toán của anh ấy.",
           "long": true
         },
         {
-          "id": "9b076ad2-a313-4c06-9654-82f07041942a",
+          "id": "8e79a62f-bcab-4ce3-97bf-52bfc6231e1d",
           "prompt": "2. Giáo viên yêu thích của chúng tôi là cô A. Cô là giáo viên Hóa Học của chúng tôi ở trường cấp ba. Cô ấy là một cô giáo giỏi và có thể nói hai thứ tiếng.",
           "long": true
         },
         {
-          "id": "e86b683f-5d12-4544-95da-f78ba5114366",
+          "id": "9eb7e5ad-5412-48e7-864d-e1e99c0f69ac",
           "prompt": "3. Bách thường mất 30 phút để đi đến trường bằng xe đạp. Cậu ấy phải học ở trường vào thứ Hai và thứ Tư. Cậu ấy không thấy việc học dễ dàng.",
           "long": true
         },
         {
-          "id": "15bc9034-fd9a-4bd1-8bf8-415d4e3df1d4",
+          "id": "1bc09ea0-efc6-43cf-9fb9-e348b6c3bb9a",
           "prompt": "4. Ở trường này, sinh viên phải học chăm chỉ để có được tấm bằng đại học. Một tấm bằng có thể giúp họ trở thành những kỹ sư giỏi, kiếm được những công việc tốt và có lương cao.",
           "long": true
         },
         {
-          "id": "90058ea2-5257-4d19-96d0-1d2de1616c7c",
+          "id": "0dea7b6f-03ff-4fea-a41d-dc996a4e2423",
           "prompt": "5. Steve đang làm một công việc toàn thời gian. Steve thích nhiều điểm về công ty của mình. Công ty của anh ấy có một môi trường làm việc thân thiện và đồng nghiệp thì luôn sẵn lòng giúp đỡ. Steve có thể được thăng chức.",
           "long": true
         }
@@ -1438,27 +1438,27 @@
       "context": "",
       "items": [
         {
-          "id": "011798c1-56fc-47a9-8ad6-8a7eae255eb4",
+          "id": "c9abfaca-f298-4cec-8687-6b952068e6dc",
           "prompt": "1. What are you doing at the moment?\nGợi ý: Hints:; bây giờ bạn đang làm gì (ăn tối/ăn trưa…); thường làm việc này với ai vào lúc nào (với bạn bè/gia đình vào thứ …); tôi thấy nó như thế nào (thú vị/nhàm chán); At the moment, I am studying English and doing this exercise on my computer. I usually study with my classmates in the evening. I think learning English is very interesting because it helps me communicate with many people.",
           "long": true
         },
         {
-          "id": "d10f243d-a49f-4402-847d-b2ef842e14f8",
+          "id": "cf69e0f3-8fbb-46ef-8b7f-a92fbd453b14",
           "prompt": "2. What do you often do after school?\nGợi ý: Hints:; kể tên việc bạn làm (làm việc bán thời gian/chơi thể thao…); bạn làm việc này trong bao lâu; việc này giúp bạn như thế nào (kiếm tiền/tăng cường sức khỏe…); After school, I often work a part-time job and sometimes play badminton with my friends. I usually spend about four hours working every day. It helps me earn extra money and improve my communication skills.",
           "long": true
         },
         {
-          "id": "d3718f21-cb57-4052-91ab-9df32e42a26d",
+          "id": "c79ee3a0-bea3-4dd2-ac56-c59f8ac9a318",
           "prompt": "3. How long does it take you to go to school?\nGợi ý: Hints:; mất bao nhiêu thời gian; phải học ở trường bao lâu (2,3 lần 1 tuần); thường đi bằng phương tiện gì, hôm nay đi bằng phương tiện gì; Lý do đi phương tiện đó; It takes me about twenty minutes to go to school by motorbike. I have classes three times a week. Today, I go to school by motorbike because it is fast, convenient, and saves a lot of tim",
           "long": true
         },
         {
-          "id": "2fa65f8e-6183-414d-9171-6ffc65a04b78",
+          "id": "2facdd82-c8c1-40b6-85de-e6bfb0080b61",
           "prompt": "4. What is your dream job?\nGợi ý: Hints:; tên công việc yêu thích (doanh nhân/kế toán…); lý do 1 (kiếm nhiều tiền); lý do 2 (cải thiện kỹ năng); Nên làm gì để có công việc đó?; My dream job is to become a business owner. I want this job because I can earn a good income and improve my management skills. To achieve my dream, I need to study hard, learn new skills, and gain practical experience.",
           "long": true
         },
         {
-          "id": "8a3f4f0b-601e-449b-9880-8062e9e1304f",
+          "id": "69dab150-732c-47dd-88ff-2fd7e0fa4214",
           "prompt": "5. Which jobs you don’t like to do?\nGợi ý: Hints:; tên công việc không muốn làm; nếu ít nhất 2 lý do không muốn làm các công việc này; chuẩn bị nhiều tài liệu; lương không cao; không thể thăng chức; I don't want to become an office clerk. I don't like this job because I have to prepare a lot of documents, the salary is not very high, and there are not many opportunities for promotion. I prefer a more creative job.; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
           "long": true
         }

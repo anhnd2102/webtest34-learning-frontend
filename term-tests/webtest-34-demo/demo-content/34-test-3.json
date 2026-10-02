@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 1,
   "testNumber": 3,
-  "sourceHash": "87a7fa3092a326583acf965f74f42d267040a64c1b19edb63f2ed51e4bd5dfc2",
+  "sourceHash": "12cdc1ac6678ff6ba66b30e2f8180bf677ac204598331fa2b42951e7d4a08be4",
   "durationMinutes": 90,
   "groups": [
     {
@@ -2772,127 +2772,127 @@
       "context": "",
       "items": [
         {
-          "id": "54133c9d-e144-47b6-a6d5-346fda4919d8",
+          "id": "80fde0a9-50a7-4951-91a4-d690de0216de",
           "prompt": "1. S_ _ _ _ _ k_ _ _ in some countries often ride their bikes to school.",
           "image": "assets/34/test-3/pic-1.png"
         },
         {
-          "id": "566dee83-5a02-4c24-ac3b-173ff89ad4ef",
+          "id": "77eef4a3-ab23-481f-8466-3f5b02a1657b",
           "prompt": "2. There is an a_ _ _ _ _ _ _ _ b_ _ _ _ _ _ _ near my house.",
           "image": "assets/34/test-3/pic-2.png"
         },
         {
-          "id": "5de525fd-10fc-488f-b8cd-97bdca6ee542",
+          "id": "327e8b73-a5ef-4e6e-8693-562bdba3f31d",
           "prompt": "3.Last year, I traveled to a mountainous area and experienced m_ _ _ _ _ _ _ c_ _ _ _ _ _ there.",
           "image": "assets/34/test-3/pic-3.png"
         },
         {
-          "id": "e5302ae9-0bf7-4027-90bc-752da9b8d36c",
+          "id": "02182e52-e12c-45ae-9843-3589e0551f02",
           "prompt": "4. W_ _ _ _ w_ _ y_ _ _ _, I used to play computer games a lot.",
           "image": "assets/34/test-3/pic-4.png"
         },
         {
-          "id": "65b7343f-599f-46c7-8f54-6d3ef22b8471",
+          "id": "3265b8fc-8d00-414f-bc6f-6e95cd36e6eb",
           "prompt": "5. He is a c_ _ _ _ _ _ _ student because he has a lot of ideas.",
           "image": "assets/34/test-3/pic-5.png"
         },
         {
-          "id": "b1c9d67a-cd16-4f2f-a767-b5d95b01cc95",
+          "id": "5a138ea4-c002-400f-8626-1bac8b43fc1f",
           "prompt": "6. Fish is never my favorite d_ _ _",
           "image": "assets/34/test-3/pic-6.png"
         },
         {
-          "id": "595a3ca4-dc6d-4e48-9baf-35a1fc27d329",
+          "id": "e06b90b8-e5a3-472a-8fec-187f598c1817",
           "prompt": "7. My teacher is usually e_ _ _ _ _ _ _ _ in class. He uses a lot of gestures and acting.",
           "image": "assets/34/test-3/pic-7.png"
         },
         {
-          "id": "99674a32-b1f2-4b47-83b3-41faf62ca155",
+          "id": "d2fc3350-33c9-4957-9667-288ff51e0fe1",
           "prompt": "8. The shop offered us e_ _ _ _ _ _ _ _ s_ _ _ _ _ _, so we gave it a 5-star review.",
           "image": "assets/34/test-3/pic-8.png"
         },
         {
-          "id": "f4b2a8b2-b0bb-4dca-b6fb-e395b8683b80",
+          "id": "d3ed3564-e8fd-498c-a1aa-5c801f727909",
           "prompt": "9. We often g_ o_ h_ _ _ _ _ _ twice a year.",
           "image": "assets/34/test-3/pic-9.png"
         },
         {
-          "id": "eb03121b-6ed7-43b5-a1f9-a24646c1cb4d",
+          "id": "a15a2bbe-7b7a-439a-ab69-2b2ce47ec91d",
           "prompt": "10. They usually e_ _ o_ _ at a seafood restaurant on the weekend.",
           "image": "assets/34/test-3/pic-10.png"
         },
         {
-          "id": "5fa2c50c-8f11-4dee-8dfa-f449fb0bc3c4",
+          "id": "6fe11f59-bbdc-48f5-beda-cfb09d3df091",
           "prompt": "11. I love living in a h_ _ _-r_ _ _ b_ _ _ _ _ _ _ in the city",
           "image": "assets/34/test-3/pic-11.png"
         },
         {
-          "id": "37975401-2bc0-450e-8d0d-17b5ce03cfb3",
+          "id": "a4a5f2d3-ea76-4a2e-99b0-706dafd76c15",
           "prompt": "12. She needs a lot of i_ _ _ _ _ _ _ _ _ _ to cook Phở",
           "image": "assets/34/test-3/pic-12.png"
         },
         {
-          "id": "39565673-1555-4153-b3a9-838f87f7e616",
+          "id": "71c9f609-92ca-4e3b-bf93-6e2aed68c12f",
           "prompt": "13. Noises from outside may k_ _ _ s_ _ _ _ _ _ _ f_ _ _ concentratin",
           "image": "assets/34/test-3/pic-13.png"
         },
         {
-          "id": "29b3b8a2-e0fc-46d9-adc3-649a5d585b7f",
+          "id": "6be7e0dc-027a-4db0-8088-e32b3108707b",
           "prompt": "14. The road is n_ _ _ _ _, so large trucks are not allowed to travel there.",
           "image": "assets/34/test-3/pic-14.png"
         },
         {
-          "id": "5e1dc335-25e5-48ae-97f9-da85f9256581",
+          "id": "5fcba963-286c-4df2-bf37-532734d03bee",
           "prompt": "15. There are five g_ _ _ _ _ _ _ _ _ _ in my house",
           "image": "assets/34/test-3/pic-15.png"
         },
         {
-          "id": "63ea737e-14a9-4aa2-a8db-2555c94c3621",
+          "id": "9839016d-edaa-4d94-a767-7f4a055532be",
           "prompt": "16. She eats a lot, so now she is o_ _ _ _ _ _ _ _ _",
           "image": "assets/34/test-3/pic-16.png"
         },
         {
-          "id": "5f103bb6-f4d5-48ee-91a0-85628f945b76",
+          "id": "940e2fc6-90d9-4ae8-ba2a-8aae8217c7ea",
           "prompt": "17. Because my teacher is p_ _ _ _ _ _, he can help me correct many mistakes in my homework",
           "image": "assets/34/test-3/pic-17.png"
         },
         {
-          "id": "e58c03b7-b962-49be-912a-62f838b5a1d1",
+          "id": "fe0561ff-337f-4969-9a46-89068c16dd0c",
           "prompt": "18. Using Tiktok is p_ _ _ _ _ _ w_ _ _ young people",
           "image": "assets/34/test-3/pic-18.png"
         },
         {
-          "id": "12cd26eb-6b01-47e1-b74f-1db7a0c4d02a",
+          "id": "95a2cb56-351a-467d-865f-d91301a7f113",
           "prompt": "19. My grandparents used to p_ _ _ _ t_ _ _ _ in our garden",
           "image": "assets/34/test-3/pic-19.png"
         },
         {
-          "id": "1ce5012e-cfe2-4b05-8754-471cdd498b23",
+          "id": "c816b8ef-838c-47ee-9eff-5968c00984c4",
           "prompt": "20.They usually s_ _ _ _ _ _ _ talk about their teacher, so he doesn’t know",
           "image": "assets/34/test-3/pic-20.png"
         },
         {
-          "id": "d73fd0e0-76d9-4f21-abbf-e702d5815e4a",
+          "id": "1767fd0e-7896-4f84-8e0f-80c19596d162",
           "prompt": "21. He used to be s_ _ and didn’t talk much to his friends when he was small",
           "image": "assets/34/test-3/pic-21.png"
         },
         {
-          "id": "c09641eb-067a-45b2-8df4-34ad32a02e58",
+          "id": "097e31cc-63b0-46ed-a572-e1375d156726",
           "prompt": "22. She often calls her parents to k_ _ _ i_ t_ _ _ _ with them",
           "image": "assets/34/test-3/pic-22.png"
         },
         {
-          "id": "6d477c70-dcc4-4ad9-9aaa-e92d44155665",
+          "id": "7fae22a2-829c-4ffc-8d6b-6f83c5ed6302",
           "prompt": "23. He is really c_ _ _ _ _ _ _ _ because he can speak in front of people without getting worried",
           "image": "assets/34/test-3/pic-23.png"
         },
         {
-          "id": "76fbd71e-8382-41c5-a022-5a89effeff37",
+          "id": "d17ad951-15b1-486f-b86f-b8f23a5ca2e1",
           "prompt": "24. I like to c_ _ _ _ u_ w_ _ _ my friends every month",
           "image": "assets/34/test-3/pic-24.png"
         },
         {
-          "id": "ad47c3ff-c663-4843-89d1-f8bfddbe0a04",
+          "id": "890840d6-c95f-49ec-9121-758c5293e0cf",
           "prompt": "25. There is a w_ _ _ h_ _ _ _ _ _ at my school so students can get access to the Internet",
           "image": "assets/34/test-3/pic-25.png"
         }
@@ -2906,7 +2906,7 @@
       "audioPath": "assets/34/test-3/listening.mp3",
       "items": [
         {
-          "id": "0ca3acd6-92e9-46b3-9503-aff465988d1b",
+          "id": "cbb745f5-d797-4709-a061-9afd42b89713",
           "prompt": "1. Port Anderson is the place where Sheena’s family is planning to move to.",
           "options": [
             "True",
@@ -2914,7 +2914,7 @@
           ]
         },
         {
-          "id": "944b7abb-00bc-4bee-aec2-e4f0e93bc853",
+          "id": "fec03f2a-6214-4fb1-b9ca-4337222cc667",
           "prompt": "2. Sheena has already hired a moving van.",
           "options": [
             "True",
@@ -2922,7 +2922,7 @@
           ]
         },
         {
-          "id": "93821b10-aa73-49e5-bd0b-714e4396785f",
+          "id": "584db7ac-4d19-4af5-8dd5-1856f7aec229",
           "prompt": "3. Mark’s sister used a cargo plane to help move her things to Dallas.",
           "options": [
             "True",
@@ -2930,7 +2930,7 @@
           ]
         },
         {
-          "id": "c89cae19-00dd-40a8-aaea-b93631a19505",
+          "id": "77dd1828-3d0e-47fa-b09b-b8284bfdf464",
           "prompt": "4. Mark will be moving next Saturday.",
           "options": [
             "True",
@@ -2938,7 +2938,7 @@
           ]
         },
         {
-          "id": "7ef74777-0bdf-4352-bc12-242ffc62f28b",
+          "id": "139bc349-15d3-460a-884c-cdfa27d1d403",
           "prompt": "5. Mark offers to help Sheena transport some of her things.",
           "options": [
             "True",
@@ -2955,7 +2955,7 @@
       "audioPath": "assets/34/test-3/listening.mp3",
       "items": [
         {
-          "id": "4d2589e0-feed-4dae-bbcb-bbe566de0dc1",
+          "id": "33be0be1-f5b4-4233-a467-7e8b3778cc87",
           "prompt": "Question 1: Who visited his/her relatives in Sydney?",
           "options": [
             "A. Shelly",
@@ -2964,7 +2964,7 @@
           ]
         },
         {
-          "id": "e483a5b5-7a27-4dbd-b506-dac93e584f92",
+          "id": "fabed87f-509b-4278-a4cb-e5e2da1240de",
           "prompt": "Question 2: What did Carl do during his vacation?",
           "options": [
             "A. Walked through dried forests",
@@ -2973,7 +2973,7 @@
           ]
         },
         {
-          "id": "b52020b1-9b9d-4e57-b58d-a0a4dc3fdbc5",
+          "id": "df7bae9a-6c03-4520-8160-5c8146dc2893",
           "prompt": "Question 3: How much did Shelly pay for a round trip ticket to Bangkok?",
           "options": [
             "A. $500",
@@ -2982,7 +2982,7 @@
           ]
         },
         {
-          "id": "276dbeac-bf6e-491c-9a8c-62479c695dc5",
+          "id": "e5f408ef-4d2e-4c0c-bd76-d201c6689bec",
           "prompt": "Question 4: Which part of the trip did Shelly love the most?",
           "options": [
             "A. The beach",
@@ -2991,7 +2991,7 @@
           ]
         },
         {
-          "id": "2841b2cb-5b0f-4cc3-a606-584eee8aed91",
+          "id": "5ba5cc0e-8762-40d7-a5c8-ba52111b5a6c",
           "prompt": "Question 5: Which of the following did Shelly dislike about her trip?",
           "options": [
             "A. The airline lost some of her luggage",
@@ -3034,27 +3034,27 @@
       "audioPath": "assets/34/test-3/listening.mp3",
       "items": [
         {
-          "id": "25ee269d-fe33-4e2b-9d61-a72fcf0c2a93",
+          "id": "26801ec0-5895-4fc1-a9d4-cf85a2427704",
           "prompt": "Chỗ trống (1)",
           "maxWords": 1
         },
         {
-          "id": "7c8452a3-1615-4efe-a330-bed22a3b4829",
+          "id": "961dc844-dce9-40a6-b2a7-dcd351671097",
           "prompt": "Chỗ trống (2)",
           "maxWords": 1
         },
         {
-          "id": "8f7d4e98-142c-45a0-beeb-13511c410265",
+          "id": "85fb8442-5ff7-4949-b25f-82eeb155c64b",
           "prompt": "Chỗ trống (3)",
           "maxWords": 1
         },
         {
-          "id": "b509e0aa-2887-462b-9eba-8a72bf305c20",
+          "id": "5270a88d-0ca2-4323-81c6-e26bd1271f72",
           "prompt": "Chỗ trống (4)",
           "maxWords": 1
         },
         {
-          "id": "d5cfc020-5497-4282-b9d3-3ccea1e7cf49",
+          "id": "6b480e33-8f81-4c2d-a9b1-16949eb80989",
           "prompt": "Chỗ trống (5)",
           "maxWords": 1
         }
@@ -3067,43 +3067,43 @@
       "context": "",
       "items": [
         {
-          "id": "b1c25692-24d8-4502-bae3-67cc66c27c59",
+          "id": "58e840c1-c0f3-4f43-ad94-9224c876a302",
           "prompt": "/taɪm/"
         },
         {
-          "id": "b43dc026-421e-46b1-b0d9-ed56369a278e",
+          "id": "1ae2b6a8-da0b-4197-b513-74bf888f6015",
           "prompt": "/kənˈviːniənt/"
         },
         {
-          "id": "4d789125-decd-4e56-9c91-8ff38a2e03cc",
+          "id": "31e0a1c3-fe86-40a7-b8b1-6f4561aff377",
           "prompt": "/ˈɪntrəstɪŋ/"
         },
         {
-          "id": "7b5241ac-3bae-488e-9f68-ca42b4974dd2",
+          "id": "e5ebe0eb-edaa-4ca8-ad9f-bb6123f7a7f0",
           "prompt": "/hɔːl/"
         },
         {
-          "id": "c47023cf-c34b-4fc5-a66f-9fda9ad14c5c",
+          "id": "b57ebc2d-02f8-4dac-9e8a-71ab6064b6b0",
           "prompt": "/wər/"
         },
         {
-          "id": "8b0d7a5e-afdc-48fb-86bd-045602c4825f",
+          "id": "3eb1ebf7-6e07-4eef-a3e7-2c2396c502d7",
           "prompt": "/ʌnˈpleznt/"
         },
         {
-          "id": "c36162e3-8a2e-451b-97d8-a204a492f376",
+          "id": "56f84096-8c91-4da2-9f08-187dc0b4a860",
           "prompt": "/ˈreɪnfɔːrɪst/"
         },
         {
-          "id": "bc551cf7-d69f-4c90-b197-78a723441d17",
+          "id": "f80f220d-49eb-40d1-9c03-f9ddbd6813af",
           "prompt": "/ɪkˈsplɔːr/"
         },
         {
-          "id": "ea4b91f2-ca09-46a6-8138-2ed295f54d28",
+          "id": "877cece4-f74e-4fb1-88f6-a4962478ff3d",
           "prompt": "/vəˈraɪəti/"
         },
         {
-          "id": "aaf8cbb5-a79a-4f08-9e9e-ef50bd9a4c7f",
+          "id": "ba9849e1-ee65-4879-a97c-a9fcb85415b8",
           "prompt": "/waɪd/"
         }
       ]
@@ -3115,7 +3115,7 @@
       "context": "",
       "items": [
         {
-          "id": "4e4ace49-3e6f-4fdd-8bac-6eceddf81716",
+          "id": "c27a524a-f3f7-40c5-aa83-5277af71e456",
           "prompt": "transport",
           "options": [
             "/ˈtrenspɔːrt/",
@@ -3124,7 +3124,7 @@
           ]
         },
         {
-          "id": "3398040e-4c94-4f19-adf1-953420d3b71c",
+          "id": "eef355cf-61ef-46d9-88a1-386da386c4ff",
           "prompt": "heavy",
           "options": [
             "/ˈhevi/",
@@ -3133,7 +3133,7 @@
           ]
         },
         {
-          "id": "eed287cd-f239-4e90-8ce2-083f0bef364e",
+          "id": "fcf439db-4440-4027-8253-3db33525dd71",
           "prompt": "junk",
           "options": [
             "/dʒʌŋk/",
@@ -3142,7 +3142,7 @@
           ]
         },
         {
-          "id": "4f3ad5c3-eb82-4be4-b6e0-e573a744d092",
+          "id": "57ca19a6-b2fe-41e7-8d54-c10f35417340",
           "prompt": "family",
           "options": [
             "/ˈfɑːməli/",
@@ -3151,7 +3151,7 @@
           ]
         },
         {
-          "id": "33e14bdc-5ff4-43fb-be82-44b354e70f55",
+          "id": "afa71320-12f6-44ec-bf54-6a0ba47259d1",
           "prompt": "relative",
           "options": [
             "/ˈreleɪtɪv/",
@@ -3160,7 +3160,7 @@
           ]
         },
         {
-          "id": "60379859-3ca8-471f-8457-aed348e67880",
+          "id": "546d4104-e1df-4e59-95c4-3bb6135c7105",
           "prompt": "work",
           "options": [
             "/wɜːrk/",
@@ -3169,7 +3169,7 @@
           ]
         },
         {
-          "id": "01deb5a5-aa10-485b-837d-3ae48a97f370",
+          "id": "f82b6457-6dc8-40ec-af9b-1d1a014f0297",
           "prompt": "surprised",
           "options": [
             "/sərˈpraɪsd/",
@@ -3178,7 +3178,7 @@
           ]
         },
         {
-          "id": "c9c0d4f2-5c52-4dbb-8006-862099df8095",
+          "id": "1920a6c7-6e0c-44cb-98db-f7ed691b1d8b",
           "prompt": "forget",
           "options": [
             "/fɔːrˈɡet/",
@@ -3187,7 +3187,7 @@
           ]
         },
         {
-          "id": "14b7d081-4cd0-48aa-98b1-25211afc5039",
+          "id": "f6e27f90-0971-4d2e-96ce-537750338959",
           "prompt": "dancing",
           "options": [
             "/ˈdænsi:ŋ/",
@@ -3196,7 +3196,7 @@
           ]
         },
         {
-          "id": "b6b721d1-4a73-4444-8d62-c1f3b1ec677e",
+          "id": "793dbffc-d162-4a9a-b331-7d7818b210a6",
           "prompt": "television",
           "options": [
             "/ˈtelɪvɪʒn/",
@@ -3213,42 +3213,42 @@
       "context": "",
       "items": [
         {
-          "id": "16be04d1-a389-4607-a89e-f0a31d30f0c4",
+          "id": "c8b97f46-f7f4-42f2-a410-96f8376ba183",
           "prompt": "1. Lâu (lắm) rồi tớ chưa mua/mới mua được bộ nội thất với mức giá được giảm.\nSuggested vocab: bộ (gì đó)~ a set of something",
           "long": true
         },
         {
-          "id": "800c4a1b-4908-43f8-9daf-555aee0e9653",
+          "id": "69ce71bd-0146-42cb-b23a-7e5bbc70b215",
           "prompt": "2. Bạn đang cân nhắc chuyển đồ đạc của mình đến nhà mới vào thứ mấy?",
           "long": true
         },
         {
-          "id": "24442b7a-00bd-4201-9e11-24df52f241f8",
+          "id": "7078ac15-a70f-4931-b37c-cf84ccd69d80",
           "prompt": "3. Cuối cùng thì/rốt cuộc thì, chúng tôi đã có thể tìm được hành lý của mình sau khi hãng hàng không đã đánh mất chúng.\nNote: việc \"tìm được hành lý\" đã xảy ra trong quá khứ",
           "long": true
         },
         {
-          "id": "411b562c-8563-4017-973d-39ef8a4df704",
+          "id": "ecdd58ce-de53-430e-89f9-2d5296ecb8c7",
           "prompt": "4. Điều thật sự tuyệt vời là vé máy bay khá là rẻ, nên tớ đã không phải đi tàu đến đấy.",
           "long": true
         },
         {
-          "id": "d1fa0d56-6cfe-423e-85ac-af97f718d082",
+          "id": "a84cb38b-a59b-4843-8097-7b2c1beb83e0",
           "prompt": "5. Năm ngoái khi cậu đi nghỉ, cậu mất bao lâu để sắp xếp gói ghém đồ đạc đấy?",
           "long": true
         },
         {
-          "id": "39f0b4e1-01e6-4f33-841c-143479c22634",
+          "id": "cc75ad0e-903b-43f9-b773-6e376833c232",
           "prompt": "6. Ở trên đảo, trẻ em có thể khám phá thiên nhiên, trong khi bố mẹ chúng thưởng thức đồ ăn tươi.\nNote: Thiên nhiên - Nature",
           "long": true
         },
         {
-          "id": "bdeaf4b3-24cf-4119-b23c-f2acf4ecf93f",
+          "id": "23bb95d2-c135-4433-9fb6-f88aae756dc6",
           "prompt": "7. (Kể) từ khi tôi còn bé, tôi luôn muốn được đi nghỉ một chuyến ba ngày ở Vịnh Hạ Long. Địa điểm này nghe có vẻ như là một địa điểm du lịch tuyệt vời.\nNote: Vịnh - Bay",
           "long": true
         },
         {
-          "id": "3285bb0e-3bda-46be-9a08-40d868143740",
+          "id": "143684f9-3f51-45a1-aa65-57b33228e24f",
           "prompt": "8. Với 2 tiếng mỗi ngày, cậu sẽ có thể thưởng thức được nhiều các hoạt động đa dạng khác nhau trên cả cái đảo này.",
           "long": true
         }
@@ -3261,17 +3261,17 @@
       "context": "",
       "items": [
         {
-          "id": "0183b7f0-68f9-42b6-a5d7-4c4e6b1956a6",
+          "id": "7e8668c8-a6ad-4d3f-9ab5-d7dd6287e1fa",
           "prompt": "2. Bạn đang cân nhắc chuyển đồ đạc của mình đến nhà mới vào thứ mấy?\nNote: việc \"tìm được hành lý\" đã xảy ra trong quá khứ\nNote: Thiên nhiên - Nature\nNote: Vịnh - Bay",
           "long": true
         },
         {
-          "id": "ff557cae-31ea-41c6-97b6-bd7616e9ae77",
+          "id": "61e78de3-6124-4d1c-9393-5038743a6cf0",
           "prompt": "1.  Why do some people enjoy going to entertainment complexes (E.g. Aeon mall Long Bien)? (6 points)\nNote: package holiday ~ du lịch trọn gói\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         },
         {
-          "id": "3bdce1ec-7c49-4728-911b-50de54cede1d",
+          "id": "cf14f559-f18e-4d88-bbd4-168246c6e179",
           "prompt": "2. When was the last time your family moved to a new place?\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         }
