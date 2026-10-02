@@ -504,32 +504,75 @@ export async function mount(course) {
   }
 
   function buildResponsesPayload() {
-    const defItems = (learningState.definition?.blocks || []).flatMap(b => b.items || []);
-    const formItems = form.groups.flatMap(g => g.items || []);
+    const defBlocks = learningState.definition?.blocks || [];
     const responses = {};
-    if (defItems.length && defItems.length === formItems.length) {
-      for (let i = 0; i < defItems.length; i++) {
-        const val = state.answers[formItems[i].id];
-        const answer = typeof val === 'string' ? val : (val ?? '');
-        responses[defItems[i].itemVersionId] = mapAnswerToDefinitionValue(formItems[i], defItems[i], answer);
-      }
-    } else {
-      for (const item of formItems) {
-        responses[item.id] = state.answers[item.id] || '';
+
+    for (let bIndex = 0; bIndex < defBlocks.length; bIndex++) {
+      const block = defBlocks[bIndex];
+      const group = form.groups[bIndex];
+      if (!group) continue;
+
+      const defItems = block.items || [];
+      const formItems = group.items || [];
+
+      if (defItems.length === formItems.length) {
+        for (let i = 0; i < defItems.length; i++) {
+          const val = state.answers[formItems[i].id];
+          const answer = typeof val === 'string' ? val : (val ?? '');
+          responses[defItems[i].itemVersionId] = mapAnswerToDefinitionValue(formItems[i], defItems[i], answer);
+        }
+      } else if (formItems.length === defItems.length * 2) {
+        for (let i = 0; i < defItems.length; i++) {
+          const formItemWord = formItems[i * 2];
+          const formItemOpt = formItems[i * 2 + 1];
+          const word = String(state.answers[formItemWord?.id] ?? '').trim();
+          const rawOpt = state.answers[formItemOpt?.id] ?? '';
+          const opt = mapAnswerToDefinitionValue(formItemOpt, defItems[i], rawOpt);
+          responses[defItems[i].itemVersionId] = [word, typeof opt === 'string' ? opt : ''];
+        }
+      } else {
+        for (let i = 0; i < defItems.length; i++) {
+          if (formItems[i]) {
+            const val = state.answers[formItems[i].id];
+            const answer = typeof val === 'string' ? val : (val ?? '');
+            responses[defItems[i].itemVersionId] = mapAnswerToDefinitionValue(formItems[i], defItems[i], answer);
+          }
+        }
       }
     }
+
     return responses;
   }
 
   function applyServerDraft(serverDraft) {
     if (!serverDraft || typeof serverDraft !== 'object') return;
-    const defItems = (learningState.definition?.blocks || []).flatMap(b => b.items || []);
-    const formItems = form.groups.flatMap(g => g.items || []);
-    if (defItems.length && defItems.length === formItems.length) {
-      for (let i = 0; i < defItems.length; i++) {
-        const itemVerId = defItems[i].itemVersionId;
-        if (serverDraft[itemVerId] !== undefined) {
-          state.answers[formItems[i].id] = mapAnswerFromDefinitionValue(formItems[i], defItems[i], serverDraft[itemVerId]);
+    const defBlocks = learningState.definition?.blocks || [];
+
+    for (let bIndex = 0; bIndex < defBlocks.length; bIndex++) {
+      const block = defBlocks[bIndex];
+      const group = form.groups[bIndex];
+      if (!group) continue;
+
+      const defItems = block.items || [];
+      const formItems = group.items || [];
+
+      if (defItems.length === formItems.length) {
+        for (let i = 0; i < defItems.length; i++) {
+          const itemVerId = defItems[i].itemVersionId;
+          if (serverDraft[itemVerId] !== undefined) {
+            state.answers[formItems[i].id] = mapAnswerFromDefinitionValue(formItems[i], defItems[i], serverDraft[itemVerId]);
+          }
+        }
+      } else if (formItems.length === defItems.length * 2) {
+        for (let i = 0; i < defItems.length; i++) {
+          const itemVerId = defItems[i].itemVersionId;
+          const draftVal = serverDraft[itemVerId];
+          if (Array.isArray(draftVal)) {
+            const formItemWord = formItems[i * 2];
+            const formItemOpt = formItems[i * 2 + 1];
+            if (formItemWord) state.answers[formItemWord.id] = String(draftVal[0] ?? '');
+            if (formItemOpt) state.answers[formItemOpt.id] = mapAnswerFromDefinitionValue(formItemOpt, defItems[i], draftVal[1]);
+          }
         }
       }
     }
