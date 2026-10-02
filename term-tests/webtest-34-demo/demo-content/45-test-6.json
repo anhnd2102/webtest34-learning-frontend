@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 2,
   "testNumber": 6,
-  "sourceHash": "29afd090d7f9f2957c5e5f71444003882cd4fa9b6f2ea11acc8a3a6c8c906202",
+  "sourceHash": "b662cbccf876327c3acad4e6e1f8ecd65f850393f70c2cd8862de81865892902",
   "durationMinutes": 70,
   "groups": [
     {
@@ -13,7 +13,7 @@
       "context": "",
       "items": [
         {
-          "id": "b7e49bec-943e-4892-a8bc-0cfd4adb542e",
+          "id": "26ff0dca-5ab0-4c52-8f2a-84af784b4a76",
           "prompt": "1. Students always seem to have difficulty",
           "options": [
             "A. apparent.",
@@ -24,7 +24,7 @@
           ]
         },
         {
-          "id": "84466f02-11af-4433-954c-43294a72e2a8",
+          "id": "093b71b4-f729-4983-b79c-2de4a345d94a",
           "prompt": "2. The need to find replacement fuels poses",
           "options": [
             "A. apparent.",
@@ -35,7 +35,7 @@
           ]
         },
         {
-          "id": "91ecbca8-9731-48c1-ae36-65a744163c45",
+          "id": "577c7e34-fc37-4ef0-936a-7dd1c11bad56",
           "prompt": "3. In the figures he presented, several errors were",
           "options": [
             "A. apparent.",
@@ -46,7 +46,7 @@
           ]
         },
         {
-          "id": "d912cc97-f564-46e3-9cab-dbe6fcded281",
+          "id": "abb2fe42-330a-456b-965d-8a408da865b9",
           "prompt": "4. On their way across Antarctica, they experienced",
           "options": [
             "A. apparent.",
@@ -57,7 +57,7 @@
           ]
         },
         {
-          "id": "4ffe785b-8680-4da1-abe9-13ad9b6e003b",
+          "id": "45706484-6933-4d5a-a5ec-576a88713f66",
           "prompt": "5. The results of the opinion poll raised",
           "options": [
             "A. apparent.",
@@ -76,23 +76,23 @@
       "context": "",
       "items": [
         {
-          "id": "8d8db942-8a82-47c1-8290-16d24a5564d1",
+          "id": "603e4c22-5fb8-49f6-9713-ef73c8a36690",
           "prompt": "6. The theatre has been slow to respond ______ the challenge (Điền giới từ hoặc từ liền trước + giới từ)"
         },
         {
-          "id": "59121394-07d6-48e8-b1d3-555c517af4f7",
+          "id": "1b98069a-38a5-4d5f-8491-6096e8a5d704",
           "prompt": "7. In this lecture I plan to deal ______ the later novels of Dickens."
         },
         {
-          "id": "4943099b-0c16-4bf3-a091-e5af4deb0b23",
+          "id": "bdcd3acb-d129-4dd6-9f9e-33edf8897026",
           "prompt": "8. Changes in the frequency of droughts and floods pose a challenge ______ agriculture."
         },
         {
-          "id": "6d96cc15-0116-4903-a931-3de084a0cf82",
+          "id": "699dd4f4-f490-4657-9c54-69b32f3896d9",
           "prompt": "9. He thought for a long time but was unable to come ______ with a solution."
         },
         {
-          "id": "e6571073-bf9c-4330-8cdc-023817140078",
+          "id": "c8b2a262-2769-423e-bcca-890a39e2fc95",
           "prompt": "10. This article raises the issue ______ what people can do to protect the environment."
         }
       ]
@@ -104,7 +104,7 @@
       "context": "",
       "items": [
         {
-          "id": "7e8b7d7a-2dfe-44e9-aa68-a5e5327015cc",
+          "id": "9c530dbe-6930-4054-b445-1c4733467fdb",
           "prompt": "11. It is sensible to unify / select / verify your results before publishing.",
           "options": [
             "A. unify",
@@ -113,7 +113,7 @@
           ]
         },
         {
-          "id": "d4719b4f-b14a-411c-be05-de7d63e3ed86",
+          "id": "5f2f9731-ac54-44ca-9f3a-92de8a234848",
           "prompt": "12. Hip replacement is usually a simple medical application / procedure / behavior.",
           "options": [
             "A. application",
@@ -122,7 +122,7 @@
           ]
         },
         {
-          "id": "b0c631b5-f58c-4e11-b975-7e89a513fa4c",
+          "id": "cbba77a4-1288-4aba-9ff1-bbb276630b30",
           "prompt": "13. Many students supplement / utilize / verify their scholarship with a part-time job.",
           "options": [
             "A. supplement",
@@ -131,7 +131,7 @@
           ]
         },
         {
-          "id": "1903c671-db81-4124-a5a2-ce75df4fb004",
+          "id": "b36f1905-185e-40a2-a04f-badbf0bfa29f",
           "prompt": "14. As the next step / behavior / application in our study, we will analyze blood samples.",
           "options": [
             "A. step",
@@ -140,7 +140,7 @@
           ]
         },
         {
-          "id": "96dde338-05a0-4eda-b742-2c9d0dbd1a5b",
+          "id": "b057c847-3c0a-4961-a3ab-5a078725325d",
           "prompt": "15. Her aim is to form / design / function a radically different type of engine.",
           "options": [
             "A. form",
@@ -157,23 +157,23 @@
       "context": "",
       "items": [
         {
-          "id": "2bf1d50f-cadb-4b56-abad-c456f5ea4439",
+          "id": "7c4da27d-3bdb-4893-8625-b8704b881f20",
           "prompt": "16. There has been an enormous ______ in aviation in recent years. (EXPAND)"
         },
         {
-          "id": "c118b675-01e5-407e-af2f-c45e6a1149d9",
+          "id": "cad4afaf-c844-484b-8376-bf0871845c96",
           "prompt": "17. Economists are increasingly concerned that development should be ______. (SUSTAIN)"
         },
         {
-          "id": "223ad9aa-df8a-4ae1-9b6f-42716de9b582",
+          "id": "48c28ea5-b3b5-4d80-a77e-859e3efb0923",
           "prompt": "18. There has been no ______ change in the patient's condition. (PERCEIVE)"
         },
         {
-          "id": "be107851-90b6-49dd-a982-f14b2b622f74",
+          "id": "513a6221-e1e0-4887-8af7-c4bb12b2a26d",
           "prompt": "19. The survey found that most people feel that modern life is becoming ______ stressful. (INCREASE)"
         },
         {
-          "id": "09e559fa-ee09-4e21-9a34-71938e26d7b9",
+          "id": "58b49dbd-2f72-4f48-a4a2-ac248ebfd2ee",
           "prompt": "20. Industrial ______ has, of course, transformed people's lives. (DEVELOP)"
         }
       ]
@@ -185,7 +185,7 @@
       "context": "",
       "items": [
         {
-          "id": "911a1b6a-afbe-42f1-9221-a80ef4c3e462",
+          "id": "6d900444-0421-4fa9-a071-e53dbceb89bc",
           "prompt": "21. The economy now seems to be recovering / amending.",
           "options": [
             "A. recovering",
@@ -193,7 +193,7 @@
           ]
         },
         {
-          "id": "7423f439-56f1-435a-b108-3bb164c5f34a",
+          "id": "d327dce3-451b-4493-9806-f848a4d6e013",
           "prompt": "22. Many people now are converting / transforming to use solar power.",
           "options": [
             "A. converting",
@@ -201,7 +201,7 @@
           ]
         },
         {
-          "id": "689b0b89-9029-44dc-95bd-88ce9ff6c79a",
+          "id": "ed0ff235-c09f-4f11-a9a3-68cd8587fca1",
           "prompt": "23. Why do some people abandon / shift their families to pursue wealth?",
           "options": [
             "A. abandon",
@@ -209,7 +209,7 @@
           ]
         },
         {
-          "id": "ce69e837-1a11-4db0-8add-8b862071f66d",
+          "id": "fdc515bc-5071-4e7b-b684-d4cfbc4e06ed",
           "prompt": "24. It takes most people some time to alter / adjust to living abroad.",
           "options": [
             "A. alter",
@@ -217,7 +217,7 @@
           ]
         },
         {
-          "id": "0bdb0eac-6f32-4466-9279-5921e7d76726",
+          "id": "5166d739-279d-4dd8-bbe9-8a9a1c2d9ee9",
           "prompt": "25. It is increasingly hard to adapt / maintain traditional lifestyles.",
           "options": [
             "A. adapt",
@@ -286,19 +286,19 @@
       "audioPath": "assets/45/p2-test-2/listening.mp3",
       "items": [
         {
-          "id": "b8919f87-e56e-4c47-b5d9-ca3e72b67fe4",
+          "id": "7543ad8f-6f75-4645-b423-ad425efb9064",
           "prompt": "1. Class on Thursday (Teacher: Diana): (1) ______"
         },
         {
-          "id": "92ce01bd-6e77-49be-adeb-94e8fd09be04",
+          "id": "d19de472-06ff-4fde-a501-4b7312cb8c5b",
           "prompt": "2. Baseball Teacher on Saturday: (2) ______"
         },
         {
-          "id": "9445c9f6-8502-4df4-a990-59d940c330f1",
+          "id": "55e286f3-f776-42f3-9deb-2231b1f0ed6d",
           "prompt": "3. Class on Sunday (Teacher: Steve): (3) ______"
         },
         {
-          "id": "3bd47025-7f4e-4b58-ae12-b15f9e93ddea",
+          "id": "a443ed3b-b676-40f8-95f2-2611ef6f71ae",
           "prompt": "4. Class on Tuesday (Teacher: Stella): (4) ______"
         }
       ]
@@ -311,15 +311,15 @@
       "audioPath": "assets/45/p2-test-2/listening.mp3",
       "items": [
         {
-          "id": "b7313a04-977f-48a1-97bb-4e7978b2743a",
+          "id": "f283d5ef-a99a-4241-8360-625c518d11f7",
           "prompt": "5. Plan Area 5: ______"
         },
         {
-          "id": "93cf717f-0d7f-43ff-92c8-ae41ee1751d4",
+          "id": "29e5992e-2a3d-419c-83bc-bab5f08522a9",
           "prompt": "6. Plan Area 6: ______"
         },
         {
-          "id": "097decc2-c2ae-4382-bb2d-275c67fd3e8b",
+          "id": "4fe9622e-521e-461f-b732-139600d79a87",
           "prompt": "7. Plan Area 7: ______"
         }
       ]
@@ -332,15 +332,15 @@
       "audioPath": "assets/45/p2-test-2/listening.mp3",
       "items": [
         {
-          "id": "ecc021c5-74d8-4822-86f9-ce90274d7250",
+          "id": "dbe50821-8e04-488e-bd51-bb423e574b21",
           "prompt": "8. Parents need to (8) ______ an authorisation form."
         },
         {
-          "id": "53f2e060-63c3-4387-94bc-cb3138fa0ed4",
+          "id": "f5d063eb-c407-41ad-a484-dd5963232a8c",
           "prompt": "9. Give forms to (9) ______ with a fee of £20."
         },
         {
-          "id": "0b2161e2-32e8-4be2-a9e7-c08c2a60ddcb",
+          "id": "dcb93982-3a72-4c12-9fcd-9201ef957be8",
           "prompt": "10. You will receive your (10) ______ in the post."
         }
       ]
@@ -352,7 +352,7 @@
       "context": "Reading Passage 2: The Chilean Mine Rescue\n\nParagraph A:\nThe race to reach 33 miners entombed for 64 days 700m (2,300ft) below the bare brown mountains of Chile's Atacama desert enters its final stage this week. Rescuers are drilling through solid rock to reach the chamber where the men have been surviving. The length of the operation will be determined by the stability of the rock and the speed at which the custom escape shaft can be bored.\n\nParagraph B:\nFor more than two months, the miners have endured extreme heat, suffocating humidity, and near-total darkness. They organized themselves into shifts, rationed their tiny food supply, and kept each other's spirits alive while the world above mobilized unprecedented technical expertise. The miners' situation is of global interest, with live television broadcasts and messages of encouragement pouring in from all continents.\n\nParagraph C:\nEngineers from across the globe brought three massive drilling rigs, nicknamed Plan A, Plan B, and Plan C. Each rig cut through different angles of rock. Plan B, using a specialized drill hammer, finally broke through into the workshop near the miners' refuge. Rescuers cheered as dust and fresh air circulated through the newly created tunnel.\n\nParagraph D:\nThe final phase requires lowering a custom-built rescue capsule, dubbed the \"Phoenix\", down the 624-meter escape shaft. Constructed from high-strength steel, the capsule is just 53cm wide—barely enough room for a single man standing upright with his arms crossed.\n\nParagraph E:\nEquipped with communications gear, LED lights, oxygen tanks, an escape hatch at the bottom, and retractable exterior wheels to reduce friction against the uneven rock walls, the Phoenix represents engineering at its most daring. Once doctors confirm each miner's fitness, the ascent to daylight will begin.",
       "items": [
         {
-          "id": "ffe0b287-978b-430c-866f-72174e422b7e",
+          "id": "40b4dd12-18d6-4aa9-8f02-d4e2a0d420f6",
           "prompt": "14. The miners' situation is of global interest.",
           "options": [
             "Paragraph A",
@@ -363,7 +363,7 @@
           ]
         },
         {
-          "id": "c4a7b96c-ea30-404e-bdb4-fb476e781054",
+          "id": "93137537-367e-4469-b560-1549fbbe0e7a",
           "prompt": "15. The length of the operation will be determined by the stability of the rock.",
           "options": [
             "Paragraph A",
@@ -382,23 +382,23 @@
       "context": "[ Từ gợi ý: trapped | made safe | designed | estimated | trained | freed ]\n\nComplete the summary below:\nHowever, if all goes well, they could be (16) ______ by (17) ______ emergency workers in the next few days. As soon as the miners have been (18) ______, a specially (19) ______ capsule will be sent down. It is (20) ______ that bringing all of the men back up will take up to forty hours.",
       "items": [
         {
-          "id": "8bb3b3f1-cb6e-4338-9ee8-7621b75f8874",
+          "id": "183900ae-be06-4d66-afc5-7c18268be8da",
           "prompt": "16. they could be (16) ______ by emergency workers"
         },
         {
-          "id": "a4084292-b7b4-4194-b0ec-14e1e23d4626",
+          "id": "f6170398-e2c9-4e25-ac35-8222b72cdc82",
           "prompt": "17. by (17) ______ emergency workers in the next few days"
         },
         {
-          "id": "0f70836b-d6c0-4c51-bd6b-212113c319f9",
+          "id": "a479d142-7d92-4cfb-82ba-65248d902204",
           "prompt": "18. As soon as the miners have been (18) ______"
         },
         {
-          "id": "da9a3028-acdd-4d68-8965-b86aaa5f1aff",
+          "id": "3126dcff-e603-47da-987e-39a79dd8a29b",
           "prompt": "19. a specially (19) ______ capsule will be sent down"
         },
         {
-          "id": "2eb03171-ea5b-4761-8fd6-e04af14b025d",
+          "id": "f2d45d3c-174f-4cb3-af37-fef0b3210b29",
           "prompt": "20. It is (20) ______ that bringing all of the men back up will take up to forty hours"
         }
       ]
@@ -410,27 +410,27 @@
       "context": "",
       "items": [
         {
-          "id": "e1f907b2-bef7-4708-9f78-13345acb54e4",
+          "id": "532fb387-4958-4558-b9dc-f6455c64720b",
           "prompt": "21. The capsule structure is made of ______"
         },
         {
-          "id": "a916b444-5187-4665-af34-2afed3f37648",
+          "id": "5fce012f-0750-4fc2-8d53-e57990e0f819",
           "prompt": "22. The diameter of the capsule is ______"
         },
         {
-          "id": "6118ff83-176b-4d6e-a891-06ba8ab1d53e",
+          "id": "28e7f4a9-8fb0-4ef8-937b-5bfb5d351975",
           "prompt": "23. Interior equipped with ______"
         },
         {
-          "id": "d3a56e1b-5ea6-447f-94c9-ca393335b309",
+          "id": "f31332a5-3461-43ff-a586-1099967b396d",
           "prompt": "24. Emergency supply includes ______"
         },
         {
-          "id": "db5f115b-ec73-4836-8945-d1a8e26d27ab",
+          "id": "05959317-f033-4488-8f23-5526c899f391",
           "prompt": "25. Bottom escape mechanism ______"
         },
         {
-          "id": "344980ea-a46a-4625-a4fc-984060bf59da",
+          "id": "7692c30b-0f3c-4bd0-aad3-a16a0dd1b2be",
           "prompt": "26. Fitted on exterior to reduce friction: ______"
         }
       ]
@@ -442,7 +442,7 @@
       "context": "",
       "items": [
         {
-          "id": "2296f142-4cca-4969-a16d-d8dd65a8db27",
+          "id": "92b6050c-88f9-4a83-9b01-03d5cffe0ce2",
           "prompt": "27. Choose the most suitable title for Reading Passage 2:",
           "options": [
             "A. Mine rescue on verge of breakthrough",
@@ -460,12 +460,12 @@
       "context": "",
       "items": [
         {
-          "id": "c6d8bdc2-8d75-4cb4-b861-adaa2cf20c7b",
+          "id": "b8104150-699c-48eb-b559-f172b97c2707",
           "prompt": "Đề bài: More and more people are migrating to cities in search of a better life, but city life can be extremely difficult. Explain some of the difficulties of living in a city. How can governments make urban life better for everyone?\n\nYêu cầu: Hãy viết đoạn thân bài 1 (Body 1) nêu ra các khó khăn khi sống ở thành phố lớn dựa trên dàn ý gợi ý sau (Tối thiểu 70 từ):\n- Topic sentence: Nêu khái quát cuộc sống thành phố gặp nhiều thách thức.\n- Ý 1: Chi phí sinh hoạt (cost of living) tại thành phố cao hơn nông thôn; chi phí nhà ở (housing costs) và thực phẩm (food expenses) đắt đỏ.\n- Ý 2: Các vấn đề xã hội (social problems) như tỷ lệ tội phạm (crime rates) và nghèo đói (poverty).\n- Ý 3: Chất lượng không khí kém (poor air quality) do ô nhiễm giao thông và mật độ dân cư quá đông đúc (overcrowded).",
           "long": true
         },
         {
-          "id": "a420c2d4-f0f0-4373-aa82-de5d53738393",
+          "id": "904e4b70-73b6-4095-b500-748adf67e1f8",
           "prompt": "Yêu cầu: Hãy viết đoạn thân bài 2 (Body 2) nêu ra các giải pháp mà chính phủ có thể thực hiện để cải thiện đời sống đô thị dựa trên dàn ý gợi ý sau (Tối thiểu 70 từ):\n- Topic sentence: Nêu khái quát chính phủ có thể triển khai một số giải pháp hiệu quả.\n- Ý 1: Xây dựng nhà ở giá cả phải chăng hoặc nhà ở xã hội (affordable / social housing) cho người có thu nhập thấp.\n- Ý 2: Cấm hoặc đánh phí phương tiện cá nhân (như phí tắc nghẽn - congestion charge tại London) và phát triển giao thông công cộng sạch (clean public transport).\n- Ý 3: Đầu tư phát triển các thị trấn vệ tinh / khu vực nông thôn (provincial towns & rural areas), chuyển dịch bớt việc làm và ngành công nghiệp để giảm áp lực cho đô thị lớn.",
           "long": true
         }

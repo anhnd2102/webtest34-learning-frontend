@@ -3,7 +3,7 @@
   "course": "45",
   "phase": 1,
   "testNumber": 4,
-  "sourceHash": "ff6458bc353f40854c33c099318d803539bcb7f458f671ddc2badfd850e6e53f",
+  "sourceHash": "56b364e478b73b643145a427c48227d20dde17064356a9b351619905066c18cc",
   "durationMinutes": 90,
   "groups": [
     {
@@ -13,39 +13,39 @@
       "context": "Many people think that the best way to reduce deaths from smoking is to ban smoking in public places. (1)____ (However/In addition), it is not as simple as that. There are several reasons why I do not consider this approach to be suitable\n\n(2)____ (Alternatively/firstly), banning activities often increases their popularity by making them seem more exciting. (3)____ (Furthermore/In contrast), most smoking takes place in the privacy of people’s homes, and would (4)____ (therefore/nevertheless) not be affected by the ban. (5)____ (Thirdly/Similarly), a ban on smoking would make extra demand on the police.\n\n(6)____ (Although/despite) the ideas behind banning smoking in public places are good, an alternative approach needs to be taken, in my opinion. Schools should lead the way in discussing the harmful effects of smoking not only on the smokers themselves but on others around them. (7)____ (In addition/consequently), parents need to support these efforts by encouraging the children to understand the negative aspects of smoking\n\nIf we adopted these measures, I believe that fewer people would take up smoking (8)____ (as a result/moreover). To some extent, these things are already happening. (9)____ (And/nevertheless), further efforts are needed.",
       "items": [
         {
-          "id": "90d4584c-6ce5-44cd-a41d-add829acd3ce",
+          "id": "679703d5-f899-47c9-befb-c5edb5ae136a",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "e5da3ec0-9657-41a0-920f-20a3bf883eea",
+          "id": "57c40da4-e20b-4fd0-98e4-1cee881b39b8",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "1d707964-756e-41e2-9abc-2eac270d6e0c",
+          "id": "31921ce0-9e49-4f2a-9269-71cab51a91bf",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "fd5fe6ea-599b-4a38-9389-fd3a9ddc5c10",
+          "id": "9d8b94b2-6df9-4838-8cc6-ea637942d128",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "4a51ba5e-628b-4f92-8401-894d75a9d75b",
+          "id": "274167e4-a564-42a9-9966-51777da3c97d",
           "prompt": "Chỗ trống (5)"
         },
         {
-          "id": "d10a608f-56c6-42a7-bd0e-df49d9f05a64",
+          "id": "0523dae8-6be4-4c04-8205-430a81c8f2ab",
           "prompt": "Chỗ trống (6)"
         },
         {
-          "id": "1d75f561-2330-4589-8413-afebee1686d1",
+          "id": "5822659b-4343-47ea-aaf1-7974aa1f0eeb",
           "prompt": "Chỗ trống (7)"
         },
         {
-          "id": "0d7dfa3a-1ed3-497d-b84d-db7d39e9acd8",
+          "id": "73bc6f26-a036-4622-83b9-5dd1eeaa4867",
           "prompt": "Chỗ trống (8)"
         },
         {
-          "id": "d195d13d-e4e6-43fa-9c43-13a899c59e00",
+          "id": "7174cfdf-1825-4595-91a5-82fbdeae3f3e",
           "prompt": "Chỗ trống (9)"
         }
       ]
@@ -58,23 +58,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "02e35fc4-d6d2-4013-8796-5061a56ef781",
+          "id": "ab70ac28-4831-4407-b8ca-5b4b28d4724c",
           "prompt": "Câu nghe 1"
         },
         {
-          "id": "e9d4c241-ec95-4e8f-b337-c7092bf876e5",
+          "id": "4ec7af29-3158-43e7-a073-b0247b61a9c6",
           "prompt": "Câu nghe 2"
         },
         {
-          "id": "5bfd9c15-cd01-417d-98db-c8c29868cc2b",
+          "id": "68239370-fdd0-4e7b-88d9-3823c8c24d48",
           "prompt": "Câu nghe 3"
         },
         {
-          "id": "263b7751-695e-446f-a2fa-837e1dd720b4",
+          "id": "6ee891dc-3062-4d6c-a883-c36dcdd82b8a",
           "prompt": "Câu nghe 4"
         },
         {
-          "id": "747e8390-ff3b-4106-b1cd-3939625935c9",
+          "id": "b0b39081-277b-4856-8bf4-291c9aaf4649",
           "prompt": "Câu nghe 5"
         }
       ]
@@ -87,23 +87,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "b9638624-0dc6-4c40-983b-44f968dbabd6",
+          "id": "3e295d84-bc46-4586-8c7b-8584f2331d80",
           "prompt": "Chỗ trống (1)"
         },
         {
-          "id": "71f05b47-7bb3-4fac-8cbd-8b61bef85b2a",
+          "id": "3c877034-56c5-458d-bc62-ef0e18545c33",
           "prompt": "Chỗ trống (2)"
         },
         {
-          "id": "c893f00b-ac1b-4f7f-b3a4-a8efa33f04b5",
+          "id": "f3d4dcc2-5b63-42be-afcc-6a916fc56f2a",
           "prompt": "Chỗ trống (3)"
         },
         {
-          "id": "ada97c77-c4cb-46c3-8409-325aa8fdf822",
+          "id": "cbd16c1d-7fdd-4890-9a2e-72870c7d7a8f",
           "prompt": "Chỗ trống (4)"
         },
         {
-          "id": "d5d2bbf5-6941-4c0d-8af9-9c22949f817c",
+          "id": "08eacfa7-859e-4382-8bd1-171d5f5139b3",
           "prompt": "Chỗ trống (5)"
         }
       ]
@@ -116,23 +116,23 @@
       "audioPath": "assets/demo-audio/45/listening.mp3",
       "items": [
         {
-          "id": "2f63650a-a8df-4fd7-ba41-c45655d6e004",
+          "id": "caa7b80a-b2b5-4d28-8a9c-4614fb56808b",
           "prompt": "6. What cost can change a lot depending on where you buy it?"
         },
         {
-          "id": "f0b80fe7-8160-444e-817a-d9d4450dbd39",
+          "id": "6cac10cc-e9da-4264-9489-99a542ee5b8b",
           "prompt": "7. How is Campbelltown described?"
         },
         {
-          "id": "f2679649-0431-4867-b198-32d2715478ed",
+          "id": "4f12eb9d-fe6a-4b70-8e76-caa1f25e54bb",
           "prompt": "8. How do you have to get there with a campervan?"
         },
         {
-          "id": "50af532c-5a1f-4e99-9cfc-300d77798c6e",
+          "id": "c00431cc-41b6-4021-a7ee-1cf64b7dd765",
           "prompt": "9. What daily driving distance does she suggest not going over?"
         },
         {
-          "id": "0cbe6af6-c8c8-46e1-943d-4fce15ba15fe",
+          "id": "df920e3a-9424-48bc-b6f5-05f8f2385645",
           "prompt": "10. What can you rent to explore local areas?"
         }
       ]
@@ -144,63 +144,63 @@
       "context": "",
       "items": [
         {
-          "id": "73ff4e76-f03c-4914-ae0f-9c65deff07d8",
+          "id": "00c9b10f-ebbd-4e1d-a129-3704e2bd2b31",
           "prompt": "1. Complete the prepositional phrases as used in these press announcements."
         },
         {
-          "id": "9086a8cc-d8f0-417c-bb36-e44906aea93b",
+          "id": "2fd1d7c2-a34b-40ed-a874-21ff88c8396a",
           "prompt": "1"
         },
         {
-          "id": "24717fdd-dbf1-4b30-9ee0-b238c6d8467d",
+          "id": "e4d7d25b-fe8a-4752-a31a-1658a195a5a5",
           "prompt": "Sentence 3"
         },
         {
-          "id": "d976cd13-abf0-4d33-b493-3d49ee6ca13e",
+          "id": "c0270a21-9d57-40e9-8c18-b3a3c79b00c4",
           "prompt": "Sentence 4"
         },
         {
-          "id": "db807509-39a4-4bc4-a83f-408287861380",
+          "id": "7146b2ee-3a1d-4280-aa29-d3d20f9f7597",
           "prompt": "44595"
         },
         {
-          "id": "0e4e23fe-4a0b-4f62-b541-e3eebfc46262",
+          "id": "80032d0e-8fab-474c-9c63-cfaa2a4af84d",
           "prompt": "Sentence 6"
         },
         {
-          "id": "0dd0c96e-0aa2-4d43-95b2-e887f6f874e8",
+          "id": "cd49967f-8a46-4225-b8bf-08d8fc6e9a9f",
           "prompt": "Sentence 7"
         },
         {
-          "id": "6a4b84c4-c8d9-46f8-8f6a-8bcf69113225",
+          "id": "10117ac1-b552-4e2c-8238-b4bf2f4393c4",
           "prompt": "Sentence 8"
         },
         {
-          "id": "8070284e-40ae-42a5-a72a-7707ed9e8892",
+          "id": "1efbd7da-6760-472a-ad3f-4cd298643112",
           "prompt": "Sentence 9"
         },
         {
-          "id": "036d6041-0edd-429d-853a-bdc489db31c2",
+          "id": "2d106624-07b3-48e6-b075-9e64900e6048",
           "prompt": "Sentence 10"
         },
         {
-          "id": "8a516edc-e56b-4ad8-bbd2-129b051c320d",
+          "id": "e72e70bf-f54f-4094-8a37-2b8d30bce462",
           "prompt": "4"
         },
         {
-          "id": "e10fa740-7d24-41ee-967e-fba690664c6f",
+          "id": "70b3f598-1cf4-4249-876d-7302c7225fc5",
           "prompt": "Sentence 12"
         },
         {
-          "id": "6583c49c-8378-433a-95f5-c98570d30f88",
+          "id": "72b64bf0-3129-4519-8293-2156322c6837",
           "prompt": "Sentence 13"
         },
         {
-          "id": "31116e33-7f05-4637-8a1a-8b2ab2de97ec",
+          "id": "78e11cde-c369-43b5-87f5-6667b417bb1b",
           "prompt": "5"
         },
         {
-          "id": "d7c86f89-ebc5-4445-b782-817ebbff1f00",
+          "id": "d451847d-78e1-4f92-b6b4-5f8423048c61",
           "prompt": "Sentence 15"
         }
       ]
@@ -212,17 +212,17 @@
       "context": "",
       "items": [
         {
-          "id": "e040a689-6c98-4bbc-8243-685a39dbe29a",
+          "id": "5c74f1b6-7a0f-4b78-9e2b-810a478aa0f2",
           "prompt": "Question 1: What problems will the peer pressure among teenagers today cause? (name at least three)? (Note to use proper signposts)",
           "long": true
         },
         {
-          "id": "bdf84136-d249-4ad7-948c-92f51d4ffe61",
+          "id": "920c5f65-538d-41db-9152-709fb8242734",
           "prompt": "Question 2: What are the causes for the rise in youth crime these days? (name at least three, explain your answer briefly using proper conjunctions) – (Note to use proper signposts)",
           "long": true
         },
         {
-          "id": "c6b6692b-8fa8-41f8-86f1-d654b26e3465",
+          "id": "54e5a6ff-6603-4e80-84e4-df377b4c9951",
           "prompt": "Question 3:  Describe a movie that you’ve recently watched.",
           "long": true
         }

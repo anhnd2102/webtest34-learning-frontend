@@ -3,7 +3,7 @@
   "course": "34",
   "phase": 1,
   "testNumber": 2,
-  "sourceHash": "f94b031f73f5527cfd2eaf1639c4aa6ab3cee88d44ea67d30ffac2780e792171",
+  "sourceHash": "2a7a986b644993dc756ebda94b154cf45a929f45684021efc4f5ab8b00a39a3b",
   "durationMinutes": 90,
   "groups": [
     {
@@ -2772,127 +2772,127 @@
       "context": "",
       "items": [
         {
-          "id": "bec79192-2106-4191-98ff-3bfe16604279",
+          "id": "8611866f-682a-49b3-b336-55efdf15e358",
           "prompt": "1. I’m tired. I think I need to t_ _ _  _   b_ _ _ _",
           "image": "assets/34/test-2/pic-1.png"
         },
         {
-          "id": "462e4a27-977d-47fc-9b69-d81e514a5ca4",
+          "id": "b2622a5f-8b9d-466e-affa-4f13df50b446",
           "prompt": "2. B_ _ _ _ _ _ _ _ _ is a \npopular sport in my \nschool.",
           "image": "assets/34/test-2/pic-2.png"
         },
         {
-          "id": "24f4380e-f596-4d9a-905c-847361d714fa",
+          "id": "72622047-c377-43f1-b6a8-1e61c84c2db8",
           "prompt": "3.F_ _ _ m_ _ _ _ is not a popular type of music to the young.",
           "image": "assets/34/test-2/pic-3.png"
         },
         {
-          "id": "f969b677-b07e-4e01-aa1d-9bcd7fccfba0",
+          "id": "abcd3a63-485e-43c8-8fcd-acbb63b70ef0",
           "prompt": "4. Although I tried to  m_ _ _ d_ _ _ _ _ _ _ _ , I couldn’t finish my homework on time.",
           "image": "assets/34/test-2/pic-4.png"
         },
         {
-          "id": "d71c9847-5b1f-4df1-87bb-77074bd6cc95",
+          "id": "534db4b9-9eeb-476d-959f-12b28ff49054",
           "prompt": "5. When you finish your university, it means you are a fresh g_ _ _ _ _ _ _",
           "image": "assets/34/test-2/pic-5.png"
         },
         {
-          "id": "d0b05861-712b-4c6e-9272-98f75a37a3ab",
+          "id": "34055492-a507-44c7-b7e4-01864536cc74",
           "prompt": "6. I have never gone to a L_ _ _ c_ _ _ _ _ _ ,  where singers  perform songs in front of the audience.",
           "image": "assets/34/test-2/pic-6.png"
         },
         {
-          "id": "ab26a618-c476-4d72-a575-986483d55aec",
+          "id": "967e2463-d896-489a-b0a8-0b58689dd388",
           "prompt": "7. The s_ _ _ _ _ _ _ is warm, and the weather is so good.",
           "image": "assets/34/test-2/pic-7.png"
         },
         {
-          "id": "f978a84a-645e-45af-8019-56bd61b9ca9e",
+          "id": "b9ab61a7-6856-4f5e-9bd8-c046c915f99e",
           "prompt": "8. You have to f_ _ _ _ o_ studying for your exam.",
           "image": "assets/34/test-2/pic-8.png"
         },
         {
-          "id": "50baf729-abe0-4229-a208-8ee29678baaf",
+          "id": "4a2bad31-35c3-4398-bb6d-f07900b806c6",
           "prompt": "9. On s_ _ _ _ _ _ o_ _ _ _ _ _ _ _ , like Tet holiday, or mid-autumn festival, children usually have a lot of fun.",
           "image": "assets/34/test-2/pic-9.png"
         },
         {
-          "id": "38389c0c-285c-4d4a-ab0a-3db2147ceefe",
+          "id": "8054aa27-91d1-4797-ad4f-ec2e04051a0d",
           "prompt": "10. People in t_ _ l_ _ _ _ c_ _ _ _ are poor and they cannot afford a comfortable life.",
           "image": "assets/34/test-2/pic-10.png"
         },
         {
-          "id": "deb08ca7-7a55-4778-b501-bef31aff99bc",
+          "id": "752c6046-b9b9-4cb5-8317-2d6c31320201",
           "prompt": "11. I like to go sightseeing in n_ _ _ _ _ , because I want to see animals and plants.",
           "image": "assets/34/test-2/pic-11.png"
         },
         {
-          "id": "647480b4-8ff7-4b96-b9e3-aca97e5827cb",
+          "id": "cebb3ffa-7a6f-4b28-96ba-2d44c65141b1",
           "prompt": "12. T_ _ u_ _ _ _ _ _ _ _ _ are those who do not have a job.",
           "image": "assets/34/test-2/pic-12.png"
         },
         {
-          "id": "e8699dec-a8d0-47b3-bbb1-50addb0600db",
+          "id": "c78bfd6c-9104-498b-bebf-f06890b9b591",
           "prompt": "13. I often eat  f_ _ _ _ s_ _ _ _ _ _ because my house is near the sea.",
           "image": "assets/34/test-2/pic-13.png"
         },
         {
-          "id": "02df04b3-bc6d-46d4-9569-47fa83bf56c6",
+          "id": "e878e6f0-b25c-45d9-a2ac-00217636db27",
           "prompt": "14. I usually p_ _ _  _  f_ _ s_ _ _ _ when I study, because it helps me focus better,",
           "image": "assets/34/test-2/pic-14.png"
         },
         {
-          "id": "b4f4318e-c2f2-491a-beed-ca8753804498",
+          "id": "8c9539b7-56bd-46c7-b409-2d08673cc190",
           "prompt": "15. Nam often rides his m_ _ _ _ _ _ _ _ to work.",
           "image": "assets/34/test-2/pic-15.png"
         },
         {
-          "id": "b7fe42b1-eca9-4be5-922d-fb40f18a9cf7",
+          "id": "f2c0e1ae-985b-422d-ab6f-5780edbfca78",
           "prompt": "16. There is  a f_ _ _ _ _ _ _ m_ _ _ _  between Vietnam and Thailand tonight.",
           "image": "assets/34/test-2/pic-16.png"
         },
         {
-          "id": "bd5bb956-a4f2-4b54-a36e-2fc3fd4937d1",
+          "id": "4e7a2f4b-8a63-49f3-89a5-7d809d163e08",
           "prompt": "17. Nam is in last year of university, and he has to do his i_ _ _ _ _ _ _ _ _  at a company to graduate.",
           "image": "assets/34/test-2/pic-17.png"
         },
         {
-          "id": "3b4c9a72-5bd9-45c7-8ae3-6dbcda7f7007",
+          "id": "8a45925d-5866-4d29-bd98-303d11723dd5",
           "prompt": "18. Children should respect t_ _ e_ _ _ _ _ _",
           "image": "assets/34/test-2/pic-18.png"
         },
         {
-          "id": "a41d5851-108d-45b9-b807-f0622d602d47",
+          "id": "cb506506-4ef6-442f-aece-f33650cd1c59",
           "prompt": "19.My father is a b_ _ _-c_ _ _ _ _ w_ _ _ _ _ _ . Although he works hard, he earns little money.",
           "image": "assets/34/test-2/pic-19.png"
         },
         {
-          "id": "ed64d8a8-b625-47b0-9259-ebee5a24639c",
+          "id": "b66ca834-c5c8-4f84-a85e-20571b6ea543",
           "prompt": "20.You should t_ _ _ _ m_ _ _ _ _ _ regularly to become stronger.",
           "image": "assets/34/test-2/pic-20.png"
         },
         {
-          "id": "de3a73b7-6b08-46d6-9e2d-b65ad2534204",
+          "id": "3fc7d738-e370-4e75-9024-66ef14b93093",
           "prompt": "21. My w_ _ _ _ _ _ e_ _ _ _ _ _ _ _ _ _ is so good. My co-workers are nice, and my boss is friendly.",
           "image": "assets/34/test-2/pic-21.png"
         },
         {
-          "id": "5abbc47e-0621-40dc-9cdf-e07ed0dbaef6",
+          "id": "29da8110-06a5-45aa-8d27-134ce19de1c1",
           "prompt": "22. You cannot a_ _ _ _ _ a house without money.",
           "image": "assets/34/test-2/pic-22.png"
         },
         {
-          "id": "03e1aa69-2609-43f9-b1f7-53ba845e9829",
+          "id": "0e151a4c-e598-4324-8c75-54cea2193066",
           "prompt": "23.T_ _ _ _ _ _ _ _ are energetic, and they love outdoor activities.",
           "image": "assets/34/test-2/pic-23.png"
         },
         {
-          "id": "e3941a29-6b98-42f4-b261-14eef6af4da4",
+          "id": "671525cc-f0fc-4682-a314-acb9dff37e32",
           "prompt": "24.I used to do exercise a_ _ t_ _ t_ _ _ , but now, I don’t do it anymore because I’m very busy.",
           "image": "assets/34/test-2/pic-24.png"
         },
         {
-          "id": "f2b4bc4d-5be6-4d42-bed8-187d02cafb78",
+          "id": "c8a1c60a-8b56-4b0c-85ad-7244bdfb26c4",
           "prompt": "25. There is a  b_ _ _ _ near my house, and I often go there to swim.",
           "image": "assets/34/test-2/pic-25.png"
         }
@@ -2906,7 +2906,7 @@
       "audioPath": "assets/34/test-2/listening.mp3",
       "items": [
         {
-          "id": "7e72bc0f-ab9b-40d4-b251-8f618159d3c9",
+          "id": "171d31ee-44ed-4005-8b69-966f1d3b9499",
           "prompt": "Vị trí 1",
           "options": [
             "A",
@@ -2917,7 +2917,7 @@
           ]
         },
         {
-          "id": "c4065464-a629-484c-a4b5-d8aaf92038ef",
+          "id": "de8523f4-9d54-46a2-afcf-c792203bd758",
           "prompt": "Vị trí 2",
           "options": [
             "A",
@@ -2928,7 +2928,7 @@
           ]
         },
         {
-          "id": "099e01e3-c4d6-4dde-b852-e6621ddaedf2",
+          "id": "d8a0937d-f5e1-43a3-a1e8-ef932e2dec74",
           "prompt": "Vị trí 3",
           "options": [
             "A",
@@ -2939,7 +2939,7 @@
           ]
         },
         {
-          "id": "13f98269-1fc0-4db5-9744-96929d2541d2",
+          "id": "3469ab41-3653-41b5-be45-52e4abdf4ae7",
           "prompt": "Vị trí 4",
           "options": [
             "A",
@@ -2950,7 +2950,7 @@
           ]
         },
         {
-          "id": "aefba949-63dd-43ea-acf7-4c759e858298",
+          "id": "02171717-1f46-437e-9daf-5a7a1323c75e",
           "prompt": "Vị trí 5",
           "options": [
             "A",
@@ -2991,27 +2991,27 @@
       "audioPath": "assets/34/test-2/listening.mp3",
       "items": [
         {
-          "id": "31be4f58-ac6c-4f13-9d70-38e7ff74c9be",
+          "id": "a44a2dca-ed0e-438b-928a-1599a273a61a",
           "prompt": "Chỗ trống (1)",
           "maxWords": 1
         },
         {
-          "id": "da15fa38-83cb-4462-8322-e125be330968",
+          "id": "5d19cd4e-af5e-4096-9bf5-2d012b9e1550",
           "prompt": "Chỗ trống (2)",
           "maxWords": 1
         },
         {
-          "id": "468c73fb-3ac3-49fa-89f1-d50eeb66f02d",
+          "id": "25efa760-5412-4945-a5f0-47de09590df5",
           "prompt": "Chỗ trống (3)",
           "maxWords": 1
         },
         {
-          "id": "0123b45a-c478-4c51-a145-0491fe4213ac",
+          "id": "a3ac379e-f348-405f-bbac-60f14f84b258",
           "prompt": "Chỗ trống (4)",
           "maxWords": 1
         },
         {
-          "id": "888921b8-9a7f-45c7-a16d-5b7ba7c8bf7f",
+          "id": "ec1756ae-703e-4ec1-a192-bdad13b34565",
           "prompt": "Chỗ trống (5)",
           "maxWords": 1
         }
@@ -3025,7 +3025,7 @@
       "audioPath": "assets/34/test-2/listening.mp3",
       "items": [
         {
-          "id": "0f5cdbce-55dc-40ca-9708-df1c60abe35a",
+          "id": "8d476dad-081b-4226-8dcc-a0a14ffd3471",
           "prompt": "Vị trí 1",
           "options": [
             "A",
@@ -3036,7 +3036,7 @@
           ]
         },
         {
-          "id": "2b539c2f-809f-4cd0-b444-236c80521b4a",
+          "id": "6c9eaab7-b990-4355-89a2-09ccc00cf604",
           "prompt": "Vị trí 2",
           "options": [
             "A",
@@ -3047,7 +3047,7 @@
           ]
         },
         {
-          "id": "ad59d1f9-89ed-4ef2-879a-6309004385bf",
+          "id": "ac332135-1566-4abc-838a-5aa524051f2e",
           "prompt": "Vị trí 3",
           "options": [
             "A",
@@ -3058,7 +3058,7 @@
           ]
         },
         {
-          "id": "a08b73e8-dd3a-484a-b6e1-6365ac9db71b",
+          "id": "0370a7af-ecdf-4221-b199-9dc9dff18613",
           "prompt": "Vị trí 4",
           "options": [
             "A",
@@ -3069,7 +3069,7 @@
           ]
         },
         {
-          "id": "e8e5e747-f669-4e6e-94fe-493ae542ae2e",
+          "id": "b1749504-9932-4dca-89f4-59aa030e5417",
           "prompt": "Vị trí 5",
           "options": [
             "A",
@@ -3088,43 +3088,43 @@
       "context": "",
       "items": [
         {
-          "id": "0105e3d2-1ee8-41db-88d1-74ae33225272",
+          "id": "61c61aab-3e37-435e-9881-9df37d66f8b8",
           "prompt": "/ˈprɑːbəbli/"
         },
         {
-          "id": "73064e37-83d4-45e5-b011-cff161272088",
+          "id": "7d490122-b6e5-404d-b6c1-bc017934869d",
           "prompt": "/hɑːrt/"
         },
         {
-          "id": "91b998c9-fc82-4344-ac9b-0aa655bf96d4",
+          "id": "194d23b9-3722-4f32-a9d4-f521093d4c5b",
           "prompt": "/tʃæns/"
         },
         {
-          "id": "df3d5aa6-2689-439e-814c-5ed58f1864e1",
+          "id": "08d750b6-0313-4a49-8092-79daeb2e5882",
           "prompt": "/ˈsɪriəs/"
         },
         {
-          "id": "e98c531f-108b-4aad-93c0-b5a3cd9f4095",
+          "id": "e2fbc57c-4a38-47e9-b2fb-e9f0fd69c3fd",
           "prompt": "/ˈtʊrnəmənt/"
         },
         {
-          "id": "83d43e37-9a9a-4f97-a222-68ae370194bf",
+          "id": "b0c6c67f-43d3-4be1-8f66-6e63dbb67f7e",
           "prompt": "/ðerz/"
         },
         {
-          "id": "ae2030a8-c62a-47b5-943b-75f68dac003e",
+          "id": "3df6d8d9-2d20-4b4a-a99b-941fbb34487c",
           "prompt": "/ɪkˈsaɪtɪŋ/"
         },
         {
-          "id": "7cb61549-65af-4789-a066-b5a662016e91",
+          "id": "f6326230-6436-4531-8ac4-6375ca9732dd",
           "prompt": "/ɪnˈdʒɔɪ/"
         },
         {
-          "id": "e93c5937-1bd5-49dc-a30c-763c74333426",
+          "id": "6c4df53f-892f-42a0-b4ea-d8acb25aba8c",
           "prompt": "/əˈraʊnd/"
         },
         {
-          "id": "51aa3f9c-32ad-4cf1-8b75-37a38f1db89e",
+          "id": "357440ec-053c-47da-9299-696650d15562",
           "prompt": "/ˈenvələʊp/"
         }
       ]
@@ -3136,7 +3136,7 @@
       "context": "",
       "items": [
         {
-          "id": "5ac5ca7c-aa1f-4a67-9af7-ca47dcd442fe",
+          "id": "72f826b5-3fd4-45a8-9a5c-7b3a4e15cd82",
           "prompt": "companion",
           "options": [
             "/kəmˈpɑːnjən/",
@@ -3145,7 +3145,7 @@
           ]
         },
         {
-          "id": "c936caa5-f910-4171-9301-76b6af5d0c5d",
+          "id": "6b847b64-bb64-40fc-a8fd-c6fb2ba2830f",
           "prompt": "animal",
           "options": [
             "/ˈænɪml/",
@@ -3154,7 +3154,7 @@
           ]
         },
         {
-          "id": "66f848ae-9289-40a1-a063-3e8b23d14fbf",
+          "id": "106ceb9a-658e-4b95-af82-4dc971e6c680",
           "prompt": "guard",
           "options": [
             "/ɡɑːrd/",
@@ -3163,7 +3163,7 @@
           ]
         },
         {
-          "id": "ab6b46cd-a338-48bf-9761-ad14632abfd1",
+          "id": "afddb2e5-68a5-4e41-9715-79a35a2a54b3",
           "prompt": "We’re",
           "options": [
             "/wer/",
@@ -3172,7 +3172,7 @@
           ]
         },
         {
-          "id": "ebf8d7c9-c179-4b5f-bf0a-670c30de7f84",
+          "id": "7269ef59-e093-4b48-b27c-4173310b8808",
           "prompt": "where",
           "options": [
             "/we/",
@@ -3181,7 +3181,7 @@
           ]
         },
         {
-          "id": "72f1c3a3-5d1a-4490-b59b-afac5b98ca3d",
+          "id": "9c78c53b-ba02-45d4-bd71-8c893da724fb",
           "prompt": "Most",
           "options": [
             "/məʊst/",
@@ -3190,7 +3190,7 @@
           ]
         },
         {
-          "id": "73ba160d-8235-43d6-86d0-2b7e23b266e0",
+          "id": "1125ab3c-0c21-4226-a0c7-0404f5f2a769",
           "prompt": "nowadays",
           "options": [
             "/ˈnaʊədeɪs/",
@@ -3199,7 +3199,7 @@
           ]
         },
         {
-          "id": "3d9ece55-2c57-43e9-a46a-f91d23fd1a79",
+          "id": "d8802fdf-c4a4-40d5-9c76-f1c6af66acd6",
           "prompt": "while",
           "options": [
             "/wɪl/",
@@ -3208,7 +3208,7 @@
           ]
         },
         {
-          "id": "31158f74-0804-4b24-a685-fe8dc6d1e3b3",
+          "id": "c7e321a9-2db6-4beb-a3d9-ef1a9aa8095d",
           "prompt": "closer",
           "options": [
             "/klʊsər/",
@@ -3217,7 +3217,7 @@
           ]
         },
         {
-          "id": "98466c22-8ab3-4d73-a045-263f0645902a",
+          "id": "2a900ea5-5c67-471e-86ae-6c762e2499ae",
           "prompt": "about",
           "options": [
             "/eɪˈbaʊt/",
@@ -3234,42 +3234,42 @@
       "context": "",
       "items": [
         {
-          "id": "6c947876-49e8-41fa-be4e-68958f83f273",
+          "id": "fd346cdc-52e4-4ec0-9059-2d9e0680efee",
           "prompt": "1. Học về các vị lãnh đạo thế giới và các động vật có nguy cơ tuyệt chủng thật là chán. (It's...)",
           "long": true
         },
         {
-          "id": "aa3922b7-7f76-47d1-ae1b-83215fb24bb3",
+          "id": "28113a3b-4f57-4a30-a91b-c7d569568341",
           "prompt": "2. Nhiều trẻ em hỏi cha mẹ chúng rằng tại sao họ có thể dành thời gian vào việc tận hưởng các thói quen giống nhau hàng ngày được.",
           "long": true
         },
         {
-          "id": "6efd7ccf-bc82-4f34-ba33-198baaedef81",
+          "id": "20598fd1-6be7-42aa-ad03-c082e17d695c",
           "prompt": "3. (Đúng là/Sự thật là) ngày nay con người chúng ta không có nhiều mối quan hệ bạn bè/ tình bạn như trước đây.",
           "long": true
         },
         {
-          "id": "9efb6305-ce80-41a3-9599-0a1995536f97",
+          "id": "a69dddcb-65d9-454d-baf0-281c0f7257b1",
           "prompt": "4. Cũng có một chiếc máy tập chạy cho những người muốn luyện tập.",
           "long": true
         },
         {
-          "id": "5f6332dc-7d23-4add-abcf-ef54a42d097a",
+          "id": "c7f491cf-7d64-4c4c-965b-bc0a5ecab721",
           "prompt": "5. Hãy đến với khu tập/phòng tập của chúng tôi nơi có một bể bơi dành cho tất cả mọi người.",
           "long": true
         },
         {
-          "id": "571ae117-97bd-44c6-b339-62ca8d25f9f0",
+          "id": "22af3b66-507a-4ac7-9f2d-0a5b3923dd36",
           "prompt": "6. Học về trách nhiệm có thể cung cấp cho trẻ em nhiều lợi ích.",
           "long": true
         },
         {
-          "id": "29dc1f81-f18c-4236-9af9-cf4e9bb496e0",
+          "id": "96c3deb8-e918-4206-b8de-a92c17d5e62f",
           "prompt": "7. Những học sinh có động lực thường học nhanh hơn những học sinh không có động lực.\nHint: sử dụng cặp \"with\"&\"without\"",
           "long": true
         },
         {
-          "id": "bb688cfa-8fc6-4f07-b3c0-05e8aa9366c6",
+          "id": "c7d05404-58f3-4101-a0c5-858020c37662",
           "prompt": "8. Những người không có thú nuôi sẽ có ít các đức tính, chẳng hạn như tính trung thành, tính thân thiện và lòng trắc ẩn, hơn là những người sở hữu thú nuôi.",
           "long": true
         }
@@ -3282,17 +3282,17 @@
       "context": "",
       "items": [
         {
-          "id": "e9854808-4a2c-49a8-9aea-22cbe10526e6",
-          "prompt": "1.  How often do you work out? (6 points)\nSuggested Ideas (Vietnamese) – Chọn 1 trong 2 gợi ý sau đây:\n1. Change of habit\n2. Break down the keywords",
+          "id": "27dd6368-e808-46f0-a7fa-9705d8520491",
+          "prompt": "1.  How often do you work out? (6 points)\nSuggested vocab:",
           "long": true
         },
         {
-          "id": "ff5e884c-e47b-4db5-93b8-f932b8629881",
-          "prompt": "2. What is your favorite type of pet?\nSuggested Ideas (Vietnamese) – Chọn 1 trong 2 gợi ý sau đây:\n1. Dogs\n2. Cats",
+          "id": "bbf1d7a7-7446-4d09-ad35-678fe857c9fd",
+          "prompt": "2. What is your favorite type of pet?",
           "long": true
         },
         {
-          "id": "f8b587e1-134d-4230-be10-5b472621e7fe",
+          "id": "069bf46a-9810-4188-bb81-636e65266edd",
           "prompt": "3. Is collecting stamps popular in your country?\nSuggested Ideas\nSuggested Vocab:",
           "long": true
         }
