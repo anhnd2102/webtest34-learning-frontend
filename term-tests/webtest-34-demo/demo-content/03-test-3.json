@@ -1414,27 +1414,27 @@
       "items": [
         {
           "id": "5bb608e5-5778-4562-8108-d44604261304",
-          "prompt": "1. What’s your favorite food and drink? Why?\nGợi ý: Hints:; món ăn ưa thích của tôi là … + giải thích vì sao; đồ uống ưa thích của tôi là; thích vị của nó vì sao?",
+          "prompt": "1. What’s your favorite food and drink? Why?\nGợi ý: Món ăn ưa thích của tôi là … + giải thích vì sao; Đồ uống ưa thích của tôi là; Thích vị của nó vì sao?",
           "long": true
         },
         {
           "id": "e63bad36-a3e9-422b-8185-642f5314b9fc",
-          "prompt": "2. How often do you eat in a restaurant?\nGợi ý: Hints:; tần suất ăn ở nhà hàng như thế nào; ăn ở ngoài với ai; ăn món gì",
+          "prompt": "2. How often do you eat in a restaurant?\nGợi ý: Tần suất ăn ở nhà hàng như thế nào; Ăn ở ngoài với ai; Ăn món gì",
           "long": true
         },
         {
           "id": "4e7f22f2-a314-44f7-8425-7759650f7135",
-          "prompt": "3. Who did you often go shopping for clothes with?\nGợi ý: Hints:; Đã thường đi mua sắm với ai; Cả hai chúng tôi đều thích thời trang; nên (so) tôi rất thích đi mua sắm với anh ấy/cô ấy",
+          "prompt": "3. Who did you often go shopping for clothes with?\nGợi ý: Đã thường đi mua sắm với ai; Cả hai chúng tôi đều thích thời trang; Nên (so) tôi rất thích đi mua sắm với anh ấy/cô ấy",
           "long": true
         },
         {
           "id": "ab659b8f-c53b-4e44-8a8d-0a124722a2c4",
-          "prompt": "4. What clothes did you buy the last time you went to a shopping mall?\nGợi ý: Hints:; Đã mua……..(liệt kê các đồ quần áo đã mua); Chiếc áo/ quần rất thoải mái, dễ mặc, và không đắt tiền (yêu cầu nêu cả 3 thông tin); Rất phấn khích vì món đồ; Mặc nó hàng ngày và cả các dịp đặc biệt",
+          "prompt": "4. What clothes did you buy the last time you went to a shopping mall?\nGợi ý: Đã mua... (liệt kê các đồ quần áo đã mua); Chiếc áo/ quần rất thoải mái, dễ mặc, và không đắt tiền (yêu cầu nêu cả 3 thông tin); Rất phấn khích vì món đồ; Mặc nó hàng ngày và cả các dịp đặc biệt",
           "long": true
         },
         {
           "id": "63ac0415-9ff9-4660-9745-37d7d9e99964",
-          "prompt": "5. Did you like sports when you were a child?\nGợi ý: Hints:; Khi tôi còn nhỏ → thường chơi …; Nó đã giúp tôi + (nêu ra ít nhất 2 lợi ích của thể thao); Tôi đã thường xuyên xem các trận đấu và cổ vũ cho đội tôi yêu thích; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
+          "prompt": "5. Did you like sports when you were a child?\nGợi ý: Khi tôi còn nhỏ → thường chơi …; Nó đã giúp tôi + (nêu ra ít nhất 2 lợi ích của thể thao); Tôi đã thường xuyên xem các trận đấu và cổ vũ cho đội tôi yêu thích",
           "long": true
         }
       ]

@@ -1429,17 +1429,17 @@
       "items": [
         {
           "id": "a4e84f24-b0cb-480c-abee-200d8986aabf",
-          "prompt": "1. Tell me about your house\nGợi ý: Hints:; nhà to/nhỏ/hiện đại; có các phòng nào (phòng khách, phòng ngủ…); ở ngoại ô/trung tâm thành phố; nó thoải mái/ấm cúng/tiện lợi; đã sống ở đây được bao nhiêu lâu",
+          "prompt": "1. Tell me about your house\nGợi ý: Nhà to/nhỏ/hiện đại; có các phòng nào (phòng khách, phòng ngủ…); ở ngoại ô/trung tâm thành phố; nó thoải mái/ấm cúng/tiện lợi; đã sống ở đây được bao nhiêu lâu",
           "long": true
         },
         {
           "id": "add74ab3-f725-46e3-9127-1d0a050e322f",
-          "prompt": "2. Where do you often go on the weekend?\nGợi ý: đến rạp chiếu phim khi có phim mới; Chỉ tốn… phút để đến rạp phim ➔ đi xem phim một cách dễ dàng; thường đi vs …. nhưng thi thoảng đi vs ….; xem phim giúp tôi thế nào (ví dụ: thư giãn, vui vẻ, v.v.)",
+          "prompt": "2. Where do you often go on the weekend?\nGợi ý: Đến rạp chiếu phim khi có phim mới; Chỉ tốn… phút để đến rạp phim ➔ đi xem phim một cách dễ dàng; thường đi vs …. nhưng thi thoảng đi vs ….; xem phim giúp tôi thế nào (ví dụ: thư giãn, vui vẻ, v.v.)",
           "long": true
         },
         {
           "id": "68b56215-6587-4b2f-a612-1d97f57c7f32",
-          "prompt": "3. What is your favorite season?\nGợi ý: mùa yêu thích là mùa hè bởi vì thời tiết rất đẹp; tháng 6-7, thời tiết nhiều nắng; tháng 8-9, trời hay mưa to; nhiệt độ luôn luôn cao ➔ phải bật điều hòa cả ngày",
+          "prompt": "3. What is your favorite season?\nGợi ý: Mùa yêu thích là mùa hè bởi vì thời tiết rất đẹp; tháng 6-7, thời tiết nhiều nắng; tháng 8-9, trời hay mưa to; nhiệt độ luôn luôn cao ➔ phải bật điều hòa cả ngày",
           "long": true
         },
         {
@@ -1449,7 +1449,7 @@
         },
         {
           "id": "8ee9b720-e698-49a5-b943-70d6d8331fae",
-          "prompt": "5. Have you ever been abroad?\nGợi ý: tôi đã từng đến Thái Lan và nó rất đẹp; có nhiều hoạt động thú vị ở đây như …. (ví dụ: đi mua sắm, ngắm cảnh, đi bơi,chụp ảnh v.v.); có nhiều trải nghiệm khó quên  ở đó; Nhưng trời rất nắng khi tôi ở Thái năm ngoái/lúc đó ➔ không cảm thấy dễ chịu; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
+          "prompt": "5. Have you ever been abroad?\nGợi ý: Tôi đã từng đến Thái Lan và nó rất đẹp; có nhiều hoạt động thú vị ở đây như …. (ví dụ: đi mua sắm, ngắm cảnh, đi bơi, chụp ảnh v.v.); có nhiều trải nghiệm khó quên ở đó; Nhưng trời rất nắng khi tôi ở Thái năm ngoái/lúc đó ➔ không cảm thấy dễ chịu",
           "long": true
         }
       ]

@@ -303,7 +303,7 @@ export function groupBody(group) {
       const item = cluster[0];
       const prompt = item.prompt.replace(/^\s*\d+[.)]\s*/, '');
       const isChoiceGroup = group.id.includes('choice') || group.id.includes('matching') || group.id.includes('headings') || group.id.includes('info') || group.id.endsWith('-tf');
-      const single = (!item.options || !item.options.length) && /[_\.\u2026]{3,}/.test(prompt)
+      const single = !item.long && (!item.options || !item.options.length) && /[_\.\u2026]{3,}/.test(prompt)
         ? clozeSegments(prompt, [item.id], false)
         : null;
       if (single) return `<div class="demo-cloze demo-sentence"><span class="qnum">${questionNumber}</span> ${clozeMarkup(single, [item], false)}</div>`;

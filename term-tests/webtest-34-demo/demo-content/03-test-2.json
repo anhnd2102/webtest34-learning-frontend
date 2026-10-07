@@ -1439,27 +1439,27 @@
       "items": [
         {
           "id": "c9abfaca-f298-4cec-8687-6b952068e6dc",
-          "prompt": "1. What are you doing at the moment?\nGợi ý: Hints:; bây giờ bạn đang làm gì (ăn tối/ăn trưa…); thường làm việc này với ai vào lúc nào (với bạn bè/gia đình vào thứ …); tôi thấy nó như thế nào (thú vị/nhàm chán); At the moment, I am studying English and doing this exercise on my computer. I usually study with my classmates in the evening. I think learning English is very interesting because it helps me communicate with many people.",
+          "prompt": "1. What are you doing at the moment?\nGợi ý: Bây giờ bạn đang làm gì (ăn tối/ăn trưa…); thường làm việc này với ai vào lúc nào (với bạn bè/gia đình vào thứ …); tôi thấy nó như thế nào (thú vị/nhàm chán)\n(Ví dụ tham khảo: At the moment, I am studying English and doing this exercise on my computer. I usually study with my classmates in the evening. I think learning English is very interesting because it helps me communicate with many people.)",
           "long": true
         },
         {
           "id": "cf69e0f3-8fbb-46ef-8b7f-a92fbd453b14",
-          "prompt": "2. What do you often do after school?\nGợi ý: Hints:; kể tên việc bạn làm (làm việc bán thời gian/chơi thể thao…); bạn làm việc này trong bao lâu; việc này giúp bạn như thế nào (kiếm tiền/tăng cường sức khỏe…); After school, I often work a part-time job and sometimes play badminton with my friends. I usually spend about four hours working every day. It helps me earn extra money and improve my communication skills.",
+          "prompt": "2. What do you often do after school?\nGợi ý: Kể tên việc bạn làm (làm việc bán thời gian/chơi thể thao…); bạn làm việc này trong bao lâu; việc này giúp bạn như thế nào (kiếm tiền/tăng cường sức khỏe…)\n(Ví dụ tham khảo: After school, I often work a part-time job and sometimes play badminton with my friends. I usually spend about four hours working every day. It helps me earn extra money and improve my communication skills.)",
           "long": true
         },
         {
           "id": "c79ee3a0-bea3-4dd2-ac56-c59f8ac9a318",
-          "prompt": "3. How long does it take you to go to school?\nGợi ý: Hints:; mất bao nhiêu thời gian; phải học ở trường bao lâu (2,3 lần 1 tuần); thường đi bằng phương tiện gì, hôm nay đi bằng phương tiện gì; Lý do đi phương tiện đó; It takes me about twenty minutes to go to school by motorbike. I have classes three times a week. Today, I go to school by motorbike because it is fast, convenient, and saves a lot of tim",
+          "prompt": "3. How long does it take you to go to school?\nGợi ý: Mất bao nhiêu thời gian; phải học ở trường bao lâu (2,3 lần 1 tuần); thường đi bằng phương tiện gì, hôm nay đi bằng phương tiện gì; Lý do đi phương tiện đó\n(Ví dụ tham khảo: It takes me about twenty minutes to go to school by motorbike. I have classes three times a week. Today, I go to school by motorbike because it is fast, convenient, and saves a lot of time.)",
           "long": true
         },
         {
           "id": "2facdd82-c8c1-40b6-85de-e6bfb0080b61",
-          "prompt": "4. What is your dream job?\nGợi ý: Hints:; tên công việc yêu thích (doanh nhân/kế toán…); lý do 1 (kiếm nhiều tiền); lý do 2 (cải thiện kỹ năng); Nên làm gì để có công việc đó?; My dream job is to become a business owner. I want this job because I can earn a good income and improve my management skills. To achieve my dream, I need to study hard, learn new skills, and gain practical experience.",
+          "prompt": "4. What is your dream job?\nGợi ý: Tên công việc yêu thích (doanh nhân/kế toán…); lý do 1 (kiếm nhiều tiền); lý do 2 (cải thiện kỹ năng); Nên làm gì để có công việc đó?\n(Ví dụ tham khảo: My dream job is to become a business owner. I want this job because I can earn a good income and improve my management skills. To achieve my dream, I need to study hard, learn new skills, and gain practical experience.)",
           "long": true
         },
         {
           "id": "69dab150-732c-47dd-88ff-2fd7e0fa4214",
-          "prompt": "5. Which jobs you don’t like to do?\nGợi ý: Hints:; tên công việc không muốn làm; nếu ít nhất 2 lý do không muốn làm các công việc này; chuẩn bị nhiều tài liệu; lương không cao; không thể thăng chức; I don't want to become an office clerk. I don't like this job because I have to prepare a lot of documents, the salary is not very high, and there are not many opportunities for promotion. I prefer a more creative job.; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab; Structure; Grammar/ Vocab",
+          "prompt": "5. Which jobs you don’t like to do?\nGợi ý: Tên công việc không muốn làm; nêu ít nhất 2 lý do không muốn làm các công việc này; chuẩn bị nhiều tài liệu; lương không cao; không thể thăng chức\n(Ví dụ tham khảo: I don't want to become an office clerk. I don't like this job because I have to prepare a lot of documents, the salary is not very high, and there are not many opportunities for promotion. I prefer a more creative job.)",
           "long": true
         }
       ]
