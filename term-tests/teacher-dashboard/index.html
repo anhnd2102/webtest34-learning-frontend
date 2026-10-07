@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IZONE · Teacher Dashboard</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">IZONE LEARNING PLATFORM</p>
+      <h1>Teacher Dashboard</h1>
+      <p>Chọn lớp và bài được giao trong môi trường nội bộ hoặc staging.</p>
+    </header>
+
+    <form id="identity-form" class="panel">
+      <h2>Danh tính kiểm thử</h2>
+      <p class="warning">Fixture chỉ dành cho kiểm thử. Không sử dụng với dữ liệu học viên thật.</p>
+      <label>API base URL <input name="apiBase" type="url" value="http://localhost:8788" required></label>
+      <label>Email fixture <input name="actorId" type="email" value="admin@izone.test" required></label>
+      <label>Vai trò
+        <select name="role"><option value="admin">Admin</option><option value="lead">Lead khối</option><option value="teacher">Giáo viên</option></select>
+      </label>
+      <label>Phạm vi <input name="scope" placeholder="Lead: 34 · Giáo viên: 101,202"></label>
+      <button type="submit">Tải lớp được phép</button>
+    </form>
+
+    <section class="panel">
+      <label>Chọn lớp <select id="class-select"><option value="">Chọn lớp</option></select></label>
+      <p id="status" aria-live="polite">Chưa tải dữ liệu.</p>
+    </section>
+    <section id="assignments" class="assignment-grid" aria-label="Bài được giao"></section>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
