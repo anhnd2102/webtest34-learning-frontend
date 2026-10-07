@@ -15,15 +15,8 @@ export function assignmentUrl(input, state) {
   return url;
 }
 
-export function fixtureHeaders({ actorId, role, scope = '' }) {
-  const headers = {
-    'X-Teacher-Fixture-Id': actorId.trim(),
-    'X-Teacher-Fixture-Role': role
-  };
-  const normalizedScope = scope.split(',').map(value => value.trim()).filter(Boolean).join(',');
-  if (role === 'lead' && normalizedScope) headers['X-Teacher-Fixture-Course-Codes'] = normalizedScope.toUpperCase();
-  if (role === 'teacher' && normalizedScope) headers['X-Teacher-Fixture-Class-Ids'] = normalizedScope;
-  return headers;
+export function fixtureHeaders({ actorId }) {
+  return { 'X-Teacher-Fixture-Id': actorId.trim() };
 }
 
 export function formatAssignmentWindow(opensAt, closesAt, locale = 'vi-VN', timeZone = 'Asia/Ho_Chi_Minh') {
@@ -31,7 +24,7 @@ export function formatAssignmentWindow(opensAt, closesAt, locale = 'vi-VN', time
   const format = value => value ? new Intl.DateTimeFormat(locale, {
     day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone
   }).format(new Date(value)) : 'Không giới hạn';
-  return `${format(opensAt)} → ${format(closesAt)}`;
+  return `${format(opensAt)} → ${format(closesAt)} (${timeZone})`;
 }
 
 async function startDashboard() {
@@ -41,11 +34,7 @@ async function startDashboard() {
   const status = document.querySelector('#status');
   const state = readDashboardState(location.href);
 
-  const identity = () => ({
-    actorId: form.elements.actorId.value,
-    role: form.elements.role.value,
-    scope: form.elements.scope.value
-  });
+  const identity = () => ({ actorId: form.elements.actorId.value });
   const apiBase = () => form.elements.apiBase.value.replace(/\/$/, '');
   const request = async path => {
     const response = await fetch(`${apiBase()}${path}`, { headers: fixtureHeaders(identity()) });

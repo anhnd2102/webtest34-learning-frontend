@@ -19,10 +19,7 @@
       <p class="warning">Fixture chỉ dành cho kiểm thử. Không sử dụng với dữ liệu học viên thật.</p>
       <label>API base URL <input name="apiBase" type="url" value="http://localhost:8788" required></label>
       <label>Email fixture <input name="actorId" type="email" value="admin@izone.test" required></label>
-      <label>Vai trò
-        <select name="role"><option value="admin">Admin</option><option value="lead">Lead khối</option><option value="teacher">Giáo viên</option></select>
-      </label>
-      <label>Phạm vi <input name="scope" placeholder="Lead: 34 · Giáo viên: 101,202"></label>
+      <p>Vai trò và phạm vi lớp/khối được cấu hình ở backend; trình duyệt không thể tự khai báo quyền.</p>
       <button type="submit">Tải lớp được phép</button>
     </form>
 
