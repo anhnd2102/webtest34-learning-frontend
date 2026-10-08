@@ -56,3 +56,17 @@ riêng; không báo đã xác minh nếu chưa thực sự smoke test boundary �
   `../docs/WEBTEST34_CONTENT_DRIFT.md`, không sửa JSON result để che lỗi.
 - Giữ thay đổi trong workspace này; không sửa `izone-ai-team-pages/` hoặc backend legacy
   chỉ để làm test mới chạy.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in this repository's GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The default five-role triage label vocabulary is used. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Domain documentation uses the single-context layout. See `docs/agents/domain.md`.
