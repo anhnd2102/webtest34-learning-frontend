@@ -10,7 +10,10 @@ import {
   resultStatusLabel,
   attemptStatusLabel,
   verdictLabel,
-  readDashboardState
+  readDashboardState,
+  manualGradingDraftPath,
+  manualGradingCompletePath,
+  validateManualGradingScores
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('dashboard URL preserves class and assignment selection', () => {
@@ -164,5 +167,56 @@ test('dashboard URL state management retains attemptId across navigation', () =>
   const parsed = readDashboardState(url);
   assert.equal(parsed.attemptId, '33333333-3333-4333-8333-333333333333');
 });
+
+test('manualGradingDraftPath and manualGradingCompletePath build canonical endpoints', () => {
+  assert.equal(
+    manualGradingDraftPath('101', '11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333'),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/attempts/33333333-3333-4333-8333-333333333333/manual-grading/draft'
+  );
+  assert.equal(
+    manualGradingCompletePath('101', '11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333'),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/attempts/33333333-3333-4333-8333-333333333333/manual-grading/complete'
+  );
+});
+
+test('teacher dashboard index.html provides manual grading controls and conflict alert container', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="save-draft-btn"/);
+  assert.match(html, /id="complete-grading-btn"/);
+  assert.match(html, /id="draft-status-msg"/);
+  assert.match(html, /id="conflict-alert"/);
+});
+
+test('validateManualGradingScores checks missing review scores and out-of-range scores', () => {
+  const items = [
+    { itemVersionId: 'item-1', needsReview: true, canGrade: true, maxScore: 3 },
+    { itemVersionId: 'item-2', needsReview: false, canGrade: false, maxScore: 2 }
+  ];
+
+  // Missing score for review item
+  const emptyScores = {};
+  const resMissing = validateManualGradingScores(items, emptyScores);
+  assert.equal(resMissing.valid, false);
+  assert.match(resMissing.message, /còn câu cần duyệt/i);
+
+  // Score exceeds maxScore
+  const overScores = { 'item-1': 4 };
+  const resOver = validateManualGradingScores(items, overScores);
+  assert.equal(resOver.valid, false);
+  assert.match(resOver.message, /không hợp lệ/i);
+
+  // Negative score
+  const negScores = { 'item-1': -1 };
+  const resNeg = validateManualGradingScores(items, negScores);
+  assert.equal(resNeg.valid, false);
+
+  // Valid score
+  const validScores = { 'item-1': 2.5 };
+  const resValid = validateManualGradingScores(items, validScores);
+  assert.equal(resValid.valid, true);
+  assert.equal(resValid.message, '');
+});
+
 
 

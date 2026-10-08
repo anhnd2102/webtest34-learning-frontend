@@ -61,6 +61,32 @@ export function attemptDetailPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}`;
 }
 
+export function manualGradingDraftPath(classId, assignmentId, attemptId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}/manual-grading/draft`;
+}
+
+export function manualGradingCompletePath(classId, assignmentId, attemptId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}/manual-grading/complete`;
+}
+
+export function validateManualGradingScores(items, scores) {
+  for (const item of items) {
+    if (item.canGrade) {
+      const val = scores[item.itemVersionId];
+      if (item.needsReview && (val === undefined || val === null || val === '')) {
+        return { valid: false, message: 'Còn câu cần duyệt chưa được chấm.' };
+      }
+      if (val !== undefined && val !== null && val !== '') {
+        const num = Number(val);
+        if (!Number.isFinite(num) || num < 0 || num > item.maxScore) {
+          return { valid: false, message: `Điểm câu ${item.position} không hợp lệ (0 - ${item.maxScore}).` };
+        }
+      }
+    }
+  }
+  return { valid: true, message: '' };
+}
+
 export function formatDashboardScore(score) {
   if (!score) return '—';
   if (score.status === 'pending') return 'Chờ chấm';
@@ -144,6 +170,13 @@ async function startDashboard() {
   const detailItems = document.querySelector('#detail-items');
   const detailAttemptHistory = document.querySelector('#detail-attempt-history');
   const detailGradingHistory = document.querySelector('#detail-grading-history');
+  const saveDraftBtn = document.querySelector('#save-draft-btn');
+  const completeGradingBtn = document.querySelector('#complete-grading-btn');
+  const draftStatusMsg = document.querySelector('#draft-status-msg');
+  const conflictAlert = document.querySelector('#conflict-alert');
+  const gradingActionsBar = document.querySelector('#grading-actions-bar');
+
+  let currentAttemptDetail = null;
 
   const state = readDashboardState(location.href);
 
@@ -373,6 +406,30 @@ async function startDashboard() {
       }
     }
 
+    currentAttemptDetail = payload;
+    if (conflictAlert) {
+      conflictAlert.hidden = true;
+      conflictAlert.replaceChildren();
+    }
+
+    if (draftStatusMsg) {
+      if (payload.manualGrading?.status === 'completed') {
+        draftStatusMsg.textContent = 'Bài làm đã hoàn tất chấm điểm.';
+        if (saveDraftBtn) saveDraftBtn.disabled = true;
+        if (completeGradingBtn) completeGradingBtn.disabled = true;
+      } else if (payload.manualGrading?.revision > 0) {
+        draftStatusMsg.textContent = `Bản nháp phiên bản ${payload.manualGrading.revision} (lưu lúc ${payload.manualGrading.updatedAt ? formatAssignmentWindow(payload.manualGrading.updatedAt, null).split(' → ')[0] : '—'})`;
+        if (saveDraftBtn) saveDraftBtn.disabled = false;
+        if (completeGradingBtn) completeGradingBtn.disabled = false;
+      } else {
+        draftStatusMsg.textContent = 'Chưa có bản nháp nào được lưu.';
+        if (saveDraftBtn) saveDraftBtn.disabled = false;
+        if (completeGradingBtn) completeGradingBtn.disabled = false;
+      }
+    }
+
+    if (gradingActionsBar) gradingActionsBar.hidden = false;
+
     if (detailItems) {
       detailItems.replaceChildren();
       for (const item of payload.items) {
@@ -460,8 +517,88 @@ async function startDashboard() {
           card.append(fbBox);
         }
 
+        if (item.canGrade) {
+          const gradingPanel = document.createElement('div');
+          gradingPanel.className = `grading-input-panel${item.needsReview ? ' review-needed' : ''}`;
+          const currentScoreVal = item.draftScore !== null && item.draftScore !== undefined
+            ? item.draftScore
+            : (item.manualReview ? item.scoreEarned : '');
+          const currentFeedbackVal = typeof item.draftFeedback === 'string'
+            ? item.draftFeedback
+            : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
+
+          gradingPanel.innerHTML = `
+            <div class="grading-panel-header">
+              <span>Chấm điểm giảng viên</span>
+              ${item.needsReview ? '<span class="q-review-badge">Cần duyệt</span>' : ''}
+            </div>
+            <div class="grading-score-row">
+              <label style="display:flex; align-items:center; gap:8px;">
+                <span>Điểm:</span>
+                <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal}" placeholder="0 - ${item.maxScore}">
+                <span>/ ${item.maxScore} điểm</span>
+              </label>
+            </div>
+            <div class="grading-feedback-row">
+              <textarea class="grade-feedback-input" data-item-id="${item.itemVersionId}" placeholder="Nhận xét / ghi chú chấm...">${currentFeedbackVal}</textarea>
+            </div>
+          `;
+          card.append(gradingPanel);
+        } else {
+          const autoHint = document.createElement('div');
+          autoHint.className = 'readonly-hint';
+          autoHint.innerHTML = '<span class="q-automated-badge">Điểm tự động — không thể sửa</span>';
+          card.append(autoHint);
+        }
+
         detailItems.append(card);
       }
+
+      // Attach auto-save listener on inputs with debounce
+      const scoreInputs = detailItems.querySelectorAll('.grade-score-input');
+      const feedbackInputs = detailItems.querySelectorAll('.grade-feedback-input');
+      [...scoreInputs, ...feedbackInputs].forEach(inp => {
+        inp.addEventListener('input', () => {
+          clearTimeout(autoSaveTimeout);
+          autoSaveTimeout = setTimeout(() => {
+            saveManualGradingDraft(true).catch(() => {});
+          }, 1500);
+        });
+      });
+    }
+
+    if (payload.manualGradingHistory && payload.manualGradingHistory.length > 0 && detailGradingHistory) {
+      const mgHeader = document.createElement('h4');
+      mgHeader.textContent = 'Lịch sử chấm của giảng viên';
+      mgHeader.style.margin = '16px 0 6px';
+      const mgTable = document.createElement('table');
+      mgTable.className = 'mini-table';
+      mgTable.innerHTML = `
+        <thead>
+          <tr>
+            <th>Hành động</th>
+            <th>Người thực hiện</th>
+            <th>Phiên bản</th>
+            <th>Thời gian</th>
+            <th>Ghi chú</th>
+          </tr>
+        </thead>
+      `;
+      const mgBody = document.createElement('tbody');
+      for (const log of payload.manualGradingHistory) {
+        const row = document.createElement('tr');
+        const actionLabel = log.action === 'complete' ? 'Hoàn tất chấm' : 'Lưu nháp';
+        row.innerHTML = `
+          <td><span class="result-status ${log.action === 'complete' ? 'complete' : 'grading'}">${actionLabel}</span></td>
+          <td>${log.actorEmail || '—'}</td>
+          <td>v${log.revision}</td>
+          <td>${log.createdAt ? formatAssignmentWindow(log.createdAt, null).split(' → ')[0] : '—'}</td>
+          <td>${log.note || '—'}</td>
+        `;
+        mgBody.append(row);
+      }
+      mgTable.append(mgBody);
+      detailGradingHistory.append(mgHeader, mgTable);
     }
 
     if (results) results.hidden = true;
@@ -626,12 +763,175 @@ async function startDashboard() {
     });
   }
 
+  let autoSaveTimeout = null;
+
+  function showConflictAlert(msg) {
+    if (!conflictAlert) return;
+    conflictAlert.replaceChildren();
+    const span = document.createElement('span');
+    span.textContent = `⚠️ ${msg}`;
+    const reloadBtn = document.createElement('button');
+    reloadBtn.type = 'button';
+    reloadBtn.className = 'btn-secondary';
+    reloadBtn.textContent = 'Tải lại bài làm';
+    reloadBtn.addEventListener('click', () => {
+      loadAttemptDetail(state.classId, state.assignmentId, state.attemptId).catch(err => {
+        status.textContent = err.message;
+      });
+    });
+    conflictAlert.append(span, reloadBtn);
+    conflictAlert.hidden = false;
+  }
+
+  async function saveManualGradingDraft(silent = false) {
+    if (!currentAttemptDetail) return;
+    const itemsToSubmit = [];
+    const scoreInputs = detailItems.querySelectorAll('.grade-score-input');
+    const feedbackInputs = detailItems.querySelectorAll('.grade-feedback-input');
+    const feedbackMap = new Map();
+    feedbackInputs.forEach(input => {
+      feedbackMap.set(input.dataset.itemId, input.value.trim());
+    });
+
+    const scoresMap = {};
+    scoreInputs.forEach(input => {
+      const val = input.value.trim();
+      if (val !== '') {
+        const num = Number(val);
+        scoresMap[input.dataset.itemId] = num;
+        itemsToSubmit.push({
+          itemVersionId: input.dataset.itemId,
+          scoreEarned: num,
+          feedback: feedbackMap.get(input.dataset.itemId) || null
+        });
+      }
+    });
+
+    for (const itm of currentAttemptDetail.items) {
+      if (scoresMap[itm.itemVersionId] !== undefined) {
+        const num = scoresMap[itm.itemVersionId];
+        if (!Number.isFinite(num) || num < 0 || num > itm.maxScore) {
+          if (!silent && status) status.textContent = `Điểm câu ${itm.position} không hợp lệ (0 - ${itm.maxScore}).`;
+          return;
+        }
+      }
+    }
+
+    if (draftStatusMsg) draftStatusMsg.textContent = 'Đang lưu nháp...';
+    try {
+      const response = await fetch(`${apiBase()}${manualGradingDraftPath(state.classId, state.assignmentId, state.attemptId)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...fixtureHeaders(identity())
+        },
+        body: JSON.stringify({
+          baseRevision: currentAttemptDetail.manualGrading?.revision ?? 0,
+          items: itemsToSubmit,
+          note: 'Lưu nháp từ Dashboard'
+        })
+      });
+      const payload = await response.json();
+      if (response.status === 409) {
+        showConflictAlert(payload.message || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(payload.message || 'Không thể lưu nháp.');
+      }
+      currentAttemptDetail.manualGrading.revision = payload.revision;
+      currentAttemptDetail.manualGrading.status = 'draft';
+      if (draftStatusMsg) {
+        draftStatusMsg.textContent = `Đã lưu nháp lúc ${formatCurrentTime()} (phiên bản ${payload.revision})`;
+      }
+    } catch (err) {
+      if (draftStatusMsg) draftStatusMsg.textContent = `Lỗi lưu nháp: ${err.message}`;
+    }
+  }
+
+  async function completeManualGrading() {
+    if (!currentAttemptDetail) return;
+    const itemsToSubmit = [];
+    const scoreInputs = detailItems.querySelectorAll('.grade-score-input');
+    const feedbackInputs = detailItems.querySelectorAll('.grade-feedback-input');
+    const feedbackMap = new Map();
+    feedbackInputs.forEach(input => {
+      feedbackMap.set(input.dataset.itemId, input.value.trim());
+    });
+
+    const scoresMap = {};
+    scoreInputs.forEach(input => {
+      const val = input.value.trim();
+      if (val !== '') {
+        const num = Number(val);
+        scoresMap[input.dataset.itemId] = num;
+        itemsToSubmit.push({
+          itemVersionId: input.dataset.itemId,
+          scoreEarned: num,
+          feedback: feedbackMap.get(input.dataset.itemId) || null
+        });
+      }
+    });
+
+    const validation = validateManualGradingScores(currentAttemptDetail.items, scoresMap);
+    if (!validation.valid) {
+      alert(validation.message);
+      if (status) status.textContent = validation.message;
+      return;
+    }
+
+    if (draftStatusMsg) draftStatusMsg.textContent = 'Đang hoàn tất chấm...';
+    try {
+      const response = await fetch(`${apiBase()}${manualGradingCompletePath(state.classId, state.assignmentId, state.attemptId)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...fixtureHeaders(identity())
+        },
+        body: JSON.stringify({
+          baseRevision: currentAttemptDetail.manualGrading?.revision ?? 0,
+          items: itemsToSubmit,
+          note: 'Xác nhận hoàn tất chấm'
+        })
+      });
+      const payload = await response.json();
+      if (response.status === 409) {
+        showConflictAlert(payload.message || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(payload.message || 'Không thể hoàn tất chấm.');
+      }
+      alert('Đã hoàn tất chấm bài thành công!');
+      await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);
+    } catch (err) {
+      if (draftStatusMsg) draftStatusMsg.textContent = `Lỗi: ${err.message}`;
+    }
+  }
+
+  if (saveDraftBtn) {
+    saveDraftBtn.addEventListener('click', () => {
+      saveManualGradingDraft(false).catch(err => {
+        if (status) status.textContent = err.message;
+      });
+    });
+  }
+
+  if (completeGradingBtn) {
+    completeGradingBtn.addEventListener('click', () => {
+      completeManualGrading().catch(err => {
+        if (status) status.textContent = err.message;
+      });
+    });
+  }
+
   if (closeAttemptDetailBtn) {
     closeAttemptDetailBtn.addEventListener('click', () => {
       if (attemptDetail) attemptDetail.hidden = true;
       if (results) results.hidden = false;
       delete state.attemptId;
       setUrl();
+      loadResults(state.classId, state.assignmentId).catch(() => {});
     });
   }
 

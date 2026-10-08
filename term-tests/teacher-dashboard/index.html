@@ -103,6 +103,8 @@
     </section>
 
     <section id="attempt-detail" class="panel" hidden aria-label="Chi tiết bài làm">
+      <div id="conflict-alert" class="conflict-alert" hidden role="alert" aria-live="assertive"></div>
+
       <div class="detail-header">
         <button id="close-attempt-detail-btn" type="button" class="btn-secondary">← Quay lại danh sách</button>
         <div>
@@ -129,6 +131,16 @@
       <div class="detail-section">
         <h3>Nội dung bài làm và kết quả câu hỏi</h3>
         <div id="detail-items" class="items-list"></div>
+      </div>
+
+      <div id="grading-actions-bar" class="grading-actions-bar">
+        <div class="grading-status-wrap">
+          <span id="draft-status-msg" class="draft-status-msg" aria-live="polite"></span>
+        </div>
+        <div class="grading-buttons">
+          <button id="save-draft-btn" type="button" class="btn-secondary">Lưu nháp</button>
+          <button id="complete-grading-btn" type="button" class="btn-primary">Hoàn tất chấm</button>
+        </div>
       </div>
     </section>
   </main>
