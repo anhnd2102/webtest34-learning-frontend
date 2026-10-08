@@ -51,6 +51,55 @@ test('result view requests the selected assignment and labels roster statuses', 
   assert.equal(resultStatusLabel('complete'), 'Hoàn tất');
 });
 
+test('assignmentResultsPath serializes search, filter, sort, and pagination query options', () => {
+  const path = assignmentResultsPath('101', '11111111-1111-4111-8111-111111111111', {
+    q: 'nguyễn',
+    status: 'review_required',
+    minScore: '50',
+    maxScore: '80',
+    skill: 'reading',
+    sortBy: 'score',
+    sortDir: 'desc',
+    page: 2
+  });
+  const url = new URL(`http://localhost${path}`);
+  assert.equal(url.pathname, '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/results');
+  assert.equal(url.searchParams.get('q'), 'nguyễn');
+  assert.equal(url.searchParams.get('status'), 'review_required');
+  assert.equal(url.searchParams.get('minScore'), '50');
+  assert.equal(url.searchParams.get('maxScore'), '80');
+  assert.equal(url.searchParams.get('skill'), 'reading');
+  assert.equal(url.searchParams.get('sortBy'), 'score');
+  assert.equal(url.searchParams.get('sortDir'), 'desc');
+  assert.equal(url.searchParams.get('page'), '2');
+});
+
+test('dashboard URL state management retains search, filter, sort, and pagination across reload', () => {
+  const initial = assignmentUrl('https://example.test/term-tests/teacher-dashboard/', {
+    classId: '101',
+    assignmentId: '11111111-1111-4111-8111-111111111111',
+    q: 'an',
+    status: 'complete',
+    minScore: '60',
+    maxScore: '100',
+    sortBy: 'name',
+    sortDir: 'asc',
+    page: 3
+  });
+  const parsed = readDashboardState(initial);
+  assert.deepEqual(parsed, {
+    classId: '101',
+    assignmentId: '11111111-1111-4111-8111-111111111111',
+    q: 'an',
+    status: 'complete',
+    minScore: '60',
+    maxScore: '100',
+    sortBy: 'name',
+    sortDir: 'asc',
+    page: 3
+  });
+});
+
 test('teacher dashboard index.html provides required controls and result containers', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
@@ -60,5 +109,16 @@ test('teacher dashboard index.html provides required controls and result contain
   assert.match(html, /id="status"/);
   assert.match(html, /id="results"/);
   assert.match(html, /id="results-content"/);
+  assert.match(html, /id="search-input"/);
+  assert.match(html, /id="status-filter"/);
+  assert.match(html, /id="min-score-input"/);
+  assert.match(html, /id="max-score-input"/);
+  assert.match(html, /id="sort-by-select"/);
+  assert.match(html, /id="sort-dir-select"/);
+  assert.match(html, /id="refresh-btn"/);
+  assert.match(html, /id="last-updated"/);
+  assert.match(html, /id="pagination-bar"/);
+  assert.match(html, /id="prev-page-btn"/);
+  assert.match(html, /id="next-page-btn"/);
 });
 

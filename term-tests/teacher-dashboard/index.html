@@ -29,7 +29,77 @@
     </section>
     <section id="assignments" class="assignment-grid" aria-label="Bài được giao"></section>
     <section id="results" class="panel" hidden aria-label="Bảng kết quả">
+      <div class="results-header">
+        <div>
+          <h2 id="assignment-heading">Bảng kết quả</h2>
+          <p id="assignment-meta" class="meta-info"></p>
+        </div>
+        <div class="refresh-container">
+          <span id="last-updated" class="last-updated" aria-live="polite"></span>
+          <button id="refresh-btn" type="button" class="btn-secondary">Làm mới</button>
+        </div>
+      </div>
+
+      <form id="filters-toolbar" class="toolbar-grid" role="search" aria-label="Bộ lọc và tìm kiếm">
+        <label class="field-search">
+          <span>Tìm kiếm</span>
+          <input id="search-input" type="search" placeholder="Tên hoặc mã học viên…">
+        </label>
+        <label>
+          <span>Trạng thái</span>
+          <select id="status-filter">
+            <option value="">Tất cả</option>
+            <option value="review_required">Cần duyệt</option>
+            <option value="grading">Đang chấm</option>
+            <option value="not_started">Chưa làm</option>
+            <option value="in_progress">Đang làm</option>
+            <option value="complete">Hoàn tất</option>
+          </select>
+        </label>
+        <label>
+          <span>Kỹ năng</span>
+          <select id="skill-filter">
+            <option value="">Tổng điểm</option>
+          </select>
+        </label>
+        <label>
+          <span>Từ (%)</span>
+          <input id="min-score-input" type="number" min="0" max="100" placeholder="0%">
+        </label>
+        <label>
+          <span>Đến (%)</span>
+          <input id="max-score-input" type="number" min="0" max="100" placeholder="100%">
+        </label>
+        <label>
+          <span>Sắp xếp</span>
+          <select id="sort-by-select">
+            <option value="">Mặc định (Ưu tiên trạng thái)</option>
+            <option value="name">Tên học viên</option>
+            <option value="score">Điểm số</option>
+            <option value="submittedAt">Thời gian nộp</option>
+          </select>
+        </label>
+        <label>
+          <span>Thứ tự</span>
+          <select id="sort-dir-select">
+            <option value="asc">Tăng dần</option>
+            <option value="desc">Giảm dần</option>
+          </select>
+        </label>
+        <div class="filter-actions">
+          <button id="reset-filters-btn" type="button" class="btn-secondary">Xóa bộ lọc</button>
+        </div>
+      </form>
+
       <div id="results-content"></div>
+
+      <nav id="pagination-bar" class="pagination-bar" aria-label="Phân trang">
+        <span id="pagination-info">Trang 1 / 1 (0 học viên)</span>
+        <div class="pagination-buttons">
+          <button id="prev-page-btn" type="button" class="btn-secondary" disabled>Trang trước</button>
+          <button id="next-page-btn" type="button" class="btn-secondary" disabled>Trang sau</button>
+        </div>
+      </nav>
     </section>
   </main>
   <script type="module" src="./app.js"></script>
