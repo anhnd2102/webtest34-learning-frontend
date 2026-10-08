@@ -138,8 +138,13 @@ tr:hover td { background: #fafbfc; }
 .grading-score-row { display: flex; align-items: center; gap: 8px; }
 .grade-score-input { width: 90px; padding: 6px 10px; font-size: 1rem; font-weight: 700; text-align: center; border: 1px solid #a0aec0; border-radius: 6px; }
 .grade-feedback-input { width: 100%; min-height: 60px; padding: 8px 10px; font-size: 0.9rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; resize: vertical; }
-.readonly-hint { font-size: 0.8rem; color: #718096; font-style: italic; }
 .q-review-badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; background: #feebc8; color: #c05621; }
 .q-automated-badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; background: #edf2f7; color: #718096; }
+
+.meta-badge.badge-published { background: #c6f6d5; color: #22543d; font-weight: 700; }
+.meta-badge.badge-unpub { background: #edf2f7; color: #718096; }
+.badge-pub { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; background: #edf2f7; color: #718096; }
+.badge-pub.is-pub { background: #c6f6d5; color: #22543d; font-weight: 700; }
+
 
 

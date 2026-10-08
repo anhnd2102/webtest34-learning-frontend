@@ -801,6 +801,11 @@
       const accuracyMax = feedback.accuracyMaxScore ?? 2;
       return `<div class="learning-result-feedback"><strong>Structure ${esc(feedback.structureScore)} / ${esc(structureMax)} · Accuracy ${esc(feedback.accuracyScore)} / ${esc(accuracyMax)}</strong>${structures ? `<div><strong>Required structures</strong><ul>${structures}</ul></div>` : ''}${errors ? `<div><strong>Lỗi</strong><ul>${errors}</ul></div>` : ''}${feedback.evidence?.length ? `<div><strong>Evidence:</strong> ${esc(feedback.evidence.join(' · '))}</div>` : ''}</div>`;
     };
+    const expectedAnswerHtml = item => {
+      if (item.expectedAnswer === null || item.expectedAnswer === undefined) return '';
+      const expText = Array.isArray(item.expectedAnswer) ? item.expectedAnswer.join(', ') : String(item.expectedAnswer);
+      return `<div class="learning-result-expected"><strong>Đáp án:</strong> ${esc(expText)}</div>`;
+    };
     const groupHtml = sections.map(section => {
       const sectionGroups = groups.filter(group => group.label.startsWith(section.label));
       if(!sectionGroups.length) return '';
@@ -816,7 +821,7 @@
           <div class="learning-result-items">${group.items.map(item => `
             <div class="learning-result-item">
               <span class="learning-result-verdict ${item.verdict === 'correct' ? 'correct' : item.verdict === 'incorrect' ? 'incorrect' : item.verdict === 'partial' ? 'partial' : 'pending'}">${verdictLabel(item)}</span>
-              <div><strong>Câu ${esc(item.position)}</strong><div class="learning-result-answer">${esc(resultAnswer(item.rawAnswer, item))}</div>${feedbackHtml(item)}</div>
+              <div><strong>Câu ${esc(item.position)}</strong><div class="learning-result-answer">${esc(resultAnswer(item.rawAnswer, item))}</div>${expectedAnswerHtml(item)}${feedbackHtml(item)}</div>
             </div>`).join('')}</div>
         </div>`).join('');
       return `
@@ -836,6 +841,9 @@
     }).join('');
     const waitingGroups = groups.filter(group => group.items.some(item => item.verdict === 'pending' || item.verdict === 'manual_review'));
     const waitingHtml = waitingGroups.map(group => `<span class="chip">${esc(group.label)}: ${group.items.some(item => item.verdict === 'manual_review') ? 'Cần giảng viên' : 'Đang chờ chấm AI'}</span>`).join('');
+    const pubNotice = (result.publication?.published || result.publishedAt)
+      ? `<span class="chip chip-published">Đã công bố kết quả</span>`
+      : '';
     const displayedScore = mappingIncomplete ? `${hardScore} / ${hardMax}` : asyncView.score;
     const incompleteHtml = mappingIncomplete
       ? `<div class="learning-result-status">Chưa ghép được ${groups.unmatchedItems.length} câu vào block của đề.</div>`
@@ -845,7 +853,7 @@
       <h1>Kết quả bài làm của ${esc(state.studentName || 'học viên')}</h1>
       <div class="learning-result-status">${statusText}<br><strong>${mappingIncomplete?'Điểm đã ghép':asyncView.scoreLabel}: ${displayedScore}</strong></div>${incompleteHtml}
       <div class="learning-result-grid">${groupHtml}</div>
-      <div class="section-stats">${waitingHtml}</div>
+      <div class="section-stats">${waitingHtml}${pubNotice}</div>
     </div>`;
     $('#examApp').classList.add('hidden');
     $('#mobileBottom').classList.add('hidden');

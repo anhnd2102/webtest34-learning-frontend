@@ -51,7 +51,11 @@ export function resultDetailsHtml(result, definition) {
       const tone = item.verdict === 'correct' ? 'correct' : item.verdict === 'incorrect' ? 'incorrect' : item.verdict === 'partial' ? 'partial' : 'pending';
       const errors = (item.feedback?.errors || []).map(error => `<li>${escape(error.message || error.code || '')}</li>`).join('');
       const feedback = errors ? `<div class="learning-result-feedback"><strong>Nhận xét</strong><ul>${errors}</ul></div>` : '';
-      return `<div class="learning-result-item"><span class="learning-result-verdict ${tone}">${escape(verdictLabel(item.verdict))}</span><div><strong>Câu ${escape(item.position)}</strong><div class="learning-result-answer">${escape(item.rawAnswer || 'Chưa trả lời')}</div>${feedback}</div></div>`;
+      const expText = (item.expectedAnswer !== null && item.expectedAnswer !== undefined)
+        ? (Array.isArray(item.expectedAnswer) ? item.expectedAnswer.join(', ') : String(item.expectedAnswer))
+        : '';
+      const expHtml = expText ? `<div class="learning-result-expected"><strong>Đáp án:</strong> ${escape(expText)}</div>` : '';
+      return `<div class="learning-result-item"><span class="learning-result-verdict ${tone}">${escape(verdictLabel(item.verdict))}</span><div><strong>Câu ${escape(item.position)}</strong><div class="learning-result-answer">${escape(item.rawAnswer || 'Chưa trả lời')}</div>${expHtml}${feedback}</div></div>`;
     }).join('');
     return `<article class="learning-result-section"><div class="learning-result-section-header"><h3>${escape(block.title)}</h3><div class="learning-result-section-actions"><div class="learning-result-section-summary"><div class="learning-result-score">${score} / ${maxScore} điểm</div><div class="meta">${correct}/${items.length} câu đúng</div></div><button class="result-details-toggle" type="button" data-result-details="result-${escape(block.blockId)}" aria-expanded="false">Xem chi tiết</button></div></div><div class="learning-result-exercise" id="result-${escape(block.blockId)}" hidden><div class="learning-result-items">${details}</div></div></article>`;
   }).join('');

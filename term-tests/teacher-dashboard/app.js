@@ -69,6 +69,15 @@ export function manualGradingCompletePath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}/manual-grading/complete`;
 }
 
+export function attemptPublishPath(classId, assignmentId, attemptId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}/publish`;
+}
+
+export function formatPublicationStatus(publication) {
+  if (!publication || !publication.published) return 'Chưa công bố';
+  return 'Đã công bố';
+}
+
 export function validateManualGradingScores(items, scores) {
   for (const item of items) {
     if (item.canGrade) {
@@ -172,6 +181,7 @@ async function startDashboard() {
   const detailGradingHistory = document.querySelector('#detail-grading-history');
   const saveDraftBtn = document.querySelector('#save-draft-btn');
   const completeGradingBtn = document.querySelector('#complete-grading-btn');
+  const publishResultBtn = document.querySelector('#publish-result-btn');
   const draftStatusMsg = document.querySelector('#draft-status-msg');
   const conflictAlert = document.querySelector('#conflict-alert');
   const gradingActionsBar = document.querySelector('#grading-actions-bar');
@@ -227,7 +237,7 @@ async function startDashboard() {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    for (const label of ['Học viên', 'Trạng thái', 'Tổng', ...payload.skills.map(skill => skill.code), 'Nộp lúc', 'Thao tác']) {
+    for (const label of ['Học viên', 'Trạng thái', 'Công bố', 'Tổng', ...payload.skills.map(skill => skill.code), 'Nộp lúc', 'Thao tác']) {
       const header = document.createElement('th');
       header.scope = 'col';
       header.textContent = label;
@@ -239,7 +249,7 @@ async function startDashboard() {
     if (payload.students.length === 0) {
       const emptyRow = document.createElement('tr');
       const emptyCell = document.createElement('td');
-      emptyCell.colSpan = payload.skills.length + 5;
+      emptyCell.colSpan = payload.skills.length + 6;
       emptyCell.className = 'empty-results';
       emptyCell.textContent = 'Không tìm thấy học viên nào phù hợp với bộ lọc.';
       emptyRow.append(emptyCell);
@@ -249,6 +259,7 @@ async function startDashboard() {
         const row = document.createElement('tr');
         appendCell(row, student.discriminator ? `${student.name} · ${student.discriminator}` : student.name);
         appendCell(row, resultStatusLabel(student.status), `result-status ${student.status}`);
+        appendCell(row, student.published ? 'Đã công bố' : 'Chưa công bố', `badge-pub ${student.published ? 'is-pub' : ''}`);
         appendCell(row, formatDashboardScore(student.total), 'score');
         for (const skill of payload.skills) appendCell(row, formatDashboardScore(student.skills[skill.code]), 'score');
         appendCell(row, student.submittedAt ? formatAssignmentWindow(student.submittedAt, null).split(' → ')[0] : '—');
@@ -316,6 +327,12 @@ async function startDashboard() {
         badge.textContent = text;
         detailMeta.append(badge);
       }
+      const pubBadge = document.createElement('span');
+      pubBadge.className = `meta-badge ${payload.attempt.publication?.published ? 'badge-published' : 'badge-unpub'}`;
+      pubBadge.textContent = payload.attempt.publication?.published
+        ? `Đã công bố (${payload.attempt.publication.publishedBy || ''})`
+        : 'Chưa công bố';
+      detailMeta.append(pubBadge);
     }
 
     if (detailScores) {
@@ -599,6 +616,17 @@ async function startDashboard() {
       }
       mgTable.append(mgBody);
       detailGradingHistory.append(mgHeader, mgTable);
+    }
+
+    if (publishResultBtn) {
+      if (payload.attempt.status === 'active') {
+        publishResultBtn.disabled = true;
+        publishResultBtn.title = 'Chưa thể công bố bài khi học viên chưa nộp';
+      } else {
+        publishResultBtn.disabled = false;
+        publishResultBtn.title = '';
+      }
+      publishResultBtn.textContent = payload.attempt.publication?.published ? 'Công bố lại' : 'Công bố kết quả';
     }
 
     if (results) results.hidden = true;
@@ -920,6 +948,38 @@ async function startDashboard() {
   if (completeGradingBtn) {
     completeGradingBtn.addEventListener('click', () => {
       completeManualGrading().catch(err => {
+        if (status) status.textContent = err.message;
+      });
+    });
+  }
+
+  async function publishAttemptResult() {
+    if (!state.classId || !state.assignmentId || !state.attemptId) return;
+    if (draftStatusMsg) draftStatusMsg.textContent = 'Đang công bố kết quả…';
+    try {
+      const response = await fetch(`${apiBase()}${attemptPublishPath(state.classId, state.assignmentId, state.attemptId)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...fixtureHeaders(identity())
+        },
+        body: JSON.stringify({ note: 'Công bố kết quả' })
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.message || 'Không thể công bố kết quả.');
+      }
+      alert('Đã công bố kết quả thành công!');
+      if (draftStatusMsg) draftStatusMsg.textContent = `Đã công bố kết quả lúc ${formatCurrentTime()}`;
+      await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);
+    } catch (err) {
+      if (draftStatusMsg) draftStatusMsg.textContent = `Lỗi công bố: ${err.message}`;
+    }
+  }
+
+  if (publishResultBtn) {
+    publishResultBtn.addEventListener('click', () => {
+      publishAttemptResult().catch(err => {
         if (status) status.textContent = err.message;
       });
     });

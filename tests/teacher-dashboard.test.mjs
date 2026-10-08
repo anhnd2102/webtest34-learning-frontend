@@ -13,7 +13,9 @@ import {
   readDashboardState,
   manualGradingDraftPath,
   manualGradingCompletePath,
-  validateManualGradingScores
+  validateManualGradingScores,
+  attemptPublishPath,
+  formatPublicationStatus
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('dashboard URL preserves class and assignment selection', () => {
@@ -217,6 +219,26 @@ test('validateManualGradingScores checks missing review scores and out-of-range 
   assert.equal(resValid.valid, true);
   assert.equal(resValid.message, '');
 });
+
+test('attemptPublishPath builds canonical endpoint', () => {
+  assert.equal(
+    attemptPublishPath('101', '11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333'),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/attempts/33333333-3333-4333-8333-333333333333/publish'
+  );
+});
+
+test('formatPublicationStatus returns correct labels and metadata', () => {
+  assert.equal(formatPublicationStatus(null), 'Chưa công bố');
+  assert.equal(formatPublicationStatus({ published: false }), 'Chưa công bố');
+  assert.equal(formatPublicationStatus({ published: true }), 'Đã công bố');
+});
+
+test('teacher dashboard index.html provides publication button', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="publish-result-btn"/);
+});
+
 
 
 
