@@ -146,5 +146,85 @@ tr:hover td { background: #fafbfc; }
 .badge-pub { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; background: #edf2f7; color: #718096; }
 .badge-pub.is-pub { background: #c6f6d5; color: #22543d; font-weight: 700; }
 
+.badge-left-class {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  background: #ffedd5;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.meta-badge.badge-left-class {
+  background: #ffedd5;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+/* Modal Dialog */
+.modal {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 500px;
+  width: 90%;
+  background: white;
+}
+.modal::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+}
+.modal-form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.modal-form h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #0f172a;
+}
+.modal-desc {
+  margin: -8px 0 4px;
+  font-size: 0.88rem;
+  color: #64748b;
+}
+.form-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  margin: 4px 0;
+}
+.form-divider::before, .form-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+.form-divider span {
+  padding: 0 8px;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+.error-msg {
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+
 
 

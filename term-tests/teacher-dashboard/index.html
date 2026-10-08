@@ -36,9 +36,42 @@
         </div>
         <div class="refresh-container">
           <span id="last-updated" class="last-updated" aria-live="polite"></span>
+          <button id="add-student-btn" type="button" class="btn-primary">Thêm học viên</button>
           <button id="refresh-btn" type="button" class="btn-secondary">Làm mới</button>
         </div>
       </div>
+
+      <dialog id="add-student-modal" class="modal">
+        <form id="add-student-form" method="dialog" class="modal-form">
+          <h3>Bổ sung học viên vào bài được giao</h3>
+          <p class="modal-desc">Chọn học viên từ lớp hoặc nhập thông tin học viên để bổ sung vào danh sách làm bài.</p>
+          <div id="add-student-error" class="error-msg" hidden role="alert"></div>
+          <label>
+            <span>Chọn từ học viên trong lớp</span>
+            <select id="eligible-student-select">
+              <option value="">-- Chọn học viên --</option>
+            </select>
+          </label>
+          <div class="form-divider"><span>hoặc nhập thủ công</span></div>
+          <label>
+            <span>Mã định danh (UUID)</span>
+            <input id="add-student-ref-input" type="text" placeholder="UUID học viên">
+          </label>
+          <label>
+            <span>Họ và tên</span>
+            <input id="add-student-name-input" type="text" placeholder="Tên học viên">
+          </label>
+          <label>
+            <span>Phân biệt / Mã lớp (Discriminator)</span>
+            <input id="add-student-disc-input" type="text" placeholder="Ví dụ: A01">
+          </label>
+          <div class="modal-actions">
+            <button id="cancel-add-student-btn" type="button" class="btn-secondary">Hủy</button>
+            <button id="submit-add-student-btn" type="submit" class="btn-primary">Thêm vào bài</button>
+          </div>
+        </form>
+      </dialog>
+
 
       <form id="filters-toolbar" class="toolbar-grid" role="search" aria-label="Bộ lọc và tìm kiếm">
         <label class="field-search">

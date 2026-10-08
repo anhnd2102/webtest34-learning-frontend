@@ -15,8 +15,12 @@ import {
   manualGradingCompletePath,
   validateManualGradingScores,
   attemptPublishPath,
-  formatPublicationStatus
+  formatPublicationStatus,
+  assignmentRosterPath,
+  eligibleStudentsPath,
+  studentTransferPath
 } from '../term-tests/teacher-dashboard/app.js';
+
 
 test('dashboard URL preserves class and assignment selection', () => {
   const url = assignmentUrl('https://example.test/term-tests/teacher-dashboard/?classId=101', {
@@ -239,6 +243,26 @@ test('teacher dashboard index.html provides publication button', async () => {
   assert.match(html, /id="publish-result-btn"/);
 });
 
+test('assignmentRosterPath, eligibleStudentsPath, and studentTransferPath build canonical endpoints', () => {
+  const asgId = '11111111-1111-4111-8111-111111111111';
+  const sRef = '44444444-4444-4444-8444-444444444441';
+  assert.equal(
+    assignmentRosterPath('101', asgId),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/roster'
+  );
+  assert.equal(
+    eligibleStudentsPath('101', asgId),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/eligible-students'
+  );
+  assert.equal(
+    studentTransferPath('101', sRef),
+    '/api/teacher/classes/101/students/44444444-4444-4444-8444-444444444441/transfer'
+  );
+});
 
-
-
+test('teacher dashboard index.html provides add student controls and modal', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="add-student-btn"/);
+  assert.match(html, /id="add-student-modal"/);
+});

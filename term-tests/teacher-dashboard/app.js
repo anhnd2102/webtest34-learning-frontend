@@ -73,6 +73,19 @@ export function attemptPublishPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}/publish`;
 }
 
+export function assignmentRosterPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/roster`;
+}
+
+export function eligibleStudentsPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/eligible-students`;
+}
+
+export function studentTransferPath(classId, studentRef) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/students/${encodeURIComponent(studentRef)}/transfer`;
+}
+
+
 export function formatPublicationStatus(publication) {
   if (!publication || !publication.published) return 'Chưa công bố';
   return 'Đã công bố';
@@ -160,6 +173,17 @@ async function startDashboard() {
   const status = document.querySelector('#status');
   const lastUpdated = document.querySelector('#last-updated');
   const refreshBtn = document.querySelector('#refresh-btn');
+
+  const addStudentBtn = document.querySelector('#add-student-btn');
+  const addStudentModal = document.querySelector('#add-student-modal');
+  const addStudentForm = document.querySelector('#add-student-form');
+  const eligibleStudentSelect = document.querySelector('#eligible-student-select');
+  const addStudentRefInput = document.querySelector('#add-student-ref-input');
+  const addStudentNameInput = document.querySelector('#add-student-name-input');
+  const addStudentDiscInput = document.querySelector('#add-student-disc-input');
+  const addStudentError = document.querySelector('#add-student-error');
+  const cancelAddStudentBtn = document.querySelector('#cancel-add-student-btn');
+
 
   const searchInput = document.querySelector('#search-input');
   const statusFilter = document.querySelector('#status-filter');
@@ -257,8 +281,18 @@ async function startDashboard() {
     } else {
       for (const student of payload.students) {
         const row = document.createElement('tr');
-        appendCell(row, student.discriminator ? `${student.name} · ${student.discriminator}` : student.name);
+        const nameCell = document.createElement('td');
+        const nameText = student.discriminator ? `${student.name} · ${student.discriminator}` : student.name;
+        nameCell.textContent = nameText;
+        if (student.leftClass) {
+          const leftBadge = document.createElement('span');
+          leftBadge.className = 'badge-left-class';
+          leftBadge.textContent = 'Không còn trong lớp';
+          nameCell.append(leftBadge);
+        }
+        row.append(nameCell);
         appendCell(row, resultStatusLabel(student.status), `result-status ${student.status}`);
+
         appendCell(row, student.published ? 'Đã công bố' : 'Chưa công bố', `badge-pub ${student.published ? 'is-pub' : ''}`);
         appendCell(row, formatDashboardScore(student.total), 'score');
         for (const skill of payload.skills) appendCell(row, formatDashboardScore(student.skills[skill.code]), 'score');
@@ -333,7 +367,15 @@ async function startDashboard() {
         ? `Đã công bố (${payload.attempt.publication.publishedBy || ''})`
         : 'Chưa công bố';
       detailMeta.append(pubBadge);
+
+      if (payload.student.leftClass) {
+        const leftBadge = document.createElement('span');
+        leftBadge.className = 'meta-badge badge-left-class';
+        leftBadge.textContent = 'Không còn trong lớp';
+        detailMeta.append(leftBadge);
+      }
     }
+
 
     if (detailScores) {
       detailScores.replaceChildren();
@@ -1000,6 +1042,105 @@ async function startDashboard() {
       loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
     });
   }
+
+  if (addStudentBtn) {
+    addStudentBtn.addEventListener('click', async () => {
+      if (!state.classId || !state.assignmentId) return;
+      if (addStudentError) {
+        addStudentError.hidden = true;
+        addStudentError.textContent = '';
+      }
+      if (eligibleStudentSelect) {
+        eligibleStudentSelect.replaceChildren(new Option('-- Chọn học viên --', ''));
+        try {
+          const res = await request(eligibleStudentsPath(state.classId, state.assignmentId));
+          if (res.ok && Array.isArray(res.students)) {
+            for (const s of res.students) {
+              const opt = new Option(s.discriminator ? `${s.name} · ${s.discriminator}` : s.name, s.studentRef);
+              opt.dataset.name = s.name;
+              opt.dataset.discriminator = s.discriminator || '';
+              opt.dataset.contactId = s.erpStudentContactId || '';
+              eligibleStudentSelect.add(opt);
+            }
+          }
+        } catch {
+          // ignore error fetching eligible students
+        }
+      }
+      if (addStudentRefInput) addStudentRefInput.value = '';
+      if (addStudentNameInput) addStudentNameInput.value = '';
+      if (addStudentDiscInput) addStudentDiscInput.value = '';
+      if (typeof addStudentModal?.showModal === 'function') {
+        addStudentModal.showModal();
+      } else if (addStudentModal) {
+        addStudentModal.hidden = false;
+      }
+    });
+  }
+
+  if (eligibleStudentSelect) {
+    eligibleStudentSelect.addEventListener('change', () => {
+      const selected = eligibleStudentSelect.selectedOptions[0];
+      if (selected && selected.value) {
+        if (addStudentRefInput) addStudentRefInput.value = selected.value;
+        if (addStudentNameInput) addStudentNameInput.value = selected.dataset.name || '';
+        if (addStudentDiscInput) addStudentDiscInput.value = selected.dataset.discriminator || '';
+      }
+    });
+  }
+
+  if (cancelAddStudentBtn) {
+    cancelAddStudentBtn.addEventListener('click', () => {
+      if (typeof addStudentModal?.close === 'function') {
+        addStudentModal.close();
+      } else if (addStudentModal) {
+        addStudentModal.hidden = true;
+      }
+    });
+  }
+
+  if (addStudentForm) {
+    addStudentForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!state.classId || !state.assignmentId) return;
+      const studentRef = addStudentRefInput?.value.trim();
+      const name = addStudentNameInput?.value.trim();
+      const discriminator = addStudentDiscInput?.value.trim();
+      if (!studentRef || !name) {
+        if (addStudentError) {
+          addStudentError.hidden = false;
+          addStudentError.textContent = 'Vui lòng nhập đầy đủ mã định danh và tên học viên.';
+        }
+        return;
+      }
+      try {
+        const response = await fetch(`${apiBase()}${assignmentRosterPath(state.classId, state.assignmentId)}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...fixtureHeaders(identity())
+          },
+          body: JSON.stringify({ studentRef, name, discriminator })
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.message || 'Không thể thêm học viên.');
+        }
+        if (typeof addStudentModal?.close === 'function') {
+          addStudentModal.close();
+        } else if (addStudentModal) {
+          addStudentModal.hidden = true;
+        }
+        await loadResults(state.classId, state.assignmentId);
+      } catch (err) {
+        if (addStudentError) {
+          addStudentError.hidden = false;
+          addStudentError.textContent = err.message;
+        }
+      }
+    });
+  }
+
 
   if (prevPageBtn) {
     prevPageBtn.addEventListener('click', () => {
