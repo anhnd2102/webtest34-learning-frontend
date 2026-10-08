@@ -101,7 +101,38 @@
         </div>
       </nav>
     </section>
+
+    <section id="attempt-detail" class="panel" hidden aria-label="Chi tiết bài làm">
+      <div class="detail-header">
+        <button id="close-attempt-detail-btn" type="button" class="btn-secondary">← Quay lại danh sách</button>
+        <div>
+          <h2 id="detail-heading">Chi tiết bài làm</h2>
+          <div id="detail-meta" class="meta-badges"></div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Điểm số</h3>
+        <div id="detail-scores" class="scores-grid"></div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Lịch sử lần làm bài</h3>
+        <div id="detail-attempt-history"></div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Lịch sử chấm</h3>
+        <div id="detail-grading-history"></div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Nội dung bài làm và kết quả câu hỏi</h3>
+        <div id="detail-items" class="items-list"></div>
+      </div>
+    </section>
   </main>
+
   <script type="module" src="./app.js"></script>
 </body>
 </html>

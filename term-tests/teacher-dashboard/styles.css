@@ -57,3 +57,67 @@ tr:hover td { background: #fafbfc; }
   .field-search { grid-column: span 1; }
   .toolbar-grid { grid-template-columns: 1fr; }
 }
+
+/* Attempt Detail Styles */
+.btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+.detail-header { display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid #eef2f6; padding-bottom: 16px; }
+.meta-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.meta-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; background: #e8eef5; font-size: 0.85rem; font-weight: 600; color: #2d3748; }
+
+.detail-section { margin-top: 16px; display: grid; gap: 12px; }
+.detail-section h3 { margin: 0; font-size: 1.15rem; color: #1a202c; border-left: 4px solid #db0829; padding-left: 10px; }
+
+.scores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.score-card { padding: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; display: grid; gap: 6px; }
+.score-card.total-card { background: #fff7f8; border-color: #fbcfe8; }
+.score-card strong { font-size: 0.85rem; color: #64748b; text-transform: uppercase; }
+.score-card .score-val { font-size: 1.4rem; font-weight: 800; color: #1e293b; font-variant-numeric: tabular-nums; }
+.score-card.total-card .score-val { color: #db0829; }
+
+.mini-table { width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 4px; font-size: 0.9rem; }
+.mini-table th { background: #f1f5f9; padding: 8px 12px; font-size: 0.85rem; }
+.mini-table td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; }
+.current-attempt-row td { background: #fff7f8; font-weight: 700; }
+
+.items-list { display: grid; gap: 16px; margin-top: 8px; }
+.question-card { padding: 18px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; display: grid; gap: 12px; transition: border-color 0.15s ease; }
+.question-card.verdict-correct { border-left: 5px solid #38a169; }
+.question-card.verdict-incorrect { border-left: 5px solid #e53e3e; }
+.question-card.verdict-partial { border-left: 5px solid #dd6b20; }
+.question-card.verdict-pending { border-left: 5px solid #d69e2e; }
+.question-card.verdict-manual_review { border-left: 5px solid #dd6b20; }
+.question-card.verdict-ungraded { border-left: 5px solid #a0aec0; }
+
+.question-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px; }
+.q-title-wrap { display: flex; align-items: center; gap: 8px; }
+.q-pos { font-weight: 800; font-size: 1rem; color: #1a202c; }
+.q-skill-badge { padding: 2px 8px; border-radius: 4px; background: #edf2f7; font-size: 0.75rem; font-weight: 700; color: #4a5568; }
+.q-type-badge { padding: 2px 6px; border-radius: 4px; background: #f7fafc; border: 1px solid #e2e8f0; font-size: 0.75rem; color: #718096; }
+.q-score-wrap { display: flex; align-items: center; gap: 10px; }
+.q-points { font-weight: 700; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+
+.verdict-badge { display: inline-block; padding: 3px 9px; border-radius: 99px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; }
+.verdict-badge.correct { background: #c6f6d5; color: #22543d; }
+.verdict-badge.incorrect { background: #fed7d7; color: #9b2c2c; }
+.verdict-badge.partial { background: #feebc8; color: #c05621; }
+.verdict-badge.pending { background: #fefcbf; color: #975a16; }
+.verdict-badge.manual_review { background: #feebc8; color: #c05621; }
+.verdict-badge.ungraded, .verdict-badge.not_submitted { background: #edf2f7; color: #718096; }
+
+.question-prompt { font-size: 0.98rem; line-height: 1.5; color: #2d3748; white-space: pre-wrap; font-weight: 500; }
+.question-help { margin: 6px 0 0; font-size: 0.88rem; color: #718096; font-style: italic; }
+
+.question-options { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.question-options li { padding: 8px 12px; border: 1px solid #edf2f7; border-radius: 6px; font-size: 0.9rem; background: #f8fafc; }
+.question-options li.opt-selected { background: #ebf8ff; border-color: #bee3f8; font-weight: 700; color: #2b6cb0; }
+
+.answers-wrap { display: grid; gap: 8px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #edf2f7; }
+.answer-block { font-size: 0.9rem; line-height: 1.5; }
+.answer-block strong { color: #4a5568; margin-right: 6px; }
+.student-answer .ans-content { font-weight: 600; color: #1a202c; }
+.expected-answer .ans-content { font-weight: 600; color: #2b6cb0; }
+
+.feedback-box { padding: 12px; background: #fffaf0; border-left: 4px solid #dd6b20; border-radius: 6px; font-size: 0.88rem; }
+.feedback-box strong { color: #9c4221; }
+.feedback-box p { margin: 4px 0 0; color: #7b341e; }
+

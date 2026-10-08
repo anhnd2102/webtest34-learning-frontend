@@ -2,11 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   assignmentResultsPath,
+  attemptDetailPath,
   assignmentUrl,
   fixtureHeaders,
   formatDashboardScore,
   formatAssignmentWindow,
   resultStatusLabel,
+  attemptStatusLabel,
+  verdictLabel,
   readDashboardState
 } from '../term-tests/teacher-dashboard/app.js';
 
@@ -120,5 +123,46 @@ test('teacher dashboard index.html provides required controls and result contain
   assert.match(html, /id="pagination-bar"/);
   assert.match(html, /id="prev-page-btn"/);
   assert.match(html, /id="next-page-btn"/);
+  assert.match(html, /id="attempt-detail"/);
+  assert.match(html, /id="close-attempt-detail-btn"/);
+  assert.match(html, /id="detail-heading"/);
+  assert.match(html, /id="detail-meta"/);
+  assert.match(html, /id="detail-scores"/);
+  assert.match(html, /id="detail-items"/);
+  assert.match(html, /id="detail-grading-history"/);
+  assert.match(html, /id="detail-attempt-history"/);
 });
+
+test('attemptDetailPath builds canonical endpoint path', () => {
+  assert.equal(
+    attemptDetailPath('101', '11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333'),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/attempts/33333333-3333-4333-8333-333333333333'
+  );
+});
+
+test('attemptStatusLabel and verdictLabel return Vietnamese domain terminology', () => {
+  assert.equal(attemptStatusLabel('active'), 'Đang làm');
+  assert.equal(attemptStatusLabel('submitted'), 'Đã nộp');
+  assert.equal(attemptStatusLabel('superseded'), 'Bị thay thế');
+
+  assert.equal(verdictLabel('correct'), 'Đúng');
+  assert.equal(verdictLabel('incorrect'), 'Sai');
+  assert.equal(verdictLabel('partial'), 'Đúng một phần');
+  assert.equal(verdictLabel('pending'), 'Chờ chấm');
+  assert.equal(verdictLabel('manual_review'), 'Cần duyệt');
+  assert.equal(verdictLabel('ungraded'), 'Chưa chấm');
+  assert.equal(verdictLabel('not_submitted'), 'Chưa nộp');
+});
+
+test('dashboard URL state management retains attemptId across navigation', () => {
+  const url = assignmentUrl('https://example.test/term-tests/teacher-dashboard/', {
+    classId: '101',
+    assignmentId: '11111111-1111-4111-8111-111111111111',
+    attemptId: '33333333-3333-4333-8333-333333333333'
+  });
+  assert.equal(url.searchParams.get('attemptId'), '33333333-3333-4333-8333-333333333333');
+  const parsed = readDashboardState(url);
+  assert.equal(parsed.attemptId, '33333333-3333-4333-8333-333333333333');
+});
+
 

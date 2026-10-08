@@ -4,6 +4,8 @@ export function readDashboardState(input) {
     classId: url.searchParams.get('classId') || '',
     assignmentId: url.searchParams.get('assignmentId') || ''
   };
+  const attemptId = url.searchParams.get('attemptId');
+  if (attemptId !== null && attemptId !== '') state.attemptId = attemptId;
   const q = url.searchParams.get('q');
   if (q !== null && q !== '') state.q = q;
   const status = url.searchParams.get('status');
@@ -28,7 +30,7 @@ export function readDashboardState(input) {
 
 export function assignmentUrl(input, state) {
   const url = input instanceof URL ? new URL(input) : new URL(input);
-  const keys = ['classId', 'assignmentId', 'q', 'status', 'minScore', 'maxScore', 'skill', 'sortBy', 'sortDir', 'page'];
+  const keys = ['classId', 'assignmentId', 'attemptId', 'q', 'status', 'minScore', 'maxScore', 'skill', 'sortBy', 'sortDir', 'page'];
   for (const key of keys) {
     if (state[key] !== undefined && state[key] !== null && state[key] !== '' && (key !== 'page' || Number(state[key]) > 1)) {
       url.searchParams.set(key, String(state[key]));
@@ -55,6 +57,10 @@ export function assignmentResultsPath(classId, assignmentId, options = {}) {
   return query ? `${base}?${query}` : base;
 }
 
+export function attemptDetailPath(classId, assignmentId, attemptId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}`;
+}
+
 export function formatDashboardScore(score) {
   if (!score) return '—';
   if (score.status === 'pending') return 'Chờ chấm';
@@ -70,6 +76,28 @@ export function resultStatusLabel(status) {
     review_required: 'Cần duyệt',
     complete: 'Hoàn tất'
   })[status] || status;
+}
+
+export function attemptStatusLabel(status) {
+  return ({
+    not_started: 'Chưa bắt đầu',
+    in_progress: 'Đang làm',
+    active: 'Đang làm',
+    submitted: 'Đã nộp',
+    superseded: 'Bị thay thế'
+  })[status] || status;
+}
+
+export function verdictLabel(verdict) {
+  return ({
+    correct: 'Đúng',
+    incorrect: 'Sai',
+    partial: 'Đúng một phần',
+    pending: 'Chờ chấm',
+    manual_review: 'Cần duyệt',
+    ungraded: 'Chưa chấm',
+    not_submitted: 'Chưa nộp'
+  })[verdict] || verdict;
 }
 
 export function formatAssignmentWindow(opensAt, closesAt, locale = 'vi-VN', timeZone = 'Asia/Ho_Chi_Minh') {
@@ -106,9 +134,16 @@ async function startDashboard() {
   const sortBySelect = document.querySelector('#sort-by-select');
   const sortDirSelect = document.querySelector('#sort-dir-select');
   const resetFiltersBtn = document.querySelector('#reset-filters-btn');
-  const paginationInfo = document.querySelector('#pagination-info');
   const prevPageBtn = document.querySelector('#prev-page-btn');
   const nextPageBtn = document.querySelector('#next-page-btn');
+  const attemptDetail = document.querySelector('#attempt-detail');
+  const closeAttemptDetailBtn = document.querySelector('#close-attempt-detail-btn');
+  const detailHeading = document.querySelector('#detail-heading');
+  const detailMeta = document.querySelector('#detail-meta');
+  const detailScores = document.querySelector('#detail-scores');
+  const detailItems = document.querySelector('#detail-items');
+  const detailAttemptHistory = document.querySelector('#detail-attempt-history');
+  const detailGradingHistory = document.querySelector('#detail-grading-history');
 
   const state = readDashboardState(location.href);
 
@@ -159,7 +194,7 @@ async function startDashboard() {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    for (const label of ['Học viên', 'Trạng thái', 'Tổng', ...payload.skills.map(skill => skill.code), 'Nộp lúc']) {
+    for (const label of ['Học viên', 'Trạng thái', 'Tổng', ...payload.skills.map(skill => skill.code), 'Nộp lúc', 'Thao tác']) {
       const header = document.createElement('th');
       header.scope = 'col';
       header.textContent = label;
@@ -171,7 +206,7 @@ async function startDashboard() {
     if (payload.students.length === 0) {
       const emptyRow = document.createElement('tr');
       const emptyCell = document.createElement('td');
-      emptyCell.colSpan = payload.skills.length + 4;
+      emptyCell.colSpan = payload.skills.length + 5;
       emptyCell.className = 'empty-results';
       emptyCell.textContent = 'Không tìm thấy học viên nào phù hợp với bộ lọc.';
       emptyRow.append(emptyCell);
@@ -184,6 +219,25 @@ async function startDashboard() {
         appendCell(row, formatDashboardScore(student.total), 'score');
         for (const skill of payload.skills) appendCell(row, formatDashboardScore(student.skills[skill.code]), 'score');
         appendCell(row, student.submittedAt ? formatAssignmentWindow(student.submittedAt, null).split(' → ')[0] : '—');
+
+        const actionCell = document.createElement('td');
+        if (student.attemptId) {
+          const detailBtn = document.createElement('button');
+          detailBtn.type = 'button';
+          detailBtn.className = 'btn-secondary btn-sm';
+          detailBtn.textContent = 'Xem chi tiết';
+          detailBtn.addEventListener('click', () => {
+            state.attemptId = student.attemptId;
+            setUrl();
+            loadAttemptDetail(state.classId, state.assignmentId, student.attemptId).catch(err => {
+              status.textContent = err.message;
+            });
+          });
+          actionCell.append(detailBtn);
+        } else {
+          actionCell.textContent = '—';
+        }
+        row.append(actionCell);
         body.append(row);
       }
     }
@@ -205,6 +259,224 @@ async function startDashboard() {
     }
 
     results.hidden = false;
+  }
+
+  function renderAttemptDetail(payload) {
+    if (!attemptDetail) return;
+    if (detailHeading) {
+      detailHeading.textContent = `${payload.student.name}${payload.student.discriminator ? ' · ' + payload.student.discriminator : ''}`;
+    }
+
+    if (detailMeta) {
+      detailMeta.replaceChildren();
+      const badges = [
+        `Lớp: ${payload.class.name} (${payload.class.courseCode})`,
+        `Bài: ${payload.assignment.title}`,
+        `Phiên bản đề: ${payload.attempt.formVersion}`,
+        `Trạng thái: ${attemptStatusLabel(payload.attempt.status)}`,
+        `Bắt đầu: ${payload.attempt.startedAt ? formatAssignmentWindow(payload.attempt.startedAt, null).split(' → ')[0] : '—'}`,
+        `Nộp lúc: ${payload.attempt.submittedAt ? formatAssignmentWindow(payload.attempt.submittedAt, null).split(' → ')[0] : 'Chưa nộp'}`
+      ];
+      for (const text of badges) {
+        const badge = document.createElement('span');
+        badge.className = 'meta-badge';
+        badge.textContent = text;
+        detailMeta.append(badge);
+      }
+    }
+
+    if (detailScores) {
+      detailScores.replaceChildren();
+      const totalCard = document.createElement('div');
+      totalCard.className = 'score-card total-card';
+      totalCard.innerHTML = `<strong>Tổng điểm</strong><span class="score-val">${formatDashboardScore(payload.scores.total)}</span>`;
+      detailScores.append(totalCard);
+
+      for (const skill of payload.skills) {
+        const skillScore = payload.scores.skills?.[skill.code];
+        const card = document.createElement('div');
+        card.className = 'score-card';
+        card.innerHTML = `<strong>${skill.code.toUpperCase()}</strong><span class="score-val">${formatDashboardScore(skillScore)}</span>`;
+        detailScores.append(card);
+      }
+    }
+
+    if (detailAttemptHistory) {
+      detailAttemptHistory.replaceChildren();
+      if (payload.attemptHistory && payload.attemptHistory.length > 0) {
+        const historyTable = document.createElement('table');
+        historyTable.className = 'mini-table';
+        historyTable.innerHTML = `
+          <thead>
+            <tr>
+              <th>Lần làm bài</th>
+              <th>Phiên bản đề</th>
+              <th>Trạng thái</th>
+              <th>Bắt đầu</th>
+              <th>Nộp lúc</th>
+            </tr>
+          </thead>
+        `;
+        const hBody = document.createElement('tbody');
+        for (const att of payload.attemptHistory) {
+          const hRow = document.createElement('tr');
+          if (att.isCurrent) hRow.className = 'current-attempt-row';
+          const label = att.isCurrent ? `${att.attemptId.slice(0, 8)}… (Hiện tại)` : `${att.attemptId.slice(0, 8)}…`;
+          hRow.innerHTML = `
+            <td>${label}</td>
+            <td>Phiên bản ${att.formVersion}</td>
+            <td><span class="result-status ${att.status}">${attemptStatusLabel(att.status)}</span></td>
+            <td>${att.startedAt ? formatAssignmentWindow(att.startedAt, null).split(' → ')[0] : '—'}</td>
+            <td>${att.submittedAt ? formatAssignmentWindow(att.submittedAt, null).split(' → ')[0] : '—'}</td>
+          `;
+          hBody.append(hRow);
+        }
+        historyTable.append(hBody);
+        detailAttemptHistory.append(historyTable);
+      } else {
+        detailAttemptHistory.textContent = 'Không có lịch sử lần làm nào khác.';
+      }
+    }
+
+    if (detailGradingHistory) {
+      detailGradingHistory.replaceChildren();
+      if (payload.gradingHistory && payload.gradingHistory.length > 0) {
+        const gTable = document.createElement('table');
+        gTable.className = 'mini-table';
+        gTable.innerHTML = `
+          <thead>
+            <tr>
+              <th>Lượt chấm</th>
+              <th>Phiên bản chấm</th>
+              <th>Trạng thái</th>
+              <th>Bắt đầu</th>
+              <th>Hoàn tất</th>
+            </tr>
+          </thead>
+        `;
+        const gBody = document.createElement('tbody');
+        for (const run of payload.gradingHistory) {
+          const gRow = document.createElement('tr');
+          gRow.innerHTML = `
+            <td>${run.gradingRunId.slice(0, 8)}…</td>
+            <td>v${run.graderVersion}</td>
+            <td><span class="result-status ${run.status}">${resultStatusLabel(run.status)}</span></td>
+            <td>${run.startedAt ? formatAssignmentWindow(run.startedAt, null).split(' → ')[0] : '—'}</td>
+            <td>${run.completedAt ? formatAssignmentWindow(run.completedAt, null).split(' → ')[0] : '—'}</td>
+          `;
+          gBody.append(gRow);
+        }
+        gTable.append(gBody);
+        detailGradingHistory.append(gTable);
+      } else {
+        detailGradingHistory.textContent = 'Chưa có thông tin lượt chấm.';
+      }
+    }
+
+    if (detailItems) {
+      detailItems.replaceChildren();
+      for (const item of payload.items) {
+        const card = document.createElement('div');
+        card.className = `question-card verdict-${item.verdict}`;
+
+        const qHeader = document.createElement('div');
+        qHeader.className = 'question-header';
+        qHeader.innerHTML = `
+          <div class="q-title-wrap">
+            <span class="q-pos">Câu ${item.position}</span>
+            ${item.primarySkill ? `<span class="q-skill-badge">${item.primarySkill.toUpperCase()}</span>` : ''}
+            <span class="q-type-badge">${item.interactionType}</span>
+          </div>
+          <div class="q-score-wrap">
+            <span class="verdict-badge ${item.verdict}">${verdictLabel(item.verdict)}</span>
+            <span class="q-points">${item.scoreEarned}/${item.maxScore} điểm</span>
+          </div>
+        `;
+        card.append(qHeader);
+
+        const promptDiv = document.createElement('div');
+        promptDiv.className = 'question-prompt';
+        promptDiv.textContent = item.prompt;
+        if (item.helpText) {
+          const helpP = document.createElement('p');
+          helpP.className = 'question-help';
+          helpP.textContent = item.helpText;
+          promptDiv.append(helpP);
+        }
+        card.append(promptDiv);
+
+        if (item.options && item.options.length > 0) {
+          const optList = document.createElement('ul');
+          optList.className = 'question-options';
+          for (const opt of item.options) {
+            const li = document.createElement('li');
+            const isSelected = item.studentAnswer === opt.id || (Array.isArray(item.studentAnswer) && item.studentAnswer.includes(opt.id));
+            if (isSelected) li.className = 'opt-selected';
+            li.textContent = `${opt.id}: ${opt.label}${isSelected ? ' (Học viên chọn)' : ''}`;
+            optList.append(li);
+          }
+          card.append(optList);
+        }
+
+        const answersWrap = document.createElement('div');
+        answersWrap.className = 'answers-wrap';
+
+        const studentAnsP = document.createElement('div');
+        studentAnsP.className = 'answer-block student-answer';
+        const ansText = item.studentAnswer === null || item.studentAnswer === undefined
+          ? '(Chưa trả lời)'
+          : (Array.isArray(item.studentAnswer) ? item.studentAnswer.join(', ') : String(item.studentAnswer));
+        studentAnsP.innerHTML = `<strong>Câu trả lời của học viên:</strong> <span class="ans-content">${ansText}</span>`;
+        answersWrap.append(studentAnsP);
+
+        if (item.expectedAnswer !== null && item.expectedAnswer !== undefined) {
+          const expectedAnsP = document.createElement('div');
+          expectedAnsP.className = 'answer-block expected-answer';
+          const expText = Array.isArray(item.expectedAnswer)
+            ? item.expectedAnswer.join(', ')
+            : String(item.expectedAnswer);
+          expectedAnsP.innerHTML = `<strong>Đáp án mẫu / rubric:</strong> <span class="ans-content">${expText}</span>`;
+          answersWrap.append(expectedAnsP);
+        }
+        card.append(answersWrap);
+
+        if (item.feedback) {
+          const fbBox = document.createElement('div');
+          fbBox.className = 'feedback-box';
+          const fbLines = [];
+          if (Number.isFinite(item.feedback.structureScore)) {
+            fbLines.push(`Điểm cấu trúc: ${item.feedback.structureScore}`);
+          }
+          if (Number.isFinite(item.feedback.accuracyScore)) {
+            fbLines.push(`Điểm chính xác: ${item.feedback.accuracyScore}`);
+          }
+          if (Array.isArray(item.feedback.evidence) && item.feedback.evidence.length > 0) {
+            fbLines.push(`Nhận xét: ${item.feedback.evidence.join('; ')}`);
+          }
+          if (Array.isArray(item.feedback.errors) && item.feedback.errors.length > 0) {
+            fbLines.push(`Lỗi: ${item.feedback.errors.map(e => e.message || e.code).join(', ')}`);
+          }
+          fbBox.innerHTML = `<strong>Nhận xét & Rubric:</strong><p>${fbLines.join(' · ') || 'Không có nhận xét chi tiết.'}</p>`;
+          card.append(fbBox);
+        }
+
+        detailItems.append(card);
+      }
+    }
+
+    if (results) results.hidden = true;
+    attemptDetail.hidden = false;
+  }
+
+  async function loadAttemptDetail(classId, assignmentId, attemptId) {
+    if (!classId || !assignmentId || !attemptId) {
+      if (attemptDetail) attemptDetail.hidden = true;
+      return;
+    }
+    status.textContent = 'Đang tải chi tiết bài làm…';
+    const payload = await request(attemptDetailPath(classId, assignmentId, attemptId));
+    renderAttemptDetail(payload);
+    status.textContent = 'Đã mở chi tiết bài làm';
   }
 
   async function loadResults(classId, assignmentId) {
@@ -254,6 +526,12 @@ async function startDashboard() {
       assignments.append(card);
     }
     status.textContent = `${payload.assignments.length} bài được giao`;
+    if (selectedExists) {
+      await loadResults(classId, selectedAssignmentId);
+      if (state.attemptId) {
+        await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
+      }
+    }
   }
 
   async function loadClasses() {
@@ -345,6 +623,15 @@ async function startDashboard() {
       if (sortDirSelect) sortDirSelect.value = 'asc';
       setUrl();
       loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
+    });
+  }
+
+  if (closeAttemptDetailBtn) {
+    closeAttemptDetailBtn.addEventListener('click', () => {
+      if (attemptDetail) attemptDetail.hidden = true;
+      if (results) results.hidden = false;
+      delete state.attemptId;
+      setUrl();
     });
   }
 
