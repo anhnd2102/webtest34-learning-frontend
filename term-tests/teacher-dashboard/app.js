@@ -85,6 +85,10 @@ export function studentTransferPath(classId, studentRef) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/students/${encodeURIComponent(studentRef)}/transfer`;
 }
 
+export function grantRetakePath(classId, assignmentId, studentRef) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/students/${encodeURIComponent(studentRef)}/retake`;
+}
+
 
 export function formatPublicationStatus(publication) {
   if (!publication || !publication.published) return 'Chưa công bố';
@@ -120,6 +124,8 @@ export function resultStatusLabel(status) {
   return ({
     not_started: 'Chưa bắt đầu',
     in_progress: 'Đang làm',
+    retake_granted: 'Được phép làm lại',
+    retaking: 'Đang làm lại',
     grading: 'Đang chấm',
     review_required: 'Cần duyệt',
     complete: 'Hoàn tất'
@@ -184,6 +190,16 @@ async function startDashboard() {
   const addStudentError = document.querySelector('#add-student-error');
   const cancelAddStudentBtn = document.querySelector('#cancel-add-student-btn');
 
+  const grantRetakeModal = document.querySelector('#grant-retake-modal');
+  const grantRetakeForm = document.querySelector('#grant-retake-form');
+  const grantRetakeBtn = document.querySelector('#grant-retake-btn');
+  const retakeStudentName = document.querySelector('#retake-student-name');
+  const retakeStudentRefInput = document.querySelector('#retake-student-ref-input');
+  const retakeReasonInput = document.querySelector('#retake-reason-input');
+  const retakeAvailableFromInput = document.querySelector('#retake-available-from-input');
+  const retakeExpiresAtInput = document.querySelector('#retake-expires-at-input');
+  const cancelGrantRetakeBtn = document.querySelector('#cancel-grant-retake-btn');
+  const grantRetakeError = document.querySelector('#grant-retake-error');
 
   const searchInput = document.querySelector('#search-input');
   const statusFilter = document.querySelector('#status-filter');
@@ -299,6 +315,8 @@ async function startDashboard() {
         appendCell(row, student.submittedAt ? formatAssignmentWindow(student.submittedAt, null).split(' → ')[0] : '—');
 
         const actionCell = document.createElement('td');
+        const actionsGroup = document.createElement('div');
+        actionsGroup.className = 'table-actions';
         if (student.attemptId) {
           const detailBtn = document.createElement('button');
           detailBtn.type = 'button';
@@ -311,10 +329,22 @@ async function startDashboard() {
               status.textContent = err.message;
             });
           });
-          actionCell.append(detailBtn);
-        } else {
-          actionCell.textContent = '—';
+          actionsGroup.append(detailBtn);
         }
+        const retakeBtn = document.createElement('button');
+        retakeBtn.type = 'button';
+        retakeBtn.className = 'btn-secondary btn-sm';
+        retakeBtn.textContent = 'Làm lại';
+        retakeBtn.title = 'Cấp quyền làm lại bài thi';
+        retakeBtn.addEventListener('click', () => {
+          openGrantRetakeModal({
+            studentRef: student.studentRef,
+            studentName: student.name,
+            discriminator: student.discriminator
+          });
+        });
+        actionsGroup.append(retakeBtn);
+        actionCell.append(actionsGroup);
         row.append(actionCell);
         body.append(row);
       }
@@ -373,6 +403,15 @@ async function startDashboard() {
         leftBadge.className = 'meta-badge badge-left-class';
         leftBadge.textContent = 'Không còn trong lớp';
         detailMeta.append(leftBadge);
+      }
+
+      if (payload.retakeGrant) {
+        const retakeBadge = document.createElement('span');
+        retakeBadge.className = 'meta-badge';
+        retakeBadge.style.background = '#f3e8ff';
+        retakeBadge.style.color = '#6b21a8';
+        retakeBadge.textContent = `Quyền làm lại: ${resultStatusLabel(payload.retakeGrant.status)}`;
+        detailMeta.append(retakeBadge);
       }
     }
 
@@ -1136,6 +1175,110 @@ async function startDashboard() {
         if (addStudentError) {
           addStudentError.hidden = false;
           addStudentError.textContent = err.message;
+        }
+      }
+    });
+  }
+
+  function openGrantRetakeModal({ studentRef, studentName, discriminator }) {
+    if (!state.classId || !state.assignmentId || !studentRef) return;
+    if (grantRetakeError) {
+      grantRetakeError.hidden = true;
+      grantRetakeError.textContent = '';
+    }
+    if (retakeStudentName) {
+      retakeStudentName.textContent = discriminator ? `${studentName} · ${discriminator}` : (studentName || studentRef);
+    }
+    if (retakeStudentRefInput) {
+      retakeStudentRefInput.value = studentRef;
+    }
+    if (retakeReasonInput) {
+      retakeReasonInput.value = '';
+    }
+    if (retakeAvailableFromInput) {
+      retakeAvailableFromInput.value = '';
+    }
+    if (retakeExpiresAtInput) {
+      const nowPlus24h = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      const pad = n => String(n).padStart(2, '0');
+      const localIso = `${nowPlus24h.getFullYear()}-${pad(nowPlus24h.getMonth() + 1)}-${pad(nowPlus24h.getDate())}T${pad(nowPlus24h.getHours())}:${pad(nowPlus24h.getMinutes())}`;
+      retakeExpiresAtInput.value = localIso;
+    }
+    if (typeof grantRetakeModal?.showModal === 'function') {
+      grantRetakeModal.showModal();
+    } else if (grantRetakeModal) {
+      grantRetakeModal.hidden = false;
+    }
+  }
+
+  if (grantRetakeBtn) {
+    grantRetakeBtn.addEventListener('click', () => {
+      if (!currentAttemptDetail) return;
+      openGrantRetakeModal({
+        studentRef: currentAttemptDetail.student.studentRef,
+        studentName: currentAttemptDetail.student.name,
+        discriminator: currentAttemptDetail.student.discriminator
+      });
+    });
+  }
+
+  if (cancelGrantRetakeBtn) {
+    cancelGrantRetakeBtn.addEventListener('click', () => {
+      if (typeof grantRetakeModal?.close === 'function') {
+        grantRetakeModal.close();
+      } else if (grantRetakeModal) {
+        grantRetakeModal.hidden = true;
+      }
+    });
+  }
+
+  if (grantRetakeForm) {
+    grantRetakeForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!state.classId || !state.assignmentId) return;
+      const studentRef = retakeStudentRefInput?.value.trim();
+      const reason = retakeReasonInput?.value.trim();
+      const availableFromVal = retakeAvailableFromInput?.value;
+      const expiresAtVal = retakeExpiresAtInput?.value;
+
+      if (!studentRef || !reason || !expiresAtVal) {
+        if (grantRetakeError) {
+          grantRetakeError.hidden = false;
+          grantRetakeError.textContent = 'Vui lòng điền đầy đủ lý do và hạn chót làm lại.';
+        }
+        return;
+      }
+
+      const availableFrom = availableFromVal ? new Date(availableFromVal).toISOString() : null;
+      const expiresAt = new Date(expiresAtVal).toISOString();
+
+      try {
+        const response = await fetch(`${apiBase()}${grantRetakePath(state.classId, state.assignmentId, studentRef)}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...fixtureHeaders(identity())
+          },
+          body: JSON.stringify({ reason, availableFrom, expiresAt })
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.message || 'Không thể cấp quyền làm lại.');
+        }
+        if (typeof grantRetakeModal?.close === 'function') {
+          grantRetakeModal.close();
+        } else if (grantRetakeModal) {
+          grantRetakeModal.hidden = true;
+        }
+        alert('Cấp quyền làm lại thành công!');
+        await loadResults(state.classId, state.assignmentId);
+        if (state.attemptId) {
+          await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);
+        }
+      } catch (err) {
+        if (grantRetakeError) {
+          grantRetakeError.hidden = false;
+          grantRetakeError.textContent = err.message;
         }
       }
     });

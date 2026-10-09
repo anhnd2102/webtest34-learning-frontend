@@ -72,6 +72,34 @@
         </form>
       </dialog>
 
+      <dialog id="grant-retake-modal" class="modal">
+        <form id="grant-retake-form" method="dialog" class="modal-form">
+          <h3>Cấp quyền làm lại bài thi</h3>
+          <p class="modal-desc">Lưu ý: Cấp quyền làm lại sẽ vô hiệu hóa lần làm bài hiện tại sau khi học viên bắt đầu lần mới. Lịch sử các lần làm bài trước vẫn được lưu trữ đầy đủ.</p>
+          <div id="grant-retake-error" class="error-msg" hidden role="alert"></div>
+          <div class="modal-info">
+            <span>Học viên:</span>
+            <strong id="retake-student-name">—</strong>
+            <input id="retake-student-ref-input" type="hidden">
+          </div>
+          <label>
+            <span>Lý do cho phép làm lại (bắt buộc)</span>
+            <textarea id="retake-reason-input" required rows="3" placeholder="Nhập lý do cho phép làm lại (ví dụ: Sự cố mạng, sự cố kỹ thuật...)"></textarea>
+          </label>
+          <label>
+            <span>Thời điểm mở (tùy chọn)</span>
+            <input id="retake-available-from-input" type="datetime-local">
+          </label>
+          <label>
+            <span>Hạn chót làm lại (bắt buộc - gợi ý 24 giờ)</span>
+            <input id="retake-expires-at-input" type="datetime-local" required>
+          </label>
+          <div class="modal-actions">
+            <button id="cancel-grant-retake-btn" type="button" class="btn-secondary">Hủy</button>
+            <button id="submit-grant-retake-btn" type="submit" class="btn-primary">Xác nhận cấp quyền</button>
+          </div>
+        </form>
+      </dialog>
 
       <form id="filters-toolbar" class="toolbar-grid" role="search" aria-label="Bộ lọc và tìm kiếm">
         <label class="field-search">
@@ -84,6 +112,8 @@
             <option value="">Tất cả</option>
             <option value="review_required">Cần duyệt</option>
             <option value="grading">Đang chấm</option>
+            <option value="retake_granted">Được phép làm lại</option>
+            <option value="retaking">Đang làm lại</option>
             <option value="not_started">Chưa làm</option>
             <option value="in_progress">Đang làm</option>
             <option value="complete">Hoàn tất</option>
@@ -171,6 +201,7 @@
           <span id="draft-status-msg" class="draft-status-msg" aria-live="polite"></span>
         </div>
         <div class="grading-buttons">
+          <button id="grant-retake-btn" type="button" class="btn-secondary">Cấp quyền làm lại</button>
           <button id="save-draft-btn" type="button" class="btn-secondary">Lưu nháp</button>
           <button id="complete-grading-btn" type="button" class="btn-primary">Hoàn tất chấm</button>
           <button id="publish-result-btn" type="button" class="btn-primary">Công bố kết quả</button>

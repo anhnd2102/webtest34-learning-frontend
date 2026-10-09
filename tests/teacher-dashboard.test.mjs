@@ -18,7 +18,8 @@ import {
   formatPublicationStatus,
   assignmentRosterPath,
   eligibleStudentsPath,
-  studentTransferPath
+  studentTransferPath,
+  grantRetakePath
 } from '../term-tests/teacher-dashboard/app.js';
 
 
@@ -266,3 +267,28 @@ test('teacher dashboard index.html provides add student controls and modal', asy
   assert.match(html, /id="add-student-btn"/);
   assert.match(html, /id="add-student-modal"/);
 });
+
+test('grantRetakePath builds canonical endpoint and labels retake statuses', () => {
+  const classId = '101';
+  const asgId = '11111111-1111-4111-8111-111111111111';
+  const sRef = '44444444-4444-4444-8444-444444444441';
+  assert.equal(
+    grantRetakePath(classId, asgId, sRef),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/students/44444444-4444-4444-8444-444444444441/retake'
+  );
+  assert.equal(resultStatusLabel('retake_granted'), 'Được phép làm lại');
+  assert.equal(resultStatusLabel('retaking'), 'Đang làm lại');
+  assert.equal(attemptStatusLabel('superseded'), 'Bị thay thế');
+});
+
+test('teacher dashboard index.html provides grant retake modal and status filter options', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="grant-retake-modal"/);
+  assert.match(html, /id="grant-retake-btn"/);
+  assert.match(html, /id="retake-reason-input"/);
+  assert.match(html, /id="retake-expires-at-input"/);
+  assert.match(html, /value="retake_granted"/);
+  assert.match(html, /value="retaking"/);
+});
+
