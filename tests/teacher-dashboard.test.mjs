@@ -19,7 +19,12 @@ import {
   assignmentRosterPath,
   eligibleStudentsPath,
   studentTransferPath,
-  grantRetakePath
+  grantRetakePath,
+  authLoginPath,
+  authLogoutPath,
+  authMePath,
+  authHeaders,
+  teacherRoleLabel
 } from '../term-tests/teacher-dashboard/app.js';
 
 
@@ -304,6 +309,51 @@ test('teacher dashboard styles.css and student runner provide retake expiry and 
   assert.match(demoHtml, /id="studentNotice"/);
   assert.match(demoHtml, /Quy\u1ec1n l\u00e0m l\u1ea1i \u0111\u00e3 h\u1ebft h\u1ea1n/);
   assert.match(demoHtml, /Th\u1eddi gian l\u00e0m b\u00e0i th\u1ef1c t\u1ebf l\u00e0/);
+});
+
+test('teacher dashboard auth endpoints and headers use canonical authorization', () => {
+  assert.equal(authLoginPath(), '/api/teacher/auth/login');
+  assert.equal(authLogoutPath(), '/api/teacher/auth/logout');
+  assert.equal(authMePath(), '/api/teacher/auth/me');
+
+  assert.deepEqual(authHeaders({ token: 'sess_abc123' }), {
+    Authorization: 'Bearer sess_abc123'
+  });
+  assert.deepEqual(authHeaders({ actorId: 'teacher@izone.edu.vn' }), {
+    'X-Teacher-Fixture-Id': 'teacher@izone.edu.vn'
+  });
+  assert.deepEqual(authHeaders({ token: 'sess_abc123', actorId: 'ignored@izone.edu.vn' }), {
+    Authorization: 'Bearer sess_abc123'
+  });
+  assert.deepEqual(authHeaders({}), {});
+});
+
+test('teacherRoleLabel formats friendly labels per teacher role and course codes', () => {
+  assert.equal(teacherRoleLabel('admin'), 'Quản trị viên (Toàn quyền)');
+  assert.equal(teacherRoleLabel('lead', ['IELTS34', 'IELTS45']), 'Trưởng bộ môn (Khối IELTS34, IELTS45)');
+  assert.equal(teacherRoleLabel('lead', []), 'Trưởng bộ môn (Khối Khối)');
+  assert.equal(teacherRoleLabel('qm'), 'Quản lý chất lượng');
+  assert.equal(teacherRoleLabel('teacher'), 'Giáo viên phụ trách lớp');
+});
+
+test('teacher dashboard index.html and styles.css provide database login and teacher profile elements', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="auth-panel"/);
+  assert.match(html, /id="login-form"/);
+  assert.match(html, /id="login-email"/);
+  assert.match(html, /id="login-phone"/);
+  assert.match(html, /id="login-error"/);
+  assert.match(html, /id="teacher-profile"/);
+  assert.match(html, /id="teacher-profile-name"/);
+  assert.match(html, /id="teacher-role-badge"/);
+  assert.match(html, /id="logout-btn"/);
+
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /#teacher-profile/);
+  assert.match(css, /\.role-badge\.admin/);
+  assert.match(css, /\.role-badge\.lead/);
+  assert.match(css, /\.role-badge\.teacher/);
 });
 
 

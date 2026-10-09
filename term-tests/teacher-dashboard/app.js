@@ -45,6 +45,38 @@ export function fixtureHeaders({ actorId }) {
   return { 'X-Teacher-Fixture-Id': actorId.trim() };
 }
 
+export function authLoginPath() {
+  return '/api/teacher/auth/login';
+}
+
+export function authLogoutPath() {
+  return '/api/teacher/auth/logout';
+}
+
+export function authMePath() {
+  return '/api/teacher/auth/me';
+}
+
+export function authHeaders({ token = '', actorId = '' } = {}) {
+  if (token && typeof token === 'string' && token.trim()) {
+    return { 'Authorization': `Bearer ${token.trim()}` };
+  }
+  if (actorId && typeof actorId === 'string' && actorId.trim()) {
+    return { 'X-Teacher-Fixture-Id': actorId.trim() };
+  }
+  return {};
+}
+
+export function teacherRoleLabel(role, courseCodes = []) {
+  if (role === 'admin') return 'Quản trị viên (Toàn quyền)';
+  if (role === 'lead') {
+    const khoiList = courseCodes && courseCodes.length > 0 ? courseCodes.join(', ') : 'Khối';
+    return `Trưởng bộ môn (Khối ${khoiList})`;
+  }
+  if (role === 'qm') return 'Quản lý chất lượng';
+  return 'Giáo viên phụ trách lớp';
+}
+
 export function assignmentResultsPath(classId, assignmentId, options = {}) {
   const base = `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/results`;
   const params = new URLSearchParams();
@@ -240,11 +272,36 @@ async function startDashboard() {
   if (state.sortBy) sortBySelect.value = state.sortBy;
   if (state.sortDir) sortDirSelect.value = state.sortDir;
 
-  const identity = () => ({ actorId: form.elements.actorId.value });
-  const apiBase = () => form.elements.apiBase.value.replace(/\/$/, '');
-  const request = async path => {
-    const response = await fetch(`${apiBase()}${path}`, { headers: fixtureHeaders(identity()) });
-    const payload = await response.json();
+  const loginForm = document.querySelector('#login-form');
+  const loginApiBase = document.querySelector('#login-api-base');
+  const loginEmail = document.querySelector('#login-email');
+  const loginPhone = document.querySelector('#login-phone');
+  const loginError = document.querySelector('#login-error');
+  const toggleFixtureBtn = document.querySelector('#toggle-fixture-btn');
+  const teacherProfile = document.querySelector('#teacher-profile');
+  const teacherProfileName = document.querySelector('#teacher-profile-name');
+  const teacherProfileMeta = document.querySelector('#teacher-profile-meta');
+  const teacherRoleBadge = document.querySelector('#teacher-role-badge');
+  const logoutBtn = document.querySelector('#logout-btn');
+
+  let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
+
+  const identity = () => ({ actorId: form?.elements?.actorId?.value || '' });
+  const apiBase = () => (loginApiBase?.value || form?.elements?.apiBase?.value || 'http://localhost:8788').replace(/\/$/, '');
+  const authHeader = () => authHeaders({ token: sessionToken, actorId: form?.elements?.actorId?.value });
+
+  const request = async (path, options = {}) => {
+    const headers = { ...authHeader(), ...(options.headers || {}) };
+    const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
+    const payload = await response.json().catch(() => ({}));
+    if (response.status === 401 && sessionToken) {
+      handleLogout();
+      if (loginError) {
+        loginError.hidden = false;
+        loginError.textContent = 'Phiên làm việc đã kết thúc hoặc không hợp lệ. Vui lòng đăng nhập lại.';
+      }
+      throw new Error(payload.message || 'Yêu cầu đăng nhập.');
+    }
     if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
     return payload;
   };
@@ -934,7 +991,7 @@ async function startDashboard() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...fixtureHeaders(identity())
+          ...authHeader()
         },
         body: JSON.stringify({
           baseRevision: currentAttemptDetail.manualGrading?.revision ?? 0,
@@ -997,7 +1054,7 @@ async function startDashboard() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...fixtureHeaders(identity())
+          ...authHeader()
         },
         body: JSON.stringify({
           baseRevision: currentAttemptDetail.manualGrading?.revision ?? 0,
@@ -1044,7 +1101,7 @@ async function startDashboard() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...fixtureHeaders(identity())
+          ...authHeader()
         },
         body: JSON.stringify({ note: 'Công bố kết quả' })
       });
@@ -1159,7 +1216,7 @@ async function startDashboard() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            ...fixtureHeaders(identity())
+            ...authHeader()
           },
           body: JSON.stringify({ studentRef, name, discriminator })
         });
@@ -1259,7 +1316,7 @@ async function startDashboard() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            ...fixtureHeaders(identity())
+            ...authHeader()
           },
           body: JSON.stringify({ reason, availableFrom, expiresAt })
         });
@@ -1303,6 +1360,122 @@ async function startDashboard() {
       setUrl();
       loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
     });
+  }
+
+  function renderTeacherProfile(teacher) {
+    if (!teacher) return;
+    if (teacherProfileName) teacherProfileName.textContent = teacher.name || teacher.email;
+    if (teacherProfileMeta) teacherProfileMeta.textContent = `${teacher.email} · SĐT: ${teacher.phone || '—'}`;
+    if (teacherRoleBadge) {
+      teacherRoleBadge.textContent = teacherRoleLabel(teacher.role, teacher.courseCodes);
+      teacherRoleBadge.className = `role-badge ${teacher.role || 'teacher'}`;
+    }
+    if (loginForm) loginForm.hidden = true;
+    if (teacherProfile) teacherProfile.hidden = false;
+    if (loginError) loginError.hidden = true;
+  }
+
+  function handleLogout() {
+    sessionToken = '';
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem('izone_teacher_token');
+      sessionStorage.removeItem('izone_teacher_profile');
+    }
+    if (teacherProfile) teacherProfile.hidden = true;
+    if (loginForm) loginForm.hidden = false;
+    if (classSelect) classSelect.replaceChildren(new Option('Chọn lớp', ''));
+    if (assignments) assignments.replaceChildren();
+    if (results) results.hidden = true;
+    if (attemptDetail) attemptDetail.hidden = true;
+    if (status) status.textContent = 'Đã đăng xuất. Vui lòng đăng nhập lại.';
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (loginError) loginError.hidden = true;
+      const email = loginEmail?.value.trim() || '';
+      const phone = loginPhone?.value.trim() || '';
+      if (!email || !phone) {
+        if (loginError) {
+          loginError.hidden = false;
+          loginError.textContent = 'Vui lòng nhập đầy đủ Email và Số điện thoại.';
+        }
+        return;
+      }
+
+      try {
+        if (status) status.textContent = 'Đang xác thực tài khoản…';
+        const response = await fetch(`${apiBase()}${authLoginPath()}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, phone })
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.message || 'Email hoặc số điện thoại không chính xác.');
+        }
+
+        sessionToken = payload.token;
+        if (typeof sessionStorage !== 'undefined') {
+          sessionStorage.setItem('izone_teacher_token', payload.token);
+          sessionStorage.setItem('izone_teacher_profile', JSON.stringify(payload.teacher));
+        }
+
+        renderTeacherProfile(payload.teacher);
+        await loadClasses();
+      } catch (err) {
+        if (loginError) {
+          loginError.hidden = false;
+          loginError.textContent = err.message;
+        }
+        if (status) status.textContent = `Lỗi đăng nhập: ${err.message}`;
+      }
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        if (sessionToken) {
+          await fetch(`${apiBase()}${authLogoutPath()}`, {
+            method: 'POST',
+            headers: { ...authHeader() }
+          }).catch(() => {});
+        }
+      } finally {
+        handleLogout();
+      }
+    });
+  }
+
+  if (toggleFixtureBtn && form) {
+    toggleFixtureBtn.addEventListener('click', () => {
+      form.hidden = !form.hidden;
+    });
+  }
+
+  // Restore session on load if present
+  if (sessionToken) {
+    const cachedProfile = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('izone_teacher_profile') : null;
+    if (cachedProfile) {
+      try {
+        renderTeacherProfile(JSON.parse(cachedProfile));
+      } catch {
+        // ignore
+      }
+    }
+    fetch(`${apiBase()}${authMePath()}`, { headers: { ...authHeader() } })
+      .then(async res => {
+        if (res.ok) {
+          const data = await res.json();
+          renderTeacherProfile(data.teacher);
+          await loadClasses();
+        } else {
+          handleLogout();
+        }
+      })
+      .catch(() => {});
   }
 
   form.addEventListener('submit', event => {

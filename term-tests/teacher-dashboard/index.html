@@ -14,9 +14,37 @@
       <p>Chọn lớp và bài được giao trong môi trường nội bộ hoặc staging.</p>
     </header>
 
-    <form id="identity-form" class="panel">
-      <h2>Danh tính kiểm thử</h2>
-      <p class="warning">Fixture chỉ dành cho kiểm thử. Không sử dụng với dữ liệu học viên thật.</p>
+    <section id="auth-panel" class="panel">
+      <form id="login-form">
+        <h2>Đăng nhập Giảng viên / Quản lý</h2>
+        <p class="auth-desc">Đăng nhập nội bộ IZONE bằng Email và Số điện thoại đã được đăng ký.</p>
+        <div id="login-error" class="error-msg" hidden role="alert"></div>
+        <div class="auth-grid">
+          <label>API base URL <input id="login-api-base" name="apiBase" type="url" value="http://localhost:8788" required></label>
+          <label>Email <input id="login-email" name="email" type="email" placeholder="ví dụ: giangvien@izone.edu.vn" required></label>
+          <label>Số điện thoại <input id="login-phone" name="phone" type="tel" placeholder="ví dụ: 0912345678" required></label>
+        </div>
+        <div class="auth-actions">
+          <button id="login-btn" type="submit" class="btn-primary">Đăng nhập</button>
+          <button id="toggle-fixture-btn" type="button" class="btn-secondary">Chế độ kiểm thử (Fixture)</button>
+        </div>
+      </form>
+
+      <div id="teacher-profile" class="teacher-profile" hidden>
+        <div class="profile-info">
+          <div>
+            <h3 id="teacher-profile-name">—</h3>
+            <p id="teacher-profile-meta" class="meta-info">—</p>
+          </div>
+          <span id="teacher-role-badge" class="role-badge">—</span>
+        </div>
+        <button id="logout-btn" type="button" class="btn-secondary">Đăng xuất</button>
+      </div>
+    </section>
+
+    <form id="identity-form" class="panel" hidden>
+      <h2>Danh tính kiểm thử (Fixture)</h2>
+      <p class="warning">Fixture chỉ dành cho kiểm thử cục bộ khi chưa cấu hình database auth.</p>
       <label>API base URL <input name="apiBase" type="url" value="http://localhost:8788" required></label>
       <label>Email fixture <input name="actorId" type="email" value="admin@izone.test" required></label>
       <p>Vai trò và phạm vi lớp/khối được cấu hình ở backend; trình duyệt không thể tự khai báo quyền.</p>
