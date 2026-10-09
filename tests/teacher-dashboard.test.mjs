@@ -356,4 +356,60 @@ test('teacher dashboard index.html and styles.css provide database login and tea
   assert.match(css, /\.role-badge\.teacher/);
 });
 
+test('multi-course grading presentation invariants across Course 03, Course 34, and Course 45', () => {
+  // Course 03 (Scale 100): must be earned/max, never %
+  const c03Score = formatDashboardScore({ earned: 87.5, maximum: 100, status: 'final' });
+  assert.equal(c03Score, '87.5/100');
+  assert.doesNotMatch(c03Score, /%/);
+
+  // Course 45 (Speaking rubric scale 9 or 10): must be earned/max, never %
+  const c45Score = formatDashboardScore({ earned: 6.5, maximum: 9, status: 'final' });
+  assert.equal(c45Score, '6.5/9');
+  assert.doesNotMatch(c45Score, /%/);
+
+  // Course 34 (Scale 25): must be earned/max, never %
+  const c34Score = formatDashboardScore({ earned: 18, maximum: 25, status: 'final' });
+  assert.equal(c34Score, '18/25');
+  assert.doesNotMatch(c34Score, /%/);
+
+  // Provisional total score: distinct from final, never %
+  const provisional = formatDashboardScore({ earned: 18, maximum: 25, status: 'provisional' });
+  assert.equal(provisional, '18/25 · Tạm tính');
+  assert.doesNotMatch(provisional, /%/);
+
+  // Missing or untested skill: display "—", never 0 or 0%
+  assert.equal(formatDashboardScore(null), '—');
+});
+
+test('dashboard URL preserves class and assignment isolation across multiple classes', () => {
+  const c34AUrl = assignmentUrl('https://example.test/term-tests/teacher-dashboard/', {
+    classId: 'class-c34-a',
+    assignmentId: 'assign-c34-a-1'
+  });
+  assert.deepEqual(readDashboardState(c34AUrl), {
+    classId: 'class-c34-a',
+    assignmentId: 'assign-c34-a-1'
+  });
+
+  const c34BUrl = assignmentUrl(c34AUrl.toString(), {
+    classId: 'class-c34-b',
+    assignmentId: 'assign-c34-b-2'
+  });
+  assert.deepEqual(readDashboardState(c34BUrl), {
+    classId: 'class-c34-b',
+    assignmentId: 'assign-c34-b-2'
+  });
+});
+
+test('teacher dashboard index.html and styles.css provide conflict alert element and styles', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="conflict-alert"/);
+  assert.match(html, /class="conflict-alert"/);
+
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.conflict-alert/);
+});
+
+
 
