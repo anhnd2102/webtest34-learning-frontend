@@ -278,7 +278,9 @@ test('grantRetakePath builds canonical endpoint and labels retake statuses', () 
   );
   assert.equal(resultStatusLabel('retake_granted'), 'Được phép làm lại');
   assert.equal(resultStatusLabel('retaking'), 'Đang làm lại');
+  assert.equal(resultStatusLabel('retake_expired'), 'Quyền làm lại đã hết hạn');
   assert.equal(attemptStatusLabel('superseded'), 'Bị thay thế');
+  assert.equal(attemptStatusLabel('expired'), 'Hết hạn');
 });
 
 test('teacher dashboard index.html provides grant retake modal and status filter options', async () => {
@@ -290,5 +292,18 @@ test('teacher dashboard index.html provides grant retake modal and status filter
   assert.match(html, /id="retake-expires-at-input"/);
   assert.match(html, /value="retake_granted"/);
   assert.match(html, /value="retaking"/);
+  assert.match(html, /value="retake_expired"/);
 });
+
+test('teacher dashboard styles.css and student runner provide retake expiry and preflight notices', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.result-status\.retake_expired/);
+
+  const demoHtml = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
+  assert.match(demoHtml, /id="studentNotice"/);
+  assert.match(demoHtml, /Quy\u1ec1n l\u00e0m l\u1ea1i \u0111\u00e3 h\u1ebft h\u1ea1n/);
+  assert.match(demoHtml, /Th\u1eddi gian l\u00e0m b\u00e0i th\u1ef1c t\u1ebf l\u00e0/);
+});
+
 

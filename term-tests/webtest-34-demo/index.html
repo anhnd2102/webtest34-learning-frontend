@@ -338,6 +338,7 @@
             </select>
             <span class="field-hint">Chọn đúng tên của bạn trong danh sách lớp. Tên sẽ được khóa khi bắt đầu làm bài.</span>
             <span class="field-error hidden" id="studentError"></span>
+            <span class="field-ok hidden" id="studentNotice"></span>
           </div>
         </div>
         <div class="start-actions">
@@ -1369,11 +1370,52 @@
     if(retry) retry.hidden = state !== 'error';
   }
 
+  function formatDateTimeVN(value){
+    if(!value) return '—';
+    try {
+      return new Intl.DateTimeFormat('vi-VN', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+        timeZone: 'Asia/Ho_Chi_Minh'
+      }).format(new Date(value));
+    } catch {
+      return String(value);
+    }
+  }
+
   function updateStartButton(){
     const student = selectedStudent();
     const ready = officialAudioKeys.every(key => audioReady[key]);
-    $('#continueToAudio').disabled = !student;
-    $('#startExam').disabled = !student || !ready;
+    let canStart = Boolean(student);
+
+    const noticeEl = $('#studentNotice');
+    if (noticeEl) hide('studentNotice');
+
+    if (student?.retakeGrant) {
+      const grant = student.retakeGrant;
+      const now = Date.now();
+      const expiresAtMs = grant.expiresAt ? new Date(grant.expiresAt).getTime() : 0;
+      const availableFromMs = grant.availableFrom ? new Date(grant.availableFrom).getTime() : 0;
+
+      if (grant.status === 'expired' || (expiresAtMs && expiresAtMs <= now)) {
+        setError('studentError', `Quyền làm lại đã hết hạn (hạn chót: ${formatDateTimeVN(grant.expiresAt)}). Hãy liên hệ giáo viên để được cấp lại.`);
+        canStart = false;
+      } else if (availableFromMs && availableFromMs > now) {
+        setError('studentError', `Quyền làm lại chưa tới thời gian mở (bắt đầu lúc: ${formatDateTimeVN(grant.availableFrom)}).`);
+        canStart = false;
+      } else {
+        setError('studentError', '');
+        const defMinutes = TOTAL_MINUTES;
+        const remainingMinutes = Math.min(defMinutes, Math.max(0, Math.floor((expiresAtMs - now) / 60000)));
+        if (noticeEl) {
+          noticeEl.textContent = `Quyền làm lại: Thời gian làm bài thực tế là ${remainingMinutes} phút (hạn chót nộp bài: ${formatDateTimeVN(grant.expiresAt)}).`;
+          show('studentNotice');
+        }
+      }
+    }
+
+    $('#continueToAudio').disabled = !canStart;
+    $('#startExam').disabled = !canStart || !ready;
   }
 
   function setAudioVolume(value){
@@ -1741,7 +1783,8 @@
         students = assignment.assignment.roster.map(student => ({
           ref: student.studentRef,
           name: student.name,
-          discriminator: student.discriminator || ''
+          discriminator: student.discriminator || '',
+          retakeGrant: student.retakeGrant || null
         }));
         className = assignment.assignment.class?.name || code;
       } else if((config.ENABLE_DEMO_ROSTER_FALLBACK || !config.API_BASE_URL) && demoRosterByClass[code]){

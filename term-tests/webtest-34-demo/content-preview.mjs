@@ -718,6 +718,48 @@ export async function mount(course) {
         const student = learningState.assignment?.roster?.find(s => s.studentRef === ref);
         learningState.studentRef = ref;
         learningState.studentName = student?.name || '';
+
+        if (student?.retakeGrant) {
+          const grant = student.retakeGrant;
+          const now = Date.now();
+          const expiresAtMs = grant.expiresAt ? new Date(grant.expiresAt).getTime() : 0;
+          const availableFromMs = grant.availableFrom ? new Date(grant.availableFrom).getTime() : 0;
+
+          if (grant.status === 'expired' || (expiresAtMs && expiresAtMs <= now)) {
+            startBtn.disabled = true;
+            const expTime = new Intl.DateTimeFormat('vi-VN', {
+              day: '2-digit', month: '2-digit', year: 'numeric',
+              hour: '2-digit', minute: '2-digit',
+              timeZone: 'Asia/Ho_Chi_Minh'
+            }).format(new Date(grant.expiresAt));
+            studentStatus.textContent = `Quyền làm lại đã hết hạn (hạn chót: ${expTime}). Hãy liên hệ giáo viên để được cấp lại.`;
+            studentStatus.style.color = '#dc2626';
+            return;
+          } else if (availableFromMs && availableFromMs > now) {
+            startBtn.disabled = true;
+            const openTime = new Intl.DateTimeFormat('vi-VN', {
+              day: '2-digit', month: '2-digit', year: 'numeric',
+              hour: '2-digit', minute: '2-digit',
+              timeZone: 'Asia/Ho_Chi_Minh'
+            }).format(new Date(grant.availableFrom));
+            studentStatus.textContent = `Quyền làm lại chưa tới thời gian mở (bắt đầu lúc: ${openTime}).`;
+            studentStatus.style.color = '#dc2626';
+            return;
+          } else {
+            const defMinutes = Number(learningState.assignment?.definition?.timing?.totalMinutes) || 120;
+            const remainingMinutes = Math.min(defMinutes, Math.max(0, Math.floor((expiresAtMs - now) / 60000)));
+            const expTime = new Intl.DateTimeFormat('vi-VN', {
+              day: '2-digit', month: '2-digit', year: 'numeric',
+              hour: '2-digit', minute: '2-digit',
+              timeZone: 'Asia/Ho_Chi_Minh'
+            }).format(new Date(grant.expiresAt));
+            studentStatus.textContent = `Đã chọn: ${escape(learningState.studentName)}. Quyền làm lại: Thời gian làm bài thực tế là ${remainingMinutes} phút (hạn chót nộp bài: ${expTime}).`;
+            studentStatus.style.color = '#16a34a';
+            startBtn.disabled = false;
+            return;
+          }
+        }
+
         startBtn.disabled = false;
         studentStatus.textContent = `Đã chọn: ${escape(learningState.studentName)}.`;
         studentStatus.style.color = '#16a34a';

@@ -126,6 +126,7 @@ export function resultStatusLabel(status) {
     in_progress: 'Đang làm',
     retake_granted: 'Được phép làm lại',
     retaking: 'Đang làm lại',
+    retake_expired: 'Quyền làm lại đã hết hạn',
     grading: 'Đang chấm',
     review_required: 'Cần duyệt',
     complete: 'Hoàn tất'
@@ -138,7 +139,8 @@ export function attemptStatusLabel(status) {
     in_progress: 'Đang làm',
     active: 'Đang làm',
     submitted: 'Đã nộp',
-    superseded: 'Bị thay thế'
+    superseded: 'Bị thay thế',
+    expired: 'Hết hạn'
   })[status] || status;
 }
 
