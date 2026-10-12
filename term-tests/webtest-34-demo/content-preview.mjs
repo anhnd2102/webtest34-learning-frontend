@@ -631,6 +631,26 @@ export async function mount(course) {
               <div id="studentSelectStatus" style="font-size:13px;margin-top:6px;color:#64748b">Chọn đúng tên của bạn trong danh sách lớp. Tên sẽ được khóa khi nộp bài.</div>
             </div>
 
+            <div id="soundcheckSection" style="margin-bottom:24px;padding:16px 20px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px">
+              <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+                <span>🔊 Kiểm tra âm thanh trước khi làm bài</span>
+                <span id="soundcheckStatus" style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:12px;background:#e2e8f0;color:#475569">Chưa kiểm tra</span>
+              </div>
+              <p style="font-size:13px;color:#64748b;margin:0 0 12px 0;line-height:1.5">
+                Bài thi có nội dung âm thanh. Hãy nhấn <strong>Nghe thử</strong> để kiểm tra loa hoặc tai nghe và điều chỉnh âm lượng phù hợp.
+              </p>
+              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                <button type="button" class="btn btn-secondary" id="soundcheckPlayBtn" style="min-width:130px;background:white;font-weight:700">
+                  🔊 Nghe thử
+                </button>
+                <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#475569">
+                  <label for="soundcheckVolume">Âm lượng:</label>
+                  <input id="soundcheckVolume" type="range" min="0" max="1" step="0.05" value="1" style="cursor:pointer;width:110px">
+                  <span id="soundcheckVolumeLabel" style="font-weight:700;min-width:36px">100%</span>
+                </div>
+              </div>
+            </div>
+
             <div style="display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #f1f5f9;padding-top:20px">
               <button type="button" class="btn btn-primary" id="startExamBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Bắt đầu làm bài →</button>
             </div>
@@ -784,7 +804,74 @@ export async function mount(course) {
       }
     });
 
+    const soundcheckUrl = config.AUDIO?.soundcheck?.remote || 'https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/soundcheck.mp3';
+    let soundcheckAudio = null;
+    const soundcheckPlayBtn = document.querySelector('#soundcheckPlayBtn');
+    const soundcheckStatus = document.querySelector('#soundcheckStatus');
+    const soundcheckVolume = document.querySelector('#soundcheckVolume');
+    const soundcheckVolumeLabel = document.querySelector('#soundcheckVolumeLabel');
+
+    if (soundcheckPlayBtn) {
+      soundcheckPlayBtn.addEventListener('click', () => {
+        if (!soundcheckAudio) {
+          soundcheckAudio = new Audio(soundcheckUrl);
+          soundcheckAudio.volume = parseFloat(soundcheckVolume?.value || '1');
+          soundcheckAudio.addEventListener('ended', () => {
+            soundcheckPlayBtn.textContent = '🔊 Nghe thử lại';
+            if (soundcheckStatus) {
+              soundcheckStatus.textContent = '✓ Âm thanh hoạt động tốt';
+              soundcheckStatus.style.background = '#dcfce7';
+              soundcheckStatus.style.color = '#15803d';
+            }
+          });
+          soundcheckAudio.addEventListener('error', () => {
+            soundcheckPlayBtn.textContent = '🔊 Nghe thử';
+            if (soundcheckStatus) {
+              soundcheckStatus.textContent = 'Lỗi tải audio';
+              soundcheckStatus.style.background = '#fee2e2';
+              soundcheckStatus.style.color = '#dc2626';
+            }
+          });
+        }
+        if (soundcheckAudio.paused) {
+          soundcheckAudio.currentTime = 0;
+          soundcheckAudio.play().then(() => {
+            soundcheckPlayBtn.textContent = '⏹ Dừng nghe thử';
+            if (soundcheckStatus) {
+              soundcheckStatus.textContent = 'Đang phát âm thanh…';
+              soundcheckStatus.style.background = '#dbeafe';
+              soundcheckStatus.style.color = '#1d4ed8';
+            }
+          }).catch(err => {
+            console.warn('Audio play error:', err);
+            soundcheckPlayBtn.textContent = '🔊 Nghe thử';
+          });
+        } else {
+          soundcheckAudio.pause();
+          soundcheckAudio.currentTime = 0;
+          soundcheckPlayBtn.textContent = '🔊 Nghe thử lại';
+          if (soundcheckStatus) {
+            soundcheckStatus.textContent = '✓ Âm thanh hoạt động';
+            soundcheckStatus.style.background = '#dcfce7';
+            soundcheckStatus.style.color = '#15803d';
+          }
+        }
+      });
+    }
+
+    if (soundcheckVolume) {
+      soundcheckVolume.addEventListener('input', e => {
+        const val = parseFloat(e.target.value);
+        if (soundcheckVolumeLabel) soundcheckVolumeLabel.textContent = `${Math.round(val * 100)}%`;
+        if (soundcheckAudio) soundcheckAudio.volume = val;
+      });
+    }
+
     startBtn.addEventListener('click', async () => {
+      if (soundcheckAudio) {
+        soundcheckAudio.pause();
+        soundcheckAudio.currentTime = 0;
+      }
       startBtn.disabled = true;
       startBtn.textContent = 'Đang mở đề thi…';
       try {
