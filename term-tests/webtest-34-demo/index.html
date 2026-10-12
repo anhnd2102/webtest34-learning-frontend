@@ -521,7 +521,18 @@
     {id:'translation', label:'Translation', points:32, count:8},
     {id:'speaking', label:'Speaking', points:18, count:3}
   ];
-  if(testMode === 'test2'){
+  const urlParams = new URLSearchParams(window.location.search);
+  const testParam = urlParams.get('test') || (testMode === 'test2' ? '2' : '1');
+  const phaseParam = urlParams.get('phase') || '1';
+  const demoCourseParam = urlParams.get('demoCourse') || '34';
+  if(testParam !== '1' || phaseParam !== '1' || demoCourseParam !== '34'){
+    const testTitle = `Khóa ${demoCourseParam} · Phase ${phaseParam} · Test ${testParam}`;
+    document.title = `IZONE · ${testTitle}`;
+    const brandTitle = document.querySelector('.brand-title');
+    if(brandTitle) brandTitle.textContent = testTitle;
+    const introH1 = document.querySelector('#introScreen h1');
+    if(introH1) introH1.textContent = `${demoCourseParam} PHASE ${phaseParam} · TEST ${testParam}`;
+  } else if(testMode === 'test2'){
     document.title = 'IZONE · Khóa 34 · Phase 1 · Test 2';
     document.querySelector('.brand-title').textContent = 'Khóa 34 · Phase 1 · Test 2';
     document.querySelector('#introScreen h1').textContent = '34 PHASE 1 · TEST 2';
@@ -544,7 +555,6 @@
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {answers:{}}; }
     catch { return {answers:{}}; }
   }
-  const urlParams = new URLSearchParams(window.location.search);
   const paramClass = urlParams.get('class') || urlParams.get('classCode');
   if(paramClass && !state.startedAt){
     state.classCode = paramClass.trim().toUpperCase();
@@ -1852,6 +1862,13 @@
       $('#classCode').disabled = true;
       btn.disabled = true;
       btn.textContent = 'Đã tải';
+      if(rosterData.assignment?.title){
+        const introH1 = document.querySelector('#introScreen h1');
+        if(introH1) introH1.textContent = rosterData.assignment.title;
+        const brandTitle = document.querySelector('.brand-title');
+        if(brandTitle) brandTitle.textContent = rosterData.assignment.title;
+        document.title = rosterData.assignment.title;
+      }
       show('classOk');
       $('#classOk').textContent = `Lớp ${esc(className)} · ${students.length} học viên.${usedFallback ? ' (roster mẫu — bản demo local)' : ''}`;
     }catch(err){
@@ -2024,7 +2041,7 @@
   $('#submitModal').addEventListener('click',e=>{if(e.target.id==='submitModal') $('#submitModal').classList.add('hidden')});
   // Restore identity fields and persisted Learning audio before rendering the exam.
   async function initializePage(){
-    await preloadAudioInOrder();
+    void preloadAudioInOrder().catch(console.warn);
     if(state.startedAt && state.studentName && state.classCode){
       if(learningEnabled() && state.learning?.attemptToken){
         try{
