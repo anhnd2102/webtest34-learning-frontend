@@ -807,7 +807,6 @@
       return;
     }
     const asyncView=resultViewModel(result);
-    const resultView = $('#learningResult');
     const resultGrouper = window.WEBTEST34_LEARNING_RESULT;
     if(!resultGrouper) throw new Error('WEBTEST34_RESULT_GROUPER_MISSING');
     const groups = resultGrouper.groupResultItems({
