@@ -111,6 +111,10 @@ export function attemptPublishPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}/publish`;
 }
 
+export function assignmentPublishAllPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/publish`;
+}
+
 export function assignmentRosterPath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/roster`;
 }
@@ -219,6 +223,8 @@ async function startDashboard() {
   const status = document.querySelector('#status');
   const lastUpdated = document.querySelector('#last-updated');
   const refreshBtn = document.querySelector('#refresh-btn');
+  const publishAllBtn = document.querySelector('#publish-all-btn');
+  let currentResultsPayload = null;
 
   const addStudentBtn = document.querySelector('#add-student-btn');
   const addStudentModal = document.querySelector('#add-student-modal');
@@ -357,6 +363,7 @@ async function startDashboard() {
   }
 
   function renderResults(payload) {
+    currentResultsPayload = payload;
     resultsContent.replaceChildren();
     if (assignmentHeading) assignmentHeading.textContent = payload.assignment.title;
     if (assignmentMeta) {
@@ -1232,6 +1239,78 @@ async function startDashboard() {
   if (refreshBtn) {
     refreshBtn.addEventListener('click', () => {
       loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
+    });
+  }
+
+  async function publishAllResults() {
+    if (!state.classId || !state.assignmentId) return;
+    const confirmed = confirm('Bạn có chắc chắn muốn công bố điểm cho toàn bộ học viên đã nộp bài trong bài được giao này không?');
+    if (!confirmed) return;
+
+    if (publishAllBtn) {
+      publishAllBtn.disabled = true;
+      publishAllBtn.textContent = 'Đang công bố…';
+    }
+    if (status) status.textContent = 'Đang công bố điểm cho toàn bộ học viên…';
+
+    try {
+      let success = false;
+      let count = 0;
+      let msg = '';
+      try {
+        const payload = await request(assignmentPublishAllPath(state.classId, state.assignmentId), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note: 'Công bố toàn bộ kết quả' })
+        });
+        success = true;
+        count = payload.publishedCount ?? 0;
+        msg = payload.message || `Đã công bố kết quả cho ${count} học viên.`;
+      } catch (batchErr) {
+        // Fallback: If batch endpoint returned error or 404, fallback to individual publication
+        const submittedStudents = (currentResultsPayload?.students || []).filter(
+          s => s.attemptId && s.status === 'submitted' && !s.published
+        );
+        if (submittedStudents.length > 0) {
+          await Promise.all(
+            submittedStudents.map(s =>
+              request(attemptPublishPath(state.classId, state.assignmentId, s.attemptId), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ note: 'Công bố kết quả' })
+              })
+            )
+          );
+          success = true;
+          count = submittedStudents.length;
+          msg = `Đã công bố kết quả cho ${count} học viên.`;
+        } else if ((currentResultsPayload?.students || []).some(s => s.attemptId && s.status === 'submitted')) {
+          msg = 'Tất cả học viên đã nộp bài đều đã được công bố điểm.';
+          success = true;
+        } else {
+          throw batchErr;
+        }
+      }
+
+      alert(msg || 'Đã công bố điểm cho toàn bộ học viên thành công!');
+      if (status) status.textContent = msg || 'Đã công bố kết quả thành công.';
+      await loadResults(state.classId, state.assignmentId);
+    } catch (err) {
+      alert(`Lỗi khi công bố điểm: ${err.message}`);
+      if (status) status.textContent = `Lỗi công bố: ${err.message}`;
+    } finally {
+      if (publishAllBtn) {
+        publishAllBtn.disabled = false;
+        publishAllBtn.textContent = 'Công bố toàn bộ điểm';
+      }
+    }
+  }
+
+  if (publishAllBtn) {
+    publishAllBtn.addEventListener('click', () => {
+      publishAllResults().catch(err => {
+        if (status) status.textContent = err.message;
+      });
     });
   }
 

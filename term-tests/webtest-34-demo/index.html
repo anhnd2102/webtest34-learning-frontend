@@ -342,7 +342,6 @@
           </div>
         </div>
         <div class="start-actions">
-          <button class="btn btn-secondary" id="clearDraft">Xóa bản nháp</button>
           <button class="btn btn-primary" id="continueToAudio" disabled>Tiếp tục kiểm tra âm thanh →</button>
         </div>
       </div>
@@ -1963,7 +1962,7 @@
     });
   });
 
-  $('#clearDraft').addEventListener('click',()=>{if(confirm('Xóa toàn bộ bản nháp prototype?')){localStorage.removeItem(STORAGE_KEY);location.reload();}});
+  $('#clearDraft')?.addEventListener('click',()=>{if(confirm('Xóa toàn bộ bản nháp prototype?')){localStorage.removeItem(STORAGE_KEY);location.reload();}});
   document.addEventListener('click',e=>{
     const go=e.target.closest('[data-go]'); if(go) goTo(go.dataset.go);
     if(e.target.closest('[data-prev]')) step(-1);

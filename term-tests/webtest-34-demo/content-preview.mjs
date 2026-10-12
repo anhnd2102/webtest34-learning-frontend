@@ -932,7 +932,6 @@ export async function mount(course) {
           <span id="demo-progress" aria-live="polite"></span>
           <span id="demo-save" role="status"></span>
           <button type="button" class="btn btn-primary" id="demo-submit">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
-          <button type="button" class="btn btn-secondary" id="demo-reset">Xóa bản nháp / làm lại</button>
         </div>
         <div id="demo-result" class="demo-notice" hidden></div>
         <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
@@ -1400,16 +1399,6 @@ export async function mount(course) {
         query('#demo-confirm-submit').disabled = false;
         query('#demo-confirm-submit').textContent = isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử';
       }
-    });
-
-    query('#demo-reset').addEventListener('click',()=>{
-      if (!confirm('Xóa câu trả lời và làm lại?')) return;
-      state=sanitizeDraft(form,null); fields.forEach(field=>field.value=''); persist(); update();
-      localStorage.removeItem(timerStorageKey);
-      if (examTimerInterval) clearInterval(examTimerInterval);
-      examEndTime = Date.now() + durationMs;
-      tickExamTimer();
-      examTimerInterval = setInterval(tickExamTimer, 1000);
     });
 
     function showSection(section) {

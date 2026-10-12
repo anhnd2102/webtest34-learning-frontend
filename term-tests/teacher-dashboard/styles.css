@@ -137,6 +137,9 @@ tr:hover td { background: #fafbfc; }
 .grading-buttons { display: flex; gap: 10px; align-items: center; }
 .btn-primary { width: auto; padding: 9px 20px; font-size: 0.9rem; font-weight: 800; background: #db0829; color: white; border: 1px solid #db0829; border-radius: 9px; cursor: pointer; }
 .btn-primary:hover:not(:disabled) { background: #b80521; border-color: #b80521; }
+.btn-publish-all { width: auto; padding: 9px 18px; font-size: 0.9rem; font-weight: 800; background: #0284c7; color: white; border: 1px solid #0284c7; border-radius: 9px; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; }
+.btn-publish-all:hover:not(:disabled) { background: #0369a1; border-color: #0369a1; }
+.btn-publish-all:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .grading-input-panel { margin-top: 10px; padding: 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; display: grid; gap: 10px; }
 .grading-input-panel.review-needed { border-color: #f6ad55; background: #fffaf0; }

@@ -15,6 +15,7 @@ import {
   manualGradingCompletePath,
   validateManualGradingScores,
   attemptPublishPath,
+  assignmentPublishAllPath,
   formatPublicationStatus,
   assignmentRosterPath,
   eligibleStudentsPath,
@@ -242,6 +243,10 @@ test('attemptPublishPath builds canonical endpoint', () => {
     attemptPublishPath('101', '11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333'),
     '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/attempts/33333333-3333-4333-8333-333333333333/publish'
   );
+  assert.equal(
+    assignmentPublishAllPath('101', '11111111-1111-4111-8111-111111111111'),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/publish'
+  );
 });
 
 test('formatPublicationStatus returns correct labels and metadata', () => {
@@ -254,6 +259,7 @@ test('teacher dashboard index.html provides publication button', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   assert.match(html, /id="publish-result-btn"/);
+  assert.match(html, /id="publish-all-btn"/);
 });
 
 test('assignmentRosterPath, eligibleStudentsPath, and studentTransferPath build canonical endpoints', () => {
