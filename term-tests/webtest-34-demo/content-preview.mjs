@@ -427,18 +427,21 @@ export async function mount(course) {
   const rawTestTokenParam = queryParams.get('testToken') || queryParams.get('token') || (queryParams.get('test')?.includes('-') ? queryParams.get('test') : '');
   const testToken = (hashToken?.includes('-') ? hashToken : '') || rawTestTokenParam || config.LEARNING_TEST_TOKEN || '';
 
-  let testNum = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || (!queryParams.get('test')?.includes('-') ? Number(queryParams.get('test')) : 0) || 1;
+  const explicitTest = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || (!queryParams.get('test')?.includes('-') ? Number(queryParams.get('test')) : 0);
+  let testNum = explicitTest || 1;
   const phaseParam = queryParams.get('phase');
   if ((course === '34' || course === '45') && phaseParam === '2' && testNum <= 2) {
     testNum = testNum + 4;
   }
-  const prefixMatch = testToken.match(/^(\d{2})(\d{2})/);
-  if (prefixMatch && prefixMatch[1] === course) {
-    testNum = Number(prefixMatch[2]);
-  } else {
-    const tokenMatch = testToken.match(/-0*([1-9]\d*)$/);
-    if (tokenMatch) {
-      testNum = Number(tokenMatch[1]);
+  if (!explicitTest) {
+    const prefixMatch = testToken.match(/^(\d{2})(\d{2})/);
+    if (prefixMatch && prefixMatch[1] === course && Number(prefixMatch[2]) <= 6) {
+      testNum = Number(prefixMatch[2]);
+    } else {
+      const tokenMatch = testToken.match(/-0*([1-9]\d*)$/);
+      if (tokenMatch && Number(tokenMatch[1]) <= 6) {
+        testNum = Number(tokenMatch[1]);
+      }
     }
   }
 
@@ -468,9 +471,10 @@ export async function mount(course) {
   const apiBase = (isProd ? 'https://webtest.ducanhn.autos' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhn.autos')).replace(/\/$/, '');
   const isLearningMode = Boolean(testToken);
 
+  const paramClassCode = (queryParams.get('class') || queryParams.get('classCode') || '').trim().toUpperCase();
   let learningState = {
     testToken,
-    courseCode: `TEST-${course}`,
+    courseCode: paramClassCode || `TEST-${course}`,
     className: '',
     studentRef: '',
     studentName: '',
@@ -613,7 +617,7 @@ export async function mount(course) {
             <div style="margin-bottom:20px">
               <label for="classCodeInput" style="display:block;font-weight:600;margin-bottom:8px;color:#1e293b">Mã lớp</label>
               <div style="display:flex;gap:10px">
-                <input id="classCodeInput" value="TEST-${course}" placeholder="Ví dụ: TEST-${course}" autocomplete="off" style="flex:1;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;font-weight:600">
+                <input id="classCodeInput" value="${escape(paramClassCode || `TEST-${course}`)}" placeholder="Ví dụ: ICxxxx" autocomplete="off" style="flex:1;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;font-weight:600">
                 <button type="button" class="btn btn-secondary" id="loadRosterBtn" style="min-width:140px;font-weight:600">Tải danh sách</button>
               </div>
               <div id="classCodeStatus" style="font-size:13px;margin-top:6px;color:#64748b">Nhập đúng mã lớp do giáo viên cung cấp, sau đó bấm “Tải danh sách”.</div>
@@ -700,6 +704,13 @@ export async function mount(course) {
         classStatus.textContent = `Lớp ${escape(learningState.className)} · ${assignment.roster.length} học viên.`;
         classStatus.style.color = '#16a34a';
         studentStatus.textContent = 'Hãy chọn tên của bạn trong danh sách trên.';
+        if (assignment.title) {
+          const h1 = document.querySelector('h1');
+          if (h1) h1.textContent = assignment.title;
+          const brandSub = document.querySelector('.brand-sub');
+          if (brandSub) brandSub.textContent = assignment.title;
+          document.title = assignment.title;
+        }
       } catch (err) {
         loadBtn.disabled = false;
         loadBtn.textContent = 'Thử lại';
@@ -711,6 +722,10 @@ export async function mount(course) {
 
     loadBtn.addEventListener('click', handleLoadRoster);
     classInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleLoadRoster(); } });
+
+    if (paramClassCode) {
+      void handleLoadRoster();
+    }
 
     studentSelect.addEventListener('change', () => {
       const ref = studentSelect.value;
