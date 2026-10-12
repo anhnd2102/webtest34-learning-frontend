@@ -1266,9 +1266,23 @@ export async function mount(course) {
     query('#demo-cancel').addEventListener('click',()=>query('#demo-confirm').close());
 
     function renderAiResultCard(result) {
-      const vm = resultViewModel(result);
+      const isPublished = Boolean(result?.publication?.published);
       const card = query('#demo-ai-card');
       card.hidden = false;
+      if (!isPublished) {
+        card.innerHTML = `
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:28px 24px;text-align:center;color:#166534">
+            <div style="font-size:36px;margin-bottom:8px">✓</div>
+            <h3 style="color:#15803d;margin:0 0 10px 0;font-size:20px;font-weight:700">Bài làm đã được nộp thành công!</h3>
+            <p style="margin:0;font-size:15px;color:#166534;line-height:1.6">
+              Hệ thống đã ghi nhận an toàn bài thi của bạn.<br>
+              Kết quả và điểm số sẽ được giáo viên công bố sau khi hoàn tất chấm điểm.
+            </p>
+          </div>
+        `;
+        return;
+      }
+      const vm = resultViewModel(result);
       const isComplete = vm.scoreFinal;
       const isManualReview = result.gradingStatus === 'manual_review';
       card.innerHTML = `
@@ -1325,9 +1339,16 @@ export async function mount(course) {
         if (res.result) {
           learningState.result = res.result;
           renderAiResultCard(res.result);
-          if (res.result.gradingStatus === 'complete' || res.result.gradingStatus === 'manual_review' || res.result.summary?.scoreFinal) {
-            clearInterval(learningState.pollTimer);
-            learningState.pollTimer = null;
+          if (!res.result.publication?.published) {
+            if (learningState.pollTimer) {
+              clearInterval(learningState.pollTimer);
+              learningState.pollTimer = null;
+            }
+          } else if (res.result.gradingStatus === 'complete' || res.result.gradingStatus === 'manual_review' || res.result.summary?.scoreFinal) {
+            if (learningState.pollTimer) {
+              clearInterval(learningState.pollTimer);
+              learningState.pollTimer = null;
+            }
           }
         }
       } catch {}
@@ -1357,12 +1378,12 @@ export async function mount(course) {
           query('#demo-result').style.background = '#f0fdf4';
           query('#demo-result').style.borderColor = '#bbf7d0';
           query('#demo-result').style.color = '#166534';
-          query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được chuyển cho AI Worker để chấm điểm.`;
+          query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
 
           if (res.result) {
             renderAiResultCard(res.result);
           }
-          if (!learningState.pollTimer) {
+          if (res.result?.publication?.published && !learningState.pollTimer) {
             learningState.pollTimer = setInterval(pollLearningResult, 3500);
             void pollLearningResult();
           }
@@ -1416,9 +1437,6 @@ export async function mount(course) {
 
     if (isLearningMode && state.submittedAt) {
       void pollLearningResult();
-      if (!learningState.pollTimer) {
-        learningState.pollTimer = setInterval(pollLearningResult, 3000);
-      }
     }
   }
 }
