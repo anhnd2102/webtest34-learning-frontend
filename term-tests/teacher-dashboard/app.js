@@ -839,6 +839,9 @@ async function startDashboard() {
 
   async function loadAssignments(classId, selectedAssignmentId = '') {
     assignments.replaceChildren();
+    if (assignmentStudentUrl) assignmentStudentUrl.value = '';
+    if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
+    if (assignmentLinkBar) assignmentLinkBar.hidden = true;
     await loadResults('', '');
     if (!classId) return;
     status.textContent = 'Đang tải bài được giao…';
@@ -871,11 +874,24 @@ async function startDashboard() {
         state.assignmentId = assignment.assignmentId;
         state.page = 1;
         setUrl();
+        if (assignmentStudentUrl) assignmentStudentUrl.value = assignment.studentUrl || '';
+        if (openStudentLinkBtn) openStudentLinkBtn.href = assignment.studentUrl || '#';
+        if (assignmentLinkBar) assignmentLinkBar.hidden = !assignment.studentUrl;
         loadResults(classId, assignment.assignmentId).catch(error => { status.textContent = error.message; });
       });
       assignments.append(card);
     }
     status.textContent = `${payload.assignments.length} bài được giao`;
+    const activeAssignment = payload.assignments.find(a => a.assignmentId === (selectedAssignmentId || state.assignmentId));
+    if (activeAssignment) {
+      if (assignmentStudentUrl) assignmentStudentUrl.value = activeAssignment.studentUrl || '';
+      if (openStudentLinkBtn) openStudentLinkBtn.href = activeAssignment.studentUrl || '#';
+      if (assignmentLinkBar) assignmentLinkBar.hidden = !activeAssignment.studentUrl;
+    } else {
+      if (assignmentStudentUrl) assignmentStudentUrl.value = '';
+      if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
+      if (assignmentLinkBar) assignmentLinkBar.hidden = true;
+    }
     if (selectedExists) {
       await loadResults(classId, selectedAssignmentId);
       if (state.attemptId) {

@@ -631,8 +631,7 @@ export async function mount(course) {
               <div id="studentSelectStatus" style="font-size:13px;margin-top:6px;color:#64748b">Chọn đúng tên của bạn trong danh sách lớp. Tên sẽ được khóa khi nộp bài.</div>
             </div>
 
-            <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:20px">
-              <a href="?course=${course}&test=${testNum}" style="color:#64748b;font-size:13px;text-decoration:underline">Chuyển sang chế độ duyệt nhanh đề</a>
+            <div style="display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #f1f5f9;padding-top:20px">
               <button type="button" class="btn btn-primary" id="startExamBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Bắt đầu làm bài →</button>
             </div>
           </div>
