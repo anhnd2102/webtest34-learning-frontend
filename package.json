@@ -3,6 +3,8 @@
   "private": false,
   "type": "module",
   "scripts": {
+    "start": "node serve.mjs 8034 127.0.0.1",
+    "dev": "node serve.mjs 8034 127.0.0.1",
     "test": "node --test tests/*.test.mjs"
   }
 }

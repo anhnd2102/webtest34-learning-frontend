@@ -61,6 +61,12 @@
         <div>
           <h2 id="assignment-heading">Bảng kết quả</h2>
           <p id="assignment-meta" class="meta-info"></p>
+          <div id="assignment-link-bar" class="assignment-link-bar" hidden>
+            <span class="link-label">🔗 Link làm bài cho học viên:</span>
+            <input id="assignment-student-url" type="text" readonly class="student-url-input">
+            <button id="copy-student-link-btn" type="button" class="btn-secondary">Sao chép link</button>
+            <a id="open-student-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">Mở trang thi ↗</a>
+          </div>
         </div>
         <div class="refresh-container">
           <span id="last-updated" class="last-updated" aria-live="polite"></span>

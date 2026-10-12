@@ -411,5 +411,20 @@ test('teacher dashboard index.html and styles.css provide conflict alert element
   assert.match(css, /\.conflict-alert/);
 });
 
+test('teacher dashboard index.html and styles.css provide student test link bar and copy button', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="assignment-link-bar"/);
+  assert.match(html, /id="assignment-student-url"/);
+  assert.match(html, /id="copy-student-link-btn"/);
+  assert.match(html, /id="open-student-link-btn"/);
+
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.assignment-link-bar/);
+  assert.match(css, /\.student-url-input/);
+  assert.match(css, /\.card-copy-btn/);
+});
+
+
 
 

@@ -544,6 +544,11 @@
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {answers:{}}; }
     catch { return {answers:{}}; }
   }
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramClass = urlParams.get('class') || urlParams.get('classCode');
+  if(paramClass && !state.startedAt){
+    state.classCode = paramClass.trim().toUpperCase();
+  }
   if(!state.answers) state.answers = {};
   if(!state.audioFlags) state.audioFlags = {};
 
@@ -651,8 +656,13 @@
       if(result.result) state.learning.studentResult = result.result;
       persist();
       if(result.result) renderLearningResult(result.result);
-      if(['complete', 'manual_review'].includes(state.learning.gradingStatus)) stopLearningResultPolling();
-      else learningResultPollDelayMs = 2000;
+      if(!result.result?.publication?.published){
+        stopLearningResultPolling();
+      } else if(['complete', 'manual_review'].includes(state.learning.gradingStatus)){
+        stopLearningResultPolling();
+      } else {
+        learningResultPollDelayMs = 2000;
+      }
     }catch(error){
       if(error.status === 429) {
         learningResultPollDelayMs = Math.min(
@@ -772,6 +782,20 @@
 
   function renderLearningResult(result){
     if(!result || !Array.isArray(result.items)) return;
+    const isPublished = Boolean(result.publication?.published);
+    const resultView = $('#learningResult');
+    if(!isPublished){
+      if(resultView){
+        resultView.innerHTML = `
+          <div class="notice" style="background:#f0fdf4; border-color:#bbf7d0; color:#166534; padding:20px; border-radius:12px; margin-top:20px; text-align:center;">
+            <h3 style="color:#15803d; margin-bottom:8px; font-weight:700;">✓ Bài làm đã được nộp thành công!</h3>
+            <p style="margin:0; font-size:15px; color:#166534;">Hệ thống đã ghi nhận an toàn bài thi của bạn. Kết quả sẽ được giáo viên công bố sau khi hoàn tất chấm điểm.</p>
+          </div>
+        `;
+        resultView.classList.remove('hidden');
+      }
+      return;
+    }
     const asyncView=resultViewModel(result);
     const resultView = $('#learningResult');
     const resultGrouper = window.WEBTEST34_LEARNING_RESULT;
@@ -1199,9 +1223,13 @@
       return;
     }
     startTimer(); initAudioDocks();
-    if(state.learning?.studentResult) renderLearningResult(state.learning.studentResult);
+    if(state.learning?.studentResult) {
+      renderLearningResult(state.learning.studentResult);
+      if(state.learning.studentResult.publication?.published) {
+        startLearningResultPolling();
+      }
+    }
     if(state.submittedAt || ['submitted', 'superseded'].includes(state.learning?.status)) lockSubmittedAttempt();
-    startLearningResultPolling();
   }
 
   function lockSubmittedAttempt(){
@@ -1775,7 +1803,10 @@
           courseCode: code
         });
         if(!assignment.assignment?.roster?.length) throw new Error('Assignment chưa có roster local.');
-        if(assignment.assignment?.courseCode && assignment.assignment.courseCode !== code){
+        const asgCourse = String(assignment.assignment?.courseCode || '').toUpperCase();
+        const asgClass = String(assignment.assignment?.class?.name || '').toUpperCase();
+        const inputCode = code.toUpperCase();
+        if(asgCourse && asgCourse !== inputCode && asgClass !== inputCode){
           throw new Error('Mã lớp không khớp phiếu đang mở.');
         }
         rosterData.assignment = assignment.assignment;
@@ -1946,9 +1977,14 @@
     persist();
     lockSubmittedAttempt();
     $('#submitModal').classList.add('hidden');
+    const isPublished = Boolean(result.result?.publication?.published);
     if(result.result) renderLearningResult(result.result);
-    else alert(`Đã nộp bài. Trạng thái chấm: ${state.learning.gradingStatus}.`);
-    startLearningResultPolling();
+    if(isPublished) {
+      startLearningResultPolling();
+    } else {
+      stopLearningResultPolling();
+      alert('Bài làm của bạn đã được nộp thành công! Kết quả sẽ được giáo viên công bố sau khi hoàn tất chấm.');
+    }
   }
 
   $('#confirmSubmit').addEventListener('click', async ()=>{

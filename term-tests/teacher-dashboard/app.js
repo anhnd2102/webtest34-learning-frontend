@@ -259,6 +259,26 @@ async function startDashboard() {
   const draftStatusMsg = document.querySelector('#draft-status-msg');
   const conflictAlert = document.querySelector('#conflict-alert');
   const gradingActionsBar = document.querySelector('#grading-actions-bar');
+  const assignmentLinkBar = document.querySelector('#assignment-link-bar');
+  const assignmentStudentUrl = document.querySelector('#assignment-student-url');
+  const copyStudentLinkBtn = document.querySelector('#copy-student-link-btn');
+  const openStudentLinkBtn = document.querySelector('#open-student-link-btn');
+
+  if (copyStudentLinkBtn) {
+    copyStudentLinkBtn.addEventListener('click', async () => {
+      const url = assignmentStudentUrl?.value;
+      if (!url) return;
+      try {
+        await navigator.clipboard.writeText(url);
+        const originalText = copyStudentLinkBtn.textContent;
+        copyStudentLinkBtn.textContent = '✓ Đã sao chép!';
+        setTimeout(() => { copyStudentLinkBtn.textContent = originalText; }, 2000);
+      } catch {
+        assignmentStudentUrl?.select();
+        document.execCommand('copy');
+      }
+    });
+  }
 
   let currentAttemptDetail = null;
 
@@ -319,6 +339,16 @@ async function startDashboard() {
     if (assignmentHeading) assignmentHeading.textContent = payload.assignment.title;
     if (assignmentMeta) {
       assignmentMeta.textContent = `${payload.assignment.className} · Khối ${payload.assignment.courseCode} · Phiên bản ${payload.assignment.formVersion}`;
+    }
+
+    if (assignmentLinkBar) {
+      if (payload.assignment?.studentUrl) {
+        assignmentLinkBar.hidden = false;
+        if (assignmentStudentUrl) assignmentStudentUrl.value = payload.assignment.studentUrl;
+        if (openStudentLinkBtn) openStudentLinkBtn.href = payload.assignment.studentUrl;
+      } else {
+        assignmentLinkBar.hidden = true;
+      }
     }
 
     // Populate skill filter dropdown if needed
@@ -818,8 +848,22 @@ async function startDashboard() {
       card.type = 'button';
       card.className = `assignment-card${assignment.assignmentId === selectedAssignmentId ? ' selected' : ''}`;
       if (assignment.assignmentId === selectedAssignmentId) selectedExists = true;
-      card.innerHTML = `<strong>${assignment.title}</strong><span>Khối ${assignment.courseCode} · Phase ${assignment.phase ?? '—'}</span><span>${formatAssignmentWindow(assignment.opensAt, assignment.closesAt)}</span><span class="status">${assignment.status}</span>`;
-      card.addEventListener('click', () => {
+      const linkSnippet = assignment.studentUrl
+        ? `<span class="card-link-row"><span class="card-copy-btn" data-url="${encodeURIComponent(assignment.studentUrl)}">📋 Sao chép link học viên</span></span>`
+        : '';
+      card.innerHTML = `<strong>${assignment.title}</strong><span>Khối ${assignment.courseCode} · Phase ${assignment.phase ?? '—'}</span><span>${formatAssignmentWindow(assignment.opensAt, assignment.closesAt)}</span><span class="status">${assignment.status}</span>${linkSnippet}`;
+      card.addEventListener('click', (e) => {
+        const copyBtn = e.target.closest('.card-copy-btn');
+        if (copyBtn) {
+          e.stopPropagation();
+          const targetUrl = decodeURIComponent(copyBtn.dataset.url);
+          navigator.clipboard.writeText(targetUrl).then(() => {
+            const original = copyBtn.textContent;
+            copyBtn.textContent = '✓ Đã chép!';
+            setTimeout(() => { copyBtn.textContent = original; }, 1500);
+          }).catch(() => {});
+          return;
+        }
         assignments.querySelectorAll('.selected').forEach(node => node.classList.remove('selected'));
         card.classList.add('selected');
         state.classId = classId;
