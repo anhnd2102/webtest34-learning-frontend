@@ -24,9 +24,16 @@ import {
   authLogoutPath,
   authMePath,
   authHeaders,
-  teacherRoleLabel
+  teacherRoleLabel,
+  defaultApiBase
 } from '../term-tests/teacher-dashboard/app.js';
 
+test('defaultApiBase resolves local or production origin based on location', () => {
+  assert.equal(defaultApiBase({ hostname: 'localhost' }), 'http://localhost:8788');
+  assert.equal(defaultApiBase({ hostname: '127.0.0.1' }), 'http://localhost:8788');
+  assert.equal(defaultApiBase({ hostname: 'anhnd2102.github.io' }), 'https://webtest.ducanhn.autos');
+  assert.equal(defaultApiBase(null), 'https://webtest.ducanhn.autos');
+});
 
 test('dashboard URL preserves class and assignment selection', () => {
   const url = assignmentUrl('https://example.test/term-tests/teacher-dashboard/?classId=101', {

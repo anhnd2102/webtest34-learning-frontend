@@ -1,3 +1,9 @@
+export function defaultApiBase(currentLocation = (typeof window !== 'undefined' ? window.location : null)) {
+  const hostname = currentLocation?.hostname || '';
+  const isLocal = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(hostname);
+  return isLocal ? 'http://localhost:8788' : 'https://webtest.ducanhn.autos';
+}
+
 export function readDashboardState(input) {
   const url = input instanceof URL ? input : new URL(input);
   const state = {
@@ -307,8 +313,23 @@ async function startDashboard() {
 
   let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
 
+  const currentLocation = typeof window !== 'undefined' ? window.location : null;
+  const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(currentLocation?.hostname || '');
+  const standardApiBase = defaultApiBase(currentLocation);
+
+  if (loginApiBase) {
+    if (!loginApiBase.value || (!isLocalHost && loginApiBase.value.includes('localhost'))) {
+      loginApiBase.value = standardApiBase;
+    }
+  }
+  if (form?.elements?.apiBase) {
+    if (!form.elements.apiBase.value || (!isLocalHost && form.elements.apiBase.value.includes('localhost'))) {
+      form.elements.apiBase.value = standardApiBase;
+    }
+  }
+
   const identity = () => ({ actorId: form?.elements?.actorId?.value || '' });
-  const apiBase = () => (loginApiBase?.value || form?.elements?.apiBase?.value || 'http://localhost:8788').replace(/\/$/, '');
+  const apiBase = () => (loginApiBase?.value || form?.elements?.apiBase?.value || standardApiBase).replace(/\/$/, '');
   const authHeader = () => authHeaders({ token: sessionToken, actorId: form?.elements?.actorId?.value });
 
   const request = async (path, options = {}) => {
@@ -895,7 +916,19 @@ async function startDashboard() {
     if (selectedExists) {
       await loadResults(classId, selectedAssignmentId);
       if (state.attemptId) {
-        await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
+        try {
+          await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
+        } catch (err) {
+          console.warn('Attempt detail not found:', err.message);
+          state.attemptId = '';
+          setUrl();
+          const attemptContainer = document.querySelector('#attempt-detail');
+          if (attemptContainer) attemptContainer.hidden = true;
+          if (loginError && loginError.textContent.includes('Không tìm thấy bài làm')) {
+            loginError.hidden = true;
+            loginError.textContent = '';
+          }
+        }
       }
     }
   }

@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>IZONE · Teacher Dashboard</title>
   <link rel="stylesheet" href="./styles.css">
+  <script>
+    (function () {
+      var isLocal = ['localhost', '127.0.0.1', '[::1]', '::1'].indexOf(window.location.hostname) !== -1;
+      if (!isLocal) {
+        document.addEventListener('DOMContentLoaded', function () {
+          var els = document.querySelectorAll('#login-api-base, input[name="apiBase"]');
+          els.forEach(function (el) {
+            if (!el.value || el.value.indexOf('localhost') !== -1) {
+              el.value = 'https://webtest.ducanhn.autos';
+            }
+          });
+        });
+      }
+    })();
+  </script>
 </head>
 <body>
   <main>
@@ -245,6 +260,6 @@
     </section>
   </main>
 
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./app.js?rev=20261012-api-base-v1"></script>
 </body>
 </html>
