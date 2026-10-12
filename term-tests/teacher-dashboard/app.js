@@ -243,6 +243,7 @@ async function startDashboard() {
   const sortBySelect = document.querySelector('#sort-by-select');
   const sortDirSelect = document.querySelector('#sort-dir-select');
   const resetFiltersBtn = document.querySelector('#reset-filters-btn');
+  const paginationInfo = document.querySelector('#pagination-info');
   const prevPageBtn = document.querySelector('#prev-page-btn');
   const nextPageBtn = document.querySelector('#next-page-btn');
   const attemptDetail = document.querySelector('#attempt-detail');
