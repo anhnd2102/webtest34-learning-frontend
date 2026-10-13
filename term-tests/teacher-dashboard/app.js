@@ -212,8 +212,20 @@ export function formatCurrentTime(date = new Date(), locale = 'vi-VN', timeZone 
   }).format(date);
 }
 
+const CANONICAL_SKILL_LABELS = {
+  vocabulary: 'Vocabulary',
+  listening: 'Listening',
+  pronunciation: 'Pronunciation',
+  reading: 'Reading',
+  writing: 'Writing',
+  speaking: 'Speaking',
+  grammar: 'Grammar',
+  general: 'Chung'
+};
+
 export function extractAttemptSkills(items = []) {
   const skillMap = new Map();
+  const sectionMap = new Map();
   let totalScoreEarned = 0;
   let totalMaxScore = 0;
   let totalNeedsReview = 0;
@@ -231,7 +243,7 @@ export function extractAttemptSkills(items = []) {
     if (!skillMap.has(code)) {
       skillMap.set(code, {
         code,
-        label: code.charAt(0).toUpperCase() + code.slice(1),
+        label: CANONICAL_SKILL_LABELS[code] || (code.charAt(0).toUpperCase() + code.slice(1)),
         totalItems: 0,
         needsReviewCount: 0,
         scoreEarned: 0,
@@ -243,9 +255,34 @@ export function extractAttemptSkills(items = []) {
     skillStat.scoreEarned += scoreEarned;
     skillStat.maxScore += maxScore;
     if (needsReview) skillStat.needsReviewCount += 1;
+
+    // Track Section
+    const secId = item.sectionId || item.sectionTitle || `sec-${code}`;
+    const secTitle = item.sectionTitle || (CANONICAL_SKILL_LABELS[code] ? `Phần ${CANONICAL_SKILL_LABELS[code]}` : 'Phần bài tập');
+    if (!sectionMap.has(secId)) {
+      sectionMap.set(secId, {
+        id: secId,
+        title: secTitle,
+        skillCode: code,
+        totalItems: 0,
+        correctCount: 0,
+        needsReviewCount: 0,
+        scoreEarned: 0,
+        maxScore: 0,
+        items: []
+      });
+    }
+    const secStat = sectionMap.get(secId);
+    secStat.totalItems += 1;
+    if (item.verdict === 'correct') secStat.correctCount += 1;
+    if (needsReview) secStat.needsReviewCount += 1;
+    secStat.scoreEarned = Math.round((secStat.scoreEarned + scoreEarned) * 100) / 100;
+    secStat.maxScore = Math.round((secStat.maxScore + maxScore) * 100) / 100;
+    secStat.items.push(item);
   }
 
   const skills = Array.from(skillMap.values());
+  const sections = Array.from(sectionMap.values());
   const summary = {
     all: {
       code: 'all',
@@ -265,7 +302,7 @@ export function extractAttemptSkills(items = []) {
     };
   }
 
-  return { skills, summary };
+  return { skills, summary, sections };
 }
 
 export function formatCompactPrompt(item) {
@@ -850,103 +887,125 @@ async function startDashboard() {
       detailItemsBody.replaceChildren();
 
       const items = currentAttemptDetail.items;
-      const filteredItems = tabCode === 'all'
-        ? items
-        : items.filter(i => (i.primarySkill || 'general').toLowerCase() === tabCode);
+      const { sections } = extractAttemptSkills(items);
+      const filteredSections = tabCode === 'all'
+        ? sections
+        : sections.filter(s => s.skillCode === tabCode);
 
-      for (const item of filteredItems) {
-        const tr = document.createElement('tr');
-        if (item.needsReview) tr.className = 'row-needs-review';
-
-        // 1. # Column
-        const tdPos = document.createElement('td');
-        tdPos.innerHTML = `
-          <div class="q-col-pos">
-            <span class="q-pos-num">Câu ${item.position}</span>
-            <span class="q-type-badge">${item.interactionType}</span>
-            ${item.primarySkill ? `<span class="q-skill-badge">${item.primarySkill.toUpperCase()}</span>` : ''}
-          </div>
+      for (const section of filteredSections) {
+        // Render Section Header Row
+        const secTr = document.createElement('tr');
+        secTr.className = 'section-header-row';
+        secTr.innerHTML = `
+          <td colspan="8">
+            <div class="sec-header-wrap">
+              <span class="sec-header-title">📚 ${escapeHtml(section.title)}</span>
+              <div class="sec-header-badges">
+                <span class="sec-header-score">${section.scoreEarned}/${section.maxScore} điểm</span>
+                <span class="sec-header-count">(${section.correctCount}/${section.totalItems} câu đúng)</span>
+                ${section.needsReviewCount > 0 ? `<span class="sec-header-review">${section.needsReviewCount} câu cần duyệt</span>` : ''}
+              </div>
+            </div>
+          </td>
         `;
-        tr.append(tdPos);
+        detailItemsBody.append(secTr);
 
-        // 2. Prompt Column
-        const tdPrompt = document.createElement('td');
-        const compactPrompt = formatCompactPrompt(item);
-        const optBtnHtml = compactPrompt.hasExtensiveOptions
-          ? `<button type="button" class="prompt-opt-btn" data-item-id="${item.itemVersionId}">📋 Xem danh sách từ (${compactPrompt.optionsCount})</button>`
-          : '';
-        tdPrompt.innerHTML = `
-          <div class="prompt-compact">
-            <div class="prompt-preview-text" title="${escapeHtml(compactPrompt.text)}">${escapeHtml(compactPrompt.text)}</div>
-            ${item.helpText ? `<small style="color:#64748b; display:block;">${escapeHtml(item.helpText)}</small>` : ''}
-            ${optBtnHtml}
-          </div>
-        `;
-        tr.append(tdPrompt);
+        for (const item of section.items) {
+          const tr = document.createElement('tr');
+          if (item.needsReview) tr.className = 'row-needs-review';
 
-        // 3. Student Answer Column
-        const tdStudent = document.createElement('td');
-        tdStudent.innerHTML = `
-          <div class="ans-display-cell">
-            <div class="ans-student-val">${escapeHtml(resolveStudentAnswerDisplay(item))}</div>
-          </div>
-        `;
-        tr.append(tdStudent);
-
-        // 4. Expected Answer Column
-        const tdExpected = document.createElement('td');
-        tdExpected.innerHTML = `
-          <div class="ans-display-cell">
-            <div class="ans-expected-val">${escapeHtml(resolveExpectedAnswerDisplay(item))}</div>
-          </div>
-        `;
-        tr.append(tdExpected);
-
-        // 5. Verdict Column
-        const tdVerdict = document.createElement('td');
-        tdVerdict.innerHTML = `<span class="verdict-badge ${item.verdict}">${verdictLabel(item.verdict)}</span>`;
-        tr.append(tdVerdict);
-
-        // 6. Score Column
-        const tdScore = document.createElement('td');
-        const currentScoreVal = item.draftScore !== null && item.draftScore !== undefined
-          ? item.draftScore
-          : (item.manualReview ? item.scoreEarned : (item.canGrade ? (item.draftScore ?? '') : item.scoreEarned));
-
-        if (item.canGrade) {
-          tdScore.innerHTML = `
-            <div class="table-grade-score-wrap">
-              <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input table-grade-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal !== undefined ? currentScoreVal : ''}" placeholder="0-${item.maxScore}">
-              <span>/${item.maxScore}</span>
+          // 1. # Column
+          const tdPos = document.createElement('td');
+          tdPos.innerHTML = `
+            <div class="q-col-pos">
+              <span class="q-pos-num">Câu ${item.position}</span>
+              <span class="q-type-badge">${item.interactionType}</span>
+              ${item.primarySkill ? `<span class="q-skill-badge">${item.primarySkill.toUpperCase()}</span>` : ''}
             </div>
           `;
-        } else {
-          tdScore.innerHTML = `<div class="table-grade-score-wrap"><span>${item.scoreEarned}/${item.maxScore}</span></div>`;
-        }
-        tr.append(tdScore);
+          tr.append(tdPos);
 
-        // 7. Feedback Column
-        const tdFeedback = document.createElement('td');
-        const currentFeedbackVal = typeof item.draftFeedback === 'string'
-          ? item.draftFeedback
-          : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
-
-        if (item.canGrade) {
-          tdFeedback.innerHTML = `
-            <textarea class="grade-feedback-input table-feedback-input" data-item-id="${item.itemVersionId}" placeholder="Nhận xét...">${escapeHtml(currentFeedbackVal)}</textarea>
+          // 2. Prompt Column
+          const tdPrompt = document.createElement('td');
+          const compactPrompt = formatCompactPrompt(item);
+          const optBtnHtml = compactPrompt.hasExtensiveOptions
+            ? `<button type="button" class="prompt-opt-btn" data-item-id="${item.itemVersionId}">📋 Xem danh sách từ (${compactPrompt.optionsCount})</button>`
+            : '';
+          tdPrompt.innerHTML = `
+            <div class="prompt-compact">
+              <div class="prompt-preview-text" title="${escapeHtml(compactPrompt.text)}">${escapeHtml(compactPrompt.text)}</div>
+              ${item.helpText ? `<small style="color:#64748b; display:block;">${escapeHtml(item.helpText)}</small>` : ''}
+              ${optBtnHtml}
+            </div>
           `;
-        } else {
-          const commentText = item.feedback?.comment || '';
-          tdFeedback.innerHTML = `<span style="font-size:0.82rem; color:#64748b;">${escapeHtml(commentText) || '—'}</span>`;
+          tr.append(tdPrompt);
+
+          // 3. Student Answer Column
+          const tdStudent = document.createElement('td');
+          const studentAnsDisplay = resolveStudentAnswerDisplay(item);
+          tdStudent.innerHTML = `
+            <div class="ans-display-cell">
+              <div class="ans-student-val" title="${escapeHtml(studentAnsDisplay)}">${escapeHtml(studentAnsDisplay)}</div>
+            </div>
+          `;
+          tr.append(tdStudent);
+
+          // 4. Expected Answer Column
+          const tdExpected = document.createElement('td');
+          const expectedAnsDisplay = resolveExpectedAnswerDisplay(item);
+          tdExpected.innerHTML = `
+            <div class="ans-display-cell">
+              <div class="ans-expected-val" title="${escapeHtml(expectedAnsDisplay)}">${escapeHtml(expectedAnsDisplay)}</div>
+            </div>
+          `;
+          tr.append(tdExpected);
+
+          // 5. Verdict Column
+          const tdVerdict = document.createElement('td');
+          tdVerdict.innerHTML = `<span class="verdict-badge ${item.verdict}">${verdictLabel(item.verdict)}</span>`;
+          tr.append(tdVerdict);
+
+          // 6. Score Column
+          const tdScore = document.createElement('td');
+          const currentScoreVal = item.draftScore !== null && item.draftScore !== undefined
+            ? item.draftScore
+            : (item.manualReview ? item.scoreEarned : (item.canGrade ? (item.draftScore ?? '') : item.scoreEarned));
+
+          if (item.canGrade) {
+            tdScore.innerHTML = `
+              <div class="table-grade-score-wrap">
+                <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input table-grade-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal !== undefined ? currentScoreVal : ''}" placeholder="0-${item.maxScore}">
+                <span>/${item.maxScore}</span>
+              </div>
+            `;
+          } else {
+            tdScore.innerHTML = `<div class="table-grade-score-wrap"><span>${item.scoreEarned}/${item.maxScore}</span></div>`;
+          }
+          tr.append(tdScore);
+
+          // 7. Feedback Column
+          const tdFeedback = document.createElement('td');
+          const currentFeedbackVal = typeof item.draftFeedback === 'string'
+            ? item.draftFeedback
+            : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
+
+          if (item.canGrade) {
+            tdFeedback.innerHTML = `
+              <textarea class="grade-feedback-input table-feedback-input" data-item-id="${item.itemVersionId}" placeholder="Nhận xét...">${escapeHtml(currentFeedbackVal)}</textarea>
+            `;
+          } else {
+            const commentText = item.feedback?.comment || '';
+            tdFeedback.innerHTML = `<span style="font-size:0.82rem; color:#64748b;">${escapeHtml(commentText) || '—'}</span>`;
+          }
+          tr.append(tdFeedback);
+
+          // 8. Action Column
+          const tdAction = document.createElement('td');
+          tdAction.innerHTML = `<button type="button" class="btn-inspect-item" data-item-id="${item.itemVersionId}">🔍 Xem</button>`;
+          tr.append(tdAction);
+
+          detailItemsBody.append(tr);
         }
-        tr.append(tdFeedback);
-
-        // 8. Action Column
-        const tdAction = document.createElement('td');
-        tdAction.innerHTML = `<button type="button" class="btn-inspect-item" data-item-id="${item.itemVersionId}">🔍 Xem</button>`;
-        tr.append(tdAction);
-
-        detailItemsBody.append(tr);
       }
 
       // Attach event listeners for prompt opt buttons and inspect item buttons

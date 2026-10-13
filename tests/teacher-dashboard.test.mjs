@@ -546,6 +546,83 @@ test('teacher dashboard styles.css provides table grading and skill tab styles',
   assert.match(css, /\.item-context-modal/);
 });
 
+test('extractAttemptSkills groups sections with accurate titles, scores, and correct counts matching student view', () => {
+  const items = [
+    {
+      itemVersionId: 'v1',
+      position: 1,
+      sectionId: 'sec-1',
+      sectionTitle: 'Vocabulary · Nghe từ và chọn nghĩa',
+      primarySkill: 'vocabulary',
+      scoreEarned: 0.5,
+      maxScore: 0.5,
+      verdict: 'correct',
+      needsReview: false
+    },
+    {
+      itemVersionId: 'v2',
+      position: 2,
+      sectionId: 'sec-1',
+      sectionTitle: 'Vocabulary · Nghe từ và chọn nghĩa',
+      primarySkill: 'vocabulary',
+      scoreEarned: 0,
+      maxScore: 0.5,
+      verdict: 'incorrect',
+      needsReview: false
+    },
+    {
+      itemVersionId: 'v3',
+      position: 3,
+      sectionId: 'sec-2',
+      sectionTitle: 'Listening · Đúng/Sai',
+      primarySkill: 'listening',
+      scoreEarned: 1.0,
+      maxScore: 1.0,
+      verdict: 'correct',
+      needsReview: false
+    }
+  ];
+
+  const result = extractAttemptSkills(items);
+  assert.equal(result.skills.length, 2);
+  assert.deepEqual(result.skills.map(s => s.code), ['vocabulary', 'listening']);
+  assert.equal(result.skills[0].label, 'Vocabulary');
+  assert.equal(result.skills[1].label, 'Listening');
+
+  // Verify sections grouping in result
+  assert.ok(Array.isArray(result.sections));
+  assert.equal(result.sections.length, 2);
+
+  const sec1 = result.sections[0];
+  assert.equal(sec1.title, 'Vocabulary · Nghe từ và chọn nghĩa');
+  assert.equal(sec1.skillCode, 'vocabulary');
+  assert.equal(sec1.totalItems, 2);
+  assert.equal(sec1.correctCount, 1);
+  assert.equal(sec1.scoreEarned, 0.5);
+  assert.equal(sec1.maxScore, 1.0);
+
+  const sec2 = result.sections[1];
+  assert.equal(sec2.title, 'Listening · Đúng/Sai');
+  assert.equal(sec2.skillCode, 'listening');
+  assert.equal(sec2.totalItems, 1);
+  assert.equal(sec2.correctCount, 1);
+  assert.equal(sec2.scoreEarned, 1.0);
+  assert.equal(sec2.maxScore, 1.0);
+});
+
+test('styles.css enforces table-layout fixed, white-space normal, and section header styling to prevent text collision', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  // Ensure table-layout: fixed is configured on grading-table
+  assert.match(css, /\.grading-table\s*\{[^}]*table-layout:\s*fixed/);
+  // Ensure white-space: normal and word wrapping on grading-table td
+  assert.match(css, /\.grading-table\s+(?:th,\s*\.grading-table\s+)?td\s*\{[^}]*white-space:\s*normal/);
+  // Ensure section-header-row styling exists
+  assert.match(css, /\.section-header-row/);
+});
+
+
 
 
 
