@@ -352,6 +352,75 @@ export function resolveExpectedAnswerDisplay(item) {
   return raw;
 }
 
+export function getScoreTier(earned, maximum) {
+  if (earned === null || earned === undefined || maximum === null || maximum === undefined || Number(maximum) <= 0) {
+    return null;
+  }
+  const ratio = (Number(earned) / Number(maximum)) * 100;
+  if (ratio >= 60) {
+    return 'tier-yellow';
+  }
+  if (ratio >= 45) {
+    return 'tier-red';
+  }
+  return 'tier-gray';
+}
+
+export function computeClassSkillSummary(payload) {
+  const students = Array.isArray(payload?.students) ? payload.students : [];
+  const skills = Array.isArray(payload?.skills) ? payload.skills : [];
+
+  const totalStudents = students.length;
+  const submittedStudents = students.filter(s => s.status !== 'not_started' && s.attemptId);
+  const submittedCount = submittedStudents.length;
+
+  const studentsWithTotal = students.filter(s => s.total && typeof s.total.earned === 'number' && Number(s.total.maximum) > 0);
+  let totalAverage = null;
+  if (studentsWithTotal.length > 0) {
+    const sumEarned = studentsWithTotal.reduce((acc, s) => acc + Number(s.total.earned), 0);
+    const avgEarned = Math.round((sumEarned / studentsWithTotal.length) * 10) / 10;
+    const maxScore = Number(studentsWithTotal[0].total.maximum) || 100;
+    totalAverage = {
+      earned: avgEarned,
+      maximum: maxScore,
+      tier: getScoreTier(avgEarned, maxScore),
+      studentCount: studentsWithTotal.length
+    };
+  }
+
+  const skillSummaries = skills.map(skill => {
+    const withSkill = students.filter(s => s.skills?.[skill.code] && typeof s.skills[skill.code].earned === 'number' && Number(s.skills[skill.code].maximum) > 0);
+    if (withSkill.length === 0) {
+      return {
+        code: skill.code,
+        label: skill.code.toUpperCase(),
+        earned: null,
+        maximum: skill.maximum,
+        tier: null,
+        studentCount: 0
+      };
+    }
+    const sumEarned = withSkill.reduce((acc, s) => acc + Number(s.skills[skill.code].earned), 0);
+    const avgEarned = Math.round((sumEarned / withSkill.length) * 10) / 10;
+    const maxScore = Number(withSkill[0].skills[skill.code].maximum) || skill.maximum;
+    return {
+      code: skill.code,
+      label: skill.code.toUpperCase(),
+      earned: avgEarned,
+      maximum: maxScore,
+      tier: getScoreTier(avgEarned, maxScore),
+      studentCount: withSkill.length
+    };
+  });
+
+  return {
+    totalStudents,
+    submittedCount,
+    totalAverage,
+    skills: skillSummaries
+  };
+}
+
 async function startDashboard() {
   const form = document.querySelector('#identity-form');
   const classSelect = document.querySelector('#class-select');
@@ -364,6 +433,7 @@ async function startDashboard() {
   const lastUpdated = document.querySelector('#last-updated');
   const refreshBtn = document.querySelector('#refresh-btn');
   const publishAllBtn = document.querySelector('#publish-all-btn');
+  const classSkillSummary = document.querySelector('#class-skill-summary');
   let currentResultsPayload = null;
 
   const addStudentBtn = document.querySelector('#add-student-btn');
@@ -528,6 +598,42 @@ async function startDashboard() {
     row.append(cell);
   }
 
+  function renderClassSkillSummaryCards(container, payload) {
+    container.replaceChildren();
+    const summary = computeClassSkillSummary(payload);
+
+    // 1. Class Total Average Card
+    const totalCard = document.createElement('div');
+    totalCard.className = 'class-summary-card card-total';
+    const totalTier = summary.totalAverage?.tier;
+    const totalTierLabel = totalTier === 'tier-yellow' ? '🟡 Vàng' : totalTier === 'tier-red' ? '🔴 Đỏ' : totalTier === 'tier-gray' ? '⚪ Xám' : '';
+    totalCard.innerHTML = `
+      <div class="summary-card-header">
+        <span class="summary-card-title">Điểm trung bình lớp</span>
+        ${totalTierLabel ? `<span class="tier-badge ${totalTier}">${totalTierLabel}</span>` : ''}
+      </div>
+      <div class="summary-card-score">${summary.totalAverage ? `${summary.totalAverage.earned}/${summary.totalAverage.maximum}` : '—'}</div>
+      <div class="summary-card-meta">Đã nộp: ${summary.submittedCount}/${summary.totalStudents} học viên</div>
+    `;
+    container.append(totalCard);
+
+    // 2. Skill Breakdown Cards
+    for (const sk of summary.skills) {
+      const card = document.createElement('div');
+      card.className = 'class-summary-card';
+      const tierLabel = sk.tier === 'tier-yellow' ? '🟡 Vàng' : sk.tier === 'tier-red' ? '🔴 Đỏ' : sk.tier === 'tier-gray' ? '⚪ Xám' : '';
+      card.innerHTML = `
+        <div class="summary-card-header">
+          <span class="summary-card-title">${escapeHtml(sk.label)}</span>
+          ${tierLabel ? `<span class="tier-badge ${sk.tier}">${tierLabel}</span>` : ''}
+        </div>
+        <div class="summary-card-score">${sk.earned !== null ? `${sk.earned}/${sk.maximum}` : '—'}</div>
+        <div class="summary-card-meta">${sk.studentCount} học viên có điểm</div>
+      `;
+      container.append(card);
+    }
+  }
+
   function renderResults(payload) {
     currentResultsPayload = payload;
     resultsContent.replaceChildren();
@@ -546,6 +652,11 @@ async function startDashboard() {
       }
     }
 
+    // Render Class Skill Performance Summary Bar
+    if (classSkillSummary) {
+      renderClassSkillSummaryCards(classSkillSummary, payload);
+    }
+
     // Populate skill filter dropdown if needed
     if (skillFilter) {
       const currentSkill = skillFilter.value;
@@ -561,7 +672,8 @@ async function startDashboard() {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    for (const label of ['Học viên', 'Trạng thái', 'Công bố', 'Tổng', ...payload.skills.map(skill => skill.code), 'Nộp lúc', 'Thao tác']) {
+    const headers = ['Học viên', 'Trạng thái', 'Tổng điểm', ...payload.skills.map(skill => skill.code), 'Nộp lúc', 'Thao tác'];
+    for (const label of headers) {
       const header = document.createElement('th');
       header.scope = 'col';
       header.textContent = label;
@@ -573,7 +685,7 @@ async function startDashboard() {
     if (payload.students.length === 0) {
       const emptyRow = document.createElement('tr');
       const emptyCell = document.createElement('td');
-      emptyCell.colSpan = payload.skills.length + 6;
+      emptyCell.colSpan = headers.length;
       emptyCell.className = 'empty-results';
       emptyCell.textContent = 'Không tìm thấy học viên nào phù hợp với bộ lọc.';
       emptyRow.append(emptyCell);
@@ -581,6 +693,8 @@ async function startDashboard() {
     } else {
       for (const student of payload.students) {
         const row = document.createElement('tr');
+
+        // 1. Name Cell
         const nameCell = document.createElement('td');
         const nameText = student.discriminator ? `${student.name} · ${student.discriminator}` : student.name;
         nameCell.textContent = nameText;
@@ -591,13 +705,66 @@ async function startDashboard() {
           nameCell.append(leftBadge);
         }
         row.append(nameCell);
-        appendCell(row, resultStatusLabel(student.status), `result-status ${student.status}`);
 
-        appendCell(row, student.published ? 'Đã công bố' : 'Chưa công bố', `badge-pub ${student.published ? 'is-pub' : ''}`);
-        appendCell(row, formatDashboardScore(student.total), 'score');
-        for (const skill of payload.skills) appendCell(row, formatDashboardScore(student.skills[skill.code]), 'score');
-        appendCell(row, student.submittedAt ? formatAssignmentWindow(student.submittedAt, null).split(' → ')[0] : '—');
+        // 2. Status Cell (wrapped in status-cell-wrap to prevent table cell collapse)
+        const statusCell = document.createElement('td');
+        const statusWrap = document.createElement('div');
+        statusWrap.className = 'status-cell-wrap';
+        const statusSpan = document.createElement('span');
+        statusSpan.className = `result-status ${student.status}`;
+        statusSpan.textContent = resultStatusLabel(student.status);
+        const pubSpan = document.createElement('span');
+        pubSpan.className = `badge-pub ${student.published ? 'is-pub' : ''}`;
+        pubSpan.textContent = student.published ? 'Đã công bố' : 'Chưa công bố';
+        statusWrap.append(statusSpan, pubSpan);
+        statusCell.append(statusWrap);
+        row.append(statusCell);
 
+        // 3. Total Score Cell with Tier Pill
+        const totalCell = document.createElement('td');
+        totalCell.className = 'score-cell';
+        const totalScoreSpan = document.createElement('span');
+        totalScoreSpan.className = 'score-text';
+        totalScoreSpan.textContent = formatDashboardScore(student.total);
+        totalCell.append(totalScoreSpan);
+        if (student.total && student.total.earned !== null && student.total.earned !== undefined) {
+          const totalTier = getScoreTier(student.total.earned, student.total.maximum);
+          if (totalTier) {
+            const tierPill = document.createElement('span');
+            tierPill.className = `tier-pill ${totalTier}`;
+            tierPill.textContent = totalTier === 'tier-yellow' ? '🟡 Vàng' : totalTier === 'tier-red' ? '🔴 Đỏ' : '⚪ Xám';
+            totalCell.append(tierPill);
+          }
+        }
+        row.append(totalCell);
+
+        // 4. Per-Skill Score Cells with Tier Pills
+        for (const skill of payload.skills) {
+          const skillCell = document.createElement('td');
+          skillCell.className = 'score-cell';
+          const skScore = student.skills?.[skill.code];
+          const skScoreSpan = document.createElement('span');
+          skScoreSpan.className = 'score-text';
+          skScoreSpan.textContent = formatDashboardScore(skScore);
+          skillCell.append(skScoreSpan);
+          if (skScore && skScore.earned !== null && skScore.earned !== undefined) {
+            const skTier = getScoreTier(skScore.earned, skScore.maximum);
+            if (skTier) {
+              const tierPill = document.createElement('span');
+              tierPill.className = `tier-pill ${skTier}`;
+              tierPill.textContent = skTier === 'tier-yellow' ? '🟡 Vàng' : skTier === 'tier-red' ? '🔴 Đỏ' : '⚪ Xám';
+              skillCell.append(tierPill);
+            }
+          }
+          row.append(skillCell);
+        }
+
+        // 5. Submitted At Cell
+        const submittedCell = document.createElement('td');
+        submittedCell.textContent = student.submittedAt ? formatAssignmentWindow(student.submittedAt, null).split(' → ')[0] : '—';
+        row.append(submittedCell);
+
+        // 6. Action Cell
         const actionCell = document.createElement('td');
         const actionsGroup = document.createElement('div');
         actionsGroup.className = 'table-actions';
@@ -630,6 +797,7 @@ async function startDashboard() {
         actionsGroup.append(retakeBtn);
         actionCell.append(actionsGroup);
         row.append(actionCell);
+
         body.append(row);
       }
     }

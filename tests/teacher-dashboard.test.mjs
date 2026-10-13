@@ -30,7 +30,9 @@ import {
   extractAttemptSkills,
   formatCompactPrompt,
   resolveStudentAnswerDisplay,
-  resolveExpectedAnswerDisplay
+  resolveExpectedAnswerDisplay,
+  getScoreTier,
+  computeClassSkillSummary
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase resolves local or production origin based on location', () => {
@@ -621,6 +623,113 @@ test('styles.css enforces table-layout fixed, white-space normal, and section he
   // Ensure section-header-row styling exists
   assert.match(css, /\.section-header-row/);
 });
+
+test('getScoreTier classifies scores into yellow (>=60%), red (45-59.9%), and gray (<45%) tiers', () => {
+  assert.equal(getScoreTier(75, 100), 'tier-yellow');
+  assert.equal(getScoreTier(60, 100), 'tier-yellow');
+  assert.equal(getScoreTier(59.9, 100), 'tier-red');
+  assert.equal(getScoreTier(45, 100), 'tier-red');
+  assert.equal(getScoreTier(44.9, 100), 'tier-gray');
+  assert.equal(getScoreTier(0, 100), 'tier-gray');
+
+  // Multi-skill tests with different maximum scores
+  assert.equal(getScoreTier(15, 25), 'tier-yellow'); // 60%
+  assert.equal(getScoreTier(12, 25), 'tier-red');    // 48%
+  assert.equal(getScoreTier(10, 25), 'tier-gray');   // 40%
+
+  // Edge cases
+  assert.equal(getScoreTier(null, 100), null);
+  assert.equal(getScoreTier(50, 0), null);
+});
+
+test('computeClassSkillSummary calculates class average and per-skill breakdown', () => {
+  const payload = {
+    skills: [
+      { code: 'vocabulary', maximum: 25 },
+      { code: 'listening', maximum: 25 }
+    ],
+    students: [
+      {
+        name: 'Student A',
+        status: 'complete',
+        attemptId: 'att-1',
+        total: { earned: 80, maximum: 100, status: 'final' },
+        skills: {
+          vocabulary: { earned: 20, maximum: 25, status: 'final' },
+          listening: { earned: 20, maximum: 25, status: 'final' }
+        }
+      },
+      {
+        name: 'Student B',
+        status: 'complete',
+        attemptId: 'att-2',
+        total: { earned: 50, maximum: 100, status: 'final' },
+        skills: {
+          vocabulary: { earned: 10, maximum: 25, status: 'final' },
+          listening: { earned: 15, maximum: 25, status: 'final' }
+        }
+      },
+      {
+        name: 'Student C',
+        status: 'not_started',
+        attemptId: null,
+        total: null,
+        skills: {
+          vocabulary: null,
+          listening: null
+        }
+      }
+    ]
+  };
+
+  const summary = computeClassSkillSummary(payload);
+  assert.equal(summary.totalStudents, 3);
+  assert.equal(summary.submittedCount, 2);
+  assert.ok(summary.totalAverage);
+  assert.equal(summary.totalAverage.earned, 65); // (80 + 50) / 2
+  assert.equal(summary.totalAverage.maximum, 100);
+  assert.equal(summary.totalAverage.tier, 'tier-yellow');
+
+  assert.equal(summary.skills.length, 2);
+  assert.equal(summary.skills[0].code, 'vocabulary');
+  assert.equal(summary.skills[0].earned, 15); // (20 + 10) / 2
+  assert.equal(summary.skills[0].maximum, 25);
+  assert.equal(summary.skills[0].tier, 'tier-yellow'); // 15/25 = 60%
+
+  assert.equal(summary.skills[1].code, 'listening');
+  assert.equal(summary.skills[1].earned, 17.5); // (20 + 15) / 2
+  assert.equal(summary.skills[1].maximum, 25);
+  assert.equal(summary.skills[1].tier, 'tier-yellow'); // 17.5/25 = 70%
+});
+
+test('teacher dashboard index.html removes % symbols from filters and provides class skill summary container', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  // Must not have % in score filter labels or placeholders
+  assert.equal(html.includes('Từ (%)'), false);
+  assert.equal(html.includes('Đến (%)'), false);
+  assert.equal(html.includes('placeholder="0%"'), false);
+  assert.equal(html.includes('placeholder="100%"'), false);
+
+  // Must provide proper filter labels and container
+  assert.match(html, /<span>Từ điểm<\/span>/);
+  assert.match(html, /<span>Đến điểm<\/span>/);
+  assert.match(html, /id="class-skill-summary"/);
+});
+
+test('teacher dashboard styles.css provides class summary cards and tier colors without inline-block on td', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.tier-yellow/);
+  assert.match(css, /\.tier-red/);
+  assert.match(css, /\.tier-gray/);
+  assert.match(css, /\.class-skill-summary/);
+  assert.match(css, /\.class-summary-card/);
+  assert.match(css, /\.status-cell-wrap/);
+});
+
 
 
 
