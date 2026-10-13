@@ -212,8 +212,9 @@ export function formatCurrentTime(date = new Date(), locale = 'vi-VN', timeZone 
   }).format(date);
 }
 
-const CANONICAL_SKILL_LABELS = {
+export const CANONICAL_SKILL_LABELS = {
   vocabulary: 'Vocabulary',
+  vocabulary_listen_write: 'Vocabulary',
   listening: 'Listening',
   pronunciation: 'Pronunciation',
   reading: 'Reading',
@@ -223,6 +224,29 @@ const CANONICAL_SKILL_LABELS = {
   general: 'Chung'
 };
 
+export function normalizeSkillCode(code, sectionTitle = '') {
+  if (typeof sectionTitle === 'string' && sectionTitle) {
+    const prefix = sectionTitle.split(/[·\-\:]/)[0].trim().toLowerCase();
+    if (prefix.includes('vocab')) return 'vocabulary';
+    if (prefix.includes('listen')) return 'listening';
+    if (prefix.includes('pronun')) return 'pronunciation';
+    if (prefix.includes('read')) return 'reading';
+    if (prefix.includes('writ') || prefix.includes('dịch') || prefix.includes('translat')) return 'writing';
+    if (prefix.includes('speak')) return 'speaking';
+    if (prefix.includes('gramm')) return 'grammar';
+  }
+  if (!code || typeof code !== 'string') return 'general';
+  const clean = code.trim().toLowerCase();
+  if (clean.includes('vocab')) return 'vocabulary';
+  if (clean.includes('listen')) return 'listening';
+  if (clean.includes('pronun')) return 'pronunciation';
+  if (clean.includes('read')) return 'reading';
+  if (clean.includes('writ') || clean.includes('translat')) return 'writing';
+  if (clean.includes('speak')) return 'speaking';
+  if (clean.includes('gramm')) return 'grammar';
+  return clean;
+}
+
 export function extractAttemptSkills(items = []) {
   const skillMap = new Map();
   const sectionMap = new Map();
@@ -231,7 +255,8 @@ export function extractAttemptSkills(items = []) {
   let totalNeedsReview = 0;
 
   for (const item of items) {
-    const code = (item.primarySkill || 'general').toLowerCase();
+    const rawCode = item.primarySkill || '';
+    const code = normalizeSkillCode(rawCode, item.sectionTitle || item.sectionId) || 'general';
     const scoreEarned = Number(item.scoreEarned) || 0;
     const maxScore = Number(item.maxScore) || 0;
     const needsReview = Boolean(item.needsReview);
@@ -389,11 +414,13 @@ export function computeClassSkillSummary(payload) {
   }
 
   const skillSummaries = skills.map(skill => {
+    const normCode = normalizeSkillCode(skill.code);
+    const label = (CANONICAL_SKILL_LABELS[normCode] || CANONICAL_SKILL_LABELS[skill.code] || skill.code).toUpperCase();
     const withSkill = students.filter(s => s.skills?.[skill.code] && typeof s.skills[skill.code].earned === 'number' && Number(s.skills[skill.code].maximum) > 0);
     if (withSkill.length === 0) {
       return {
         code: skill.code,
-        label: skill.code.toUpperCase(),
+        label,
         earned: null,
         maximum: skill.maximum,
         tier: null,
@@ -405,7 +432,7 @@ export function computeClassSkillSummary(payload) {
     const maxScore = Number(withSkill[0].skills[skill.code].maximum) || skill.maximum;
     return {
       code: skill.code,
-      label: skill.code.toUpperCase(),
+      label,
       earned: avgEarned,
       maximum: maxScore,
       tier: getScoreTier(avgEarned, maxScore),
@@ -678,7 +705,9 @@ async function startDashboard() {
       const currentSkill = skillFilter.value;
       skillFilter.replaceChildren(new Option('Tổng điểm', ''));
       for (const skill of payload.skills) {
-        skillFilter.add(new Option(`Kỹ năng: ${skill.code.toUpperCase()}`, skill.code));
+        const normCode = normalizeSkillCode(skill.code);
+        const label = CANONICAL_SKILL_LABELS[normCode] || skill.code.toUpperCase();
+        skillFilter.add(new Option(`Kỹ năng: ${label}`, skill.code));
       }
       skillFilter.value = state.skill || currentSkill || '';
     }
@@ -717,7 +746,8 @@ async function startDashboard() {
     headerRow.append(createScoreHeader('Tổng điểm', maxTotal));
     for (const skill of payload.skills) {
       const code = skill.code || '';
-      const label = code.charAt(0).toUpperCase() + code.slice(1);
+      const normCode = normalizeSkillCode(code);
+      const label = CANONICAL_SKILL_LABELS[normCode] || (code.charAt(0).toUpperCase() + code.slice(1));
       headerRow.append(createScoreHeader(label, skill.maximum));
     }
     headerRow.append(createTextHeader('Nộp lúc'));
