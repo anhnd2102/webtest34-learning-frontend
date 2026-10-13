@@ -35,13 +35,20 @@
         <p class="auth-desc">Đăng nhập nội bộ IZONE bằng Email và Số điện thoại đã được đăng ký.</p>
         <div id="login-error" class="error-msg" hidden role="alert"></div>
         <div class="auth-grid">
-          <label>API base URL <input id="login-api-base" name="apiBase" type="url" value="http://localhost:8788" required></label>
+          <input id="login-api-base" name="apiBase" type="hidden" value="http://localhost:8788">
           <label>Email <input id="login-email" name="email" type="email" placeholder="ví dụ: giangvien@izone.edu.vn" required></label>
-          <label>Số điện thoại <input id="login-phone" name="phone" type="tel" placeholder="ví dụ: 0912345678" required></label>
+          <label>Số điện thoại (Mật khẩu)
+            <div class="password-input-wrap">
+              <input id="login-phone" name="phone" type="password" autocomplete="current-password" placeholder="ví dụ: 0912345678" required>
+              <button id="toggle-password-btn" type="button" class="password-toggle-btn" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">
+                <span class="eye-icon" aria-hidden="true">👁️</span>
+              </button>
+            </div>
+          </label>
         </div>
         <div class="auth-actions">
           <button id="login-btn" type="submit" class="btn-primary">Đăng nhập</button>
-          <button id="toggle-fixture-btn" type="button" class="btn-secondary">Chế độ kiểm thử (Fixture)</button>
+          <button id="toggle-fixture-btn" type="button" class="btn-secondary" hidden>Chế độ kiểm thử (Fixture)</button>
         </div>
       </form>
 

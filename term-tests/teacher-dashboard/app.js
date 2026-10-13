@@ -47,6 +47,21 @@ export function assignmentUrl(input, state) {
   return url;
 }
 
+export function resetDashboardState(state = {}) {
+  state.classId = '';
+  state.assignmentId = '';
+  state.attemptId = '';
+  state.q = '';
+  state.status = '';
+  state.minScore = '';
+  state.maxScore = '';
+  state.skill = '';
+  state.sortBy = '';
+  state.sortDir = '';
+  state.page = 1;
+  return state;
+}
+
 export function fixtureHeaders({ actorId }) {
   return { 'X-Teacher-Fixture-Id': actorId.trim() };
 }
@@ -593,6 +608,7 @@ async function startDashboard() {
   const loginApiBase = document.querySelector('#login-api-base');
   const loginEmail = document.querySelector('#login-email');
   const loginPhone = document.querySelector('#login-phone');
+  const togglePasswordBtn = document.querySelector('#toggle-password-btn');
   const loginError = document.querySelector('#login-error');
   const toggleFixtureBtn = document.querySelector('#toggle-fixture-btn');
   const teacherProfile = document.querySelector('#teacher-profile');
@@ -2177,11 +2193,54 @@ async function startDashboard() {
     }
     if (teacherProfile) teacherProfile.hidden = true;
     if (loginForm) loginForm.hidden = false;
+    if (loginPhone) loginPhone.value = '';
     if (classSelect) classSelect.replaceChildren(new Option('Chọn lớp', ''));
     if (assignments) assignments.replaceChildren();
     if (results) results.hidden = true;
+    if (resultsContent) resultsContent.replaceChildren();
+    if (classSkillSummary) classSkillSummary.replaceChildren();
     if (attemptDetail) attemptDetail.hidden = true;
+    if (detailScores) detailScores.replaceChildren();
+    if (detailItemsBody) detailItemsBody.replaceChildren();
+    if (detailAttemptHistory) detailAttemptHistory.replaceChildren();
+    if (detailGradingHistory) detailGradingHistory.replaceChildren();
+    if (searchInput) searchInput.value = '';
+    if (statusFilter) statusFilter.value = '';
+    if (skillFilter) skillFilter.value = '';
+    if (minScoreInput) minScoreInput.value = '';
+    if (maxScoreInput) maxScoreInput.value = '';
+    if (sortBySelect) sortBySelect.value = 'submitted_at';
+    if (sortDirSelect) sortDirSelect.value = 'desc';
+
+    resetDashboardState(state);
+    setUrl();
     if (status) status.textContent = 'Đã đăng xuất. Vui lòng đăng nhập lại.';
+  }
+
+  if (togglePasswordBtn && loginPhone) {
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = loginPhone.type === 'password';
+      loginPhone.type = isPassword ? 'text' : 'password';
+      togglePasswordBtn.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+      togglePasswordBtn.setAttribute('title', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+      const icon = togglePasswordBtn.querySelector('.eye-icon');
+      if (icon) {
+        icon.textContent = isPassword ? '🙈' : '👁️';
+      }
+    });
+  }
+
+  if (loginPhone && loginForm) {
+    loginPhone.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        if (typeof loginForm.requestSubmit === 'function') {
+          loginForm.requestSubmit();
+        } else {
+          loginForm.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      }
+    });
   }
 
   if (loginForm) {

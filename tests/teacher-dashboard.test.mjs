@@ -34,7 +34,8 @@ import {
   getScoreTier,
   computeClassSkillSummary,
   formatCompactScore,
-  formatSubmissionTimestamp
+  formatSubmissionTimestamp,
+  resetDashboardState
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase resolves local or production origin based on location', () => {
@@ -773,6 +774,65 @@ test('teacher dashboard styles.css provides .th-score, .th-score-wrap, and table
   assert.match(css, /\.th-score-label/);
   assert.match(css, /\.th-score-max/);
   assert.match(css, /\.results-scroll/);
+});
+
+test('resetDashboardState clears all filter, class, and assignment fields', () => {
+  const state = {
+    classId: '341',
+    assignmentId: '12',
+    attemptId: '99',
+    q: 'student',
+    status: 'complete',
+    minScore: '50',
+    maxScore: '90',
+    skill: 'listening',
+    sortBy: 'score',
+    sortDir: 'asc',
+    page: 3
+  };
+  resetDashboardState(state);
+  assert.equal(state.classId, '');
+  assert.equal(state.assignmentId, '');
+  assert.equal(state.attemptId, '');
+  assert.equal(state.q, '');
+  assert.equal(state.status, '');
+  assert.equal(state.minScore, '');
+  assert.equal(state.maxScore, '');
+  assert.equal(state.skill, '');
+  assert.equal(state.sortBy, '');
+  assert.equal(state.sortDir, '');
+  assert.equal(state.page, 1);
+  const cleanUrl = assignmentUrl('http://example.com/teacher?classId=341&assignmentId=12&attemptId=99', state);
+  assert.equal(cleanUrl.search, '');
+});
+
+test('teacher dashboard index.html and styles.css provide secure password input and hide fixture/debug elements', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  // Phone field is password type with current-password autocomplete
+  assert.match(html, /<input[^>]*id="login-phone"[^>]*type="password"/);
+  assert.match(html, /<input[^>]*id="login-phone"[^>]*autocomplete="current-password"/);
+
+  // Password toggle button exists
+  assert.match(html, /id="toggle-password-btn"/);
+  assert.match(html, /class="[^"]*password-toggle-btn[^"]*"/);
+
+  // API base is hidden input
+  assert.match(html, /<input[^>]*id="login-api-base"[^>]*type="hidden"/);
+
+  // Toggle fixture button and identity form have hidden attribute
+  assert.match(html, /<button[^>]*id="toggle-fixture-btn"[^>]*hidden/);
+  assert.match(html, /<form[^>]*id="identity-form"[^>]*hidden/);
+
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  // Crucial [hidden] rule with display: none !important
+  assert.match(css, /\[hidden\]\s*\{\s*display:\s*none\s*!important;\s*\}/);
+
+  // Password wrapper and toggle button styles
+  assert.match(css, /\.password-input-wrap/);
+  assert.match(css, /\.password-toggle-btn/);
 });
 
 
