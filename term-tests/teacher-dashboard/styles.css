@@ -1,7 +1,7 @@
 :root { color-scheme: light; font-family: Inter, system-ui, sans-serif; color: #404040; background: #f5f7fa; }
 * { box-sizing: border-box; }
 body { margin: 0; }
-main { width: min(1120px, calc(100% - 32px)); margin: 48px auto; }
+main { width: min(1280px, calc(100% - 32px)); margin: 48px auto; }
 header { margin-bottom: 28px; }
 h1 { margin: 4px 0 8px; font-size: clamp(2rem, 5vw, 3.5rem); }
 h2 { margin-top: 0; }
