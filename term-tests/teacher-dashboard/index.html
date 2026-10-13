@@ -243,8 +243,33 @@
       </div>
 
       <div class="detail-section">
-        <h3>Nội dung bài làm và kết quả câu hỏi</h3>
-        <div id="detail-items" class="items-list"></div>
+        <div class="section-title-wrap">
+          <h3>Bảng kết quả & Chấm điểm theo kỹ năng</h3>
+        </div>
+
+        <nav id="attempt-skill-tabs" class="skill-tabs" aria-label="Lọc theo kỹ năng"></nav>
+        
+        <div id="skill-summary-card" class="skill-summary-card"></div>
+
+        <div class="results-scroll grading-table-wrap">
+          <table id="detail-items-table" class="grading-table">
+            <thead>
+              <tr>
+                <th style="width: 75px;">#</th>
+                <th style="min-width: 220px;">Câu hỏi / Yêu cầu</th>
+                <th style="min-width: 180px;">Bài làm học viên</th>
+                <th style="min-width: 180px;">Đáp án mẫu / Rubric</th>
+                <th style="width: 100px;">Trạng thái</th>
+                <th style="width: 130px;">Điểm số</th>
+                <th style="min-width: 160px;">Nhận xét</th>
+                <th style="width: 85px;">Chi tiết</th>
+              </tr>
+            </thead>
+            <tbody id="detail-items-body"></tbody>
+          </table>
+        </div>
+
+        <div id="detail-items" class="items-list" hidden></div>
       </div>
 
       <div id="grading-actions-bar" class="grading-actions-bar">
@@ -259,8 +284,18 @@
         </div>
       </div>
     </section>
+
+    <dialog id="item-context-modal" class="modal item-context-modal" aria-labelledby="modal-item-title">
+      <div class="modal-form">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 id="modal-item-title">Chi tiết câu hỏi</h3>
+          <button id="close-item-modal-btn" type="button" class="btn-secondary btn-sm">✕ Đóng</button>
+        </div>
+        <div id="modal-item-content" class="modal-item-content"></div>
+      </div>
+    </dialog>
   </main>
 
-  <script type="module" src="./app.js?rev=20261012-api-base-v1"></script>
+  <script type="module" src="./app.js?rev=20261013-table-view-v1"></script>
 </body>
 </html>

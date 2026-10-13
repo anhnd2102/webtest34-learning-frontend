@@ -212,6 +212,109 @@ export function formatCurrentTime(date = new Date(), locale = 'vi-VN', timeZone 
   }).format(date);
 }
 
+export function extractAttemptSkills(items = []) {
+  const skillMap = new Map();
+  let totalScoreEarned = 0;
+  let totalMaxScore = 0;
+  let totalNeedsReview = 0;
+
+  for (const item of items) {
+    const code = (item.primarySkill || 'general').toLowerCase();
+    const scoreEarned = Number(item.scoreEarned) || 0;
+    const maxScore = Number(item.maxScore) || 0;
+    const needsReview = Boolean(item.needsReview);
+
+    totalScoreEarned += scoreEarned;
+    totalMaxScore += maxScore;
+    if (needsReview) totalNeedsReview += 1;
+
+    if (!skillMap.has(code)) {
+      skillMap.set(code, {
+        code,
+        label: code.charAt(0).toUpperCase() + code.slice(1),
+        totalItems: 0,
+        needsReviewCount: 0,
+        scoreEarned: 0,
+        maxScore: 0
+      });
+    }
+    const skillStat = skillMap.get(code);
+    skillStat.totalItems += 1;
+    skillStat.scoreEarned += scoreEarned;
+    skillStat.maxScore += maxScore;
+    if (needsReview) skillStat.needsReviewCount += 1;
+  }
+
+  const skills = Array.from(skillMap.values());
+  const summary = {
+    all: {
+      code: 'all',
+      label: 'Tất cả kỹ năng',
+      totalItems: items.length,
+      needsReviewCount: totalNeedsReview,
+      scoreEarned: Math.round(totalScoreEarned * 100) / 100,
+      maxScore: Math.round(totalMaxScore * 100) / 100
+    }
+  };
+
+  for (const skill of skills) {
+    summary[skill.code] = {
+      ...skill,
+      scoreEarned: Math.round(skill.scoreEarned * 100) / 100,
+      maxScore: Math.round(skill.maxScore * 100) / 100
+    };
+  }
+
+  return { skills, summary };
+}
+
+export function formatCompactPrompt(item) {
+  const options = Array.isArray(item.options) ? item.options : [];
+  const optionsCount = options.length;
+  const isExtensive = optionsCount > 4 || item.interactionType === 'text_select_pair';
+  return {
+    text: item.prompt || `Câu hỏi số ${item.position}`,
+    optionsCount,
+    hasExtensiveOptions: isExtensive
+  };
+}
+
+export function resolveStudentAnswerDisplay(item) {
+  if (item.studentAnswer === null || item.studentAnswer === undefined || item.studentAnswer === '') {
+    return '(Chưa trả lời)';
+  }
+  const options = Array.isArray(item.options) ? item.options : [];
+  const optMap = new Map(options.map(o => [String(o.id), o.label]));
+
+  if (Array.isArray(item.studentAnswer)) {
+    return item.studentAnswer.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
+  }
+
+  const raw = String(item.studentAnswer);
+  if (optMap.has(raw)) {
+    return `${optMap.get(raw)} (${raw})`;
+  }
+  return raw;
+}
+
+export function resolveExpectedAnswerDisplay(item) {
+  if (item.expectedAnswer === null || item.expectedAnswer === undefined || item.expectedAnswer === '') {
+    return item.graderType === 'rubric_async' ? '(Chấm theo rubric)' : '—';
+  }
+  const options = Array.isArray(item.options) ? item.options : [];
+  const optMap = new Map(options.map(o => [String(o.id), o.label]));
+
+  if (Array.isArray(item.expectedAnswer)) {
+    return item.expectedAnswer.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
+  }
+
+  const raw = String(item.expectedAnswer);
+  if (optMap.has(raw)) {
+    return `${optMap.get(raw)} (${raw})`;
+  }
+  return raw;
+}
+
 async function startDashboard() {
   const form = document.querySelector('#identity-form');
   const classSelect = document.querySelector('#class-select');
@@ -266,6 +369,32 @@ async function startDashboard() {
   const detailItems = document.querySelector('#detail-items');
   const detailAttemptHistory = document.querySelector('#detail-attempt-history');
   const detailGradingHistory = document.querySelector('#detail-grading-history');
+  const attemptSkillTabs = document.querySelector('#attempt-skill-tabs');
+  const skillSummaryCard = document.querySelector('#skill-summary-card');
+  const detailItemsTable = document.querySelector('#detail-items-table');
+  const detailItemsBody = document.querySelector('#detail-items-body');
+  const itemContextModal = document.querySelector('#item-context-modal');
+  const modalItemTitle = document.querySelector('#modal-item-title');
+  const modalItemContent = document.querySelector('#modal-item-content');
+  const closeItemModalBtn = document.querySelector('#close-item-modal-btn');
+  let currentSkillTab = 'all';
+
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  if (closeItemModalBtn && itemContextModal) {
+    closeItemModalBtn.addEventListener('click', () => {
+      itemContextModal.close();
+    });
+  }
+
   const saveDraftBtn = document.querySelector('#save-draft-btn');
   const completeGradingBtn = document.querySelector('#complete-grading-btn');
   const publishResultBtn = document.querySelector('#publish-result-btn');
@@ -646,141 +775,281 @@ async function startDashboard() {
 
     if (gradingActionsBar) gradingActionsBar.hidden = false;
 
-    if (detailItems) {
-      detailItems.replaceChildren();
-      for (const item of payload.items) {
-        const card = document.createElement('div');
-        card.className = `question-card verdict-${item.verdict}`;
+    function openItemContextModal(item) {
+      if (!itemContextModal || !modalItemContent) return;
+      if (modalItemTitle) {
+        const skillLabel = item.primarySkill ? ` · ${item.primarySkill.toUpperCase()}` : '';
+        modalItemTitle.textContent = `Câu ${item.position} · ${item.interactionType}${skillLabel}`;
+      }
+      modalItemContent.replaceChildren();
 
-        const qHeader = document.createElement('div');
-        qHeader.className = 'question-header';
-        qHeader.innerHTML = `
-          <div class="q-title-wrap">
-            <span class="q-pos">Câu ${item.position}</span>
-            ${item.primarySkill ? `<span class="q-skill-badge">${item.primarySkill.toUpperCase()}</span>` : ''}
-            <span class="q-type-badge">${item.interactionType}</span>
-          </div>
-          <div class="q-score-wrap">
-            <span class="verdict-badge ${item.verdict}">${verdictLabel(item.verdict)}</span>
-            <span class="q-points">${item.scoreEarned}/${item.maxScore} điểm</span>
-          </div>
-        `;
-        card.append(qHeader);
+      // 1. Prompt Block
+      const promptBlock = document.createElement('div');
+      promptBlock.className = 'modal-ctx-block';
+      promptBlock.innerHTML = `
+        <h4>Đề bài / Yêu cầu chi tiết</h4>
+        <div style="font-size: 0.95rem; line-height: 1.5; color: #1e293b; white-space: pre-wrap;">${escapeHtml(item.prompt || '—')}</div>
+        ${item.helpText ? `<p style="margin: 6px 0 0; font-size: 0.88rem; color: #64748b; font-style: italic;">${escapeHtml(item.helpText)}</p>` : ''}
+      `;
+      modalItemContent.append(promptBlock);
 
-        const promptDiv = document.createElement('div');
-        promptDiv.className = 'question-prompt';
-        promptDiv.textContent = item.prompt;
-        if (item.helpText) {
-          const helpP = document.createElement('p');
-          helpP.className = 'question-help';
-          helpP.textContent = item.helpText;
-          promptDiv.append(helpP);
+      // 2. Options List (if options exist)
+      if (Array.isArray(item.options) && item.options.length > 0) {
+        const optBlock = document.createElement('div');
+        optBlock.className = 'modal-ctx-block';
+        const optTitle = document.createElement('h4');
+        optTitle.textContent = `Danh sách lựa chọn / Từ vựng (${item.options.length})`;
+        optBlock.append(optTitle);
+
+        const ul = document.createElement('ul');
+        ul.className = 'modal-options-list';
+        for (const opt of item.options) {
+          const li = document.createElement('li');
+          const isSelected = item.studentAnswer === opt.id || (Array.isArray(item.studentAnswer) && item.studentAnswer.includes(opt.id));
+          if (isSelected) li.className = 'is-selected';
+          li.textContent = `${opt.id}: ${opt.label}${isSelected ? ' (Học viên chọn)' : ''}`;
+          ul.append(li);
         }
-        card.append(promptDiv);
-
-        if (item.options && item.options.length > 0) {
-          const optList = document.createElement('ul');
-          optList.className = 'question-options';
-          for (const opt of item.options) {
-            const li = document.createElement('li');
-            const isSelected = item.studentAnswer === opt.id || (Array.isArray(item.studentAnswer) && item.studentAnswer.includes(opt.id));
-            if (isSelected) li.className = 'opt-selected';
-            li.textContent = `${opt.id}: ${opt.label}${isSelected ? ' (Học viên chọn)' : ''}`;
-            optList.append(li);
-          }
-          card.append(optList);
-        }
-
-        const answersWrap = document.createElement('div');
-        answersWrap.className = 'answers-wrap';
-
-        const studentAnsP = document.createElement('div');
-        studentAnsP.className = 'answer-block student-answer';
-        const ansText = item.studentAnswer === null || item.studentAnswer === undefined
-          ? '(Chưa trả lời)'
-          : (Array.isArray(item.studentAnswer) ? item.studentAnswer.join(', ') : String(item.studentAnswer));
-        studentAnsP.innerHTML = `<strong>Câu trả lời của học viên:</strong> <span class="ans-content">${ansText}</span>`;
-        answersWrap.append(studentAnsP);
-
-        if (item.expectedAnswer !== null && item.expectedAnswer !== undefined) {
-          const expectedAnsP = document.createElement('div');
-          expectedAnsP.className = 'answer-block expected-answer';
-          const expText = Array.isArray(item.expectedAnswer)
-            ? item.expectedAnswer.join(', ')
-            : String(item.expectedAnswer);
-          expectedAnsP.innerHTML = `<strong>Đáp án mẫu / rubric:</strong> <span class="ans-content">${expText}</span>`;
-          answersWrap.append(expectedAnsP);
-        }
-        card.append(answersWrap);
-
-        if (item.feedback) {
-          const fbBox = document.createElement('div');
-          fbBox.className = 'feedback-box';
-          const fbLines = [];
-          if (Number.isFinite(item.feedback.structureScore)) {
-            fbLines.push(`Điểm cấu trúc: ${item.feedback.structureScore}`);
-          }
-          if (Number.isFinite(item.feedback.accuracyScore)) {
-            fbLines.push(`Điểm chính xác: ${item.feedback.accuracyScore}`);
-          }
-          if (Array.isArray(item.feedback.evidence) && item.feedback.evidence.length > 0) {
-            fbLines.push(`Nhận xét: ${item.feedback.evidence.join('; ')}`);
-          }
-          if (Array.isArray(item.feedback.errors) && item.feedback.errors.length > 0) {
-            fbLines.push(`Lỗi: ${item.feedback.errors.map(e => e.message || e.code).join(', ')}`);
-          }
-          fbBox.innerHTML = `<strong>Nhận xét & Rubric:</strong><p>${fbLines.join(' · ') || 'Không có nhận xét chi tiết.'}</p>`;
-          card.append(fbBox);
-        }
-
-        if (item.canGrade) {
-          const gradingPanel = document.createElement('div');
-          gradingPanel.className = `grading-input-panel${item.needsReview ? ' review-needed' : ''}`;
-          const currentScoreVal = item.draftScore !== null && item.draftScore !== undefined
-            ? item.draftScore
-            : (item.manualReview ? item.scoreEarned : '');
-          const currentFeedbackVal = typeof item.draftFeedback === 'string'
-            ? item.draftFeedback
-            : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
-
-          gradingPanel.innerHTML = `
-            <div class="grading-panel-header">
-              <span>Chấm điểm giảng viên</span>
-              ${item.needsReview ? '<span class="q-review-badge">Cần duyệt</span>' : ''}
-            </div>
-            <div class="grading-score-row">
-              <label style="display:flex; align-items:center; gap:8px;">
-                <span>Điểm:</span>
-                <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal}" placeholder="0 - ${item.maxScore}">
-                <span>/ ${item.maxScore} điểm</span>
-              </label>
-            </div>
-            <div class="grading-feedback-row">
-              <textarea class="grade-feedback-input" data-item-id="${item.itemVersionId}" placeholder="Nhận xét / ghi chú chấm...">${currentFeedbackVal}</textarea>
-            </div>
-          `;
-          card.append(gradingPanel);
-        } else {
-          const autoHint = document.createElement('div');
-          autoHint.className = 'readonly-hint';
-          autoHint.innerHTML = '<span class="q-automated-badge">Điểm tự động — không thể sửa</span>';
-          card.append(autoHint);
-        }
-
-        detailItems.append(card);
+        optBlock.append(ul);
+        modalItemContent.append(optBlock);
       }
 
-      // Attach auto-save listener on inputs with debounce
-      const scoreInputs = detailItems.querySelectorAll('.grade-score-input');
-      const feedbackInputs = detailItems.querySelectorAll('.grade-feedback-input');
+      // 3. Student Answer Block
+      const ansBlock = document.createElement('div');
+      ansBlock.className = 'modal-ctx-block';
+      const ansStudent = resolveStudentAnswerDisplay(item);
+      ansBlock.innerHTML = `
+        <h4>Bài làm của học viên</h4>
+        <div style="font-size: 0.95rem; font-weight: 600; color: #0f172a;">${escapeHtml(ansStudent)}</div>
+      `;
+      modalItemContent.append(ansBlock);
+
+      // 4. Expected Answer & Feedback
+      const expBlock = document.createElement('div');
+      expBlock.className = 'modal-ctx-block';
+      const ansExpected = resolveExpectedAnswerDisplay(item);
+      const fbLines = [];
+      if (item.feedback) {
+        if (Number.isFinite(item.feedback.structureScore)) fbLines.push(`Điểm cấu trúc: ${item.feedback.structureScore}`);
+        if (Number.isFinite(item.feedback.accuracyScore)) fbLines.push(`Điểm chính xác: ${item.feedback.accuracyScore}`);
+        if (Array.isArray(item.feedback.evidence) && item.feedback.evidence.length > 0) fbLines.push(`Nhận xét: ${item.feedback.evidence.join('; ')}`);
+        if (Array.isArray(item.feedback.errors) && item.feedback.errors.length > 0) fbLines.push(`Lỗi: ${item.feedback.errors.map(e => e.message || e.code).join(', ')}`);
+      }
+      expBlock.innerHTML = `
+        <h4>Đáp án mẫu & Tiêu chí Rubric</h4>
+        <div style="font-size: 0.95rem; font-weight: 600; color: #0369a1; margin-bottom: 6px;">${escapeHtml(ansExpected)}</div>
+        ${fbLines.length > 0 ? `<p style="margin: 0; font-size: 0.88rem; color: #92400e; background: #fffbeb; padding: 8px 12px; border-radius: 6px;">${escapeHtml(fbLines.join(' · '))}</p>` : ''}
+      `;
+      modalItemContent.append(expBlock);
+
+      itemContextModal.showModal();
+    }
+
+    function renderAttemptTableRows(tabCode = 'all') {
+      if (!detailItemsBody || !currentAttemptDetail) return;
+      detailItemsBody.replaceChildren();
+
+      const items = currentAttemptDetail.items;
+      const filteredItems = tabCode === 'all'
+        ? items
+        : items.filter(i => (i.primarySkill || 'general').toLowerCase() === tabCode);
+
+      for (const item of filteredItems) {
+        const tr = document.createElement('tr');
+        if (item.needsReview) tr.className = 'row-needs-review';
+
+        // 1. # Column
+        const tdPos = document.createElement('td');
+        tdPos.innerHTML = `
+          <div class="q-col-pos">
+            <span class="q-pos-num">Câu ${item.position}</span>
+            <span class="q-type-badge">${item.interactionType}</span>
+            ${item.primarySkill ? `<span class="q-skill-badge">${item.primarySkill.toUpperCase()}</span>` : ''}
+          </div>
+        `;
+        tr.append(tdPos);
+
+        // 2. Prompt Column
+        const tdPrompt = document.createElement('td');
+        const compactPrompt = formatCompactPrompt(item);
+        const optBtnHtml = compactPrompt.hasExtensiveOptions
+          ? `<button type="button" class="prompt-opt-btn" data-item-id="${item.itemVersionId}">📋 Xem danh sách từ (${compactPrompt.optionsCount})</button>`
+          : '';
+        tdPrompt.innerHTML = `
+          <div class="prompt-compact">
+            <div class="prompt-preview-text" title="${escapeHtml(compactPrompt.text)}">${escapeHtml(compactPrompt.text)}</div>
+            ${item.helpText ? `<small style="color:#64748b; display:block;">${escapeHtml(item.helpText)}</small>` : ''}
+            ${optBtnHtml}
+          </div>
+        `;
+        tr.append(tdPrompt);
+
+        // 3. Student Answer Column
+        const tdStudent = document.createElement('td');
+        tdStudent.innerHTML = `
+          <div class="ans-display-cell">
+            <div class="ans-student-val">${escapeHtml(resolveStudentAnswerDisplay(item))}</div>
+          </div>
+        `;
+        tr.append(tdStudent);
+
+        // 4. Expected Answer Column
+        const tdExpected = document.createElement('td');
+        tdExpected.innerHTML = `
+          <div class="ans-display-cell">
+            <div class="ans-expected-val">${escapeHtml(resolveExpectedAnswerDisplay(item))}</div>
+          </div>
+        `;
+        tr.append(tdExpected);
+
+        // 5. Verdict Column
+        const tdVerdict = document.createElement('td');
+        tdVerdict.innerHTML = `<span class="verdict-badge ${item.verdict}">${verdictLabel(item.verdict)}</span>`;
+        tr.append(tdVerdict);
+
+        // 6. Score Column
+        const tdScore = document.createElement('td');
+        const currentScoreVal = item.draftScore !== null && item.draftScore !== undefined
+          ? item.draftScore
+          : (item.manualReview ? item.scoreEarned : (item.canGrade ? (item.draftScore ?? '') : item.scoreEarned));
+
+        if (item.canGrade) {
+          tdScore.innerHTML = `
+            <div class="table-grade-score-wrap">
+              <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input table-grade-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal !== undefined ? currentScoreVal : ''}" placeholder="0-${item.maxScore}">
+              <span>/${item.maxScore}</span>
+            </div>
+          `;
+        } else {
+          tdScore.innerHTML = `<div class="table-grade-score-wrap"><span>${item.scoreEarned}/${item.maxScore}</span></div>`;
+        }
+        tr.append(tdScore);
+
+        // 7. Feedback Column
+        const tdFeedback = document.createElement('td');
+        const currentFeedbackVal = typeof item.draftFeedback === 'string'
+          ? item.draftFeedback
+          : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
+
+        if (item.canGrade) {
+          tdFeedback.innerHTML = `
+            <textarea class="grade-feedback-input table-feedback-input" data-item-id="${item.itemVersionId}" placeholder="Nhận xét...">${escapeHtml(currentFeedbackVal)}</textarea>
+          `;
+        } else {
+          const commentText = item.feedback?.comment || '';
+          tdFeedback.innerHTML = `<span style="font-size:0.82rem; color:#64748b;">${escapeHtml(commentText) || '—'}</span>`;
+        }
+        tr.append(tdFeedback);
+
+        // 8. Action Column
+        const tdAction = document.createElement('td');
+        tdAction.innerHTML = `<button type="button" class="btn-inspect-item" data-item-id="${item.itemVersionId}">🔍 Xem</button>`;
+        tr.append(tdAction);
+
+        detailItemsBody.append(tr);
+      }
+
+      // Attach event listeners for prompt opt buttons and inspect item buttons
+      detailItemsBody.querySelectorAll('.prompt-opt-btn, .btn-inspect-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const itm = items.find(i => i.itemVersionId === btn.dataset.itemId);
+          if (itm) openItemContextModal(itm);
+        });
+      });
+
+      // Attach auto-save listener on table score and feedback inputs
+      const scoreInputs = detailItemsBody.querySelectorAll('.grade-score-input');
+      const feedbackInputs = detailItemsBody.querySelectorAll('.grade-feedback-input');
       [...scoreInputs, ...feedbackInputs].forEach(inp => {
         inp.addEventListener('input', () => {
+          const itm = items.find(i => i.itemVersionId === inp.dataset.itemId);
+          if (itm) {
+            if (inp.classList.contains('grade-score-input')) {
+              itm.draftScore = inp.value.trim() !== '' ? Number(inp.value.trim()) : null;
+            } else if (inp.classList.contains('grade-feedback-input')) {
+              itm.draftFeedback = inp.value;
+            }
+          }
           clearTimeout(autoSaveTimeout);
           autoSaveTimeout = setTimeout(() => {
             saveManualGradingDraft(true).catch(() => {});
           }, 1500);
         });
       });
+    }
+
+    function renderSkillSummary(tabCode = 'all') {
+      if (!skillSummaryCard || !currentAttemptDetail) return;
+      const skillsData = extractAttemptSkills(currentAttemptDetail.items);
+      const summary = skillsData.summary[tabCode] || skillsData.summary['all'];
+
+      const titleText = tabCode === 'all'
+        ? 'Tất cả kỹ năng'
+        : `Kỹ năng ${summary.label || tabCode.toUpperCase()}`;
+
+      skillSummaryCard.innerHTML = `
+        <div class="skill-summary-title">${escapeHtml(titleText)} (${summary.totalItems} câu)</div>
+        <div class="skill-summary-metrics">
+          <span class="skill-summary-score">${summary.scoreEarned}/${summary.maxScore} điểm</span>
+          ${summary.needsReviewCount > 0 ? `<span class="verdict-badge manual_review">${summary.needsReviewCount} câu cần duyệt</span>` : '<span class="verdict-badge correct">Đã chấm xong</span>'}
+        </div>
+      `;
+    }
+
+    function renderSkillTabs() {
+      if (!attemptSkillTabs || !currentAttemptDetail) return;
+      attemptSkillTabs.replaceChildren();
+
+      const skillsData = extractAttemptSkills(currentAttemptDetail.items);
+      const allSummary = skillsData.summary['all'];
+
+      // 1. "All" tab button
+      const allBtn = document.createElement('button');
+      allBtn.type = 'button';
+      allBtn.className = `skill-tab-btn${currentSkillTab === 'all' ? ' active' : ''}`;
+      allBtn.innerHTML = `
+        <span>Tất cả</span>
+        <span class="tab-count">${allSummary.totalItems}</span>
+        ${allSummary.needsReviewCount > 0 ? `<span class="tab-review-pill">${allSummary.needsReviewCount} cần duyệt</span>` : ''}
+      `;
+      allBtn.addEventListener('click', () => {
+        currentSkillTab = 'all';
+        attemptSkillTabs.querySelectorAll('.skill-tab-btn').forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
+        renderSkillSummary('all');
+        renderAttemptTableRows('all');
+      });
+      attemptSkillTabs.append(allBtn);
+
+      // 2. Each skill tab button
+      for (const skill of skillsData.skills) {
+        const skillBtn = document.createElement('button');
+        skillBtn.type = 'button';
+        skillBtn.className = `skill-tab-btn${currentSkillTab === skill.code ? ' active' : ''}`;
+        skillBtn.innerHTML = `
+          <span>${escapeHtml(skill.label)}</span>
+          <span class="tab-count">${skill.totalItems}</span>
+          ${skill.needsReviewCount > 0 ? `<span class="tab-review-pill">${skill.needsReviewCount} cần duyệt</span>` : ''}
+        `;
+        skillBtn.addEventListener('click', () => {
+          currentSkillTab = skill.code;
+          attemptSkillTabs.querySelectorAll('.skill-tab-btn').forEach(b => b.classList.remove('active'));
+          skillBtn.classList.add('active');
+          renderSkillSummary(skill.code);
+          renderAttemptTableRows(skill.code);
+        });
+        attemptSkillTabs.append(skillBtn);
+      }
+    }
+
+    currentSkillTab = 'all';
+    renderSkillTabs();
+    renderSkillSummary(currentSkillTab);
+    renderAttemptTableRows(currentSkillTab);
+
+    // Keep detailItems container synchronized for compatibility
+    if (detailItems) {
+      detailItems.replaceChildren();
     }
 
     if (payload.manualGradingHistory && payload.manualGradingHistory.length > 0 && detailGradingHistory) {
@@ -1055,24 +1324,52 @@ async function startDashboard() {
   async function saveManualGradingDraft(silent = false) {
     if (!currentAttemptDetail) return;
     const itemsToSubmit = [];
-    const scoreInputs = detailItems.querySelectorAll('.grade-score-input');
-    const feedbackInputs = detailItems.querySelectorAll('.grade-feedback-input');
     const feedbackMap = new Map();
+    const scoresMap = {};
+
+    // 1. Populate from items in memory
+    for (const itm of currentAttemptDetail.items) {
+      if (itm.canGrade) {
+        const scoreVal = itm.draftScore !== null && itm.draftScore !== undefined
+          ? itm.draftScore
+          : (itm.manualReview && itm.scoreEarned !== null ? itm.scoreEarned : null);
+        const feedbackVal = typeof itm.draftFeedback === 'string'
+          ? itm.draftFeedback
+          : (itm.draftFeedback?.comment ?? (itm.manualReview && typeof itm.feedback === 'object' ? (itm.feedback?.comment || '') : null));
+
+        if (scoreVal !== null && scoreVal !== undefined) {
+          scoresMap[itm.itemVersionId] = Number(scoreVal);
+          itemsToSubmit.push({
+            itemVersionId: itm.itemVersionId,
+            scoreEarned: Number(scoreVal),
+            feedback: feedbackVal || null
+          });
+        }
+      }
+    }
+
+    // 2. Override with active inputs in DOM
+    const scoreInputs = attemptDetail.querySelectorAll('.grade-score-input');
+    const feedbackInputs = attemptDetail.querySelectorAll('.grade-feedback-input');
     feedbackInputs.forEach(input => {
       feedbackMap.set(input.dataset.itemId, input.value.trim());
     });
-
-    const scoresMap = {};
     scoreInputs.forEach(input => {
       const val = input.value.trim();
       if (val !== '') {
         const num = Number(val);
         scoresMap[input.dataset.itemId] = num;
-        itemsToSubmit.push({
+        const existingIdx = itemsToSubmit.findIndex(it => it.itemVersionId === input.dataset.itemId);
+        const itemObj = {
           itemVersionId: input.dataset.itemId,
           scoreEarned: num,
           feedback: feedbackMap.get(input.dataset.itemId) || null
-        });
+        };
+        if (existingIdx >= 0) {
+          itemsToSubmit[existingIdx] = itemObj;
+        } else {
+          itemsToSubmit.push(itemObj);
+        }
       }
     });
 
@@ -1121,24 +1418,52 @@ async function startDashboard() {
   async function completeManualGrading() {
     if (!currentAttemptDetail) return;
     const itemsToSubmit = [];
-    const scoreInputs = detailItems.querySelectorAll('.grade-score-input');
-    const feedbackInputs = detailItems.querySelectorAll('.grade-feedback-input');
     const feedbackMap = new Map();
+    const scoresMap = {};
+
+    // 1. Populate from items in memory
+    for (const itm of currentAttemptDetail.items) {
+      if (itm.canGrade) {
+        const scoreVal = itm.draftScore !== null && itm.draftScore !== undefined
+          ? itm.draftScore
+          : (itm.manualReview && itm.scoreEarned !== null ? itm.scoreEarned : null);
+        const feedbackVal = typeof itm.draftFeedback === 'string'
+          ? itm.draftFeedback
+          : (itm.draftFeedback?.comment ?? (itm.manualReview && typeof itm.feedback === 'object' ? (itm.feedback?.comment || '') : null));
+
+        if (scoreVal !== null && scoreVal !== undefined) {
+          scoresMap[itm.itemVersionId] = Number(scoreVal);
+          itemsToSubmit.push({
+            itemVersionId: itm.itemVersionId,
+            scoreEarned: Number(scoreVal),
+            feedback: feedbackVal || null
+          });
+        }
+      }
+    }
+
+    // 2. Override with active inputs in DOM
+    const scoreInputs = attemptDetail.querySelectorAll('.grade-score-input');
+    const feedbackInputs = attemptDetail.querySelectorAll('.grade-feedback-input');
     feedbackInputs.forEach(input => {
       feedbackMap.set(input.dataset.itemId, input.value.trim());
     });
-
-    const scoresMap = {};
     scoreInputs.forEach(input => {
       const val = input.value.trim();
       if (val !== '') {
         const num = Number(val);
         scoresMap[input.dataset.itemId] = num;
-        itemsToSubmit.push({
+        const existingIdx = itemsToSubmit.findIndex(it => it.itemVersionId === input.dataset.itemId);
+        const itemObj = {
           itemVersionId: input.dataset.itemId,
           scoreEarned: num,
           feedback: feedbackMap.get(input.dataset.itemId) || null
-        });
+        };
+        if (existingIdx >= 0) {
+          itemsToSubmit[existingIdx] = itemObj;
+        } else {
+          itemsToSubmit.push(itemObj);
+        }
       }
     });
 

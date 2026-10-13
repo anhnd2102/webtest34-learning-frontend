@@ -26,7 +26,11 @@ import {
   authMePath,
   authHeaders,
   teacherRoleLabel,
-  defaultApiBase
+  defaultApiBase,
+  extractAttemptSkills,
+  formatCompactPrompt,
+  resolveStudentAnswerDisplay,
+  resolveExpectedAnswerDisplay
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase resolves local or production origin based on location', () => {
@@ -437,6 +441,111 @@ test('teacher dashboard index.html and styles.css provide student test link bar 
   assert.match(css, /\.student-url-input/);
   assert.match(css, /\.card-copy-btn/);
 });
+
+test('extractAttemptSkills groups items by primary skill and aggregates scores & review counts', () => {
+  const items = [
+    { itemVersionId: 'v1', position: 1, primarySkill: 'vocabulary', scoreEarned: 0.5, maxScore: 0.5, needsReview: false, canGrade: false },
+    { itemVersionId: 'v2', position: 2, primarySkill: 'vocabulary', scoreEarned: 0, maxScore: 0.5, needsReview: false, canGrade: false },
+    { itemVersionId: 'v3', position: 3, primarySkill: 'writing', scoreEarned: 1.0, maxScore: 2.0, needsReview: true, canGrade: true },
+    { itemVersionId: 'v4', position: 4, primarySkill: 'speaking', scoreEarned: 0, maxScore: 2.0, needsReview: true, canGrade: true }
+  ];
+
+  const result = extractAttemptSkills(items);
+  assert.equal(result.skills.length, 3);
+  assert.deepEqual(result.skills.map(s => s.code), ['vocabulary', 'writing', 'speaking']);
+
+  const allSummary = result.summary['all'];
+  assert.equal(allSummary.totalItems, 4);
+  assert.equal(allSummary.needsReviewCount, 2);
+  assert.equal(allSummary.scoreEarned, 1.5);
+  assert.equal(allSummary.maxScore, 5.0);
+
+  const vocabSummary = result.summary['vocabulary'];
+  assert.equal(vocabSummary.totalItems, 2);
+  assert.equal(vocabSummary.needsReviewCount, 0);
+  assert.equal(vocabSummary.scoreEarned, 0.5);
+  assert.equal(vocabSummary.maxScore, 1.0);
+
+  const writingSummary = result.summary['writing'];
+  assert.equal(writingSummary.totalItems, 1);
+  assert.equal(writingSummary.needsReviewCount, 1);
+});
+
+test('formatCompactPrompt produces concise prompt without dumping massive option lists for text_select_pair', () => {
+  const item = {
+    position: 1,
+    interactionType: 'text_select_pair',
+    prompt: '1. Từ/cụm từ nghe được',
+    options: Array.from({ length: 15 }, (_, i) => ({ id: `meaning-${i + 1}`, label: `Định nghĩa số ${i + 1}` }))
+  };
+
+  const compact = formatCompactPrompt(item);
+  assert.equal(compact.text, '1. Từ/cụm từ nghe được');
+  assert.equal(compact.optionsCount, 15);
+  assert.equal(compact.hasExtensiveOptions, true);
+});
+
+test('resolveStudentAnswerDisplay resolves option labels and formats scalar/array answers', () => {
+  const itemWithOpt = {
+    interactionType: 'text_select_pair',
+    studentAnswer: 'meaning-02',
+    options: [
+      { id: 'meaning-01', label: 'bạn cùng lớp' },
+      { id: 'meaning-02', label: 'bảo thủ' }
+    ]
+  };
+  assert.equal(resolveStudentAnswerDisplay(itemWithOpt), 'bảo thủ (meaning-02)');
+
+  const itemArray = {
+    studentAnswer: ['A', 'C'],
+    options: [
+      { id: 'A', label: 'Lựa chọn A' },
+      { id: 'B', label: 'Lựa chọn B' },
+      { id: 'C', label: 'Lựa chọn C' }
+    ]
+  };
+  assert.equal(resolveStudentAnswerDisplay(itemArray), 'Lựa chọn A, Lựa chọn C');
+
+  const itemNull = { studentAnswer: null };
+  assert.equal(resolveStudentAnswerDisplay(itemNull), '(Chưa trả lời)');
+});
+
+test('resolveExpectedAnswerDisplay formats expected answers cleanly', () => {
+  const item = {
+    expectedAnswer: 'meaning-02',
+    options: [
+      { id: 'meaning-01', label: 'bạn cùng lớp' },
+      { id: 'meaning-02', label: 'bảo thủ' }
+    ]
+  };
+  assert.equal(resolveExpectedAnswerDisplay(item), 'bảo thủ (meaning-02)');
+
+  const itemNoExp = { expectedAnswer: null, graderType: 'rubric_async' };
+  assert.equal(resolveExpectedAnswerDisplay(itemNoExp), '(Chấm theo rubric)');
+});
+
+test('teacher dashboard index.html provides table grading view containers and context modal', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /id="attempt-skill-tabs"/);
+  assert.match(html, /id="skill-summary-card"/);
+  assert.match(html, /id="detail-items-table"/);
+  assert.match(html, /id="item-context-modal"/);
+  assert.match(html, /id="close-item-modal-btn"/);
+});
+
+test('teacher dashboard styles.css provides table grading and skill tab styles', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.grading-table/);
+  assert.match(css, /\.skill-tabs/);
+  assert.match(css, /\.skill-tab-btn/);
+  assert.match(css, /\.skill-summary-card/);
+  assert.match(css, /\.item-context-modal/);
+});
+
 
 
 
