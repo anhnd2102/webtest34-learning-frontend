@@ -764,6 +764,17 @@ test('teacher dashboard styles.css provides .score-total, .score-skill, and .tim
   assert.match(css, /\.date-part/);
 });
 
+test('teacher dashboard styles.css provides .th-score, .th-score-wrap, and table container fit styles', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.th-score/);
+  assert.match(css, /\.th-score-wrap/);
+  assert.match(css, /\.th-score-label/);
+  assert.match(css, /\.th-score-max/);
+  assert.match(css, /\.results-scroll/);
+});
+
 
 
 

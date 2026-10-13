@@ -686,10 +686,24 @@ async function startDashboard() {
     const maxTotal = payload.students.find(s => s.total?.maximum)?.total?.maximum
       || (payload.skills.length > 0 ? payload.skills.reduce((acc, s) => acc + (Number(s.maximum) || 0), 0) : 100);
 
-    function formatSkillHeader(skill) {
-      const code = skill.code || '';
-      const label = code.charAt(0).toUpperCase() + code.slice(1);
-      return skill.maximum ? `${label} (/${skill.maximum})` : label;
+    function createScoreHeader(label, maximum) {
+      const th = document.createElement('th');
+      th.scope = 'col';
+      th.className = 'th-score';
+      th.innerHTML = `
+        <div class="th-score-wrap">
+          <span class="th-score-label">${escapeHtml(label)}</span>
+          ${maximum ? `<span class="th-score-max">(/${escapeHtml(maximum)})</span>` : ''}
+        </div>
+      `;
+      return th;
+    }
+
+    function createTextHeader(label) {
+      const th = document.createElement('th');
+      th.scope = 'col';
+      th.textContent = label;
+      return th;
     }
 
     const scroll = document.createElement('div');
@@ -697,27 +711,25 @@ async function startDashboard() {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = [
-      'Học viên',
-      'Trạng thái',
-      `Tổng điểm (/${maxTotal})`,
-      ...payload.skills.map(skill => formatSkillHeader(skill)),
-      'Nộp lúc',
-      'Thao tác'
-    ];
-    for (const label of headers) {
-      const header = document.createElement('th');
-      header.scope = 'col';
-      header.textContent = label;
-      headerRow.append(header);
+
+    headerRow.append(createTextHeader('Học viên'));
+    headerRow.append(createTextHeader('Trạng thái'));
+    headerRow.append(createScoreHeader('Tổng điểm', maxTotal));
+    for (const skill of payload.skills) {
+      const code = skill.code || '';
+      const label = code.charAt(0).toUpperCase() + code.slice(1);
+      headerRow.append(createScoreHeader(label, skill.maximum));
     }
+    headerRow.append(createTextHeader('Nộp lúc'));
+    headerRow.append(createTextHeader('Thao tác'));
     head.append(headerRow);
     const body = document.createElement('tbody');
 
+    const totalColumns = 4 + payload.skills.length;
     if (payload.students.length === 0) {
       const emptyRow = document.createElement('tr');
       const emptyCell = document.createElement('td');
-      emptyCell.colSpan = headers.length;
+      emptyCell.colSpan = totalColumns;
       emptyCell.className = 'empty-results';
       emptyCell.textContent = 'Không tìm thấy học viên nào phù hợp với bộ lọc.';
       emptyRow.append(emptyCell);
