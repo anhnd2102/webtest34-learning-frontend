@@ -32,7 +32,9 @@ import {
   resolveStudentAnswerDisplay,
   resolveExpectedAnswerDisplay,
   getScoreTier,
-  computeClassSkillSummary
+  computeClassSkillSummary,
+  formatCompactScore,
+  formatSubmissionTimestamp
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase resolves local or production origin based on location', () => {
@@ -729,6 +731,39 @@ test('teacher dashboard styles.css provides class summary cards and tier colors 
   assert.match(css, /\.class-summary-card/);
   assert.match(css, /\.status-cell-wrap/);
 });
+
+test('formatCompactScore formats score as a clean number without repeating max score', () => {
+  assert.equal(formatCompactScore({ earned: 19.5, maximum: 25, status: 'final' }), '19.5');
+  assert.equal(formatCompactScore({ earned: 14, maximum: 15, status: 'final' }), '14');
+  assert.equal(formatCompactScore({ earned: 87.7, maximum: 100, status: 'final' }), '87.7');
+  assert.equal(formatCompactScore({ earned: 50, maximum: 100, status: 'provisional' }), '50 (Tạm tính)');
+  assert.equal(formatCompactScore({ status: 'pending' }), 'Chờ chấm');
+  assert.equal(formatCompactScore(null), '—');
+});
+
+test('formatSubmissionTimestamp formats valid timestamps into separate time and date components', () => {
+  const formatted = formatSubmissionTimestamp('2026-10-12T14:11:00.000Z');
+  assert.ok(formatted);
+  assert.match(formatted.time, /^\d{2}:\d{2}$/);
+  assert.match(formatted.date, /^\d{2}\/\d{2}\/\d{4}$/);
+  assert.equal(formatSubmissionTimestamp(null), null);
+  assert.equal(formatSubmissionTimestamp('invalid-date'), null);
+});
+
+test('teacher dashboard styles.css provides .score-total, .score-skill, and .time-stamp-wrap styles', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.score-total/);
+  assert.match(css, /\.score-total\.tier-yellow/);
+  assert.match(css, /\.score-total\.tier-red/);
+  assert.match(css, /\.score-total\.tier-gray/);
+  assert.match(css, /\.score-skill/);
+  assert.match(css, /\.time-stamp-wrap/);
+  assert.match(css, /\.time-part/);
+  assert.match(css, /\.date-part/);
+});
+
 
 
 

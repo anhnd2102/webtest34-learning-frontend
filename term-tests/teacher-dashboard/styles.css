@@ -851,6 +851,52 @@ tr:hover td { background: #fafbfc; }
   font-weight: 600;
 }
 
+/* Issue 15: Compact Total Score with Direct Tier Color */
+.score-total {
+  font-weight: 800;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: #1e293b;
+}
+
+.score-total.tier-yellow {
+  color: #b45309;
+}
+
+.score-total.tier-red {
+  color: #dc2626;
+}
+
+.score-total.tier-gray {
+  color: #64748b;
+}
+
+/* Issue 15: Standard Normal Skill Score */
+.score-skill {
+  font-weight: 500;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+  color: #334155;
+}
+
+/* Issue 15: Two-line Submission Timestamp Layout */
+.time-stamp-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.time-stamp-wrap .time-part {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.time-stamp-wrap .date-part {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
 
 
 

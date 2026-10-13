@@ -421,6 +421,27 @@ export function computeClassSkillSummary(payload) {
   };
 }
 
+export function formatCompactScore(score) {
+  if (!score) return '—';
+  if (score.status === 'pending') return 'Chờ chấm';
+  if (score.earned === null || score.earned === undefined) return '—';
+  const val = Number(score.earned);
+  const formatted = Number.isInteger(val) ? String(val) : String(Math.round(val * 100) / 100);
+  return score.status === 'provisional' ? `${formatted} (Tạm tính)` : formatted;
+}
+
+export function formatSubmissionTimestamp(dateStr, locale = 'vi-VN', timeZone = 'Asia/Ho_Chi_Minh') {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) return null;
+  const timeFormatter = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit', timeZone });
+  const dateFormatter = new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone });
+  return {
+    time: timeFormatter.format(d),
+    date: dateFormatter.format(d)
+  };
+}
+
 async function startDashboard() {
   const form = document.querySelector('#identity-form');
   const classSelect = document.querySelector('#class-select');
@@ -605,12 +626,9 @@ async function startDashboard() {
     // 1. Class Total Average Card
     const totalCard = document.createElement('div');
     totalCard.className = 'class-summary-card card-total';
-    const totalTier = summary.totalAverage?.tier;
-    const totalTierLabel = totalTier === 'tier-yellow' ? '🟡 Vàng' : totalTier === 'tier-red' ? '🔴 Đỏ' : totalTier === 'tier-gray' ? '⚪ Xám' : '';
     totalCard.innerHTML = `
       <div class="summary-card-header">
         <span class="summary-card-title">Điểm trung bình lớp</span>
-        ${totalTierLabel ? `<span class="tier-badge ${totalTier}">${totalTierLabel}</span>` : ''}
       </div>
       <div class="summary-card-score">${summary.totalAverage ? `${summary.totalAverage.earned}/${summary.totalAverage.maximum}` : '—'}</div>
       <div class="summary-card-meta">Đã nộp: ${summary.submittedCount}/${summary.totalStudents} học viên</div>
@@ -621,11 +639,9 @@ async function startDashboard() {
     for (const sk of summary.skills) {
       const card = document.createElement('div');
       card.className = 'class-summary-card';
-      const tierLabel = sk.tier === 'tier-yellow' ? '🟡 Vàng' : sk.tier === 'tier-red' ? '🔴 Đỏ' : sk.tier === 'tier-gray' ? '⚪ Xám' : '';
       card.innerHTML = `
         <div class="summary-card-header">
           <span class="summary-card-title">${escapeHtml(sk.label)}</span>
-          ${tierLabel ? `<span class="tier-badge ${sk.tier}">${tierLabel}</span>` : ''}
         </div>
         <div class="summary-card-score">${sk.earned !== null ? `${sk.earned}/${sk.maximum}` : '—'}</div>
         <div class="summary-card-meta">${sk.studentCount} học viên có điểm</div>
@@ -667,12 +683,28 @@ async function startDashboard() {
       skillFilter.value = state.skill || currentSkill || '';
     }
 
+    const maxTotal = payload.students.find(s => s.total?.maximum)?.total?.maximum
+      || (payload.skills.length > 0 ? payload.skills.reduce((acc, s) => acc + (Number(s.maximum) || 0), 0) : 100);
+
+    function formatSkillHeader(skill) {
+      const code = skill.code || '';
+      const label = code.charAt(0).toUpperCase() + code.slice(1);
+      return skill.maximum ? `${label} (/${skill.maximum})` : label;
+    }
+
     const scroll = document.createElement('div');
     scroll.className = 'results-scroll';
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = ['Học viên', 'Trạng thái', 'Tổng điểm', ...payload.skills.map(skill => skill.code), 'Nộp lúc', 'Thao tác'];
+    const headers = [
+      'Học viên',
+      'Trạng thái',
+      `Tổng điểm (/${maxTotal})`,
+      ...payload.skills.map(skill => formatSkillHeader(skill)),
+      'Nộp lúc',
+      'Thao tác'
+    ];
     for (const label of headers) {
       const header = document.createElement('th');
       header.scope = 'col';
@@ -720,48 +752,43 @@ async function startDashboard() {
         statusCell.append(statusWrap);
         row.append(statusCell);
 
-        // 3. Total Score Cell with Tier Pill
+        // 3. Total Score Cell: Bold, larger text, direct tier text color, NO badge
         const totalCell = document.createElement('td');
         totalCell.className = 'score-cell';
-        const totalScoreSpan = document.createElement('span');
-        totalScoreSpan.className = 'score-text';
-        totalScoreSpan.textContent = formatDashboardScore(student.total);
-        totalCell.append(totalScoreSpan);
         if (student.total && student.total.earned !== null && student.total.earned !== undefined) {
           const totalTier = getScoreTier(student.total.earned, student.total.maximum);
-          if (totalTier) {
-            const tierPill = document.createElement('span');
-            tierPill.className = `tier-pill ${totalTier}`;
-            tierPill.textContent = totalTier === 'tier-yellow' ? '🟡 Vàng' : totalTier === 'tier-red' ? '🔴 Đỏ' : '⚪ Xám';
-            totalCell.append(tierPill);
-          }
+          const scoreVal = formatCompactScore(student.total);
+          totalCell.innerHTML = `<span class="score-total ${totalTier || ''}">${escapeHtml(scoreVal)}</span>`;
+        } else if (student.total?.status === 'pending') {
+          totalCell.innerHTML = `<span class="score-total">Chờ chấm</span>`;
+        } else {
+          totalCell.innerHTML = `<span class="score-total">—</span>`;
         }
         row.append(totalCell);
 
-        // 4. Per-Skill Score Cells with Tier Pills
+        // 4. Per-Skill Score Cells: Standard normal font, only earned score number, NO tier badge
         for (const skill of payload.skills) {
           const skillCell = document.createElement('td');
           skillCell.className = 'score-cell';
           const skScore = student.skills?.[skill.code];
-          const skScoreSpan = document.createElement('span');
-          skScoreSpan.className = 'score-text';
-          skScoreSpan.textContent = formatDashboardScore(skScore);
-          skillCell.append(skScoreSpan);
-          if (skScore && skScore.earned !== null && skScore.earned !== undefined) {
-            const skTier = getScoreTier(skScore.earned, skScore.maximum);
-            if (skTier) {
-              const tierPill = document.createElement('span');
-              tierPill.className = `tier-pill ${skTier}`;
-              tierPill.textContent = skTier === 'tier-yellow' ? '🟡 Vàng' : skTier === 'tier-red' ? '🔴 Đỏ' : '⚪ Xám';
-              skillCell.append(tierPill);
-            }
-          }
+          const skVal = formatCompactScore(skScore);
+          skillCell.innerHTML = `<span class="score-skill">${escapeHtml(skVal)}</span>`;
           row.append(skillCell);
         }
 
-        // 5. Submitted At Cell
+        // 5. Submitted At Cell: Two-line layout (Line 1: Time, Line 2: Date)
         const submittedCell = document.createElement('td');
-        submittedCell.textContent = student.submittedAt ? formatAssignmentWindow(student.submittedAt, null).split(' → ')[0] : '—';
+        const ts = formatSubmissionTimestamp(student.submittedAt);
+        if (ts) {
+          submittedCell.innerHTML = `
+            <div class="time-stamp-wrap">
+              <span class="time-part">${escapeHtml(ts.time)}</span>
+              <span class="date-part">${escapeHtml(ts.date)}</span>
+            </div>
+          `;
+        } else {
+          submittedCell.textContent = '—';
+        }
         row.append(submittedCell);
 
         // 6. Action Cell
