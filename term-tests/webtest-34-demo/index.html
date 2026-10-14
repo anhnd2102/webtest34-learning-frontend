@@ -393,6 +393,12 @@
         <div class="eyebrow">PHÒNG CHỜ</div>
         <h1 id="exam-waiting-greeting">Xin chào!</h1>
         <p>Đề sẽ hiện khi giáo viên bắt đầu.</p>
+        <p id="exam-fullscreen-status" aria-live="polite"></p>
+        <p id="exam-waiting-error" class="notice hidden" role="alert"></p>
+        <div class="start-actions">
+          <button id="exam-ready-button" class="btn btn-primary" type="button">Tôi đã sẵn sàng</button>
+          <button id="exam-fullscreen-reenter" class="btn btn-secondary hidden" type="button">Vào chế độ thi</button>
+        </div>
       </div>
     </section>
 
@@ -2048,6 +2054,46 @@
       button.disabled = false;
       setError('studentError', `Không mở được phiên làm bài: ${error.message}`);
     });
+  });
+
+  const examReadyButton = $('#exam-ready-button');
+  const examFullscreenReenter = $('#exam-fullscreen-reenter');
+  const examFullscreenStatus = $('#exam-fullscreen-status');
+  const examWaitingError = $('#exam-waiting-error');
+  examReadyButton?.addEventListener('click', async () => {
+    const fullscreenUnsupported = typeof document.documentElement.requestFullscreen !== 'function';
+    const fullscreenAttempt = fullscreenUnsupported
+      ? Promise.resolve()
+      : document.documentElement.requestFullscreen().catch(() => null);
+    examReadyButton.disabled = true;
+    try {
+      await fullscreenAttempt;
+      await learningRequest('/attempts/exam/ready', {
+        attemptToken: state.learning?.attemptToken,
+        fullscreenUnsupported
+      });
+      examReadyButton.hidden = true;
+      examWaitingError.classList.add('hidden');
+      examFullscreenStatus.textContent = fullscreenUnsupported
+        ? 'Thiết bị không hỗ trợ toàn màn hình; giáo viên đã được thông báo.'
+        : (document.fullscreenElement ? '' : 'Không thể bật toàn màn hình. Bạn vẫn có thể chờ giáo viên bắt đầu.');
+    } catch (error) {
+      examReadyButton.disabled = false;
+      examWaitingError.textContent = `Không thể lưu trạng thái sẵn sàng: ${error.message}`;
+      examWaitingError.classList.remove('hidden');
+    }
+  });
+  examFullscreenReenter?.addEventListener('click', () => {
+    if (typeof document.documentElement.requestFullscreen === 'function') {
+      document.documentElement.requestFullscreen().catch(() => {
+        examFullscreenStatus.textContent = 'Không thể bật toàn màn hình. Hãy thử lại.';
+      });
+    }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const waiting = !$('#examWaitingRoom').classList.contains('hidden');
+    const supportsFullscreen = typeof document.documentElement.requestFullscreen === 'function';
+    examFullscreenReenter.hidden = !waiting || !supportsFullscreen || Boolean(document.fullscreenElement);
   });
 
   $('#clearDraft')?.addEventListener('click',()=>{if(confirm('Xóa toàn bộ bản nháp prototype?')){localStorage.removeItem(STORAGE_KEY);location.reload();}});

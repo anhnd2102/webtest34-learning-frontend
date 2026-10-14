@@ -224,6 +224,26 @@ export function assignmentExamModePath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam-mode`;
 }
 
+export function assignmentExamRoomPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/room`;
+}
+
+export function assignmentExamStartPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/start`;
+}
+
+export function assignmentExamExtendPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/extend`;
+}
+
+export function formatExamRoomStatus(status) {
+  return ({ not_entered: 'Chưa vào', entered: 'Đã vào', ready: 'Sẵn sàng' })[status] || 'Chưa vào';
+}
+
+export function formatExamReadyCount({ readyCount = 0, totalCount = 0 } = {}) {
+  return `${readyCount}/${totalCount} sẵn sàng`;
+}
+
 export function attemptDetailPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}`;
 }
@@ -615,6 +635,16 @@ async function startDashboard() {
   const showcasePhaseBadge = document.querySelector('#showcase-phase-badge');
   const showcaseStatusBadge = document.querySelector('#showcase-status-badge');
   const examModeToggle = document.querySelector('#exam-mode-toggle');
+  const examRoomOpenButton = document.querySelector('#exam-room-open');
+  const examRoom = document.querySelector('#exam-room');
+  const examRoomSummary = document.querySelector('#exam-room-summary');
+  const examRoomMessage = document.querySelector('#exam-room-message');
+  const examRoomStudents = document.querySelector('#exam-room-students');
+  const examRoomStartButton = document.querySelector('#exam-room-start');
+  const examRoomExtendButton = document.querySelector('#exam-room-extend');
+  const examRoomExtensionMinutes = document.querySelector('#exam-room-extension-minutes');
+  const examRoomRefreshButton = document.querySelector('#exam-room-refresh');
+  const examRoomCloseButton = document.querySelector('#exam-room-close');
   const showcaseWindowText = document.querySelector('#showcase-window-text');
   const showcaseLinkBar = document.querySelector('#showcase-link-bar');
   const showcaseStudentUrl = document.querySelector('#showcase-student-url');
@@ -633,6 +663,7 @@ async function startDashboard() {
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
   let currentSelectedAssignment = null;
+  let examRoomReturnToResults = false;
 
   const addStudentBtn = document.querySelector('#add-student-btn');
   const addStudentModal = document.querySelector('#add-student-modal');
@@ -748,17 +779,21 @@ async function startDashboard() {
     if (!assignment) {
       currentSelectedAssignment = null;
       selectedAssignmentCard.hidden = true;
+      if (examRoom) examRoom.hidden = true;
       if (assignmentStudentUrl) assignmentStudentUrl.value = '';
       if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
       if (assignmentLinkBar) assignmentLinkBar.hidden = true;
       if (showcaseStudentUrl) showcaseStudentUrl.value = '';
       if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = '#';
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
+      if (examRoomOpenButton) examRoomOpenButton.hidden = true;
       return;
     }
 
     selectedAssignmentCard.hidden = false;
     currentSelectedAssignment = assignment;
+    if (examRoom) examRoom.hidden = true;
+    if (examRoomOpenButton) examRoomOpenButton.hidden = !assignment.examMode;
     if (examModeToggle) examModeToggle.checked = Boolean(assignment.examMode);
     const selectedClassOpt = classSelect?.selectedOptions?.[0];
     const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
@@ -865,6 +900,83 @@ async function startDashboard() {
     if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
     return payload;
   };
+
+  function renderExamRoom(room) {
+    const roomStatus = ({ waiting: 'Đang chờ', running: 'Đang thi', ended: 'Đã kết thúc' })[room.status] || room.status;
+    const deadline = room.deadlineAt ? ` · Hạn ${formatAssignmentWindow(room.deadlineAt, null).split(' → ')[0]}` : '';
+    if (examRoomSummary) examRoomSummary.textContent = `${roomStatus} · ${formatExamReadyCount(room)}${deadline}`;
+    if (examRoomStudents) {
+      examRoomStudents.replaceChildren();
+      for (const student of room.students || []) {
+        const row = document.createElement('tr');
+        const name = document.createElement('td');
+        const participation = document.createElement('td');
+        const device = document.createElement('td');
+        name.textContent = student.name || '—';
+        participation.textContent = formatExamRoomStatus(student.status);
+        device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
+        row.append(name, participation, device);
+        examRoomStudents.append(row);
+      }
+    }
+    if (examRoomStartButton) examRoomStartButton.disabled = room.status !== 'waiting';
+    if (examRoomExtendButton) examRoomExtendButton.disabled = room.status !== 'running';
+  }
+
+  async function loadExamRoom() {
+    if (!currentSelectedAssignment || !state.classId) return;
+    if (examRoomMessage) examRoomMessage.textContent = 'Đang tải trạng thái Phòng thi…';
+    const payload = await request(assignmentExamRoomPath(state.classId, currentSelectedAssignment.assignmentId));
+    renderExamRoom(payload.room);
+    if (examRoomMessage) examRoomMessage.textContent = '';
+  }
+
+  examRoomOpenButton?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    examRoomReturnToResults = Boolean(results && !results.hidden);
+    if (results) results.hidden = true;
+    if (examRoom) examRoom.hidden = false;
+    try { await loadExamRoom(); }
+    catch (error) { if (examRoomMessage) examRoomMessage.textContent = error.message; }
+  });
+  examRoomRefreshButton?.addEventListener('click', () => {
+    loadExamRoom().catch(error => { if (examRoomMessage) examRoomMessage.textContent = error.message; });
+  });
+  examRoomCloseButton?.addEventListener('click', () => {
+    if (examRoom) examRoom.hidden = true;
+    if (examRoomReturnToResults && results) results.hidden = false;
+  });
+  examRoomStartButton?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    examRoomStartButton.disabled = true;
+    try {
+      await request(assignmentExamStartPath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
+      });
+      await loadExamRoom();
+    } catch (error) {
+      if (examRoomMessage) examRoomMessage.textContent = error.message;
+      examRoomStartButton.disabled = false;
+    }
+  });
+  examRoomExtendButton?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    examRoomExtendButton.disabled = true;
+    try {
+      await request(assignmentExamExtendPath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ minutes: Number(examRoomExtensionMinutes?.value) })
+      });
+    } catch (error) {
+      if (examRoomMessage) examRoomMessage.textContent = error.message;
+      examRoomExtendButton.disabled = false;
+      return;
+    }
+    loadExamRoom().catch(error => {
+      if (examRoomMessage) examRoomMessage.textContent = `Đã gia hạn nhưng chưa tải lại được trạng thái: ${error.message}`;
+    });
+  });
+
   examModeToggle?.addEventListener('change', async () => {
     if (!currentSelectedAssignment) return;
     examModeToggle.disabled = true;
@@ -875,6 +987,8 @@ async function startDashboard() {
         body: JSON.stringify({ enabled: examModeToggle.checked })
       });
       currentSelectedAssignment.examMode = payload.examMode;
+      if (examRoomOpenButton) examRoomOpenButton.hidden = !payload.examMode;
+      if (!payload.examMode && examRoom) examRoom.hidden = true;
       status.textContent = payload.examMode ? 'Exam Mode đã bật. Học viên sẽ chờ giáo viên bắt đầu.' : 'Exam Mode đã tắt.';
     } catch (error) {
       examModeToggle.checked = Boolean(currentSelectedAssignment.examMode);

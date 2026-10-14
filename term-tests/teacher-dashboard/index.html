@@ -162,6 +162,7 @@
       </div>
       <div class="showcase-details">
         <label class="exam-mode-toggle"><input id="exam-mode-toggle" type="checkbox"> Bật Exam Mode</label>
+        <button id="exam-room-open" class="btn-secondary" type="button" hidden>Mở Phòng thi</button>
         <div class="showcase-window" id="showcase-window">
           <span class="window-label">Thời hạn làm bài:</span>
           <span id="showcase-window-text">—</span>
@@ -176,6 +177,30 @@
     </section>
 
     <section id="assignments" class="assignment-grid assignment-chips" aria-label="Danh sách bài được giao"></section>
+    <section id="exam-room" class="panel" hidden aria-labelledby="exam-room-title">
+      <div class="results-header">
+        <div>
+          <h2 id="exam-room-title">Phòng thi</h2>
+          <p id="exam-room-summary" class="meta-info" aria-live="polite"></p>
+        </div>
+        <div class="refresh-container">
+          <label>Gia hạn (phút)
+            <input id="exam-room-extension-minutes" type="number" min="1" max="600" step="1" value="5">
+          </label>
+          <button id="exam-room-start" type="button" class="btn-primary">Bắt đầu</button>
+          <button id="exam-room-extend" type="button" class="btn-secondary">Gia hạn</button>
+          <button id="exam-room-refresh" type="button" class="btn-secondary">Làm mới</button>
+          <button id="exam-room-close" type="button" class="btn-secondary">Đóng</button>
+        </div>
+      </div>
+      <p id="exam-room-message" aria-live="polite"></p>
+      <div class="results-scroll">
+        <table>
+          <thead><tr><th>Học viên</th><th>Trạng thái</th><th>Thiết bị</th></tr></thead>
+          <tbody id="exam-room-students"></tbody>
+        </table>
+      </div>
+    </section>
     <section id="results" class="panel" hidden aria-label="Bảng kết quả">
       <div class="results-header">
         <div>
