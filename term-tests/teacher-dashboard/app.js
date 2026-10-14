@@ -31,12 +31,20 @@ export function readDashboardState(input) {
     const parsedPage = Number.parseInt(page, 10);
     state.page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
   }
+  const course = url.searchParams.get('course');
+  if (course !== null && course !== '') state.course = course;
+  const scope = url.searchParams.get('scope');
+  if (scope !== null && scope !== '') state.scope = scope;
+  const classStatus = url.searchParams.get('classStatus');
+  if (classStatus !== null && classStatus !== '') state.classStatus = classStatus;
+  const classQ = url.searchParams.get('classQ');
+  if (classQ !== null && classQ !== '') state.classQ = classQ;
   return state;
 }
 
 export function assignmentUrl(input, state) {
   const url = input instanceof URL ? new URL(input) : new URL(input);
-  const keys = ['classId', 'assignmentId', 'attemptId', 'q', 'status', 'minScore', 'maxScore', 'skill', 'sortBy', 'sortDir', 'page'];
+  const keys = ['classId', 'assignmentId', 'attemptId', 'q', 'status', 'minScore', 'maxScore', 'skill', 'sortBy', 'sortDir', 'page', 'course', 'scope', 'classStatus', 'classQ'];
   for (const key of keys) {
     if (state[key] !== undefined && state[key] !== null && state[key] !== '' && (key !== 'page' || Number(state[key]) > 1)) {
       url.searchParams.set(key, String(state[key]));
@@ -59,7 +67,64 @@ export function resetDashboardState(state = {}) {
   state.sortBy = '';
   state.sortDir = '';
   state.page = 1;
+  state.course = '';
+  state.scope = '';
+  state.classStatus = '';
+  state.classQ = '';
   return state;
+}
+
+export function filterClasses(classes = [], { course = '', scope = '', classStatus = '', q = '', userRole = '' } = {}) {
+  let list = Array.isArray(classes) ? [...classes] : [];
+
+  // 1. Role-specific filters
+  if (userRole === 'lead' && scope === 'my_classes') {
+    list = list.filter(c => Boolean(c.isTeaching || c.is_teaching));
+  } else if (course && course !== 'all') {
+    const normCourse = String(course).replace(/^[^\d]*/, '').trim().toUpperCase();
+    list = list.filter(c => {
+      const cCode = String(c.courseCode || '').replace(/^[^\d]*/, '').trim().toUpperCase();
+      return cCode === normCourse;
+    });
+  }
+
+  // 2. Status filter
+  if (classStatus && classStatus !== 'all') {
+    list = list.filter(c => {
+      const st = String(c.status || c.classStatus || '').toLowerCase();
+      return st === classStatus.toLowerCase();
+    });
+  }
+
+  // 3. Search query
+  if (q && q.trim()) {
+    const term = q.trim().toLowerCase();
+    list = list.filter(c => {
+      const name = String(c.name || '').toLowerCase();
+      const id = String(c.classId || '').toLowerCase();
+      return name.includes(term) || id.includes(term);
+    });
+  }
+
+  return list;
+}
+
+export function formatClassFilterCountLabel({ count = 0, course = '', scope = '', classStatus = '', userRole = '' } = {}) {
+  let statusText = '';
+  if (classStatus === 'on_going') statusText = ' đang học';
+  else if (classStatus === 'pending') statusText = ' chờ mở';
+  else if (classStatus === 'completed') statusText = ' đã kết thúc';
+
+  if (userRole === 'lead' && scope === 'my_classes') {
+    return `${count} lớp bạn đang dạy${statusText}`;
+  }
+
+  if (course && course !== 'all') {
+    const courseNum = String(course).replace(/^[^\d]*/, '');
+    return `${count} lớp Khối ${courseNum || course}${statusText}`;
+  }
+
+  return `${count} lớp${statusText}`;
 }
 
 export function formatClassOptionLabel({ name, courseCode, assignmentCount }) {
@@ -533,6 +598,12 @@ export function formatSubmissionTimestamp(dateStr, locale = 'vi-VN', timeZone = 
 
 async function startDashboard() {
   const form = document.querySelector('#identity-form');
+  const classFilterToolbar = document.querySelector('#class-filter-toolbar');
+  const adminCourseFilters = document.querySelector('#admin-course-filters');
+  const leadScopeFilters = document.querySelector('#lead-scope-filters');
+  const classSearchInput = document.querySelector('#class-search-input');
+  const classStatusFilter = document.querySelector('#class-status-filter');
+  const classCountBadge = document.querySelector('#class-count-badge');
   const classSelect = document.querySelector('#class-select');
   const assignmentSelect = document.querySelector('#assignment-select');
   const selectedAssignmentCard = document.querySelector('#selected-assignment-card');
@@ -1687,15 +1758,145 @@ async function startDashboard() {
     }
   }
 
+  let rawClassesList = [];
+  let currentTeacher = null;
+
+  function updateFilterPillsUI() {
+    if (adminCourseFilters) {
+      const activeCourse = state.course || 'all';
+      adminCourseFilters.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.course === activeCourse);
+      });
+    }
+    if (leadScopeFilters) {
+      const activeScope = state.scope || 'all';
+      leadScopeFilters.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.scope === activeScope);
+      });
+    }
+    if (classStatusFilter) {
+      classStatusFilter.value = state.classStatus || '';
+    }
+    if (classSearchInput) {
+      classSearchInput.value = state.classQ || '';
+    }
+  }
+
+  function renderFilteredClasses() {
+    if (!classSelect) return;
+    const filtered = filterClasses(rawClassesList, {
+      course: state.course,
+      scope: state.scope,
+      classStatus: state.classStatus,
+      q: state.classQ,
+      userRole: currentTeacher?.role
+    });
+
+    if (classCountBadge) {
+      classCountBadge.textContent = formatClassFilterCountLabel({
+        count: filtered.length,
+        course: state.course,
+        scope: state.scope,
+        classStatus: state.classStatus,
+        userRole: currentTeacher?.role
+      });
+    }
+
+    classSelect.replaceChildren(new Option(filtered.length > 0 ? `-- Chọn lớp (${filtered.length}) --` : '-- Không có lớp phù hợp --', ''));
+    for (const item of filtered) {
+      classSelect.add(new Option(formatClassOptionLabel(item), item.classId));
+    }
+
+    const matchingClass = filtered.find(c => c.classId === state.classId);
+    if (matchingClass) {
+      classSelect.value = state.classId;
+    } else {
+      classSelect.value = '';
+    }
+
+    if (status) {
+      status.textContent = `${filtered.length}/${rawClassesList.length} lớp phù hợp bộ lọc`;
+    }
+  }
+
+  function setupClassFilterToolbar() {
+    if (!classFilterToolbar || !currentTeacher) return;
+    classFilterToolbar.hidden = false;
+
+    const role = currentTeacher.role;
+    if (role === 'admin' || role === 'qm') {
+      if (adminCourseFilters) adminCourseFilters.hidden = false;
+      if (leadScopeFilters) leadScopeFilters.hidden = true;
+    } else if (role === 'lead') {
+      if (adminCourseFilters) adminCourseFilters.hidden = true;
+      if (leadScopeFilters) {
+        leadScopeFilters.hidden = false;
+        const allBtn = leadScopeFilters.querySelector('[data-scope="all"]');
+        if (allBtn && currentTeacher.courseCodes?.length) {
+          allBtn.textContent = `📋 Tất cả lớp Khối ${currentTeacher.courseCodes.join(', ')}`;
+        }
+      }
+    } else {
+      if (adminCourseFilters) adminCourseFilters.hidden = true;
+      if (leadScopeFilters) leadScopeFilters.hidden = true;
+    }
+
+    updateFilterPillsUI();
+  }
+
+  if (adminCourseFilters) {
+    adminCourseFilters.addEventListener('click', event => {
+      const pill = event.target.closest('.filter-pill');
+      if (!pill) return;
+      const course = pill.dataset.course || 'all';
+      state.course = course === 'all' ? '' : course;
+      setUrl();
+      updateFilterPillsUI();
+      renderFilteredClasses();
+    });
+  }
+
+  if (leadScopeFilters) {
+    leadScopeFilters.addEventListener('click', event => {
+      const pill = event.target.closest('.filter-pill');
+      if (!pill) return;
+      const scope = pill.dataset.scope || 'all';
+      state.scope = scope === 'all' ? '' : scope;
+      setUrl();
+      updateFilterPillsUI();
+      renderFilteredClasses();
+    });
+  }
+
+  if (classStatusFilter) {
+    classStatusFilter.addEventListener('change', () => {
+      state.classStatus = classStatusFilter.value;
+      setUrl();
+      renderFilteredClasses();
+    });
+  }
+
+  let classSearchTimeout = null;
+  if (classSearchInput) {
+    classSearchInput.addEventListener('input', () => {
+      state.classQ = classSearchInput.value.trim();
+      clearTimeout(classSearchTimeout);
+      classSearchTimeout = setTimeout(() => {
+        setUrl();
+        renderFilteredClasses();
+      }, 250);
+    });
+  }
+
   async function loadClasses() {
     status.textContent = 'Đang kiểm tra quyền…';
     const payload = await request('/api/teacher/classes');
-    classSelect.replaceChildren(new Option('-- Chọn lớp --', ''));
-    for (const item of payload.classes) {
-      classSelect.add(new Option(formatClassOptionLabel(item), item.classId));
+    if (payload.actor && !currentTeacher) {
+      currentTeacher = payload.actor;
     }
-    classSelect.value = state.classId;
-    status.textContent = `${payload.classes.length} lớp được phép truy cập`;
+    rawClassesList = payload.classes || [];
+    setupClassFilterToolbar();
+    renderFilteredClasses();
     await loadAssignments(classSelect.value, state.assignmentId);
   }
 
@@ -2340,6 +2541,8 @@ async function startDashboard() {
 
   function renderTeacherProfile(teacher) {
     if (!teacher) return;
+    currentTeacher = teacher;
+    setupClassFilterToolbar();
     if (teacherProfileName) teacherProfileName.textContent = teacher.name || teacher.email;
     if (teacherProfileMeta) teacherProfileMeta.textContent = `${teacher.email} · SĐT: ${teacher.phone || '—'}`;
     if (teacherRoleBadge) {
@@ -2353,6 +2556,12 @@ async function startDashboard() {
 
   function handleLogout() {
     sessionToken = '';
+    currentTeacher = null;
+    rawClassesList = [];
+    if (classFilterToolbar) classFilterToolbar.hidden = true;
+    if (classSearchInput) classSearchInput.value = '';
+    if (classStatusFilter) classStatusFilter.value = '';
+    if (classCountBadge) classCountBadge.textContent = '0 lớp';
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.removeItem('izone_teacher_token');
       sessionStorage.removeItem('izone_teacher_profile');

@@ -79,6 +79,45 @@
     </form>
 
     <section class="panel control-toolbar">
+      <!-- Smart Class Filtering Controls -->
+      <div id="class-filter-toolbar" class="class-filter-toolbar" hidden>
+        <!-- Admin Course Filter Pills -->
+        <div id="admin-course-filters" class="course-filter-group" hidden aria-label="Lọc theo khối đào tạo">
+          <span class="filter-group-label">Khối đào tạo:</span>
+          <div class="filter-pills" role="radiogroup">
+            <button type="button" class="filter-pill active" data-course="all">Tất cả</button>
+            <button type="button" class="filter-pill" data-course="03">Khối 03</button>
+            <button type="button" class="filter-pill" data-course="34">Khối 34</button>
+            <button type="button" class="filter-pill" data-course="45">Khối 45</button>
+          </div>
+        </div>
+
+        <!-- Lead Teaching Scope Toggle -->
+        <div id="lead-scope-filters" class="course-filter-group" hidden aria-label="Phạm vi lớp của Lead">
+          <span class="filter-group-label">Chế độ xem:</span>
+          <div class="filter-pills" role="radiogroup">
+            <button type="button" class="filter-pill" data-scope="my_classes">👨‍🏫 Lớp tôi đang dạy</button>
+            <button type="button" class="filter-pill active" data-scope="all">📋 Tất cả lớp trong khối</button>
+          </div>
+        </div>
+
+        <!-- Search Input & Status Filter -->
+        <div class="class-search-status-row">
+          <div class="class-search-wrap">
+            <input id="class-search-input" type="search" placeholder="🔍 Tìm mã hoặc tên lớp (ví dụ IC2283)..." autocomplete="off" aria-label="Tìm kiếm lớp học">
+          </div>
+          <div class="class-status-wrap">
+            <select id="class-status-filter" aria-label="Lọc theo trạng thái lớp">
+              <option value="">Tất cả trạng thái</option>
+              <option value="on_going">Đang học (on_going)</option>
+              <option value="pending">Chờ mở (pending)</option>
+              <option value="completed">Đã kết thúc (completed)</option>
+            </select>
+          </div>
+          <span id="class-count-badge" class="class-count-badge">0 lớp</span>
+        </div>
+      </div>
+
       <div class="toolbar-grid">
         <label>Chọn lớp
           <select id="class-select"><option value="">-- Chọn lớp --</option></select>

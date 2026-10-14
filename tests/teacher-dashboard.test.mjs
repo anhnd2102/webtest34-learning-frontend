@@ -38,7 +38,9 @@ import {
   resetDashboardState,
   formatClassOptionLabel,
   extractPhase,
-  formatAssignmentMeta
+  formatAssignmentMeta,
+  filterClasses,
+  formatClassFilterCountLabel
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase resolves local or production origin based on location', () => {
@@ -908,6 +910,90 @@ test('teacher dashboard styles.css provides .control-toolbar, .selected-assignme
   assert.match(css, /\.control-toolbar/);
   assert.match(css, /\.selected-assignment-card/);
   assert.match(css, /\.assignment-chip/);
+});
+
+test('filterClasses filters classes by course, scope, status, and search query', () => {
+  const sampleClasses = [
+    { classId: '101', name: 'IC2182', courseCode: '45', status: 'on_going', isTeaching: false },
+    { classId: '102', name: 'IC2185', courseCode: '45', status: 'pending', isTeaching: false },
+    { classId: '103', name: 'IC2283', courseCode: '34', status: 'on_going', isTeaching: false },
+    { classId: '104', name: 'IC2251', courseCode: '03', status: 'on_going', isTeaching: true },
+    { classId: '105', name: 'IC1000', courseCode: '34', status: 'completed', isTeaching: true }
+  ];
+
+  // 1. Course filter
+  const c45 = filterClasses(sampleClasses, { course: '45' });
+  assert.equal(c45.length, 2);
+  assert.deepEqual(c45.map(c => c.classId), ['101', '102']);
+
+  // 2. Lead scope: my_classes
+  const myClasses = filterClasses(sampleClasses, { userRole: 'lead', scope: 'my_classes' });
+  assert.equal(myClasses.length, 2);
+  assert.deepEqual(myClasses.map(c => c.classId), ['104', '105']);
+
+  // 3. Status filter
+  const ongoing = filterClasses(sampleClasses, { classStatus: 'on_going' });
+  assert.equal(ongoing.length, 3);
+  assert.deepEqual(ongoing.map(c => c.classId), ['101', '103', '104']);
+
+  // 4. Search query by name or classId
+  const searchName = filterClasses(sampleClasses, { q: '2283' });
+  assert.equal(searchName.length, 1);
+  assert.equal(searchName[0].classId, '103');
+
+  // 5. Combined filters
+  const combined = filterClasses(sampleClasses, { course: '45', classStatus: 'on_going' });
+  assert.equal(combined.length, 1);
+  assert.equal(combined[0].classId, '101');
+});
+
+test('formatClassFilterCountLabel formats count label with scope and status', () => {
+  assert.equal(formatClassFilterCountLabel({ count: 51, course: '45' }), '51 lớp Khối 45');
+  assert.equal(formatClassFilterCountLabel({ count: 29, course: '34', classStatus: 'on_going' }), '29 lớp Khối 34 đang học');
+  assert.equal(formatClassFilterCountLabel({ count: 2, userRole: 'lead', scope: 'my_classes' }), '2 lớp bạn đang dạy');
+  assert.equal(formatClassFilterCountLabel({ count: 122 }), '122 lớp');
+});
+
+test('dashboard URL preserves smart class filtering state (course, scope, classStatus, classQ)', () => {
+  const url = assignmentUrl('https://example.test/term-tests/teacher-dashboard/', {
+    classId: '101',
+    course: '45',
+    scope: 'my_classes',
+    classStatus: 'on_going',
+    classQ: 'IC218'
+  });
+
+  assert.equal(url.searchParams.get('course'), '45');
+  assert.equal(url.searchParams.get('scope'), 'my_classes');
+  assert.equal(url.searchParams.get('classStatus'), 'on_going');
+  assert.equal(url.searchParams.get('classQ'), 'IC218');
+
+  const state = readDashboardState(url);
+  assert.equal(state.course, '45');
+  assert.equal(state.scope, 'my_classes');
+  assert.equal(state.classStatus, 'on_going');
+  assert.equal(state.classQ, 'IC218');
+});
+
+test('teacher dashboard index.html provides smart class filtering controls', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /id="class-filter-toolbar"/);
+  assert.match(html, /id="admin-course-filters"/);
+  assert.match(html, /id="lead-scope-filters"/);
+  assert.match(html, /id="class-search-input"/);
+  assert.match(html, /id="class-status-filter"/);
+  assert.match(html, /id="class-count-badge"/);
+});
+
+test('teacher dashboard styles.css provides .class-filter-toolbar and filter pill styles', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.class-filter-toolbar/);
+  assert.match(css, /\.filter-pill/);
+  assert.match(css, /\.class-count-badge/);
 });
 
 
