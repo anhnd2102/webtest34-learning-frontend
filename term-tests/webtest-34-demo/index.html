@@ -12,6 +12,7 @@
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
+  <script src="exam-guard.js?rev=20261015-exam-guard-v1"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -50,6 +51,10 @@
     button,input,textarea,select{font:inherit}
     button{cursor:pointer}
     .hidden{display:none!important}
+    #examApp.exam-guard-blurred{filter:blur(7px);pointer-events:none;user-select:none}
+    .exam-guard-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;background:rgba(17,24,39,.72)}
+    .exam-guard-card{width:min(100%,480px);padding:28px;border-radius:18px;background:#fff;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+    .exam-guard-card h2{margin:0 0 12px;font-family:Geologica,sans-serif;font-size:24px}
     .shell{min-height:100vh}
     .topbar{
       position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
@@ -423,6 +428,14 @@
   <div class="mobile-bottom hidden" id="mobileBottom">
     <button class="btn btn-secondary" id="mobilePrev">← Phần trước</button>
     <button class="btn btn-primary" id="mobileNext">Phần tiếp →</button>
+  </div>
+
+  <div class="exam-guard-overlay hidden" id="examGuardOverlay" role="alertdialog" aria-modal="true" aria-labelledby="examGuardTitle" aria-describedby="examGuardMessage">
+    <div class="exam-guard-card">
+      <h2 id="examGuardTitle">Bạn đã rời khỏi màn hình thi.</h2>
+      <p id="examGuardMessage">Giáo viên sẽ được thông báo.</p>
+      <button class="btn btn-primary" id="examGuardReturn" type="button">Quay lại bài thi</button>
+    </div>
   </div>
 </div>
 
@@ -2107,6 +2120,82 @@
     const waiting = !$('#examWaitingRoom').classList.contains('hidden');
     const supportsFullscreen = typeof document.documentElement.requestFullscreen === 'function';
     examFullscreenReenter.hidden = !waiting || !supportsFullscreen || Boolean(document.fullscreenElement);
+  });
+
+  let examGuardState = { running: false, fullscreenSupported: typeof document.documentElement.requestFullscreen === 'function' };
+  const examGuardOverlay = $('#examGuardOverlay');
+  const examGuardMessage = $('#examGuardMessage');
+  const examIncidentOperations = new Map();
+  function requestExamIncident(command){
+    const opening = command.type === 'open_incident';
+    const path = opening ? '/attempts/exam/incidents/open' : '/attempts/exam/incidents/close';
+    const body = {
+      attemptToken: state.learning?.attemptToken,
+      incidentId: command.incidentId,
+      ...(opening ? {type: 'left_exam'} : {})
+    };
+    const previous = examIncidentOperations.get(command.incidentId) || Promise.resolve();
+    const operation = previous.catch(() => opening ? undefined : learningRequest('/attempts/exam/incidents/open', {...body, type: 'left_exam'}))
+      .then(() => learningRequest(path, body));
+    examIncidentOperations.set(command.incidentId, operation);
+    void operation.catch(() => {
+      examGuardMessage.textContent = 'Không thể lưu sự cố rời bài. Hãy giữ trang mở và thử quay lại bài thi.';
+    });
+  }
+  function runExamGuardCommand(command){
+    if(command.type === 'pause_audio'){
+      snapshotActiveAudio();
+      allowPause = true;
+      if(activeAudioKey) audioPlayers.get(activeAudioKey)?.pause();
+      allowPause = false;
+    }else if(command.type === 'resume_audio'){
+      if(activeAudioKey) audioPlayers.get(activeAudioKey)?.play().catch(() => {
+        examGuardMessage.textContent = 'Nhấn “Quay lại bài thi” lần nữa để tiếp tục audio.';
+        examGuardOverlay.classList.remove('hidden');
+      });
+    }else if(command.type === 'request_fullscreen'){
+      const onFullscreenFailure = () => {
+        dispatchExamGuard({ type: 'left_exam', reason: 'fullscreen', at: Date.now(), incidentId: createClientKey() });
+        examGuardMessage.textContent = 'Không thể bật toàn màn hình. Hãy bấm “Quay lại bài thi” để thử lại.';
+      };
+      try{
+        document.documentElement.requestFullscreen().catch(onFullscreenFailure);
+      }catch{
+        onFullscreenFailure();
+      }
+    }else if(command.type === 'open_incident' || command.type === 'close_incident'){
+      requestExamIncident(command);
+    }
+  }
+  function dispatchExamGuard(event){
+    examGuardState = {
+      ...examGuardState,
+      running: state.learning?.exam?.status === 'running' && state.learning?.status === 'active',
+      fullscreenSupported: typeof document.documentElement.requestFullscreen === 'function'
+    };
+    const result = window.examGuardReducer(examGuardState, event);
+    examGuardState = result.state;
+    examGuardOverlay.classList.toggle('hidden', !examGuardState.prompt);
+    $('#examApp').classList.toggle('exam-guard-blurred', Boolean(examGuardState.prompt));
+    if(examGuardState.prompt && document.visibilityState !== 'hidden') $('#examGuardReturn').focus();
+    for(const command of result.commands) runExamGuardCommand(command);
+  }
+  window.addEventListener('blur', () => dispatchExamGuard({
+    type: 'left_exam', reason: 'blur', at: Date.now(), incidentId: createClientKey()
+  }));
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'hidden') dispatchExamGuard({
+      type: 'left_exam', reason: 'hidden', at: Date.now(), incidentId: createClientKey()
+    });
+  });
+  document.addEventListener('fullscreenchange', () => {
+    if(!document.fullscreenElement && typeof document.documentElement.requestFullscreen === 'function'){
+      dispatchExamGuard({ type: 'left_exam', reason: 'fullscreen', at: Date.now(), incidentId: createClientKey() });
+    }
+  });
+  $('#examGuardReturn').addEventListener('click', () => {
+    examGuardMessage.textContent = 'Giáo viên sẽ được thông báo.';
+    dispatchExamGuard({ type: 'return_click', at: Date.now() });
   });
 
   $('#clearDraft')?.addEventListener('click',()=>{if(confirm('Xóa toàn bộ bản nháp prototype?')){localStorage.removeItem(STORAGE_KEY);location.reload();}});
