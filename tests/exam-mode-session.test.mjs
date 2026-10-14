@@ -20,3 +20,8 @@ test('student exam stream stays connected while running and applies extension de
   assert.ok(page.includes("['waiting', 'running'].includes(state.learning?.exam?.status)"));
   assert.ok(page.includes('state.learning.expiresAt = Date.parse(deadlineAt)'));
 });
+
+test('shared deadline submits through the existing submission handler without waiting for confirmation', async () => {
+  const page = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
+  assert.match(page, /if\(left<=0\)\{clearInterval\(timerInt\); if\(!state\.submittedAt\) \$\('#confirmSubmit'\)\.click\(\)\}/);
+});

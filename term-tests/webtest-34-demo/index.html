@@ -1303,7 +1303,7 @@
       const mins=Math.floor(left/60000); const secs=Math.floor((left%60000)/1000);
       $('#timer').textContent=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
       $('#timer').classList.toggle('warn',left<=10*60*1000);
-      if(left<=0){clearInterval(timerInt); if(!state.submittedAt) openSubmit()}
+      if(left<=0){clearInterval(timerInt); if(!state.submittedAt) $('#confirmSubmit').click()}
     };
     const timerInt=setInterval(tick,1000); tick();
   }
