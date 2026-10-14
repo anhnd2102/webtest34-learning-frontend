@@ -624,9 +624,16 @@
     state.startedAt = startedAt ? Date.parse(startedAt) : state.startedAt;
     if(rosterData.assignment) rosterData.assignment = {...rosterData.assignment, definition: payload.definition};
     persist();
-    examStreamController?.abort();
     await restoreAudioResume().catch(() => {});
     showExam();
+  }
+
+  function applyExamExtended(payload){
+    const deadlineAt = payload.deadlineAt || payload.exam?.deadlineAt;
+    if(state.learning?.exam?.status !== 'running' || !deadlineAt) return;
+    state.learning.exam = {...state.learning.exam, deadlineAt};
+    state.learning.expiresAt = Date.parse(deadlineAt);
+    persist();
   }
 
   async function consumeExamEvents(signal){
@@ -649,25 +656,30 @@
         buffer = buffer.slice(boundary + 2);
         const event = block.match(/^event:\s*(.+)$/m)?.[1];
         const data = block.match(/^data:\s*(.+)$/m)?.[1];
-        if((event === 'snapshot' || event === 'exam.started') && data){
+        if(event === 'snapshot' && data){
+          const payload = JSON.parse(data);
+          if(state.learning?.exam?.status === 'running') applyExamExtended(payload);
+          else await applyExamStarted(payload);
+        }else if(event === 'exam.started' && data){
           await applyExamStarted(JSON.parse(data));
-          if(state.learning?.exam?.status === 'running') return;
+        }else if(event === 'exam.extended' && data){
+          applyExamExtended(JSON.parse(data));
         }
       }
     }
   }
 
   async function connectExamEvents(){
-    if(examStreamController || !state.learning?.attemptToken) return;
+    if(examStreamController || !state.learning?.attemptToken || state.learning.status === 'submitted') return;
     const controller = new AbortController();
     examStreamController = controller;
-    while(!controller.signal.aborted && state.learning?.exam?.status === 'waiting'){
+    while(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted'){
       try{
         await consumeExamEvents(controller.signal);
       }catch(error){
         if(controller.signal.aborted) break;
       }
-      if(!controller.signal.aborted && state.learning?.exam?.status === 'waiting'){
+      if(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted'){
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
@@ -2047,6 +2059,7 @@
       state.startedAt = state.startedAt || Date.now();
       persist();
       showExam();
+      if(state.learning?.exam?.status === 'running' && state.learning.status !== 'submitted') void connectExamEvents();
     };
     const button = $('#startExam');
     button.disabled = true;
@@ -2117,6 +2130,7 @@
   $('#fontUp').addEventListener('click',()=>{fontScale=Math.min(1.2,Math.round((fontScale+.06)*100)/100);document.documentElement.style.setProperty('--font-scale',fontScale);persist()});
   $('#cancelSubmit').addEventListener('click',()=>$('#submitModal').classList.add('hidden'));
   function acceptLearningSubmission(result){
+    examStreamController?.abort();
     stopAnyPlayback();
     state.submittedAt = state.submittedAt || Date.now();
     state.learning.status = 'submitted';
@@ -2183,6 +2197,7 @@
         }
       }
       showExam();
+      if(state.learning?.exam?.status === 'running' && state.learning.status !== 'submitted') void connectExamEvents();
     }else if(state.classCode && classCodeValid(state.classCode)){
       await loadRoster();
     }
