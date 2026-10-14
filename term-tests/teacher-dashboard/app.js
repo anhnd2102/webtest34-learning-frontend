@@ -809,6 +809,7 @@ async function startDashboard() {
   if (state.sortDir) sortDirSelect.value = state.sortDir;
 
   const loginForm = document.querySelector('#login-form');
+  const loginBtn = document.querySelector('#login-btn');
   const loginApiBase = document.querySelector('#login-api-base');
   const loginEmail = document.querySelector('#login-email');
   const loginPhone = document.querySelector('#login-phone');
@@ -2541,6 +2542,7 @@ async function startDashboard() {
 
   function renderTeacherProfile(teacher) {
     if (!teacher) return;
+    document.body.classList.remove('login-page');
     currentTeacher = teacher;
     setupClassFilterToolbar();
     if (teacherProfileName) teacherProfileName.textContent = teacher.name || teacher.email;
@@ -2555,6 +2557,7 @@ async function startDashboard() {
   }
 
   function handleLogout() {
+    document.body.classList.add('login-page');
     sessionToken = '';
     currentTeacher = null;
     rawClassesList = [];
@@ -2602,10 +2605,7 @@ async function startDashboard() {
       loginPhone.type = isPassword ? 'text' : 'password';
       togglePasswordBtn.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
       togglePasswordBtn.setAttribute('title', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
-      const icon = togglePasswordBtn.querySelector('.eye-icon');
-      if (icon) {
-        icon.textContent = isPassword ? '🙈' : '👁️';
-      }
+      togglePasswordBtn.setAttribute('aria-pressed', String(isPassword));
     });
   }
 
@@ -2625,6 +2625,7 @@ async function startDashboard() {
   if (loginForm) {
     loginForm.addEventListener('submit', async event => {
       event.preventDefault();
+      if (loginBtn.disabled) return;
       if (loginError) loginError.hidden = true;
       const email = loginEmail?.value.trim() || '';
       const phone = loginPhone?.value.trim() || '';
@@ -2636,6 +2637,9 @@ async function startDashboard() {
         return;
       }
 
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Đang đăng nhập…';
+      loginForm.setAttribute('aria-busy', 'true');
       try {
         if (status) status.textContent = 'Đang xác thực tài khoản…';
         const response = await fetch(`${apiBase()}${authLoginPath()}`, {
@@ -2662,6 +2666,10 @@ async function startDashboard() {
           loginError.textContent = err.message;
         }
         if (status) status.textContent = `Lỗi đăng nhập: ${err.message}`;
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Đăng nhập';
+        loginForm.removeAttribute('aria-busy');
       }
     });
   }
@@ -2712,6 +2720,7 @@ async function startDashboard() {
 
   form.addEventListener('submit', event => {
     event.preventDefault();
+    document.body.classList.remove('login-page');
     loadClasses().catch(error => { status.textContent = error.message; });
   });
 

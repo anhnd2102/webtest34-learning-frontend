@@ -440,6 +440,48 @@ tr:hover td { background: #fafbfc; }
 }
 .auth-actions { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
 .auth-actions button { width: auto; min-width: 140px; }
+.login-page main {
+  width: min(420px, calc(100% - 32px));
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.login-page main > :not(#auth-panel):not(#identity-form):not(.login-footer) { display: none; }
+.login-page #auth-panel {
+  padding: 40px;
+  margin: 0;
+  border-radius: 12px;
+  border-color: #e0e3e6;
+  box-shadow: 0 1px 3px #2030400a;
+}
+#login-form, .login-footer { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
+.login-brand { text-align: center; margin-bottom: 24px; }
+.login-brand h1 { margin: 0; color: #db0829; font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
+.login-brand p { margin: 6px 0 12px; font-size: 11px; font-weight: 600; letter-spacing: .12em; color: #64748b; }
+.login-brand span { display: inline-block; padding: 5px 10px; border: 1px solid #e0e3e6; border-radius: 99px; background: #f2f4f7; font-size: 11px; color: #64748b; }
+#login-form h2 { margin: 0 0 8px; font-size: 24px; color: #1e293b; text-align: center; letter-spacing: -.03em; }
+#login-form .auth-desc { text-align: center; font-size: 14px; line-height: 1.6; }
+#login-form .auth-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 24px; }
+#login-form label { font-size: 12px; font-weight: 600; color: #334155; }
+#login-form input { min-width: 0; height: 48px; border-radius: 8px; border-color: #cbd5e1; background: white; font-size: 16px; font-weight: 400; color: #191c1e; }
+#login-form input::placeholder { color: #64748b; font-size: 14px; }
+#login-form :is(input, button):focus-visible { outline: 2px solid #db0829; outline-offset: 2px; }
+#login-form .password-toggle-btn { right: 2px; width: 44px; height: 44px; border-radius: 8px; }
+.eye-slash { display: none; }
+[aria-pressed="true"] .eye-slash { display: block; }
+.login-help { color: #64748b; font-size: 12px; font-weight: 400; line-height: 1.6; }
+#login-form .auth-actions { margin-top: 24px; }
+#login-btn { width: 100%; min-height: 48px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+.login-support { margin-top: 24px; padding-top: 12px; border-top: 1px solid #e0e3e6; text-align: center; color: #64748b; font-size: 12px; line-height: 1.6; }
+.login-support p { margin: 0; }
+.login-footer { display: none; margin-top: 32px; text-align: center; color: #64748b; font-size: 12px; }
+.login-page .login-footer { display: block; }
+@media (max-width: 480px) {
+  .login-page #auth-panel { padding: 28px 24px; }
+}
 .teacher-profile, #teacher-profile { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
 .profile-info { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .profile-info h3 { margin: 0 0 4px; font-size: 1.15rem; }

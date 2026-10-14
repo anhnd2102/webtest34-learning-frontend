@@ -9,7 +9,10 @@
       window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
     }
   </script>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="./styles.css?rev=20261014-login-v1">
   <script>
     (function () {
       var isLocal = ['localhost', '127.0.0.1', '[::1]', '::1'].indexOf(window.location.hostname) !== -1;
@@ -26,34 +29,48 @@
     })();
   </script>
 </head>
-<body>
+<body class="login-page">
   <main>
     <header>
       <p class="eyebrow">IZONE LEARNING PLATFORM</p>
       <h1>Teacher Dashboard</h1>
-      <p>Chọn lớp và bài được giao trong môi trường nội bộ hoặc staging.</p>
+      <p>Quản lý bài kiểm tra và kết quả học viên.</p>
     </header>
 
     <section id="auth-panel" class="panel">
       <form id="login-form">
-        <h2>Đăng nhập Giảng viên / Quản lý</h2>
-        <p class="auth-desc">Đăng nhập nội bộ IZONE bằng Email và Số điện thoại đã được đăng ký.</p>
+        <div class="login-brand">
+          <h1>IZONE</h1>
+          <p>LEARNING PLATFORM</p>
+          <span>Dành cho giảng viên và quản lý</span>
+        </div>
+        <h2>Chào mừng trở lại</h2>
+        <p class="auth-desc">Đăng nhập để quản lý bài kiểm tra và kết quả học viên.</p>
         <div id="login-error" class="error-msg" hidden role="alert"></div>
         <div class="auth-grid">
           <input id="login-api-base" name="apiBase" type="hidden" value="http://localhost:8788">
-          <label>Email <input id="login-email" name="email" type="email" placeholder="ví dụ: giangvien@izone.edu.vn" required></label>
-          <label>Số điện thoại (Mật khẩu)
+          <label>Email <input id="login-email" name="email" type="email" autocomplete="username" placeholder="Nhập email đã đăng ký" required></label>
+          <label>Mật khẩu
             <div class="password-input-wrap">
-              <input id="login-phone" name="phone" type="password" autocomplete="current-password" placeholder="ví dụ: 0912345678" required>
-              <button id="toggle-password-btn" type="button" class="password-toggle-btn" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">
-                <span class="eye-icon" aria-hidden="true">👁️</span>
+              <input id="login-phone" name="phone" type="password" autocomplete="current-password" aria-describedby="login-password-help" placeholder="Nhập mật khẩu" required>
+              <button id="toggle-password-btn" type="button" class="password-toggle-btn" aria-label="Hiện mật khẩu" title="Hiện mật khẩu" aria-pressed="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                  <path class="eye-slash" d="m3 3 18 18"/>
+                </svg>
               </button>
             </div>
+            <span id="login-password-help" class="login-help">Sử dụng số điện thoại đã đăng ký làm mật khẩu.</span>
           </label>
         </div>
         <div class="auth-actions">
-          <button id="login-btn" type="submit" class="btn-primary">Đăng nhập</button>
+          <button id="login-btn" type="submit" class="btn-primary" aria-live="polite">Đăng nhập</button>
           <button id="toggle-fixture-btn" type="button" class="btn-secondary" hidden>Chế độ kiểm thử (Fixture)</button>
+        </div>
+        <div class="login-support">
+          <p>Không đăng nhập được?</p>
+          <p>Vui lòng liên hệ bộ phận phụ trách.</p>
         </div>
       </form>
 
@@ -68,6 +85,8 @@
         <button id="logout-btn" type="button" class="btn-secondary">Đăng xuất</button>
       </div>
     </section>
+
+    <footer class="login-footer">IZONE Learning Platform</footer>
 
     <form id="identity-form" class="panel" hidden>
       <h2>Danh tính kiểm thử (Fixture)</h2>
@@ -393,6 +412,6 @@
     </dialog>
   </main>
 
-  <script type="module" src="./app.js?rev=20261013-table-view-v1"></script>
+  <script type="module" src="./app.js?rev=20261014-login-v1"></script>
 </body>
 </html>
