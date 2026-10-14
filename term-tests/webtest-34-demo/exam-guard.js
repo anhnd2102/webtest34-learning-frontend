@@ -1,6 +1,12 @@
 globalThis.examGuardReducer = (state, event) => {
   const next = { ...state };
   const commands = [];
+  if(event.type === 'device_superseded'){
+    next.superseded = true;
+    next.prompt = true;
+  }else if(state.superseded){
+    return { state: next, commands };
+  }
   if(event.type === 'left_exam'){
     if(!state.running) return { state: next, commands };
     const combined = state.incidentId && event.at - state.lastIncidentAt < 2000;
@@ -22,3 +28,5 @@ globalThis.examGuardReducer = (state, event) => {
   }
   return { state: next, commands };
 };
+
+globalThis.examDeviceRequestBody = (body, deviceId) => ({...body, deviceId});
