@@ -388,6 +388,14 @@
       </div>
     </section>
 
+    <section class="intro hidden" id="examWaitingRoom" aria-live="polite">
+      <div class="intro-card">
+        <div class="eyebrow">PHÒNG CHỜ</div>
+        <h1 id="exam-waiting-greeting">Xin chào!</h1>
+        <p>Đề sẽ hiện khi giáo viên bắt đầu.</p>
+      </div>
+    </section>
+
     <section class="exam-layout hidden" id="examApp">
       <div class="main-column" id="mainColumn"></div>
       <aside class="side-panel">
@@ -1945,6 +1953,15 @@
           status: result.attempt.status || 'active',
           expiresAt: result.attempt.expiresAt ? Date.parse(result.attempt.expiresAt) : null
         };
+        if(result.attempt.exam?.enabled && result.attempt.exam.status === 'waiting'){
+          state.startedAt = result.attempt.startedAt ? Date.parse(result.attempt.startedAt) : state.startedAt || Date.now();
+          persist();
+          $('#introScreen').classList.add('hidden');
+          $('#audioCheckScreen').classList.add('hidden');
+          $('#examWaitingRoom').classList.remove('hidden');
+          $('#exam-waiting-greeting').textContent = `Xin chào ${student.name}!`;
+          return;
+        }
         state.startedAt = result.attempt.startedAt ? Date.parse(result.attempt.startedAt) : state.startedAt;
         if(result.attempt.status === 'submitted') state.submittedAt = state.submittedAt || Date.now();
         if(result.attempt.draft) state.answers = {...state.answers, ...result.attempt.draft};

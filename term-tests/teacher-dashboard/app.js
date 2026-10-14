@@ -220,6 +220,10 @@ export function assignmentResultsPath(classId, assignmentId, options = {}) {
   return query ? `${base}?${query}` : base;
 }
 
+export function assignmentExamModePath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam-mode`;
+}
+
 export function attemptDetailPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}`;
 }
@@ -610,6 +614,7 @@ async function startDashboard() {
   const showcaseBlockBadge = document.querySelector('#showcase-block-badge');
   const showcasePhaseBadge = document.querySelector('#showcase-phase-badge');
   const showcaseStatusBadge = document.querySelector('#showcase-status-badge');
+  const examModeToggle = document.querySelector('#exam-mode-toggle');
   const showcaseWindowText = document.querySelector('#showcase-window-text');
   const showcaseLinkBar = document.querySelector('#showcase-link-bar');
   const showcaseStudentUrl = document.querySelector('#showcase-student-url');
@@ -627,6 +632,7 @@ async function startDashboard() {
   const classSkillSummary = document.querySelector('#class-skill-summary');
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
+  let currentSelectedAssignment = null;
 
   const addStudentBtn = document.querySelector('#add-student-btn');
   const addStudentModal = document.querySelector('#add-student-modal');
@@ -740,6 +746,7 @@ async function startDashboard() {
   function renderSelectedAssignmentShowcase(assignment) {
     if (!selectedAssignmentCard) return;
     if (!assignment) {
+      currentSelectedAssignment = null;
       selectedAssignmentCard.hidden = true;
       if (assignmentStudentUrl) assignmentStudentUrl.value = '';
       if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
@@ -751,6 +758,8 @@ async function startDashboard() {
     }
 
     selectedAssignmentCard.hidden = false;
+    currentSelectedAssignment = assignment;
+    if (examModeToggle) examModeToggle.checked = Boolean(assignment.examMode);
     const selectedClassOpt = classSelect?.selectedOptions?.[0];
     const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
 
@@ -856,6 +865,24 @@ async function startDashboard() {
     if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
     return payload;
   };
+  examModeToggle?.addEventListener('change', async () => {
+    if (!currentSelectedAssignment) return;
+    examModeToggle.disabled = true;
+    try {
+      const payload = await request(assignmentExamModePath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: examModeToggle.checked })
+      });
+      currentSelectedAssignment.examMode = payload.examMode;
+      status.textContent = payload.examMode ? 'Exam Mode đã bật. Học viên sẽ chờ giáo viên bắt đầu.' : 'Exam Mode đã tắt.';
+    } catch (error) {
+      examModeToggle.checked = Boolean(currentSelectedAssignment.examMode);
+      status.textContent = error.message;
+    } finally {
+      examModeToggle.disabled = false;
+    }
+  });
   const setUrl = () => history.replaceState(null, '', assignmentUrl(location.href, state));
 
   function appendCell(row, value, className = '') {
