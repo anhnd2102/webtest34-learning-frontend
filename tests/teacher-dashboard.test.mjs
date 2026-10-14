@@ -43,9 +43,9 @@ import {
   formatClassFilterCountLabel
 } from '../term-tests/teacher-dashboard/app.js';
 
-test('defaultApiBase resolves local or production origin based on location', () => {
-  assert.equal(defaultApiBase({ hostname: 'localhost' }), 'http://localhost:8788');
-  assert.equal(defaultApiBase({ hostname: '127.0.0.1' }), 'http://localhost:8788');
+test('defaultApiBase always resolves to the production origin, including local hosts', () => {
+  assert.equal(defaultApiBase({ hostname: 'localhost' }), 'https://webtest.ducanhn.autos');
+  assert.equal(defaultApiBase({ hostname: '127.0.0.1' }), 'https://webtest.ducanhn.autos');
   assert.equal(defaultApiBase({ hostname: 'anhnd2102.github.io' }), 'https://webtest.ducanhn.autos');
   assert.equal(defaultApiBase(null), 'https://webtest.ducanhn.autos');
 });

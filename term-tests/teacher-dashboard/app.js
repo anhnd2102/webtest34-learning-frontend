@@ -1,7 +1,5 @@
-export function defaultApiBase(currentLocation = (typeof window !== 'undefined' ? window.location : null)) {
-  const hostname = currentLocation?.hostname || '';
-  const isLocal = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(hostname);
-  return isLocal ? 'http://localhost:8788' : 'https://webtest.ducanhn.autos';
+export function defaultApiBase() {
+  return 'https://webtest.ducanhn.autos';
 }
 
 export function readDashboardState(input) {
@@ -826,7 +824,7 @@ async function startDashboard() {
 
   const currentLocation = typeof window !== 'undefined' ? window.location : null;
   const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(currentLocation?.hostname || '');
-  const standardApiBase = defaultApiBase(currentLocation);
+  const standardApiBase = defaultApiBase();
 
   if (loginApiBase) {
     if (!loginApiBase.value || (!isLocalHost && loginApiBase.value.includes('localhost'))) {
