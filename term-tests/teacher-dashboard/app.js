@@ -269,6 +269,22 @@ export function formatExamProgress(progress) {
   return `${progress.answered}/${progress.total}`;
 }
 
+export function applyExamConnection(room, { studentRef, status } = {}) {
+  if (!room || !Array.isArray(room.students) || typeof studentRef !== 'string'
+    || !['connected', 'disconnected'].includes(status)) return room;
+  const index = room.students.findIndex(student => student.studentRef === studentRef);
+  if (index < 0) return room;
+  return {
+    ...room,
+    students: room.students.map((student, studentIndex) =>
+      studentIndex === index ? { ...student, connectionStatus: status } : student)
+  };
+}
+
+export function formatExamConnectionStatus(status) {
+  return ({ connected: 'Đang kết nối', disconnected: 'Mất kết nối' })[status] || '—';
+}
+
 export function attemptDetailPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}`;
 }
@@ -972,16 +988,18 @@ async function startDashboard() {
         const name = document.createElement('td');
         const participation = document.createElement('td');
         const progress = document.createElement('td');
+        const connection = document.createElement('td');
         const device = document.createElement('td');
         name.textContent = student.name || '—';
         participation.textContent = formatExamRoomStatus(student.status);
         progress.textContent = formatExamProgress(student.progress);
+        connection.textContent = formatExamConnectionStatus(student.connectionStatus);
         device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
         if (activeExamIncidents.has(student.studentRef)) {
           row.className = 'exam-incident-active';
           row.setAttribute('aria-label', `${student.name || 'Học viên'} đang có sự cố Exam Guard`);
         }
-        row.append(name, participation, progress, device);
+        row.append(name, participation, progress, connection, device);
         examRoomStudents.append(row);
       }
     }
@@ -1037,6 +1055,9 @@ async function startDashboard() {
               if (currentExamRoom) renderExamRoom(currentExamRoom);
             } else if (message.event === 'exam.progress.updated') {
               currentExamRoom = applyExamProgress(currentExamRoom, message.data);
+              if (currentExamRoom) renderExamRoom(currentExamRoom);
+            } else if (message.event === 'exam.connection.changed') {
+              currentExamRoom = applyExamConnection(currentExamRoom, message.data);
               if (currentExamRoom) renderExamRoom(currentExamRoom);
             } else if (message.event !== 'snapshot') await loadExamRoom();
           }

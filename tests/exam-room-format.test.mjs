@@ -8,6 +8,8 @@ import {
   formatExamRoomStatus,
   formatExamReadyCount,
   applyExamProgress,
+  applyExamConnection,
+  formatExamConnectionStatus,
   formatExamProgress
 } from '../term-tests/teacher-dashboard/app.js';
 
@@ -36,6 +38,16 @@ test('exam progress ignores malformed counts and unknown students', () => {
   const room = { students: [{ studentRef: 's1' }] };
   assert.equal(applyExamProgress(room, { studentRef: 'missing', progress: { answered: 1, total: 2 } }), room);
   assert.equal(applyExamProgress(room, { studentRef: 's1', progress: { answered: 3, total: 2 } }), room);
+});
+
+test('exam connection updates only the matching student and formats both states', () => {
+  const room = { students: [{ studentRef: 's1', connectionStatus: 'connected' }, { studentRef: 's2' }] };
+  const updated = applyExamConnection(room, { studentRef: 's2', status: 'disconnected' });
+  assert.equal(updated.students[0].connectionStatus, 'connected');
+  assert.equal(updated.students[1].connectionStatus, 'disconnected');
+  assert.equal(formatExamConnectionStatus('connected'), 'Đang kết nối');
+  assert.equal(formatExamConnectionStatus('disconnected'), 'Mất kết nối');
+  assert.equal(applyExamConnection(room, { studentRef: 's2', status: 'unknown' }), room);
 });
 
 test('exam room controls use the teacher API routes for snapshot, start, and extension', () => {

@@ -582,6 +582,7 @@
   let learningResultPollStartedAt = 0;
   let learningResultPollDelayMs = 2000;
   let examStreamController = null;
+  let examHeartbeatTimer = null;
   let saveTimer = 0;
 
   const $ = s => document.querySelector(s);
@@ -653,6 +654,21 @@
     showExam();
   }
 
+  function stopExamHeartbeat(){
+    clearInterval(examHeartbeatTimer);
+    examHeartbeatTimer = null;
+  }
+
+  function startExamHeartbeat(){
+    if(examHeartbeatTimer || !state.learning?.attemptToken || ['submitted', 'superseded'].includes(state.learning.status)) return;
+    const send = () => {
+      if(!state.learning?.attemptToken || ['submitted', 'superseded'].includes(state.learning.status)) return stopExamHeartbeat();
+      void learningRequest('/attempts/exam/heartbeat', {attemptToken: state.learning.attemptToken}).catch(() => {});
+    };
+    send();
+    examHeartbeatTimer = setInterval(send, 20_000);
+  }
+
   function applyExamExtended(payload){
     const deadlineAt = payload.deadlineAt || payload.exam?.deadlineAt;
     if(state.learning?.exam?.status !== 'running' || !deadlineAt) return;
@@ -691,6 +707,7 @@
           applyExamExtended(JSON.parse(data));
         }else if(event === 'device.superseded'){
           state.learning.status = 'superseded';
+          stopExamHeartbeat();
           persist();
           dispatchExamGuard({type: 'device_superseded'});
           examStreamController?.abort();
@@ -702,6 +719,7 @@
 
   async function connectExamEvents(){
     if(examStreamController || !state.learning?.attemptToken || ['submitted', 'superseded'].includes(state.learning.status)) return;
+    startExamHeartbeat();
     const controller = new AbortController();
     examStreamController = controller;
     while(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && !['submitted', 'superseded'].includes(state.learning.status)){
@@ -2091,7 +2109,7 @@
       state.startedAt = state.startedAt || Date.now();
       persist();
       showExam();
-      if(state.learning?.exam?.status === 'running' && state.learning.status !== 'submitted') void connectExamEvents();
+      if(['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted') void connectExamEvents();
     };
     const button = $('#startExam');
     button.disabled = true;
@@ -2250,6 +2268,7 @@
   $('#cancelSubmit').addEventListener('click',()=>$('#submitModal').classList.add('hidden'));
   function acceptLearningSubmission(result){
     examStreamController?.abort();
+    stopExamHeartbeat();
     stopAnyPlayback();
     state.submittedAt = state.submittedAt || Date.now();
     state.learning.status = 'submitted';
@@ -2321,7 +2340,7 @@
         }
       }
       showExam();
-      if(state.learning?.exam?.status === 'running' && state.learning.status !== 'submitted') void connectExamEvents();
+      if(['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted') void connectExamEvents();
     }else if(state.classCode && classCodeValid(state.classCode)){
       await loadRoster();
     }
