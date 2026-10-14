@@ -27,6 +27,7 @@ test('teacher room markup offers a manual refresh, start, and extension control'
   assert.match(page, /id="exam-room-refresh"/);
   assert.match(page, /id="exam-room-start"[^>]*>Bắt đầu/);
   assert.match(page, /id="exam-room-extend"[^>]*>Gia hạn/);
+  assert.match(page, /<th>Tiến độ<\/th>/);
 });
 
 test('teacher room consumes the scoped Bearer SSE stream and reconnects with a fresh snapshot', async () => {
@@ -36,6 +37,9 @@ test('teacher room consumes the scoped Bearer SSE stream and reconnects with a f
   assert.match(source, /parseSseChunk\(buffer/);
   assert.match(source, /message\.event === 'snapshot'[\s\S]*?message\.event === 'exam\.incident\.opened'/);
   assert.match(source, /message\.event === 'exam\.incident\.closed'/);
+  assert.match(source, /message\.event === 'exam\.progress\.updated'[\s\S]*?applyExamProgress\(currentExamRoom, message\.data\)/);
+  assert.match(source, /progress\.textContent = formatExamProgress\(student\.progress\)/);
+  assert.match(source, /row\.append\(name, participation, progress, device\)/);
   assert.match(source, /await loadExamRoom\(\);[\s\S]*?setTimeout\(resolve, 1000\)/);
   assert.match(styles, /\.exam-incident-active\s*\{[^}]*background:\s*#fee2e2/);
 });

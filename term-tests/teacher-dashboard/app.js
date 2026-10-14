@@ -250,6 +250,25 @@ export function formatExamReadyCount({ readyCount = 0, totalCount = 0 } = {}) {
   return `${readyCount}/${totalCount} sẵn sàng`;
 }
 
+export function applyExamProgress(room, { studentRef, progress } = {}) {
+  if (!room || !Array.isArray(room.students) || typeof studentRef !== 'string'
+    || !Number.isInteger(progress?.answered) || !Number.isInteger(progress?.total)
+    || progress.answered < 0 || progress.total < progress.answered) return room;
+  const index = room.students.findIndex(student => student.studentRef === studentRef);
+  if (index < 0) return room;
+  return {
+    ...room,
+    students: room.students.map((student, studentIndex) =>
+      studentIndex === index ? { ...student, progress: { answered: progress.answered, total: progress.total } } : student)
+  };
+}
+
+export function formatExamProgress(progress) {
+  if (!Number.isInteger(progress?.answered) || !Number.isInteger(progress?.total)
+    || progress.answered < 0 || progress.total < progress.answered) return '—';
+  return `${progress.answered}/${progress.total}`;
+}
+
 export function attemptDetailPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}`;
 }
@@ -952,15 +971,17 @@ async function startDashboard() {
         const row = document.createElement('tr');
         const name = document.createElement('td');
         const participation = document.createElement('td');
+        const progress = document.createElement('td');
         const device = document.createElement('td');
         name.textContent = student.name || '—';
         participation.textContent = formatExamRoomStatus(student.status);
+        progress.textContent = formatExamProgress(student.progress);
         device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
         if (activeExamIncidents.has(student.studentRef)) {
           row.className = 'exam-incident-active';
           row.setAttribute('aria-label', `${student.name || 'Học viên'} đang có sự cố Exam Guard`);
         }
-        row.append(name, participation, device);
+        row.append(name, participation, progress, device);
         examRoomStudents.append(row);
       }
     }
@@ -1013,6 +1034,9 @@ async function startDashboard() {
               if (currentExamRoom) renderExamRoom(currentExamRoom);
             } else if (message.event === 'exam.incident.closed' && message.data.studentRef) {
               activeExamIncidents.delete(message.data.studentRef);
+              if (currentExamRoom) renderExamRoom(currentExamRoom);
+            } else if (message.event === 'exam.progress.updated') {
+              currentExamRoom = applyExamProgress(currentExamRoom, message.data);
               if (currentExamRoom) renderExamRoom(currentExamRoom);
             } else if (message.event !== 'snapshot') await loadExamRoom();
           }
