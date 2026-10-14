@@ -35,7 +35,10 @@ import {
   computeClassSkillSummary,
   formatCompactScore,
   formatSubmissionTimestamp,
-  resetDashboardState
+  resetDashboardState,
+  formatClassOptionLabel,
+  extractPhase,
+  formatAssignmentMeta
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase resolves local or production origin based on location', () => {
@@ -833,6 +836,78 @@ test('teacher dashboard index.html and styles.css provide secure password input 
   // Password wrapper and toggle button styles
   assert.match(css, /\.password-input-wrap/);
   assert.match(css, /\.password-toggle-btn/);
+});
+
+test('formatClassOptionLabel normalizes class and course labels without redundant Khối ClassName', () => {
+  // When courseCode is class name (e.g. IC2283), do not say "Khối IC2283"
+  assert.equal(
+    formatClassOptionLabel({ name: 'IC2283', courseCode: 'IC2283', assignmentCount: 6 }),
+    'Lớp IC2283 · 6 bài'
+  );
+
+  // When courseCode is numeric course (e.g. 34), format as Lớp Name · Khối 34 · X bài
+  assert.equal(
+    formatClassOptionLabel({ name: 'IC2283', courseCode: '34', assignmentCount: 6 }),
+    'Lớp IC2283 · Khối 34 · 6 bài'
+  );
+
+  assert.equal(
+    formatClassOptionLabel({ name: 'C03-A', courseCode: '03', assignmentCount: 4 }),
+    'Lớp C03-A · Khối 03 · 4 bài'
+  );
+});
+
+test('extractPhase detects phase from numeric phase or assignment title', () => {
+  assert.equal(extractPhase(1, 'IZONE · Khối 34 (Phase 1) · Test 1 · IC2283'), 'Phase 1');
+  assert.equal(extractPhase(2, 'IZONE · Khối 34 (Phase 2) · Test 2 · IC2283'), 'Phase 2');
+
+  // When phase is null/undefined in DB, extract from title
+  assert.equal(extractPhase(null, 'IZONE · Khối 34 (Phase 1) · Test 3 · IC2283'), 'Phase 1');
+  assert.equal(extractPhase(undefined, 'IZONE · Khối 34 (Phase 2) · Test 1 · IC2283'), 'Phase 2');
+
+  // When test has no phase (e.g. Khối 03), return null
+  assert.equal(extractPhase(null, 'IZONE · Khối 03 · Test 1'), null);
+});
+
+test('formatAssignmentMeta creates clean Lớp, Khối, and Phase badges without Khối ClassName', () => {
+  const meta1 = formatAssignmentMeta({
+    className: 'IC2283',
+    courseCode: 'IC2283',
+    phase: null,
+    title: 'IZONE · Khối 34 (Phase 1) · Test 3 · IC2283'
+  });
+
+  assert.equal(meta1.classLabel, 'Lớp IC2283');
+  assert.equal(meta1.courseLabel, 'Khối 34');
+  assert.equal(meta1.phaseLabel, 'Phase 1');
+
+  const meta2 = formatAssignmentMeta({
+    className: 'C03-A',
+    courseCode: '03',
+    phase: null,
+    title: 'IZONE · Khối 03 · Test 1 · C03-A'
+  });
+
+  assert.equal(meta2.classLabel, 'Lớp C03-A');
+  assert.equal(meta2.courseLabel, 'Khối 03');
+  assert.equal(meta2.phaseLabel, null);
+});
+
+test('teacher dashboard index.html provides #assignment-select and #selected-assignment-card', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /<select[^>]*id="assignment-select"/);
+  assert.match(html, /id="selected-assignment-card"/);
+});
+
+test('teacher dashboard styles.css provides .control-toolbar, .selected-assignment-card, and compact assignment chips styles', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.control-toolbar/);
+  assert.match(css, /\.selected-assignment-card/);
+  assert.match(css, /\.assignment-chip/);
 });
 
 

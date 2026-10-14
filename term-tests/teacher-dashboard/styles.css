@@ -21,6 +21,162 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 .assignment-card.selected { border: 2px solid #db0829; background: #fff7f8; }
 .assignment-card .status { width: fit-content; padding: 4px 9px; border-radius: 99px; background: #e8eef5; font-size: .85rem; }
 
+/* Control Toolbar & Dropdowns */
+.control-toolbar {
+  padding: 18px 24px;
+}
+.control-toolbar .toolbar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.control-toolbar label {
+  font-size: 0.92rem;
+  color: #1e293b;
+}
+.control-toolbar select {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  font-weight: 500;
+  color: #0f172a;
+}
+.control-toolbar select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Selected Assignment Showcase Card */
+.selected-assignment-card {
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #2563eb;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+.showcase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.showcase-title-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.showcase-badge-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: #ede9fe;
+  color: #6d28d9;
+  letter-spacing: 0.02em;
+}
+.showcase-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+.showcase-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.meta-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+}
+.meta-pill.status-pill {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #059669;
+  font-weight: 700;
+}
+.showcase-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.showcase-window {
+  font-size: 0.88rem;
+  color: #64748b;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.window-label {
+  font-weight: 600;
+  color: #475569;
+}
+
+/* Compact Assignment Chips */
+.assignment-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.assignment-chip {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  width: auto;
+  min-width: 140px;
+}
+.assignment-chip:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+.assignment-chip.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+.assignment-chip .chip-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.assignment-chip .chip-meta {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+.assignment-chip.selected .chip-meta {
+  color: #3b82f6;
+}
+
 .results-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 4px; min-width: 0; max-width: 100%; }
 .meta-info { margin: 4px 0 0; color: #64748b; font-size: 0.95rem; }
 .refresh-container { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }

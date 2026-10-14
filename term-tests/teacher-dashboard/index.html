@@ -78,11 +78,45 @@
       <button type="submit">Tải lớp được phép</button>
     </form>
 
-    <section class="panel">
-      <label>Chọn lớp <select id="class-select"><option value="">Chọn lớp</option></select></label>
+    <section class="panel control-toolbar">
+      <div class="toolbar-grid">
+        <label>Chọn lớp
+          <select id="class-select"><option value="">-- Chọn lớp --</option></select>
+        </label>
+        <label>Chọn bài test
+          <select id="assignment-select" disabled><option value="">-- Chọn bài test --</option></select>
+        </label>
+      </div>
       <p id="status" aria-live="polite">Chưa tải dữ liệu.</p>
     </section>
-    <section id="assignments" class="assignment-grid" aria-label="Bài được giao"></section>
+
+    <section id="selected-assignment-card" class="panel selected-assignment-card" hidden aria-label="Thông tin bài test đang chọn">
+      <div class="showcase-header">
+        <div class="showcase-title-area">
+          <span class="showcase-badge-pill" id="showcase-badge-class">Lớp —</span>
+          <h2 id="showcase-title" class="showcase-title">—</h2>
+        </div>
+        <div class="showcase-badges" id="showcase-badges">
+          <span class="meta-pill" id="showcase-block-badge">Khối —</span>
+          <span class="meta-pill" id="showcase-phase-badge" hidden>Phase —</span>
+          <span class="meta-pill status-pill" id="showcase-status-badge">Đang phát hành</span>
+        </div>
+      </div>
+      <div class="showcase-details">
+        <div class="showcase-window" id="showcase-window">
+          <span class="window-label">Thời hạn làm bài:</span>
+          <span id="showcase-window-text">—</span>
+        </div>
+        <div id="showcase-link-bar" class="assignment-link-bar">
+          <span class="link-label">🔗 Link làm bài cho học viên:</span>
+          <input id="showcase-student-url" type="text" readonly class="student-url-input">
+          <button id="copy-showcase-link-btn" type="button" class="btn-secondary">Sao chép link</button>
+          <a id="open-showcase-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">Mở trang thi ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="assignments" class="assignment-grid assignment-chips" aria-label="Danh sách bài được giao"></section>
     <section id="results" class="panel" hidden aria-label="Bảng kết quả">
       <div class="results-header">
         <div>

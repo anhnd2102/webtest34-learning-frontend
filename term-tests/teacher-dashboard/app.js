@@ -62,6 +62,53 @@ export function resetDashboardState(state = {}) {
   return state;
 }
 
+export function formatClassOptionLabel({ name, courseCode, assignmentCount }) {
+  const normName = String(name || '').trim();
+  const normCode = String(courseCode || '').trim();
+  const count = Number(assignmentCount || 0);
+
+  // If courseCode is the same as class name or looks like a class code (e.g. IC2283)
+  if (normCode && normCode.toLowerCase() !== normName.toLowerCase()) {
+    const courseNum = normCode.replace(/^[^\d]*/, '');
+    const cleanCourse = courseNum ? `Khối ${courseNum}` : `Khối ${normCode}`;
+    return `Lớp ${normName} · ${cleanCourse} · ${count} bài`;
+  }
+  return `Lớp ${normName} · ${count} bài`;
+}
+
+export function extractPhase(phase, title = '') {
+  if (phase !== null && phase !== undefined && phase !== '') {
+    const num = Number(phase);
+    if (Number.isFinite(num)) return `Phase ${num}`;
+  }
+  if (typeof title === 'string' && title) {
+    const match = title.match(/Phase\s*(\d+)/i);
+    if (match) return `Phase ${match[1]}`;
+  }
+  return null;
+}
+
+export function formatAssignmentMeta({ className, courseCode, phase, title }) {
+  const normClass = String(className || '').trim();
+  let normCourse = String(courseCode || '').trim();
+
+  // If courseCode is identical to className or is a class name, infer from title
+  if (!normCourse || normCourse.toLowerCase() === normClass.toLowerCase()) {
+    if (typeof title === 'string') {
+      const match = title.match(/Khối\s*(\d+)/i);
+      if (match) normCourse = match[1];
+    }
+  }
+
+  const classLabel = normClass ? (normClass.startsWith('Lớp') ? normClass : `Lớp ${normClass}`) : '—';
+  const courseLabel = normCourse && normCourse.toLowerCase() !== normClass.toLowerCase()
+    ? (normCourse.startsWith('Khối') ? normCourse : `Khối ${normCourse}`)
+    : '—';
+  const phaseLabel = extractPhase(phase, title);
+
+  return { classLabel, courseLabel, phaseLabel };
+}
+
 export function fixtureHeaders({ actorId }) {
   return { 'X-Teacher-Fixture-Id': actorId.trim() };
 }
@@ -487,6 +534,18 @@ export function formatSubmissionTimestamp(dateStr, locale = 'vi-VN', timeZone = 
 async function startDashboard() {
   const form = document.querySelector('#identity-form');
   const classSelect = document.querySelector('#class-select');
+  const assignmentSelect = document.querySelector('#assignment-select');
+  const selectedAssignmentCard = document.querySelector('#selected-assignment-card');
+  const showcaseBadgeClass = document.querySelector('#showcase-badge-class');
+  const showcaseTitle = document.querySelector('#showcase-title');
+  const showcaseBlockBadge = document.querySelector('#showcase-block-badge');
+  const showcasePhaseBadge = document.querySelector('#showcase-phase-badge');
+  const showcaseStatusBadge = document.querySelector('#showcase-status-badge');
+  const showcaseWindowText = document.querySelector('#showcase-window-text');
+  const showcaseLinkBar = document.querySelector('#showcase-link-bar');
+  const showcaseStudentUrl = document.querySelector('#showcase-student-url');
+  const copyShowcaseLinkBtn = document.querySelector('#copy-showcase-link-btn');
+  const openShowcaseLinkBtn = document.querySelector('#open-showcase-link-btn');
   const assignments = document.querySelector('#assignments');
   const results = document.querySelector('#results');
   const resultsContent = document.querySelector('#results-content');
@@ -498,6 +557,7 @@ async function startDashboard() {
   const publishAllBtn = document.querySelector('#publish-all-btn');
   const classSkillSummary = document.querySelector('#class-skill-summary');
   let currentResultsPayload = null;
+  let currentAssignmentsList = [];
 
   const addStudentBtn = document.querySelector('#add-student-btn');
   const addStudentModal = document.querySelector('#add-student-modal');
@@ -590,6 +650,79 @@ async function startDashboard() {
         document.execCommand('copy');
       }
     });
+  }
+
+  if (copyShowcaseLinkBtn) {
+    copyShowcaseLinkBtn.addEventListener('click', async () => {
+      const url = showcaseStudentUrl?.value;
+      if (!url) return;
+      try {
+        await navigator.clipboard.writeText(url);
+        const originalText = copyShowcaseLinkBtn.textContent;
+        copyShowcaseLinkBtn.textContent = '✓ Đã sao chép!';
+        setTimeout(() => { copyShowcaseLinkBtn.textContent = originalText; }, 2000);
+      } catch {
+        showcaseStudentUrl?.select();
+        document.execCommand('copy');
+      }
+    });
+  }
+
+  function renderSelectedAssignmentShowcase(assignment) {
+    if (!selectedAssignmentCard) return;
+    if (!assignment) {
+      selectedAssignmentCard.hidden = true;
+      if (assignmentStudentUrl) assignmentStudentUrl.value = '';
+      if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
+      if (assignmentLinkBar) assignmentLinkBar.hidden = true;
+      if (showcaseStudentUrl) showcaseStudentUrl.value = '';
+      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = '#';
+      if (showcaseLinkBar) showcaseLinkBar.hidden = true;
+      return;
+    }
+
+    selectedAssignmentCard.hidden = false;
+    const selectedClassOpt = classSelect?.selectedOptions?.[0];
+    const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
+
+    const meta = formatAssignmentMeta({
+      className: currentClassName,
+      courseCode: assignment.courseCode,
+      phase: assignment.phase,
+      title: assignment.title
+    });
+
+    if (showcaseBadgeClass) showcaseBadgeClass.textContent = meta.classLabel;
+    if (showcaseTitle) showcaseTitle.textContent = assignment.title;
+    if (showcaseBlockBadge) showcaseBlockBadge.textContent = meta.courseLabel;
+    if (showcasePhaseBadge) {
+      if (meta.phaseLabel) {
+        showcasePhaseBadge.textContent = meta.phaseLabel;
+        showcasePhaseBadge.hidden = false;
+      } else {
+        showcasePhaseBadge.hidden = true;
+      }
+    }
+    if (showcaseStatusBadge) {
+      showcaseStatusBadge.textContent = assignment.status === 'published' ? 'Đang phát hành' : assignment.status;
+    }
+    if (showcaseWindowText) {
+      showcaseWindowText.textContent = formatAssignmentWindow(assignment.opensAt, assignment.closesAt);
+    }
+
+    if (assignment.studentUrl) {
+      if (showcaseStudentUrl) showcaseStudentUrl.value = assignment.studentUrl;
+      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = assignment.studentUrl;
+      if (showcaseLinkBar) showcaseLinkBar.hidden = false;
+
+      // Also sync legacy assignmentLinkBar
+      if (assignmentStudentUrl) assignmentStudentUrl.value = assignment.studentUrl;
+      if (openStudentLinkBtn) openStudentLinkBtn.href = assignment.studentUrl;
+      if (assignmentLinkBar) assignmentLinkBar.hidden = false;
+    } else {
+      if (showcaseLinkBar) showcaseLinkBar.hidden = true;
+      if (assignmentLinkBar) assignmentLinkBar.hidden = true;
+    }
   }
 
   let currentAttemptDetail = null;
@@ -694,11 +827,25 @@ async function startDashboard() {
   }
 
   function renderResults(payload) {
+    if (!payload || !payload.assignment) {
+      if (results) results.hidden = true;
+      if (resultsContent) resultsContent.replaceChildren();
+      return;
+    }
     currentResultsPayload = payload;
     resultsContent.replaceChildren();
     if (assignmentHeading) assignmentHeading.textContent = payload.assignment.title;
     if (assignmentMeta) {
-      assignmentMeta.textContent = `${payload.assignment.className} · Khối ${payload.assignment.courseCode} · Phiên bản ${payload.assignment.formVersion}`;
+      const meta = formatAssignmentMeta({
+        className: payload.assignment.className,
+        courseCode: payload.assignment.courseCode,
+        phase: payload.assignment.phase,
+        title: payload.assignment.title
+      });
+      const parts = [meta.classLabel, meta.courseLabel];
+      if (meta.phaseLabel) parts.push(meta.phaseLabel);
+      parts.push(`Phiên bản ${payload.assignment.formVersion}`);
+      assignmentMeta.textContent = parts.join(' · ');
     }
 
     if (assignmentLinkBar) {
@@ -1448,59 +1595,78 @@ async function startDashboard() {
 
   async function loadAssignments(classId, selectedAssignmentId = '') {
     assignments.replaceChildren();
-    if (assignmentStudentUrl) assignmentStudentUrl.value = '';
-    if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
-    if (assignmentLinkBar) assignmentLinkBar.hidden = true;
+    if (assignmentSelect) {
+      assignmentSelect.replaceChildren(new Option('-- Chọn bài test --', ''));
+      assignmentSelect.disabled = !classId;
+    }
+    renderSelectedAssignmentShowcase(null);
+    currentAssignmentsList = [];
     await loadResults('', '');
     if (!classId) return;
+
     status.textContent = 'Đang tải bài được giao…';
     const payload = await request(`/api/teacher/classes/${encodeURIComponent(classId)}/assignments`);
+    currentAssignmentsList = payload.assignments || [];
     let selectedExists = false;
-    for (const assignment of payload.assignments) {
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.className = `assignment-card${assignment.assignmentId === selectedAssignmentId ? ' selected' : ''}`;
-      if (assignment.assignmentId === selectedAssignmentId) selectedExists = true;
-      const linkSnippet = assignment.studentUrl
-        ? `<span class="card-link-row"><span class="card-copy-btn" data-url="${encodeURIComponent(assignment.studentUrl)}">📋 Sao chép link học viên</span></span>`
-        : '';
-      card.innerHTML = `<strong>${assignment.title}</strong><span>Khối ${assignment.courseCode} · Phase ${assignment.phase ?? '—'}</span><span>${formatAssignmentWindow(assignment.opensAt, assignment.closesAt)}</span><span class="status">${assignment.status}</span>${linkSnippet}`;
-      card.addEventListener('click', (e) => {
-        const copyBtn = e.target.closest('.card-copy-btn');
-        if (copyBtn) {
-          e.stopPropagation();
-          const targetUrl = decodeURIComponent(copyBtn.dataset.url);
-          navigator.clipboard.writeText(targetUrl).then(() => {
-            const original = copyBtn.textContent;
-            copyBtn.textContent = '✓ Đã chép!';
-            setTimeout(() => { copyBtn.textContent = original; }, 1500);
-          }).catch(() => {});
-          return;
+
+    if (assignmentSelect) {
+      assignmentSelect.disabled = false;
+      for (const assignment of currentAssignmentsList) {
+        const phaseLabel = extractPhase(assignment.phase, assignment.title);
+        const optLabel = phaseLabel ? `${assignment.title} (${phaseLabel})` : assignment.title;
+        const opt = new Option(optLabel, assignment.assignmentId);
+        if (assignment.assignmentId === selectedAssignmentId) {
+          opt.selected = true;
+          selectedExists = true;
         }
-        assignments.querySelectorAll('.selected').forEach(node => node.classList.remove('selected'));
-        card.classList.add('selected');
-        state.classId = classId;
-        state.assignmentId = assignment.assignmentId;
-        state.page = 1;
-        setUrl();
-        if (assignmentStudentUrl) assignmentStudentUrl.value = assignment.studentUrl || '';
-        if (openStudentLinkBtn) openStudentLinkBtn.href = assignment.studentUrl || '#';
-        if (assignmentLinkBar) assignmentLinkBar.hidden = !assignment.studentUrl;
-        loadResults(classId, assignment.assignmentId).catch(error => { status.textContent = error.message; });
+        assignmentSelect.add(opt);
+      }
+    }
+
+    function selectAssignment(assignmentId) {
+      state.classId = classId;
+      state.assignmentId = assignmentId;
+      state.attemptId = '';
+      state.page = 1;
+      setUrl();
+      if (assignmentSelect) assignmentSelect.value = assignmentId;
+      assignments.querySelectorAll('.selected').forEach(node => node.classList.remove('selected'));
+      const matchingChip = assignments.querySelector(`[data-assignment-id="${assignmentId}"]`);
+      if (matchingChip) matchingChip.classList.add('selected');
+
+      const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === assignmentId);
+      renderSelectedAssignmentShowcase(activeAssignment);
+      loadResults(classId, assignmentId).catch(error => { status.textContent = error.message; });
+    }
+
+    for (const assignment of currentAssignmentsList) {
+      const isSelected = assignment.assignmentId === selectedAssignmentId;
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = `assignment-chip${isSelected ? ' selected' : ''}`;
+      chip.dataset.assignmentId = assignment.assignmentId;
+      if (isSelected) selectedExists = true;
+
+      const phaseLabel = extractPhase(assignment.phase, assignment.title);
+      chip.innerHTML = `
+        <span class="chip-title">${escapeHtml(assignment.title)}</span>
+        <span class="chip-meta">${escapeHtml(phaseLabel ? `${phaseLabel} · ${assignment.status}` : assignment.status)}</span>
+      `;
+      chip.addEventListener('click', () => {
+        selectAssignment(assignment.assignmentId);
       });
-      assignments.append(card);
+      assignments.append(chip);
     }
-    status.textContent = `${payload.assignments.length} bài được giao`;
-    const activeAssignment = payload.assignments.find(a => a.assignmentId === (selectedAssignmentId || state.assignmentId));
+
+    status.textContent = `${currentAssignmentsList.length} bài được giao`;
+
+    const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === (selectedAssignmentId || state.assignmentId));
     if (activeAssignment) {
-      if (assignmentStudentUrl) assignmentStudentUrl.value = activeAssignment.studentUrl || '';
-      if (openStudentLinkBtn) openStudentLinkBtn.href = activeAssignment.studentUrl || '#';
-      if (assignmentLinkBar) assignmentLinkBar.hidden = !activeAssignment.studentUrl;
+      renderSelectedAssignmentShowcase(activeAssignment);
     } else {
-      if (assignmentStudentUrl) assignmentStudentUrl.value = '';
-      if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
-      if (assignmentLinkBar) assignmentLinkBar.hidden = true;
+      renderSelectedAssignmentShowcase(null);
     }
+
     if (selectedExists) {
       await loadResults(classId, selectedAssignmentId);
       if (state.attemptId) {
@@ -1524,9 +1690,9 @@ async function startDashboard() {
   async function loadClasses() {
     status.textContent = 'Đang kiểm tra quyền…';
     const payload = await request('/api/teacher/classes');
-    classSelect.replaceChildren(new Option('Chọn lớp', ''));
+    classSelect.replaceChildren(new Option('-- Chọn lớp --', ''));
     for (const item of payload.classes) {
-      classSelect.add(new Option(`${item.name} · Khối ${item.courseCode} · ${item.assignmentCount} bài`, item.classId));
+      classSelect.add(new Option(formatClassOptionLabel(item), item.classId));
     }
     classSelect.value = state.classId;
     status.textContent = `${payload.classes.length} lớp được phép truy cập`;
@@ -2193,9 +2359,13 @@ async function startDashboard() {
     }
     if (teacherProfile) teacherProfile.hidden = true;
     if (loginForm) loginForm.hidden = false;
-    if (loginPhone) loginPhone.value = '';
-    if (classSelect) classSelect.replaceChildren(new Option('Chọn lớp', ''));
-    if (assignments) assignments.replaceChildren();
+    if (classSelect) classSelect.replaceChildren(new Option('-- Chọn lớp --', ''));
+    if (assignmentSelect) {
+      assignmentSelect.replaceChildren(new Option('-- Chọn bài test --', ''));
+      assignmentSelect.disabled = true;
+    }
+    if (selectedAssignmentCard) selectedAssignmentCard.hidden = true;
+    currentAssignmentsList = [];
     if (results) results.hidden = true;
     if (resultsContent) resultsContent.replaceChildren();
     if (classSkillSummary) classSkillSummary.replaceChildren();
@@ -2339,10 +2509,37 @@ async function startDashboard() {
   classSelect.addEventListener('change', () => {
     state.classId = classSelect.value;
     state.assignmentId = '';
+    state.attemptId = '';
     state.page = 1;
     setUrl();
+    if (assignmentSelect) {
+      assignmentSelect.value = '';
+    }
+    renderSelectedAssignmentShowcase(null);
     loadAssignments(classSelect.value).catch(error => { status.textContent = error.message; });
   });
+
+  if (assignmentSelect) {
+    assignmentSelect.addEventListener('change', () => {
+      const selectedId = assignmentSelect.value;
+      state.assignmentId = selectedId;
+      state.attemptId = '';
+      state.page = 1;
+      setUrl();
+      if (selectedId && state.classId) {
+        assignments.querySelectorAll('.selected').forEach(node => node.classList.remove('selected'));
+        const matchingChip = assignments.querySelector(`[data-assignment-id="${selectedId}"]`);
+        if (matchingChip) matchingChip.classList.add('selected');
+
+        const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === selectedId);
+        renderSelectedAssignmentShowcase(activeAssignment);
+        loadResults(state.classId, selectedId).catch(error => { status.textContent = error.message; });
+      } else {
+        renderSelectedAssignmentShowcase(null);
+        loadResults('', '').catch(() => {});
+      }
+    });
+  }
 
   // Light periodic polling every 30 seconds if visible and active
   setInterval(() => {
