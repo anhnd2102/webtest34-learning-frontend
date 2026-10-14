@@ -367,6 +367,33 @@ export function formatCurrentTime(date = new Date(), locale = 'vi-VN', timeZone 
   }).format(date);
 }
 
+export function incidentTypeLabel(type) {
+  return ({ left_exam: 'Rời khỏi bài thi', device_switch: 'Đổi thiết bị' })[type] || type || 'Sự cố';
+}
+
+export function formatIncidentDuration(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return '—';
+  const total = Math.floor(seconds);
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const remainder = total % 60;
+  return [hours && `${hours} giờ`, minutes && `${minutes} phút`, remainder && `${remainder} giây`]
+    .filter(Boolean).join(' ') || '0 giây';
+}
+
+export function formatIncidentTimeline(incidents = []) {
+  const timestamp = value => value ? new Intl.DateTimeFormat('vi-VN', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Ho_Chi_Minh'
+  }).format(new Date(value)) : '—';
+  return incidents.map(incident => ({
+    incidentId: incident.incidentId,
+    typeLabel: incidentTypeLabel(incident.type),
+    startedAt: timestamp(incident.startedAt),
+    endedAt: incident.endedAt ? timestamp(incident.endedAt) : 'Đang diễn ra',
+    duration: formatIncidentDuration(incident.durationSeconds)
+  }));
+}
+
 export const CANONICAL_SKILL_LABELS = {
   vocabulary: 'Vocabulary',
   vocabulary_listen_write: 'Vocabulary',
@@ -708,6 +735,7 @@ async function startDashboard() {
   const detailHeading = document.querySelector('#detail-heading');
   const detailMeta = document.querySelector('#detail-meta');
   const detailScores = document.querySelector('#detail-scores');
+  const detailIncidents = document.querySelector('#detail-incidents');
   const detailItems = document.querySelector('#detail-items');
   const detailAttemptHistory = document.querySelector('#detail-attempt-history');
   const detailGradingHistory = document.querySelector('#detail-grading-history');
@@ -1194,12 +1222,13 @@ async function startDashboard() {
       const label = CANONICAL_SKILL_LABELS[normCode] || (code.charAt(0).toUpperCase() + code.slice(1));
       headerRow.append(createScoreHeader(label, skill.maximum));
     }
+    headerRow.append(createTextHeader('Sự cố'));
     headerRow.append(createTextHeader('Nộp lúc'));
     headerRow.append(createTextHeader('Thao tác'));
     head.append(headerRow);
     const body = document.createElement('tbody');
 
-    const totalColumns = 4 + payload.skills.length;
+    const totalColumns = 5 + payload.skills.length;
     if (payload.students.length === 0) {
       const emptyRow = document.createElement('tr');
       const emptyCell = document.createElement('td');
@@ -1261,6 +1290,10 @@ async function startDashboard() {
           skillCell.innerHTML = `<span class="score-skill">${escapeHtml(skVal)}</span>`;
           row.append(skillCell);
         }
+
+        const incidentCell = document.createElement('td');
+        incidentCell.textContent = student.attemptId ? String(student.incidentCount ?? 0) : '—';
+        row.append(incidentCell);
 
         // 5. Submitted At Cell: Two-line layout (Line 1: Time, Line 2: Date)
         const submittedCell = document.createElement('td');
@@ -1347,6 +1380,7 @@ async function startDashboard() {
         `Bài: ${payload.assignment.title}`,
         `Phiên bản đề: ${payload.attempt.formVersion}`,
         `Trạng thái: ${attemptStatusLabel(payload.attempt.status)}`,
+        `Sự cố: ${payload.incidentCount ?? payload.incidents?.length ?? 0}`,
         `Bắt đầu: ${payload.attempt.startedAt ? formatAssignmentWindow(payload.attempt.startedAt, null).split(' → ')[0] : '—'}`,
         `Nộp lúc: ${payload.attempt.submittedAt ? formatAssignmentWindow(payload.attempt.submittedAt, null).split(' → ')[0] : 'Chưa nộp'}`
       ];
@@ -1394,6 +1428,30 @@ async function startDashboard() {
         card.className = 'score-card';
         card.innerHTML = `<strong>${skill.code.toUpperCase()}</strong><span class="score-val">${formatDashboardScore(skillScore)}</span>`;
         detailScores.append(card);
+      }
+    }
+
+    if (detailIncidents) {
+      detailIncidents.replaceChildren();
+      const incidents = formatIncidentTimeline(payload.incidents || []);
+      if (!incidents.length) {
+        detailIncidents.textContent = 'Không có sự cố được ghi nhận.';
+      } else {
+        const table = document.createElement('table');
+        table.className = 'mini-table';
+        table.innerHTML = '<thead><tr><th>Loại</th><th>Bắt đầu</th><th>Kết thúc</th><th>Thời lượng</th></tr></thead>';
+        const body = document.createElement('tbody');
+        for (const incident of incidents) {
+          const row = document.createElement('tr');
+          for (const value of [incident.typeLabel, incident.startedAt, incident.endedAt, incident.duration]) {
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            row.append(cell);
+          }
+          body.append(row);
+        }
+        table.append(body);
+        detailIncidents.append(table);
       }
     }
 
