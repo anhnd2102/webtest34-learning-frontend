@@ -23,7 +23,7 @@ Workspace nằm tại `webtest34-learning-frontend/`; không nhầm với
 
 ## Boundary và route
 
-- `term-tests/webtest-34/index.html` là landing page.
+- `index.html` ở root chuyển hướng tới `term-tests/teacher-dashboard/index.html`; `term-tests/webtest-34/index.html` là landing page chọn bài.
 - `term-tests/webtest-34/test-1/index.html` là entry point cho Test 1.
 - `term-tests/webtest-34-demo/index.html` là canonical renderer duy nhất.
 - `term-tests/webtest-34-demo/config.js` giữ API origin và public audio config.

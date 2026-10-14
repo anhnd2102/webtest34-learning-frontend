@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Webtest 34 Learning</title>
+  <title>Teacher Dashboard</title>
 </head>
 <body>
   <main>
     <p>Đang mở trang bài kiểm tra…</p>
     <noscript>
-      <p><a href="term-tests/webtest-34/index.html">Mở Webtest 34</a></p>
+      <p><a href="term-tests/teacher-dashboard/index.html">Mở Teacher Dashboard</a></p>
     </noscript>
   </main>
   <script>
-    const landingUrl = new URL('term-tests/webtest-34/index.html', window.location.href);
-    landingUrl.searchParams.set('v', Date.now().toString());
+    const dashboardUrl = new URL('term-tests/teacher-dashboard/index.html', window.location.href);
+    dashboardUrl.searchParams.set('v', Date.now().toString());
     if (window.location.hash) {
-      landingUrl.hash = window.location.hash.slice(1);
+      dashboardUrl.hash = window.location.hash.slice(1);
     }
-    window.location.replace(landingUrl.href);
+    window.location.replace(dashboardUrl.href);
   </script>
 </body>
 </html>
