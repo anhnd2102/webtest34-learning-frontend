@@ -3,6 +3,7 @@ import '../term-tests/webtest-34-demo/exam-guard.js';
 import test from 'node:test';
 
 const reduce = globalThis.examGuardReducer;
+const withDeviceId = globalThis.examDeviceRequestBody;
 const initial = { running: true, fullscreenSupported: true };
 
 test('combines tab and fullscreen exits within two seconds into one incident', () => {
@@ -45,4 +46,20 @@ test('opens an incident while running and closes the same incident from the retu
   assert.ok(left.commands.some(command => command.type === 'open_incident' && command.incidentId === 'incident-1'));
   assert.ok(returned.commands.some(command => command.type === 'close_incident' && command.incidentId === 'incident-1'));
   assert.ok(returned.commands.some(command => command.type === 'request_fullscreen'));
+});
+
+test('a superseded tab is locked and cannot resume the attempt', () => {
+  const result = reduce(initial, { type: 'device_superseded' });
+  const returned = reduce(result.state, { type: 'return_click', at: 2000 });
+
+  assert.equal(result.state.superseded, true);
+  assert.equal(result.state.prompt, true);
+  assert.deepEqual(result.commands, []);
+  assert.deepEqual(returned.commands, []);
+});
+
+test('attempt request bodies carry the tab device id without dropping existing fields', () => {
+  assert.deepEqual(withDeviceId({attemptToken: 'attempt-1', revision: 3}, 'device-b'), {
+    attemptToken: 'attempt-1', revision: 3, deviceId: 'device-b'
+  });
 });

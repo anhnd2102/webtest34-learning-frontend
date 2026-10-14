@@ -12,7 +12,7 @@
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
-  <script src="exam-guard.js?rev=20261015-exam-guard-v1"></script>
+  <script src="exam-guard.js?rev=20261015-exam-guard-device-id-v2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -565,6 +565,15 @@
   }
 
   const state = loadState();
+  const deviceId = (() => {
+    try{
+      let id = sessionStorage.getItem('webtest34.learning.deviceId');
+      if(!id) sessionStorage.setItem('webtest34.learning.deviceId', id = createClientKey());
+      return id;
+    }catch{
+      return createClientKey();
+    }
+  })();
   let currentSection = state.currentSection || 'vocabulary';
   let fontScale = state.fontScale || 1;
   let learningDraftChain = Promise.resolve();
@@ -604,12 +613,15 @@
   }
 
   async function learningRequest(path, body){
+    if(state.learning?.status === 'superseded' && path.startsWith('/attempts/')){
+      throw Object.assign(new Error('Bài thi đang được mở ở máy khác. Nếu không phải bạn, hãy báo giáo viên.'), {code: 'DEVICE_SUPERSEDED'});
+    }
     const config = learningConfig();
     const response = await fetch(`${config.baseUrl}/api/learning${path}`, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       cache: 'no-store',
-      body: JSON.stringify(body)
+      body: JSON.stringify(path.startsWith('/attempts/') ? window.examDeviceRequestBody(body, deviceId) : body)
     });
     const data = await response.json().catch(() => ({}));
     if(!response.ok) {
@@ -651,7 +663,7 @@
 
   async function consumeExamEvents(signal){
     const config = learningConfig();
-    const response = await fetch(`${config.baseUrl}/api/learning/attempts/events`, {
+    const response = await fetch(`${config.baseUrl}/api/learning/attempts/events?deviceId=${encodeURIComponent(deviceId)}`, {
       headers: {Authorization: `Bearer ${state.learning.attemptToken}`},
       cache: 'no-store', signal
     });
@@ -677,22 +689,28 @@
           await applyExamStarted(JSON.parse(data));
         }else if(event === 'exam.extended' && data){
           applyExamExtended(JSON.parse(data));
+        }else if(event === 'device.superseded'){
+          state.learning.status = 'superseded';
+          persist();
+          dispatchExamGuard({type: 'device_superseded'});
+          examStreamController?.abort();
+          return;
         }
       }
     }
   }
 
   async function connectExamEvents(){
-    if(examStreamController || !state.learning?.attemptToken || state.learning.status === 'submitted') return;
+    if(examStreamController || !state.learning?.attemptToken || ['submitted', 'superseded'].includes(state.learning.status)) return;
     const controller = new AbortController();
     examStreamController = controller;
-    while(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted'){
+    while(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && !['submitted', 'superseded'].includes(state.learning.status)){
       try{
         await consumeExamEvents(controller.signal);
       }catch(error){
         if(controller.signal.aborted) break;
       }
-      if(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted'){
+      if(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && !['submitted', 'superseded'].includes(state.learning.status)){
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
@@ -705,7 +723,8 @@
 
   async function sendLearningAudioCheckpoint(body, keepalive){
     if(!keepalive) return learningRequest('/attempts/audio/checkpoint', body);
-    const payload = JSON.stringify(body);
+    if(state.learning?.status === 'superseded') return Promise.reject(Object.assign(new Error('Bài thi đang được mở ở máy khác. Nếu không phải bạn, hãy báo giáo viên.'), {code: 'DEVICE_SUPERSEDED'}));
+    const payload = JSON.stringify(window.examDeviceRequestBody(body, deviceId));
     const blob = new Blob([payload], {type: 'application/json'});
     try{
       if(typeof navigator.sendBeacon === 'function' && navigator.sendBeacon(audioCheckpointUrl(), blob)){
@@ -845,7 +864,7 @@
   }
 
   function queueLearningDraft(){
-    if(!learningEnabled() || !state.learning?.attemptToken || state.submittedAt) return;
+    if(!learningEnabled() || !state.learning?.attemptToken || state.submittedAt || state.learning?.status === 'superseded') return;
     const revision = Number(state.learning.draftRevision || 0) + 1;
     state.learning.draftRevision = revision;
     learningDraftChain = learningDraftChain.then(async () => {
@@ -1348,7 +1367,7 @@
     $('#examApp').classList.add('submitted-readonly');
     $$('#examApp input, #examApp textarea, #examApp select').forEach(el => { el.disabled = true; });
     $$('#examApp [data-prev], #examApp [data-next], #mobilePrev, #mobileNext').forEach(el => { el.disabled = true; });
-    $('#saveState').textContent = 'Đã nộp · chỉ xem kết quả';
+    $('#saveState').textContent = state.learning?.status === 'superseded' ? 'Đã khóa · chỉ xem' : 'Đã nộp · chỉ xem kết quả';
   }
 
   // ================= Audio preflight + phát một lần =================
@@ -2138,7 +2157,8 @@
     const operation = previous.catch(() => opening ? undefined : learningRequest('/attempts/exam/incidents/open', {...body, type: 'left_exam'}))
       .then(() => learningRequest(path, body));
     examIncidentOperations.set(command.incidentId, operation);
-    void operation.catch(() => {
+    void operation.catch(error => {
+      if(error.code === 'DEVICE_SUPERSEDED') return;
       examGuardMessage.textContent = 'Không thể lưu sự cố rời bài. Hãy giữ trang mở và thử quay lại bài thi.';
     });
   }
@@ -2177,7 +2197,17 @@
     examGuardState = result.state;
     examGuardOverlay.classList.toggle('hidden', !examGuardState.prompt);
     $('#examApp').classList.toggle('exam-guard-blurred', Boolean(examGuardState.prompt));
-    if(examGuardState.prompt && document.visibilityState !== 'hidden') $('#examGuardReturn').focus();
+    if(examGuardState.superseded){
+      state.learning.status = 'superseded';
+      document.querySelector('main').inert = true;
+      $('#mobileBottom').inert = true;
+      examGuardMessage.textContent = 'Bài thi đang được mở ở máy khác. Nếu không phải bạn, hãy báo giáo viên.';
+      $('#examGuardReturn').hidden = true;
+      lockSubmittedAttempt();
+    }else if(examGuardState.prompt && document.visibilityState !== 'hidden'){
+      $('#examGuardReturn').hidden = false;
+      $('#examGuardReturn').focus();
+    }
     for(const command of result.commands) runExamGuardCommand(command);
   }
   window.addEventListener('blur', () => dispatchExamGuard({
@@ -2278,6 +2308,11 @@
   async function initializePage(){
     void preloadAudioInOrder().catch(console.warn);
     if(state.startedAt && state.studentName && state.classCode){
+      if(state.learning?.status === 'superseded'){
+        showExam();
+        dispatchExamGuard({type: 'device_superseded'});
+        return;
+      }
       if(learningEnabled() && state.learning?.attemptToken){
         try{
           await restoreAudioResume();
