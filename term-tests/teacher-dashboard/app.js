@@ -1,3 +1,5 @@
+import { parseSseChunk } from './exam-room-sse.js';
+
 export function defaultApiBase() {
   return 'https://webtest.ducanhn.autos';
 }
@@ -226,6 +228,10 @@ export function assignmentExamModePath(classId, assignmentId) {
 
 export function assignmentExamRoomPath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/room`;
+}
+
+export function assignmentExamEventsPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/events`;
 }
 
 export function assignmentExamStartPath(classId, assignmentId) {
@@ -775,6 +781,9 @@ async function startDashboard() {
   }
 
   function renderSelectedAssignmentShowcase(assignment) {
+    stopExamRoomEvents();
+    activeExamIncidents.clear();
+    currentExamRoom = null;
     if (!selectedAssignmentCard) return;
     if (!assignment) {
       currentSelectedAssignment = null;
@@ -865,6 +874,9 @@ async function startDashboard() {
   const logoutBtn = document.querySelector('#logout-btn');
 
   let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
+  let examRoomEventsController = null;
+  let currentExamRoom = null;
+  const activeExamIncidents = new Set();
 
   const currentLocation = typeof window !== 'undefined' ? window.location : null;
   const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(currentLocation?.hostname || '');
@@ -902,6 +914,7 @@ async function startDashboard() {
   };
 
   function renderExamRoom(room) {
+    currentExamRoom = room;
     const roomStatus = ({ waiting: 'Đang chờ', running: 'Đang thi', ended: 'Đã kết thúc' })[room.status] || room.status;
     const deadline = room.deadlineAt ? ` · Hạn ${formatAssignmentWindow(room.deadlineAt, null).split(' → ')[0]}` : '';
     if (examRoomSummary) examRoomSummary.textContent = `${roomStatus} · ${formatExamReadyCount(room)}${deadline}`;
@@ -915,6 +928,10 @@ async function startDashboard() {
         name.textContent = student.name || '—';
         participation.textContent = formatExamRoomStatus(student.status);
         device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
+        if (activeExamIncidents.has(student.studentRef)) {
+          row.className = 'exam-incident-active';
+          row.setAttribute('aria-label', `${student.name || 'Học viên'} đang có sự cố Exam Guard`);
+        }
         row.append(name, participation, device);
         examRoomStudents.append(row);
       }
@@ -931,18 +948,71 @@ async function startDashboard() {
     if (examRoomMessage) examRoomMessage.textContent = '';
   }
 
+  function stopExamRoomEvents() {
+    examRoomEventsController?.abort();
+    examRoomEventsController = null;
+  }
+
+  async function startExamRoomEvents() {
+    stopExamRoomEvents();
+    if (!sessionToken || !currentSelectedAssignment || !state.classId) return;
+    const controller = new AbortController();
+    examRoomEventsController = controller;
+    const path = assignmentExamEventsPath(state.classId, currentSelectedAssignment.assignmentId);
+    while (!controller.signal.aborted) {
+      try {
+        const response = await fetch(`${apiBase()}${path}`, {
+          headers: { Authorization: `Bearer ${sessionToken}`, Accept: 'text/event-stream' },
+          signal: controller.signal
+        });
+        if (response.status === 401) {
+          handleLogout();
+          break;
+        }
+        if (!response.ok || !response.body) throw new Error('Không kết nối được luồng Phòng thi.');
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        while (!controller.signal.aborted) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const parsed = parseSseChunk(buffer, decoder.decode(value, { stream: true }));
+          buffer = parsed.buffer;
+          for (const message of parsed.events) {
+            if (message.event === 'snapshot' && message.data.room) renderExamRoom(message.data.room);
+            else if (message.event === 'exam.incident.opened' && message.data.studentRef) {
+              activeExamIncidents.add(message.data.studentRef);
+              if (currentExamRoom) renderExamRoom(currentExamRoom);
+            } else if (message.event === 'exam.incident.closed' && message.data.studentRef) {
+              activeExamIncidents.delete(message.data.studentRef);
+              if (currentExamRoom) renderExamRoom(currentExamRoom);
+            } else if (message.event !== 'snapshot') await loadExamRoom();
+          }
+        }
+      } catch (error) {
+        if (controller.signal.aborted) break;
+      }
+      if (!controller.signal.aborted) {
+        try { await loadExamRoom(); } catch { /* reconnect below; REST may recover with the stream */ }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  }
+
   examRoomOpenButton?.addEventListener('click', async () => {
     if (!currentSelectedAssignment) return;
     examRoomReturnToResults = Boolean(results && !results.hidden);
     if (results) results.hidden = true;
     if (examRoom) examRoom.hidden = false;
-    try { await loadExamRoom(); }
+    activeExamIncidents.clear();
+    try { await loadExamRoom(); startExamRoomEvents(); }
     catch (error) { if (examRoomMessage) examRoomMessage.textContent = error.message; }
   });
   examRoomRefreshButton?.addEventListener('click', () => {
     loadExamRoom().catch(error => { if (examRoomMessage) examRoomMessage.textContent = error.message; });
   });
   examRoomCloseButton?.addEventListener('click', () => {
+    stopExamRoomEvents();
     if (examRoom) examRoom.hidden = true;
     if (examRoomReturnToResults && results) results.hidden = false;
   });
@@ -2696,6 +2766,7 @@ async function startDashboard() {
   }
 
   function handleLogout() {
+    stopExamRoomEvents();
     document.body.classList.add('login-page');
     sessionToken = '';
     currentTeacher = null;
