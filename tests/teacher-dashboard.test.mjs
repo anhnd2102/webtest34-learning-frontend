@@ -52,11 +52,11 @@ test('defaultApiBase always resolves to the production origin, including local h
   assert.equal(defaultApiBase(null), 'https://webtest.ducanhn.autos');
 });
 
-test('localStudentUrl points student links at the local server only when the dashboard runs locally', () => {
+test('localStudentUrl points student links at the local server with the production API only when the dashboard runs locally', () => {
   const pages = 'https://anhnd2102.github.io/webtest34-learning-frontend/term-tests/webtest-34-demo/index.html?demoCourse=34&test=1&class=IC2293#test=34010000-0000-4000-8000-000000000002';
   assert.equal(
     localStudentUrl(pages, { hostname: '127.0.0.1', origin: 'http://127.0.0.1:8090' }),
-    'http://127.0.0.1:8090/term-tests/webtest-34-demo/index.html?demoCourse=34&test=1&class=IC2293#test=34010000-0000-4000-8000-000000000002'
+    'http://127.0.0.1:8090/term-tests/webtest-34-demo/index.html?demoCourse=34&test=1&class=IC2293&prod=1#test=34010000-0000-4000-8000-000000000002'
   );
   assert.equal(localStudentUrl(pages, { hostname: 'anhnd2102.github.io', origin: 'https://anhnd2102.github.io' }), pages);
   assert.equal(localStudentUrl('', { hostname: 'localhost', origin: 'http://localhost:8090' }), '');

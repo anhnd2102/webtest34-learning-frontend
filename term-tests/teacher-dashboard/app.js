@@ -5,11 +5,14 @@ export function defaultApiBase() {
 }
 
 // Dashboard chạy local (run-local.sh) thì link học viên trỏ về static server local; production giữ nguyên link backend trả.
+// `prod=1`: run-local.sh không chạy backend, nên trang học viên local phải gọi API production như dashboard.
 export function localStudentUrl(studentUrl, location) {
   if (!studentUrl || !['localhost', '127.0.0.1', '[::1]', '::1'].includes(location?.hostname || '')) return studentUrl;
   const url = new URL(studentUrl);
   const index = url.pathname.indexOf('/term-tests/');
-  return index < 0 ? studentUrl : `${location.origin}${url.pathname.slice(index)}${url.search}${url.hash}`;
+  if (index < 0) return studentUrl;
+  url.searchParams.set('prod', '1');
+  return `${location.origin}${url.pathname.slice(index)}${url.search}${url.hash}`;
 }
 
 export function readDashboardState(input) {
