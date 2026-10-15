@@ -23,3 +23,8 @@ test('device.superseded locks the old attempt and shows the required message', (
   assert.ok(/Bài thi đang được mở ở máy khác\. Nếu không phải bạn, hãy báo giáo viên\./.test(page));
   assert.ok(/document\.querySelector\('main'\)\.inert = true/.test(page));
 });
+
+test('regular and keepalive requests share the superseded-device guard', () => {
+  assert.match(page, /function assertLearningAttemptNotSuperseded\(path\)/);
+  assert.equal((page.match(/assertLearningAttemptNotSuperseded\((?:path|'\/attempts\/audio\/checkpoint')\);/g) || []).length, 2);
+});
