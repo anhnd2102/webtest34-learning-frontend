@@ -18,6 +18,8 @@ test('exam room status formatter covers all participation states', () => {
   assert.equal(formatExamRoomStatus('not_entered'), 'Chưa vào');
   assert.equal(formatExamRoomStatus('entered'), 'Đã vào');
   assert.equal(formatExamRoomStatus('ready'), 'Sẵn sàng');
+  assert.equal(formatExamRoomStatus('in_progress'), 'Đang làm');
+  assert.equal(formatExamRoomStatus('submitted'), 'Đã nộp');
 });
 
 test('exam room ready count formatter includes ready and roster totals', () => {

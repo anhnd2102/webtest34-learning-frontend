@@ -254,7 +254,7 @@ export function assignmentExamExtendPath(classId, assignmentId) {
 }
 
 export function formatExamRoomStatus(status) {
-  return ({ not_entered: 'Chưa vào', entered: 'Đã vào', ready: 'Sẵn sàng' })[status] || 'Chưa vào';
+  return ({ not_entered: 'Chưa vào', entered: 'Đã vào', ready: 'Sẵn sàng', in_progress: 'Đang làm', submitted: 'Đã nộp' })[status] || 'Chưa vào';
 }
 
 export function formatExamReadyCount({ readyCount = 0, totalCount = 0 } = {}) {
