@@ -9,6 +9,7 @@ import {
   formatExamReadyCount,
   applyExamProgress,
   applyExamConnection,
+  applyExamIncident,
   formatExamConnectionStatus,
   formatExamProgress
 } from '../term-tests/teacher-dashboard/app.js';
@@ -55,4 +56,21 @@ test('exam room controls use the teacher API routes for snapshot, start, and ext
   assert.equal(assignmentExamStartPath('101', 'assignment/id'), '/api/teacher/classes/101/assignments/assignment%2Fid/exam/start');
   assert.equal(assignmentExamExtendPath('101', 'assignment/id'), '/api/teacher/classes/101/assignments/assignment%2Fid/exam/extend');
   assert.equal(assignmentExamEventsPath('101', 'assignment/id'), '/api/teacher/classes/101/assignments/assignment%2Fid/exam/events');
+});
+
+test('incident events keep the per-student incident count and open incidents up to date', () => {
+  const room = { status: 'running', students: [
+    { studentRef: 'a', incidentCount: 0, openIncidents: [] },
+    { studentRef: 'b', incidentCount: 2, openIncidents: [] }
+  ] };
+  const incident = { incidentId: 'i1', type: 'left_exam', status: 'open', startedAt: '2026-10-15T01:00:00.000Z', endedAt: null };
+  const opened = applyExamIncident(room, { studentRef: 'a', incident, incidentCount: 1 });
+  assert.equal(opened.students[0].incidentCount, 1);
+  assert.deepEqual(opened.students[0].openIncidents.map(item => item.incidentId), ['i1']);
+  assert.equal(opened.students[1].incidentCount, 2);
+
+  const closed = applyExamIncident(opened, { studentRef: 'a', incident: { ...incident, status: 'closed', endedAt: '2026-10-15T01:00:05.000Z' }, incidentCount: 1 });
+  assert.equal(closed.students[0].incidentCount, 1);
+  assert.deepEqual(closed.students[0].openIncidents, []);
+  assert.equal(applyExamIncident(room, { studentRef: 'zzz', incident, incidentCount: 1 }), room);
 });

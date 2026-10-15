@@ -35,7 +35,9 @@ test('incident details stay in the teacher dashboard, outside the student render
   const teacherPage = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   const studentPage = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
   assert.match(teacherApp, /student\.incidentCount/);
-  assert.match(teacherApp, /formatIncidentTimeline\(payload\.incidents \|\| \[\]\)/);
+  assert.match(teacherApp, /fillIncidentTimeline\(detailIncidents, payload\.incidents\)/);
   assert.match(teacherPage, /id="detail-incidents"/);
   assert.doesNotMatch(studentPage, /incidentCount|detail-incidents/);
+  const studentRenderer = await fs.readFile(new URL('../term-tests/webtest-34-demo/content-preview.mjs', import.meta.url), 'utf8');
+  assert.doesNotMatch(studentRenderer, /incidentCount|detail-incidents/);
 });

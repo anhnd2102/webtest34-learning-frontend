@@ -274,6 +274,23 @@ export function applyExamProgress(room, { studentRef, progress } = {}) {
   };
 }
 
+export function applyExamIncident(room, { studentRef, incident, incidentCount } = {}) {
+  const index = room?.students?.findIndex(student => student.studentRef === studentRef) ?? -1;
+  if (index < 0 || !incident?.incidentId) return room;
+  return {
+    ...room,
+    students: room.students.map((student, studentIndex) => {
+      if (studentIndex !== index) return student;
+      const others = (student.openIncidents || []).filter(item => item.incidentId !== incident.incidentId);
+      return {
+        ...student,
+        incidentCount: Number.isInteger(incidentCount) ? incidentCount : student.incidentCount,
+        openIncidents: incident.endedAt ? others : [...others, incident]
+      };
+    })
+  };
+}
+
 export function formatExamProgress(progress) {
   if (!Number.isInteger(progress?.answered) || !Number.isInteger(progress?.total)
     || progress.answered < 0 || progress.total < progress.answered) return '—';
@@ -856,7 +873,6 @@ async function startDashboard() {
 
   function renderSelectedAssignmentShowcase(assignment) {
     stopExamRoomEvents();
-    activeExamIncidents.clear();
     currentExamRoom = null;
     if (!selectedAssignmentCard) return;
     if (!assignment) {
@@ -951,7 +967,6 @@ async function startDashboard() {
   let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
   let examRoomEventsController = null;
   let currentExamRoom = null;
-  const activeExamIncidents = new Set();
 
   const currentLocation = typeof window !== 'undefined' ? window.location : null;
   const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(currentLocation?.hostname || '');
@@ -988,6 +1003,45 @@ async function startDashboard() {
     return payload;
   };
 
+  function fillIncidentTimeline(container, rawIncidents) {
+    container.replaceChildren();
+    const incidents = formatIncidentTimeline(rawIncidents || []);
+    if (!incidents.length) {
+      container.textContent = 'Không có sự cố được ghi nhận.';
+      return;
+    }
+    const table = document.createElement('table');
+    table.className = 'mini-table';
+    table.innerHTML = '<thead><tr><th>Loại</th><th>Bắt đầu</th><th>Kết thúc</th><th>Thời lượng</th></tr></thead>';
+    const body = document.createElement('tbody');
+    for (const incident of incidents) {
+      const row = document.createElement('tr');
+      for (const value of [incident.typeLabel, incident.startedAt, incident.endedAt, incident.duration]) {
+        const cell = document.createElement('td');
+        cell.textContent = value;
+        row.append(cell);
+      }
+      body.append(row);
+    }
+    table.append(body);
+    container.append(table);
+  }
+
+  async function showExamRoomTimeline(student) {
+    const panel = document.querySelector('#exam-room-timeline');
+    if (!panel || !student.attemptId || !currentSelectedAssignment) return;
+    panel.hidden = false;
+    panel.querySelector('h3').textContent = `Timeline sự cố · ${student.name || 'Học viên'}`;
+    const content = panel.querySelector('div');
+    content.textContent = 'Đang tải timeline sự cố…';
+    try {
+      const payload = await request(attemptDetailPath(state.classId, currentSelectedAssignment.assignmentId, student.attemptId));
+      fillIncidentTimeline(content, payload.incidents);
+    } catch (error) {
+      content.textContent = `Không tải được timeline sự cố: ${error.message}`;
+    }
+  }
+
   function renderExamRoom(room) {
     currentExamRoom = room;
     const roomStatus = ({ waiting: 'Đang chờ', running: 'Đang thi', ended: 'Đã kết thúc' })[room.status] || room.status;
@@ -1001,17 +1055,29 @@ async function startDashboard() {
         const participation = document.createElement('td');
         const progress = document.createElement('td');
         const connection = document.createElement('td');
+        const incidents = document.createElement('td');
         const device = document.createElement('td');
         name.textContent = student.name || '—';
         participation.textContent = formatExamRoomStatus(student.status);
         progress.textContent = formatExamProgress(student.progress);
         connection.textContent = formatExamConnectionStatus(student.connectionStatus);
+        const incidentCount = Number(student.incidentCount) || 0;
+        const openIncident = (student.openIncidents || []).length > 0;
+        incidents.textContent = student.status === 'not_entered' ? '—' : `${incidentCount}${openIncident ? ' · đang rời bài' : ''}`;
         device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
-        if (activeExamIncidents.has(student.studentRef)) {
+        // Tô đỏ mọi học viên đã có sự cố (không chỉ lúc đang rời bài) để giáo viên không bỏ sót.
+        if (incidentCount > 0 || openIncident) {
           row.className = 'exam-incident-active';
-          row.setAttribute('aria-label', `${student.name || 'Học viên'} đang có sự cố Exam Guard`);
+          row.setAttribute('aria-label', `${student.name || 'Học viên'} có ${incidentCount} sự cố Exam Guard`);
         }
-        row.append(name, participation, progress, connection, device);
+        row.append(name, participation, progress, connection, incidents, device);
+        if (student.attemptId) {
+          row.classList.add('exam-room-clickable');
+          row.tabIndex = 0;
+          row.title = 'Bấm để xem timeline sự cố';
+          row.addEventListener('click', () => void showExamRoomTimeline(student));
+          row.addEventListener('keydown', event => { if (event.key === 'Enter') void showExamRoomTimeline(student); });
+        }
         examRoomStudents.append(row);
       }
     }
@@ -1059,11 +1125,8 @@ async function startDashboard() {
           buffer = parsed.buffer;
           for (const message of parsed.events) {
             if (message.event === 'snapshot' && message.data.room) renderExamRoom(message.data.room);
-            else if (message.event === 'exam.incident.opened' && message.data.studentRef) {
-              activeExamIncidents.add(message.data.studentRef);
-              if (currentExamRoom) renderExamRoom(currentExamRoom);
-            } else if (message.event === 'exam.incident.closed' && message.data.studentRef) {
-              activeExamIncidents.delete(message.data.studentRef);
+            else if (message.event === 'exam.incident.opened' || message.event === 'exam.incident.closed') {
+              currentExamRoom = applyExamIncident(currentExamRoom, message.data);
               if (currentExamRoom) renderExamRoom(currentExamRoom);
             } else if (message.event === 'exam.progress.updated') {
               currentExamRoom = applyExamProgress(currentExamRoom, message.data);
@@ -1089,7 +1152,6 @@ async function startDashboard() {
     examRoomReturnToResults = Boolean(results && !results.hidden);
     if (results) results.hidden = true;
     if (examRoom) examRoom.hidden = false;
-    activeExamIncidents.clear();
     try { await loadExamRoom(); startExamRoomEvents(); }
     catch (error) { if (examRoomMessage) examRoomMessage.textContent = error.message; }
   });
@@ -1489,29 +1551,7 @@ async function startDashboard() {
       }
     }
 
-    if (detailIncidents) {
-      detailIncidents.replaceChildren();
-      const incidents = formatIncidentTimeline(payload.incidents || []);
-      if (!incidents.length) {
-        detailIncidents.textContent = 'Không có sự cố được ghi nhận.';
-      } else {
-        const table = document.createElement('table');
-        table.className = 'mini-table';
-        table.innerHTML = '<thead><tr><th>Loại</th><th>Bắt đầu</th><th>Kết thúc</th><th>Thời lượng</th></tr></thead>';
-        const body = document.createElement('tbody');
-        for (const incident of incidents) {
-          const row = document.createElement('tr');
-          for (const value of [incident.typeLabel, incident.startedAt, incident.endedAt, incident.duration]) {
-            const cell = document.createElement('td');
-            cell.textContent = value;
-            row.append(cell);
-          }
-          body.append(row);
-        }
-        table.append(body);
-        detailIncidents.append(table);
-      }
-    }
+    if (detailIncidents) fillIncidentTimeline(detailIncidents, payload.incidents);
 
     if (detailAttemptHistory) {
       detailAttemptHistory.replaceChildren();

@@ -41,7 +41,7 @@ test('teacher room consumes the scoped Bearer SSE stream and reconnects with a f
   assert.match(source, /message\.event === 'exam\.connection\.changed'[\s\S]*?applyExamConnection\(currentExamRoom, message\.data\)/);
   assert.match(source, /connection\.textContent = formatExamConnectionStatus\(student\.connectionStatus\)/);
   assert.match(source, /progress\.textContent = formatExamProgress\(student\.progress\)/);
-  assert.match(source, /row\.append\(name, participation, progress, connection, device\)/);
+  assert.match(source, /row\.append\(name, participation, progress, connection, incidents, device\)/);
   assert.match(source, /await loadExamRoom\(\);[\s\S]*?setTimeout\(resolve, 1000\)/);
   assert.match(styles, /\.exam-incident-active\s*\{[^}]*background:\s*#fee2e2/);
 });
