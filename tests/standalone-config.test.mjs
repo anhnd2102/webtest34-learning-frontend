@@ -34,3 +34,14 @@ test('Webtest 34 calls the stable Learning access contract', async () => {
   assert.match(index, /\/api\/learning\$\{path\}/);
   assert.match(index, /learningRequest\('\/test-access\/resolve'/);
 });
+
+test('Webtest 34 reads a clean test token even when the shared link has trailing junk', async () => {
+  const index = await read('term-tests/webtest-34-demo/index.html');
+  const learningConfig = index.match(/function learningConfig\(\)\{[\s\S]*?\n  \}\n/)[0];
+  const token = '34010000-0000-4000-8000-000000000002';
+  for (const hash of [`#test=${token}`, `#test=${token}\\`, `#test=${token}%5C`, `#test=${token}%20`]) {
+    const window = { location: { hash }, WEBTEST_34_PREVIEW_CONFIG: { LEARNING_API_BASE_URL: 'https://webtest.ducanhn.autos' } };
+    const config = vm.runInNewContext(`${learningConfig}; learningConfig()`, { window, URLSearchParams });
+    assert.equal(config.testToken, token, hash);
+  }
+});

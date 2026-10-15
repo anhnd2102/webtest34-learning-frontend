@@ -563,7 +563,9 @@
 
   function learningConfig(){
     const config = window.WEBTEST_34_PREVIEW_CONFIG || {};
-    const testToken = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('test') || config.LEARNING_TEST_TOKEN;
+    // Link chia sẻ qua chat hay dính ký tự thừa (vd. `\`) sau token; chỉ giữ đúng UUID.
+    const hashToken = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('test') || '';
+    const testToken = hashToken.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i)?.[0] || config.LEARNING_TEST_TOKEN;
     return {
       baseUrl: String(config.LEARNING_API_BASE_URL || '').replace(/\/$/, ''),
       testToken: testToken || ''
