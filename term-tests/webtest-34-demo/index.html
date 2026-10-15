@@ -707,7 +707,7 @@
           else await applyExamStarted(payload);
         }else if(event === 'exam.started' && data){
           await applyExamStarted(JSON.parse(data));
-        }else if(event === 'exam.extended' && data){
+        }else if(event === 'exam.extended' && data && !state.learning?.exam?.retake){ // lượt làm lại theo hạn riêng, không theo gia hạn của phiên
           applyExamExtended(JSON.parse(data));
         }else if(event === 'device.superseded'){
           state.learning.status = 'superseded';
