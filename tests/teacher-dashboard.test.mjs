@@ -1318,6 +1318,37 @@ test('renderAssignmentChipsView renders 1 focused card when selected, full list 
   }
 });
 
+test('teacher dashboard styles.css and index.html provide wide attempt-detail drawer and compact question column layout', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  // Drawer width should be min(1080px, 95vw)
+  assert.match(css, /width:\s*min\(1080px,\s*95vw\)/);
+
+  // Colgroup in index.html should allocate fixed 50-60px for question number
+  assert.match(html, /<col style="width:\s*55px;">/);
+
+  // white-space nowrap on question position, score fraction, and verdict badge
+  assert.match(css, /\.col-pos-cell[^}]*white-space:\s*nowrap/);
+  assert.match(css, /\.verdict-badge[^}]*white-space:\s*nowrap/);
+  assert.match(css, /\.table-grade-score-wrap[^}]*white-space:\s*nowrap/);
+  assert.match(css, /\.q-pos-num[^}]*white-space:\s*nowrap/);
+});
+
+test('teacher dashboard app.js formats compact question number without internal tech badges', async () => {
+  const fs = await import('node:fs/promises');
+  const code = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+
+  // Should render #position and col-pos-cell
+  assert.match(code, /col-pos-cell/);
+  assert.match(code, /#\$\{item\.position\}/);
+
+  // Should NOT render internal tech badges in question column
+  assert.equal(code.includes('q-type-badge'), false, 'q-type-badge should be completely removed');
+  assert.equal(code.includes('q-skill-badge'), false, 'q-skill-badge should be completely removed');
+});
+
 
 
 

@@ -1921,7 +1921,7 @@ async function startDashboard() {
       if (!itemContextModal || !modalItemContent) return;
       if (modalItemTitle) {
         const skillLabel = item.primarySkill ? ` · ${item.primarySkill.toUpperCase()}` : '';
-        modalItemTitle.textContent = `Câu ${item.position} · ${item.interactionType}${skillLabel}`;
+        modalItemTitle.textContent = `Câu ${item.position}${skillLabel}`;
       }
       modalItemContent.replaceChildren();
 
@@ -2019,15 +2019,10 @@ async function startDashboard() {
           const tr = document.createElement('tr');
           if (item.needsReview) tr.className = 'row-needs-review';
 
-          // 1. # Column
+          // 1. # Column (compact question number, no internal tech badges)
           const tdPos = document.createElement('td');
-          tdPos.innerHTML = `
-            <div class="q-col-pos">
-              <span class="q-pos-num">Câu ${item.position}</span>
-              <span class="q-type-badge">${item.interactionType}</span>
-              ${item.primarySkill ? `<span class="q-skill-badge">${item.primarySkill.toUpperCase()}</span>` : ''}
-            </div>
-          `;
+          tdPos.className = 'col-pos-cell';
+          tdPos.innerHTML = `<span class="q-pos-num">#${item.position}</span>`;
           tr.append(tdPos);
 
           // 2. Prompt Column
