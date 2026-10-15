@@ -871,13 +871,48 @@ async function startDashboard() {
     });
   }
 
+  const showcaseQrBtn = document.querySelector('#showcase-qr-btn');
+  if (showcaseQrBtn) {
+    showcaseQrBtn.addEventListener('click', () => {
+      const url = showcaseStudentUrl?.value;
+      if (!url) return;
+      let modal = document.querySelector('#qr-code-modal');
+      if (!modal) {
+        modal = document.createElement('dialog');
+        modal.id = 'qr-code-modal';
+        modal.className = 'qr-modal';
+        document.body.append(modal);
+      }
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=220x220&margin=10`;
+      modal.innerHTML = `
+        <div class="qr-modal-content">
+          <div class="qr-modal-header">
+            <h3>Mã QR phòng làm bài</h3>
+            <button type="button" class="btn-close-qr" onclick="this.closest('dialog').close()">✕</button>
+          </div>
+          <div class="qr-image-wrap">
+            <img src="${qrApiUrl}" alt="Mã QR bài thi" width="220" height="220" style="border-radius: 8px;">
+          </div>
+          <p class="qr-modal-hint">Học viên quét mã để truy cập ngay vào bài kiểm tra.</p>
+        </div>
+      `;
+      if (typeof modal.showModal === 'function') {
+        modal.showModal();
+      }
+    });
+  }
+
   function renderSelectedAssignmentShowcase(assignment) {
     stopExamRoomEvents();
     currentExamRoom = null;
+    const showcaseProgressText = document.querySelector('#showcase-progress-text');
+    const showcaseProgressBar = document.querySelector('#showcase-progress-bar');
     if (!selectedAssignmentCard) return;
     if (!assignment) {
       currentSelectedAssignment = null;
       selectedAssignmentCard.hidden = true;
+      if (showcaseProgressText) showcaseProgressText.textContent = '—';
+      if (showcaseProgressBar) showcaseProgressBar.style.width = '0%';
       if (examRoom) examRoom.hidden = true;
       if (assignmentStudentUrl) assignmentStudentUrl.value = '';
       if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
@@ -1285,6 +1320,18 @@ async function startDashboard() {
       } else {
         assignmentLinkBar.hidden = true;
       }
+    }
+
+    // Update showcase progress bar
+    const showcaseProgressText = document.querySelector('#showcase-progress-text');
+    const showcaseProgressBar = document.querySelector('#showcase-progress-bar');
+    if (showcaseProgressText && showcaseProgressBar) {
+      const students = payload.students || [];
+      const totalStudents = students.length;
+      const submittedStudents = students.filter(s => s.status === 'submitted' || s.attemptId).length;
+      const pct = totalStudents > 0 ? Math.round((submittedStudents / totalStudents) * 100) : 0;
+      showcaseProgressText.textContent = `${submittedStudents}/${totalStudents} học viên (${pct}%)`;
+      showcaseProgressBar.style.width = `${pct}%`;
     }
 
     // Render Class Skill Performance Summary Bar

@@ -1044,6 +1044,31 @@ test('teacher dashboard styles.css provides .global-navbar sticky and responsive
   assert.match(css, /\.navbar-brand/);
 });
 
+test('teacher dashboard index.html provides .split-dashboard-grid with selector and showcase panels', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /class="[^"]*split-dashboard-grid[^"]*"/);
+  assert.match(html, /class="[^"]*selector-panel[^"]*"/);
+  assert.match(html, /class="[^"]*showcase-panel[^"]*"/);
+  assert.match(html, /id="selected-assignment-card"/);
+  assert.match(html, /id="class-select"/);
+  assert.match(html, /id="assignment-select"/);
+  assert.match(html, /id="showcase-progress-wrap"/);
+});
+
+test('teacher dashboard styles.css provides .split-dashboard-grid layout rules and responsive fallback', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.split-dashboard-grid/);
+  assert.match(css, /grid-template-columns/);
+  assert.match(css, /\.selector-panel/);
+  assert.match(css, /\.showcase-panel/);
+  assert.match(css, /\.showcase-progress-wrap/);
+});
+
+
 
 
 

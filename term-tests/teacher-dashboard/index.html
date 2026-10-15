@@ -134,86 +134,121 @@
       <button type="submit">Tải lớp được phép</button>
     </form>
 
-    <section class="panel control-toolbar">
-      <!-- Smart Class Filtering Controls -->
-      <div id="class-filter-toolbar" class="class-filter-toolbar" hidden>
-        <!-- Admin Course Filter Pills -->
-        <div id="admin-course-filters" class="course-filter-group" hidden aria-label="Lọc theo khối đào tạo">
-          <span class="filter-group-label">Khối đào tạo:</span>
-          <div class="filter-pills" role="radiogroup">
-            <button type="button" class="filter-pill active" data-course="all">Tất cả</button>
-            <button type="button" class="filter-pill" data-course="03">Khối 03</button>
-            <button type="button" class="filter-pill" data-course="34">Khối 34</button>
-            <button type="button" class="filter-pill" data-course="45">Khối 45</button>
-          </div>
-        </div>
+    <div class="split-dashboard-grid">
+      <div class="selector-panel">
+        <section class="panel control-toolbar">
+          <!-- Smart Class Filtering Controls -->
+          <div id="class-filter-toolbar" class="class-filter-toolbar" hidden>
+            <!-- Admin Course Filter Pills -->
+            <div id="admin-course-filters" class="course-filter-group" hidden aria-label="Lọc theo khối đào tạo">
+              <span class="filter-group-label">Khối đào tạo:</span>
+              <div class="filter-pills" role="radiogroup">
+                <button type="button" class="filter-pill active" data-course="all">Tất cả</button>
+                <button type="button" class="filter-pill" data-course="03">Khối 03</button>
+                <button type="button" class="filter-pill" data-course="34">Khối 34</button>
+                <button type="button" class="filter-pill" data-course="45">Khối 45</button>
+              </div>
+            </div>
 
-        <!-- Lead Teaching Scope Toggle -->
-        <div id="lead-scope-filters" class="course-filter-group" hidden aria-label="Phạm vi lớp của Lead">
-          <span class="filter-group-label">Chế độ xem:</span>
-          <div class="filter-pills" role="radiogroup">
-            <button type="button" class="filter-pill" data-scope="my_classes">👨‍🏫 Lớp tôi đang dạy</button>
-            <button type="button" class="filter-pill active" data-scope="all">📋 Tất cả lớp trong khối</button>
-          </div>
-        </div>
+            <!-- Lead Teaching Scope Toggle -->
+            <div id="lead-scope-filters" class="course-filter-group" hidden aria-label="Phạm vi lớp của Lead">
+              <span class="filter-group-label">Chế độ xem:</span>
+              <div class="filter-pills" role="radiogroup">
+                <button type="button" class="filter-pill" data-scope="my_classes">👨‍🏫 Lớp tôi đang dạy</button>
+                <button type="button" class="filter-pill active" data-scope="all">📋 Tất cả lớp trong khối</button>
+              </div>
+            </div>
 
-        <!-- Search Input & Status Filter -->
-        <div class="class-search-status-row">
-          <div class="class-search-wrap">
-            <input id="class-search-input" type="search" placeholder="🔍 Tìm mã hoặc tên lớp (ví dụ IC2283)..." autocomplete="off" aria-label="Tìm kiếm lớp học">
+            <!-- Search Input & Status Filter -->
+            <div class="class-search-status-row">
+              <div class="class-search-wrap">
+                <input id="class-search-input" type="search" placeholder="🔍 Tìm mã hoặc tên lớp (ví dụ IC2283)..." autocomplete="off" aria-label="Tìm kiếm lớp học">
+              </div>
+              <div class="class-status-wrap">
+                <select id="class-status-filter" aria-label="Lọc theo trạng thái lớp">
+                  <option value="">Tất cả trạng thái</option>
+                  <option value="on_going">Đang học (on_going)</option>
+                  <option value="pending">Chờ mở (pending)</option>
+                  <option value="completed">Đã kết thúc (completed)</option>
+                </select>
+              </div>
+              <span id="class-count-badge" class="class-count-badge">0 lớp</span>
+            </div>
           </div>
-          <div class="class-status-wrap">
-            <select id="class-status-filter" aria-label="Lọc theo trạng thái lớp">
-              <option value="">Tất cả trạng thái</option>
-              <option value="on_going">Đang học (on_going)</option>
-              <option value="pending">Chờ mở (pending)</option>
-              <option value="completed">Đã kết thúc (completed)</option>
-            </select>
+
+          <div class="toolbar-grid">
+            <label>Chọn lớp
+              <select id="class-select"><option value="">-- Chọn lớp --</option></select>
+            </label>
+            <label>Chọn bài test
+              <select id="assignment-select" disabled><option value="">-- Chọn bài test --</option></select>
+            </label>
           </div>
-          <span id="class-count-badge" class="class-count-badge">0 lớp</span>
-        </div>
+          <p id="status" aria-live="polite">Chưa tải dữ liệu.</p>
+        </section>
+
+        <section id="assignments" class="assignment-grid assignment-chips" aria-label="Danh sách bài được giao"></section>
       </div>
 
-      <div class="toolbar-grid">
-        <label>Chọn lớp
-          <select id="class-select"><option value="">-- Chọn lớp --</option></select>
-        </label>
-        <label>Chọn bài test
-          <select id="assignment-select" disabled><option value="">-- Chọn bài test --</option></select>
-        </label>
-      </div>
-      <p id="status" aria-live="polite">Chưa tải dữ liệu.</p>
-    </section>
+      <div class="showcase-panel">
+        <section id="selected-assignment-card" class="panel selected-assignment-card" hidden aria-label="Thông tin bài test đang chọn">
+          <div class="showcase-header">
+            <div class="showcase-title-area">
+              <span class="showcase-badge-pill" id="showcase-badge-class">Lớp —</span>
+              <h2 id="showcase-title" class="showcase-title">—</h2>
+            </div>
+            <div class="showcase-badges" id="showcase-badges">
+              <span class="meta-pill" id="showcase-block-badge">Khối —</span>
+              <span class="meta-pill" id="showcase-phase-badge" hidden>Phase —</span>
+              <span class="meta-pill status-pill" id="showcase-status-badge">Đang phát hành</span>
+            </div>
+          </div>
+          <div class="showcase-details">
+            <div class="showcase-exam-controls">
+              <label class="exam-mode-toggle"><input id="exam-mode-toggle" type="checkbox"> Bật Exam Mode</label>
+              <button id="exam-room-open" class="btn-secondary" type="button" hidden>Mở Phòng thi</button>
+            </div>
+            <div class="showcase-window" id="showcase-window">
+              <span class="window-label">Thời hạn làm bài:</span>
+              <span id="showcase-window-text">—</span>
+            </div>
 
-    <section id="selected-assignment-card" class="panel selected-assignment-card" hidden aria-label="Thông tin bài test đang chọn">
-      <div class="showcase-header">
-        <div class="showcase-title-area">
-          <span class="showcase-badge-pill" id="showcase-badge-class">Lớp —</span>
-          <h2 id="showcase-title" class="showcase-title">—</h2>
-        </div>
-        <div class="showcase-badges" id="showcase-badges">
-          <span class="meta-pill" id="showcase-block-badge">Khối —</span>
-          <span class="meta-pill" id="showcase-phase-badge" hidden>Phase —</span>
-          <span class="meta-pill status-pill" id="showcase-status-badge">Đang phát hành</span>
-        </div>
-      </div>
-      <div class="showcase-details">
-        <label class="exam-mode-toggle"><input id="exam-mode-toggle" type="checkbox"> Bật Exam Mode</label>
-        <button id="exam-room-open" class="btn-secondary" type="button" hidden>Mở Phòng thi</button>
-        <div class="showcase-window" id="showcase-window">
-          <span class="window-label">Thời hạn làm bài:</span>
-          <span id="showcase-window-text">—</span>
-        </div>
-        <div id="showcase-link-bar" class="assignment-link-bar">
-          <span class="link-label">🔗 Link làm bài cho học viên:</span>
-          <input id="showcase-student-url" type="text" readonly class="student-url-input">
-          <button id="copy-showcase-link-btn" type="button" class="btn-secondary">Sao chép link</button>
-          <a id="open-showcase-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">Mở trang thi ↗</a>
-        </div>
-      </div>
-    </section>
+            <!-- Submission Progress Bar -->
+            <div id="showcase-progress-wrap" class="showcase-progress-wrap">
+              <div class="progress-labels">
+                <span class="progress-label">Tiến độ nộp bài</span>
+                <span id="showcase-progress-text" class="progress-value">—</span>
+              </div>
+              <div class="progress-track">
+                <div id="showcase-progress-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
 
-    <section id="assignments" class="assignment-grid assignment-chips" aria-label="Danh sách bài được giao"></section>
+            <div id="showcase-link-bar" class="assignment-link-bar">
+              <span class="link-label">🔗 Link làm bài cho học viên:</span>
+              <input id="showcase-student-url" type="text" readonly class="student-url-input">
+              <button id="copy-showcase-link-btn" type="button" class="btn-secondary">Sao chép link</button>
+              <a id="open-showcase-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">Mở trang thi ↗</a>
+              <button id="showcase-qr-btn" type="button" class="btn-secondary qr-btn" title="Hiện mã QR">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span>Mã QR</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div id="showcase-placeholder" class="panel showcase-placeholder">
+          <div class="placeholder-icon">📋</div>
+          <h3>Chưa chọn bài kiểm tra</h3>
+          <p>Vui lòng chọn lớp học và bài test ở bảng bên trái để xem thông tin phòng thi và kết quả học viên.</p>
+        </div>
+      </div>
+    </div>
     <section id="exam-room" class="panel" hidden aria-labelledby="exam-room-title">
       <div class="results-header">
         <div>
