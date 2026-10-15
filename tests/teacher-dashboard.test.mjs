@@ -943,18 +943,20 @@ test('filterClasses filters classes by course, scope, status, and search query',
     { classId: '102', name: 'IC2185', courseCode: '45', status: 'pending', isTeaching: false },
     { classId: '103', name: 'IC2283', courseCode: '34', status: 'on_going', isTeaching: false },
     { classId: '104', name: 'IC2251', courseCode: '03', status: 'on_going', isTeaching: true },
-    { classId: '105', name: 'IC1000', courseCode: '34', status: 'completed', isTeaching: true }
+    { classId: '105', name: 'IC1000', courseCode: '34', status: 'pending', isTeaching: true },
+    { classId: '106', name: 'IC999', courseCode: '34', status: 'completed', isTeaching: true }
   ];
 
-  // 1. Course filter
+  // 1. Course filter (completed classes automatically excluded)
   const c45 = filterClasses(sampleClasses, { course: '45' });
   assert.equal(c45.length, 2);
   assert.deepEqual(c45.map(c => c.classId), ['101', '102']);
 
-  // 2. Lead scope: my_classes
+  // 2. Lead scope: my_classes (completed class 106 is excluded)
   const myClasses = filterClasses(sampleClasses, { userRole: 'lead', scope: 'my_classes' });
   assert.equal(myClasses.length, 2);
   assert.deepEqual(myClasses.map(c => c.classId), ['104', '105']);
+  assert.ok(!myClasses.some(c => c.classId === '106'));
 
   // 3. Status filter
   const ongoing = filterClasses(sampleClasses, { classStatus: 'on_going' });
@@ -1009,6 +1011,7 @@ test('teacher dashboard index.html provides smart class filtering controls', asy
   assert.match(html, /id="lead-scope-filters"/);
   assert.match(html, /id="class-search-input"/);
   assert.match(html, /id="class-status-filter"/);
+  assert.ok(!html.includes('value="completed"'), 'completed status option should be removed');
   assert.match(html, /id="class-count-badge"/);
 });
 

@@ -88,6 +88,12 @@ export function resetDashboardState(state = {}) {
 export function filterClasses(classes = [], { course = '', scope = '', classStatus = '', q = '', userRole = '' } = {}) {
   let list = Array.isArray(classes) ? [...classes] : [];
 
+  // Exclude completed or cancelled classes
+  list = list.filter(c => {
+    const st = String(c.status || c.classStatus || '').toLowerCase();
+    return st !== 'completed' && st !== 'cancelled';
+  });
+
   // 1. Role-specific filters
   if (userRole === 'lead' && scope === 'my_classes') {
     list = list.filter(c => Boolean(c.isTeaching || c.is_teaching));
@@ -124,7 +130,6 @@ export function formatClassFilterCountLabel({ count = 0, course = '', scope = ''
   let statusText = '';
   if (classStatus === 'on_going') statusText = ' đang học';
   else if (classStatus === 'pending') statusText = ' chờ mở';
-  else if (classStatus === 'completed') statusText = ' đã kết thúc';
 
   if (userRole === 'lead' && scope === 'my_classes') {
     return `${count} lớp bạn đang dạy${statusText}`;
