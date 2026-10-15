@@ -1452,19 +1452,19 @@ async function startDashboard() {
       for (const student of payload.students) {
         const row = document.createElement('tr');
 
-        // 1. Name Cell with Initials Avatar & Student Code (Stitch Gradebook Experience)
+        // 1. Name Cell with Initials Avatar & Student Email (Stitch Gradebook Experience)
         const nameCell = document.createElement('td');
         nameCell.className = 'student-cell';
         const initials = getStudentInitials(student.name);
-        const avatarColor = getAvatarColor(student.discriminator || student.studentRef || student.name);
-        const studentCode = student.discriminator || (student.studentRef ? `HV-${student.studentRef}` : '');
+        const studentEmail = student.email || student.studentEmail || '';
+        const avatarColor = getAvatarColor(studentEmail || student.name);
 
         nameCell.innerHTML = `
           <div class="student-cell-wrap">
             <div class="student-avatar" style="background-color: ${avatarColor.bg}; color: ${avatarColor.text}; border-color: ${avatarColor.border};" aria-hidden="true">${escapeHtml(initials)}</div>
             <div class="student-info">
               <span class="student-name">${escapeHtml(student.name)}</span>
-              ${studentCode ? `<span class="student-code">${escapeHtml(studentCode)}</span>` : ''}
+              ${studentEmail ? `<span class="student-email">${escapeHtml(studentEmail)}</span>` : ''}
               ${student.leftClass ? `<span class="badge-left-class">Không còn trong lớp</span>` : ''}
             </div>
           </div>
@@ -1589,7 +1589,8 @@ async function startDashboard() {
   function renderAttemptDetail(payload) {
     if (!attemptDetail) return;
     if (detailHeading) {
-      detailHeading.textContent = `${payload.student.name}${payload.student.discriminator ? ' · ' + payload.student.discriminator : ''}`;
+      const email = payload.student.studentEmail || payload.student.email;
+      detailHeading.textContent = `${payload.student.name}${email ? ' · ' + email : ''}`;
     }
 
     if (detailMeta) {

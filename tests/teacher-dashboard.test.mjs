@@ -1158,6 +1158,7 @@ test('teacher dashboard styles.css provides .student-avatar, .student-code, and 
   assert.match(css, /\.student-avatar/);
   assert.match(css, /\.student-name/);
   assert.match(css, /\.student-code/);
+  assert.match(css, /\.student-email/);
   assert.match(css, /\.btn-view-attempt/);
 });
 

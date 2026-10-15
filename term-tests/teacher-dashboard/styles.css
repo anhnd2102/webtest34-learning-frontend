@@ -1759,11 +1759,13 @@ body:not(.login-page) #auth-panel {
   color: #0f172a;
 }
 
-.student-code {
+.student-code,
+.student-email {
   font-size: 0.76rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #64748b;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  word-break: break-all;
 }
 
 .btn-view-attempt {
