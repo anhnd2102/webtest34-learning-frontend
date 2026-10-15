@@ -421,15 +421,16 @@
       </nav>
     </section>
 
-    <section id="attempt-detail" class="panel" hidden aria-label="Chi tiết bài làm">
+    <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+    <section id="attempt-detail" class="panel sliding-drawer" hidden aria-label="Chi tiết bài làm">
       <div id="conflict-alert" class="conflict-alert" hidden role="alert" aria-live="assertive"></div>
 
       <div class="detail-header">
-        <button id="close-attempt-detail-btn" type="button" class="btn-secondary">← Quay lại danh sách</button>
-        <div>
+        <div class="detail-title-wrap">
           <h2 id="detail-heading">Chi tiết bài làm</h2>
           <div id="detail-meta" class="meta-badges"></div>
         </div>
+        <button id="close-attempt-detail-btn" type="button" class="btn-close-drawer" aria-label="Đóng ngăn kéo" title="Đóng (Esc)">✕</button>
       </div>
 
       <div class="detail-section">

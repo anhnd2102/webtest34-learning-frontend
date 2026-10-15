@@ -795,6 +795,7 @@ async function startDashboard() {
   const nextPageBtn = document.querySelector('#next-page-btn');
   const attemptDetail = document.querySelector('#attempt-detail');
   const closeAttemptDetailBtn = document.querySelector('#close-attempt-detail-btn');
+  const drawerBackdrop = document.querySelector('#drawer-backdrop');
   const detailHeading = document.querySelector('#detail-heading');
   const detailMeta = document.querySelector('#detail-meta');
   const detailScores = document.querySelector('#detail-scores');
@@ -2040,13 +2041,19 @@ async function startDashboard() {
       publishResultBtn.textContent = payload.attempt.publication?.published ? 'Công bố lại' : 'Công bố kết quả';
     }
 
-    if (results) results.hidden = true;
+    if (drawerBackdrop) drawerBackdrop.hidden = false;
     attemptDetail.hidden = false;
+    attemptDetail.classList.add('drawer-open');
+    if (results) results.hidden = false;
   }
 
   async function loadAttemptDetail(classId, assignmentId, attemptId) {
     if (!classId || !assignmentId || !attemptId) {
-      if (attemptDetail) attemptDetail.hidden = true;
+      if (attemptDetail) {
+        attemptDetail.classList.remove('drawer-open');
+        attemptDetail.hidden = true;
+      }
+      if (drawerBackdrop) drawerBackdrop.hidden = true;
       return;
     }
     status.textContent = 'Đang tải chi tiết bài làm…';
@@ -2161,7 +2168,11 @@ async function startDashboard() {
           state.attemptId = '';
           setUrl();
           const attemptContainer = document.querySelector('#attempt-detail');
-          if (attemptContainer) attemptContainer.hidden = true;
+          if (attemptContainer) {
+            attemptContainer.classList.remove('drawer-open');
+            attemptContainer.hidden = true;
+          }
+          if (drawerBackdrop) drawerBackdrop.hidden = true;
           if (loginError && loginError.textContent.includes('Không tìm thấy bài làm')) {
             loginError.hidden = true;
             loginError.textContent = '';
@@ -2643,15 +2654,33 @@ async function startDashboard() {
     });
   }
 
-  if (closeAttemptDetailBtn) {
-    closeAttemptDetailBtn.addEventListener('click', () => {
-      if (attemptDetail) attemptDetail.hidden = true;
-      if (results) results.hidden = false;
-      delete state.attemptId;
-      setUrl();
-      loadResults(state.classId, state.assignmentId).catch(() => {});
-    });
+  function closeAttemptDetail() {
+    if (attemptDetail) {
+      attemptDetail.classList.remove('drawer-open');
+      attemptDetail.hidden = true;
+    }
+    if (drawerBackdrop) {
+      drawerBackdrop.hidden = true;
+    }
+    if (results) {
+      results.hidden = false;
+    }
+    delete state.attemptId;
+    setUrl();
+    loadResults(state.classId, state.assignmentId).catch(() => {});
   }
+
+  if (closeAttemptDetailBtn) {
+    closeAttemptDetailBtn.addEventListener('click', closeAttemptDetail);
+  }
+  if (drawerBackdrop) {
+    drawerBackdrop.addEventListener('click', closeAttemptDetail);
+  }
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && attemptDetail && !attemptDetail.hidden) {
+      closeAttemptDetail();
+    }
+  });
 
   if (refreshBtn) {
     refreshBtn.addEventListener('click', () => {
@@ -3006,7 +3035,11 @@ async function startDashboard() {
     if (results) results.hidden = true;
     if (resultsContent) resultsContent.replaceChildren();
     if (classSkillSummary) classSkillSummary.replaceChildren();
-    if (attemptDetail) attemptDetail.hidden = true;
+    if (attemptDetail) {
+      attemptDetail.classList.remove('drawer-open');
+      attemptDetail.hidden = true;
+    }
+    if (drawerBackdrop) drawerBackdrop.hidden = true;
     if (detailScores) detailScores.replaceChildren();
     if (detailItemsBody) detailItemsBody.replaceChildren();
     if (detailAttemptHistory) detailAttemptHistory.replaceChildren();

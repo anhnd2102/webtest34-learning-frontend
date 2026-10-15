@@ -1068,6 +1068,51 @@ test('teacher dashboard styles.css provides .split-dashboard-grid layout rules a
   assert.match(css, /\.showcase-progress-wrap/);
 });
 
+test('teacher dashboard index.html provides sliding attempt-detail drawer and backdrop elements', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /id="drawer-backdrop"/);
+  assert.match(html, /class="[^"]*sliding-drawer[^"]*"/);
+  assert.match(html, /id="close-attempt-detail-btn"/);
+  assert.match(html, /id="attempt-detail"/);
+  assert.match(html, /id="save-draft-btn"/);
+  assert.match(html, /id="complete-grading-btn"/);
+});
+
+test('teacher dashboard styles.css provides .sliding-drawer and .drawer-backdrop off-canvas styling', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.sliding-drawer/);
+  assert.match(css, /position:\s*fixed/);
+  assert.match(css, /transform:\s*translateX/);
+  assert.match(css, /\.drawer-backdrop/);
+  assert.match(css, /\.drawer-open/);
+});
+
+test('teacher dashboard app.js wires drawer backdrop, drawer-open class, and escape key handling', async () => {
+  const fs = await import('node:fs/promises');
+  const code = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+
+  assert.match(code, /drawerBackdrop/);
+  assert.match(code, /drawer-open/);
+  assert.match(code, /closeAttemptDetail/);
+  assert.match(code, /event\.key === ['"]Escape['"]/);
+});
+
+test('teacher dashboard styles.css provides sticky actions bar and audio waveform player styles', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.grading-actions-bar/);
+  assert.match(css, /position:\s*sticky/);
+  assert.match(css, /\.audio-waveform-player/);
+  assert.match(css, /\.audio-waveform-bar/);
+});
+
+
+
 
 
 
