@@ -1193,6 +1193,131 @@ test('teacher dashboard index.html and styles.css provide minimalist line icon s
   assert.equal(emojiRegex.test(html), false, 'index.html should not contain any emoji characters');
 });
 
+test('teacher dashboard index.html and styles.css provide active test focus and compact switcher elements and styles', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(html, /id="assignment-chips"/);
+  assert.match(html, /id="assignments"/);
+
+  assert.match(css, /\.assignment-focus-container/);
+  assert.match(css, /\.assignment-active-focus/);
+  assert.match(css, /\.btn-switch-assignment/);
+  assert.match(css, /\.assignment-switcher-header/);
+  assert.match(css, /\.btn-close-switcher/);
+  assert.match(css, /\.assignment-chips-list/);
+});
+
+test('renderAssignmentChipsView renders 1 focused card when selected, full list when switching, and invokes callbacks', async () => {
+  const { renderAssignmentChipsView } = await import('../term-tests/teacher-dashboard/app.js');
+
+  function makeMockElement(tag) {
+    return {
+      tagName: tag.toUpperCase(),
+      children: [],
+      classList: new Set(),
+      dataset: {},
+      attributes: {},
+      listeners: {},
+      className: '',
+      innerHTML: '',
+      replaceChildren(...nodes) { this.children = [...nodes]; },
+      append(...nodes) { this.children.push(...nodes); },
+      setAttribute(k, v) { this.attributes[k] = v; },
+      addEventListener(evt, fn) { this.listeners[evt] = this.listeners[evt] || []; this.listeners[evt].push(fn); },
+      click() { (this.listeners['click'] || []).forEach(fn => fn()); },
+      querySelector(sel) { return this.querySelectorAll(sel)[0] || null; },
+      querySelectorAll(sel) {
+        const results = [];
+        function walk(node) {
+          if (!node || !node.children) return;
+          for (const c of node.children) {
+            const classList = (c.className || '').trim().split(/\s+/);
+            if (sel.startsWith('.') && classList.includes(sel.slice(1))) results.push(c);
+            else if (sel.startsWith('#') && c.id === sel.slice(1)) results.push(c);
+            else if (c.tagName === sel.toUpperCase()) results.push(c);
+            walk(c);
+          }
+        }
+        walk(this);
+        return results;
+      }
+    };
+  }
+
+  const prevDoc = globalThis.document;
+  globalThis.document = { createElement: makeMockElement };
+
+  try {
+    const container = makeMockElement('div');
+    const assignmentsList = [
+      { assignmentId: 'assign-1', title: 'Test 1', status: 'published', phase: 1 },
+      { assignmentId: 'assign-2', title: 'Test 2', status: 'published', phase: 1 },
+      { assignmentId: 'assign-3', title: 'Test 3', status: 'published', phase: 2 }
+    ];
+
+    let switchedTo = null;
+    let selectedId = null;
+
+    // 1. When assignment is selected and not switching: exactly 1 card is rendered + switch button
+    renderAssignmentChipsView(container, {
+      assignmentsList,
+      selectedAssignmentId: 'assign-2',
+      isSwitching: false,
+      onToggleSwitch: (switching) => { switchedTo = switching; },
+      onSelect: (id) => { selectedId = id; }
+    });
+
+    const activeChips = container.querySelectorAll('.assignment-chip');
+    assert.equal(activeChips.length, 1, 'Only 1 active card should be rendered when selected');
+    assert.equal(activeChips[0].dataset.assignmentId, 'assign-2');
+    assert.match(activeChips[0].className, /assignment-active-focus/);
+
+    const switchBtn = container.querySelector('#switch-assignment-btn');
+    assert.ok(switchBtn, '#switch-assignment-btn should be present');
+    assert.match(switchBtn.innerHTML, /Đổi bài test \(3 bài\)/);
+
+    // Clicking switch button should trigger onToggleSwitch(true)
+    switchBtn.click();
+    assert.equal(switchedTo, true);
+
+    // 2. When switching mode is active: all cards are rendered + close button
+    renderAssignmentChipsView(container, {
+      assignmentsList,
+      selectedAssignmentId: 'assign-2',
+      isSwitching: true,
+      onToggleSwitch: (switching) => { switchedTo = switching; },
+      onSelect: (id) => { selectedId = id; }
+    });
+
+    const expandedChips = container.querySelectorAll('.assignment-chip');
+    assert.equal(expandedChips.length, 3, 'All 3 cards should be rendered when switching');
+
+    const closeBtn = container.querySelector('#close-switcher-btn');
+    assert.ok(closeBtn, '#close-switcher-btn should be present in expanded view');
+    closeBtn.click();
+    assert.equal(switchedTo, false);
+
+    // Clicking another card triggers onSelect
+    expandedChips[2].click();
+    assert.equal(selectedId, 'assign-3');
+
+    // 3. When no assignment is selected: all cards are rendered without switcher header
+    renderAssignmentChipsView(container, {
+      assignmentsList,
+      selectedAssignmentId: '',
+      isSwitching: false
+    });
+    const unselectedChips = container.querySelectorAll('.assignment-chip');
+    assert.equal(unselectedChips.length, 3);
+    assert.equal(container.querySelector('#switch-assignment-btn'), null);
+    assert.equal(container.querySelector('#close-switcher-btn'), null);
+  } finally {
+    globalThis.document = prevDoc;
+  }
+});
+
 
 
 

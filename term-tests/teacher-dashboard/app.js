@@ -784,6 +784,114 @@ export function getAvatarColor(nameOrId) {
   return AVATAR_PALETTES[index];
 }
 
+export function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+export function renderAssignmentChipsView(container, {
+  assignmentsList = [],
+  selectedAssignmentId = '',
+  isSwitching = false,
+  onSelect = () => {},
+  onToggleSwitch = () => {}
+} = {}) {
+  if (!container) return;
+  container.replaceChildren();
+  if (!assignmentsList || assignmentsList.length === 0) return;
+
+  const selectedAssignment = assignmentsList.find(a => a.assignmentId === selectedAssignmentId);
+
+  // Mode 1: An assignment is selected and NOT in expanded switching mode:
+  // Render ONLY 1 card representing the active test, plus compact switcher button
+  if (selectedAssignment && !isSwitching) {
+    const focusContainer = document.createElement('div');
+    focusContainer.className = 'assignment-focus-container';
+
+    const chip = document.createElement('div');
+    chip.className = 'assignment-chip selected assignment-active-focus';
+    chip.dataset.assignmentId = selectedAssignment.assignmentId;
+    chip.setAttribute('role', 'status');
+    chip.setAttribute('aria-label', `Bài test đang chọn: ${selectedAssignment.title}`);
+
+    const phaseLabel = extractPhase(selectedAssignment.phase, selectedAssignment.title);
+    chip.innerHTML = `
+      <div class="chip-header">
+        <span class="active-badge">${renderSvgIcon('check', 'icon-inline')} Đang chọn</span>
+        <span class="chip-meta">${escapeHtml(phaseLabel ? `${phaseLabel} · ${selectedAssignment.status}` : selectedAssignment.status)}</span>
+      </div>
+      <span class="chip-title">${escapeHtml(selectedAssignment.title)}</span>
+    `;
+
+    const switchBtn = document.createElement('button');
+    switchBtn.type = 'button';
+    switchBtn.id = 'switch-assignment-btn';
+    switchBtn.className = 'btn-switch-assignment';
+    switchBtn.innerHTML = `
+      ${renderSvgIcon('rotate', 'icon-inline')}
+      <span>Đổi bài test (${assignmentsList.length} bài)</span>
+    `;
+    switchBtn.title = 'Xem và chọn bài kiểm tra khác trong lớp';
+    switchBtn.addEventListener('click', () => {
+      onToggleSwitch(true);
+    });
+
+    focusContainer.append(chip, switchBtn);
+    container.append(focusContainer);
+    return;
+  }
+
+  // Mode 2: Expanded switching mode (user clicked "Đổi bài test")
+  if (selectedAssignment && isSwitching) {
+    const switcherHeader = document.createElement('div');
+    switcherHeader.className = 'assignment-switcher-header';
+    switcherHeader.innerHTML = `
+      <span class="switcher-title">${renderSvgIcon('book', 'icon-inline')} <span>Chọn bài test (${assignmentsList.length} bài)</span></span>
+    `;
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'btn-close-switcher';
+    closeBtn.id = 'close-switcher-btn';
+    closeBtn.innerHTML = `
+      ${renderSvgIcon('close', 'icon-inline')}
+      <span>Đóng</span>
+    `;
+    closeBtn.addEventListener('click', () => {
+      onToggleSwitch(false);
+    });
+    switcherHeader.append(closeBtn);
+    container.append(switcherHeader);
+  }
+
+  // Mode 3: Render all cards (either no assignment selected, or expanded switching mode)
+  const chipsList = document.createElement('div');
+  chipsList.className = 'assignment-chips-list';
+
+  for (const assignment of assignmentsList) {
+    const isSelected = assignment.assignmentId === selectedAssignmentId;
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = `assignment-chip${isSelected ? ' selected' : ''}`;
+    chip.dataset.assignmentId = assignment.assignmentId;
+
+    const phaseLabel = extractPhase(assignment.phase, assignment.title);
+    chip.innerHTML = `
+      <span class="chip-title">${escapeHtml(assignment.title)}</span>
+      <span class="chip-meta">${escapeHtml(phaseLabel ? `${phaseLabel} · ${assignment.status}` : assignment.status)}</span>
+    `;
+    chip.addEventListener('click', () => {
+      onSelect(assignment.assignmentId);
+    });
+    chipsList.append(chip);
+  }
+  container.append(chipsList);
+}
+
 async function startDashboard() {
   const form = document.querySelector('#identity-form');
   const classFilterToolbar = document.querySelector('#class-filter-toolbar');
@@ -816,7 +924,7 @@ async function startDashboard() {
   const showcaseStudentUrl = document.querySelector('#showcase-student-url');
   const copyShowcaseLinkBtn = document.querySelector('#copy-showcase-link-btn');
   const openShowcaseLinkBtn = document.querySelector('#open-showcase-link-btn');
-  const assignments = document.querySelector('#assignments');
+  const assignments = document.querySelector('#assignment-chips') || document.querySelector('#assignments');
   const results = document.querySelector('#results');
   const resultsContent = document.querySelector('#results-content');
   const assignmentHeading = document.querySelector('#assignment-heading');
@@ -828,8 +936,45 @@ async function startDashboard() {
   const classSkillSummary = document.querySelector('#class-skill-summary');
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
+  let isSwitchingAssignment = false;
   let currentSelectedAssignment = null;
   let examRoomReturnToResults = false;
+
+  function renderAssignmentChips(targetAssignmentId = state.assignmentId) {
+    renderAssignmentChipsView(assignments, {
+      assignmentsList: currentAssignmentsList,
+      selectedAssignmentId: targetAssignmentId,
+      isSwitching: isSwitchingAssignment,
+      onSelect: (assignmentId) => {
+        selectAssignment(assignmentId);
+      },
+      onToggleSwitch: (switching) => {
+        isSwitchingAssignment = switching;
+        renderAssignmentChips(state.assignmentId);
+      }
+    });
+  }
+
+  function selectAssignment(assignmentId) {
+    state.assignmentId = assignmentId || '';
+    state.attemptId = '';
+    state.page = 1;
+    setUrl();
+    if (assignmentSelect) assignmentSelect.value = assignmentId || '';
+    isSwitchingAssignment = false;
+    renderAssignmentChips(assignmentId);
+
+    if (assignmentId) {
+      const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === assignmentId);
+      renderSelectedAssignmentShowcase(activeAssignment);
+      if (state.classId) {
+        loadResults(state.classId, assignmentId).catch(error => { status.textContent = error.message; });
+      }
+    } else {
+      renderSelectedAssignmentShowcase(null);
+      loadResults('', '').catch(() => {});
+    }
+  }
 
   const addStudentBtn = document.querySelector('#add-student-btn');
   const addStudentModal = document.querySelector('#add-student-modal');
@@ -882,16 +1027,6 @@ async function startDashboard() {
   const modalItemContent = document.querySelector('#modal-item-content');
   const closeItemModalBtn = document.querySelector('#close-item-modal-btn');
   let currentSkillTab = 'all';
-
-  function escapeHtml(str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
 
   if (closeItemModalBtn && itemContextModal) {
     closeItemModalBtn.addEventListener('click', () => {
@@ -1047,6 +1182,12 @@ async function startDashboard() {
   let currentAttemptDetail = null;
 
   const state = readDashboardState(location.href);
+  Object.defineProperty(state, 'selectedAssignmentId', {
+    get() { return this.assignmentId; },
+    set(v) { this.assignmentId = v; },
+    enumerable: false,
+    configurable: true
+  });
 
   // Sync inputs from initial state
   if (state.q) searchInput.value = state.q;
@@ -2193,40 +2334,7 @@ async function startDashboard() {
       }
     }
 
-    function selectAssignment(assignmentId) {
-      state.classId = classId;
-      state.assignmentId = assignmentId;
-      state.attemptId = '';
-      state.page = 1;
-      setUrl();
-      if (assignmentSelect) assignmentSelect.value = assignmentId;
-      assignments.querySelectorAll('.selected').forEach(node => node.classList.remove('selected'));
-      const matchingChip = assignments.querySelector(`[data-assignment-id="${assignmentId}"]`);
-      if (matchingChip) matchingChip.classList.add('selected');
-
-      const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === assignmentId);
-      renderSelectedAssignmentShowcase(activeAssignment);
-      loadResults(classId, assignmentId).catch(error => { status.textContent = error.message; });
-    }
-
-    for (const assignment of currentAssignmentsList) {
-      const isSelected = assignment.assignmentId === selectedAssignmentId;
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = `assignment-chip${isSelected ? ' selected' : ''}`;
-      chip.dataset.assignmentId = assignment.assignmentId;
-      if (isSelected) selectedExists = true;
-
-      const phaseLabel = extractPhase(assignment.phase, assignment.title);
-      chip.innerHTML = `
-        <span class="chip-title">${escapeHtml(assignment.title)}</span>
-        <span class="chip-meta">${escapeHtml(phaseLabel ? `${phaseLabel} · ${assignment.status}` : assignment.status)}</span>
-      `;
-      chip.addEventListener('click', () => {
-        selectAssignment(assignment.assignmentId);
-      });
-      assignments.append(chip);
-    }
+    renderAssignmentChips(selectedAssignmentId);
 
     status.textContent = `${currentAssignmentsList.length} bài được giao`;
 
@@ -3281,23 +3389,7 @@ async function startDashboard() {
 
   if (assignmentSelect) {
     assignmentSelect.addEventListener('change', () => {
-      const selectedId = assignmentSelect.value;
-      state.assignmentId = selectedId;
-      state.attemptId = '';
-      state.page = 1;
-      setUrl();
-      if (selectedId && state.classId) {
-        assignments.querySelectorAll('.selected').forEach(node => node.classList.remove('selected'));
-        const matchingChip = assignments.querySelector(`[data-assignment-id="${selectedId}"]`);
-        if (matchingChip) matchingChip.classList.add('selected');
-
-        const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === selectedId);
-        renderSelectedAssignmentShowcase(activeAssignment);
-        loadResults(state.classId, selectedId).catch(error => { status.textContent = error.message; });
-      } else {
-        renderSelectedAssignmentShowcase(null);
-        loadResults('', '').catch(() => {});
-      }
+      selectAssignment(assignmentSelect.value);
     });
   }
 
