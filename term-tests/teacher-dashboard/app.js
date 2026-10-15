@@ -714,6 +714,40 @@ export function formatSubmissionTimestamp(dateStr, locale = 'vi-VN', timeZone = 
   };
 }
 
+export const AVATAR_PALETTES = [
+  { bg: '#fee2e2', text: '#991b1b', border: '#fecaca' }, // Red / Crimson
+  { bg: '#fef3c7', text: '#92400e', border: '#fde68a' }, // Amber
+  { bg: '#dcfce7', text: '#166534', border: '#bbf7d0' }, // Green
+  { bg: '#e0f2fe', text: '#0369a1', border: '#bae6fd' }, // Blue / Sky
+  { bg: '#ede9fe', text: '#5b21b6', border: '#ddd6fe' }, // Purple
+  { bg: '#fce7f3', text: '#9d174d', border: '#fbcfe8' }, // Pink
+  { bg: '#ccfbf1', text: '#115e59', border: '#99f6e4' }, // Teal
+  { bg: '#ffedd5', text: '#9a3412', border: '#fed7aa' }  // Orange
+];
+
+export function getStudentInitials(name) {
+  if (!name || typeof name !== 'string') return 'HV';
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return 'HV';
+  if (words.length === 1) {
+    return Array.from(words[0]).slice(0, 2).join('').toUpperCase();
+  }
+  const first = Array.from(words[0])[0] || '';
+  const second = Array.from(words[1])[0] || '';
+  return (first + second).toUpperCase();
+}
+
+export function getAvatarColor(nameOrId) {
+  const str = String(nameOrId || '');
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  const index = Math.abs(hash) % AVATAR_PALETTES.length;
+  return AVATAR_PALETTES[index];
+}
+
 async function startDashboard() {
   const form = document.querySelector('#identity-form');
   const classFilterToolbar = document.querySelector('#class-filter-toolbar');
@@ -1409,16 +1443,23 @@ async function startDashboard() {
       for (const student of payload.students) {
         const row = document.createElement('tr');
 
-        // 1. Name Cell
+        // 1. Name Cell with Initials Avatar & Student Code (Stitch Gradebook Experience)
         const nameCell = document.createElement('td');
-        const nameText = student.discriminator ? `${student.name} · ${student.discriminator}` : student.name;
-        nameCell.textContent = nameText;
-        if (student.leftClass) {
-          const leftBadge = document.createElement('span');
-          leftBadge.className = 'badge-left-class';
-          leftBadge.textContent = 'Không còn trong lớp';
-          nameCell.append(leftBadge);
-        }
+        nameCell.className = 'student-cell';
+        const initials = getStudentInitials(student.name);
+        const avatarColor = getAvatarColor(student.discriminator || student.studentRef || student.name);
+        const studentCode = student.discriminator || (student.studentRef ? `HV-${student.studentRef}` : '');
+
+        nameCell.innerHTML = `
+          <div class="student-cell-wrap">
+            <div class="student-avatar" style="background-color: ${avatarColor.bg}; color: ${avatarColor.text}; border-color: ${avatarColor.border};" aria-hidden="true">${escapeHtml(initials)}</div>
+            <div class="student-info">
+              <span class="student-name">${escapeHtml(student.name)}</span>
+              ${studentCode ? `<span class="student-code">${escapeHtml(studentCode)}</span>` : ''}
+              ${student.leftClass ? `<span class="badge-left-class">Không còn trong lớp</span>` : ''}
+            </div>
+          </div>
+        `;
         row.append(nameCell);
 
         // 2. Status Cell (wrapped in status-cell-wrap to prevent table cell collapse)
@@ -1485,8 +1526,9 @@ async function startDashboard() {
         if (student.attemptId) {
           const detailBtn = document.createElement('button');
           detailBtn.type = 'button';
-          detailBtn.className = 'btn-secondary btn-sm';
-          detailBtn.textContent = 'Xem chi tiết';
+          detailBtn.className = 'btn-secondary btn-sm btn-view-attempt';
+          detailBtn.textContent = 'Xem bài';
+          detailBtn.title = 'Xem chi tiết bài làm';
           detailBtn.addEventListener('click', () => {
             state.attemptId = student.attemptId;
             setUrl();
@@ -1498,7 +1540,7 @@ async function startDashboard() {
         }
         const retakeBtn = document.createElement('button');
         retakeBtn.type = 'button';
-        retakeBtn.className = 'btn-secondary btn-sm';
+        retakeBtn.className = 'btn-secondary btn-sm btn-retake';
         retakeBtn.textContent = 'Làm lại';
         retakeBtn.title = 'Cấp quyền làm lại bài thi';
         retakeBtn.addEventListener('click', () => {

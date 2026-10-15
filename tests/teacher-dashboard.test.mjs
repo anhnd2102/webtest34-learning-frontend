@@ -1111,6 +1111,40 @@ test('teacher dashboard styles.css provides sticky actions bar and audio wavefor
   assert.match(css, /\.audio-waveform-bar/);
 });
 
+test('getStudentInitials extracts 2 uppercase letters from student name', async () => {
+  const { getStudentInitials } = await import('../term-tests/teacher-dashboard/app.js');
+
+  assert.equal(getStudentInitials('Đức Anh'), 'ĐA');
+  assert.equal(getStudentInitials('Lê Hằng'), 'LH');
+  assert.equal(getStudentInitials('Đoàn Thị Lan Anh'), 'ĐT');
+  assert.equal(getStudentInitials('Đỗ Anh Thư'), 'ĐA');
+  assert.equal(getStudentInitials('Hoàng'), 'HO');
+  assert.equal(getStudentInitials('A'), 'A');
+  assert.equal(getStudentInitials(''), 'HV');
+  assert.equal(getStudentInitials(null), 'HV');
+});
+
+test('getAvatarColor returns deterministic palette with bg, text, and border', async () => {
+  const { getAvatarColor } = await import('../term-tests/teacher-dashboard/app.js');
+
+  const color1 = getAvatarColor('Đức Anh');
+  const color2 = getAvatarColor('Đức Anh');
+  assert.deepEqual(color1, color2);
+  assert.ok(color1.bg && color1.text && color1.border);
+});
+
+test('teacher dashboard styles.css provides .student-avatar, .student-code, and pill badge styling', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.student-cell-wrap/);
+  assert.match(css, /\.student-avatar/);
+  assert.match(css, /\.student-name/);
+  assert.match(css, /\.student-code/);
+  assert.match(css, /\.btn-view-attempt/);
+});
+
+
 
 
 

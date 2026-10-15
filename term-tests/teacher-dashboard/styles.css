@@ -305,16 +305,16 @@ th { background: #f8fafc; font-weight: 700; color: #2d3748; }
 tr:hover td { background: #fafbfc; }
 .empty-results { text-align: center; color: #64748b; padding: 32px 16px; font-style: italic; }
 .score { font-variant-numeric: tabular-nums; font-weight: 600; }
-.result-status { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 700; }
-.result-status.not_started { background: #edf2f7; color: #718096; }
-.result-status.in_progress { background: #e8f4fd; color: #2b6cb0; }
-.result-status.retake_granted { background: #f3e8ff; color: #6b21a8; }
-.result-status.retaking { background: #e0f2fe; color: #0369a1; }
-.result-status.retake_expired { background: #fee2e2; color: #991b1b; }
-.result-status.superseded { background: #f1f5f9; color: #64748b; }
-.result-status.grading { background: #fefcbf; color: #975a16; }
-.result-status.review_required { background: #feebc8; color: #c05621; }
-.result-status.complete { background: #c6f6d5; color: #22543d; }
+.result-status { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 9999px; font-size: 0.78rem; font-weight: 700; line-height: 1.25; border: 1px solid transparent; }
+.result-status.not_started { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+.result-status.in_progress { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.result-status.retake_granted { background: #faf5ff; color: #7e22ce; border-color: #e9d5ff; }
+.result-status.retaking { background: #f0f9ff; color: #0369a1; border-color: #bae6fd; }
+.result-status.retake_expired { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+.result-status.superseded { background: #f8fafc; color: #64748b; border-color: #e2e8f0; }
+.result-status.grading { background: #fefce8; color: #a16207; border-color: #fef08a; }
+.result-status.review_required { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+.result-status.complete { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
 .table-actions { display: flex; gap: 6px; align-items: center; }
 .modal-info { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; display: flex; gap: 8px; align-items: center; font-size: 0.9rem; }
 
@@ -420,8 +420,8 @@ tr:hover td { background: #fafbfc; }
 
 .meta-badge.badge-published { background: #c6f6d5; color: #22543d; font-weight: 700; }
 .meta-badge.badge-unpub { background: #edf2f7; color: #718096; }
-.badge-pub { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; background: #edf2f7; color: #718096; }
-.badge-pub.is-pub { background: #c6f6d5; color: #22543d; font-weight: 700; }
+.badge-pub { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; line-height: 1.25; }
+.badge-pub.is-pub { background: #f0fdf4; color: #166534; border-color: #bbf7d0; font-weight: 700; }
 
 .badge-left-class {
   display: inline-block;
@@ -1714,6 +1714,93 @@ body:not(.login-page) #auth-panel {
 .time-stamp-wrap .date-part {
   font-size: 0.74rem;
   color: #64748b;
+}
+
+/* ==========================================================================
+   Issue 25: Student Initials Avatar, Sub-label & Gradebook Action Styling
+   ========================================================================== */
+.student-cell {
+  vertical-align: middle;
+}
+
+.student-cell-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 180px;
+}
+
+.student-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  border: 1.5px solid transparent;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  user-select: none;
+}
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.25;
+}
+
+.student-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+.student-code {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+.btn-view-attempt {
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 5px 12px;
+  color: #db0829;
+  border: 1px solid #fecaca;
+  background: #ffffff;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-view-attempt:hover {
+  background: #db0829;
+  color: #ffffff;
+  border-color: #b80521;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(219, 8, 41, 0.25);
+}
+
+.btn-retake {
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 5px 10px;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  transition: all 0.15s ease;
+}
+
+.btn-retake:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: translateY(-1px);
 }
 
 /* Issue 20: Smart Class Filtering Controls */
