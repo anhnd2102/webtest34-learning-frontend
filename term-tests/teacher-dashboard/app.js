@@ -4,6 +4,33 @@ export function defaultApiBase() {
   return 'https://webtest.ducanhn.autos';
 }
 
+export const ICONS = {
+  teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  book: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  search: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  link: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  external: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+  externalLink: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+  copy: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  check: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
+  close: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  qr: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  view: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  alert: '<svg class="icon-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  filter: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+  rotate: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>',
+  clipboard: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
+  logout: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>'
+};
+
+export function renderSvgIcon(name, customClass = '') {
+  const icon = ICONS[name];
+  if (!icon) return '';
+  if (!customClass) return icon;
+  return icon.replace('class="', `class="${customClass} `);
+}
+
 // Dashboard chạy local (run-local.sh) thì link học viên trỏ về static server local; production giữ nguyên link backend trả.
 // `prod=1`: run-local.sh không chạy backend, nên trang học viên local phải gọi API production như dashboard.
 export function localStudentUrl(studentUrl, location) {
@@ -889,9 +916,9 @@ async function startDashboard() {
       if (!url) return;
       try {
         await navigator.clipboard.writeText(url);
-        const originalText = copyStudentLinkBtn.textContent;
-        copyStudentLinkBtn.textContent = '✓ Đã sao chép!';
-        setTimeout(() => { copyStudentLinkBtn.textContent = originalText; }, 2000);
+        const originalHtml = copyStudentLinkBtn.innerHTML;
+        copyStudentLinkBtn.innerHTML = `${ICONS.check} <span>Đã sao chép!</span>`;
+        setTimeout(() => { copyStudentLinkBtn.innerHTML = originalHtml; }, 2000);
       } catch {
         assignmentStudentUrl?.select();
         document.execCommand('copy');
@@ -905,9 +932,9 @@ async function startDashboard() {
       if (!url) return;
       try {
         await navigator.clipboard.writeText(url);
-        const originalText = copyShowcaseLinkBtn.textContent;
-        copyShowcaseLinkBtn.textContent = '✓ Đã sao chép!';
-        setTimeout(() => { copyShowcaseLinkBtn.textContent = originalText; }, 2000);
+        const originalHtml = copyShowcaseLinkBtn.innerHTML;
+        copyShowcaseLinkBtn.innerHTML = `${ICONS.check} <span>Đã sao chép!</span>`;
+        setTimeout(() => { copyShowcaseLinkBtn.innerHTML = originalHtml; }, 2000);
       } catch {
         showcaseStudentUrl?.select();
         document.execCommand('copy');
@@ -932,7 +959,7 @@ async function startDashboard() {
         <div class="qr-modal-content">
           <div class="qr-modal-header">
             <h3>Mã QR phòng làm bài</h3>
-            <button type="button" class="btn-close-qr" onclick="this.closest('dialog').close()">✕</button>
+            <button type="button" class="btn-close-qr" onclick="this.closest('dialog').close()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
           <div class="qr-image-wrap">
             <img src="${qrApiUrl}" alt="Mã QR bài thi" width="220" height="220" style="border-radius: 8px;">
@@ -1536,7 +1563,7 @@ async function startDashboard() {
           const detailBtn = document.createElement('button');
           detailBtn.type = 'button';
           detailBtn.className = 'btn-secondary btn-sm btn-view-attempt';
-          detailBtn.textContent = 'Xem bài';
+          detailBtn.innerHTML = `${ICONS.view} <span>Xem bài</span>`;
           detailBtn.title = 'Xem chi tiết bài làm';
           detailBtn.addEventListener('click', () => {
             state.attemptId = student.attemptId;
@@ -1550,7 +1577,7 @@ async function startDashboard() {
         const retakeBtn = document.createElement('button');
         retakeBtn.type = 'button';
         retakeBtn.className = 'btn-secondary btn-sm btn-retake';
-        retakeBtn.textContent = 'Làm lại';
+        retakeBtn.innerHTML = `${ICONS.rotate} <span>Làm lại</span>`;
         retakeBtn.title = 'Cấp quyền làm lại bài thi';
         retakeBtn.addEventListener('click', () => {
           openGrantRetakeModal({
@@ -1836,7 +1863,7 @@ async function startDashboard() {
         secTr.innerHTML = `
           <td colspan="8">
             <div class="sec-header-wrap">
-              <span class="sec-header-title">📚 ${escapeHtml(section.title)}</span>
+              <span class="sec-header-title">${ICONS.book} <span>${escapeHtml(section.title)}</span></span>
               <div class="sec-header-badges">
                 <span class="sec-header-score">${section.scoreEarned}/${section.maxScore} điểm</span>
                 <span class="sec-header-count">(${section.correctCount}/${section.totalItems} câu đúng)</span>
@@ -1866,7 +1893,7 @@ async function startDashboard() {
           const tdPrompt = document.createElement('td');
           const compactPrompt = formatCompactPrompt(item);
           const optBtnHtml = compactPrompt.hasExtensiveOptions
-            ? `<button type="button" class="prompt-opt-btn" data-item-id="${item.itemVersionId}">📋 Xem danh sách từ (${compactPrompt.optionsCount})</button>`
+            ? `<button type="button" class="prompt-opt-btn" data-item-id="${item.itemVersionId}">${ICONS.clipboard} <span>Xem danh sách từ (${compactPrompt.optionsCount})</span></button>`
             : '';
           tdPrompt.innerHTML = `
             <div class="prompt-compact">
@@ -1938,7 +1965,7 @@ async function startDashboard() {
 
           // 8. Action Column
           const tdAction = document.createElement('td');
-          tdAction.innerHTML = `<button type="button" class="btn-inspect-item" data-item-id="${item.itemVersionId}">🔍 Xem</button>`;
+          tdAction.innerHTML = `<button type="button" class="btn-inspect-item" data-item-id="${item.itemVersionId}">${ICONS.view} <span>Xem</span></button>`;
           tr.append(tdAction);
 
           detailItemsBody.append(tr);
@@ -2311,7 +2338,7 @@ async function startDashboard() {
         leadScopeFilters.hidden = false;
         const allBtn = leadScopeFilters.querySelector('[data-scope="all"]');
         if (allBtn && currentTeacher.courseCodes?.length) {
-          allBtn.textContent = `📋 Tất cả lớp Khối ${currentTeacher.courseCodes.join(', ')}`;
+          allBtn.innerHTML = `${ICONS.classes} <span>Tất cả lớp Khối ${escapeHtml(currentTeacher.courseCodes.join(', '))}</span>`;
         }
       }
     } else {
@@ -2467,7 +2494,7 @@ async function startDashboard() {
     if (!conflictAlert) return;
     conflictAlert.replaceChildren();
     const span = document.createElement('span');
-    span.textContent = `⚠️ ${msg}`;
+    span.innerHTML = `${ICONS.alert} <span>${escapeHtml(msg)}</span>`;
     const reloadBtn = document.createElement('button');
     reloadBtn.type = 'button';
     reloadBtn.className = 'btn-secondary';

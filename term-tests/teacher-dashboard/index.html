@@ -154,15 +154,22 @@
             <div id="lead-scope-filters" class="course-filter-group" hidden aria-label="Phạm vi lớp của Lead">
               <span class="filter-group-label">Chế độ xem:</span>
               <div class="filter-pills" role="radiogroup">
-                <button type="button" class="filter-pill" data-scope="my_classes">👨‍🏫 Lớp tôi đang dạy</button>
-                <button type="button" class="filter-pill active" data-scope="all">📋 Tất cả lớp trong khối</button>
+                <button type="button" class="filter-pill" data-scope="my_classes">
+                  <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <span>Lớp tôi đang dạy</span>
+                </button>
+                <button type="button" class="filter-pill active" data-scope="all">
+                  <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span>Tất cả lớp trong khối</span>
+                </button>
               </div>
             </div>
 
             <!-- Search Input & Status Filter -->
             <div class="class-search-status-row">
               <div class="class-search-wrap">
-                <input id="class-search-input" type="search" placeholder="🔍 Tìm mã hoặc tên lớp (ví dụ IC2283)..." autocomplete="off" aria-label="Tìm kiếm lớp học">
+                <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="class-search-input" type="search" placeholder="Tìm mã hoặc tên lớp (ví dụ IC2283)..." autocomplete="off" aria-label="Tìm kiếm lớp học">
               </div>
               <div class="class-status-wrap">
                 <select id="class-status-filter" aria-label="Lọc theo trạng thái lớp">
@@ -224,10 +231,19 @@
             </div>
 
             <div id="showcase-link-bar" class="assignment-link-bar">
-              <span class="link-label">🔗 Link làm bài cho học viên:</span>
+              <span class="link-label">
+                <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                <span>Link làm bài cho học viên:</span>
+              </span>
               <input id="showcase-student-url" type="text" readonly class="student-url-input">
-              <button id="copy-showcase-link-btn" type="button" class="btn-secondary">Sao chép link</button>
-              <a id="open-showcase-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">Mở trang thi ↗</a>
+              <button id="copy-showcase-link-btn" type="button" class="btn-secondary">
+                <svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Sao chép link</span>
+              </button>
+              <a id="open-showcase-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">
+                <span>Mở trang thi</span>
+                <svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
               <button id="showcase-qr-btn" type="button" class="btn-secondary qr-btn" title="Hiện mã QR">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="3" width="7" height="7"/>
@@ -242,7 +258,9 @@
         </section>
 
         <div id="showcase-placeholder" class="panel showcase-placeholder">
-          <div class="placeholder-icon">📋</div>
+          <div class="placeholder-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+          </div>
           <h3>Chưa chọn bài kiểm tra</h3>
           <p>Vui lòng chọn lớp học và bài test ở bảng bên trái để xem thông tin phòng thi và kết quả học viên.</p>
         </div>
@@ -279,10 +297,19 @@
           <h2 id="assignment-heading">Bảng kết quả</h2>
           <p id="assignment-meta" class="meta-info"></p>
           <div id="assignment-link-bar" class="assignment-link-bar" hidden>
-            <span class="link-label">🔗 Link làm bài cho học viên:</span>
+            <span class="link-label">
+              <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <span>Link làm bài cho học viên:</span>
+            </span>
             <input id="assignment-student-url" type="text" readonly class="student-url-input">
-            <button id="copy-student-link-btn" type="button" class="btn-secondary">Sao chép link</button>
-            <a id="open-student-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">Mở trang thi ↗</a>
+            <button id="copy-student-link-btn" type="button" class="btn-secondary">
+              <svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Sao chép link</span>
+            </button>
+            <a id="open-student-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">
+              <span>Mở trang thi</span>
+              <svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
           </div>
         </div>
         <div class="refresh-container">
@@ -429,7 +456,9 @@
           <h2 id="detail-heading">Chi tiết bài làm</h2>
           <div id="detail-meta" class="meta-badges"></div>
         </div>
-        <button id="close-attempt-detail-btn" type="button" class="btn-close-drawer" aria-label="Đóng ngăn kéo" title="Đóng (Esc)">✕</button>
+        <button id="close-attempt-detail-btn" type="button" class="btn-close-drawer" aria-label="Đóng ngăn kéo" title="Đóng (Esc)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
       <div class="detail-section">
@@ -509,7 +538,10 @@
       <div class="modal-form">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h3 id="modal-item-title">Chi tiết câu hỏi</h3>
-          <button id="close-item-modal-btn" type="button" class="btn-secondary btn-sm">✕ Đóng</button>
+          <button id="close-item-modal-btn" type="button" class="btn-secondary btn-sm">
+          <svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <span>Đóng</span>
+        </button>
         </div>
         <div id="modal-item-content" class="modal-item-content"></div>
       </div>

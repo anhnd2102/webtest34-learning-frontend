@@ -1162,6 +1162,38 @@ test('teacher dashboard styles.css provides .student-avatar, .student-code, and 
   assert.match(css, /\.btn-view-attempt/);
 });
 
+test('ICONS dictionary and renderSvgIcon provide minimalist monochromatic SVG line icons', async () => {
+  const { ICONS, renderSvgIcon } = await import('../term-tests/teacher-dashboard/app.js');
+
+  assert.ok(ICONS, 'ICONS dictionary should be exported');
+  const requiredIcons = ['teacher', 'classes', 'book', 'search', 'link', 'copy', 'check', 'close', 'qr', 'view', 'alert', 'external', 'clipboard', 'logout'];
+  for (const name of requiredIcons) {
+    assert.ok(ICONS[name], `ICONS.${name} should exist`);
+    assert.match(ICONS[name], /<svg[^>]*>/, `ICONS.${name} should be valid SVG`);
+    assert.match(ICONS[name], /stroke="currentColor"/, `ICONS.${name} should use currentColor stroke`);
+    assert.match(ICONS[name], /fill="none"/, `ICONS.${name} should have fill="none"`);
+  }
+
+  assert.equal(renderSvgIcon('nonexistent'), '');
+  assert.match(renderSvgIcon('search', 'custom-class'), /class="[^"]*custom-class[^"]*"/);
+});
+
+test('teacher dashboard index.html and styles.css provide minimalist line icon styling without emojis', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.icon-inline/);
+  assert.match(css, /\.search-icon/);
+  assert.match(html, /<svg class="search-icon"/);
+  assert.match(html, /placeholder="Tìm mã hoặc tên lớp/);
+
+  // Assert no emoji characters exist in index.html
+  const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E0}-\u{1F1FF}]/u;
+  assert.equal(emojiRegex.test(html), false, 'index.html should not contain any emoji characters');
+});
+
+
 
 
 

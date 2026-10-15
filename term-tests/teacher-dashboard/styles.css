@@ -1874,11 +1874,23 @@ body:not(.login-page) #auth-panel {
 .class-search-wrap {
   flex: 1 1 240px;
   min-width: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.class-search-wrap .search-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .class-search-wrap input[type="search"] {
   width: 100%;
-  padding: 9px 14px;
+  padding: 9px 14px 9px 36px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   font-size: 0.88rem;
@@ -1990,11 +2002,51 @@ body:not(.login-page) #auth-panel {
   line-height: 1.4;
 }
 
+/* Minimalist SVG Line Icons System (Issue 28) */
+.icon-inline {
+  display: inline-block;
+  vertical-align: -0.15em;
+  margin-right: 5px;
+  flex-shrink: 0;
+  stroke: currentColor;
+}
 
+.placeholder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: #94a3b8;
+}
 
+.placeholder-icon svg {
+  stroke: #94a3b8;
+}
 
+.btn-view-attempt,
+.btn-retake {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
 
+.btn-view-attempt .icon-inline,
+.btn-retake .icon-inline {
+  margin-right: 0;
+}
 
+.assignment-link-bar .btn-secondary,
+.assignment-link-bar .link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
 
-
+.btn-close-drawer,
+.btn-close-qr {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
