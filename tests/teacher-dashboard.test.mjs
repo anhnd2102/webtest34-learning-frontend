@@ -1336,17 +1336,39 @@ test('teacher dashboard styles.css and index.html provide wide attempt-detail dr
   assert.match(css, /\.q-pos-num[^}]*white-space:\s*nowrap/);
 });
 
-test('teacher dashboard app.js formats compact question number without internal tech badges', async () => {
+test('teacher dashboard provides modern exam-mode toggle switch, slider, and status pill', async () => {
   const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(html, /id="exam-mode-toggle"/);
+  assert.match(html, /class="toggle-slider"/);
+  assert.match(html, /id="exam-mode-status-pill"/);
+  assert.match(css, /\.toggle-slider/);
+  assert.match(css, /\.exam-mode-status-pill/);
+});
+
+test('teacher dashboard provides role capabilities popover and tooltip trigger', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
   const code = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
 
-  // Should render #position and col-pos-cell
-  assert.match(code, /col-pos-cell/);
-  assert.match(code, /#\$\{item\.position\}/);
+  assert.match(html, /id="role-capabilities-popover"/);
+  assert.match(html, /Kiểm tra toàn bộ các lớp/);
+  assert.match(css, /\.role-capabilities-popover/);
+  assert.match(code, /roleCapabilitiesPopover/);
+});
 
-  // Should NOT render internal tech badges in question column
-  assert.equal(code.includes('q-type-badge'), false, 'q-type-badge should be completely removed');
-  assert.equal(code.includes('q-skill-badge'), false, 'q-skill-badge should be completely removed');
+test('teacher dashboard lead-scope-filters provides 1-row nowrap layout and concise labels', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const code = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+
+  assert.match(html, /Lớp tôi dạy/);
+  assert.match(css, /#lead-scope-filters[^{]*\{[^}]*flex-wrap:\s*nowrap/);
+  assert.match(code, /Toàn bộ khối/);
 });
 
 

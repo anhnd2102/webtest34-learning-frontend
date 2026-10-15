@@ -909,6 +909,7 @@ async function startDashboard() {
   const showcasePhaseBadge = document.querySelector('#showcase-phase-badge');
   const showcaseStatusBadge = document.querySelector('#showcase-status-badge');
   const examModeToggle = document.querySelector('#exam-mode-toggle');
+  const examModeStatusPill = document.querySelector('#exam-mode-status-pill');
   const examRoomOpenButton = document.querySelector('#exam-room-open');
   const examRoom = document.querySelector('#exam-room');
   const examRoomSummary = document.querySelector('#exam-room-summary');
@@ -1134,7 +1135,7 @@ async function startDashboard() {
     currentSelectedAssignment = assignment;
     if (examRoom) examRoom.hidden = true;
     if (examRoomOpenButton) examRoomOpenButton.hidden = !assignment.examMode;
-    if (examModeToggle) examModeToggle.checked = Boolean(assignment.examMode);
+    updateExamModeUI(assignment.examMode);
     const selectedClassOpt = classSelect?.selectedOptions?.[0];
     const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
 
@@ -1209,6 +1210,11 @@ async function startDashboard() {
   const teacherProfileName = document.querySelector('#teacher-profile-name');
   const teacherProfileMeta = document.querySelector('#teacher-profile-meta');
   const teacherRoleBadge = document.querySelector('#teacher-role-badge');
+  const roleBadgeWrap = document.querySelector('#role-badge-wrap');
+  const roleInfoBtn = document.querySelector('#role-info-btn');
+  const roleCapabilitiesPopover = document.querySelector('#role-capabilities-popover');
+  const closeRolePopoverBtn = document.querySelector('#close-role-popover');
+  const popoverRoleTitle = document.querySelector('#popover-role-title');
   const logoutBtn = document.querySelector('#logout-btn');
 
   let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
@@ -1441,6 +1447,15 @@ async function startDashboard() {
     });
   });
 
+  function updateExamModeUI(enabled) {
+    const isEnabled = Boolean(enabled);
+    if (examModeToggle) examModeToggle.checked = isEnabled;
+    if (examModeStatusPill) {
+      examModeStatusPill.textContent = isEnabled ? 'Đang bật' : 'Đang tắt';
+      examModeStatusPill.className = `exam-mode-status-pill ${isEnabled ? 'active' : ''}`;
+    }
+  }
+
   examModeToggle?.addEventListener('change', async () => {
     if (!currentSelectedAssignment) return;
     examModeToggle.disabled = true;
@@ -1451,11 +1466,12 @@ async function startDashboard() {
         body: JSON.stringify({ enabled: examModeToggle.checked })
       });
       currentSelectedAssignment.examMode = payload.examMode;
+      updateExamModeUI(payload.examMode);
       if (examRoomOpenButton) examRoomOpenButton.hidden = !payload.examMode;
       if (!payload.examMode && examRoom) examRoom.hidden = true;
       status.textContent = payload.examMode ? 'Exam Mode đã bật. Học viên sẽ chờ giáo viên bắt đầu.' : 'Exam Mode đã tắt.';
     } catch (error) {
-      examModeToggle.checked = Boolean(currentSelectedAssignment.examMode);
+      updateExamModeUI(currentSelectedAssignment.examMode);
       status.textContent = error.message;
     } finally {
       examModeToggle.disabled = false;
@@ -2441,7 +2457,7 @@ async function startDashboard() {
         leadScopeFilters.hidden = false;
         const allBtn = leadScopeFilters.querySelector('[data-scope="all"]');
         if (allBtn && currentTeacher.courseCodes?.length) {
-          allBtn.innerHTML = `${ICONS.classes} <span>Tất cả lớp Khối ${escapeHtml(currentTeacher.courseCodes.join(', '))}</span>`;
+          allBtn.innerHTML = `${ICONS.classes} <span>Toàn bộ khối</span>`;
         }
       }
     } else {
@@ -3196,8 +3212,65 @@ async function startDashboard() {
     if (loginError) loginError.hidden = true;
   }
 
+  function toggleRoleCapabilitiesPopover(show) {
+    if (!roleCapabilitiesPopover) return;
+    const shouldShow = typeof show === 'boolean' ? show : roleCapabilitiesPopover.hidden;
+    roleCapabilitiesPopover.hidden = !shouldShow;
+    if (teacherRoleBadge) teacherRoleBadge.setAttribute('aria-expanded', String(shouldShow));
+    if (shouldShow && currentTeacher && popoverRoleTitle) {
+      if (currentTeacher.role === 'admin' || currentTeacher.role === 'qm') {
+        popoverRoleTitle.textContent = 'Quyền hạn Quản trị viên (Admin)';
+      } else if (currentTeacher.role === 'lead') {
+        popoverRoleTitle.textContent = `Quyền hạn Trưởng nhóm Khối (${(currentTeacher.courseCodes || []).join(', ') || 'Lead'})`;
+      } else {
+        popoverRoleTitle.textContent = 'Quyền hạn Giảng viên (Teacher)';
+      }
+    }
+  }
+
+  if (roleInfoBtn) {
+    roleInfoBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleRoleCapabilitiesPopover();
+    });
+  }
+
+  if (teacherRoleBadge) {
+    teacherRoleBadge.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleRoleCapabilitiesPopover();
+    });
+    teacherRoleBadge.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleRoleCapabilitiesPopover();
+      }
+    });
+  }
+
+  if (closeRolePopoverBtn) {
+    closeRolePopoverBtn.addEventListener('click', () => {
+      toggleRoleCapabilitiesPopover(false);
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    if (roleCapabilitiesPopover && !roleCapabilitiesPopover.hidden) {
+      if (!roleCapabilitiesPopover.contains(e.target) && !roleBadgeWrap?.contains(e.target)) {
+        toggleRoleCapabilitiesPopover(false);
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && roleCapabilitiesPopover && !roleCapabilitiesPopover.hidden) {
+      toggleRoleCapabilitiesPopover(false);
+    }
+  });
+
   function handleLogout() {
     stopExamRoomEvents();
+    if (roleCapabilitiesPopover) roleCapabilitiesPopover.hidden = true;
     document.body.classList.add('login-page');
     sessionToken = '';
     currentTeacher = null;
