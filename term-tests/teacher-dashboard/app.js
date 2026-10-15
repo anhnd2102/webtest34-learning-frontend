@@ -85,7 +85,7 @@ export function resetDashboardState(state = {}) {
   return state;
 }
 
-export function filterClasses(classes = [], { course = '', scope = '', classStatus = '', q = '', userRole = '' } = {}) {
+export function filterClasses(classes = [], { course = '', scope = '', classStatus = '', q = '', userRole = '', userClassIds = [] } = {}) {
   let list = Array.isArray(classes) ? [...classes] : [];
 
   // Exclude completed or cancelled classes
@@ -96,7 +96,11 @@ export function filterClasses(classes = [], { course = '', scope = '', classStat
 
   // 1. Role-specific filters
   if (userRole === 'lead' && scope === 'my_classes') {
-    list = list.filter(c => Boolean(c.isTeaching || c.is_teaching));
+    const classIdSet = new Set((userClassIds || []).map(String));
+    list = list.filter(c => {
+      const cid = String(c.classId || c.class_id || '');
+      return Boolean(c.isTeaching || c.is_teaching || classIdSet.has(cid));
+    });
   } else if (course && course !== 'all') {
     const normCourse = String(course).replace(/^[^\d]*/, '').trim().toUpperCase();
     list = list.filter(c => {
@@ -2255,12 +2259,14 @@ async function startDashboard() {
 
   function renderFilteredClasses() {
     if (!classSelect) return;
+    const userClassIds = currentTeacher?.classIds || [];
     const filtered = filterClasses(rawClassesList, {
       course: state.course,
       scope: state.scope,
       classStatus: state.classStatus,
       q: state.classQ,
-      userRole: currentTeacher?.role
+      userRole: currentTeacher?.role,
+      userClassIds
     });
 
     if (classCountBadge) {
@@ -2362,8 +2368,11 @@ async function startDashboard() {
   async function loadClasses() {
     status.textContent = 'Đang kiểm tra quyền…';
     const payload = await request('/api/teacher/classes');
-    if (payload.actor && !currentTeacher) {
-      currentTeacher = payload.actor;
+    if (payload.actor) {
+      currentTeacher = { ...(currentTeacher || {}), ...payload.actor };
+      if (Array.isArray(payload.actor.classIds) && payload.actor.classIds.length > 0) {
+        currentTeacher.classIds = payload.actor.classIds;
+      }
     }
     rawClassesList = payload.classes || [];
     setupClassFilterToolbar();

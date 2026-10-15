@@ -958,6 +958,20 @@ test('filterClasses filters classes by course, scope, status, and search query',
   assert.deepEqual(myClasses.map(c => c.classId), ['104', '105']);
   assert.ok(!myClasses.some(c => c.classId === '106'));
 
+  // 2b. Lead scope with userClassIds fallback when isTeaching property is missing
+  const classesWithoutIsTeaching = [
+    { classId: '101', name: 'IC2182', courseCode: '45', status: 'on_going' },
+    { classId: '103', name: 'IC2283', courseCode: '34', status: 'on_going' },
+    { classId: '104', name: 'IC2251', courseCode: '03', status: 'on_going' }
+  ];
+  const myClassesByIds = filterClasses(classesWithoutIsTeaching, {
+    userRole: 'lead',
+    scope: 'my_classes',
+    userClassIds: ['103', '104']
+  });
+  assert.equal(myClassesByIds.length, 2);
+  assert.deepEqual(myClassesByIds.map(c => c.classId), ['103', '104']);
+
   // 3. Status filter
   const ongoing = filterClasses(sampleClasses, { classStatus: 'on_going' });
   assert.equal(ongoing.length, 3);
