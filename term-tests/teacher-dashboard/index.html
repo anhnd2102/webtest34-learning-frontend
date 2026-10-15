@@ -30,11 +30,59 @@
   </script>
 </head>
 <body class="login-page">
+  <header class="global-navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <a href="./index.html" class="navbar-brand">
+          <div class="brand-badge">IZ</div>
+          <div class="brand-text">
+            <span class="brand-title">IZONE</span>
+            <span class="brand-sub">LEARNING PLATFORM</span>
+          </div>
+        </a>
+        <nav class="navbar-menu" aria-label="Điều hướng phân hệ">
+          <a href="#dashboard" class="nav-item active">Teacher Dashboard</a>
+          <a href="#exams" class="nav-item">Quản lý bài thi</a>
+          <a href="#grading" class="nav-item">Chấm điểm &amp; Đánh giá</a>
+          <a href="#reports" class="nav-item">Báo cáo phổ điểm</a>
+        </nav>
+      </div>
+
+      <div class="navbar-right">
+        <div class="system-status-pill" title="Hệ thống vận hành bình thường">
+          <span class="status-indicator-dot"></span>
+          <span class="status-indicator-text">Online</span>
+        </div>
+
+        <div id="teacher-profile" class="teacher-profile" hidden>
+          <div class="profile-info">
+            <div class="profile-avatar" id="teacher-profile-avatar">GV</div>
+            <div class="profile-text">
+              <h3 id="teacher-profile-name">—</h3>
+              <p id="teacher-profile-meta" class="meta-info">—</p>
+            </div>
+            <span id="teacher-role-badge" class="role-badge">—</span>
+          </div>
+          <button id="logout-btn" type="button" class="btn-logout" title="Đăng xuất">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span>Đăng xuất</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
   <main>
-    <header>
-      <p class="eyebrow">IZONE LEARNING PLATFORM</p>
-      <h1>Teacher Dashboard</h1>
-      <p>Quản lý bài kiểm tra và kết quả học viên.</p>
+    <header class="page-title-bar">
+      <div class="title-wrap">
+        <p class="eyebrow">IZONE LEARNING PLATFORM</p>
+        <h1>Teacher Dashboard</h1>
+        <p>Quản lý bài kiểm tra và kết quả học viên.</p>
+      </div>
     </header>
 
     <section id="auth-panel" class="panel">
@@ -73,17 +121,6 @@
           <p>Vui lòng liên hệ bộ phận phụ trách.</p>
         </div>
       </form>
-
-      <div id="teacher-profile" class="teacher-profile" hidden>
-        <div class="profile-info">
-          <div>
-            <h3 id="teacher-profile-name">—</h3>
-            <p id="teacher-profile-meta" class="meta-info">—</p>
-          </div>
-          <span id="teacher-role-badge" class="role-badge">—</span>
-        </div>
-        <button id="logout-btn" type="button" class="btn-secondary">Đăng xuất</button>
-      </div>
     </section>
 
     <footer class="login-footer">IZONE Learning Platform</footer>

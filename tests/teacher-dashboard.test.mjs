@@ -1021,6 +1021,30 @@ test('teacher dashboard styles.css provides .class-filter-toolbar and filter pil
   assert.match(css, /\.class-count-badge/);
 });
 
+test('teacher dashboard index.html provides global sticky top navbar and stitch navigation elements', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /class="global-navbar"/);
+  assert.match(html, /class="navbar-brand"/);
+  assert.match(html, /class="navbar-menu"/);
+  assert.match(html, /Teacher Dashboard/);
+  assert.match(html, /Quản lý bài thi/);
+  assert.match(html, /Chấm điểm (&amp;|&) Đánh giá/);
+  assert.match(html, /id="teacher-profile"/);
+});
+
+test('teacher dashboard styles.css provides .global-navbar sticky and responsive styling', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.global-navbar/);
+  assert.match(css, /position:\s*sticky/);
+  assert.match(css, /\.navbar-menu/);
+  assert.match(css, /\.navbar-brand/);
+});
+
+
 
 
 

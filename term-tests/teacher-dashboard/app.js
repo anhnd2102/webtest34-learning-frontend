@@ -2912,6 +2912,18 @@ async function startDashboard() {
     setupClassFilterToolbar();
     if (teacherProfileName) teacherProfileName.textContent = teacher.name || teacher.email;
     if (teacherProfileMeta) teacherProfileMeta.textContent = `${teacher.email} · SĐT: ${teacher.phone || '—'}`;
+    const teacherProfileAvatar = document.querySelector('#teacher-profile-avatar');
+    if (teacherProfileAvatar) {
+      const name = (teacher.name || teacher.email || '').trim();
+      const parts = name.split(/\s+/).filter(Boolean);
+      let initials = 'GV';
+      if (parts.length >= 2) {
+        initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      } else if (parts.length === 1) {
+        initials = parts[0].slice(0, 2).toUpperCase();
+      }
+      teacherProfileAvatar.textContent = initials;
+    }
     if (teacherRoleBadge) {
       teacherRoleBadge.textContent = teacherRoleLabel(teacher.role, teacher.courseCodes);
       teacherRoleBadge.className = `role-badge ${teacher.role || 'teacher'}`;
