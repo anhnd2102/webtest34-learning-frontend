@@ -12,6 +12,7 @@
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
+  <script src="exam-guard.js?rev=20261015-exam-guard-device-id-v3"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -50,6 +51,10 @@
     button,input,textarea,select{font:inherit}
     button{cursor:pointer}
     .hidden{display:none!important}
+    #examApp.exam-guard-blurred{filter:blur(7px);pointer-events:none;user-select:none}
+    .exam-guard-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;background:rgba(17,24,39,.72)}
+    .exam-guard-card{width:min(100%,480px);padding:28px;border-radius:18px;background:#fff;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+    .exam-guard-card h2{margin:0 0 12px;font-family:Geologica,sans-serif;font-size:24px}
     .shell{min-height:100vh}
     .topbar{
       position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
@@ -388,6 +393,20 @@
       </div>
     </section>
 
+    <section class="intro hidden" id="examWaitingRoom" aria-live="polite">
+      <div class="intro-card">
+        <div class="eyebrow">PHÒNG CHỜ</div>
+        <h1 id="exam-waiting-greeting">Xin chào!</h1>
+        <p>Đề sẽ hiện khi giáo viên bắt đầu.</p>
+        <p id="exam-fullscreen-status" aria-live="polite"></p>
+        <p id="exam-waiting-error" class="notice hidden" role="alert"></p>
+        <div class="start-actions">
+          <button id="exam-ready-button" class="btn btn-primary" type="button">Tôi đã sẵn sàng</button>
+          <button id="exam-fullscreen-reenter" class="btn btn-secondary hidden" type="button">Vào chế độ thi</button>
+        </div>
+      </div>
+    </section>
+
     <section class="exam-layout hidden" id="examApp">
       <div class="main-column" id="mainColumn"></div>
       <aside class="side-panel">
@@ -410,6 +429,14 @@
     <button class="btn btn-secondary" id="mobilePrev">← Phần trước</button>
     <button class="btn btn-primary" id="mobileNext">Phần tiếp →</button>
   </div>
+
+  <div class="exam-guard-overlay hidden" id="examGuardOverlay" role="alertdialog" aria-modal="true" aria-labelledby="examGuardTitle" aria-describedby="examGuardMessage">
+    <div class="exam-guard-card">
+      <h2 id="examGuardTitle">Bạn đã rời khỏi màn hình thi.</h2>
+      <p id="examGuardMessage">Giáo viên sẽ được thông báo.</p>
+      <button class="btn btn-primary" id="examGuardReturn" type="button">Quay lại bài thi</button>
+    </div>
+  </div>
 </div>
 
 <div class="modal-backdrop hidden" id="submitModal" role="dialog" aria-modal="true" aria-labelledby="submitTitle">
@@ -431,7 +458,7 @@
   const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
   if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs?rev=20261012-update-spk3-v1').then(module => module.mount(demoCourse)).catch((err) => {
+    import('./content-preview.mjs?rev=20261015-exam-mode-v1').then(module => module.mount(demoCourse)).catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });
@@ -538,6 +565,15 @@
   }
 
   const state = loadState();
+  const deviceId = (() => {
+    try{
+      let id = sessionStorage.getItem('webtest34.learning.deviceId');
+      if(!id) sessionStorage.setItem('webtest34.learning.deviceId', id = createClientKey());
+      return id;
+    }catch{
+      return createClientKey();
+    }
+  })();
   let currentSection = state.currentSection || 'vocabulary';
   let fontScale = state.fontScale || 1;
   let learningDraftChain = Promise.resolve();
@@ -545,6 +581,8 @@
   let learningResultPollInFlight = false;
   let learningResultPollStartedAt = 0;
   let learningResultPollDelayMs = 2000;
+  let examStreamController = null;
+  let examHeartbeatTimer = null;
   let saveTimer = 0;
 
   const $ = s => document.querySelector(s);
@@ -577,13 +615,20 @@
     return Boolean(config.baseUrl && config.testToken);
   }
 
+  function assertLearningAttemptNotSuperseded(path){
+    if(state.learning?.status === 'superseded' && path.startsWith('/attempts/')){
+      throw Object.assign(new Error('Bài thi đang được mở ở máy khác. Nếu không phải bạn, hãy báo giáo viên.'), {code: 'DEVICE_SUPERSEDED'});
+    }
+  }
+
   async function learningRequest(path, body){
+    assertLearningAttemptNotSuperseded(path);
     const config = learningConfig();
     const response = await fetch(`${config.baseUrl}/api/learning${path}`, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       cache: 'no-store',
-      body: JSON.stringify(body)
+      body: JSON.stringify(path.startsWith('/attempts/') ? window.examDeviceRequestBody(body, deviceId) : body)
     });
     const data = await response.json().catch(() => ({}));
     if(!response.ok) {
@@ -597,13 +642,113 @@
     return data;
   }
 
+  async function applyExamStarted(payload){
+    const exam = payload.exam || payload;
+    if(exam.status !== 'running' || !payload.definition) return;
+    const deadlineAt = exam.deadlineAt || payload.deadlineAt;
+    const startedAt = exam.startedAt || payload.startedAt;
+    state.learning = {
+      ...(state.learning || {}),
+      definition: payload.definition,
+      exam: {enabled: true, status: 'running', deadlineAt},
+      expiresAt: deadlineAt ? Date.parse(deadlineAt) : null
+    };
+    state.startedAt = startedAt ? Date.parse(startedAt) : state.startedAt;
+    if(rosterData.assignment) rosterData.assignment = {...rosterData.assignment, definition: payload.definition};
+    persist();
+    await restoreAudioResume().catch(() => {});
+    showExam();
+  }
+
+  function stopExamHeartbeat(){
+    clearInterval(examHeartbeatTimer);
+    examHeartbeatTimer = null;
+  }
+
+  function startExamHeartbeat(){
+    if(examHeartbeatTimer || !state.learning?.attemptToken || ['submitted', 'superseded'].includes(state.learning.status)) return;
+    const send = () => {
+      if(!state.learning?.attemptToken || ['submitted', 'superseded'].includes(state.learning.status)) return stopExamHeartbeat();
+      void learningRequest('/attempts/exam/heartbeat', {attemptToken: state.learning.attemptToken}).catch(() => {});
+    };
+    send();
+    examHeartbeatTimer = setInterval(send, 20_000);
+  }
+
+  function applyExamExtended(payload){
+    const deadlineAt = payload.deadlineAt || payload.exam?.deadlineAt;
+    if(state.learning?.exam?.status !== 'running' || !deadlineAt) return;
+    state.learning.exam = {...state.learning.exam, deadlineAt};
+    state.learning.expiresAt = Date.parse(deadlineAt);
+    persist();
+  }
+
+  async function consumeExamEvents(signal){
+    const config = learningConfig();
+    const response = await fetch(`${config.baseUrl}/api/learning/attempts/events?deviceId=${encodeURIComponent(deviceId)}`, {
+      headers: {Authorization: `Bearer ${state.learning.attemptToken}`},
+      cache: 'no-store', signal
+    });
+    if(!response.ok || !response.body) throw new Error(`Lỗi HTTP ${response.status}`);
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    while(!signal.aborted){
+      const {value, done} = await reader.read();
+      if(done) return;
+      buffer += decoder.decode(value, {stream: true}).replace(/\r\n/g, '\n');
+      let boundary;
+      while((boundary = buffer.indexOf('\n\n')) >= 0){
+        const block = buffer.slice(0, boundary);
+        buffer = buffer.slice(boundary + 2);
+        const event = block.match(/^event:\s*(.+)$/m)?.[1];
+        const data = block.match(/^data:\s*(.+)$/m)?.[1];
+        if(event === 'snapshot' && data){
+          const payload = JSON.parse(data);
+          if(state.learning?.exam?.status === 'running') applyExamExtended(payload);
+          else await applyExamStarted(payload);
+        }else if(event === 'exam.started' && data){
+          await applyExamStarted(JSON.parse(data));
+        }else if(event === 'exam.extended' && data && !state.learning?.exam?.retake){ // lượt làm lại theo hạn riêng, không theo gia hạn của phiên
+          applyExamExtended(JSON.parse(data));
+        }else if(event === 'device.superseded'){
+          state.learning.status = 'superseded';
+          stopExamHeartbeat();
+          persist();
+          dispatchExamGuard({type: 'device_superseded'});
+          examStreamController?.abort();
+          return;
+        }
+      }
+    }
+  }
+
+  async function connectExamEvents(){
+    if(examStreamController || !state.learning?.attemptToken || ['submitted', 'superseded'].includes(state.learning.status)) return;
+    startExamHeartbeat();
+    const controller = new AbortController();
+    examStreamController = controller;
+    while(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && !['submitted', 'superseded'].includes(state.learning.status)){
+      try{
+        await consumeExamEvents(controller.signal);
+      }catch(error){
+        if(controller.signal.aborted) break;
+      }
+      if(!controller.signal.aborted && ['waiting', 'running'].includes(state.learning?.exam?.status) && !['submitted', 'superseded'].includes(state.learning.status)){
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+    if(examStreamController === controller) examStreamController = null;
+  }
+
   function audioCheckpointUrl(){
     return `${learningConfig().baseUrl}/api/learning/attempts/audio/checkpoint`;
   }
 
   async function sendLearningAudioCheckpoint(body, keepalive){
     if(!keepalive) return learningRequest('/attempts/audio/checkpoint', body);
-    const payload = JSON.stringify(body);
+    assertLearningAttemptNotSuperseded('/attempts/audio/checkpoint');
+    const payload = JSON.stringify(window.examDeviceRequestBody(body, deviceId));
     const blob = new Blob([payload], {type: 'application/json'});
     try{
       if(typeof navigator.sendBeacon === 'function' && navigator.sendBeacon(audioCheckpointUrl(), blob)){
@@ -743,7 +888,7 @@
   }
 
   function queueLearningDraft(){
-    if(!learningEnabled() || !state.learning?.attemptToken || state.submittedAt) return;
+    if(!learningEnabled() || !state.learning?.attemptToken || state.submittedAt || state.learning?.status === 'superseded') return;
     const revision = Number(state.learning.draftRevision || 0) + 1;
     state.learning.draftRevision = revision;
     learningDraftChain = learningDraftChain.then(async () => {
@@ -1214,7 +1359,7 @@
       const mins=Math.floor(left/60000); const secs=Math.floor((left%60000)/1000);
       $('#timer').textContent=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
       $('#timer').classList.toggle('warn',left<=10*60*1000);
-      if(left<=0){clearInterval(timerInt); if(!state.submittedAt) openSubmit()}
+      if(left<=0){clearInterval(timerInt); if(!state.submittedAt) $('#confirmSubmit').click()}
     };
     const timerInt=setInterval(tick,1000); tick();
   }
@@ -1246,7 +1391,7 @@
     $('#examApp').classList.add('submitted-readonly');
     $$('#examApp input, #examApp textarea, #examApp select').forEach(el => { el.disabled = true; });
     $$('#examApp [data-prev], #examApp [data-next], #mobilePrev, #mobileNext').forEach(el => { el.disabled = true; });
-    $('#saveState').textContent = 'Đã nộp · chỉ xem kết quả';
+    $('#saveState').textContent = state.learning?.status === 'superseded' ? 'Đã khóa · chỉ xem' : 'Đã nộp · chỉ xem kết quả';
   }
 
   // ================= Audio preflight + phát một lần =================
@@ -1945,8 +2090,23 @@
           definitionHash: result.attempt.definitionHash,
           draftRevision: result.attempt.draftRevision || 0,
           status: result.attempt.status || 'active',
-          expiresAt: result.attempt.expiresAt ? Date.parse(result.attempt.expiresAt) : null
+          expiresAt: result.attempt.expiresAt ? Date.parse(result.attempt.expiresAt) : null,
+          definition: result.attempt.definition || state.learning?.definition,
+          exam: result.attempt.exam || state.learning?.exam || null
         };
+        if(result.attempt.definition && rosterData.assignment) {
+          rosterData.assignment = {...rosterData.assignment, definition: result.attempt.definition};
+        }
+        if(result.attempt.exam?.enabled && result.attempt.exam.status === 'waiting'){
+          state.startedAt = result.attempt.startedAt ? Date.parse(result.attempt.startedAt) : state.startedAt || Date.now();
+          persist();
+          $('#introScreen').classList.add('hidden');
+          $('#audioCheckScreen').classList.add('hidden');
+          $('#examWaitingRoom').classList.remove('hidden');
+          $('#exam-waiting-greeting').textContent = `Xin chào ${student.name}!`;
+          void connectExamEvents();
+          return;
+        }
         state.startedAt = result.attempt.startedAt ? Date.parse(result.attempt.startedAt) : state.startedAt;
         if(result.attempt.status === 'submitted') state.submittedAt = state.submittedAt || Date.now();
         if(result.attempt.draft) state.answers = {...state.answers, ...result.attempt.draft};
@@ -1955,6 +2115,7 @@
       state.startedAt = state.startedAt || Date.now();
       persist();
       showExam();
+      if(['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted') void connectExamEvents();
     };
     const button = $('#startExam');
     button.disabled = true;
@@ -1962,6 +2123,133 @@
       button.disabled = false;
       setError('studentError', `Không mở được phiên làm bài: ${error.message}`);
     });
+  });
+
+  const examReadyButton = $('#exam-ready-button');
+  const examFullscreenReenter = $('#exam-fullscreen-reenter');
+  const examFullscreenStatus = $('#exam-fullscreen-status');
+  const examWaitingError = $('#exam-waiting-error');
+  examReadyButton?.addEventListener('click', async () => {
+    const fullscreenUnsupported = typeof document.documentElement.requestFullscreen !== 'function';
+    const fullscreenAttempt = fullscreenUnsupported
+      ? Promise.resolve()
+      : document.documentElement.requestFullscreen().catch(() => null);
+    examReadyButton.disabled = true;
+    try {
+      await fullscreenAttempt;
+      await learningRequest('/attempts/exam/ready', {
+        attemptToken: state.learning?.attemptToken,
+        fullscreenUnsupported
+      });
+      examReadyButton.hidden = true;
+      examWaitingError.classList.add('hidden');
+      examFullscreenStatus.textContent = fullscreenUnsupported
+        ? 'Thiết bị không hỗ trợ toàn màn hình; giáo viên đã được thông báo.'
+        : (document.fullscreenElement ? '' : 'Không thể bật toàn màn hình. Bạn vẫn có thể chờ giáo viên bắt đầu.');
+    } catch (error) {
+      examReadyButton.disabled = false;
+      examWaitingError.textContent = `Không thể lưu trạng thái sẵn sàng: ${error.message}`;
+      examWaitingError.classList.remove('hidden');
+    }
+  });
+  examFullscreenReenter?.addEventListener('click', () => {
+    if (typeof document.documentElement.requestFullscreen === 'function') {
+      document.documentElement.requestFullscreen().catch(() => {
+        examFullscreenStatus.textContent = 'Không thể bật toàn màn hình. Hãy thử lại.';
+      });
+    }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const waiting = !$('#examWaitingRoom').classList.contains('hidden');
+    const supportsFullscreen = typeof document.documentElement.requestFullscreen === 'function';
+    examFullscreenReenter.hidden = !waiting || !supportsFullscreen || Boolean(document.fullscreenElement);
+  });
+
+  let examGuardState = { running: false, fullscreenSupported: typeof document.documentElement.requestFullscreen === 'function' };
+  const examGuardOverlay = $('#examGuardOverlay');
+  const examGuardMessage = $('#examGuardMessage');
+  const examIncidentOperations = new Map();
+  function requestExamIncident(command){
+    const opening = command.type === 'open_incident';
+    const path = opening ? '/attempts/exam/incidents/open' : '/attempts/exam/incidents/close';
+    const body = {
+      attemptToken: state.learning?.attemptToken,
+      incidentId: command.incidentId,
+      ...(opening ? {type: 'left_exam'} : {})
+    };
+    const previous = examIncidentOperations.get(command.incidentId) || Promise.resolve();
+    const operation = previous.catch(() => opening ? undefined : learningRequest('/attempts/exam/incidents/open', {...body, type: 'left_exam'}))
+      .then(() => learningRequest(path, body));
+    examIncidentOperations.set(command.incidentId, operation);
+    void operation.catch(error => {
+      if(error.code === 'DEVICE_SUPERSEDED') return;
+      examGuardMessage.textContent = 'Không thể lưu sự cố rời bài. Hãy giữ trang mở và thử quay lại bài thi.';
+    });
+  }
+  function runExamGuardCommand(command){
+    if(command.type === 'pause_audio'){
+      snapshotActiveAudio();
+      allowPause = true;
+      if(activeAudioKey) audioPlayers.get(activeAudioKey)?.pause();
+      allowPause = false;
+    }else if(command.type === 'resume_audio'){
+      if(activeAudioKey) audioPlayers.get(activeAudioKey)?.play().catch(() => {
+        examGuardMessage.textContent = 'Nhấn “Quay lại bài thi” lần nữa để tiếp tục audio.';
+        examGuardOverlay.classList.remove('hidden');
+      });
+    }else if(command.type === 'request_fullscreen'){
+      const onFullscreenFailure = () => {
+        dispatchExamGuard({ type: 'left_exam', reason: 'fullscreen', at: Date.now(), incidentId: createClientKey() });
+        examGuardMessage.textContent = 'Không thể bật toàn màn hình. Hãy bấm “Quay lại bài thi” để thử lại.';
+      };
+      try{
+        document.documentElement.requestFullscreen().catch(onFullscreenFailure);
+      }catch{
+        onFullscreenFailure();
+      }
+    }else if(command.type === 'open_incident' || command.type === 'close_incident'){
+      requestExamIncident(command);
+    }
+  }
+  function dispatchExamGuard(event){
+    examGuardState = {
+      ...examGuardState,
+      running: state.learning?.exam?.status === 'running' && state.learning?.status === 'active',
+      fullscreenSupported: typeof document.documentElement.requestFullscreen === 'function'
+    };
+    const result = window.examGuardReducer(examGuardState, event);
+    examGuardState = result.state;
+    examGuardOverlay.classList.toggle('hidden', !examGuardState.prompt);
+    $('#examApp').classList.toggle('exam-guard-blurred', Boolean(examGuardState.prompt));
+    if(examGuardState.superseded){
+      state.learning.status = 'superseded';
+      document.querySelector('main').inert = true;
+      $('#mobileBottom').inert = true;
+      examGuardMessage.textContent = 'Bài thi đang được mở ở máy khác. Nếu không phải bạn, hãy báo giáo viên.';
+      $('#examGuardReturn').hidden = true;
+      lockSubmittedAttempt();
+    }else if(examGuardState.prompt && document.visibilityState !== 'hidden'){
+      $('#examGuardReturn').hidden = false;
+      $('#examGuardReturn').focus();
+    }
+    for(const command of result.commands) runExamGuardCommand(command);
+  }
+  window.addEventListener('blur', () => dispatchExamGuard({
+    type: 'left_exam', reason: 'blur', at: Date.now(), incidentId: createClientKey()
+  }));
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'hidden') dispatchExamGuard({
+      type: 'left_exam', reason: 'hidden', at: Date.now(), incidentId: createClientKey()
+    });
+  });
+  document.addEventListener('fullscreenchange', () => {
+    if(!document.fullscreenElement && typeof document.documentElement.requestFullscreen === 'function'){
+      dispatchExamGuard({ type: 'left_exam', reason: 'fullscreen', at: Date.now(), incidentId: createClientKey() });
+    }
+  });
+  $('#examGuardReturn').addEventListener('click', () => {
+    examGuardMessage.textContent = 'Giáo viên sẽ được thông báo.';
+    dispatchExamGuard({ type: 'return_click', at: Date.now() });
   });
 
   $('#clearDraft')?.addEventListener('click',()=>{if(confirm('Xóa toàn bộ bản nháp prototype?')){localStorage.removeItem(STORAGE_KEY);location.reload();}});
@@ -1985,6 +2273,8 @@
   $('#fontUp').addEventListener('click',()=>{fontScale=Math.min(1.2,Math.round((fontScale+.06)*100)/100);document.documentElement.style.setProperty('--font-scale',fontScale);persist()});
   $('#cancelSubmit').addEventListener('click',()=>$('#submitModal').classList.add('hidden'));
   function acceptLearningSubmission(result){
+    examStreamController?.abort();
+    stopExamHeartbeat();
     stopAnyPlayback();
     state.submittedAt = state.submittedAt || Date.now();
     state.learning.status = 'submitted';
@@ -2043,6 +2333,11 @@
   async function initializePage(){
     void preloadAudioInOrder().catch(console.warn);
     if(state.startedAt && state.studentName && state.classCode){
+      if(state.learning?.status === 'superseded'){
+        showExam();
+        dispatchExamGuard({type: 'device_superseded'});
+        return;
+      }
       if(learningEnabled() && state.learning?.attemptToken){
         try{
           await restoreAudioResume();
@@ -2051,6 +2346,7 @@
         }
       }
       showExam();
+      if(['waiting', 'running'].includes(state.learning?.exam?.status) && state.learning.status !== 'submitted') void connectExamEvents();
     }else if(state.classCode && classCodeValid(state.classCode)){
       await loadRoster();
     }

@@ -1,5 +1,18 @@
+import { parseSseChunk } from './exam-room-sse.js';
+
 export function defaultApiBase() {
   return 'https://webtest.ducanhn.autos';
+}
+
+// Dashboard chạy local (run-local.sh) thì link học viên trỏ về static server local; production giữ nguyên link backend trả.
+// `prod=1`: run-local.sh không chạy backend, nên trang học viên local phải gọi API production như dashboard.
+export function localStudentUrl(studentUrl, location) {
+  if (!studentUrl || !['localhost', '127.0.0.1', '[::1]', '::1'].includes(location?.hostname || '')) return studentUrl;
+  const url = new URL(studentUrl);
+  const index = url.pathname.indexOf('/term-tests/');
+  if (index < 0) return studentUrl;
+  url.searchParams.set('prod', '1');
+  return `${location.origin}${url.pathname.slice(index)}${url.search}${url.hash}`;
 }
 
 export function readDashboardState(input) {
@@ -220,6 +233,86 @@ export function assignmentResultsPath(classId, assignmentId, options = {}) {
   return query ? `${base}?${query}` : base;
 }
 
+export function assignmentExamModePath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam-mode`;
+}
+
+export function assignmentExamRoomPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/room`;
+}
+
+export function assignmentExamEventsPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/events`;
+}
+
+export function assignmentExamStartPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/start`;
+}
+
+export function assignmentExamExtendPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/extend`;
+}
+
+export function formatExamRoomStatus(status) {
+  return ({ not_entered: 'Chưa vào', entered: 'Đã vào', ready: 'Sẵn sàng', in_progress: 'Đang làm', submitted: 'Đã nộp' })[status] || 'Chưa vào';
+}
+
+export function formatExamReadyCount({ readyCount = 0, totalCount = 0 } = {}) {
+  return `${readyCount}/${totalCount} sẵn sàng`;
+}
+
+export function applyExamProgress(room, { studentRef, progress } = {}) {
+  if (!room || !Array.isArray(room.students) || typeof studentRef !== 'string'
+    || !Number.isInteger(progress?.answered) || !Number.isInteger(progress?.total)
+    || progress.answered < 0 || progress.total < progress.answered) return room;
+  const index = room.students.findIndex(student => student.studentRef === studentRef);
+  if (index < 0) return room;
+  return {
+    ...room,
+    students: room.students.map((student, studentIndex) =>
+      studentIndex === index ? { ...student, progress: { answered: progress.answered, total: progress.total } } : student)
+  };
+}
+
+export function applyExamIncident(room, { studentRef, incident, incidentCount } = {}) {
+  const index = room?.students?.findIndex(student => student.studentRef === studentRef) ?? -1;
+  if (index < 0 || !incident?.incidentId) return room;
+  return {
+    ...room,
+    students: room.students.map((student, studentIndex) => {
+      if (studentIndex !== index) return student;
+      const others = (student.openIncidents || []).filter(item => item.incidentId !== incident.incidentId);
+      return {
+        ...student,
+        incidentCount: Number.isInteger(incidentCount) ? incidentCount : student.incidentCount,
+        openIncidents: incident.endedAt ? others : [...others, incident]
+      };
+    })
+  };
+}
+
+export function formatExamProgress(progress) {
+  if (!Number.isInteger(progress?.answered) || !Number.isInteger(progress?.total)
+    || progress.answered < 0 || progress.total < progress.answered) return '—';
+  return `${progress.answered}/${progress.total}`;
+}
+
+export function applyExamConnection(room, { studentRef, status } = {}) {
+  if (!room || !Array.isArray(room.students) || typeof studentRef !== 'string'
+    || !['connected', 'disconnected'].includes(status)) return room;
+  const index = room.students.findIndex(student => student.studentRef === studentRef);
+  if (index < 0) return room;
+  return {
+    ...room,
+    students: room.students.map((student, studentIndex) =>
+      studentIndex === index ? { ...student, connectionStatus: status } : student)
+  };
+}
+
+export function formatExamConnectionStatus(status) {
+  return ({ connected: 'Đang kết nối', disconnected: 'Mất kết nối' })[status] || '—';
+}
+
 export function attemptDetailPath(classId, assignmentId, attemptId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/attempts/${encodeURIComponent(attemptId)}`;
 }
@@ -335,6 +428,33 @@ export function formatCurrentTime(date = new Date(), locale = 'vi-VN', timeZone 
   return new Intl.DateTimeFormat(locale, {
     hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone
   }).format(date);
+}
+
+export function incidentTypeLabel(type) {
+  return ({ left_exam: 'Rời khỏi bài thi', device_switch: 'Đổi thiết bị' })[type] || type || 'Sự cố';
+}
+
+export function formatIncidentDuration(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return '—';
+  const total = Math.floor(seconds);
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const remainder = total % 60;
+  return [hours && `${hours} giờ`, minutes && `${minutes} phút`, remainder && `${remainder} giây`]
+    .filter(Boolean).join(' ') || '0 giây';
+}
+
+export function formatIncidentTimeline(incidents = []) {
+  const timestamp = value => value ? new Intl.DateTimeFormat('vi-VN', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Ho_Chi_Minh'
+  }).format(new Date(value)) : '—';
+  return incidents.map(incident => ({
+    incidentId: incident.incidentId,
+    typeLabel: incidentTypeLabel(incident.type),
+    startedAt: timestamp(incident.startedAt),
+    endedAt: incident.endedAt ? timestamp(incident.endedAt) : 'Đang diễn ra',
+    duration: formatIncidentDuration(incident.durationSeconds)
+  }));
 }
 
 export const CANONICAL_SKILL_LABELS = {
@@ -610,6 +730,17 @@ async function startDashboard() {
   const showcaseBlockBadge = document.querySelector('#showcase-block-badge');
   const showcasePhaseBadge = document.querySelector('#showcase-phase-badge');
   const showcaseStatusBadge = document.querySelector('#showcase-status-badge');
+  const examModeToggle = document.querySelector('#exam-mode-toggle');
+  const examRoomOpenButton = document.querySelector('#exam-room-open');
+  const examRoom = document.querySelector('#exam-room');
+  const examRoomSummary = document.querySelector('#exam-room-summary');
+  const examRoomMessage = document.querySelector('#exam-room-message');
+  const examRoomStudents = document.querySelector('#exam-room-students');
+  const examRoomStartButton = document.querySelector('#exam-room-start');
+  const examRoomExtendButton = document.querySelector('#exam-room-extend');
+  const examRoomExtensionMinutes = document.querySelector('#exam-room-extension-minutes');
+  const examRoomRefreshButton = document.querySelector('#exam-room-refresh');
+  const examRoomCloseButton = document.querySelector('#exam-room-close');
   const showcaseWindowText = document.querySelector('#showcase-window-text');
   const showcaseLinkBar = document.querySelector('#showcase-link-bar');
   const showcaseStudentUrl = document.querySelector('#showcase-student-url');
@@ -627,6 +758,8 @@ async function startDashboard() {
   const classSkillSummary = document.querySelector('#class-skill-summary');
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
+  let currentSelectedAssignment = null;
+  let examRoomReturnToResults = false;
 
   const addStudentBtn = document.querySelector('#add-student-btn');
   const addStudentModal = document.querySelector('#add-student-modal');
@@ -665,6 +798,7 @@ async function startDashboard() {
   const detailHeading = document.querySelector('#detail-heading');
   const detailMeta = document.querySelector('#detail-meta');
   const detailScores = document.querySelector('#detail-scores');
+  const detailIncidents = document.querySelector('#detail-incidents');
   const detailItems = document.querySelector('#detail-items');
   const detailAttemptHistory = document.querySelector('#detail-attempt-history');
   const detailGradingHistory = document.querySelector('#detail-grading-history');
@@ -738,19 +872,28 @@ async function startDashboard() {
   }
 
   function renderSelectedAssignmentShowcase(assignment) {
+    stopExamRoomEvents();
+    currentExamRoom = null;
     if (!selectedAssignmentCard) return;
     if (!assignment) {
+      currentSelectedAssignment = null;
       selectedAssignmentCard.hidden = true;
+      if (examRoom) examRoom.hidden = true;
       if (assignmentStudentUrl) assignmentStudentUrl.value = '';
       if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
       if (assignmentLinkBar) assignmentLinkBar.hidden = true;
       if (showcaseStudentUrl) showcaseStudentUrl.value = '';
       if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = '#';
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
+      if (examRoomOpenButton) examRoomOpenButton.hidden = true;
       return;
     }
 
     selectedAssignmentCard.hidden = false;
+    currentSelectedAssignment = assignment;
+    if (examRoom) examRoom.hidden = true;
+    if (examRoomOpenButton) examRoomOpenButton.hidden = !assignment.examMode;
+    if (examModeToggle) examModeToggle.checked = Boolean(assignment.examMode);
     const selectedClassOpt = classSelect?.selectedOptions?.[0];
     const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
 
@@ -779,14 +922,15 @@ async function startDashboard() {
       showcaseWindowText.textContent = formatAssignmentWindow(assignment.opensAt, assignment.closesAt);
     }
 
-    if (assignment.studentUrl) {
-      if (showcaseStudentUrl) showcaseStudentUrl.value = assignment.studentUrl;
-      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = assignment.studentUrl;
+    const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation);
+    if (studentUrl) {
+      if (showcaseStudentUrl) showcaseStudentUrl.value = studentUrl;
+      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = studentUrl;
       if (showcaseLinkBar) showcaseLinkBar.hidden = false;
 
       // Also sync legacy assignmentLinkBar
-      if (assignmentStudentUrl) assignmentStudentUrl.value = assignment.studentUrl;
-      if (openStudentLinkBtn) openStudentLinkBtn.href = assignment.studentUrl;
+      if (assignmentStudentUrl) assignmentStudentUrl.value = studentUrl;
+      if (openStudentLinkBtn) openStudentLinkBtn.href = studentUrl;
       if (assignmentLinkBar) assignmentLinkBar.hidden = false;
     } else {
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
@@ -821,6 +965,8 @@ async function startDashboard() {
   const logoutBtn = document.querySelector('#logout-btn');
 
   let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
+  let examRoomEventsController = null;
+  let currentExamRoom = null;
 
   const currentLocation = typeof window !== 'undefined' ? window.location : null;
   const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(currentLocation?.hostname || '');
@@ -856,6 +1002,218 @@ async function startDashboard() {
     if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
     return payload;
   };
+
+  function fillIncidentTimeline(container, rawIncidents) {
+    container.replaceChildren();
+    const incidents = formatIncidentTimeline(rawIncidents || []);
+    if (!incidents.length) {
+      container.textContent = 'Không có sự cố được ghi nhận.';
+      return;
+    }
+    const table = document.createElement('table');
+    table.className = 'mini-table';
+    table.innerHTML = '<thead><tr><th>Loại</th><th>Bắt đầu</th><th>Kết thúc</th><th>Thời lượng</th></tr></thead>';
+    const body = document.createElement('tbody');
+    for (const incident of incidents) {
+      const row = document.createElement('tr');
+      for (const value of [incident.typeLabel, incident.startedAt, incident.endedAt, incident.duration]) {
+        const cell = document.createElement('td');
+        cell.textContent = value;
+        row.append(cell);
+      }
+      body.append(row);
+    }
+    table.append(body);
+    container.append(table);
+  }
+
+  async function showExamRoomTimeline(student) {
+    const panel = document.querySelector('#exam-room-timeline');
+    if (!panel || !student.attemptId || !currentSelectedAssignment) return;
+    panel.hidden = false;
+    panel.querySelector('h3').textContent = `Timeline sự cố · ${student.name || 'Học viên'}`;
+    const content = panel.querySelector('div');
+    content.textContent = 'Đang tải timeline sự cố…';
+    try {
+      const payload = await request(attemptDetailPath(state.classId, currentSelectedAssignment.assignmentId, student.attemptId));
+      fillIncidentTimeline(content, payload.incidents);
+    } catch (error) {
+      content.textContent = `Không tải được timeline sự cố: ${error.message}`;
+    }
+  }
+
+  function renderExamRoom(room) {
+    currentExamRoom = room;
+    const roomStatus = ({ waiting: 'Đang chờ', running: 'Đang thi', ended: 'Đã kết thúc' })[room.status] || room.status;
+    const deadline = room.deadlineAt ? ` · Hạn ${formatAssignmentWindow(room.deadlineAt, null).split(' → ')[0]}` : '';
+    if (examRoomSummary) examRoomSummary.textContent = `${roomStatus} · ${formatExamReadyCount(room)}${deadline}`;
+    if (examRoomStudents) {
+      examRoomStudents.replaceChildren();
+      for (const student of room.students || []) {
+        const row = document.createElement('tr');
+        const name = document.createElement('td');
+        const participation = document.createElement('td');
+        const progress = document.createElement('td');
+        const connection = document.createElement('td');
+        const incidents = document.createElement('td');
+        const device = document.createElement('td');
+        name.textContent = student.name || '—';
+        participation.textContent = formatExamRoomStatus(student.status);
+        progress.textContent = formatExamProgress(student.progress);
+        connection.textContent = formatExamConnectionStatus(student.connectionStatus);
+        const incidentCount = Number(student.incidentCount) || 0;
+        const openIncident = (student.openIncidents || []).length > 0;
+        incidents.textContent = student.status === 'not_entered' ? '—' : `${incidentCount}${openIncident ? ' · đang rời bài' : ''}`;
+        device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
+        // Tô đỏ mọi học viên đã có sự cố (không chỉ lúc đang rời bài) để giáo viên không bỏ sót.
+        if (incidentCount > 0 || openIncident) {
+          row.className = 'exam-incident-active';
+          row.setAttribute('aria-label', `${student.name || 'Học viên'} có ${incidentCount} sự cố Exam Guard`);
+        }
+        row.append(name, participation, progress, connection, incidents, device);
+        if (student.attemptId) {
+          row.classList.add('exam-room-clickable');
+          row.tabIndex = 0;
+          row.title = 'Bấm để xem timeline sự cố';
+          row.addEventListener('click', () => void showExamRoomTimeline(student));
+          row.addEventListener('keydown', event => { if (event.key === 'Enter') void showExamRoomTimeline(student); });
+        }
+        examRoomStudents.append(row);
+      }
+    }
+    if (examRoomStartButton) examRoomStartButton.disabled = room.status !== 'waiting';
+    if (examRoomExtendButton) examRoomExtendButton.disabled = room.status !== 'running';
+  }
+
+  async function loadExamRoom() {
+    if (!currentSelectedAssignment || !state.classId) return;
+    if (examRoomMessage) examRoomMessage.textContent = 'Đang tải trạng thái Phòng thi…';
+    const payload = await request(assignmentExamRoomPath(state.classId, currentSelectedAssignment.assignmentId));
+    renderExamRoom(payload.room);
+    if (examRoomMessage) examRoomMessage.textContent = '';
+  }
+
+  function stopExamRoomEvents() {
+    examRoomEventsController?.abort();
+    examRoomEventsController = null;
+  }
+
+  async function startExamRoomEvents() {
+    stopExamRoomEvents();
+    if (!sessionToken || !currentSelectedAssignment || !state.classId) return;
+    const controller = new AbortController();
+    examRoomEventsController = controller;
+    const path = assignmentExamEventsPath(state.classId, currentSelectedAssignment.assignmentId);
+    while (!controller.signal.aborted) {
+      try {
+        const response = await fetch(`${apiBase()}${path}`, {
+          headers: { Authorization: `Bearer ${sessionToken}`, Accept: 'text/event-stream' },
+          signal: controller.signal
+        });
+        if (response.status === 401) {
+          handleLogout();
+          break;
+        }
+        if (!response.ok || !response.body) throw new Error('Không kết nối được luồng Phòng thi.');
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        while (!controller.signal.aborted) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const parsed = parseSseChunk(buffer, decoder.decode(value, { stream: true }));
+          buffer = parsed.buffer;
+          for (const message of parsed.events) {
+            if (message.event === 'snapshot' && message.data.room) renderExamRoom(message.data.room);
+            else if (message.event === 'exam.incident.opened' || message.event === 'exam.incident.closed') {
+              currentExamRoom = applyExamIncident(currentExamRoom, message.data);
+              if (currentExamRoom) renderExamRoom(currentExamRoom);
+            } else if (message.event === 'exam.progress.updated') {
+              currentExamRoom = applyExamProgress(currentExamRoom, message.data);
+              if (currentExamRoom) renderExamRoom(currentExamRoom);
+            } else if (message.event === 'exam.connection.changed') {
+              currentExamRoom = applyExamConnection(currentExamRoom, message.data);
+              if (currentExamRoom) renderExamRoom(currentExamRoom);
+            } else if (message.event !== 'snapshot') await loadExamRoom();
+          }
+        }
+      } catch (error) {
+        if (controller.signal.aborted) break;
+      }
+      if (!controller.signal.aborted) {
+        try { await loadExamRoom(); } catch { /* reconnect below; REST may recover with the stream */ }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  }
+
+  examRoomOpenButton?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    examRoomReturnToResults = Boolean(results && !results.hidden);
+    if (results) results.hidden = true;
+    if (examRoom) examRoom.hidden = false;
+    try { await loadExamRoom(); startExamRoomEvents(); }
+    catch (error) { if (examRoomMessage) examRoomMessage.textContent = error.message; }
+  });
+  examRoomRefreshButton?.addEventListener('click', () => {
+    loadExamRoom().catch(error => { if (examRoomMessage) examRoomMessage.textContent = error.message; });
+  });
+  examRoomCloseButton?.addEventListener('click', () => {
+    stopExamRoomEvents();
+    if (examRoom) examRoom.hidden = true;
+    if (examRoomReturnToResults && results) results.hidden = false;
+  });
+  examRoomStartButton?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    examRoomStartButton.disabled = true;
+    try {
+      await request(assignmentExamStartPath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
+      });
+      await loadExamRoom();
+    } catch (error) {
+      if (examRoomMessage) examRoomMessage.textContent = error.message;
+      examRoomStartButton.disabled = false;
+    }
+  });
+  examRoomExtendButton?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    examRoomExtendButton.disabled = true;
+    try {
+      await request(assignmentExamExtendPath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ minutes: Number(examRoomExtensionMinutes?.value) })
+      });
+    } catch (error) {
+      if (examRoomMessage) examRoomMessage.textContent = error.message;
+      examRoomExtendButton.disabled = false;
+      return;
+    }
+    loadExamRoom().catch(error => {
+      if (examRoomMessage) examRoomMessage.textContent = `Đã gia hạn nhưng chưa tải lại được trạng thái: ${error.message}`;
+    });
+  });
+
+  examModeToggle?.addEventListener('change', async () => {
+    if (!currentSelectedAssignment) return;
+    examModeToggle.disabled = true;
+    try {
+      const payload = await request(assignmentExamModePath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: examModeToggle.checked })
+      });
+      currentSelectedAssignment.examMode = payload.examMode;
+      if (examRoomOpenButton) examRoomOpenButton.hidden = !payload.examMode;
+      if (!payload.examMode && examRoom) examRoom.hidden = true;
+      status.textContent = payload.examMode ? 'Exam Mode đã bật. Học viên sẽ chờ giáo viên bắt đầu.' : 'Exam Mode đã tắt.';
+    } catch (error) {
+      examModeToggle.checked = Boolean(currentSelectedAssignment.examMode);
+      status.textContent = error.message;
+    } finally {
+      examModeToggle.disabled = false;
+    }
+  });
   const setUrl = () => history.replaceState(null, '', assignmentUrl(location.href, state));
 
   function appendCell(row, value, className = '') {
@@ -919,10 +1277,11 @@ async function startDashboard() {
     }
 
     if (assignmentLinkBar) {
-      if (payload.assignment?.studentUrl) {
+      const studentUrl = localStudentUrl(payload.assignment?.studentUrl, currentLocation);
+      if (studentUrl) {
         assignmentLinkBar.hidden = false;
-        if (assignmentStudentUrl) assignmentStudentUrl.value = payload.assignment.studentUrl;
-        if (openStudentLinkBtn) openStudentLinkBtn.href = payload.assignment.studentUrl;
+        if (assignmentStudentUrl) assignmentStudentUrl.value = studentUrl;
+        if (openStudentLinkBtn) openStudentLinkBtn.href = studentUrl;
       } else {
         assignmentLinkBar.hidden = true;
       }
@@ -983,12 +1342,13 @@ async function startDashboard() {
       const label = CANONICAL_SKILL_LABELS[normCode] || (code.charAt(0).toUpperCase() + code.slice(1));
       headerRow.append(createScoreHeader(label, skill.maximum));
     }
+    headerRow.append(createTextHeader('Sự cố'));
     headerRow.append(createTextHeader('Nộp lúc'));
     headerRow.append(createTextHeader('Thao tác'));
     head.append(headerRow);
     const body = document.createElement('tbody');
 
-    const totalColumns = 4 + payload.skills.length;
+    const totalColumns = 5 + payload.skills.length;
     if (payload.students.length === 0) {
       const emptyRow = document.createElement('tr');
       const emptyCell = document.createElement('td');
@@ -1050,6 +1410,10 @@ async function startDashboard() {
           skillCell.innerHTML = `<span class="score-skill">${escapeHtml(skVal)}</span>`;
           row.append(skillCell);
         }
+
+        const incidentCell = document.createElement('td');
+        incidentCell.textContent = student.attemptId ? String(student.incidentCount ?? 0) : '—';
+        row.append(incidentCell);
 
         // 5. Submitted At Cell: Two-line layout (Line 1: Time, Line 2: Date)
         const submittedCell = document.createElement('td');
@@ -1136,6 +1500,7 @@ async function startDashboard() {
         `Bài: ${payload.assignment.title}`,
         `Phiên bản đề: ${payload.attempt.formVersion}`,
         `Trạng thái: ${attemptStatusLabel(payload.attempt.status)}`,
+        `Sự cố: ${payload.incidentCount ?? payload.incidents?.length ?? 0}`,
         `Bắt đầu: ${payload.attempt.startedAt ? formatAssignmentWindow(payload.attempt.startedAt, null).split(' → ')[0] : '—'}`,
         `Nộp lúc: ${payload.attempt.submittedAt ? formatAssignmentWindow(payload.attempt.submittedAt, null).split(' → ')[0] : 'Chưa nộp'}`
       ];
@@ -1185,6 +1550,8 @@ async function startDashboard() {
         detailScores.append(card);
       }
     }
+
+    if (detailIncidents) fillIncidentTimeline(detailIncidents, payload.incidents);
 
     if (detailAttemptHistory) {
       detailAttemptHistory.replaceChildren();
@@ -2555,6 +2922,7 @@ async function startDashboard() {
   }
 
   function handleLogout() {
+    stopExamRoomEvents();
     document.body.classList.add('login-page');
     sessionToken = '';
     currentTeacher = null;
