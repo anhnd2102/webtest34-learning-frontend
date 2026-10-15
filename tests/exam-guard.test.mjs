@@ -54,7 +54,7 @@ test('a superseded tab is locked and cannot resume the attempt', () => {
 
   assert.equal(result.state.superseded, true);
   assert.equal(result.state.prompt, true);
-  assert.deepEqual(result.commands, []);
+  assert.deepEqual(result.commands, [{ type: 'pause_audio' }]);
   assert.deepEqual(returned.commands, []);
 });
 

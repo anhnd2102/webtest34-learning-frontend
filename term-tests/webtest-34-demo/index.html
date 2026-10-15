@@ -12,7 +12,7 @@
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v2"></script>
-  <script src="exam-guard.js?rev=20261015-exam-guard-device-id-v2"></script>
+  <script src="exam-guard.js?rev=20261015-exam-guard-device-id-v3"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -613,10 +613,14 @@
     return Boolean(config.baseUrl && config.testToken);
   }
 
-  async function learningRequest(path, body){
+  function assertLearningAttemptNotSuperseded(path){
     if(state.learning?.status === 'superseded' && path.startsWith('/attempts/')){
       throw Object.assign(new Error('Bài thi đang được mở ở máy khác. Nếu không phải bạn, hãy báo giáo viên.'), {code: 'DEVICE_SUPERSEDED'});
     }
+  }
+
+  async function learningRequest(path, body){
+    assertLearningAttemptNotSuperseded(path);
     const config = learningConfig();
     const response = await fetch(`${config.baseUrl}/api/learning${path}`, {
       method: 'POST',
@@ -741,7 +745,7 @@
 
   async function sendLearningAudioCheckpoint(body, keepalive){
     if(!keepalive) return learningRequest('/attempts/audio/checkpoint', body);
-    if(state.learning?.status === 'superseded') return Promise.reject(Object.assign(new Error('Bài thi đang được mở ở máy khác. Nếu không phải bạn, hãy báo giáo viên.'), {code: 'DEVICE_SUPERSEDED'}));
+    assertLearningAttemptNotSuperseded('/attempts/audio/checkpoint');
     const payload = JSON.stringify(window.examDeviceRequestBody(body, deviceId));
     const blob = new Blob([payload], {type: 'application/json'});
     try{

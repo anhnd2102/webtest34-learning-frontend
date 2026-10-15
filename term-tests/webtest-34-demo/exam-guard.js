@@ -4,6 +4,7 @@ globalThis.examGuardReducer = (state, event) => {
   if(event.type === 'device_superseded'){
     next.superseded = true;
     next.prompt = true;
+    commands.push({ type: 'pause_audio' });
   }else if(state.superseded){
     return { state: next, commands };
   }
