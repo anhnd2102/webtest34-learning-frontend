@@ -4,6 +4,14 @@ export function defaultApiBase() {
   return 'https://webtest.ducanhn.autos';
 }
 
+// Dashboard chạy local (run-local.sh) thì link học viên trỏ về static server local; production giữ nguyên link backend trả.
+export function localStudentUrl(studentUrl, location) {
+  if (!studentUrl || !['localhost', '127.0.0.1', '[::1]', '::1'].includes(location?.hostname || '')) return studentUrl;
+  const url = new URL(studentUrl);
+  const index = url.pathname.indexOf('/term-tests/');
+  return index < 0 ? studentUrl : `${location.origin}${url.pathname.slice(index)}${url.search}${url.hash}`;
+}
+
 export function readDashboardState(input) {
   const url = input instanceof URL ? input : new URL(input);
   const state = {
@@ -895,14 +903,15 @@ async function startDashboard() {
       showcaseWindowText.textContent = formatAssignmentWindow(assignment.opensAt, assignment.closesAt);
     }
 
-    if (assignment.studentUrl) {
-      if (showcaseStudentUrl) showcaseStudentUrl.value = assignment.studentUrl;
-      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = assignment.studentUrl;
+    const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation);
+    if (studentUrl) {
+      if (showcaseStudentUrl) showcaseStudentUrl.value = studentUrl;
+      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = studentUrl;
       if (showcaseLinkBar) showcaseLinkBar.hidden = false;
 
       // Also sync legacy assignmentLinkBar
-      if (assignmentStudentUrl) assignmentStudentUrl.value = assignment.studentUrl;
-      if (openStudentLinkBtn) openStudentLinkBtn.href = assignment.studentUrl;
+      if (assignmentStudentUrl) assignmentStudentUrl.value = studentUrl;
+      if (openStudentLinkBtn) openStudentLinkBtn.href = studentUrl;
       if (assignmentLinkBar) assignmentLinkBar.hidden = false;
     } else {
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
@@ -1203,10 +1212,11 @@ async function startDashboard() {
     }
 
     if (assignmentLinkBar) {
-      if (payload.assignment?.studentUrl) {
+      const studentUrl = localStudentUrl(payload.assignment?.studentUrl, currentLocation);
+      if (studentUrl) {
         assignmentLinkBar.hidden = false;
-        if (assignmentStudentUrl) assignmentStudentUrl.value = payload.assignment.studentUrl;
-        if (openStudentLinkBtn) openStudentLinkBtn.href = payload.assignment.studentUrl;
+        if (assignmentStudentUrl) assignmentStudentUrl.value = studentUrl;
+        if (openStudentLinkBtn) openStudentLinkBtn.href = studentUrl;
       } else {
         assignmentLinkBar.hidden = true;
       }
