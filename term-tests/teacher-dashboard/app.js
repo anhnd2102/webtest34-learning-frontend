@@ -3326,6 +3326,8 @@ async function startDashboard() {
     currentTeacher = teacher;
     setupClassFilterToolbar();
     if (teacherProfileName) teacherProfileName.textContent = teacher.name || teacher.email;
+    const popoverUserName = document.querySelector('#popover-user-name');
+    if (popoverUserName) popoverUserName.textContent = teacher.name || teacher.email;
     if (teacherProfileMeta) teacherProfileMeta.textContent = `${teacher.email} · SĐT: ${teacher.phone || '—'}`;
     const teacherProfileAvatar = document.querySelector('#teacher-profile-avatar');
     if (teacherProfileAvatar) {
@@ -3352,14 +3354,14 @@ async function startDashboard() {
     if (!roleCapabilitiesPopover) return;
     const shouldShow = typeof show === 'boolean' ? show : roleCapabilitiesPopover.hidden;
     roleCapabilitiesPopover.hidden = !shouldShow;
+    if (roleInfoBtn) roleInfoBtn.setAttribute('aria-expanded', String(shouldShow));
     if (teacherRoleBadge) teacherRoleBadge.setAttribute('aria-expanded', String(shouldShow));
-    if (shouldShow && currentTeacher && popoverRoleTitle) {
-      if (currentTeacher.role === 'admin' || currentTeacher.role === 'qm') {
-        popoverRoleTitle.textContent = 'Quyền hạn Quản trị viên (Admin)';
-      } else if (currentTeacher.role === 'lead') {
-        popoverRoleTitle.textContent = `Quyền hạn Trưởng nhóm Khối (${(currentTeacher.courseCodes || []).join(', ') || 'Lead'})`;
-      } else {
-        popoverRoleTitle.textContent = 'Quyền hạn Giảng viên (Teacher)';
+    if (shouldShow && currentTeacher) {
+      const popoverUserName = document.querySelector('#popover-user-name');
+      if (popoverUserName) popoverUserName.textContent = currentTeacher.name || currentTeacher.email;
+      if (teacherRoleBadge) {
+        teacherRoleBadge.textContent = teacherRoleLabel(currentTeacher.role, currentTeacher.courseCodes);
+        teacherRoleBadge.className = `role-badge ${currentTeacher.role || 'teacher'}`;
       }
     }
   }

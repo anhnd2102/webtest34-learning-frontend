@@ -1363,6 +1363,18 @@ test('teacher dashboard provides role capabilities popover and tooltip trigger',
   assert.match(code, /roleCapabilitiesPopover/);
 });
 
+test('teacher dashboard role-capabilities-popover houses teacher-role-badge inside popover and lists exam editing & publication capabilities', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  // Verify role badge is inside the popover, not exposed directly outside on the navbar
+  assert.match(html, /<div id="role-capabilities-popover"[^>]*>[\s\S]*id="teacher-role-badge"/);
+  assert.match(html, /Quản lý (&amp;|&) Xuất bản đề thi/);
+  assert.match(html, /xuất bản/i);
+  assert.match(css, /\.popover-user-summary/);
+});
+
 test('teacher dashboard lead-scope-filters provides 1-row nowrap layout and concise labels', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');

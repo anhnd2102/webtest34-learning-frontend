@@ -62,30 +62,32 @@
               <p id="teacher-profile-meta" class="meta-info">—</p>
             </div>
             <div class="role-badge-wrap" id="role-badge-wrap">
-              <span id="teacher-role-badge" class="role-badge" tabindex="0" role="button" aria-haspopup="dialog" aria-expanded="false" title="Bấm để xem quyền hạn vai trò">—</span>
-              <button type="button" class="role-info-btn" id="role-info-btn" aria-label="Xem quyền hạn vai trò" title="Xem quyền hạn vai trò">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              <button type="button" class="role-info-btn" id="role-info-btn" aria-label="Xem vai trò và quyền hạn" title="Xem vai trò và quyền hạn" aria-haspopup="dialog" aria-expanded="false">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
               </button>
               
               <!-- Popover Quyền hạn vai trò -->
-              <div id="role-capabilities-popover" class="role-capabilities-popover" role="dialog" aria-label="Quyền hạn vai trò" hidden>
+              <div id="role-capabilities-popover" class="role-capabilities-popover" role="dialog" aria-label="Vai trò và quyền hạn" hidden>
                 <div class="popover-header">
-                  <div class="popover-title-row">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <h4 id="popover-role-title">Quyền hạn vai trò</h4>
+                  <div class="popover-user-summary">
+                    <h4 id="popover-user-name" class="popover-user-name">—</h4>
+                    <div class="popover-role-pill-wrap">
+                      <span id="teacher-role-badge" class="role-badge" tabindex="0" role="button" aria-haspopup="dialog" aria-expanded="false" title="Vai trò người dùng">—</span>
+                    </div>
                   </div>
-                  <button type="button" id="close-role-popover" class="btn-popover-close" aria-label="Đóng">&times;</button>
+                  <button type="button" id="close-role-popover" class="btn-popover-close" aria-label="Đóng" title="Đóng">&times;</button>
                 </div>
                 <div class="popover-body">
+                  <div class="popover-section-title">Quyền hạn trong hệ thống</div>
                   <ul class="role-caps-list" id="role-caps-list">
                     <li>
-                      <strong>Kiểm tra toàn bộ các lớp:</strong> Xem danh sách, bài làm và kết quả của mọi lớp trong khối phụ trách (Khối 34, 45, 03).
+                      <strong>Quản lý &amp; Xuất bản đề thi:</strong> Chỉnh sửa cấu trúc đề thi, cấu hình phiên bản đề, xuất bản đợt thi cho các lớp và giám sát phòng thi tập trung (Exam Mode).
                     </li>
                     <li>
-                      <strong>Quản lý bài thi & Phòng thi:</strong> Bật/tắt chế độ thi tập trung (Exam Mode), giám sát phòng thi trực tiếp theo thời gian thực.
+                      <strong>Kiểm tra toàn bộ các lớp:</strong> Xem danh sách, bài làm và theo dõi tiến độ nộp bài của mọi lớp trong khối phụ trách (Khối 34, 45, 03).
                     </li>
                     <li>
-                      <strong>Chấm thi & Phê duyệt điểm:</strong> Chấm điểm tự luận/nói, lưu chấm nháp, duyệt điểm chính thức và công bố kết quả cho học viên.
+                      <strong>Chấm thi &amp; Phê duyệt điểm:</strong> Chấm điểm tự luận/nói, lưu chấm nháp, duyệt điểm chính thức và công bố kết quả cho học viên.
                     </li>
                     <li>
                       <strong>Quản trị quyền làm bài:</strong> Cấp quyền làm lại bài thi (Retake), bổ sung học viên chuyển lớp vào đợt thi.
@@ -633,6 +635,6 @@
     </dialog>
   </main>
 
-  <script type="module" src="./app.js?rev=20261016-tabs-v2"></script>
+  <script type="module" src="./app.js?rev=20261016-tabs-v3"></script>
 </body>
 </html>
