@@ -611,6 +611,419 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
   }
 }
 
+export function formDraftPath(apiBaseOrVersionId, versionIdOptional) {
+  if (arguments.length === 0 || apiBaseOrVersionId === undefined) {
+    return '/api/teacher/forms/draft';
+  }
+  if (arguments.length === 1) {
+    if (typeof apiBaseOrVersionId === 'string' && apiBaseOrVersionId.startsWith('http')) {
+      const cleanBase = apiBaseOrVersionId.replace(/\/+$/, '');
+      return `${cleanBase}/api/teacher/forms/draft`;
+    }
+    return `/api/teacher/forms/draft/${encodeURIComponent(apiBaseOrVersionId)}`;
+  }
+  const cleanBase = String(apiBaseOrVersionId || '').replace(/\/+$/, '');
+  return `${cleanBase}/api/teacher/forms/draft/${encodeURIComponent(versionIdOptional)}`;
+}
+
+export function formDetailPath(apiBaseOrVersionId, versionIdOptional) {
+  if (arguments.length === 1) {
+    if (typeof apiBaseOrVersionId === 'string' && apiBaseOrVersionId.startsWith('http')) {
+      const cleanBase = apiBaseOrVersionId.replace(/\/+$/, '');
+      return `${cleanBase}/api/teacher/forms`;
+    }
+    return `/api/teacher/forms/${encodeURIComponent(apiBaseOrVersionId)}`;
+  }
+  const cleanBase = String(apiBaseOrVersionId || '').replace(/\/+$/, '');
+  return `${cleanBase}/api/teacher/forms/${encodeURIComponent(versionIdOptional)}`;
+}
+
+export function generateUuid() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
+  if (!container) return;
+
+  const draftState = {
+    formVersionId: formVersionData.id || formVersionData.formVersionId || generateUuid(),
+    formTemplateId: formVersionData.formTemplateId || '',
+    version: Number(formVersionData.version || 1),
+    status: formVersionData.status || 'draft',
+    title: formVersionData.title || formVersionData.publicDefinition?.title || 'Đề thi mới',
+    durationMinutes: Number(formVersionData.durationMinutes || formVersionData.publicDefinition?.durationMinutes || 60),
+    answerReleasePolicy: formVersionData.answerReleasePolicy || formVersionData.publicDefinition?.answerReleasePolicy || 'teacher_release',
+    submissionCount: Number(formVersionData.submissionCount || 0),
+    blocks: JSON.parse(JSON.stringify(formVersionData.publicDefinition?.blocks || formVersionData.blocks || []))
+  };
+
+  if (!draftState.blocks.length) {
+    draftState.blocks.push({
+      blockId: generateUuid(),
+      checkpoint: 1,
+      title: 'Phần 1: Khởi động',
+      instructions: '',
+      audioUrl: '',
+      readingPassage: '',
+      items: [
+        {
+          itemFamilyId: generateUuid(),
+          itemVersionId: generateUuid(),
+          position: 1,
+          prompt: 'Câu hỏi 1',
+          helpText: '',
+          interactionType: 'short_text',
+          pedagogicalTypeCode: 'general_text',
+          layoutType: 'default',
+          graderType: 'accepted_text',
+          required: true,
+          maxScore: 1,
+          options: [],
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        }
+      ]
+    });
+  }
+
+  function render() {
+    const isImmutable = draftState.submissionCount > 0;
+    const isPublished = draftState.status === 'published';
+    const statusBadgeClass = isPublished ? 'badge-published' : 'badge-draft';
+    const statusBadgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
+
+    const blocksHtml = draftState.blocks.map((block, index) => {
+      const isFirst = index === 0;
+      const isLast = index === draftState.blocks.length - 1;
+      const isOnly = draftState.blocks.length <= 1;
+      const audioVal = block.audioUrl || block.stimulusAudioUrl || '';
+      const readingVal = block.readingPassage || block.stimulusReadingPassage || '';
+      const itemsCount = block.items?.length || 0;
+
+      return `
+        <div class="builder-block-card" data-block-id="${block.blockId}" data-index="${index}">
+          <div class="builder-block-header">
+            <div class="block-checkpoint-pill">Phần ${index + 1}</div>
+            <input type="text" class="block-title-input form-control" data-index="${index}" value="${escapeHtml(block.title || '')}" placeholder="Tiêu đề phần thi..." />
+            <div class="block-header-actions">
+              <button type="button" class="btn btn-icon btn-sm btn-move-block-up" data-index="${index}" ${isFirst ? 'disabled' : ''} title="Di chuyển lên">↑</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-block-down" data-index="${index}" ${isLast ? 'disabled' : ''} title="Di chuyển xuống">↓</button>
+              <button type="button" class="btn btn-icon btn-sm btn-delete-block" data-index="${index}" ${isOnly ? 'disabled' : ''} title="Xóa phần này">✕</button>
+            </div>
+          </div>
+          <div class="builder-block-body">
+            <div class="form-group block-field">
+              <label class="form-label">Hướng dẫn phần thi (Instructions):</label>
+              <textarea class="form-control block-instructions-input" data-index="${index}" rows="2" placeholder="Nhập hướng dẫn làm bài cho phần này...">${escapeHtml(block.instructions || '')}</textarea>
+            </div>
+            <div class="stimulus-grid">
+              <div class="form-group stimulus-col">
+                <label class="form-label">File âm thanh (Audio URL / Path):</label>
+                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="assets/34/test-1/listening.mp3 hoặc https://..." />
+              </div>
+              <div class="form-group stimulus-col">
+                <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
+                <textarea class="form-control block-reading-input" data-index="${index}" rows="3" placeholder="Dán văn bản đọc hiểu (nếu có)...">${escapeHtml(readingVal)}</textarea>
+              </div>
+            </div>
+            <div class="block-items-summary">
+              <span class="items-badge">${itemsCount} câu hỏi</span>
+              <span class="items-tip">Cấu hình câu hỏi chi tiết theo template ở các bước tiếp theo.</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="test-builder-workspace">
+        <div class="test-builder-top-bar">
+          <div class="builder-top-left">
+            <button type="button" class="btn btn-secondary btn-sm btn-back-to-catalog" id="btn-back-to-catalog">
+              ← Quay lại danh mục
+            </button>
+            <div class="builder-status-tags">
+              <span class="version-tag">Phiên bản: <strong>v${draftState.version}</strong></span>
+              <span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span>
+              ${isImmutable
+                ? `<span class="immutability-badge warning" title="Đã có học viên nộp bài — Chỉnh sửa sẽ tạo bản nháp mới v${draftState.version + 1}">🔒 Đã có ${draftState.submissionCount} bài nộp</span>`
+                : `<span class="immutability-badge mutable" title="Chưa có học viên nộp bài — Sẽ lưu trực tiếp trên bản nháp v${draftState.version}">✏️ Chưa có bài nộp</span>`
+              }
+            </div>
+          </div>
+          <div class="builder-top-right">
+            <span class="builder-status-msg" id="builder-status-msg" aria-live="polite"></span>
+            <button type="button" class="btn btn-primary btn-save-draft" id="btn-save-draft">
+              💾 Lưu bản nháp
+            </button>
+          </div>
+        </div>
+
+        ${isImmutable ? `
+          <div class="alert-notice alert-immutable">
+            <div class="notice-icon">⚠️</div>
+            <div class="notice-text">
+              <strong>Bảo toàn tính bất biến (Content Immutability):</strong> Đề thi này đã có <strong>${draftState.submissionCount} bài nộp</strong>. Khi bạn lưu thay đổi, hệ thống sẽ tự động tạo một phiên bản nháp mới (<strong>v${draftState.version + 1}</strong>) để giữ nguyên vẹn kết quả và dữ liệu chấm điểm của các bài thi đã nộp.
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="test-builder-main">
+          <div class="builder-settings-card panel">
+            <div class="settings-grid">
+              <div class="form-group setting-title-group">
+                <label class="form-label" for="builder-test-title">Tên bài thi:</label>
+                <input type="text" id="builder-test-title" class="form-control" value="${escapeHtml(draftState.title)}" placeholder="Nhập tên bài thi..." />
+              </div>
+              <div class="form-group setting-duration-group">
+                <label class="form-label" for="builder-test-duration">Thời lượng (phút):</label>
+                <input type="number" id="builder-test-duration" class="form-control" value="${draftState.durationMinutes}" min="5" max="300" />
+              </div>
+              <div class="form-group setting-policy-group">
+                <label class="form-label" for="builder-test-policy">Công bố đáp án:</label>
+                <select id="builder-test-policy" class="form-select">
+                  <option value="hidden" ${draftState.answerReleasePolicy === 'hidden' ? 'selected' : ''}>Ẩn đáp án (hidden)</option>
+                  <option value="immediate" ${draftState.answerReleasePolicy === 'immediate' ? 'selected' : ''}>Hiện ngay khi nộp (immediate)</option>
+                  <option value="teacher_release" ${draftState.answerReleasePolicy === 'teacher_release' ? 'selected' : ''}>Giáo viên công bố (teacher_release)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="builder-blocks-section">
+            <div class="blocks-section-header">
+              <div class="blocks-title-wrap">
+                <h3>Cấu trúc các phần thi (${draftState.blocks.length} phần)</h3>
+                <p class="subtitle">Mỗi phần thi (Block) đại diện cho một chặng bài làm với âm thanh, bài đọc hoặc hướng dẫn riêng.</p>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-add-block">
+                + Thêm phần thi (Block)
+              </button>
+            </div>
+
+            <div class="builder-blocks-list" id="builder-blocks-list">
+              ${blocksHtml}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    bindEvents();
+  }
+
+  function syncInputs() {
+    if (typeof container.querySelector !== 'function') return;
+    const titleInput = container.querySelector('#builder-test-title');
+    if (titleInput) draftState.title = titleInput.value.trim();
+
+    const durationInput = container.querySelector('#builder-test-duration');
+    if (durationInput) {
+      const dur = Number(durationInput.value);
+      if (Number.isFinite(dur) && dur > 0) draftState.durationMinutes = dur;
+    }
+
+    const policySelect = container.querySelector('#builder-test-policy');
+    if (policySelect) draftState.answerReleasePolicy = policySelect.value;
+
+    const blockCards = container.querySelectorAll('.builder-block-card');
+    if (blockCards && typeof blockCards.forEach === 'function') {
+      blockCards.forEach((card, idx) => {
+        const block = draftState.blocks[idx];
+        if (!block) return;
+
+        const titleEl = card.querySelector('.block-title-input');
+        if (titleEl) block.title = titleEl.value.trim();
+
+        const instEl = card.querySelector('.block-instructions-input');
+        if (instEl) block.instructions = instEl.value;
+
+        const audioEl = card.querySelector('.block-audio-input');
+        if (audioEl) {
+          block.audioUrl = audioEl.value.trim() || null;
+          block.stimulusAudioUrl = block.audioUrl;
+        }
+
+        const readingEl = card.querySelector('.block-reading-input');
+        if (readingEl) {
+          block.readingPassage = readingEl.value || null;
+          block.stimulusReadingPassage = block.readingPassage;
+        }
+      });
+    }
+  }
+
+  function bindEvents() {
+    if (typeof container.querySelector !== 'function') return;
+
+    const backBtn = container.querySelector('#btn-back-to-catalog');
+    if (backBtn && typeof options.onBack === 'function' && typeof backBtn.addEventListener === 'function') {
+      backBtn.addEventListener('click', options.onBack);
+    }
+
+    const addBlockBtn = container.querySelector('#btn-add-block');
+    if (addBlockBtn && typeof addBlockBtn.addEventListener === 'function') {
+      addBlockBtn.addEventListener('click', () => {
+        syncInputs();
+        const nextIdx = draftState.blocks.length + 1;
+        let nextPos = 1;
+        for (const b of draftState.blocks) {
+          for (const itm of b.items || []) {
+            if (typeof itm.position === 'number' && itm.position >= nextPos) {
+              nextPos = itm.position + 1;
+            }
+          }
+        }
+
+        draftState.blocks.push({
+          blockId: generateUuid(),
+          checkpoint: nextIdx,
+          title: `Phần ${nextIdx}`,
+          instructions: '',
+          audioUrl: null,
+          readingPassage: null,
+          stimulusAudioUrl: null,
+          stimulusReadingPassage: null,
+          items: [
+            {
+              itemFamilyId: generateUuid(),
+              itemVersionId: generateUuid(),
+              position: nextPos,
+              prompt: `Câu hỏi ${nextPos}`,
+              helpText: '',
+              interactionType: 'short_text',
+              pedagogicalTypeCode: 'general_text',
+              layoutType: 'default',
+              graderType: 'accepted_text',
+              required: true,
+              maxScore: 1,
+              options: [],
+              skillCodes: [],
+              releasePolicy: 'inherit'
+            }
+          ]
+        });
+        render();
+      });
+    }
+
+    const upBtns = container.querySelectorAll('.btn-move-block-up');
+    if (upBtns && typeof upBtns.forEach === 'function') {
+      upBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            syncInputs();
+            const idx = Number(btn.getAttribute('data-index'));
+            if (idx > 0) {
+              const temp = draftState.blocks[idx];
+              draftState.blocks[idx] = draftState.blocks[idx - 1];
+              draftState.blocks[idx - 1] = temp;
+              draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
+              render();
+            }
+          });
+        }
+      });
+    }
+
+    const downBtns = container.querySelectorAll('.btn-move-block-down');
+    if (downBtns && typeof downBtns.forEach === 'function') {
+      downBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            syncInputs();
+            const idx = Number(btn.getAttribute('data-index'));
+            if (idx < draftState.blocks.length - 1) {
+              const temp = draftState.blocks[idx];
+              draftState.blocks[idx] = draftState.blocks[idx + 1];
+              draftState.blocks[idx + 1] = temp;
+              draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
+              render();
+            }
+          });
+        }
+      });
+    }
+
+    const delBtns = container.querySelectorAll('.btn-delete-block');
+    if (delBtns && typeof delBtns.forEach === 'function') {
+      delBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            syncInputs();
+            const idx = Number(btn.getAttribute('data-index'));
+            if (draftState.blocks.length > 1) {
+              draftState.blocks.splice(idx, 1);
+              draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
+              render();
+            }
+          });
+        }
+      });
+    }
+
+    const saveBtn = container.querySelector('#btn-save-draft');
+    const statusMsg = container.querySelector('#builder-status-msg');
+    if (saveBtn && typeof options.onSaveDraft === 'function' && typeof saveBtn.addEventListener === 'function') {
+      saveBtn.addEventListener('click', async () => {
+        syncInputs();
+        saveBtn.disabled = true;
+        if (statusMsg) statusMsg.textContent = 'Đang lưu bản nháp...';
+
+        try {
+          const payload = {
+            formVersionId: draftState.formVersionId,
+            title: draftState.title,
+            durationMinutes: draftState.durationMinutes,
+            answerReleasePolicy: draftState.answerReleasePolicy,
+            blocks: draftState.blocks.map((b, i) => ({
+              blockId: b.blockId,
+              checkpoint: i + 1,
+              title: b.title || `Phần ${i + 1}`,
+              instructions: b.instructions || '',
+              audioUrl: b.audioUrl || null,
+              readingPassage: b.readingPassage || null,
+              stimulusAudioUrl: b.audioUrl || null,
+              stimulusReadingPassage: b.readingPassage || null,
+              items: b.items || []
+            }))
+          };
+
+          const res = await options.onSaveDraft(payload);
+          if (res && res.forked) {
+            draftState.formVersionId = res.formVersionId;
+            draftState.version = res.version;
+            draftState.submissionCount = 0;
+            draftState.status = 'draft';
+            render();
+            const newStatusMsg = container.querySelector('#builder-status-msg');
+            if (newStatusMsg) {
+              newStatusMsg.textContent = `Đã tự động tạo bản nháp mới v${res.version} (đề gốc đã có bài nộp).`;
+            }
+          } else {
+            if (res && res.version) draftState.version = res.version;
+            if (statusMsg) statusMsg.textContent = `Đã lưu bản nháp v${draftState.version} thành công!`;
+          }
+        } catch (err) {
+          if (statusMsg) statusMsg.textContent = `Lỗi khi lưu: ${err.message || 'Không thể lưu bản nháp'}`;
+        } finally {
+          const activeSaveBtn = container.querySelector('#btn-save-draft');
+          if (activeSaveBtn) activeSaveBtn.disabled = false;
+        }
+      });
+    }
+  }
+
+  render();
+}
+
 
 export function formatPublicationStatus(publication) {
   if (!publication || !publication.published) return 'Chưa công bố';
@@ -1225,11 +1638,85 @@ async function startDashboard() {
         onCourseChange: (newCid) => {
           loadAndRenderTestStudio(newCid);
         },
-        onAddTest: () => {
-          alert('Tính năng thêm bài thi mới sẽ được kích hoạt ở Ticket 02.');
+        onAddTest: async () => {
+          try {
+            const courseNames = { 1: '03', 2: '34', 3: '45' };
+            const courseCode = courseNames[currentStudioCourseId] || '03';
+            const defaultTitle = `IZONE · Khối ${courseCode} · Đề thi mới`;
+            container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang khởi tạo bản nháp bài thi mới...</p></div>';
+
+            const postRes = await request(formDraftPath(), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                courseId: currentStudioCourseId,
+                sessionNumber: 1,
+                title: defaultTitle,
+                durationMinutes: 60
+              })
+            });
+
+            if (!postRes || !postRes.formVersionId) {
+              throw new Error(postRes?.message || 'Không thể tạo bản nháp bài thi');
+            }
+
+            const detailRes = await request(formDetailPath(postRes.formVersionId));
+            renderTestBuilderView(container, {
+              ...detailRes.formVersion,
+              submissionCount: detailRes.submissionCount || 0
+            }, {
+              teacherRole,
+              courseId: currentStudioCourseId,
+              onBack: () => {
+                loadAndRenderTestStudio(currentStudioCourseId);
+              },
+              onSaveDraft: async (updatedPayload) => {
+                const putRes = await request(formDraftPath(updatedPayload.formVersionId), {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(updatedPayload)
+                });
+                return putRes;
+              }
+            });
+          } catch (err) {
+            alert('Lỗi khởi tạo bài thi: ' + (err.message || 'Lỗi kết nối'));
+            loadAndRenderTestStudio(currentStudioCourseId);
+          }
         },
-        onEditTest: ({ testKey, formVersionId }) => {
-          alert(`Chỉnh sửa bài thi: ${testKey} (${formVersionId})`);
+        onEditTest: async ({ testKey, formVersionId }) => {
+          if (!formVersionId) {
+            alert('Bài thi này chưa liên kết với phiên bản form nào.');
+            return;
+          }
+          try {
+            container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang tải dữ liệu bài thi...</p></div>';
+            const detailRes = await request(formDetailPath(formVersionId));
+            if (!detailRes || !detailRes.formVersion) {
+              throw new Error(detailRes?.message || 'Không tìm thấy dữ liệu bài thi');
+            }
+            renderTestBuilderView(container, {
+              ...detailRes.formVersion,
+              submissionCount: detailRes.submissionCount || 0
+            }, {
+              teacherRole,
+              courseId: currentStudioCourseId,
+              onBack: () => {
+                loadAndRenderTestStudio(currentStudioCourseId);
+              },
+              onSaveDraft: async (updatedPayload) => {
+                const putRes = await request(formDraftPath(updatedPayload.formVersionId), {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(updatedPayload)
+                });
+                return putRes;
+              }
+            });
+          } catch (err) {
+            alert('Lỗi tải bài thi: ' + (err.message || 'Lỗi kết nối'));
+            loadAndRenderTestStudio(currentStudioCourseId);
+          }
         }
       });
     } catch (err) {
