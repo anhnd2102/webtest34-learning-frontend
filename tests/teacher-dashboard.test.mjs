@@ -42,7 +42,10 @@ import {
   extractPhase,
   formatAssignmentMeta,
   filterClasses,
-  formatClassFilterCountLabel
+  formatClassFilterCountLabel,
+  assignmentResultsExportPath,
+  showExportXlsxButton,
+  downloadResultsXlsx
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase always resolves to the production origin, including local hosts', () => {
@@ -1384,3 +1387,77 @@ test('teacher dashboard lead-scope-filters provides 1-row nowrap layout and conc
 
 
 
+
+test('export xlsx button is hidden until an assignment is selected', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  assert.match(html, /<button id="export-xlsx-btn"[^>]*hidden[^>]*>[\s\S]*?<svg[\s\S]*?Tải xlsx/);
+  const button = { hidden: true };
+  showExportXlsxButton(button, '');
+  assert.equal(button.hidden, true);
+  showExportXlsxButton(button, '11111111-1111-4111-8111-111111111111');
+  assert.equal(button.hidden, false);
+});
+
+function fakeExportButton() {
+  const label = { textContent: 'Tải xlsx' };
+  return { disabled: false, label, querySelector: () => label };
+}
+
+test('export xlsx downloads the whole list with the Bearer token and locks the button while waiting', async () => {
+  const button = fakeExportButton();
+  const status = { textContent: '' };
+  const calls = [];
+  const saved = [];
+  let respond;
+  const fetchImpl = (url, options) => {
+    calls.push({ url, options });
+    return new Promise(resolve => { respond = resolve; });
+  };
+  const pending = downloadResultsXlsx({
+    url: 'https://api.test/api/teacher/classes/101/assignments/a1/results/export',
+    headers: { Authorization: 'Bearer tok' },
+    button,
+    status,
+    fetchImpl,
+    save: (blob, filename) => saved.push({ blob, filename })
+  });
+  assert.deepEqual(calls, [{
+    url: 'https://api.test/api/teacher/classes/101/assignments/a1/results/export',
+    options: { headers: { Authorization: 'Bearer tok' } }
+  }]);
+  assert.equal(button.disabled, true);
+  assert.equal(button.label.textContent, 'Đang xuất…');
+  respond(new Response('xlsx-bytes', {
+    status: 200,
+    headers: { 'Content-Disposition': 'attachment; filename="KetQua_Lop-101_Buoi3.xlsx"' }
+  }));
+  await pending;
+  assert.equal(saved.length, 1);
+  assert.equal(saved[0].filename, 'KetQua_Lop-101_Buoi3.xlsx');
+  assert.equal(await saved[0].blob.text(), 'xlsx-bytes');
+  assert.equal(button.disabled, false);
+  assert.equal(button.label.textContent, 'Tải xlsx');
+  assert.equal(
+    assignmentResultsExportPath('101', '11111111-1111-4111-8111-111111111111'),
+    '/api/teacher/classes/101/assignments/11111111-1111-4111-8111-111111111111/results/export'
+  );
+});
+
+test('export xlsx failure is shown in the dashboard status line and unlocks the button', async () => {
+  const button = fakeExportButton();
+  const status = { textContent: '' };
+  const saved = [];
+  await downloadResultsXlsx({
+    url: 'https://api.test/x',
+    headers: {},
+    button,
+    status,
+    fetchImpl: async () => new Response(JSON.stringify({ ok: false, error: 'TEACHER_ASSIGNMENT_FORBIDDEN', message: 'Không có quyền xem bài được giao này.' }), { status: 403 }),
+    save: () => saved.push(1)
+  });
+  assert.equal(saved.length, 0);
+  assert.match(status.textContent, /Không có quyền xem bài được giao này\./);
+  assert.equal(button.disabled, false);
+  assert.equal(button.label.textContent, 'Tải xlsx');
+});

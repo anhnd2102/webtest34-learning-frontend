@@ -269,6 +269,46 @@ export function assignmentResultsPath(classId, assignmentId, options = {}) {
   return query ? `${base}?${query}` : base;
 }
 
+export function assignmentResultsExportPath(classId, assignmentId) {
+  return `${assignmentResultsPath(classId, assignmentId)}/export`;
+}
+
+export function showExportXlsxButton(button, assignmentId) {
+  if (button) button.hidden = !assignmentId;
+}
+
+function saveBlob(blob, filename) {
+  const href = URL.createObjectURL(blob);
+  const link = Object.assign(document.createElement('a'), { href, download: filename });
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 0);
+}
+
+// Dashboard xác thực bằng Bearer nên không dùng link trực tiếp: fetch → blob → tải xuống.
+// Luôn xuất toàn bộ danh sách, không gửi tham số lọc/sắp xếp.
+export async function downloadResultsXlsx({ url, headers, button, status, fetchImpl = fetch, save = saveBlob }) {
+  const label = button.querySelector('span');
+  const idleText = label.textContent;
+  button.disabled = true;
+  label.textContent = 'Đang xuất…';
+  try {
+    const response = await fetchImpl(url, { headers });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload.message || 'Không xuất được file xlsx.');
+    }
+    const filename = /filename="([^"]+)"/.exec(response.headers.get('Content-Disposition') || '')?.[1] || 'KetQua.xlsx';
+    save(await response.blob(), filename);
+  } catch (error) {
+    if (status) status.textContent = `Lỗi xuất xlsx: ${error.message}`;
+  } finally {
+    button.disabled = false;
+    label.textContent = idleText;
+  }
+}
+
 export function assignmentExamModePath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam-mode`;
 }
@@ -934,6 +974,7 @@ async function startDashboard() {
   const lastUpdated = document.querySelector('#last-updated');
   const refreshBtn = document.querySelector('#refresh-btn');
   const publishAllBtn = document.querySelector('#publish-all-btn');
+  const exportXlsxBtn = document.querySelector('#export-xlsx-btn');
   const classSkillSummary = document.querySelector('#class-skill-summary');
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
@@ -1518,6 +1559,7 @@ async function startDashboard() {
   }
 
   function renderResults(payload) {
+    showExportXlsxButton(exportXlsxBtn, payload?.assignment ? state.assignmentId : '');
     if (!payload || !payload.assignment) {
       if (results) results.hidden = true;
       if (resultsContent) resultsContent.replaceChildren();
@@ -2953,6 +2995,18 @@ async function startDashboard() {
         publishAllBtn.textContent = 'Công bố toàn bộ điểm';
       }
     }
+  }
+
+  if (exportXlsxBtn) {
+    exportXlsxBtn.addEventListener('click', () => {
+      if (!state.classId || !state.assignmentId) return;
+      downloadResultsXlsx({
+        url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
+        headers: authHeader(),
+        button: exportXlsxBtn,
+        status
+      });
+    });
   }
 
   if (publishAllBtn) {
