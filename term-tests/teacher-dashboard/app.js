@@ -752,6 +752,49 @@ export function generateUuid() {
   });
 }
 
+export function parseClozeBlanks(text) {
+  if (!text || typeof text !== 'string') return [];
+  const blanks = [];
+  const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+  for (const match of text.matchAll(pattern)) {
+    const num = Number(match[1] || match[2]);
+    blanks.push({
+      number: num,
+      index: match.index,
+      length: match[0].length,
+      rawMatch: match[0]
+    });
+  }
+  return blanks;
+}
+
+export function renderInlineClozeMarkup(text, items = [], responses = {}, options = {}) {
+  if (!text || typeof text !== 'string') return '';
+  const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+  let html = '';
+  let last = 0;
+
+  for (const match of text.matchAll(pattern)) {
+    const num = Number(match[1] || match[2]);
+    const item = Array.isArray(items) ? (items.find(it => it.position === num) || items[num - 1]) : null;
+    html += escapeHtml(text.slice(last, match.index)).replace(/\n/g, '<br/>');
+
+    const itemId = item?.itemVersionId || `blank-${num}`;
+    const userVal = escapeHtml(responses[itemId] || '');
+    const disabledAttr = options.disabled ? 'disabled' : '';
+
+    html += `<span class="inline-blank-wrapper" data-item-id="${escapeHtml(itemId)}">` +
+      `<span class="inline-blank-number">(${num})</span>` +
+      `<input type="text" class="form-control inline-fill-input" data-item-id="${escapeHtml(itemId)}" data-position="${num}" placeholder="${num}" value="${userVal}" ${disabledAttr} />` +
+      `</span>`;
+
+    last = match.index + match[0].length;
+  }
+
+  html += escapeHtml(text.slice(last)).replace(/\n/g, '<br/>');
+  return html;
+}
+
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
   if (!container) return;
 
@@ -863,7 +906,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     return items.map((item, itemIdx) => {
       const isSingleChoice = item.interactionType === 'single_choice';
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async';
+      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -951,6 +995,60 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <button type="button" class="btn btn-secondary btn-sm btn-add-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                 + Thêm phương án
               </button>
+            </div>
+          </div>
+        `;
+      } else if (isInlineCloze) {
+        const acceptedList = itemKey.accepted || [''];
+        const chipsHtml = acceptedList.map((v) => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        const livePreviewHtml = renderInlineClozeMarkup(item.prompt || '', [item], {}, { disabled: true });
+
+        specificHtml = `
+          <div class="template-section template-inline-cloze">
+            <div class="cloze-editor-box">
+              <div class="cloze-toolbar">
+                <span class="cloze-tool-label"><strong>Soạn thảo nội dung chỗ trống (Inline Cloze):</strong></span>
+                <button type="button" class="btn btn-secondary btn-sm btn-insert-blank-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn chỗ trống (${item.position}) __________">
+                  ➕ Chèn chỗ trống (${item.position}) __________
+                </button>
+              </div>
+              <p class="cloze-help-text" style="font-size: 0.8rem; color: #64748b; margin: 4px 0 8px;">
+                Nhập câu hoặc đoạn văn bản chứa token định dạng <code>(${item.position}) __________</code> hoặc <code>{{${item.position}}}</code>. Trình thi sẽ tự động nhúng ô nhập trực tiếp vào dòng chữ.
+              </p>
+            </div>
+
+            <div class="cloze-live-preview-box" style="margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px;">
+              <span class="preview-mini-label" style="font-size: 0.76rem; font-weight: 700; color: #475569; text-transform: uppercase;">Xem trước hiển thị nội tuyến:</span>
+              <div class="cloze-preview-content" style="margin-top: 6px; line-height: 1.8;">
+                ${livePreviewHtml || '<em>Chưa có nội dung văn bản chứa chỗ trống...</em>'}
+              </div>
+            </div>
+
+            <div class="cloze-answers-config" style="margin-top: 12px;">
+              <label class="form-label"><strong>Đáp án chuẩn cho chỗ trống (${item.position}):</strong></label>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập đáp án chuẩn cho chỗ trống..." />
+                <button type="button" class="btn btn-secondary btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  ⚡ Tự động sinh biến thể
+                </button>
+              </div>
+              <div class="variant-chips-container" style="margin-top: 8px;">
+                <div class="chips-meta-bar">
+                  <span class="chips-count-badge">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
+                  <div class="quick-add-variant">
+                    <input type="text" class="form-control form-control-sm input-add-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
+                  </div>
+                </div>
+                <div class="variant-chips-wrap">
+                  ${chipsHtml}
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -1147,7 +1245,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
             : (isRubricAsync
               ? 'Tự luận chấm AI (AI-Graded Rubric)'
-              : 'Điền ô trống (Short Text)')));
+              : (isInlineCloze
+                ? 'Điền từ nội tuyến (Inline Cloze)'
+                : 'Điền ô trống (Short Text)'))));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1234,6 +1334,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-fitb" data-block-idx="${index}">
                     + Điền ô trống (Short Text)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-inline-cloze" data-block-idx="${index}">
+                    + Điền từ nội tuyến (Inline Cloze)
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-pair" data-block-idx="${index}">
                     + Cặp từ vựng (Vocabulary Pair)
@@ -1708,6 +1811,59 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: ['answer'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        render();
+      });
+    });
+
+    // Add Inline Cloze Question
+    const addInlineClozeBtns = container.querySelectorAll('.btn-add-inline-cloze');
+    addInlineClozeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: `The cruise departs from Miami and visits (${nextPos}) __________ Caribbean islands.`,
+          helpText: '',
+          interactionType: 'short_text',
+          pedagogicalTypeCode: 'table_completion',
+          layoutType: 'inline_cloze',
+          graderType: 'accepted_text',
+          required: true,
+          maxScore: 1,
+          options: [],
+          skillCodes: ['listening'],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'accepted_text',
+          accepted: ['six'],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Insert Blank Token into Cloze prompt
+    const insertBlankBtns = container.querySelectorAll('.btn-insert-blank-token');
+    insertBlankBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const token = `(${item.position}) __________`;
+        if (!item.prompt.includes(token)) {
+          item.prompt = item.prompt ? `${item.prompt} ${token}` : `Câu hỏi với ${token}`;
+        }
         render();
       });
     });
@@ -2384,7 +2540,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const itemsHtml = items.map((item) => {
           const isSingleChoice = item.interactionType === 'single_choice';
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async';
+          const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -2414,6 +2571,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                     <span class="choice-text">${escapeHtml(opt.label || '')}</span>
                   </label>
                 `).join('')}
+              </div>
+            `;
+          } else if (isInlineCloze) {
+            interactiveHtml = `
+              <div class="candidate-inline-cloze-wrap" style="line-height: 2.2; font-size: 1.05rem;">
+                ${renderInlineClozeMarkup(item.prompt || '', [item])}
               </div>
             `;
           } else if (isShortText) {
@@ -2446,14 +2609,18 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
+          const promptDisplay = isVocabPair
+            ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+            : (isInlineCloze ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:' : escapeHtml(item.prompt || ''));
+
           return `
             <div class="candidate-question-card" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))}</span>
+                <span class="question-type-badge">${isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))}</span>
               </div>
               <div class="candidate-question-prompt">
-                ${isVocabPair ? 'Chọn định nghĩa tương ứng cho từ vựng sau:' : escapeHtml(item.prompt || '')}
+                ${promptDisplay}
               </div>
               ${interactiveHtml}
             </div>

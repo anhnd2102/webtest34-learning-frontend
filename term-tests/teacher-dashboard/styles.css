@@ -3985,6 +3985,124 @@ body:not(.login-page) #auth-panel {
   max-width: 380px;
 }
 
+/* ==========================================================================
+   Inline Cloze & Passage / Table Fill-in-the-Blank Styles (Issue 07)
+   ========================================================================== */
+.template-inline-cloze {
+  background: #fdfefe;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cloze-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-insert-blank-token {
+  background: #f1f5f9;
+  border: 1px dashed #0284c7;
+  color: #0369a1;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-insert-blank-token:hover {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-style: solid;
+}
+
+.cloze-live-preview-box {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.cloze-preview-content {
+  font-size: 0.92rem;
+  line-height: 2.2;
+  color: #1e293b;
+}
+
+/* Inline Blank Widget Embedded in Sentences / Tables */
+.inline-blank-wrapper {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 4px;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 2px 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
+}
+
+.inline-blank-wrapper:focus-within {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.inline-blank-number,
+.inline-blank-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0284c7;
+  background: #f0f9ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 6px;
+  user-select: none;
+}
+
+.inline-fill-input {
+  display: inline-block;
+  width: 140px;
+  height: 28px;
+  padding: 2px 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: transparent;
+  border: none;
+  border-bottom: 2px dashed #94a3b8;
+  border-radius: 0;
+  text-align: left;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.inline-fill-input:focus {
+  border-bottom: 2px solid #0284c7;
+  background: rgba(2, 132, 199, 0.04);
+}
+
+.candidate-inline-cloze-wrap {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 8px;
+}
+
+.candidate-inline-cloze-wrap .inline-fill-input {
+  width: 160px;
+  height: 32px;
+  font-size: 0.95rem;
+}
+
 .candidate-open-meta {
   display: flex;
   justify-content: space-between;
