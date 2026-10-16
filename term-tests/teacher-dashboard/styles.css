@@ -2470,4 +2470,47 @@ body:not(.login-page) #auth-panel {
   white-space: nowrap;
 }
 
+/* Dashboard Sub-system View Containers */
+.dashboard-view-container {
+  width: 100%;
+}
+.dashboard-view-container[hidden] {
+  display: none !important;
+}
+
+/* Showcase Call-to-Action Bar */
+.showcase-cta-bar {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.go-to-grading-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #b91c1c;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.25);
+  transition: all 0.2s ease;
+}
+
+.go-to-grading-btn:hover {
+  background: #991b1b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35);
+}
+
+.go-to-grading-btn:active {
+  transform: translateY(0);
+}
+
 

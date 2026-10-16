@@ -80,6 +80,68 @@ export function readDashboardState(input) {
   return state;
 }
 
+export const SUPPORTED_DASHBOARD_TABS = ['dashboard', 'exams', 'grading', 'reports'];
+export const DEFAULT_DASHBOARD_TAB = 'dashboard';
+
+export function readDashboardTab(input) {
+  if (!input) return DEFAULT_DASHBOARD_TAB;
+  let hash = '';
+  if (typeof input === 'string') {
+    if (input.includes('#')) {
+      hash = input.slice(input.indexOf('#') + 1);
+    } else if (SUPPORTED_DASHBOARD_TABS.includes(input.toLowerCase().trim())) {
+      return input.toLowerCase().trim();
+    }
+  } else if (input instanceof URL) {
+    hash = input.hash ? input.hash.replace(/^#/, '') : '';
+  } else if (typeof input === 'object' && input.hash) {
+    hash = input.hash.replace(/^#/, '');
+  }
+  hash = hash.split('?')[0].trim().toLowerCase();
+  return SUPPORTED_DASHBOARD_TABS.includes(hash) ? hash : DEFAULT_DASHBOARD_TAB;
+}
+
+export function switchDashboardTab(tabId, options = {}) {
+  const targetTab = SUPPORTED_DASHBOARD_TABS.includes(tabId) ? tabId : DEFAULT_DASHBOARD_TAB;
+  const views = options.views || {};
+  const navItems = options.navItems || [];
+
+  for (const tab of SUPPORTED_DASHBOARD_TABS) {
+    const view = views[tab];
+    if (view) {
+      view.hidden = tab !== targetTab;
+    }
+  }
+
+  for (const navItem of navItems) {
+    if (!navItem) continue;
+    const href = navItem.getAttribute('href') || '';
+    const linkTab = href.replace(/^#/, '');
+    const isActive = linkTab === targetTab;
+    if (isActive) {
+      if (navItem.classList && typeof navItem.classList.add === 'function') {
+        navItem.classList.add('active');
+      }
+      if (typeof navItem.setAttribute === 'function') {
+        navItem.setAttribute('aria-current', 'page');
+      }
+    } else {
+      if (navItem.classList && typeof navItem.classList.remove === 'function') {
+        navItem.classList.remove('active');
+      }
+      if (typeof navItem.removeAttribute === 'function') {
+        navItem.removeAttribute('aria-current');
+      }
+    }
+  }
+
+  if (typeof options.onTabChange === 'function') {
+    options.onTabChange(targetTab);
+  }
+
+  return targetTab;
+}
+
 export function assignmentUrl(input, state) {
   const url = input instanceof URL ? new URL(input) : new URL(input);
   const keys = ['classId', 'assignmentId', 'attemptId', 'q', 'status', 'minScore', 'maxScore', 'skill', 'sortBy', 'sortDir', 'page', 'course', 'scope', 'classStatus', 'classQ'];
@@ -935,11 +997,72 @@ async function startDashboard() {
   const refreshBtn = document.querySelector('#refresh-btn');
   const publishAllBtn = document.querySelector('#publish-all-btn');
   const classSkillSummary = document.querySelector('#class-skill-summary');
+  const viewDashboard = document.querySelector('#view-dashboard');
+  const viewGrading = document.querySelector('#view-grading');
+  const viewExams = document.querySelector('#view-exams');
+  const viewReports = document.querySelector('#view-reports');
+  const navItems = Array.from(document.querySelectorAll('.navbar-menu .nav-item'));
+  const goToGradingBtn = document.querySelector('#go-to-grading-btn');
+  const gradingEmptyPlaceholder = document.querySelector('#grading-empty-placeholder');
+  const gradingBackToDashboardBtn = document.querySelector('#grading-back-to-dashboard-btn');
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
   let isSwitchingAssignment = false;
   let currentSelectedAssignment = null;
   let examRoomReturnToResults = false;
+
+  function updateDashboardTab(tabId) {
+    const activeTab = switchDashboardTab(tabId, {
+      views: {
+        dashboard: viewDashboard,
+        grading: viewGrading,
+        exams: viewExams,
+        reports: viewReports
+      },
+      navItems,
+      onTabChange: (newTab) => {
+        if (newTab === 'grading') {
+          if (state.assignmentId && state.classId) {
+            if (results) results.hidden = false;
+            if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = true;
+          } else {
+            if (results) results.hidden = true;
+            if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
+          }
+        }
+      }
+    });
+    return activeTab;
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = item.getAttribute('href') || '#dashboard';
+      if (window.location.hash !== href) {
+        window.location.hash = href;
+      }
+      updateDashboardTab(href);
+    });
+  });
+
+  window.addEventListener('hashchange', () => {
+    updateDashboardTab(window.location.hash);
+  });
+
+  if (goToGradingBtn) {
+    goToGradingBtn.addEventListener('click', () => {
+      window.location.hash = '#grading';
+      updateDashboardTab('grading');
+    });
+  }
+
+  if (gradingBackToDashboardBtn) {
+    gradingBackToDashboardBtn.addEventListener('click', () => {
+      window.location.hash = '#dashboard';
+      updateDashboardTab('dashboard');
+    });
+  }
 
   function renderAssignmentChips(targetAssignmentId = state.assignmentId) {
     renderAssignmentChipsView(assignments, {
@@ -964,6 +1087,17 @@ async function startDashboard() {
     if (assignmentSelect) assignmentSelect.value = assignmentId || '';
     isSwitchingAssignment = false;
     renderAssignmentChips(assignmentId);
+
+    const currentTab = readDashboardTab(window.location.hash);
+    if (currentTab === 'grading') {
+      if (assignmentId && state.classId) {
+        if (results) results.hidden = false;
+        if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = true;
+      } else {
+        if (results) results.hidden = true;
+        if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
+      }
+    }
 
     if (assignmentId) {
       const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === assignmentId);
@@ -3467,6 +3601,11 @@ async function startDashboard() {
       loadResults(state.classId, state.assignmentId).catch(() => {});
     }
   }, 30000);
+
+  // Initialize view tab according to current URL hash
+  if (typeof window !== 'undefined') {
+    updateDashboardTab(window.location.hash || '#dashboard');
+  }
 }
 
 if (typeof document !== 'undefined') startDashboard();
