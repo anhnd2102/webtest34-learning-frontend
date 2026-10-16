@@ -3409,5 +3409,53 @@ body:not(.login-page) #auth-panel {
   padding: 5px 10px;
 }
 
+/* Vocabulary Pair (text_select_pair) Styles */
+.template-vocab-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vocab-english-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.vocab-options-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.vocab-meaning-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.vocab-meaning-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.vocab-meaning-row.is-correct {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.item-kind-pill.text_select_pair {
+  background: #fdf2f8;
+  color: #9d174d;
+  border-color: #fbcfe8;
+}
 
 

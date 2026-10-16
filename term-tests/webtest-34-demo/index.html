@@ -1066,7 +1066,7 @@
 
   function vocabularyPairRow(item, ordinal){
     const options = Array.isArray(item.options) ? item.options : [];
-    if(options.length !== 25 || options.some(option => !option || typeof option.id !== 'string' || typeof option.label !== 'string')) {
+    if(options.length < 2 || options.some(option => !option || typeof option.id !== 'string' || typeof option.label !== 'string')) {
       throw new Error('WEBTEST34_VOCAB_DEFINITION_OPTIONS_INVALID');
     }
     const key = `vocab1_${ordinal}`;

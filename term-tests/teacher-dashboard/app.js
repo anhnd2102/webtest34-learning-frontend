@@ -814,6 +814,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: ['answer'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+      } else if (itm.interactionType === 'text_select_pair' && !draftState.gradingKey.items[itm.itemVersionId]) {
+        draftState.gradingKey.items[itm.itemVersionId] = {
+          graderType: 'accepted_text_exact_option',
+          accepted: [itm.prompt || 'word'],
+          expectedOptionId: itm.options?.[0]?.id || 'opt_1',
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
       } else if (itm.graderType === 'unordered_group_slot' && itm.groupId && !draftState.gradingKey.groups[itm.groupId]) {
         draftState.gradingKey.groups[itm.groupId] = {
           graderType: 'unordered_group_slot',
@@ -833,6 +840,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const isSingleChoice = item.interactionType === 'single_choice';
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
       const isShortText = item.interactionType === 'short_text';
+      const isVocabPair = item.interactionType === 'text_select_pair';
 
       const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
       const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
@@ -954,9 +962,74 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             </div>
           </div>
         `;
+      } else if (isVocabPair) {
+        const acceptedList = itemKey.accepted || [item.prompt || ''];
+        const chipsHtml = acceptedList.map((v) => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        const expectedOptId = itemKey.expectedOptionId || item.options?.[0]?.id || 'opt_1';
+        const optionsHtml = (item.options || []).map((opt) => `
+          <div class="vocab-meaning-row ${opt.id === expectedOptId ? 'is-correct' : ''}" data-option-id="${opt.id}">
+            <label class="option-select-label" title="Chọn làm nghĩa tiếng Việt đúng">
+              <input type="radio" name="radio_vocab_correct_${item.itemVersionId}" class="radio-vocab-correct" value="${opt.id}" ${opt.id === expectedOptId ? 'checked' : ''} data-correct="${opt.id}">
+              <span class="option-key-pill">${opt.id}</span>
+            </label>
+            <input type="text" class="form-control vocab-meaning-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Nghĩa tiếng Việt..." />
+            <button type="button" class="btn btn-icon btn-sm btn-del-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa nghĩa này">✕</button>
+          </div>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-vocab-pair">
+            <div class="vocab-english-box">
+              <label class="form-label"><strong>1. Từ tiếng Anh chuẩn (50% điểm):</strong></label>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-vocab-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || item.prompt || '')}" placeholder="Nhập từ tiếng Anh chuẩn..." />
+                <button type="button" class="btn btn-secondary btn-generate-vocab-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  ⚡ Sinh biến thể tự động
+                </button>
+              </div>
+              <div class="variant-chips-container" style="margin-top: 8px;">
+                <div class="chips-meta-bar">
+                  <span class="chips-count-badge">Các biến thể tiếng Anh được chấp nhận (${acceptedList.length}/40)</span>
+                  <div class="quick-add-variant">
+                    <input type="text" class="form-control form-control-sm input-add-vocab-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
+                  </div>
+                </div>
+                <div class="variant-chips-wrap">
+                  ${chipsHtml}
+                </div>
+              </div>
+            </div>
+
+            <div class="vocab-options-box">
+              <div class="template-header-bar">
+                <label class="form-label" style="margin: 0;"><strong>2. Danh sách nghĩa tiếng Việt (50% điểm - Tích tròn nghĩa đúng):</strong></label>
+              </div>
+              <div class="vocab-meaning-grid">
+                ${optionsHtml}
+              </div>
+              <div class="options-actions" style="margin-top: 8px;">
+                <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  + Thêm nghĩa tiếng Việt
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
       }
 
-      const typeLabel = isSingleChoice ? 'Trắc nghiệm 1 đáp án (Single Choice)' : (isMultiGroup ? 'Nhóm chọn nhiều (Multi-Select Group)' : 'Điền ô trống (Short Text)');
+      const typeLabel = isSingleChoice
+        ? 'Trắc nghiệm 1 đáp án (Single Choice)'
+        : (isMultiGroup
+          ? 'Nhóm chọn nhiều (Multi-Select Group)'
+          : (isVocabPair
+            ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
+            : 'Điền ô trống (Short Text)'));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1043,6 +1116,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-fitb" data-block-idx="${index}">
                     + Điền ô trống (Short Text)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-pair" data-block-idx="${index}">
+                    + Cặp từ vựng (Vocabulary Pair)
                   </button>
                 </div>
               </div>
@@ -1236,6 +1312,28 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                 };
               }
+            }
+
+            // Vocabulary pair sync
+            if (item.interactionType === 'text_select_pair') {
+              const chips = iCard.querySelectorAll('.variant-chip');
+              const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              const radioChecked = iCard.querySelector('.radio-vocab-correct:checked');
+              const expectedOptId = radioChecked ? radioChecked.value : (item.options?.[0]?.id || 'opt_1');
+
+              draftState.gradingKey.items[item.itemVersionId] = {
+                graderType: 'accepted_text_exact_option',
+                accepted: variants.length ? variants : [item.prompt || 'word'],
+                expectedOptionId: expectedOptId,
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+
+              const optInputs = iCard.querySelectorAll('.vocab-meaning-input');
+              optInputs.forEach(optIn => {
+                const optId = optIn.getAttribute('data-option-id');
+                const optObj = item.options.find(o => o.id === optId);
+                if (optObj) optObj.label = optIn.value.trim();
+              });
             }
           });
         }
@@ -1450,6 +1548,46 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    // Add Vocabulary Pair Question
+    const addVocabPairBtns = container.querySelectorAll('.btn-add-vocab-pair');
+    addVocabPairBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: `Từ vựng câu ${nextPos}`,
+          helpText: '',
+          interactionType: 'text_select_pair',
+          pedagogicalTypeCode: 'vocabulary_pair',
+          layoutType: 'default',
+          graderType: 'accepted_text_exact_option',
+          required: true,
+          maxScore: 1,
+          options: [
+            { id: 'opt_1', label: 'Nghĩa phương án 1' },
+            { id: 'opt_2', label: 'Nghĩa phương án 2' }
+          ],
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'accepted_text_exact_option',
+          accepted: [`Từ vựng câu ${nextPos}`],
+          expectedOptionId: 'opt_1',
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
     // Delete Question Item
     const delItemBtns = container.querySelectorAll('.btn-delete-item');
     delItemBtns.forEach(btn => {
@@ -1540,6 +1678,104 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           currentKey.accepted = currentKey.accepted.filter(v => v !== variantToRemove);
           if (!currentKey.accepted.length) currentKey.accepted = ['answer'];
           render();
+        }
+      });
+    });
+
+    // Generate variants button for Vocab Pair
+    const genVocabVariantBtns = container.querySelectorAll('.btn-generate-vocab-variants');
+    genVocabVariantBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const card = btn.closest('.builder-item-card');
+        const rawInput = card?.querySelector('.input-vocab-raw');
+        const rawVal = rawInput?.value?.trim() || '';
+        if (!rawVal) {
+          alert('Vui lòng nhập từ tiếng Anh chuẩn trước khi sinh biến thể.');
+          return;
+        }
+        const generated = expandSentenceVariants([rawVal]);
+        const currentExpected = draftState.gradingKey.items[item.itemVersionId]?.expectedOptionId || item.options?.[0]?.id || 'opt_1';
+        draftState.gradingKey.items[item.itemVersionId] = {
+          graderType: 'accepted_text_exact_option',
+          accepted: generated,
+          expectedOptionId: currentExpected,
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Add manual variant input for Vocab Pair
+    const addVocabVariantInputs = container.querySelectorAll('.input-add-vocab-variant');
+    addVocabVariantInputs.forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = input.value.trim();
+          if (!val) return;
+          syncInputs();
+          const bIdx = Number(input.getAttribute('data-block-idx'));
+          const iIdx = Number(input.getAttribute('data-item-idx'));
+          const item = draftState.blocks[bIdx]?.items?.[iIdx];
+          if (!item) return;
+          const currentExpected = draftState.gradingKey.items[item.itemVersionId]?.expectedOptionId || item.options?.[0]?.id || 'opt_1';
+          const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+            graderType: 'accepted_text_exact_option',
+            accepted: [],
+            expectedOptionId: currentExpected,
+            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          };
+          if (!currentKey.accepted.includes(val)) {
+            currentKey.accepted.push(val);
+            if (currentKey.accepted.length > 40) currentKey.accepted.pop();
+            draftState.gradingKey.items[item.itemVersionId] = currentKey;
+            render();
+          }
+        }
+      });
+    });
+
+    // Add Option to Vocab Pair
+    const addVocabOptBtns = container.querySelectorAll('.btn-add-vocab-option');
+    addVocabOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const nextNum = (item.options?.length || 0) + 1;
+        const nextId = `opt_${nextNum}`;
+        item.options = item.options || [];
+        item.options.push({ id: nextId, label: `Nghĩa phương án ${nextNum}` });
+        render();
+      });
+    });
+
+    // Delete Option from Vocab Pair
+    const delVocabOptBtns = container.querySelectorAll('.btn-del-vocab-option');
+    delVocabOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const optId = btn.getAttribute('data-option-id');
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (item && item.options && item.options.length > 2) {
+          item.options = item.options.filter(o => o.id !== optId);
+          // if deleted expected option, fallback to first option
+          const currentExpected = draftState.gradingKey.items[item.itemVersionId]?.expectedOptionId;
+          if (currentExpected === optId) {
+            draftState.gradingKey.items[item.itemVersionId].expectedOptionId = item.options[0]?.id || 'opt_1';
+          }
+          render();
+        } else {
+          alert('Một câu hỏi cặp từ vựng phải có ít nhất 2 nghĩa để lựa chọn.');
         }
       });
     });
