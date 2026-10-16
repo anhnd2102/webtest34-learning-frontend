@@ -731,6 +731,11 @@ export function formDetailPath(apiBaseOrVersionId, versionIdOptional) {
   return `${cleanBase}/api/teacher/forms/${encodeURIComponent(versionIdOptional)}`;
 }
 
+export function previewSandboxPath(apiBase = '') {
+  const cleanBase = String(apiBase || '').replace(/\/+$/, '');
+  return cleanBase ? `${cleanBase}/api/teacher/forms/preview-sandbox` : '/api/teacher/forms/preview-sandbox';
+}
+
 export function generateUuid() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
@@ -821,6 +826,20 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           expectedOptionId: itm.options?.[0]?.id || 'opt_1',
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+      } else if (itm.graderType === 'rubric_async' && !draftState.gradingKey.items[itm.itemVersionId]) {
+        draftState.gradingKey.items[itm.itemVersionId] = {
+          graderType: 'rubric_async',
+          rubricCode: 'rubric_translation_v1',
+          rubricVersion: 1,
+          rubric: {
+            scoringVersion: 'rubric-translation-v1',
+            maxScore: itm.maxScore || 4,
+            criteria: [
+              { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: (itm.maxScore || 4) / 2, requiredConcepts: [] },
+              { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: (itm.maxScore || 4) / 2, requiredConcepts: [] }
+            ]
+          }
+        };
       } else if (itm.graderType === 'unordered_group_slot' && itm.groupId && !draftState.gradingKey.groups[itm.groupId]) {
         draftState.gradingKey.groups[itm.groupId] = {
           graderType: 'unordered_group_slot',
@@ -839,8 +858,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     return items.map((item, itemIdx) => {
       const isSingleChoice = item.interactionType === 'single_choice';
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-      const isShortText = item.interactionType === 'short_text';
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async';
       const isVocabPair = item.interactionType === 'text_select_pair';
+      const isRubricAsync = item.graderType === 'rubric_async';
 
       const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
       const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
@@ -1021,6 +1041,97 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             </div>
           </div>
         `;
+      } else if (isRubricAsync) {
+        const rubricObj = itemKey.rubric || {
+          scoringVersion: 'rubric-translation-v1',
+          maxScore: item.maxScore || 4,
+          criteria: [
+            { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: (item.maxScore || 4) / 2, requiredConcepts: [] },
+            { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: (item.maxScore || 4) / 2, requiredConcepts: [] }
+          ]
+        };
+        const scoringVer = rubricObj.scoringVersion || 'rubric-translation-v1';
+        const criteriaList = rubricObj.criteria || [];
+        const criteriaHtml = criteriaList.map((crit, cIdx) => `
+          <div class="rubric-criterion-card" data-criterion-idx="${cIdx}">
+            <div class="criterion-card-header">
+              <div class="criterion-header-left">
+                <span class="criterion-id-badge">${escapeHtml(crit.id)}</span>
+                <input type="text" class="form-control form-control-sm criterion-label-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" value="${escapeHtml(crit.label || '')}" placeholder="Tên tiêu chí..." />
+              </div>
+              <div class="criterion-header-right">
+                <label class="form-label" style="margin:0;font-size:0.76rem;">Điểm:</label>
+                <input type="number" class="form-control form-control-sm criterion-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" value="${crit.maxScore}" step="0.5" min="0" max="100" />
+                <button type="button" class="btn btn-icon btn-sm btn-del-criterion" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" title="Xóa tiêu chí">✕</button>
+              </div>
+            </div>
+            <div class="criterion-card-body">
+              <label class="form-label" style="margin:0;font-size:0.75rem;color:#64748b;">Từ khóa / khái niệm bắt buộc (Phân tách bởi dấu phẩy):</label>
+              <input type="text" class="form-control form-control-sm criterion-concepts-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" value="${escapeHtml((crit.requiredConcepts || []).join(', '))}" placeholder="keyword1, phrase2..." />
+            </div>
+          </div>
+        `).join('');
+
+        const promptGuidance = rubricObj.promptGuidance || '';
+
+        specificHtml = `
+          <div class="template-section template-rubric-async">
+            <div class="rubric-preset-selector">
+              <span class="preset-title">Mẫu Rubric gợi ý (Preset):</span>
+              <select class="form-select form-select-sm select-rubric-preset" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                <option value="translation" ${scoringVer.includes('translation') ? 'selected' : ''}>Dịch thuật (Translation - 50% Meaning, 50% Grammar)</option>
+                <option value="speaking" ${scoringVer.includes('speaking') ? 'selected' : ''}>Speaking dạng văn bản (40% Ý tưởng, 30% Từ vựng, 30% Ngữ pháp)</option>
+                <option value="comprehension" ${scoringVer.includes('comprehension') ? 'selected' : ''}>Đọc hiểu Khối 03 (70% Comprehension, 30% Keywords)</option>
+                <option value="custom" ${(!scoringVer.includes('translation') && !scoringVer.includes('speaking') && !scoringVer.includes('comprehension')) ? 'selected' : ''}>Tự thiết lập (Custom Rubric)</option>
+              </select>
+            </div>
+
+            <div class="rubric-tabs-container">
+              <div class="rubric-tabs-header">
+                <button type="button" class="btn-rubric-tab active" data-tab="criteria" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  📋 Tiêu chí chấm điểm (${criteriaList.length})
+                </button>
+                <button type="button" class="btn-rubric-tab" data-tab="guidance" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  💡 Hướng dẫn Prompt nâng cao
+                </button>
+                <button type="button" class="btn-rubric-tab" data-tab="sandbox" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  🧪 Sandbox Chấm thử AI
+                </button>
+              </div>
+
+              <div class="rubric-tab-content" style="margin-top: 10px;">
+                <div class="rubric-tab-pane pane-criteria" id="pane-criteria-${blockIdx}-${itemIdx}">
+                  <div class="rubric-criteria-list">
+                    ${criteriaHtml}
+                  </div>
+                  <div class="criteria-actions" style="margin-top: 8px;">
+                    <button type="button" class="btn btn-secondary btn-sm btn-add-criterion" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                      + Thêm tiêu chí (Criterion)
+                    </button>
+                  </div>
+                </div>
+
+                <div class="rubric-tab-pane pane-guidance" id="pane-guidance-${blockIdx}-${itemIdx}" style="display: none;">
+                  <label class="form-label">Chỉ dẫn nâng cao dành cho AI Grader (Custom Prompt Instructions):</label>
+                  <textarea class="form-control input-rubric-guidance" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Ví dụ: Chấp nhận các cách diễn đạt đồng nghĩa cho từ 'thành công'; trừ điểm nếu thiếu liên từ nối...">${escapeHtml(promptGuidance)}</textarea>
+                </div>
+
+                <div class="rubric-tab-pane pane-sandbox" id="pane-sandbox-${blockIdx}-${itemIdx}" style="display: none;">
+                  <div class="rubric-sandbox-panel">
+                    <p class="sandbox-desc">Nhập câu trả lời mẫu của học sinh để chạy thử nghiệm bộ chấm qua AI Gateway ngay lập tức (không lưu bài thi):</p>
+                    <div class="sandbox-input-group">
+                      <textarea class="form-control input-sandbox-sample" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="3" placeholder="Nhập câu trả lời mẫu của học viên để chấm thử..."></textarea>
+                      <button type="button" class="btn btn-primary btn-sm btn-trigger-sandbox" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                        ⚡ Chấm thử AI
+                      </button>
+                    </div>
+                    <div class="sandbox-results-container" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="display: none;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
       }
 
       const typeLabel = isSingleChoice
@@ -1029,7 +1140,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           ? 'Nhóm chọn nhiều (Multi-Select Group)'
           : (isVocabPair
             ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
-            : 'Điền ô trống (Short Text)'));
+            : (isRubricAsync
+              ? 'Tự luận chấm AI (AI-Graded Rubric)'
+              : 'Điền ô trống (Short Text)')));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1119,6 +1232,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-pair" data-block-idx="${index}">
                     + Cặp từ vựng (Vocabulary Pair)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-rubric-async" data-block-idx="${index}">
+                    + Tự luận chấm AI (AI Rubric)
                   </button>
                 </div>
               </div>
@@ -1334,6 +1450,43 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 const optObj = item.options.find(o => o.id === optId);
                 if (optObj) optObj.label = optIn.value.trim();
               });
+            }
+
+            // Rubric async sync
+            if (item.graderType === 'rubric_async') {
+              const currentKey = draftState.gradingKey.items[item.itemVersionId];
+              if (currentKey && currentKey.rubric) {
+                const critCards = iCard.querySelectorAll('.rubric-criterion-card');
+                if (critCards && currentKey.rubric.criteria) {
+                  critCards.forEach((cCard, cIdx) => {
+                    const critObj = currentKey.rubric.criteria[cIdx];
+                    if (!critObj) return;
+                    const labelInput = cCard.querySelector('.criterion-label-input');
+                    if (labelInput) critObj.label = labelInput.value.trim();
+
+                    const scoreInput = cCard.querySelector('.criterion-max-score-input');
+                    if (scoreInput) {
+                      const sc = Number(scoreInput.value);
+                      if (Number.isFinite(sc) && sc >= 0) critObj.maxScore = sc;
+                    }
+
+                    const conceptsInput = cCard.querySelector('.criterion-concepts-input');
+                    if (conceptsInput) {
+                      const raw = conceptsInput.value.trim();
+                      critObj.requiredConcepts = raw ? raw.split(',').map(s => s.trim()).filter(Boolean) : [];
+                    }
+                  });
+                  // recompute total maxScore
+                  const totalScore = currentKey.rubric.criteria.reduce((sum, c) => sum + (c.maxScore || 0), 0);
+                  currentKey.rubric.maxScore = totalScore;
+                  item.maxScore = totalScore;
+                }
+
+                const guidanceEl = iCard.querySelector('.input-rubric-guidance');
+                if (guidanceEl) {
+                  currentKey.rubric.promptGuidance = guidanceEl.value.trim();
+                }
+              }
             }
           });
         }
@@ -1588,6 +1741,50 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    // Add AI-Graded Open Text (rubric_async)
+    const addRubricBtns = container.querySelectorAll('.btn-add-rubric-async');
+    addRubricBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: `Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi ${nextPos}:`,
+          helpText: '',
+          interactionType: 'long_text',
+          pedagogicalTypeCode: 'writing',
+          layoutType: 'default',
+          graderType: 'rubric_async',
+          required: true,
+          maxScore: 4,
+          options: [],
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'rubric_async',
+          rubricCode: 'rubric_translation_v1',
+          rubricVersion: 1,
+          rubric: {
+            scoringVersion: 'rubric-translation-v1',
+            maxScore: 4,
+            criteria: [
+              { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: 2, requiredConcepts: [] },
+              { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: 2, requiredConcepts: [] }
+            ]
+          }
+        };
+        render();
+      });
+    });
+
     // Delete Question Item
     const delItemBtns = container.querySelectorAll('.btn-delete-item');
     delItemBtns.forEach(btn => {
@@ -1804,6 +2001,241 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             draftState.gradingKey.items[item.itemVersionId] = currentKey;
             render();
           }
+        }
+      });
+    });
+
+    // Preset switch handler
+    const presetSelects = container.querySelectorAll('.select-rubric-preset');
+    presetSelects.forEach(sel => {
+      sel.addEventListener('change', () => {
+        syncInputs();
+        const bIdx = Number(sel.getAttribute('data-block-idx'));
+        const iIdx = Number(sel.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const val = sel.value;
+        const currentScore = item.maxScore || 4;
+
+        if (val === 'translation') {
+          draftState.gradingKey.items[item.itemVersionId] = {
+            graderType: 'rubric_async',
+            rubricCode: 'rubric_translation_v1',
+            rubricVersion: 1,
+            rubric: {
+              scoringVersion: 'rubric-translation-v1',
+              maxScore: currentScore,
+              criteria: [
+                { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: currentScore / 2, requiredConcepts: [] },
+                { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: currentScore / 2, requiredConcepts: [] }
+              ]
+            }
+          };
+        } else if (val === 'speaking') {
+          const s1 = Math.round(currentScore * 0.4 * 10) / 10;
+          const s2 = Math.round(currentScore * 0.3 * 10) / 10;
+          const s3 = Math.round((currentScore - s1 - s2) * 10) / 10;
+          draftState.gradingKey.items[item.itemVersionId] = {
+            graderType: 'rubric_async',
+            rubricCode: 'rubric_speaking_v1',
+            rubricVersion: 1,
+            rubric: {
+              scoringVersion: 'rubric-speaking-v1',
+              maxScore: currentScore,
+              criteria: [
+                { id: 'idea', label: 'Ý tưởng & Phát triển (Idea Development)', maxScore: s1, requiredConcepts: [] },
+                { id: 'vocabulary', label: 'Từ vựng & Diễn đạt (Vocabulary)', maxScore: s2, requiredConcepts: [] },
+                { id: 'coherence', label: 'Ngữ pháp & Mạch lạc (Grammar & Coherence)', maxScore: s3, requiredConcepts: [] }
+              ]
+            }
+          };
+        } else if (val === 'comprehension') {
+          const s1 = Math.round(currentScore * 0.7 * 10) / 10;
+          const s2 = Math.round((currentScore - s1) * 10) / 10;
+          draftState.gradingKey.items[item.itemVersionId] = {
+            graderType: 'rubric_async',
+            rubricCode: 'rubric_comprehension_v1',
+            rubricVersion: 1,
+            rubric: {
+              scoringVersion: 'rubric-comprehension-v1',
+              maxScore: currentScore,
+              criteria: [
+                { id: 'comprehension', label: 'Mức độ hiểu nội dung (Comprehension)', maxScore: s1, requiredConcepts: [] },
+                { id: 'keywords', label: 'Từ khóa & Khái niệm cốt lõi (Keywords)', maxScore: s2, requiredConcepts: [] }
+              ]
+            }
+          };
+        }
+        render();
+      });
+    });
+
+    // Tab switch handler inside Rubric card
+    const rubricTabs = container.querySelectorAll('.btn-rubric-tab');
+    rubricTabs.forEach(tabBtn => {
+      tabBtn.addEventListener('click', () => {
+        const tab = tabBtn.getAttribute('data-tab');
+        const bIdx = tabBtn.getAttribute('data-block-idx');
+        const iIdx = tabBtn.getAttribute('data-item-idx');
+        const card = tabBtn.closest('.builder-item-card');
+        if (!card) return;
+
+        card.querySelectorAll('.btn-rubric-tab').forEach(b => b.classList.remove('active'));
+        tabBtn.classList.add('active');
+
+        const criteriaPane = card.querySelector(`#pane-criteria-${bIdx}-${iIdx}`);
+        const guidancePane = card.querySelector(`#pane-guidance-${bIdx}-${iIdx}`);
+        const sandboxPane = card.querySelector(`#pane-sandbox-${bIdx}-${iIdx}`);
+
+        if (criteriaPane) criteriaPane.style.display = tab === 'criteria' ? 'flex' : 'none';
+        if (guidancePane) guidancePane.style.display = tab === 'guidance' ? 'flex' : 'none';
+        if (sandboxPane) sandboxPane.style.display = tab === 'sandbox' ? 'flex' : 'none';
+      });
+    });
+
+    // Add Criterion handler
+    const addCriterionBtns = container.querySelectorAll('.btn-add-criterion');
+    addCriterionBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (!currentKey || !currentKey.rubric) return;
+
+        const nextNum = (currentKey.rubric.criteria?.length || 0) + 1;
+        currentKey.rubric.criteria = currentKey.rubric.criteria || [];
+        currentKey.rubric.criteria.push({
+          id: `criterion_${nextNum}`,
+          label: `Tiêu chí ${nextNum}`,
+          maxScore: 1,
+          requiredConcepts: []
+        });
+        const total = currentKey.rubric.criteria.reduce((sum, c) => sum + (c.maxScore || 0), 0);
+        currentKey.rubric.maxScore = total;
+        item.maxScore = total;
+        render();
+      });
+    });
+
+    // Delete Criterion handler
+    const delCriterionBtns = container.querySelectorAll('.btn-del-criterion');
+    delCriterionBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const cIdx = Number(btn.getAttribute('data-criterion-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (currentKey && currentKey.rubric && currentKey.rubric.criteria && currentKey.rubric.criteria.length > 1) {
+          currentKey.rubric.criteria.splice(cIdx, 1);
+          const total = currentKey.rubric.criteria.reduce((sum, c) => sum + (c.maxScore || 0), 0);
+          currentKey.rubric.maxScore = total;
+          item.maxScore = total;
+          render();
+        } else {
+          alert('Rubric phải có ít nhất 1 tiêu chí chấm điểm.');
+        }
+      });
+    });
+
+    // Trigger AI Sandbox handler
+    const triggerSandboxBtns = container.querySelectorAll('.btn-trigger-sandbox');
+    triggerSandboxBtns.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (!currentKey || !currentKey.rubric) return;
+
+        const card = btn.closest('.builder-item-card');
+        const sampleTextarea = card?.querySelector('.input-sandbox-sample');
+        const resultsContainer = card?.querySelector('.sandbox-results-container');
+        const sampleAnswer = sampleTextarea?.value?.trim() || '';
+
+        if (!sampleAnswer) {
+          alert('Vui lòng nhập câu trả lời mẫu trước khi chấm thử.');
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '⏳ Đang chấm AI...';
+        if (resultsContainer) {
+          resultsContainer.style.display = 'block';
+          resultsContainer.innerHTML = '<div class="alert-notice"><div class="notice-text">Đang gửi yêu cầu đánh giá đến AI Gateway...</div></div>';
+        }
+
+        try {
+          let sandboxResult;
+          if (typeof options.onPreviewSandbox === 'function') {
+            sandboxResult = await options.onPreviewSandbox({
+              prompt: item.prompt,
+              sampleAnswer,
+              interactionType: item.interactionType,
+              pedagogicalTypeCode: item.pedagogicalTypeCode,
+              rubric: currentKey.rubric
+            });
+          } else {
+            const apiRes = await fetch(previewSandboxPath(options.apiBase), {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {})
+              },
+              body: JSON.stringify({
+                prompt: item.prompt,
+                sampleAnswer,
+                interactionType: item.interactionType,
+                pedagogicalTypeCode: item.pedagogicalTypeCode,
+                rubric: currentKey.rubric
+              })
+            });
+            sandboxResult = await apiRes.json();
+          }
+
+          if (!sandboxResult || !sandboxResult.ok) {
+            throw new Error(sandboxResult?.message || 'Chấm thử AI thất bại.');
+          }
+
+          const criteriaRows = (sandboxResult.criteria || []).map(c => `
+            <div class="sandbox-criterion-row">
+              <span><strong>${escapeHtml(c.id || '')}:</strong> ${c.maxScore !== undefined ? `(${c.score}/${c.maxScore}đ)` : ''}</span>
+              <span class="sandbox-criterion-score">${c.score}đ</span>
+            </div>
+          `).join('');
+
+          const errorsRows = (sandboxResult.errors || []).map(err => `
+            <div class="error-pill" style="color: #b91c1c; font-size: 0.78rem;">
+              • <strong>${escapeHtml(err.code || '')}:</strong> ${escapeHtml(err.message || '')}
+            </div>
+          `).join('');
+
+          if (resultsContainer) {
+            resultsContainer.innerHTML = `
+              <div class="sandbox-results-box">
+                <div class="sandbox-score-summary">
+                  <span>Điểm AI tạm tính:</span>
+                  <span class="sandbox-score-badge">${sandboxResult.scoreEarned} / ${sandboxResult.maxScore}</span>
+                </div>
+                ${criteriaRows ? `<div class="sandbox-criteria-breakdown">${criteriaRows}</div>` : ''}
+                ${errorsRows ? `<div class="sandbox-errors-breakdown">${errorsRows}</div>` : ''}
+              </div>
+            `;
+          }
+        } catch (err) {
+          if (resultsContainer) {
+            resultsContainer.innerHTML = `<div class="alert-notice alert-immutable"><div class="notice-text" style="color:#b91c1c;">Lỗi: ${escapeHtml(err.message || 'Không thể chấm thử')}</div></div>`;
+          }
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '⚡ Chấm thử AI';
         }
       });
     });

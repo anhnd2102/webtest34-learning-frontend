@@ -3458,4 +3458,226 @@ body:not(.login-page) #auth-panel {
   border-color: #fbcfe8;
 }
 
+.item-kind-pill.rubric_async {
+  background: #ede9fe;
+  color: #6d28d9;
+  border-color: #ddd6fe;
+}
+
+/* AI Rubric Builder & Sandbox Styles */
+.template-rubric-async {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rubric-preset-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.preset-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.select-rubric-preset {
+  max-width: 320px;
+}
+
+.rubric-tabs-header {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 2px;
+}
+
+.btn-rubric-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -4px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-rubric-tab:hover {
+  color: #0f172a;
+}
+
+.btn-rubric-tab.active {
+  color: #6d28d9;
+  border-bottom-color: #7c3aed;
+}
+
+.rubric-tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rubric-criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rubric-criterion-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.criterion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.criterion-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.criterion-id-badge {
+  font-family: monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: #ede9fe;
+  color: #6d28d9;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.criterion-label-input {
+  flex: 1;
+  font-weight: 600;
+}
+
+.criterion-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.criterion-max-score-input {
+  width: 70px;
+  text-align: right;
+  font-weight: 700;
+}
+
+.criterion-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.criterion-concepts-input {
+  font-size: 0.8rem;
+}
+
+.rubric-sandbox-panel {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sandbox-desc {
+  font-size: 0.8rem;
+  color: #6b21a8;
+  margin: 0;
+}
+
+.sandbox-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-sandbox-sample {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.84rem;
+}
+
+.btn-trigger-sandbox {
+  background: #7c3aed;
+  color: #ffffff;
+  border-color: #6d28d9;
+  font-weight: 600;
+}
+
+.btn-trigger-sandbox:hover {
+  background: #6d28d9;
+}
+
+.sandbox-results-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sandbox-score-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sandbox-score-badge {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.sandbox-criteria-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sandbox-criterion-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+.sandbox-criterion-score {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+
 
