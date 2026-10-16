@@ -97,6 +97,21 @@ export function expandSentenceVariants(sentences = []) {
   return Array.from(result).filter(Boolean).slice(0, 40);
 }
 
+export function generateHangmanHint(targetText = '') {
+  if (!targetText || typeof targetText !== 'string') return '';
+  const clean = targetText.trim();
+  if (!clean) return '';
+
+  return clean
+    .replace(/\s*-\s*/g, ' - ')
+    .replace(/[a-zA-Z]+/g, (word) => {
+      if (word.length <= 1) return word;
+      const first = word[0];
+      const underscores = Array(word.length - 1).fill('_').join(' ');
+      return `${first} ${underscores}`;
+    });
+}
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -906,8 +921,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     return items.map((item, itemIdx) => {
       const isSingleChoice = item.interactionType === 'single_choice';
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
+      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
       const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze;
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -1048,6 +1064,66 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <div class="variant-chips-wrap">
                   ${chipsHtml}
                 </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isPictorial) {
+        const acceptedList = itemKey.accepted || [''];
+        const chipsHtml = acceptedList.map((v) => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        const imgSrc = item.image || item.stimulusImageUrl || '';
+
+        specificHtml = `
+          <div class="template-section template-pictorial-vocab">
+            <div class="pictorial-meta-grid">
+              <div class="form-group pictorial-image-group">
+                <label class="form-label"><strong>Ảnh minh họa (Image URL / Path):</strong></label>
+                <div class="fitb-input-group">
+                  <input type="text" class="form-control input-pictorial-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(imgSrc)}" placeholder="assets/test 1/vocabulary/image1.png hoặc https://..." />
+                </div>
+                ${imgSrc ? `<div class="pictorial-thumb-preview"><img src="${escapeHtml(imgSrc)}" alt="Image Preview" onerror="this.style.display='none'" /></div>` : ''}
+              </div>
+
+              <div class="form-group pictorial-target-group">
+                <label class="form-label"><strong>Từ / Cụm từ tiếng Anh chuẩn:</strong></label>
+                <div class="fitb-input-group">
+                  <input type="text" class="form-control input-pictorial-target input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập từ/cụm từ mẫu (ví dụ: school kids)..." />
+                  <button type="button" class="btn btn-secondary btn-generate-hangman" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động tạo gợi ý Hangman từ từ mục tiêu">
+                    ⚡ Sinh gợi ý Hangman
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="pictorial-hints-grid">
+              <div class="form-group">
+                <label class="form-label"><strong>Gợi ý chữ cái (Letter / Hangman hint):</strong></label>
+                <input type="text" class="form-control input-pictorial-letter-hint" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(item.letterHint || '')}" placeholder="s _ _ _ _ _ k _ _ _" />
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Gợi ý nghĩa tiếng Việt (Caption hint):</strong></label>
+                <input type="text" class="form-control input-pictorial-caption" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(item.captionHint || '')}" placeholder="(độ tuổi đi học)" />
+              </div>
+            </div>
+
+            <div class="variant-chips-container" style="margin-top: 10px;">
+              <div class="chips-meta-bar">
+                <span class="chips-count-badge">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
+                <button type="button" class="btn btn-secondary btn-sm btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  ⚡ Tự động sinh biến thể
+                </button>
+                <div class="quick-add-variant">
+                  <input type="text" class="form-control form-control-sm input-add-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
+                </div>
+              </div>
+              <div class="variant-chips-wrap">
+                ${chipsHtml}
               </div>
             </div>
           </div>
@@ -1245,9 +1321,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
             : (isRubricAsync
               ? 'Tự luận chấm AI (AI-Graded Rubric)'
-              : (isInlineCloze
-                ? 'Điền từ nội tuyến (Inline Cloze)'
-                : 'Điền ô trống (Short Text)'))));
+              : (isPictorial
+                ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
+                : (isInlineCloze
+                  ? 'Điền từ nội tuyến (Inline Cloze)'
+                  : 'Điền ô trống (Short Text)')))));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1337,6 +1415,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-inline-cloze" data-block-idx="${index}">
                     + Điền từ nội tuyến (Inline Cloze)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-pictorial" data-block-idx="${index}">
+                    + Thẻ từ vựng qua ảnh (Pictorial)
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-pair" data-block-idx="${index}">
                     + Cặp từ vựng (Vocabulary Pair)
@@ -1542,6 +1623,20 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                 };
               }
+            }
+
+            // Pictorial card sync
+            if (item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary')) {
+              const imgInput = iCard.querySelector('.input-pictorial-image');
+              if (imgInput) {
+                const imgVal = imgInput.value.trim();
+                item.image = imgVal || null;
+                item.stimulusImageUrl = imgVal || null;
+              }
+              const letterInput = iCard.querySelector('.input-pictorial-letter-hint');
+              if (letterInput) item.letterHint = letterInput.value.trim() || null;
+              const captionInput = iCard.querySelector('.input-pictorial-caption');
+              if (captionInput) item.captionHint = captionInput.value.trim() || null;
             }
 
             // Vocabulary pair sync
@@ -1864,6 +1959,73 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         if (!item.prompt.includes(token)) {
           item.prompt = item.prompt ? `${item.prompt} ${token}` : `Câu hỏi với ${token}`;
         }
+        render();
+      });
+    });
+
+    // Add Pictorial Vocabulary Question
+    const addPictorialBtns = container.querySelectorAll('.btn-add-pictorial');
+    addPictorialBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: 'Nhìn hình và hoàn thành từ vựng:',
+          helpText: '',
+          interactionType: 'short_text',
+          pedagogicalTypeCode: 'pictorial_vocabulary',
+          layoutType: 'pictorial_card',
+          graderType: 'accepted_text',
+          required: true,
+          maxScore: 1,
+          image: 'assets/test 1/vocabulary/image3.png',
+          captionHint: '(gợi ý)',
+          letterHint: 's _ _ _ _ _ k _ _ _',
+          options: [],
+          skillCodes: ['vocabulary'],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'accepted_text',
+          accepted: ['school kids'],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Generate Hangman Hint from target word
+    const genHangmanBtns = container.querySelectorAll('.btn-generate-hangman');
+    genHangmanBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const card = btn.closest('.builder-item-card');
+        const targetInput = card?.querySelector('.input-pictorial-target');
+        const targetVal = targetInput?.value?.trim() || '';
+        if (!targetVal) {
+          alert('Vui lòng nhập từ hoặc cụm từ mục tiêu trước khi tạo gợi ý Hangman.');
+          return;
+        }
+        item.letterHint = generateHangmanHint(targetVal);
+        const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+          graderType: 'accepted_text',
+          accepted: [],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        currentKey.accepted = expandSentenceVariants([targetVal]);
+        draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
     });
@@ -2540,8 +2702,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const itemsHtml = items.map((item) => {
           const isSingleChoice = item.interactionType === 'single_choice';
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
+          const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
           const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze;
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -2571,6 +2734,24 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                     <span class="choice-text">${escapeHtml(opt.label || '')}</span>
                   </label>
                 `).join('')}
+              </div>
+            `;
+          } else if (isPictorial) {
+            const imgSrc = item.image || item.stimulusImageUrl || '';
+            interactiveHtml = `
+              <div class="candidate-pictorial-card">
+                ${imgSrc ? `
+                  <div class="candidate-pictorial-thumb">
+                    <img src="${escapeHtml(imgSrc)}" alt="Câu ${item.position}" onerror="this.parentElement.style.display='none'" />
+                  </div>
+                ` : ''}
+                <div class="candidate-pictorial-hints">
+                  ${item.letterHint ? `<div class="pictorial-letter-hint">${escapeHtml(item.letterHint)}</div>` : ''}
+                  ${item.captionHint ? `<div class="pictorial-caption-hint">${escapeHtml(item.captionHint)}</div>` : ''}
+                </div>
+                <div class="candidate-pictorial-input-wrap">
+                  <input type="text" class="form-control candidate-pictorial-input" placeholder="Nhập từ hoàn chỉnh..." />
+                </div>
               </div>
             `;
           } else if (isInlineCloze) {
@@ -2611,13 +2792,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           const promptDisplay = isVocabPair
             ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
-            : (isInlineCloze ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:' : escapeHtml(item.prompt || ''));
+            : (isInlineCloze
+              ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+              : (isPictorial
+                ? 'Nhìn hình và hoàn thành từ vựng:'
+                : escapeHtml(item.prompt || '')));
 
           return `
-            <div class="candidate-question-card" data-item-id="${item.itemVersionId}">
+            <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))}</span>
+                <span class="question-type-badge">${isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}

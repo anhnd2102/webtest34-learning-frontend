@@ -4103,6 +4103,148 @@ body:not(.login-page) #auth-panel {
   font-size: 0.95rem;
 }
 
+/* ==========================================================================
+   Pictorial Vocabulary Cards Styles (Issue 08)
+   ========================================================================== */
+.template-pictorial-vocab {
+  background: #fdfefe;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pictorial-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+  .pictorial-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pictorial-thumb-preview {
+  margin-top: 8px;
+  max-width: 180px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.pictorial-thumb-preview img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+}
+
+.pictorial-hints-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+  .pictorial-hints-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.btn-generate-hangman {
+  background: #f8fafc;
+  border: 1px dashed #6366f1;
+  color: #4f46e5;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-generate-hangman:hover {
+  background: #eef2ff;
+  border-style: solid;
+}
+
+/* Candidate Simulation Pictorial Card */
+.card-pictorial {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.candidate-pictorial-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.candidate-pictorial-thumb {
+  max-width: 240px;
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+}
+
+.candidate-pictorial-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #ffffff;
+  display: block;
+}
+
+.candidate-pictorial-hints {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pictorial-letter-hint {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 4px 14px;
+  border-radius: 6px;
+  border: 1px dashed #7dd3fc;
+}
+
+.pictorial-caption-hint {
+  font-size: 0.86rem;
+  font-style: italic;
+  color: #475569;
+}
+
+.candidate-pictorial-input-wrap {
+  width: 100%;
+  max-width: 320px;
+}
+
+.candidate-pictorial-input {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 .candidate-open-meta {
   display: flex;
   justify-content: space-between;
