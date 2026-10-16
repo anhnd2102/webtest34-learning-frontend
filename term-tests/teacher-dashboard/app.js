@@ -1621,6 +1621,11 @@ async function startDashboard() {
     const container = document.querySelector('#test-studio-container') || viewExams;
     if (!container) return;
 
+    if (!currentTeacher && sessionToken) {
+      container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang kiểm tra quyền hạn...</p></div>';
+      return;
+    }
+
     const teacherRole = currentTeacher ? currentTeacher.role : 'teacher';
     if (teacherRole !== 'lead' && teacherRole !== 'admin') {
       renderCourseTestCatalogView(container, [], { teacherRole, courseId: currentStudioCourseId });
@@ -2051,12 +2056,16 @@ async function startDashboard() {
   const standardApiBase = defaultApiBase();
 
   if (loginApiBase) {
-    if (!loginApiBase.value || (!isLocalHost && loginApiBase.value.includes('localhost'))) {
+    if (isLocalHost && (!loginApiBase.value || loginApiBase.value.includes('webtest.ducanhn.autos'))) {
+      loginApiBase.value = 'http://127.0.0.1:8788';
+    } else if (!loginApiBase.value || (!isLocalHost && loginApiBase.value.includes('localhost'))) {
       loginApiBase.value = standardApiBase;
     }
   }
   if (form?.elements?.apiBase) {
-    if (!form.elements.apiBase.value || (!isLocalHost && form.elements.apiBase.value.includes('localhost'))) {
+    if (isLocalHost && (!form.elements.apiBase.value || form.elements.apiBase.value.includes('webtest.ducanhn.autos'))) {
+      form.elements.apiBase.value = 'http://127.0.0.1:8788';
+    } else if (!form.elements.apiBase.value || (!isLocalHost && form.elements.apiBase.value.includes('localhost'))) {
       form.elements.apiBase.value = standardApiBase;
     }
   }
@@ -4037,6 +4046,11 @@ async function startDashboard() {
     if (loginForm) loginForm.hidden = true;
     if (teacherProfile) teacherProfile.hidden = false;
     if (loginError) loginError.hidden = true;
+
+    const currentTab = readDashboardTab(window.location.hash);
+    if (currentTab === 'test-studio' || currentTab === 'exams') {
+      loadAndRenderTestStudio();
+    }
   }
 
   function toggleRoleCapabilitiesPopover(show) {

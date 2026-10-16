@@ -16,7 +16,16 @@
   <script>
     (function () {
       var isLocal = ['localhost', '127.0.0.1', '[::1]', '::1'].indexOf(window.location.hostname) !== -1;
-      if (!isLocal) {
+      if (isLocal) {
+        document.addEventListener('DOMContentLoaded', function () {
+          var els = document.querySelectorAll('#login-api-base, input[name="apiBase"]');
+          els.forEach(function (el) {
+            if (!el.value || el.value.indexOf('webtest.ducanhn.autos') !== -1) {
+              el.value = 'http://127.0.0.1:8788';
+            }
+          });
+        });
+      } else {
         document.addEventListener('DOMContentLoaded', function () {
           var els = document.querySelectorAll('#login-api-base, input[name="apiBase"]');
           els.forEach(function (el) {
