@@ -89,8 +89,8 @@ export function readDashboardTab(input) {
   if (typeof input === 'string') {
     if (input.includes('#')) {
       hash = input.slice(input.indexOf('#') + 1);
-    } else if (SUPPORTED_DASHBOARD_TABS.includes(input.toLowerCase().trim())) {
-      return input.toLowerCase().trim();
+    } else {
+      hash = input;
     }
   } else if (input instanceof URL) {
     hash = input.hash ? input.hash.replace(/^#/, '') : '';
@@ -98,6 +98,7 @@ export function readDashboardTab(input) {
     hash = input.hash.replace(/^#/, '');
   }
   hash = hash.split('?')[0].trim().toLowerCase();
+  if (hash === 'test-studio') return 'test-studio';
   return SUPPORTED_DASHBOARD_TABS.includes(hash) ? hash : DEFAULT_DASHBOARD_TAB;
 }
 
@@ -106,18 +107,27 @@ export function switchDashboardTab(tabId, options = {}) {
   const views = options.views || {};
   const navItems = options.navItems || [];
 
+  const isTestStudio = targetTab === 'test-studio' || targetTab === 'exams';
+
   for (const tab of SUPPORTED_DASHBOARD_TABS) {
     const view = views[tab];
     if (view) {
-      view.hidden = tab !== targetTab;
+      if (tab === 'exams') {
+        view.hidden = !isTestStudio;
+      } else {
+        view.hidden = tab !== targetTab;
+      }
     }
+  }
+  if (views['test-studio']) {
+    views['test-studio'].hidden = !isTestStudio;
   }
 
   for (const navItem of navItems) {
     if (!navItem) continue;
     const href = navItem.getAttribute('href') || '';
     const linkTab = href.replace(/^#/, '');
-    const isActive = linkTab === targetTab;
+    const isActive = linkTab === targetTab || (isTestStudio && (linkTab === 'exams' || linkTab === 'test-studio'));
     if (isActive) {
       if (navItem.classList && typeof navItem.classList.add === 'function') {
         navItem.classList.add('active');
@@ -138,7 +148,6 @@ export function switchDashboardTab(tabId, options = {}) {
   if (typeof options.onTabChange === 'function') {
     options.onTabChange(targetTab);
   }
-
   return targetTab;
 }
 
@@ -445,6 +454,161 @@ export function studentTransferPath(classId, studentRef) {
 
 export function grantRetakePath(classId, assignmentId, studentRef) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/students/${encodeURIComponent(studentRef)}/retake`;
+}
+
+export function courseTestCatalogPath(apiBaseOrCourseId, courseIdOptional) {
+  if (arguments.length === 1 && (typeof apiBaseOrCourseId === 'number' || !String(apiBaseOrCourseId).startsWith('http'))) {
+    return `/api/teacher/course-test-catalog?courseId=${encodeURIComponent(apiBaseOrCourseId)}`;
+  }
+  const apiBase = String(apiBaseOrCourseId || '').replace(/\/+$/, '');
+  const courseId = courseIdOptional !== undefined ? courseIdOptional : apiBaseOrCourseId;
+  return `${apiBase}/api/teacher/course-test-catalog?courseId=${encodeURIComponent(courseId)}`;
+}
+
+export function renderCourseTestCatalogView(container, catalog = [], options = {}) {
+  if (!container) return;
+  const teacherRole = options.teacherRole || 'teacher';
+  const selectedCourseId = Number(options.courseId || 1);
+
+  if (teacherRole !== 'lead' && teacherRole !== 'admin') {
+    container.innerHTML = `
+      <div class="panel showcase-placeholder unauthorized-card">
+        <div class="placeholder-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h3>Quyền hạn bị giới hạn</h3>
+        <p>Chỉ Khối trưởng (Lead) hoặc Quản trị viên (Admin) mới có quyền truy cập Quản lý đề thi.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const courses = [
+    { id: 1, name: 'Khối 03' },
+    { id: 2, name: 'Khối 34' },
+    { id: 3, name: 'Khối 45' }
+  ];
+
+  const courseButtons = courses.map(c => `
+    <button type="button" class="btn-course-tab ${c.id === selectedCourseId ? 'active' : ''}" data-course-id="${c.id}">
+      ${c.name}
+    </button>
+  `).join('');
+
+  let tableHtml = '';
+  if (!catalog || catalog.length === 0) {
+    tableHtml = `
+      <div class="empty-catalog-state">
+        <p>Chưa có bài thi nào trong danh mục của khối này.</p>
+      </div>
+    `;
+  } else {
+    const rows = catalog.map(item => {
+      const isPublished = item.status === 'published';
+      const badgeClass = isPublished ? 'badge-published' : 'badge-draft';
+      const badgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
+      const sessionLabel = `Buổi ${item.sessionNumber}`;
+      const phaseBadge = item.phase ? `<span class="phase-pill">Phase ${item.phase}</span>` : '';
+
+      return `
+        <tr data-test-key="${item.testKey || ''}" data-test-id="${item.id || ''}">
+          <td class="col-session">
+            <strong>${sessionLabel}</strong>
+            ${phaseBadge}
+          </td>
+          <td class="col-test-key"><code>${item.testKey || '—'}</code></td>
+          <td class="col-title">
+            <span class="test-title-text">${item.title || '—'}</span>
+          </td>
+          <td class="col-version">
+            <span class="version-code" title="${item.formVersionId || ''}">${item.formVersionId ? item.formVersionId.slice(0, 8) + '...' : '—'}</span>
+          </td>
+          <td class="col-status">
+            <span class="status-badge ${badgeClass}">${badgeText}</span>
+          </td>
+          <td class="col-actions">
+            <button type="button" class="btn btn-secondary btn-sm btn-edit-test" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}">
+              Chỉnh sửa
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    tableHtml = `
+      <div class="catalog-table-wrapper">
+        <table class="catalog-table">
+          <thead>
+            <tr>
+              <th scope="col">Buổi / Phase</th>
+              <th scope="col">Mã bài test</th>
+              <th scope="col">Tên bài thi</th>
+              <th scope="col">Phiên bản Form</th>
+              <th scope="col">Trạng thái</th>
+              <th scope="col">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="test-studio-header">
+      <div class="studio-title-wrap">
+        <h2>Quản lý Đề thi (Test Studio)</h2>
+        <p class="subtitle">Xem và quản lý lộ trình bài thi theo từng buổi của các khối đào tạo IZONE.</p>
+      </div>
+      <div class="studio-header-actions">
+        <button type="button" class="btn btn-primary btn-add-test" id="btn-add-test">
+          + Thêm bài thi mới
+        </button>
+      </div>
+    </div>
+
+    <div class="test-studio-course-bar">
+      <div class="course-tabs-group" role="tablist" aria-label="Chọn khối">
+        ${courseButtons}
+      </div>
+    </div>
+
+    <div class="test-studio-content">
+      ${tableHtml}
+    </div>
+  `;
+
+  if (typeof options.onCourseChange === 'function') {
+    const courseBtns = container.querySelectorAll('.btn-course-tab');
+    courseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cid = Number(btn.getAttribute('data-course-id'));
+        options.onCourseChange(cid);
+      });
+    });
+  }
+
+  if (typeof options.onAddTest === 'function') {
+    const addBtn = container.querySelector('#btn-add-test');
+    if (addBtn) {
+      addBtn.addEventListener('click', options.onAddTest);
+    }
+  }
+
+  if (typeof options.onEditTest === 'function') {
+    const editBtns = container.querySelectorAll('.btn-edit-test');
+    editBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const testKey = btn.getAttribute('data-test-key');
+        const formVersionId = btn.getAttribute('data-form-version-id');
+        options.onEditTest({ testKey, formVersionId });
+      });
+    });
+  }
 }
 
 
@@ -1030,9 +1194,47 @@ async function startDashboard() {
             if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
           }
         }
+        if (newTab === 'test-studio' || newTab === 'exams') {
+          loadAndRenderTestStudio();
+        }
       }
     });
     return activeTab;
+  }
+
+  let currentStudioCourseId = 1;
+  async function loadAndRenderTestStudio(targetCourseId = currentStudioCourseId) {
+    currentStudioCourseId = Number(targetCourseId || 1);
+    const container = document.querySelector('#test-studio-container') || viewExams;
+    if (!container) return;
+
+    const teacherRole = currentTeacher ? currentTeacher.role : 'teacher';
+    if (teacherRole !== 'lead' && teacherRole !== 'admin') {
+      renderCourseTestCatalogView(container, [], { teacherRole, courseId: currentStudioCourseId });
+      return;
+    }
+
+    try {
+      container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang tải danh mục bài thi...</p></div>';
+      const endpoint = courseTestCatalogPath(currentStudioCourseId);
+      const res = await request(endpoint);
+      const catalog = res.catalog || [];
+      renderCourseTestCatalogView(container, catalog, {
+        teacherRole,
+        courseId: currentStudioCourseId,
+        onCourseChange: (newCid) => {
+          loadAndRenderTestStudio(newCid);
+        },
+        onAddTest: () => {
+          alert('Tính năng thêm bài thi mới sẽ được kích hoạt ở Ticket 02.');
+        },
+        onEditTest: ({ testKey, formVersionId }) => {
+          alert(`Chỉnh sửa bài thi: ${testKey} (${formVersionId})`);
+        }
+      });
+    } catch (err) {
+      container.innerHTML = `<div class="panel showcase-placeholder"><p class="alert-error">Không thể tải danh mục bài thi: ${err.message || 'Lỗi kết nối'}</p></div>`;
+    }
   }
 
   navItems.forEach(item => {
