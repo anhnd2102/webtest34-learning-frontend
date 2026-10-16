@@ -1410,6 +1410,11 @@ test('switchDashboardTab updates view visibility and nav active class', () => {
   assert.equal(views.dashboard.hidden, true);
   assert.equal(views.grading.hidden, false);
   assert.equal(activeClassTarget, '#grading');
+
+  // Verify it handles #grading with the hash symbol directly from href or window.location.hash
+  const activeTabWithHash = switchDashboardTab('#grading', { views, navItems });
+  assert.equal(activeTabWithHash, 'grading');
+  assert.equal(views.grading.hidden, false);
 });
 
 test('teacher dashboard index.html provides view-dashboard, view-grading containers and CTA button', async () => {

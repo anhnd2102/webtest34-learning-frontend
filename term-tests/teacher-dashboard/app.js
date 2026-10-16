@@ -102,7 +102,7 @@ export function readDashboardTab(input) {
 }
 
 export function switchDashboardTab(tabId, options = {}) {
-  const targetTab = SUPPORTED_DASHBOARD_TABS.includes(tabId) ? tabId : DEFAULT_DASHBOARD_TAB;
+  const targetTab = readDashboardTab(tabId);
   const views = options.views || {};
   const navItems = options.navItems || [];
 
@@ -1039,10 +1039,12 @@ async function startDashboard() {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const href = item.getAttribute('href') || '#dashboard';
-      if (window.location.hash !== href) {
-        window.location.hash = href;
+      const cleanTab = readDashboardTab(href);
+      const targetHash = '#' + cleanTab;
+      if (window.location.hash !== targetHash) {
+        window.location.hash = targetHash;
       }
-      updateDashboardTab(href);
+      updateDashboardTab(cleanTab);
     });
   });
 
