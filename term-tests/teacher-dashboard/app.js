@@ -4,6 +4,99 @@ export function defaultApiBase() {
   return 'https://webtest.ducanhn.autos';
 }
 
+export function expandSentenceVariants(sentences = []) {
+  const list = Array.isArray(sentences) ? sentences : [sentences];
+  const result = new Set();
+
+  const contractionPairs = [
+    [/(\b)I('m|’m)(\b)/gi, '$1I am$3'],
+    [/(\b)I am(\b)/gi, "$1I'm$2"],
+    [/(\b)you('re|’re)(\b)/gi, '$1you are$3'],
+    [/(\b)you are(\b)/gi, "$1you're$2"],
+    [/(\b)we('re|’re)(\b)/gi, '$1we are$3'],
+    [/(\b)we are(\b)/gi, "$1we're$2"],
+    [/(\b)they('re|’re)(\b)/gi, '$1they are$3'],
+    [/(\b)they are(\b)/gi, "$1they're$2"],
+    [/(\b)he('s|’s)(\b)/gi, '$1he is$3'],
+    [/(\b)he is(\b)/gi, "$1he's$2"],
+    [/(\b)she('s|’s)(\b)/gi, '$1she is$3'],
+    [/(\b)she is(\b)/gi, "$1she's$2"],
+    [/(\b)it('s|’s)(\b)/gi, '$1it is$3'],
+    [/(\b)it is(\b)/gi, "$1it's$2"],
+    [/(\b)don('t|’t)(\b)/gi, '$1do not$3'],
+    [/(\b)do not(\b)/gi, "$1don't$2"],
+    [/(\b)doesn('t|’t)(\b)/gi, '$1does not$3'],
+    [/(\b)does not(\b)/gi, "$1doesn't$2"],
+    [/(\b)didn('t|’t)(\b)/gi, '$1did not$3'],
+    [/(\b)did not(\b)/gi, "$1didn't$2"],
+    [/(\b)can('t|’t)(\b)/gi, '$1cannot$3'],
+    [/(\b)cannot(\b)/gi, "$1can't$2"],
+    [/(\b)won('t|’t)(\b)/gi, '$1will not$3'],
+    [/(\b)will not(\b)/gi, "$1won't$2"],
+    [/(\b)isn('t|’t)(\b)/gi, '$1is not$3'],
+    [/(\b)is not(\b)/gi, "$1isn't$2"],
+    [/(\b)aren('t|’t)(\b)/gi, '$1are not$3'],
+    [/(\b)are not(\b)/gi, "$1aren't$2"],
+    [/(\b)wasn('t|’t)(\b)/gi, '$1was not$3'],
+    [/(\b)was not(\b)/gi, "$1wasn't$2"],
+    [/(\b)weren('t|’t)(\b)/gi, '$1were not$3'],
+    [/(\b)weren't(\b)/gi, "$1were not$2"],
+    [/(\b)hasn('t|’t)(\b)/gi, '$1has not$3'],
+    [/(\b)has not(\b)/gi, "$1hasn't$2"],
+    [/(\b)haven('t|’t)(\b)/gi, '$1have not$3'],
+    [/(\b)have not(\b)/gi, "$1haven't$2"]
+  ];
+
+  for (const s of list) {
+    if (!s || typeof s !== 'string') continue;
+    const clean = s.normalize('NFKC').trim().replace(/\s+/gu, ' ');
+    if (!clean) continue;
+    result.add(clean);
+
+    for (const [pattern, replacement] of contractionPairs) {
+      if (pattern.test(clean)) {
+        const transformed = clean.replace(pattern, replacement);
+        result.add(transformed);
+      }
+    }
+  }
+
+  const afterContractions = Array.from(result);
+  for (const item of afterContractions) {
+    const withoutPeriod = item.replace(/\.+$/gu, '').trim();
+    if (withoutPeriod) {
+      result.add(withoutPeriod);
+      result.add(withoutPeriod + '.');
+    }
+    if (item.includes('?')) {
+      const withoutQ = item.replace(/\?+$/gu, '').trim();
+      if (withoutQ) {
+        result.add(withoutQ);
+        result.add(withoutQ + '?');
+      }
+    }
+  }
+
+  const afterPunctuation = Array.from(result);
+  for (const item of afterPunctuation) {
+    if (item.includes(',')) {
+      result.add(item.replace(/,/gu, '').replace(/\s+/gu, ' ').trim());
+    }
+  }
+
+  const afterCommas = Array.from(result);
+  for (const item of afterCommas) {
+    if (item.includes("'")) {
+      result.add(item.replace(/'/gu, '’'));
+    }
+    if (item.includes('’')) {
+      result.add(item.replace(/’/gu, "'"));
+    }
+  }
+
+  return Array.from(result).filter(Boolean).slice(0, 40);
+}
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -661,10 +754,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     durationMinutes: Number(formVersionData.durationMinutes || formVersionData.publicDefinition?.durationMinutes || 60),
     answerReleasePolicy: formVersionData.answerReleasePolicy || formVersionData.publicDefinition?.answerReleasePolicy || 'teacher_release',
     submissionCount: Number(formVersionData.submissionCount || 0),
-    blocks: JSON.parse(JSON.stringify(formVersionData.publicDefinition?.blocks || formVersionData.blocks || []))
+    blocks: JSON.parse(JSON.stringify(formVersionData.publicDefinition?.blocks || formVersionData.blocks || [])),
+    gradingKey: {
+      items: JSON.parse(JSON.stringify(formVersionData.gradingKey?.items || {})),
+      groups: JSON.parse(JSON.stringify(formVersionData.gradingKey?.groups || {}))
+    }
   };
 
   if (!draftState.blocks.length) {
+    const initialItemId = generateUuid();
     draftState.blocks.push({
       blockId: generateUuid(),
       checkpoint: 1,
@@ -675,22 +773,215 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       items: [
         {
           itemFamilyId: generateUuid(),
-          itemVersionId: generateUuid(),
+          itemVersionId: initialItemId,
           position: 1,
-          prompt: 'Câu hỏi 1',
+          prompt: 'Câu hỏi 1:',
           helpText: '',
-          interactionType: 'short_text',
-          pedagogicalTypeCode: 'general_text',
-          layoutType: 'default',
-          graderType: 'accepted_text',
+          interactionType: 'single_choice',
+          pedagogicalTypeCode: 'multiple_choice',
+          layoutType: 'grid_4',
+          graderType: 'exact_option',
           required: true,
           maxScore: 1,
-          options: [],
+          options: [
+            { id: 'A', label: 'Phương án A' },
+            { id: 'B', label: 'Phương án B' },
+            { id: 'C', label: 'Phương án C' },
+            { id: 'D', label: 'Phương án D' }
+          ],
           skillCodes: [],
           releasePolicy: 'inherit'
         }
       ]
     });
+    draftState.gradingKey.items[initialItemId] = {
+      graderType: 'exact_option',
+      expectedOptionId: 'A'
+    };
+  }
+
+  // Ensure initial grading key entries exist
+  for (const block of draftState.blocks) {
+    for (const itm of block.items || []) {
+      if (itm.interactionType === 'single_choice' && !draftState.gradingKey.items[itm.itemVersionId]) {
+        draftState.gradingKey.items[itm.itemVersionId] = {
+          graderType: 'exact_option',
+          expectedOptionId: itm.options?.[0]?.id || 'A'
+        };
+      } else if (itm.interactionType === 'short_text' && !draftState.gradingKey.items[itm.itemVersionId]) {
+        draftState.gradingKey.items[itm.itemVersionId] = {
+          graderType: 'accepted_text',
+          accepted: ['answer'],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+      } else if (itm.graderType === 'unordered_group_slot' && itm.groupId && !draftState.gradingKey.groups[itm.groupId]) {
+        draftState.gradingKey.groups[itm.groupId] = {
+          graderType: 'unordered_group_slot',
+          expectedOptionIds: (itm.options || []).slice(0, 2).map(o => o.id)
+        };
+      }
+    }
+  }
+
+  function renderBlockItems(block, blockIdx) {
+    const items = block.items || [];
+    if (!items.length) {
+      return `<div class="empty-items-notice">Chưa có câu hỏi nào trong phần này. Chọn một dạng câu hỏi bên dưới để thêm.</div>`;
+    }
+
+    return items.map((item, itemIdx) => {
+      const isSingleChoice = item.interactionType === 'single_choice';
+      const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
+      const isShortText = item.interactionType === 'short_text';
+
+      const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
+      const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
+
+      const itemKey = draftState.gradingKey.items[item.itemVersionId] || {};
+      const groupKey = item.groupId ? (draftState.gradingKey.groups[item.groupId] || {}) : {};
+
+      let specificHtml = '';
+
+      if (isSingleChoice) {
+        const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || 'A';
+        const optionsHtml = (item.options || []).map((opt) => `
+          <div class="option-item-row" data-option-id="${opt.id}">
+            <label class="option-select-label" title="Chọn làm đáp án đúng">
+              <input type="radio" name="radio_correct_${item.itemVersionId}" class="radio-correct" value="${opt.id}" ${opt.id === expectedId ? 'checked' : ''} data-correct="${opt.id}">
+              <span class="option-key-pill">${opt.id}</span>
+            </label>
+            <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${opt.id}..." />
+            <button type="button" class="btn btn-icon btn-sm btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
+          </div>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-single-choice">
+            <div class="template-header-bar">
+              <span class="section-sublabel">Các phương án lựa chọn (Tích tròn chọn đáp án đúng):</span>
+              <div class="layout-selector-wrap">
+                <span class="layout-title">Bố cục:</span>
+                <select class="form-select form-select-sm select-layout" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  <option value="grid_2" ${layout === 'grid_2' ? 'selected' : ''}>2 cột (grid_2)</option>
+                  <option value="grid_3" ${layout === 'grid_3' ? 'selected' : ''}>3 cột (grid_3)</option>
+                  <option value="grid_4" ${layout === 'grid_4' ? 'selected' : ''}>4 cột (grid_4)</option>
+                </select>
+              </div>
+            </div>
+            <div class="builder-options-grid ${colsClass}">
+              ${optionsHtml}
+            </div>
+            <div class="options-actions">
+              <button type="button" class="btn btn-secondary btn-sm btn-add-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                + Thêm phương án
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (isMultiGroup) {
+        const expectedIds = groupKey.expectedOptionIds || ['A', 'B'];
+        const groupIdVal = item.groupId || `group_${blockIdx + 1}`;
+        const optionsHtml = (item.options || []).map((opt) => `
+          <div class="option-item-row" data-option-id="${opt.id}">
+            <label class="option-select-label" title="Tích chọn đáp án đúng cho nhóm">
+              <input type="checkbox" class="checkbox-correct" value="${opt.id}" ${expectedIds.includes(opt.id) ? 'checked' : ''} data-correct="${opt.id}">
+              <span class="option-key-pill">${opt.id}</span>
+            </label>
+            <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${opt.id}..." />
+            <button type="button" class="btn btn-icon btn-sm btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
+          </div>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-multi-group">
+            <div class="template-header-bar">
+              <div class="group-config-wrap">
+                <span class="badge-group-pill">Nhóm unordered_group_slot</span>
+                <label class="group-id-label">Mã nhóm:
+                  <input type="text" class="form-control form-control-sm input-group-id" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(groupIdVal)}" placeholder="group_1" />
+                </label>
+              </div>
+              <div class="layout-selector-wrap">
+                <span class="layout-title">Bố cục:</span>
+                <select class="form-select form-select-sm select-layout" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  <option value="grid_2" ${layout === 'grid_2' ? 'selected' : ''}>2 cột (grid_2)</option>
+                  <option value="grid_3" ${layout === 'grid_3' ? 'selected' : ''}>3 cột (grid_3)</option>
+                  <option value="grid_4" ${layout === 'grid_4' ? 'selected' : ''}>4 cột (grid_4)</option>
+                </select>
+              </div>
+            </div>
+            <p class="template-help-text">Chấm độc lập thứ tự (unordered_group_slot): Học viên chọn đúng các phương án được tích bên dưới theo bất kỳ thứ tự nào đều được tính điểm.</p>
+            <div class="builder-options-grid ${colsClass}">
+              ${optionsHtml}
+            </div>
+            <div class="options-actions">
+              <button type="button" class="btn btn-secondary btn-sm btn-add-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                + Thêm phương án
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (isShortText) {
+        const acceptedList = itemKey.accepted || [''];
+        const chipsHtml = acceptedList.map((v) => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-fitb">
+            <div class="fitb-raw-box">
+              <label class="form-label">Đáp án gốc (Nhập từ/câu mẫu để tự động mở rộng biến thể dấu câu, viết tắt, nháy đơn):</label>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập đáp án chuẩn..." />
+                <button type="button" class="btn btn-secondary btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  ⚡ Tự động sinh biến thể
+                </button>
+              </div>
+            </div>
+            <div class="variant-chips-container">
+              <div class="chips-meta-bar">
+                <span class="chips-count-badge">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
+                <div class="quick-add-variant">
+                  <input type="text" class="form-control form-control-sm input-add-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
+                </div>
+              </div>
+              <div class="variant-chips-wrap">
+                ${chipsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      const typeLabel = isSingleChoice ? 'Trắc nghiệm 1 đáp án (Single Choice)' : (isMultiGroup ? 'Nhóm chọn nhiều (Multi-Select Group)' : 'Điền ô trống (Short Text)');
+
+      return `
+        <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
+          <div class="builder-item-header">
+            <div class="item-title-info">
+              <span class="item-pos-pill">Câu ${item.position}</span>
+              <span class="item-kind-pill ${item.interactionType}">${typeLabel}</span>
+            </div>
+            <div class="item-header-controls">
+              <label class="item-score-label">Điểm:
+                <input type="number" class="form-control form-control-sm item-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${item.maxScore || 1}" min="0" max="100" />
+              </label>
+              <button type="button" class="btn btn-icon btn-sm btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này">✕</button>
+            </div>
+          </div>
+          <div class="builder-item-body">
+            <div class="form-group item-prompt-group">
+              <label class="form-label">Nội dung câu hỏi (Prompt):</label>
+              <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="2" placeholder="Nhập đề bài câu hỏi...">${escapeHtml(item.prompt || '')}</textarea>
+            </div>
+            ${specificHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
   function render() {
@@ -733,9 +1024,28 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <textarea class="form-control block-reading-input" data-index="${index}" rows="3" placeholder="Dán văn bản đọc hiểu (nếu có)...">${escapeHtml(readingVal)}</textarea>
               </div>
             </div>
-            <div class="block-items-summary">
-              <span class="items-badge">${itemsCount} câu hỏi</span>
-              <span class="items-tip">Cấu hình câu hỏi chi tiết theo template ở các bước tiếp theo.</span>
+
+            <div class="block-items-section">
+              <div class="block-items-header-bar">
+                <h4>Danh sách câu hỏi (${itemsCount} câu)</h4>
+              </div>
+              <div class="block-items-list">
+                ${renderBlockItems(block, index)}
+              </div>
+              <div class="block-add-item-bar">
+                <span class="add-item-caption">+ Thêm câu hỏi:</span>
+                <div class="add-item-buttons">
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${index}">
+                    + Trắc nghiệm (Single Choice)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-multi-group" data-block-idx="${index}">
+                    + Nhóm chọn nhiều (Multi-Select Group)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-fitb" data-block-idx="${index}">
+                    + Điền ô trống (Short Text)
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -835,29 +1145,114 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
     const blockCards = container.querySelectorAll('.builder-block-card');
     if (blockCards && typeof blockCards.forEach === 'function') {
-      blockCards.forEach((card, idx) => {
-        const block = draftState.blocks[idx];
+      blockCards.forEach((bCard, bIdx) => {
+        const block = draftState.blocks[bIdx];
         if (!block) return;
 
-        const titleEl = card.querySelector('.block-title-input');
+        const titleEl = bCard.querySelector('.block-title-input');
         if (titleEl) block.title = titleEl.value.trim();
 
-        const instEl = card.querySelector('.block-instructions-input');
+        const instEl = bCard.querySelector('.block-instructions-input');
         if (instEl) block.instructions = instEl.value;
 
-        const audioEl = card.querySelector('.block-audio-input');
+        const audioEl = bCard.querySelector('.block-audio-input');
         if (audioEl) {
           block.audioUrl = audioEl.value.trim() || null;
           block.stimulusAudioUrl = block.audioUrl;
         }
 
-        const readingEl = card.querySelector('.block-reading-input');
+        const readingEl = bCard.querySelector('.block-reading-input');
         if (readingEl) {
           block.readingPassage = readingEl.value || null;
           block.stimulusReadingPassage = block.readingPassage;
         }
+
+        const itemCards = bCard.querySelectorAll('.builder-item-card');
+        if (itemCards && typeof itemCards.forEach === 'function') {
+          itemCards.forEach((iCard, iIdx) => {
+            const item = block.items?.[iIdx];
+            if (!item) return;
+
+            const promptEl = iCard.querySelector('.item-prompt-input');
+            if (promptEl) item.prompt = promptEl.value.trim();
+
+            const scoreEl = iCard.querySelector('.item-max-score-input');
+            if (scoreEl) {
+              const sc = Number(scoreEl.value);
+              if (Number.isFinite(sc) && sc >= 0) item.maxScore = sc;
+            }
+
+            const layoutEl = iCard.querySelector('.select-layout');
+            if (layoutEl) item.layoutType = layoutEl.value;
+
+            // Single choice sync
+            if (item.interactionType === 'single_choice') {
+              const radioChecked = iCard.querySelector('.radio-correct:checked');
+              if (radioChecked) {
+                draftState.gradingKey.items[item.itemVersionId] = {
+                  graderType: 'exact_option',
+                  expectedOptionId: radioChecked.value
+                };
+              }
+              const optInputs = iCard.querySelectorAll('.option-label-input');
+              optInputs.forEach(optIn => {
+                const optId = optIn.getAttribute('data-option-id');
+                const optObj = item.options.find(o => o.id === optId);
+                if (optObj) optObj.label = optIn.value.trim();
+              });
+            }
+
+            // Multi group sync
+            if (item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot') {
+              const groupIdInput = iCard.querySelector('.input-group-id');
+              if (groupIdInput) {
+                const gid = groupIdInput.value.trim();
+                if (gid) item.groupId = gid;
+              }
+              const checkedBoxes = iCard.querySelectorAll('.checkbox-correct:checked');
+              const checkedIds = Array.from(checkedBoxes).map(cb => cb.value);
+              if (item.groupId && checkedIds.length >= 2) {
+                draftState.gradingKey.groups[item.groupId] = {
+                  graderType: 'unordered_group_slot',
+                  expectedOptionIds: checkedIds
+                };
+              }
+              const optInputs = iCard.querySelectorAll('.option-label-input');
+              optInputs.forEach(optIn => {
+                const optId = optIn.getAttribute('data-option-id');
+                const optObj = item.options.find(o => o.id === optId);
+                if (optObj) optObj.label = optIn.value.trim();
+              });
+            }
+
+            // Short text sync
+            if (item.interactionType === 'short_text') {
+              const chips = iCard.querySelectorAll('.variant-chip');
+              const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              if (variants.length) {
+                draftState.gradingKey.items[item.itemVersionId] = {
+                  graderType: 'accepted_text',
+                  accepted: variants,
+                  normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                };
+              }
+            }
+          });
+        }
       });
     }
+  }
+
+  function getNextPosition() {
+    let nextPos = 1;
+    for (const b of draftState.blocks) {
+      for (const itm of b.items || []) {
+        if (typeof itm.position === 'number' && itm.position >= nextPos) {
+          nextPos = itm.position + 1;
+        }
+      }
+    }
+    return nextPos;
   }
 
   function bindEvents() {
@@ -873,14 +1268,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       addBlockBtn.addEventListener('click', () => {
         syncInputs();
         const nextIdx = draftState.blocks.length + 1;
-        let nextPos = 1;
-        for (const b of draftState.blocks) {
-          for (const itm of b.items || []) {
-            if (typeof itm.position === 'number' && itm.position >= nextPos) {
-              nextPos = itm.position + 1;
-            }
-          }
-        }
+        const nextPos = getNextPosition();
+        const initialItemId = generateUuid();
 
         draftState.blocks.push({
           blockId: generateUuid(),
@@ -894,25 +1283,294 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           items: [
             {
               itemFamilyId: generateUuid(),
-              itemVersionId: generateUuid(),
+              itemVersionId: initialItemId,
               position: nextPos,
-              prompt: `Câu hỏi ${nextPos}`,
+              prompt: `Câu hỏi ${nextPos}:`,
               helpText: '',
-              interactionType: 'short_text',
-              pedagogicalTypeCode: 'general_text',
-              layoutType: 'default',
-              graderType: 'accepted_text',
+              interactionType: 'single_choice',
+              pedagogicalTypeCode: 'multiple_choice',
+              layoutType: 'grid_4',
+              graderType: 'exact_option',
               required: true,
               maxScore: 1,
-              options: [],
+              options: [
+                { id: 'A', label: 'Phương án A' },
+                { id: 'B', label: 'Phương án B' },
+                { id: 'C', label: 'Phương án C' },
+                { id: 'D', label: 'Phương án D' }
+              ],
               skillCodes: [],
               releasePolicy: 'inherit'
             }
           ]
         });
+        draftState.gradingKey.items[initialItemId] = {
+          graderType: 'exact_option',
+          expectedOptionId: 'A'
+        };
         render();
       });
     }
+
+    // Add Single Choice Question
+    const addScBtns = container.querySelectorAll('.btn-add-single-choice');
+    addScBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: `Câu hỏi ${nextPos}:`,
+          helpText: '',
+          interactionType: 'single_choice',
+          pedagogicalTypeCode: 'multiple_choice',
+          layoutType: 'grid_4',
+          graderType: 'exact_option',
+          required: true,
+          maxScore: 1,
+          options: [
+            { id: 'A', label: 'Phương án A' },
+            { id: 'B', label: 'Phương án B' },
+            { id: 'C', label: 'Phương án C' },
+            { id: 'D', label: 'Phương án D' }
+          ],
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'exact_option',
+          expectedOptionId: 'A'
+        };
+        render();
+      });
+    });
+
+    // Add Multi-Select Group Question
+    const addMgBtns = container.querySelectorAll('.btn-add-multi-group');
+    addMgBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const groupId = `group_${bIdx + 1}_${Date.now().toString(36)}`;
+        const newItem1Id = generateUuid();
+        const newItem2Id = generateUuid();
+        block.items = block.items || [];
+        const optionsList = [
+          { id: 'A', label: 'Phương án A' },
+          { id: 'B', label: 'Phương án B' },
+          { id: 'C', label: 'Phương án C' },
+          { id: 'D', label: 'Phương án D' },
+          { id: 'E', label: 'Phương án E' }
+        ];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItem1Id,
+          position: nextPos,
+          prompt: `Chọn 2 đáp án chính xác (Vị trí 1):`,
+          helpText: '',
+          interactionType: 'multi_choice_group',
+          pedagogicalTypeCode: 'multiple_choice_group',
+          layoutType: 'grid_3',
+          graderType: 'unordered_group_slot',
+          groupId,
+          required: true,
+          maxScore: 1,
+          options: JSON.parse(JSON.stringify(optionsList)),
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItem2Id,
+          position: nextPos + 1,
+          prompt: `Chọn 2 đáp án chính xác (Vị trí 2):`,
+          helpText: '',
+          interactionType: 'multi_choice_group',
+          pedagogicalTypeCode: 'multiple_choice_group',
+          layoutType: 'grid_3',
+          graderType: 'unordered_group_slot',
+          groupId,
+          required: true,
+          maxScore: 1,
+          options: JSON.parse(JSON.stringify(optionsList)),
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.groups[groupId] = {
+          graderType: 'unordered_group_slot',
+          expectedOptionIds: ['A', 'B']
+        };
+        render();
+      });
+    });
+
+    // Add Fill In The Blank Question
+    const addFitbBtns = container.querySelectorAll('.btn-add-fitb');
+    addFitbBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: `Điền vào ô trống câu ${nextPos}:`,
+          helpText: '',
+          interactionType: 'short_text',
+          pedagogicalTypeCode: 'fill_in_the_blank',
+          layoutType: 'default',
+          graderType: 'accepted_text',
+          required: true,
+          maxScore: 1,
+          options: [],
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'accepted_text',
+          accepted: ['answer'],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Delete Question Item
+    const delItemBtns = container.querySelectorAll('.btn-delete-item');
+    delItemBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const block = draftState.blocks[bIdx];
+        if (block && block.items) {
+          block.items.splice(iIdx, 1);
+          render();
+        }
+      });
+    });
+
+    // Add Option to single/multi choice
+    const addOptBtns = container.querySelectorAll('.btn-add-option');
+    addOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nextId = alphabet[item.options.length] || `OPT${item.options.length + 1}`;
+        item.options.push({ id: nextId, label: `Phương án ${nextId}` });
+        render();
+      });
+    });
+
+    // Delete Option
+    const delOptBtns = container.querySelectorAll('.btn-del-option');
+    delOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const optId = btn.getAttribute('data-option-id');
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (item && item.options && item.options.length > 2) {
+          item.options = item.options.filter(o => o.id !== optId);
+          render();
+        } else {
+          alert('Một câu hỏi lựa chọn phải có ít nhất 2 phương án.');
+        }
+      });
+    });
+
+    // Generate variants button for FITB
+    const genVariantBtns = container.querySelectorAll('.btn-generate-variants');
+    genVariantBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const card = btn.closest('.builder-item-card');
+        const rawInput = card?.querySelector('.input-fitb-raw');
+        const rawVal = rawInput?.value?.trim() || '';
+        if (!rawVal) {
+          alert('Vui lòng nhập đáp án chuẩn trước khi sinh biến thể.');
+          return;
+        }
+        const generated = expandSentenceVariants([rawVal]);
+        draftState.gradingKey.items[item.itemVersionId] = {
+          graderType: 'accepted_text',
+          accepted: generated,
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Remove single variant chip
+    const removeChipBtns = container.querySelectorAll('.btn-remove-chip');
+    removeChipBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        const variantToRemove = btn.getAttribute('data-variant');
+        if (!item) return;
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (currentKey && Array.isArray(currentKey.accepted)) {
+          currentKey.accepted = currentKey.accepted.filter(v => v !== variantToRemove);
+          if (!currentKey.accepted.length) currentKey.accepted = ['answer'];
+          render();
+        }
+      });
+    });
+
+    // Add manual variant input
+    const addVariantInputs = container.querySelectorAll('.input-add-variant');
+    addVariantInputs.forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = input.value.trim();
+          if (!val) return;
+          syncInputs();
+          const bIdx = Number(input.getAttribute('data-block-idx'));
+          const iIdx = Number(input.getAttribute('data-item-idx'));
+          const item = draftState.blocks[bIdx]?.items?.[iIdx];
+          if (!item) return;
+          const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+            graderType: 'accepted_text',
+            accepted: [],
+            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          };
+          if (!currentKey.accepted.includes(val)) {
+            currentKey.accepted.push(val);
+            if (currentKey.accepted.length > 40) currentKey.accepted.pop();
+            draftState.gradingKey.items[item.itemVersionId] = currentKey;
+            render();
+          }
+        }
+      });
+    });
 
     const upBtns = container.querySelectorAll('.btn-move-block-up');
     if (upBtns && typeof upBtns.forEach === 'function') {
@@ -993,7 +1651,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               stimulusAudioUrl: b.audioUrl || null,
               stimulusReadingPassage: b.readingPassage || null,
               items: b.items || []
-            }))
+            })),
+            gradingKey: draftState.gradingKey
           };
 
           const res = await options.onSaveDraft(payload);
