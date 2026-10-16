@@ -2349,16 +2349,17 @@ body:not(.login-page) #auth-panel {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  width: 340px;
-  max-width: 90vw;
+  width: 380px;
+  max-width: 92vw;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.16), 0 4px 10px -2px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.18), 0 4px 12px -2px rgba(15, 23, 42, 0.08);
   z-index: 1000;
-  padding: 14px 16px;
+  padding: 16px;
   text-align: left;
   animation: popoverFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
 .role-capabilities-popover[hidden] {
@@ -2372,38 +2373,67 @@ body:not(.login-page) #auth-panel {
 
 .popover-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 12px;
   border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 8px;
-  margin-bottom: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
 }
 
-.popover-title-row {
+.popover-user-summary {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
-  color: #db0829;
+  min-width: 0;
+  flex: 1;
 }
 
-.popover-title-row h4 {
+.popover-user-name {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.popover-role-pill-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.popover-role-pill-wrap .role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: default;
 }
 
 .btn-popover-close {
-  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: #f1f5f9;
   border: none;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   line-height: 1;
-  color: #94a3b8;
+  color: #64748b;
   cursor: pointer;
-  padding: 0 4px;
+  flex-shrink: 0;
+  padding: 0;
+  transition: all 0.15s ease;
 }
 
 .btn-popover-close:hover {
+  background: #e2e8f0;
   color: #0f172a;
 }
 
@@ -2411,6 +2441,15 @@ body:not(.login-page) #auth-panel {
   font-size: 0.82rem;
   color: #334155;
   line-height: 1.45;
+}
+
+.popover-section-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 8px;
 }
 
 .role-caps-list {
@@ -2468,6 +2507,49 @@ body:not(.login-page) #auth-panel {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Dashboard Sub-system View Containers */
+.dashboard-view-container {
+  width: 100%;
+}
+.dashboard-view-container[hidden] {
+  display: none !important;
+}
+
+/* Showcase Call-to-Action Bar */
+.showcase-cta-bar {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.go-to-grading-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #b91c1c;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.25);
+  transition: all 0.2s ease;
+}
+
+.go-to-grading-btn:hover {
+  background: #991b1b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35);
+}
+
+.go-to-grading-btn:active {
+  transform: translateY(0);
 }
 
 

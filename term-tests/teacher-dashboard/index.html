@@ -62,30 +62,32 @@
               <p id="teacher-profile-meta" class="meta-info">—</p>
             </div>
             <div class="role-badge-wrap" id="role-badge-wrap">
-              <span id="teacher-role-badge" class="role-badge" tabindex="0" role="button" aria-haspopup="dialog" aria-expanded="false" title="Bấm để xem quyền hạn vai trò">—</span>
-              <button type="button" class="role-info-btn" id="role-info-btn" aria-label="Xem quyền hạn vai trò" title="Xem quyền hạn vai trò">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              <button type="button" class="role-info-btn" id="role-info-btn" aria-label="Xem vai trò và quyền hạn" title="Xem vai trò và quyền hạn" aria-haspopup="dialog" aria-expanded="false">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
               </button>
               
               <!-- Popover Quyền hạn vai trò -->
-              <div id="role-capabilities-popover" class="role-capabilities-popover" role="dialog" aria-label="Quyền hạn vai trò" hidden>
+              <div id="role-capabilities-popover" class="role-capabilities-popover" role="dialog" aria-label="Vai trò và quyền hạn" hidden>
                 <div class="popover-header">
-                  <div class="popover-title-row">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <h4 id="popover-role-title">Quyền hạn vai trò</h4>
+                  <div class="popover-user-summary">
+                    <h4 id="popover-user-name" class="popover-user-name">—</h4>
+                    <div class="popover-role-pill-wrap">
+                      <span id="teacher-role-badge" class="role-badge" tabindex="0" role="button" aria-haspopup="dialog" aria-expanded="false" title="Vai trò người dùng">—</span>
+                    </div>
                   </div>
-                  <button type="button" id="close-role-popover" class="btn-popover-close" aria-label="Đóng">&times;</button>
+                  <button type="button" id="close-role-popover" class="btn-popover-close" aria-label="Đóng" title="Đóng">&times;</button>
                 </div>
                 <div class="popover-body">
+                  <div class="popover-section-title">Quyền hạn trong hệ thống</div>
                   <ul class="role-caps-list" id="role-caps-list">
                     <li>
-                      <strong>Kiểm tra toàn bộ các lớp:</strong> Xem danh sách, bài làm và kết quả của mọi lớp trong khối phụ trách (Khối 34, 45, 03).
+                      <strong>Quản lý &amp; Xuất bản đề thi:</strong> Chỉnh sửa cấu trúc đề thi, cấu hình phiên bản đề, xuất bản đợt thi cho các lớp và giám sát phòng thi tập trung (Exam Mode).
                     </li>
                     <li>
-                      <strong>Quản lý bài thi & Phòng thi:</strong> Bật/tắt chế độ thi tập trung (Exam Mode), giám sát phòng thi trực tiếp theo thời gian thực.
+                      <strong>Kiểm tra toàn bộ các lớp:</strong> Xem danh sách, bài làm và theo dõi tiến độ nộp bài của mọi lớp trong khối phụ trách (Khối 34, 45, 03).
                     </li>
                     <li>
-                      <strong>Chấm thi & Phê duyệt điểm:</strong> Chấm điểm tự luận/nói, lưu chấm nháp, duyệt điểm chính thức và công bố kết quả cho học viên.
+                      <strong>Chấm thi &amp; Phê duyệt điểm:</strong> Chấm điểm tự luận/nói, lưu chấm nháp, duyệt điểm chính thức và công bố kết quả cho học viên.
                     </li>
                     <li>
                       <strong>Quản trị quyền làm bài:</strong> Cấp quyền làm lại bài thi (Retake), bổ sung học viên chuyển lớp vào đợt thi.
@@ -166,7 +168,8 @@
       <button type="submit">Tải lớp được phép</button>
     </form>
 
-    <div class="split-dashboard-grid">
+    <div id="view-dashboard" class="dashboard-view-container">
+      <div class="split-dashboard-grid">
       <div class="selector-panel">
         <section class="panel control-toolbar">
           <!-- Smart Class Filtering Controls -->
@@ -298,6 +301,13 @@
                 <span>Mã QR</span>
               </button>
             </div>
+
+            <div class="showcase-cta-bar">
+              <button type="button" id="go-to-grading-btn" class="btn-primary go-to-grading-btn">
+                <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+                <span>Vào chấm điểm &amp; Đánh giá</span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -335,6 +345,28 @@
       </div>
       <div id="exam-room-timeline" hidden aria-live="polite"><h3>Timeline sự cố</h3><div></div></div>
     </section>
+  </div> <!-- #view-dashboard -->
+
+  <div id="view-exams" class="dashboard-view-container" hidden>
+    <div class="panel showcase-placeholder">
+      <div class="placeholder-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <h3>Quản lý bài thi &amp; Lịch thi</h3>
+      <p>Phân hệ quản lý lịch thi tập trung, ca thi và đề thi chuẩn đang được hoàn thiện.</p>
+    </div>
+  </div>
+
+  <div id="view-grading" class="dashboard-view-container" hidden>
+    <div id="grading-empty-placeholder" class="panel showcase-placeholder">
+      <div class="placeholder-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+      </div>
+      <h3>Chưa chọn bài kiểm tra để chấm</h3>
+      <p>Vui lòng chuyển về tab <strong>Teacher Dashboard</strong> để chọn lớp học và bài kiểm tra cần chấm điểm.</p>
+      <button type="button" id="grading-back-to-dashboard-btn" class="btn-primary" style="margin-top:12px;">Về Teacher Dashboard</button>
+    </div>
+
     <section id="results" class="panel" hidden aria-label="Bảng kết quả">
       <div class="results-header">
         <div>
@@ -581,8 +613,19 @@
         </div>
       </div>
     </section>
+  </div> <!-- #view-grading -->
 
-    <dialog id="item-context-modal" class="modal item-context-modal" aria-labelledby="modal-item-title">
+  <div id="view-reports" class="dashboard-view-container" hidden>
+    <div class="panel showcase-placeholder">
+      <div class="placeholder-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <h3>Báo cáo phổ điểm &amp; Phân tích năng lực</h3>
+      <p>Phân hệ biểu đồ phân phối phổ điểm, phân tích độ phân cách câu hỏi và tiến bộ của học viên đang được hoàn thiện.</p>
+    </div>
+  </div>
+
+  <dialog id="item-context-modal" class="modal item-context-modal" aria-labelledby="modal-item-title">
       <div class="modal-form">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h3 id="modal-item-title">Chi tiết câu hỏi</h3>
@@ -596,6 +639,6 @@
     </dialog>
   </main>
 
-  <script type="module" src="./app.js?rev=20261014-login-v1"></script>
+  <script type="module" src="./app.js?rev=20261016-tabs-v3"></script>
 </body>
 </html>

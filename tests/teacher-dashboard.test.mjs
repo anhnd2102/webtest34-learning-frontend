@@ -45,7 +45,10 @@ import {
   formatClassFilterCountLabel,
   assignmentResultsExportPath,
   toggleExportXlsxButton,
-  downloadResultsXlsx
+  downloadResultsXlsx,
+  readDashboardTab,
+  switchDashboardTab,
+  SUPPORTED_DASHBOARD_TABS
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase always resolves to the production origin, including local hosts', () => {
@@ -1363,6 +1366,18 @@ test('teacher dashboard provides role capabilities popover and tooltip trigger',
   assert.match(code, /roleCapabilitiesPopover/);
 });
 
+test('teacher dashboard role-capabilities-popover houses teacher-role-badge inside popover and lists exam editing & publication capabilities', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+
+  // Verify role badge is inside the popover, not exposed directly outside on the navbar
+  assert.match(html, /<div id="role-capabilities-popover"[^>]*>[\s\S]*id="teacher-role-badge"/);
+  assert.match(html, /Quản lý (&amp;|&) Xuất bản đề thi/);
+  assert.match(html, /xuất bản/i);
+  assert.match(css, /\.popover-user-summary/);
+});
+
 test('teacher dashboard lead-scope-filters provides 1-row nowrap layout and concise labels', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
@@ -1373,6 +1388,62 @@ test('teacher dashboard lead-scope-filters provides 1-row nowrap layout and conc
   assert.match(css, /#lead-scope-filters[^{]*\{[^}]*flex-wrap:\s*nowrap/);
   assert.match(code, /Toàn bộ khối/);
 });
+
+test('readDashboardTab parses valid hash and defaults to dashboard', () => {
+  assert.equal(readDashboardTab('#grading'), 'grading');
+  assert.equal(readDashboardTab('https://example.test/?classId=101#grading'), 'grading');
+  assert.equal(readDashboardTab('#exams'), 'exams');
+  assert.equal(readDashboardTab('#reports'), 'reports');
+  assert.equal(readDashboardTab('#dashboard'), 'dashboard');
+  assert.equal(readDashboardTab(''), 'dashboard');
+  assert.equal(readDashboardTab('#unknown'), 'dashboard');
+  assert.equal(readDashboardTab(null), 'dashboard');
+  assert.deepEqual(SUPPORTED_DASHBOARD_TABS, ['dashboard', 'exams', 'grading', 'reports']);
+});
+
+test('switchDashboardTab updates view visibility and nav active class', () => {
+  const views = {
+    dashboard: { hidden: false },
+    exams: { hidden: true },
+    grading: { hidden: true },
+    reports: { hidden: true }
+  };
+  const navItems = [
+    { getAttribute: (attr) => attr === 'href' ? '#dashboard' : null, classList: { add: () => {}, remove: () => {}, contains: (c) => c === 'active' }, setAttribute: () => {} },
+    { getAttribute: (attr) => attr === 'href' ? '#exams' : null, classList: { add: () => {}, remove: () => {}, contains: () => false }, setAttribute: () => {} },
+    { getAttribute: (attr) => attr === 'href' ? '#grading' : null, classList: { add: () => {}, remove: () => {}, contains: () => false }, setAttribute: () => {} },
+    { getAttribute: (attr) => attr === 'href' ? '#reports' : null, classList: { add: () => {}, remove: () => {}, contains: () => false }, setAttribute: () => {} }
+  ];
+
+  let activeClassTarget = null;
+  navItems.forEach(item => {
+    item.classList.add = (cls) => { if (cls === 'active') activeClassTarget = item.getAttribute('href'); };
+  });
+
+  const activeTab = switchDashboardTab('grading', { views, navItems });
+  assert.equal(activeTab, 'grading');
+  assert.equal(views.dashboard.hidden, true);
+  assert.equal(views.grading.hidden, false);
+  assert.equal(activeClassTarget, '#grading');
+
+  // Verify it handles #grading with the hash symbol directly from href or window.location.hash
+  const activeTabWithHash = switchDashboardTab('#grading', { views, navItems });
+  assert.equal(activeTabWithHash, 'grading');
+  assert.equal(views.grading.hidden, false);
+});
+
+test('teacher dashboard index.html provides view-dashboard, view-grading containers and CTA button', async () => {
+  const fs = await import('node:fs/promises');
+  const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /id="view-dashboard"/);
+  assert.match(html, /id="view-grading"/);
+  assert.match(html, /id="view-exams"/);
+  assert.match(html, /id="view-reports"/);
+  assert.match(html, /id="go-to-grading-btn"/);
+  assert.match(html, /id="grading-empty-placeholder"/);
+});
+
 
 
 
