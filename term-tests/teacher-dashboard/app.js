@@ -331,6 +331,50 @@ export function assignmentResultsPath(classId, assignmentId, options = {}) {
   return query ? `${base}?${query}` : base;
 }
 
+export function assignmentResultsExportPath(classId, assignmentId) {
+  return `${assignmentResultsPath(classId, assignmentId)}/export`;
+}
+
+export function toggleExportXlsxButton(button, assignmentId) {
+  if (button) button.hidden = !assignmentId;
+}
+
+function saveBlob(blob, filename) {
+  const href = URL.createObjectURL(blob);
+  const link = Object.assign(document.createElement('a'), { href, download: filename });
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 0);
+}
+
+// Dashboard xác thực bằng Bearer nên không dùng link trực tiếp: fetch → blob → tải xuống.
+// Luôn xuất toàn bộ danh sách, không gửi tham số lọc/sắp xếp.
+// onUnauthorized: 401 kết thúc phiên giống request() của dashboard.
+export async function downloadResultsXlsx({ url, headers, button, status, fetchImpl = fetch, save = saveBlob, onUnauthorized = () => {} }) {
+  const label = button.querySelector('span');
+  const idleText = label.textContent;
+  button.disabled = true;
+  label.textContent = 'Đang xuất…';
+  try {
+    const response = await fetchImpl(url, { headers });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      if (response.status === 401) onUnauthorized();
+      throw new Error(payload.message || 'Không xuất được file xlsx.');
+    }
+    const filename = /filename="([^"]+)"/.exec(response.headers.get('Content-Disposition') || '')?.[1] || 'KetQua.xlsx';
+    save(await response.blob(), filename);
+    // Chỉ xoá lỗi xuất cũ, giữ nguyên thông báo khác trên dòng trạng thái.
+    if (status?.textContent.startsWith('Lỗi xuất xlsx')) status.textContent = '';
+  } catch (error) {
+    if (status) status.textContent = `Lỗi xuất xlsx: ${error.message}`;
+  } finally {
+    button.disabled = false;
+    label.textContent = idleText;
+  }
+}
+
 export function assignmentExamModePath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam-mode`;
 }
@@ -996,6 +1040,7 @@ async function startDashboard() {
   const lastUpdated = document.querySelector('#last-updated');
   const refreshBtn = document.querySelector('#refresh-btn');
   const publishAllBtn = document.querySelector('#publish-all-btn');
+  const exportXlsxBtn = document.querySelector('#export-xlsx-btn');
   const classSkillSummary = document.querySelector('#class-skill-summary');
   const viewDashboard = document.querySelector('#view-dashboard');
   const viewGrading = document.querySelector('#view-grading');
@@ -1376,16 +1421,20 @@ async function startDashboard() {
   const apiBase = () => (loginApiBase?.value || form?.elements?.apiBase?.value || standardApiBase).replace(/\/$/, '');
   const authHeader = () => authHeaders({ token: sessionToken, actorId: form?.elements?.actorId?.value });
 
+  const endSession = () => {
+    handleLogout();
+    if (loginError) {
+      loginError.hidden = false;
+      loginError.textContent = 'Phiên làm việc đã kết thúc hoặc không hợp lệ. Vui lòng đăng nhập lại.';
+    }
+  };
+
   const request = async (path, options = {}) => {
     const headers = { ...authHeader(), ...(options.headers || {}) };
     const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
     const payload = await response.json().catch(() => ({}));
     if (response.status === 401 && sessionToken) {
-      handleLogout();
-      if (loginError) {
-        loginError.hidden = false;
-        loginError.textContent = 'Phiên làm việc đã kết thúc hoặc không hợp lệ. Vui lòng đăng nhập lại.';
-      }
+      endSession();
       throw new Error(payload.message || 'Yêu cầu đăng nhập.');
     }
     if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
@@ -1654,6 +1703,7 @@ async function startDashboard() {
   }
 
   function renderResults(payload) {
+    toggleExportXlsxButton(exportXlsxBtn, payload?.assignment ? state.assignmentId : '');
     if (!payload || !payload.assignment) {
       if (results) results.hidden = true;
       if (resultsContent) resultsContent.replaceChildren();
@@ -3089,6 +3139,19 @@ async function startDashboard() {
         publishAllBtn.textContent = 'Công bố toàn bộ điểm';
       }
     }
+  }
+
+  if (exportXlsxBtn) {
+    exportXlsxBtn.addEventListener('click', () => {
+      if (!state.classId || !state.assignmentId) return;
+      downloadResultsXlsx({
+        url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
+        headers: authHeader(),
+        button: exportXlsxBtn,
+        status,
+        onUnauthorized: () => { if (sessionToken) endSession(); }
+      });
+    });
   }
 
   if (publishAllBtn) {
