@@ -112,6 +112,35 @@ export function generateHangmanHint(targetText = '') {
     });
 }
 
+export function validateListeningOrderUniqueness(events) {
+  if (!Array.isArray(events) || events.length < 2) {
+    return { isValid: false, duplicates: [], missingRanks: [] };
+  }
+  const total = events.length;
+  const ranksSeen = new Map();
+  const duplicates = [];
+
+  for (const ev of events) {
+    const r = Number(ev.rank);
+    if (!Number.isFinite(r) || r < 1) continue;
+    const count = (ranksSeen.get(r) || 0) + 1;
+    ranksSeen.set(r, count);
+    if (count === 2) {
+      duplicates.push(r);
+    }
+  }
+
+  const missingRanks = [];
+  for (let i = 1; i <= total; i++) {
+    if (!ranksSeen.has(i)) {
+      missingRanks.push(i);
+    }
+  }
+
+  const isValid = duplicates.length === 0 && missingRanks.length === 0 && ranksSeen.size === total;
+  return { isValid, duplicates, missingRanks };
+}
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -919,11 +948,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     return items.map((item, itemIdx) => {
-      const isSingleChoice = item.interactionType === 'single_choice';
+      const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence';
+      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder;
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
       const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
       const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial;
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -935,7 +965,76 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       let specificHtml = '';
 
-      if (isSingleChoice) {
+      if (isListeningOrder) {
+        const events = item.events || [
+          { label: 'A', rank: 1, text: 'Sự kiện A' },
+          { label: 'B', rank: 2, text: 'Sự kiện B' },
+          { label: 'C', rank: 3, text: 'Sự kiện C' },
+          { label: 'D', rank: 4, text: 'Sự kiện D' },
+          { label: 'E', rank: 5, text: 'Sự kiện E' }
+        ];
+        const audioUrl = item.audioUrl || block.audioUrl || '';
+        const orderValidation = validateListeningOrderUniqueness(events);
+        const sortedByRank = [...events].sort((a, b) => (Number(a.rank) || 0) - (Number(b.rank) || 0));
+
+        const eventsHtml = events.map((ev, eIdx) => `
+          <div class="listening-event-row" data-event-idx="${eIdx}">
+            <div class="event-badge">${escapeHtml(ev.label || String.fromCharCode(65 + eIdx))}</div>
+            <input type="text" class="form-control form-control-sm input-event-text" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" value="${escapeHtml(ev.text || '')}" placeholder="Nội dung sự kiện ${ev.label}..." />
+            <div class="rank-selector-wrap">
+              <label class="rank-label">Vị trí:</label>
+              <select class="form-select form-select-sm select-event-rank" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}">
+                ${Array.from({ length: events.length }, (_, i) => i + 1).map(r => `
+                  <option value="${r}" ${Number(ev.rank) === r ? 'selected' : ''}>Thứ ${r}</option>
+                `).join('')}
+              </select>
+            </div>
+            <button type="button" class="btn btn-icon btn-sm btn-del-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" title="Xóa sự kiện">✕</button>
+          </div>
+        `).join('');
+
+        const previewBadges = sortedByRank.map(ev => `
+          <div class="timeline-step">
+            <span class="step-num">#${ev.rank || '?'}</span>
+            <span class="step-card"><strong class="step-label">${ev.label}:</strong> ${escapeHtml(ev.text ? (ev.text.length > 28 ? ev.text.substring(0, 28) + '...' : ev.text) : '---')}</span>
+          </div>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-listening-order">
+            <div class="form-group audio-input-group">
+              <label class="form-label"><strong>File ghi âm Audio (URL / Path):</strong></label>
+              <input type="text" class="form-control form-control-sm input-listening-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="assets/34/test-1/listening.mp3 hoặc https://..." />
+            </div>
+
+            <div class="template-header-bar" style="margin-top: 12px;">
+              <span class="section-sublabel"><strong>Danh sách chuỗi sự kiện & Thứ tự chuẩn:</strong></span>
+              <div class="validation-status-wrap">
+                ${orderValidation.isValid 
+                  ? `<span class="badge badge-success">✓ Thứ tự hợp lệ (${events.length} bước)</span>` 
+                  : `<span class="badge badge-warning">⚠ Trùng hoặc thiếu thứ tự: ${orderValidation.duplicates.length ? `Trùng [#${orderValidation.duplicates.join(', ')}]` : ''} ${orderValidation.missingRanks.length ? `Thiếu [#${orderValidation.missingRanks.join(', ')}]` : ''}</span>`}
+              </div>
+            </div>
+
+            <div class="listening-events-list">
+              ${eventsHtml}
+            </div>
+
+            <div class="options-actions" style="margin-top: 8px;">
+              <button type="button" class="btn btn-secondary btn-sm btn-add-listening-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                + Thêm sự kiện tiếp theo (${String.fromCharCode(65 + events.length)})
+              </button>
+            </div>
+
+            <div class="timeline-preview-bar">
+              <div class="timeline-preview-label">Trình tự mẫu (Chronological Timeline Preview):</div>
+              <div class="timeline-steps-container">
+                ${previewBadges}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isSingleChoice) {
         const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || 'A';
         const optionsHtml = (item.options || []).map((opt) => `
           <div class="option-item-row" data-option-id="${opt.id}">
@@ -1404,6 +1503,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="block-add-item-bar">
                 <span class="add-item-caption">+ Thêm câu hỏi:</span>
                 <div class="add-item-buttons">
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${index}">
+                    + Sắp xếp thứ tự nghe (Listening Order)
+                  </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${index}">
                     + Trắc nghiệm (Single Choice)
                   </button>
@@ -1621,6 +1723,34 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   graderType: 'accepted_text',
                   accepted: variants,
                   normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                };
+              }
+            }
+
+            // Listening order sync
+            if (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') {
+              const audioInput = iCard.querySelector('.input-listening-audio');
+              if (audioInput) {
+                const audVal = audioInput.value.trim();
+                item.audioUrl = audVal || null;
+                item.stimulusAudioUrl = item.audioUrl;
+              }
+              const eventRows = iCard.querySelectorAll('.listening-event-row');
+              if (eventRows.length && item.events) {
+                eventRows.forEach(eRow => {
+                  const eIdx = Number(eRow.getAttribute('data-event-idx'));
+                  const ev = item.events[eIdx];
+                  if (!ev) return;
+                  const textIn = eRow.querySelector('.input-event-text');
+                  if (textIn) ev.text = textIn.value.trim();
+                  const rankSel = eRow.querySelector('.select-event-rank');
+                  if (rankSel) ev.rank = Number(rankSel.value) || 1;
+                });
+                const sorted = [...item.events].sort((a, b) => (Number(a.rank) || 0) - (Number(b.rank) || 0));
+                const expectedSeq = sorted.map(e => e.label);
+                draftState.gradingKey.items[item.itemVersionId] = {
+                  graderType: 'ordered_sequence',
+                  expectedSequence: expectedSeq
                 };
               }
             }
@@ -1959,6 +2089,100 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         if (!item.prompt.includes(token)) {
           item.prompt = item.prompt ? `${item.prompt} ${token}` : `Câu hỏi với ${token}`;
         }
+        render();
+      });
+    });
+
+    // Add Listening Order Question
+    const addListeningOrderBtns = container.querySelectorAll('.btn-add-listening-order');
+    addListeningOrderBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        const defaultEvents = [
+          { label: 'A', rank: 3, text: 'Sự kiện A' },
+          { label: 'B', rank: 4, text: 'Sự kiện B' },
+          { label: 'C', rank: 1, text: 'Sự kiện C' },
+          { label: 'D', rank: 5, text: 'Sự kiện D' },
+          { label: 'E', rank: 2, text: 'Sự kiện E' }
+        ];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: 'Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:',
+          helpText: '',
+          interactionType: 'single_choice',
+          pedagogicalTypeCode: 'listening_order',
+          layoutType: 'timeline_sequence',
+          graderType: 'exact_option',
+          required: true,
+          maxScore: 5,
+          audioUrl: block.audioUrl || 'assets/34/test-1/listening.mp3',
+          events: defaultEvents,
+          options: defaultEvents.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` })),
+          skillCodes: ['listening'],
+          releasePolicy: 'inherit'
+        });
+        const sorted = [...defaultEvents].sort((a, b) => a.rank - b.rank);
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'ordered_sequence',
+          expectedSequence: sorted.map(e => e.label)
+        };
+        render();
+      });
+    });
+
+    // Rank selector change for listening events
+    const rankSelectors = container.querySelectorAll('.select-event-rank');
+    rankSelectors.forEach(sel => {
+      sel.addEventListener('change', () => {
+        syncInputs();
+        render();
+      });
+    });
+
+    // Add event button
+    const addEventBtns = container.querySelectorAll('.btn-add-listening-event');
+    addEventBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        item.events = item.events || [];
+        const nextLabel = String.fromCharCode(65 + item.events.length);
+        const nextRank = item.events.length + 1;
+        item.events.push({ label: nextLabel, rank: nextRank, text: `Sự kiện ${nextLabel}` });
+        item.options = item.events.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` }));
+        render();
+      });
+    });
+
+    // Delete event button
+    const delEventBtns = container.querySelectorAll('.btn-del-event');
+    delEventBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const eIdx = Number(btn.getAttribute('data-event-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item || !item.events || item.events.length <= 2) {
+          alert('Cần tối thiểu 2 sự kiện để tạo câu hỏi sắp xếp thứ tự.');
+          return;
+        }
+        item.events.splice(eIdx, 1);
+        item.events.forEach((ev, idx) => {
+          ev.label = String.fromCharCode(65 + idx);
+        });
+        item.options = item.events.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` }));
         render();
       });
     });
@@ -2700,11 +2924,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const items = b.items || [];
 
         const itemsHtml = items.map((item) => {
-          const isSingleChoice = item.interactionType === 'single_choice';
+          const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence';
+          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder;
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
           const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
           const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial;
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -2712,7 +2937,49 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
 
           let interactiveHtml = '';
-          if (isSingleChoice) {
+          if (isListeningOrder) {
+            const events = item.events || [];
+            const audioSrc = item.audioUrl || audioUrl || '';
+            interactiveHtml = `
+              <div class="candidate-listening-order-wrap">
+                ${audioSrc ? `
+                  <div class="candidate-audio-dock">
+                    <div class="audio-caption">🎧 Đoạn ghi âm câu hỏi:</div>
+                    <audio controls src="${escapeHtml(audioSrc)}" class="sim-audio-player"></audio>
+                  </div>
+                ` : ''}
+
+                <div class="candidate-events-pool">
+                  <div class="events-pool-title">Các câu / sự kiện cần sắp xếp:</div>
+                  <div class="events-pool-grid">
+                    ${events.map(ev => `
+                      <div class="event-pool-card" data-event-label="${escapeHtml(ev.label)}">
+                        <span class="event-pool-badge">${escapeHtml(ev.label)}</span>
+                        <span class="event-pool-text">${escapeHtml(ev.text || '')}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+
+                <div class="candidate-timeline-slots">
+                  <div class="timeline-slots-title">Trình tự diễn ra theo thời gian:</div>
+                  <div class="timeline-slots-grid">
+                    ${events.map((_, idx) => `
+                      <div class="timeline-slot-card" data-slot-index="${idx + 1}">
+                        <div class="slot-badge">Thứ ${idx + 1}</div>
+                        <select class="form-select form-select-sm candidate-sequence-select" data-slot="${idx + 1}">
+                          <option value="">-- Chọn sự kiện --</option>
+                          ${events.map(ev => `
+                            <option value="${escapeHtml(ev.label)}">${escapeHtml(ev.label)}: ${escapeHtml(ev.text ? (ev.text.length > 30 ? ev.text.substring(0, 30) + '...' : ev.text) : '')}</option>
+                          `).join('')}
+                        </select>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            `;
+          } else if (isSingleChoice) {
             interactiveHtml = `
               <div class="candidate-options-grid ${colsClass}">
                 ${(item.options || []).map(opt => `
@@ -2790,19 +3057,21 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
-          const promptDisplay = isVocabPair
-            ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
-            : (isInlineCloze
-              ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
-              : (isPictorial
-                ? 'Nhìn hình và hoàn thành từ vựng:'
-                : escapeHtml(item.prompt || '')));
+          const promptDisplay = isListeningOrder
+            ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
+            : (isVocabPair
+              ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+              : (isInlineCloze
+                ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+                : (isPictorial
+                  ? 'Nhìn hình và hoàn thành từ vựng:'
+                  : escapeHtml(item.prompt || ''))));
 
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))}</span>
+                <span class="question-type-badge">${isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}

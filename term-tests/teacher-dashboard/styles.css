@@ -4550,5 +4550,190 @@ body:not(.login-page) #auth-panel {
   color: #ffffff;
 }
 
+/* ==========================================================================
+   Listening Event Sequence & Ordering Template Styles
+   ========================================================================== */
+.template-listening-order {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listening-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listening-event-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.listening-event-row .event-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.listening-event-row .input-event-text {
+  flex: 1;
+}
+
+.rank-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.rank-selector-wrap .rank-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0;
+}
+
+.rank-selector-wrap .select-event-rank {
+  width: 95px;
+}
+
+.timeline-preview-bar {
+  background: #f1f5f9;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 8px;
+}
+
+.timeline-preview-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.timeline-steps-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+
+.timeline-step .step-num {
+  font-weight: 800;
+  color: #0284c7;
+}
+
+.timeline-step .step-label {
+  color: #0f172a;
+}
+
+/* Candidate Simulation Listening Order */
+.candidate-listening-order-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.candidate-events-pool {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.events-pool-title,
+.timeline-slots-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.events-pool-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.event-pool-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #1e293b;
+}
+
+.event-pool-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.timeline-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.timeline-slot-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.timeline-slot-card .slot-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #0284c7;
+  text-transform: uppercase;
+}
+
+
 
 
