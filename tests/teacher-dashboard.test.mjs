@@ -44,7 +44,7 @@ import {
   filterClasses,
   formatClassFilterCountLabel,
   assignmentResultsExportPath,
-  showExportXlsxButton,
+  toggleExportXlsxButton,
   downloadResultsXlsx
 } from '../term-tests/teacher-dashboard/app.js';
 
@@ -1393,9 +1393,9 @@ test('export xlsx button is hidden until an assignment is selected', async () =>
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   assert.match(html, /<button id="export-xlsx-btn"[^>]*hidden[^>]*>[\s\S]*?<svg[\s\S]*?Tải xlsx/);
   const button = { hidden: true };
-  showExportXlsxButton(button, '');
+  toggleExportXlsxButton(button, '');
   assert.equal(button.hidden, true);
-  showExportXlsxButton(button, '11111111-1111-4111-8111-111111111111');
+  toggleExportXlsxButton(button, '11111111-1111-4111-8111-111111111111');
   assert.equal(button.hidden, false);
 });
 
@@ -1460,4 +1460,39 @@ test('export xlsx failure is shown in the dashboard status line and unlocks the 
   assert.match(status.textContent, /Không có quyền xem bài được giao này\./);
   assert.equal(button.disabled, false);
   assert.equal(button.label.textContent, 'Tải xlsx');
+});
+
+test('export xlsx 401 ends the session like other dashboard requests', async () => {
+  const button = fakeExportButton();
+  const status = { textContent: '' };
+  let loggedOut = 0;
+  await downloadResultsXlsx({
+    url: 'https://api.test/x',
+    headers: {},
+    button,
+    status,
+    fetchImpl: async () => new Response(JSON.stringify({ ok: false, message: 'Yêu cầu đăng nhập.' }), { status: 401 }),
+    save: () => assert.fail('không được lưu file'),
+    onUnauthorized: () => { loggedOut += 1; }
+  });
+  assert.equal(loggedOut, 1);
+  assert.equal(button.disabled, false);
+});
+
+test('export xlsx success after a failure clears the export error from the status line', async () => {
+  const button = fakeExportButton();
+  const status = { textContent: '' };
+  const responses = [
+    new Response(JSON.stringify({ message: 'Lỗi máy chủ.' }), { status: 500 }),
+    new Response('xlsx-bytes', { status: 200 })
+  ];
+  const run = () => downloadResultsXlsx({
+    url: 'https://api.test/x', headers: {}, button, status,
+    fetchImpl: async () => responses.shift(),
+    save: () => {}
+  });
+  await run();
+  assert.match(status.textContent, /Lỗi xuất xlsx/);
+  await run();
+  assert.equal(status.textContent, '');
 });

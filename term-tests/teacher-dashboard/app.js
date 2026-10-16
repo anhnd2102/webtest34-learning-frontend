@@ -273,7 +273,7 @@ export function assignmentResultsExportPath(classId, assignmentId) {
   return `${assignmentResultsPath(classId, assignmentId)}/export`;
 }
 
-export function showExportXlsxButton(button, assignmentId) {
+export function toggleExportXlsxButton(button, assignmentId) {
   if (button) button.hidden = !assignmentId;
 }
 
@@ -288,7 +288,8 @@ function saveBlob(blob, filename) {
 
 // Dashboard xác thực bằng Bearer nên không dùng link trực tiếp: fetch → blob → tải xuống.
 // Luôn xuất toàn bộ danh sách, không gửi tham số lọc/sắp xếp.
-export async function downloadResultsXlsx({ url, headers, button, status, fetchImpl = fetch, save = saveBlob }) {
+// onUnauthorized: 401 kết thúc phiên giống request() của dashboard.
+export async function downloadResultsXlsx({ url, headers, button, status, fetchImpl = fetch, save = saveBlob, onUnauthorized = () => {} }) {
   const label = button.querySelector('span');
   const idleText = label.textContent;
   button.disabled = true;
@@ -297,10 +298,13 @@ export async function downloadResultsXlsx({ url, headers, button, status, fetchI
     const response = await fetchImpl(url, { headers });
     if (!response.ok) {
       const payload = await response.json().catch(() => ({}));
+      if (response.status === 401) onUnauthorized();
       throw new Error(payload.message || 'Không xuất được file xlsx.');
     }
     const filename = /filename="([^"]+)"/.exec(response.headers.get('Content-Disposition') || '')?.[1] || 'KetQua.xlsx';
     save(await response.blob(), filename);
+    // Chỉ xoá lỗi xuất cũ, giữ nguyên thông báo khác trên dòng trạng thái.
+    if (status?.textContent.startsWith('Lỗi xuất xlsx')) status.textContent = '';
   } catch (error) {
     if (status) status.textContent = `Lỗi xuất xlsx: ${error.message}`;
   } finally {
@@ -1281,16 +1285,20 @@ async function startDashboard() {
   const apiBase = () => (loginApiBase?.value || form?.elements?.apiBase?.value || standardApiBase).replace(/\/$/, '');
   const authHeader = () => authHeaders({ token: sessionToken, actorId: form?.elements?.actorId?.value });
 
+  const endSession = () => {
+    handleLogout();
+    if (loginError) {
+      loginError.hidden = false;
+      loginError.textContent = 'Phiên làm việc đã kết thúc hoặc không hợp lệ. Vui lòng đăng nhập lại.';
+    }
+  };
+
   const request = async (path, options = {}) => {
     const headers = { ...authHeader(), ...(options.headers || {}) };
     const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
     const payload = await response.json().catch(() => ({}));
     if (response.status === 401 && sessionToken) {
-      handleLogout();
-      if (loginError) {
-        loginError.hidden = false;
-        loginError.textContent = 'Phiên làm việc đã kết thúc hoặc không hợp lệ. Vui lòng đăng nhập lại.';
-      }
+      endSession();
       throw new Error(payload.message || 'Yêu cầu đăng nhập.');
     }
     if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
@@ -1559,7 +1567,7 @@ async function startDashboard() {
   }
 
   function renderResults(payload) {
-    showExportXlsxButton(exportXlsxBtn, payload?.assignment ? state.assignmentId : '');
+    toggleExportXlsxButton(exportXlsxBtn, payload?.assignment ? state.assignmentId : '');
     if (!payload || !payload.assignment) {
       if (results) results.hidden = true;
       if (resultsContent) resultsContent.replaceChildren();
@@ -3004,7 +3012,8 @@ async function startDashboard() {
         url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
         headers: authHeader(),
         button: exportXlsxBtn,
-        status
+        status,
+        onUnauthorized: () => { if (sessionToken) endSession(); }
       });
     });
   }
