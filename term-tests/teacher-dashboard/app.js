@@ -736,6 +736,11 @@ export function previewSandboxPath(apiBase = '') {
   return cleanBase ? `${cleanBase}/api/teacher/forms/preview-sandbox` : '/api/teacher/forms/preview-sandbox';
 }
 
+export function formPublishPath(apiBase = '') {
+  const cleanBase = String(apiBase || '').replace(/\/+$/, '');
+  return cleanBase ? `${cleanBase}/api/teacher/forms/publish` : '/api/teacher/forms/publish';
+}
+
 export function generateUuid() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
@@ -1262,8 +1267,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
           <div class="builder-top-right">
             <span class="builder-status-msg" id="builder-status-msg" aria-live="polite"></span>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-preview-test" title="Xem trước giao diện bài thi của học sinh">
+              👁️ Xem trước bài thi
+            </button>
             <button type="button" class="btn btn-primary btn-save-draft" id="btn-save-draft">
               💾 Lưu bản nháp
+            </button>
+            <button type="button" class="btn btn-success btn-sm btn-publish-test" id="btn-publish-test" title="Công bố đề thi cho các lớp">
+              🚀 Công bố đề thi
             </button>
           </div>
         </div>
@@ -2346,6 +2357,488 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
       });
     }
+
+    // Candidate Simulation Modal
+    function openCandidateSimulationModal() {
+      syncInputs();
+      let modal = document.querySelector('#candidate-simulation-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'candidate-simulation-modal';
+        modal.className = 'candidate-simulation-overlay';
+        document.body.appendChild(modal);
+      }
+
+      const blocks = draftState.blocks || [];
+      const sectionsNavHtml = blocks.map((b, i) => `
+        <button type="button" class="simulation-nav-pill ${i === 0 ? 'active' : ''}" data-section-target="sim-block-${i}">
+          Phần ${i + 1}: ${escapeHtml(b.title || `Phần ${i + 1}`)}
+        </button>
+      `).join('');
+
+      const simulationBlocksHtml = blocks.map((b, bIdx) => {
+        const audioUrl = b.audioUrl || b.stimulusAudioUrl || '';
+        const reading = b.readingPassage || b.stimulusReadingPassage || '';
+        const items = b.items || [];
+
+        const itemsHtml = items.map((item) => {
+          const isSingleChoice = item.interactionType === 'single_choice';
+          const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async';
+          const isVocabPair = item.interactionType === 'text_select_pair';
+          const isRubricAsync = item.graderType === 'rubric_async';
+
+          const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
+          const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
+
+          let interactiveHtml = '';
+          if (isSingleChoice) {
+            interactiveHtml = `
+              <div class="candidate-options-grid ${colsClass}">
+                ${(item.options || []).map(opt => `
+                  <label class="candidate-choice-label">
+                    <input type="radio" name="sim_choice_${item.itemVersionId}" value="${opt.id}" />
+                    <span class="choice-key">${opt.id}</span>
+                    <span class="choice-text">${escapeHtml(opt.label || '')}</span>
+                  </label>
+                `).join('')}
+              </div>
+            `;
+          } else if (isMultiGroup) {
+            interactiveHtml = `
+              <div class="candidate-options-grid ${colsClass}">
+                ${(item.options || []).map(opt => `
+                  <label class="candidate-choice-label">
+                    <input type="checkbox" name="sim_multi_${item.itemVersionId}" value="${opt.id}" />
+                    <span class="choice-key">${opt.id}</span>
+                    <span class="choice-text">${escapeHtml(opt.label || '')}</span>
+                  </label>
+                `).join('')}
+              </div>
+            `;
+          } else if (isShortText) {
+            interactiveHtml = `
+              <div class="candidate-short-wrap">
+                <input type="text" class="form-control candidate-short-input" placeholder="Gõ câu trả lời của bạn..." />
+              </div>
+            `;
+          } else if (isVocabPair) {
+            interactiveHtml = `
+              <div class="candidate-vocab-wrap">
+                <span class="vocab-word-badge">${escapeHtml(item.prompt || 'Từ vựng')}</span>
+                <select class="form-select candidate-vocab-select">
+                  <option value="">-- Chọn nghĩa tiếng Việt tương ứng --</option>
+                  ${(item.options || []).map(opt => `
+                    <option value="${opt.id}">${escapeHtml(opt.label || '')}</option>
+                  `).join('')}
+                </select>
+              </div>
+            `;
+          } else if (isRubricAsync) {
+            interactiveHtml = `
+              <div class="candidate-open-wrap">
+                <textarea class="form-control candidate-open-textarea" rows="4" placeholder="Nhập bài luận hoặc câu trả lời tại đây..."></textarea>
+                <div class="candidate-open-meta">
+                  <span class="word-count-badge">Số từ: <strong>0</strong> từ</span>
+                  <span class="scoring-info-badge">Điểm tối đa: ${item.maxScore || 4} điểm (Chấm AI)</span>
+                </div>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="candidate-question-card" data-item-id="${item.itemVersionId}">
+              <div class="candidate-question-header">
+                <span class="question-num-badge">Câu ${item.position}</span>
+                <span class="question-type-badge">${isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))}</span>
+              </div>
+              <div class="candidate-question-prompt">
+                ${isVocabPair ? 'Chọn định nghĩa tương ứng cho từ vựng sau:' : escapeHtml(item.prompt || '')}
+              </div>
+              ${interactiveHtml}
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <section class="simulation-section-card" id="sim-block-${bIdx}">
+            <div class="sim-section-header">
+              <h3>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h3>
+              ${b.instructions ? `<div class="sim-instructions"><strong>Hướng dẫn:</strong> ${escapeHtml(b.instructions)}</div>` : ''}
+            </div>
+
+            ${audioUrl ? `
+              <div class="sim-audio-dock">
+                <div class="audio-title">🎧 Đoạn ghi âm phần thi:</div>
+                <audio controls src="${escapeHtml(audioUrl)}" class="sim-audio-player"></audio>
+              </div>
+            ` : ''}
+
+            ${reading ? `
+              <div class="sim-reading-dock">
+                <div class="reading-header">📖 Bài đọc hiểu:</div>
+                <div class="reading-content">${escapeHtml(reading).replace(/\n/g, '<br/>')}</div>
+              </div>
+            ` : ''}
+
+            <div class="sim-questions-list">
+              ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
+            </div>
+          </section>
+        `;
+      }).join('');
+
+      modal.innerHTML = `
+        <div class="candidate-simulation-dialog">
+          <header class="simulation-top-header">
+            <div class="sim-title-area">
+              <span class="sim-badge">Candidate Simulation</span>
+              <h2>${escapeHtml(draftState.title || 'Đề thi')}</h2>
+            </div>
+            <div class="sim-meta-badges">
+              <span class="meta-pill">⏱️ Thời lượng: ${draftState.durationMinutes} phút</span>
+              <span class="meta-pill">📑 ${blocks.length} phần thi</span>
+              <span class="meta-pill">🔒 Phiên bản: v${draftState.version}</span>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-close-simulation">✕ Thoát xem trước</button>
+            </div>
+          </header>
+
+          <nav class="simulation-nav-bar">
+            ${sectionsNavHtml}
+          </nav>
+
+          <div class="simulation-viewport">
+            ${simulationBlocksHtml}
+          </div>
+
+          <footer class="simulation-footer">
+            <div class="footer-note">💡 Đây là màn hình mô phỏng trực quan giao diện bài thi của thí sinh. Mọi thao tác làm bài tại đây chỉ dùng để kiểm tra hiển thị.</div>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-close-simulation-footer">Hoàn tất kiểm tra</button>
+          </footer>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      const closeBtns = modal.querySelectorAll('#btn-close-simulation, #btn-close-simulation-footer');
+      closeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      });
+
+      const navPills = modal.querySelectorAll('.simulation-nav-pill');
+      navPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          navPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const targetId = pill.getAttribute('data-section-target');
+          const targetEl = modal.querySelector(`#${targetId}`);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      const openTextareas = modal.querySelectorAll('.candidate-open-textarea');
+      openTextareas.forEach(ta => {
+        ta.addEventListener('input', () => {
+          const text = ta.value.trim();
+          const count = text ? text.split(/\s+/).filter(Boolean).length : 0;
+          const countEl = ta.closest('.candidate-open-wrap')?.querySelector('.word-count-badge strong');
+          if (countEl) countEl.textContent = count;
+        });
+      });
+    }
+
+    // Smart Publishing Modal
+    function openPublishingModal() {
+      syncInputs();
+      let modal = document.querySelector('#smart-publishing-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'smart-publishing-modal';
+        modal.className = 'publishing-modal-overlay';
+        document.body.appendChild(modal);
+      }
+
+      const availableClasses = options.classes || [];
+
+      const classesListHtml = availableClasses.length > 0 ? availableClasses.map((cls) => `
+        <label class="class-picker-row">
+          <input type="checkbox" class="cb-publish-class" value="${cls.classId || cls.id}" checked />
+          <span class="class-picker-name">${escapeHtml(cls.name || cls.className || `Lớp ${cls.classId}`)}</span>
+          <span class="class-picker-code">${cls.courseCode ? `(${cls.courseCode})` : ''}</span>
+        </label>
+      `).join('') : `
+        <div class="empty-classes-notice">Không tìm thấy danh sách lớp cụ thể. Bạn có thể sử dụng chế độ "Toàn bộ khối".</div>
+      `;
+
+      modal.innerHTML = `
+        <div class="publishing-dialog">
+          <header class="publishing-header">
+            <div class="publishing-title-area">
+              <span class="publish-badge">Smart Publishing Engine</span>
+              <h3>Công bố đề thi — v${draftState.version}</h3>
+              <p class="publish-test-title">${escapeHtml(draftState.title || '')}</p>
+            </div>
+            <button type="button" class="btn-close-publish-modal" id="btn-close-publish-modal">✕</button>
+          </header>
+
+          <div class="publishing-body">
+            <div class="alert-notice alert-immutable">
+              <div class="notice-icon">🛡️</div>
+              <div class="notice-text">
+                <strong>Cơ chế Roster Freezing (Bảo toàn kết quả):</strong>
+                Hệ thống sẽ tự động quét trạng thái bài làm của từng lớp. Bất kỳ lớp nào đã có ít nhất 1 bài nộp (submission_count > 0) sẽ được <strong>BẢO VỆ và ĐÓNG BĂNG</strong>, giữ nguyên phiên bản đề cũ để bảo toàn dữ liệu điểm số.
+              </div>
+            </div>
+
+            <div class="form-group publish-scope-group">
+              <label class="scope-main-label">Phạm vi công bố đề thi:</label>
+              <div class="scope-options">
+                <label class="scope-radio-card">
+                  <input type="radio" name="publish_scope" value="whole_course" checked id="radio-scope-whole" />
+                  <div class="radio-card-content">
+                    <div class="card-title">🌐 Toàn bộ khối (Mặc định)</div>
+                    <div class="card-desc">Cập nhật đề thi chuẩn cho Danh mục bài test của khối và tự động áp dụng cho tất cả các lớp chưa có học sinh nộp bài.</div>
+                  </div>
+                </label>
+
+                <label class="scope-radio-card">
+                  <input type="radio" name="publish_scope" value="specific_classes" id="radio-scope-classes" />
+                  <div class="radio-card-content">
+                    <div class="card-title">🏫 Chỉ áp dụng cho các lớp được chọn</div>
+                    <div class="card-desc">Chỉ cập nhật đề thi cho các lớp được chỉ định dưới đây (bỏ qua nếu lớp đã thi).</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="specific-classes-container" id="specific-classes-container" style="display: none;">
+              <div class="classes-container-header">
+                <span>Chọn danh sách lớp:</span>
+                <div class="classes-actions">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-select-all-classes">Chọn tất cả</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-deselect-all-classes">Bỏ chọn</button>
+                </div>
+              </div>
+              <div class="classes-checkbox-grid">
+                ${classesListHtml}
+              </div>
+            </div>
+
+            <div class="publishing-error-msg" id="publishing-error-msg" style="display:none; color:#dc2626; font-size:13px; margin-top:8px;"></div>
+          </div>
+
+          <footer class="publishing-footer">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-publish">Hủy</button>
+            <button type="button" class="btn btn-success" id="btn-confirm-publish">🚀 Tiến hành công bố</button>
+          </footer>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      const radioWhole = modal.querySelector('#radio-scope-whole');
+      const radioClasses = modal.querySelector('#radio-scope-classes');
+      const classesContainer = modal.querySelector('#specific-classes-container');
+
+      radioWhole?.addEventListener('change', () => {
+        if (classesContainer) classesContainer.style.display = 'none';
+      });
+      radioClasses?.addEventListener('change', () => {
+        if (classesContainer) classesContainer.style.display = 'block';
+      });
+
+      const selectAllBtn = modal.querySelector('#btn-select-all-classes');
+      const deselectAllBtn = modal.querySelector('#btn-deselect-all-classes');
+      selectAllBtn?.addEventListener('click', () => {
+        modal.querySelectorAll('.cb-publish-class').forEach(cb => { cb.checked = true; });
+      });
+      deselectAllBtn?.addEventListener('click', () => {
+        modal.querySelectorAll('.cb-publish-class').forEach(cb => { cb.checked = false; });
+      });
+
+      const closeBtn = modal.querySelector('#btn-close-publish-modal');
+      const cancelBtn = modal.querySelector('#btn-cancel-publish');
+      [closeBtn, cancelBtn].forEach(b => {
+        b?.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      });
+
+      const confirmBtn = modal.querySelector('#btn-confirm-publish');
+      const errorMsgEl = modal.querySelector('#publishing-error-msg');
+
+      confirmBtn?.addEventListener('click', async () => {
+        const scope = radioClasses?.checked ? 'specific_classes' : 'whole_course';
+        let selectedClassIds = [];
+        if (scope === 'specific_classes') {
+          const checked = modal.querySelectorAll('.cb-publish-class:checked');
+          selectedClassIds = Array.from(checked).map(cb => cb.value);
+          if (selectedClassIds.length === 0) {
+            if (errorMsgEl) {
+              errorMsgEl.textContent = 'Vui lòng chọn ít nhất 1 lớp để công bố đề thi.';
+              errorMsgEl.style.display = 'block';
+            }
+            return;
+          }
+        }
+
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '⏳ Đang công bố...';
+        if (errorMsgEl) errorMsgEl.style.display = 'none';
+
+        try {
+          const publishPayload = {
+            formVersionId: draftState.formVersionId,
+            courseId: options.courseId || 34,
+            scope,
+            classIds: selectedClassIds
+          };
+
+          let result;
+          if (typeof options.onPublish === 'function') {
+            result = await options.onPublish(publishPayload);
+          } else {
+            const res = await fetch(formPublishPath(options.apiBase), {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {})
+              },
+              body: JSON.stringify(publishPayload)
+            });
+            result = await res.json();
+          }
+
+          if (!result || !result.ok) {
+            throw new Error(result?.message || 'Không thể công bố đề thi');
+          }
+
+          draftState.status = 'published';
+          modal.style.display = 'none';
+          render();
+          openPublishReportDialog(result);
+        } catch (err) {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = '🚀 Tiến hành công bố';
+          if (errorMsgEl) {
+            errorMsgEl.textContent = 'Lỗi công bố: ' + (err.message || 'Lỗi mạng');
+            errorMsgEl.style.display = 'block';
+          }
+        }
+      });
+    }
+
+    // Execution Report Dialog
+    function openPublishReportDialog(result = {}) {
+      let modal = document.querySelector('#publish-report-dialog');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'publish-report-dialog';
+        modal.className = 'publish-report-overlay';
+        document.body.appendChild(modal);
+      }
+
+      const updated = result.updatedClasses || [];
+      const skipped = result.skippedClasses || [];
+
+      const updatedListHtml = updated.length > 0 ? `
+        <div class="report-section-block success-block">
+          <h4 class="report-block-title">✅ Các lớp đã cập nhật đề thi mới (${updated.length} lớp):</h4>
+          <ul class="report-classes-list">
+            ${updated.map(c => `
+              <li class="report-class-item updated-item">
+                <span class="class-name"><strong>${escapeHtml(c.className || `Lớp ${c.classId}`)}</strong></span>
+                <span class="badge-status-pill success">Đã cập nhật</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      ` : `
+        <div class="report-section-block">
+          <p class="empty-note">Không có lớp nào cần cập nhật đề thi.</p>
+        </div>
+      `;
+
+      const skippedListHtml = skipped.length > 0 ? `
+        <div class="report-section-block warning-block">
+          <h4 class="report-block-title">🔒 Các lớp được bảo vệ & đóng băng (${skipped.length} lớp):</h4>
+          <p class="skipped-help">Các lớp dưới đây đã có học sinh làm bài thi nên được bảo toàn nguyên vẹn đề gốc.</p>
+          <ul class="report-classes-list">
+            ${skipped.map(c => `
+              <li class="report-class-item frozen-item">
+                <span class="class-name"><strong>${escapeHtml(c.className || `Lớp ${c.classId}`)}</strong></span>
+                <span class="badge-status-pill warning">Đóng băng (${c.submissionCount} bài nộp)</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      ` : '';
+
+      modal.innerHTML = `
+        <div class="publish-report-dialog">
+          <header class="report-header">
+            <div class="report-title-area">
+              <span class="report-badge">Smart Publishing Report</span>
+              <h3>Báo cáo kết quả công bố đề thi</h3>
+            </div>
+            <button type="button" class="btn-close-report" id="btn-close-report-x">✕</button>
+          </header>
+
+          <div class="report-body">
+            <div class="report-summary-cards">
+              <div class="report-stat-card stat-success">
+                <div class="stat-number">${result.updatedCount ?? updated.length}</div>
+                <div class="stat-label">Lớp đã cập nhật đề mới</div>
+              </div>
+              <div class="report-stat-card stat-warning">
+                <div class="stat-number">${result.skippedCount ?? skipped.length}</div>
+                <div class="stat-label">Lớp đóng băng (đã thi)</div>
+              </div>
+              <div class="report-stat-card stat-info">
+                <div class="stat-icon">${result.catalogUpdated ? '✅' : '—'}</div>
+                <div class="stat-label">${result.catalogUpdated ? 'Đã cập nhật Catalog khối' : 'Không cập nhật Catalog'}</div>
+              </div>
+            </div>
+
+            <div class="report-details-container">
+              ${updatedListHtml}
+              ${skippedListHtml}
+            </div>
+          </div>
+
+          <footer class="report-footer">
+            <button type="button" class="btn btn-primary" id="btn-close-report">Hoàn tất & Đóng</button>
+          </footer>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      const closeBtns = modal.querySelectorAll('#btn-close-report-x, #btn-close-report');
+      closeBtns.forEach(b => {
+        b.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      });
+    }
+
+    const previewBtn = container.querySelector('#btn-preview-test');
+    if (previewBtn) {
+      previewBtn.addEventListener('click', () => {
+        openCandidateSimulationModal();
+      });
+    }
+
+    const publishBtn = container.querySelector('#btn-publish-test');
+    if (publishBtn) {
+      publishBtn.addEventListener('click', () => {
+        openPublishingModal();
+      });
+    }
   }
 
   render();
@@ -2993,12 +3486,18 @@ async function startDashboard() {
             }
 
             const detailRes = await request(formDetailPath(postRes.formVersionId));
+            const relevantClasses = (state.classes || []).filter(c => {
+              const rawCourse = String(c.courseCode || '').toLowerCase();
+              return rawCourse.includes(String(currentStudioCourseId).toLowerCase());
+            });
+
             renderTestBuilderView(container, {
               ...detailRes.formVersion,
               submissionCount: detailRes.submissionCount || 0
             }, {
               teacherRole,
               courseId: currentStudioCourseId,
+              classes: relevantClasses,
               onBack: () => {
                 loadAndRenderTestStudio(currentStudioCourseId);
               },
@@ -3009,6 +3508,14 @@ async function startDashboard() {
                   body: JSON.stringify(updatedPayload)
                 });
                 return putRes;
+              },
+              onPublish: async (publishPayload) => {
+                const pubRes = await request(formPublishPath(), {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(publishPayload)
+                });
+                return pubRes;
               }
             });
           } catch (err) {
@@ -3027,12 +3534,19 @@ async function startDashboard() {
             if (!detailRes || !detailRes.formVersion) {
               throw new Error(detailRes?.message || 'Không tìm thấy dữ liệu bài thi');
             }
+            const relevantClasses = (state.classes || []).filter(c => {
+              const rawCourse = String(c.courseCode || '').toLowerCase();
+              return rawCourse.includes(String(currentStudioCourseId).toLowerCase());
+            });
+
             renderTestBuilderView(container, {
               ...detailRes.formVersion,
+              testKey,
               submissionCount: detailRes.submissionCount || 0
             }, {
               teacherRole,
               courseId: currentStudioCourseId,
+              classes: relevantClasses,
               onBack: () => {
                 loadAndRenderTestStudio(currentStudioCourseId);
               },
@@ -3043,6 +3557,14 @@ async function startDashboard() {
                   body: JSON.stringify(updatedPayload)
                 });
                 return putRes;
+              },
+              onPublish: async (publishPayload) => {
+                const pubRes = await request(formPublishPath(), {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(publishPayload)
+                });
+                return pubRes;
               }
             });
           } catch (err) {
