@@ -20,6 +20,11 @@ test('/attempts/review không mang deviceId (schema backend strict)', () => {
   assert.deepEqual(learningRequestBody('/attempts/review', body, deviceId), body);
 });
 
+test('/attempts/result không mang deviceId (schema backend strict)', () => {
+  const body = { attemptToken: 'a' };
+  assert.deepEqual(learningRequestBody('/attempts/result', body, deviceId), body);
+});
+
 test('examPhase sends waiting students to the lobby and guards running or retake attempts', () => {
   assert.equal(examPhase({ status: 'active' }), 'off');
   assert.equal(examPhase({ status: 'active', exam: { enabled: true, status: 'waiting' } }), 'waiting');
