@@ -225,6 +225,69 @@ export function scrambleTokens(tokens) {
   return shuffled;
 }
 
+export function scoreTransformationAnswer(studentAnswer, gradingKey) {
+  const maxScore = Number(gradingKey?.maxScore) || 1;
+  if (!studentAnswer || typeof studentAnswer !== 'string') {
+    return { score: 0, isCorrect: false };
+  }
+  const acceptedList = Array.isArray(gradingKey?.accepted) ? gradingKey.accepted : [];
+  if (acceptedList.length === 0) {
+    return { score: 0, isCorrect: false };
+  }
+
+  const norm = (str) => {
+    let s = (str || '').normalize(gradingKey?.normalization?.unicode || 'NFKC');
+    if (gradingKey?.normalization?.caseInsensitive !== false) {
+      s = s.toLowerCase();
+    }
+    s = s.replace(/\s+/g, ' ').trim();
+    s = s.replace(/[.!?]+$/, '').trim();
+    return s;
+  };
+
+  const rawAns = norm(studentAnswer);
+  if (!rawAns) {
+    return { score: 0, isCorrect: false };
+  }
+
+  // 1. Direct match with accepted variants
+  for (const acc of acceptedList) {
+    if (rawAns === norm(acc)) {
+      return { score: maxScore, isCorrect: true };
+    }
+  }
+
+  // 2. Strip prefix and suffix if student typed reconstructed full sentence
+  const prefix = norm(gradingKey?.framePrefix || '');
+  const suffix = norm(gradingKey?.frameSuffix || '');
+
+  let stripped = rawAns;
+  if (prefix && stripped.startsWith(prefix)) {
+    stripped = stripped.slice(prefix.length).trim();
+  }
+  if (suffix && stripped.endsWith(suffix)) {
+    stripped = stripped.slice(0, stripped.length - suffix.length).trim();
+  }
+  stripped = norm(stripped);
+
+  if (stripped) {
+    for (const acc of acceptedList) {
+      if (stripped === norm(acc)) {
+        return { score: maxScore, isCorrect: true };
+      }
+    }
+  }
+
+  // 3. Match against full reconstructed sentence from accepted answer
+  for (const acc of acceptedList) {
+    const fullConstructed = norm(`${gradingKey?.framePrefix || ''} ${acc} ${gradingKey?.frameSuffix || ''}`);
+    if (rawAns === fullConstructed) {
+      return { score: maxScore, isCorrect: true };
+    }
+  }
+
+  return { score: 0, isCorrect: false };
+}
 
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
@@ -1033,15 +1096,16 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     return items.map((item, itemIdx) => {
-      const isSentenceReorder = item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble';
-      const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder;
-      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder;
-      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
-      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
+      const isSentenceRewrite = item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation';
+      const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite;
+      const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite;
+      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder;
-      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder;
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
+      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite;
+      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite;
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -1053,7 +1117,77 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       let specificHtml = '';
 
-      if (isSentenceReorder) {
+      if (isSentenceRewrite) {
+        const keyword = item.keyword || itemKey.keyword || 'PREVENTED';
+        const framePrefix = item.framePrefix ?? itemKey.framePrefix ?? 'His severe illness';
+        const frameSuffix = item.frameSuffix ?? itemKey.frameSuffix ?? 'from going to the conference.';
+        const targetAnswer = item.targetAnswer || (itemKey.accepted && itemKey.accepted[0]) || 'prevented him';
+        const acceptedList = itemKey.accepted || [targetAnswer];
+
+        const chipsHtml = acceptedList.map((v) => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-sentence-transformation">
+            <div class="template-header-bar">
+              <span class="section-sublabel"><strong>Cấu hình câu biến đổi (Keyword Transformation):</strong></span>
+              <span class="badge badge-info">Biến đổi câu giữ nguyên nghĩa</span>
+            </div>
+
+            <div class="form-group" style="margin-top: 8px;">
+              <label class="form-label"><strong>1. Từ khóa bắt buộc (Keyword - Tự động in hoa):</strong></label>
+              <input type="text" class="form-control input-transformation-keyword" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(keyword)}" placeholder="Ví dụ: PREVENTED, UNLESS, SO..." style="font-weight:700; text-transform:uppercase; letter-spacing:0.05em;" />
+            </div>
+
+            <div class="transformation-frame-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px;">
+              <div class="form-group">
+                <label class="form-label"><strong>2. Tiền tố khung câu (Frame Prefix):</strong></label>
+                <input type="text" class="form-control input-frame-prefix" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(framePrefix)}" placeholder="Ví dụ: His severe illness" />
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>3. Hậu tố khung câu (Frame Suffix):</strong></label>
+                <input type="text" class="form-control input-frame-suffix" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(frameSuffix)}" placeholder="Ví dụ: from going to the conference." />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <label class="form-label"><strong>4. Đáp án mẫu trong chỗ trống (Target Answer):</strong></label>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-transformation-answer" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetAnswer)}" placeholder="Ví dụ: prevented him" />
+                <button type="button" class="btn btn-secondary btn-generate-transformation-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh các biến thể viết tắt/mở rộng">
+                  ⚡ Sinh biến thể (Generate Variants)
+                </button>
+              </div>
+            </div>
+
+            <div class="transformation-frame-preview" style="margin-top: 12px; padding: 12px 16px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px;">
+              <div class="frame-preview-title" style="font-size:0.8rem; font-weight:700; color:#64748b; margin-bottom:6px; text-transform:uppercase;">Xem trước khung câu hoàn chỉnh:</div>
+              <div class="frame-preview-content" style="font-size:1rem; color:#1e293b;">
+                <span class="frame-prefix-text" style="font-weight:600;">${escapeHtml(framePrefix || '')}</span>
+                <span class="frame-blank-placeholder" style="display:inline-block; margin:0 4px; padding:2px 10px; background:#eff6ff; border-bottom:2px solid #3b82f6; color:#1d4ed8; font-weight:700;">[ ${escapeHtml(targetAnswer || '_____')} ]</span>
+                <span class="frame-suffix-text" style="font-weight:600;">${escapeHtml(frameSuffix || '')}</span>
+              </div>
+            </div>
+
+            <!-- Accepted variants chips -->
+            <div class="variant-chips-container" style="margin-top: 12px;">
+              <div class="chips-meta-bar">
+                <span class="chips-count-badge">Các biến thể đáp án được chấp nhận (${acceptedList.length}/20)</span>
+                <div class="quick-add-variant">
+                  <input type="text" class="form-control form-control-sm input-add-transformation-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể đáp án (Enter)..." />
+                </div>
+              </div>
+              <div class="variant-chips-wrap">
+                ${chipsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isSentenceReorder) {
         const tokens = item.tokens || itemKey.tokens || tokenizeSentence(item.targetSentence || 'She / has worked / at the company / for five years');
         const distractors = item.distractors || itemKey.distractors || [];
         const targetSentence = item.targetSentence || (itemKey.accepted && itemKey.accepted[0]) || tokens.join(' ');
@@ -1717,23 +1851,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         `;
       }
 
-      const typeLabel = isSingleChoice
-        ? 'Trắc nghiệm 1 đáp án (Single Choice)'
-        : (isMultiGroup
-          ? 'Nhóm chọn nhiều (Multi-Select Group)'
-          : (isSentenceReorder
-            ? 'Sắp xếp câu (Sentence Reorder)'
-            : (isErrorCorrection
-              ? 'Tìm và sửa lỗi (Error Correction)'
-              : (isVocabPair
-                ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
-                : (isRubricAsync
-                  ? 'Tự luận chấm AI (AI-Graded Rubric)'
-                  : (isPictorial
-                    ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
-                    : (isInlineCloze
-                      ? 'Điền từ nội tuyến (Inline Cloze)'
-                      : 'Điền ô trống (Short Text)')))))));
+      const typeLabel = isSentenceRewrite
+        ? 'Biến đổi câu (Transformation)'
+        : (isSingleChoice
+          ? 'Trắc nghiệm 1 đáp án (Single Choice)'
+          : (isMultiGroup
+            ? 'Nhóm chọn nhiều (Multi-Select Group)'
+            : (isSentenceReorder
+              ? 'Sắp xếp câu (Sentence Reorder)'
+              : (isErrorCorrection
+                ? 'Tìm và sửa lỗi (Error Correction)'
+                : (isVocabPair
+                  ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
+                  : (isRubricAsync
+                    ? 'Tự luận chấm AI (AI-Graded Rubric)'
+                    : (isPictorial
+                      ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
+                      : (isInlineCloze
+                        ? 'Điền từ nội tuyến (Inline Cloze)'
+                        : 'Điền ô trống (Short Text)'))))))));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1823,6 +1959,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-reorder" data-block-idx="${index}">
                     + Sắp xếp câu (Sentence Reorder)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${index}">
+                    + Biến đổi câu (Transformation)
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${index}">
                     + Trắc nghiệm (Single Choice)
@@ -2033,7 +2172,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
 
             // Short text sync
-            if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble') {
+            if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble' && item.pedagogicalTypeCode !== 'sentence_rewrite' && item.layoutType !== 'keyword_transformation') {
               const chips = iCard.querySelectorAll('.variant-chip');
               const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
               if (variants.length) {
@@ -2074,6 +2213,41 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 accepted: acceptedList,
                 tokens: item.tokens || [],
                 distractors: item.distractors || [],
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+            }
+
+            // Sentence transformation sync
+            if (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') {
+              const kwInput = iCard.querySelector('.input-transformation-keyword');
+              const prefixInput = iCard.querySelector('.input-frame-prefix');
+              const suffixInput = iCard.querySelector('.input-frame-suffix');
+              const ansInput = iCard.querySelector('.input-transformation-answer');
+
+              if (kwInput) {
+                item.keyword = kwInput.value.trim().toUpperCase();
+              }
+              if (prefixInput) {
+                item.framePrefix = prefixInput.value.trim();
+              }
+              if (suffixInput) {
+                item.frameSuffix = suffixInput.value.trim();
+              }
+              if (ansInput) {
+                item.targetAnswer = ansInput.value.trim();
+              }
+
+              const chips = iCard.querySelectorAll('.variant-chip.accepted-chip');
+              const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              const targetAns = item.targetAnswer || '';
+              const acceptedList = variants.length ? variants : (targetAns ? [targetAns] : []);
+
+              draftState.gradingKey.items[item.itemVersionId] = {
+                graderType: 'accepted_text',
+                keyword: item.keyword || '',
+                framePrefix: item.framePrefix || '',
+                frameSuffix: item.frameSuffix || '',
+                accepted: acceptedList,
                 normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
               };
             }
@@ -2943,6 +3117,108 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    // Add Sentence Transformation Question
+    const addSentenceTransformationBtns = container.querySelectorAll('.btn-add-sentence-transformation');
+    addSentenceTransformationBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        const defaultKw = 'PREVENTED';
+        const defaultPrefix = 'His severe illness';
+        const defaultSuffix = 'from going to the conference.';
+        const defaultAnswer = 'prevented him';
+        const defaultPrompt = 'He could not go to the conference because he was severely ill.';
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: defaultPrompt,
+          helpText: '',
+          interactionType: 'short_text',
+          pedagogicalTypeCode: 'sentence_rewrite',
+          layoutType: 'keyword_transformation',
+          graderType: 'accepted_text',
+          required: true,
+          maxScore: 1,
+          keyword: defaultKw,
+          framePrefix: defaultPrefix,
+          frameSuffix: defaultSuffix,
+          targetAnswer: defaultAnswer,
+          options: [],
+          skillCodes: ['grammar'],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'accepted_text',
+          keyword: defaultKw,
+          framePrefix: defaultPrefix,
+          frameSuffix: defaultSuffix,
+          accepted: [defaultAnswer],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Generate Sentence Transformation Variants
+    const genTransformationVariantsBtns = container.querySelectorAll('.btn-generate-transformation-variants');
+    genTransformationVariantsBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const ans = item.targetAnswer || '';
+        if (!ans) {
+          alert('Vui lòng nhập đáp án mẫu trong chỗ trống trước khi sinh biến thể.');
+          return;
+        }
+        const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+          graderType: 'accepted_text',
+          accepted: [],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        const expanded = expandSentenceVariants([ans]);
+        currentKey.accepted = Array.from(new Set([...(currentKey.accepted || []), ...expanded]));
+        draftState.gradingKey.items[item.itemVersionId] = currentKey;
+        render();
+      });
+    });
+
+    // Add manual transformation variant on Enter
+    const addTransformationVariantInputs = container.querySelectorAll('.input-add-transformation-variant');
+    addTransformationVariantInputs.forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = input.value.trim();
+          if (!val) return;
+          syncInputs();
+          const bIdx = Number(input.getAttribute('data-block-idx'));
+          const iIdx = Number(input.getAttribute('data-item-idx'));
+          const item = draftState.blocks[bIdx]?.items?.[iIdx];
+          if (!item) return;
+          const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+            graderType: 'accepted_text',
+            accepted: [],
+            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          };
+          currentKey.accepted = currentKey.accepted || [];
+          if (!currentKey.accepted.includes(val)) {
+            currentKey.accepted.push(val);
+            draftState.gradingKey.items[item.itemVersionId] = currentKey;
+            render();
+          }
+        }
+      });
+    });
+
     // Tokenize Sentence
     const tokenizeBtns = container.querySelectorAll('.btn-tokenize-sentence');
     tokenizeBtns.forEach(btn => {
@@ -3806,15 +4082,16 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const items = b.items || [];
 
         const itemsHtml = items.map((item) => {
-          const isSentenceReorder = item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble';
-          const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder;
-          const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder;
-          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
-          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
+          const isSentenceRewrite = item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation';
+          const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite;
+          const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite;
+          const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-          const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder;
-          const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder;
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
+          const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite;
+          const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite;
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -3822,7 +4099,22 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
 
           let interactiveHtml = '';
-          if (isReadingMatching) {
+          if (isSentenceRewrite) {
+            const kw = (item.keyword || '').toUpperCase();
+            interactiveHtml = `
+              <div class="candidate-transformation-wrap" data-item-id="${item.itemVersionId}">
+                <div class="transformation-keyword-row" style="margin-bottom: 8px;">
+                  <span class="keyword-label" style="font-size:0.85rem; font-weight:600; color:#475569;">Từ khóa bắt buộc:</span>
+                  <span class="keyword-badge-pill">${escapeHtml(kw)}</span>
+                </div>
+                <div class="candidate-frame-box">
+                  <span class="frame-prefix-text">${escapeHtml(item.framePrefix || '')}</span>
+                  <input type="text" class="form-control candidate-transformation-input" data-item-id="${item.itemVersionId}" placeholder="Nhập cụm từ khuyết..." />
+                  <span class="frame-suffix-text">${escapeHtml(item.frameSuffix || '')}</span>
+                </div>
+              </div>
+            `;
+          } else if (isReadingMatching) {
             interactiveHtml = `
               <div class="candidate-matching-wrap">
                 <label class="form-label" style="font-size:0.8rem;color:#64748b;margin-bottom:4px;">Chọn Heading / Tiêu đề phù hợp:</label>
@@ -3995,27 +4287,29 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
-          const promptDisplay = isSentenceReorder
-            ? `Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:${item.prompt && item.prompt !== 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:' ? `<br/><blockquote class="reorder-prompt-quote">${escapeHtml(item.prompt)}</blockquote>` : ''}`
-            : (isErrorCorrection
-              ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
-              : (isReadingMatching
-                ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
-                : (isListeningOrder
-                  ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
-                  : (isVocabPair
-                    ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
-                    : (isInlineCloze
-                      ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
-                      : (isPictorial
-                        ? 'Nhìn hình và hoàn thành từ vựng:'
-                        : escapeHtml(item.prompt || '')))))));
+          const promptDisplay = isSentenceRewrite
+            ? `Hoàn thành câu thứ hai sao cho có nghĩa tương đương với câu gốc, sử dụng từ in hoa đã cho:<br/><blockquote class="transformation-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+            : (isSentenceReorder
+              ? `Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:${item.prompt && item.prompt !== 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:' ? `<br/><blockquote class="reorder-prompt-quote">${escapeHtml(item.prompt)}</blockquote>` : ''}`
+              : (isErrorCorrection
+                ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+                : (isReadingMatching
+                  ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
+                  : (isListeningOrder
+                    ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
+                    : (isVocabPair
+                      ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+                      : (isInlineCloze
+                        ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+                        : (isPictorial
+                          ? 'Nhìn hình và hoàn thành từ vựng:'
+                          : escapeHtml(item.prompt || ''))))))));
 
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))))))}</span>
+                <span class="question-type-badge">${isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))))))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}
