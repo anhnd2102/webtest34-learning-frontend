@@ -23,7 +23,7 @@ test('điểm tạm tính loại câu đang chờ khỏi mẫu số và ghi rõ 
   assert.equal(vm.kind, 'ready');
   assert.equal(vm.score, '1 / 1');
   assert.equal(vm.provisionalLabel, 'Chưa chốt, còn 2 câu đang chấm');
-  assert.equal(vm.sections[0].scoreText, '1 / 2 điểm');
+  assert.equal(vm.sections[0].scoreText, '1 / 1 điểm tạm tính');
   assert.equal(vm.sections[0].correctText, '1/2 câu đúng');
 });
 
@@ -83,4 +83,36 @@ test('mọi chuỗi từ dữ liệu đều được escape và có CSS in, khô
   assert.doesNotMatch(html, /<img/);
   assert.match(html, /@media print/);
   assert.doesNotMatch(html, /PDF/i);
+});
+
+test('điểm essay null coi là chưa chấm, không hiện 0 / 2', () => {
+  const html = reviewHtml(reviewViewModel(ready([item('i1', 1, 'pending', 0, 2, { feedback: { structureScore: null, accuracyScore: null } }), item('i2', 2, 'correct', 1, 1), item('i3', 3, 'correct', 1, 1)], {}, 'pending')));
+  assert.doesNotMatch(html, /Structure 0 \/ 2/);
+  assert.match(html, /Structure chưa chấm/);
+});
+
+test('tất cả câu đang chờ: tổng và phần cùng dùng cách ghi điểm tạm tính, không hiện 0 / 0', () => {
+  const vm = reviewViewModel(ready([item('i1', 1, 'pending', 0, 1), item('i2', 2, 'pending', 0, 1), item('i3', 3, 'manual_review', 0, 2)], {}, 'pending'));
+  assert.equal(vm.score, 'Chưa có điểm');
+  assert.doesNotMatch(vm.sections[0].scoreText, /\/ 2 điểm$/);
+  assert.match(vm.sections[0].scoreText, /tạm tính/);
+});
+
+test('HTML: không lồng main, không h3 trong button, id phần duy nhất, role=status không bọc nút Thử lại', () => {
+  const dup = { blocks: [{ blockId: 'x', title: 'Same', items: [{ itemVersionId: 'i1' }] }, { blockId: 'x', title: 'Same', items: [{ itemVersionId: 'i2' }] }] };
+  const html = reviewHtml(reviewViewModel({ ...ready([item('i1', 1, 'correct', 1, 1), item('i2', 2, 'correct', 1, 1)]), definition: dup }));
+  assert.doesNotMatch(html, /<main/);
+  assert.doesNotMatch(html, /<button[^>]*><h3/);
+  const ids = [...html.matchAll(/ id="(review-[^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  assert.equal(ids.length, 2);
+  const err = reviewHtml(reviewViewModel({ state: 'error', error: { status: 500 } }));
+  assert.doesNotMatch(err, /role="status"[^>]*>[\s\S]*data-review-retry/);
+  assert.match(err, /data-review-retry/);
+});
+
+test('trạng thái lỗi/đang tải không cần WEBTEST34_LEARNING_RESULT', () => {
+  const saved = globalThis.WEBTEST34_LEARNING_RESULT;
+  delete globalThis.WEBTEST34_LEARNING_RESULT;
+  try { assert.equal(reviewViewModel({ state: 'error' }).kind, 'error'); } finally { globalThis.WEBTEST34_LEARNING_RESULT = saved; }
 });

@@ -297,7 +297,7 @@
     .review-provisional{color:#8a5a00;font-weight:700}
     .review-section{border:1px solid var(--color-border);border-radius:12px;margin-top:12px;overflow:hidden}
     .review-section-toggle{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;border:0;background:#fff;padding:12px 16px;text-align:left;font:inherit;cursor:pointer}
-    .review-section-toggle h3{margin:0;font-size:17px}.review-section-toggle span{font-size:13px;color:var(--color-text-secondary)}
+    .review-section h3{margin:0}.review-section-toggle strong{font-size:17px}.review-section-toggle span{font-size:13px;color:var(--color-text-secondary)}
     .review-section-items{list-style:none;margin:0;padding:0 16px 8px}
     .review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--color-border);font-size:14px}
     .review-verdict{flex:0 0 auto;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700;background:#f1f5f9}
@@ -305,7 +305,7 @@
     .review-verdict.partial,.review-verdict.pending,.review-verdict.manual_review{background:#fff7e8;color:#8a5a00}
     .review-answer{color:var(--color-text-secondary);word-break:break-word}.review-expected{margin-top:4px}.review-expected.muted{color:var(--color-text-secondary);font-size:13px}
     .review-feedback{margin-top:8px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--color-border);font-size:13px}
-    .review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:var(--color-primary);color:#fff;font-weight:700;cursor:pointer}
+    .review-inline-error{margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff0f2;border:1px solid #f5d8dd}.review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:var(--color-primary);color:#fff;font-weight:700;cursor:pointer}
   </style>
 </head>
 <body>
@@ -589,7 +589,18 @@
   let reviewMode = false;
   let reviewRetry = null;
   let reviewApi = null;
-  const reviewModule = import('../34-shared/review-module.mjs?rev=20261017-review-v1').then(module => (reviewApi = module));
+  let reviewModulePromise = null;
+  let reviewModuleTries = 0;
+  // Lỗi nạp module không được nuốt: mỗi lần thử lại dùng URL mới để tránh cache lỗi.
+  function loadReviewModule(){
+    reviewModulePromise ||= import(`../34-shared/review-module.mjs?rev=20261017-review-v1${reviewModuleTries++ ? `&retry=${Date.now()}` : ''}`)
+      .then(module => (reviewApi = module), error => { reviewModulePromise = null; throw error; });
+    return reviewModulePromise;
+  }
+  loadReviewModule().catch(() => {});
+  let learningResultPublished = false;
+  let learningResultPollFailed = false;
+  let lastReviewHtml = '';
   let learningResultPollInFlight = false;
   let learningResultPollStartedAt = 0;
   let learningResultPollDelayMs = 2000;
@@ -824,21 +835,21 @@
       if(result.result) state.learning.studentResult = result.result;
       persist();
       if(result.result) renderLearningResult(result.result);
-      if(!result.result?.publication?.published){
-        stopLearningResultPolling();
-      } else if(['complete', 'manual_review'].includes(state.learning.gradingStatus)){
-        stopLearningResultPolling();
-      } else {
-        learningResultPollDelayMs = 2000;
-      }
+      learningResultPublished = !!result.result?.publication?.published;
+      // Chưa công bố: hỏi chậm (bị chặn bởi LEARNING_RESULT_POLL_MAX_MS) để tự cập nhật khi giảng viên công bố.
+      learningResultPollDelayMs = learningResultPublished ? 2000 : 15_000;
     }catch(error){
       if(error.status === 429) {
         learningResultPollDelayMs = Math.min(
           30_000,
           Math.max(learningResultPollDelayMs * 2, error.retryAfterMs || 0)
         );
-      } else if(!/Chưa có bài nộp/.test(error.message) && !learningResultShown) {
-        showResultError(error, () => { showResultLoading(); startLearningResultPolling({refetch: true}); });
+      } else if(!/Chưa có bài nộp/.test(error.message)) {
+        // Lỗi bền: dừng polling, giữ nút Thử lại; nếu đã có kết quả thì giữ nguyên và báo lỗi ngay trên đó.
+        learningResultPollFailed = true;
+        const retry = () => { $('#reviewInlineError')?.remove(); showResultLoading(); startLearningResultPolling({refetch: true}); };
+        if(learningResultShown) showInlineResultError(error, () => { $('#reviewInlineError')?.remove(); startLearningResultPolling({refetch: true}); });
+        else showResultError(error, retry);
       }
     }finally{
       learningResultPollInFlight = false;
@@ -856,19 +867,21 @@
 
   function startLearningResultPolling({refetch = false} = {}){
     stopLearningResultPolling();
+    learningResultPollFailed = false;
+    learningResultPublished = false;
     if(!refetch && ['complete', 'manual_review'].includes(state.learning?.gradingStatus)) return;
     learningResultPollStartedAt = Date.now();
     const poll = async () => {
       await refreshLearningResult();
       const expired = Date.now() - learningResultPollStartedAt >= LEARNING_RESULT_POLL_MAX_MS;
-      const terminal = ['complete', 'manual_review'].includes(state.learning?.gradingStatus);
-      if(terminal) {
+      const graded = ['complete', 'manual_review'].includes(state.learning?.gradingStatus);
+      if(learningResultPollFailed || (graded && learningResultPublished)) {
         stopLearningResultPolling();
         return;
       }
       if(expired || !state.submittedAt) {
         stopLearningResultPolling();
-        if(expired) setError('studentError', 'Hệ thống vẫn chưa hoàn tất chấm tự động. Bạn có thể bấm nộp lại yêu cầu kiểm tra kết quả sau.');
+        if(expired && !graded) setError('studentError', 'Hệ thống vẫn chưa hoàn tất chấm tự động. Bạn có thể bấm nộp lại yêu cầu kiểm tra kết quả sau.');
         return;
       }
       learningResultPollTimer = setTimeout(poll, learningResultPollDelayMs);
@@ -951,8 +964,16 @@
 
   // Màn hình xem kết quả dựng bởi module dùng chung; trang chỉ cấp dữ liệu và gắn vào #learningResult.
   function renderReviewScreen(input){
-    if(!reviewApi){ void reviewModule.then(() => renderReviewScreen(input), () => {}); return; }
     const resultView = $('#learningResult');
+    if(!reviewApi){
+      loadReviewModule().then(() => renderReviewScreen(input), () => {
+        reviewRetry = () => renderReviewScreen(input);
+        resultView.innerHTML = '<section class="review-screen review-error"><p role="alert">Không tải được màn hình kết quả. Kiểm tra kết nối mạng rồi thử lại.</p><button type="button" class="review-retry" data-review-retry>Thử lại</button></section>';
+        lastReviewHtml = '';
+        showResultView(resultView);
+      });
+      return;
+    }
     const meta = {
       testTitle: $('.brand-title')?.textContent || '',
       studentName: state.studentName,
@@ -960,11 +981,39 @@
       submittedAt: state.learning?.submittedAt || ''
     };
     const definition = {blocks: learningDefinitionBlocks(), sections};
-    resultView.innerHTML = reviewApi.reviewHtml(reviewApi.reviewViewModel({meta, definition, ...input}));
+    const html = reviewApi.reviewHtml(reviewApi.reviewViewModel({meta, definition, ...input}));
+    // Không dựng lại/cuộn khi nội dung không đổi (polling), và giữ các phần đang mở.
+    if(html === lastReviewHtml && !resultView.classList.contains('hidden')) return;
+    const expanded = [...resultView.querySelectorAll('[data-review-section][aria-expanded="true"]')].map(btn => btn.dataset.reviewSection);
+    const wasHidden = resultView.classList.contains('hidden');
+    resultView.innerHTML = lastReviewHtml = html;
+    expanded.forEach(id => {
+      resultView.querySelector(`[data-review-section="${id}"]`)?.setAttribute('aria-expanded', 'true');
+      const list = document.getElementById(id);
+      if(list) list.hidden = false;
+    });
+    showResultView(resultView, wasHidden);
+  }
+
+  function showResultView(resultView, scroll = true){
     $('#examApp').classList.add('hidden');
     $('#mobileBottom').classList.add('hidden');
     resultView.classList.remove('hidden');
-    window.scrollTo({top:0, behavior:'smooth'});
+    if(scroll) window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function showInlineResultError(error, retry){
+    reviewRetry = retry;
+    const resultView = $('#learningResult');
+    let box = $('#reviewInlineError');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'reviewInlineError';
+      box.className = 'review-inline-error';
+      box.setAttribute('role', 'alert');
+      resultView.prepend(box);
+    }
+    box.innerHTML = `${error?.status === 429 ? 'Hệ thống đang bận.' : 'Không cập nhật được kết quả mới.'} Đang hiển thị kết quả đã tải trước đó. <button type="button" class="review-retry" data-review-retry>Thử lại</button>`;
   }
 
   function showResultLoading(){
@@ -1325,7 +1374,9 @@
     if(state.submittedAt || ['submitted', 'superseded'].includes(state.learning?.status)) lockSubmittedAttempt();
     if(state.submittedAt && state.learning?.status !== 'superseded' && state.learning?.attemptToken) {
       // Vào lại bài đã nộp: luôn lấy kết quả mới từ server, cache localStorage không được che kết quả mới.
-      showResultLoading();
+      // Hiện ngay điểm đã lưu (nếu có) rồi mới tải lại; lỗi tải giữ nguyên điểm đã lưu.
+      if(state.learning.studentResult) renderLearningResult(state.learning.studentResult);
+      else showResultLoading();
       startLearningResultPolling({refetch: true});
     } else if(state.learning?.studentResult) {
       renderLearningResult(state.learning.studentResult);
@@ -2011,7 +2062,8 @@
     state.studentName = student.name;
     state.classCode = state.classCode || String($('#classCode').value).trim().toUpperCase();
     state.className = rosterData.className || state.classCode;
-    state.learning = {};
+    // Giữ định nghĩa đề từ /test-access/resolve (đã nạp cùng roster) để ghép câu theo phần.
+    state.learning = {definition: rosterData.assignment?.definition};
     state.submittedAt = null;
     $('#introScreen').classList.add('hidden');
     $('#audioCheckScreen').classList.add('hidden');
@@ -2022,7 +2074,8 @@
     try{
       const review = await learningRequest('/attempts/review', {testToken: learningConfig().testToken, courseCode: state.classCode, studentRef: student.ref});
       if(review.status === 'not_submitted') return renderReviewScreen({state: 'no_submission'});
-      state.learning = {attemptToken: review.attemptToken, status: 'submitted', submittedAt: review.submittedAt};
+      if(review.status !== 'submitted_unpublished' && review.status !== 'published') throw new Error(`Trạng thái không hợp lệ: ${review.status}`);
+      state.learning = {...state.learning, attemptToken: review.attemptToken, status: 'submitted', submittedAt: review.submittedAt};
       state.submittedAt = Date.now();
       if(review.status === 'submitted_unpublished'){ learningResultShown = true; renderReviewScreen({state: 'not_released'}); }
       // Kể cả khi chưa công bố vẫn hỏi /attempts/result để trang tự cập nhật khi giảng viên công bố.
