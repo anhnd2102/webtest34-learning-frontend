@@ -1935,7 +1935,20 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         `).join('');
 
         const expectedOptId = itemKey.expectedOptionId || item.options?.[0]?.id || 'opt_1';
-        const optionsHtml = (item.options || []).map((opt) => `
+        const optionsList = item.options && item.options.length ? item.options : [
+          { id: 'opt_1', label: 'Nghĩa phương án 1' },
+          { id: 'opt_2', label: 'Nghĩa phương án 2' },
+          { id: 'opt_3', label: 'Nghĩa phương án 3' },
+          { id: 'opt_4', label: 'Nghĩa phương án 4' }
+        ];
+
+        const dropdownOptionsHtml = optionsList.map(opt => `
+          <option value="${opt.id}" ${opt.id === expectedOptId ? 'selected' : ''}>
+            [${opt.id}] ${escapeHtml(opt.label || '(Chưa nhập nghĩa)')}
+          </option>
+        `).join('');
+
+        const optionsHtml = optionsList.map((opt) => `
           <div class="vocab-meaning-row ${opt.id === expectedOptId ? 'is-correct' : ''}" data-option-id="${opt.id}">
             <label class="option-select-label" title="Chọn làm nghĩa tiếng Việt đúng">
               <input type="radio" name="radio_vocab_correct_${item.itemVersionId}" class="radio-vocab-correct" value="${opt.id}" ${opt.id === expectedOptId ? 'checked' : ''} data-correct="${opt.id}">
@@ -1978,10 +1991,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               </div>
             </div>
 
-            <div class="vocab-options-box">
+            <div class="vocab-options-box" style="margin-top: 14px;">
               <div class="template-header-bar vocab-options-header-bar">
                 <label class="form-label" style="margin: 0;"><strong>2. Danh sách nghĩa tiếng Việt (50% điểm - Tích tròn nghĩa đúng):</strong></label>
-                <div class="vocab-options-tools-bar">
+              </div>
+
+              <!-- Compact selector row -->
+              <div class="vocab-compact-selector-row">
+                <span style="font-size: 0.82rem; font-weight: 700; color: #334155; white-space: nowrap;">Nghĩa đúng câu này:</span>
+                <select class="form-select form-select-sm select-vocab-correct-dropdown" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  ${dropdownOptionsHtml}
+                </select>
+                <button type="button" class="btn btn-secondary btn-sm btn-toggle-vocab-bank" data-target="vocab-bank-${blockIdx}-${itemIdx}">
+                  Ngân hàng nghĩa (${optionsList.length}) ▼
+                </button>
+              </div>
+
+              <!-- Collapsible Bank Details -->
+              <div class="vocab-bank-collapsible" id="vocab-bank-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="vocab-options-tools-bar" style="margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
                   <button type="button" class="btn btn-secondary btn-sm btn-bulk-paste-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Dán nhanh nhiều nghĩa từ Excel hoặc Word">
                     ${renderSvgIcon('copy', 'icon-inline')} Dán nhanh danh sách nghĩa
                   </button>
@@ -1996,31 +2024,33 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                     </button>
                   ` : ''}
                 </div>
-              </div>
 
-              <!-- Collapsible Bulk Paste Box -->
-              <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" style="display: none;">
-                <div class="bulk-paste-caption">
-                  <span>Nhập hoặc dán danh sách nghĩa tiếng Việt (Mỗi dòng là một nghĩa):</span>
+                <!-- Collapsible Bulk Paste Box -->
+                <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" style="display: none; margin-bottom: 10px;">
+                  <div class="bulk-paste-caption">
+                    <span>Nhập hoặc dán danh sách nghĩa tiếng Việt (Mỗi dòng là một nghĩa):</span>
+                  </div>
+                  <textarea class="form-control input-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="hướng ngoại&#10;môi trường&#10;kiên cường, có khả năng phục hồi&#10;thân thiện, cởi mở"></textarea>
+                  <div class="bulk-paste-actions">
+                    <button type="button" class="btn btn-primary btn-sm btn-apply-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                      Áp dụng danh sách nghĩa
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-cancel-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                      Hủy
+                    </button>
+                  </div>
                 </div>
-                <textarea class="form-control input-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="hướng ngoại&#10;môi trường&#10;kiên cường, có khả năng phục hồi&#10;thân thiện, cởi mở"></textarea>
-                <div class="bulk-paste-actions">
-                  <button type="button" class="btn btn-primary btn-sm btn-apply-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                    Áp dụng danh sách nghĩa
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-cancel-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                    Hủy
-                  </button>
-                </div>
-              </div>
 
-              <div class="vocab-meaning-grid">
-                ${optionsHtml}
-              </div>
-              <div class="options-actions" style="margin-top: 8px;">
-                <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  + Thêm nghĩa tiếng Việt
-                </button>
+                <div class="vocab-bank-scrollable">
+                  <div class="vocab-meaning-grid">
+                    ${optionsHtml}
+                  </div>
+                </div>
+                <div class="options-actions" style="margin-top: 8px;">
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                    + Thêm nghĩa tiếng Việt
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2757,8 +2787,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             if (item.interactionType === 'text_select_pair') {
               const chips = iCard.querySelectorAll('.variant-chip');
               const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              const dropdownVal = iCard.querySelector('.select-vocab-correct-dropdown')?.value;
               const radioChecked = iCard.querySelector('.radio-vocab-correct:checked');
-              const expectedOptId = radioChecked ? radioChecked.value : (item.options?.[0]?.id || 'opt_1');
+              const expectedOptId = dropdownVal || (radioChecked ? radioChecked.value : (item.options?.[0]?.id || 'opt_1'));
 
               draftState.gradingKey.items[item.itemVersionId] = {
                 graderType: 'accepted_text_exact_option',
@@ -4105,6 +4136,216 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    function createSingleVocabItem(bIdx, targetEx) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const nextPos = getNextPosition();
+      const newItemId = generateUuid();
+      block.items = block.items || [];
+
+      // Check if there is an existing vocabulary pair in this block to clone meaning options
+      let inheritedOptions = null;
+      for (let p = block.items.length - 1; p >= 0; p--) {
+        const prev = block.items[p];
+        if (prev && prev.interactionType === 'text_select_pair' && prev.options && prev.options.length >= 2) {
+          inheritedOptions = prev.options.map(o => ({ id: o.id, label: o.label }));
+          break;
+        }
+      }
+
+      const initialOptions = inheritedOptions || [
+        { id: 'opt_1', label: 'Nghĩa phương án 1' },
+        { id: 'opt_2', label: 'Nghĩa phương án 2' },
+        { id: 'opt_3', label: 'Nghĩa phương án 3' },
+        { id: 'opt_4', label: 'Nghĩa phương án 4' }
+      ];
+
+      block.items.push({
+        itemFamilyId: generateUuid(),
+        itemVersionId: newItemId,
+        position: nextPos,
+        exerciseId: targetEx.exerciseId,
+        exerciseTitle: targetEx.title,
+        prompt: `Từ vựng câu ${nextPos}`,
+        helpText: '',
+        interactionType: 'text_select_pair',
+        pedagogicalTypeCode: 'vocabulary_pair',
+        layoutType: 'default',
+        graderType: 'accepted_text_exact_option',
+        required: true,
+        maxScore: 1,
+        options: initialOptions,
+        skillCodes: [],
+        releasePolicy: 'inherit'
+      });
+      draftState.gradingKey.items[newItemId] = {
+        graderType: 'accepted_text_exact_option',
+        accepted: [`Từ vựng câu ${nextPos}`],
+        expectedOptionId: initialOptions[0].id,
+        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+      };
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
+    function openBatchVocabPairModal(bIdx, targetEx) {
+      if (typeof document === 'undefined') {
+        createSingleVocabItem(bIdx, targetEx);
+        return;
+      }
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+
+      let inheritedOptions = null;
+      for (let p = (block.items || []).length - 1; p >= 0; p--) {
+        const prev = block.items[p];
+        if (prev && prev.interactionType === 'text_select_pair' && prev.options && prev.options.length >= 2) {
+          inheritedOptions = prev.options.map(o => o.label).filter(Boolean);
+          break;
+        }
+      }
+
+      let modal = document.querySelector('#batch-vocab-pair-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'batch-vocab-pair-modal';
+        modal.className = 'modal-batch-vocab-overlay';
+        document.body.appendChild(modal);
+      }
+
+      const defaultMeanings = inheritedOptions && inheritedOptions.length >= 2
+        ? inheritedOptions.join('\n')
+        : '';
+
+      modal.innerHTML = `
+        <div class="modal-batch-vocab-card">
+          <div class="modal-batch-vocab-header">
+            <h3>⚡ Tạo hàng loạt câu hỏi Cặp từ vựng</h3>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">✕</button>
+          </div>
+          <div class="modal-batch-vocab-body">
+            <div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">
+              Tạo nhanh nhiều câu hỏi cặp từ vựng thuộc bài tập <strong>${escapeHtml(targetEx.title || 'Bài tập')}</strong>. Toàn bộ các câu hỏi sẽ dùng chung danh sách nghĩa tiếng Việt trong ô dropdown.
+            </div>
+            <div class="form-group">
+              <label class="form-label"><strong>1. Tổng số câu hỏi cần tạo:</strong></label>
+              <input type="number" class="form-control input-batch-count" min="1" max="100" value="25" style="max-width: 160px; font-weight: 700;" />
+              <span style="font-size: 0.8rem; color: #64748b;">(Ví dụ: 25 câu hoặc 50 câu)</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label"><strong>2. Danh sách nghĩa tiếng Việt dùng chung (Mỗi dòng một nghĩa):</strong></label>
+              <textarea class="form-control textarea-batch-meanings" rows="8" placeholder="hướng ngoại&#10;môi trường&#10;kiên cường, có khả năng phục hồi&#10;thân thiện, cởi mở&#10;...">${escapeHtml(defaultMeanings)}</textarea>
+              <span style="font-size: 0.8rem; color: #64748b;">Gợi ý: Dán danh sách các nghĩa. Các câu hỏi tạo ra sẽ lần lượt nhận nghĩa đúng từ dòng 1 đến N.</span>
+            </div>
+          </div>
+          <div class="modal-batch-vocab-footer">
+            <button type="button" class="btn btn-secondary btn-batch-single">
+              + Chỉ tạo 1 câu
+            </button>
+            <button type="button" class="btn btn-primary btn-batch-confirm">
+              ⚡ Tạo câu hỏi hàng loạt
+            </button>
+          </div>
+        </div>
+      `;
+
+      const closeModal = () => {
+        modal.style.display = 'none';
+      };
+
+      const closeBtn = modal.querySelector('.btn-close-batch-modal');
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+      // Single item creation
+      const singleBtn = modal.querySelector('.btn-batch-single');
+      if (singleBtn) {
+        singleBtn.addEventListener('click', () => {
+          closeModal();
+          createSingleVocabItem(bIdx, targetEx);
+        });
+      }
+
+      // Batch creation
+      const confirmBtn = modal.querySelector('.btn-batch-confirm');
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+          const countInput = modal.querySelector('.input-batch-count');
+          const count = Math.max(1, Math.min(100, parseInt(countInput?.value, 10) || 25));
+          const meaningsText = modal.querySelector('.textarea-batch-meanings')?.value?.trim() || '';
+
+          let options = [];
+          if (meaningsText) {
+            const lines = meaningsText.split('\n').map(l => l.trim()).filter(Boolean);
+            if (lines.length >= 2) {
+              options = lines.map((line, idx) => ({
+                id: `meaning-${String(idx + 1).padStart(2, '0')}`,
+                label: line
+              }));
+            }
+          }
+
+          if (!options.length) {
+            if (inheritedOptions && inheritedOptions.length >= 2) {
+              options = inheritedOptions.map((label, idx) => ({
+                id: `meaning-${String(idx + 1).padStart(2, '0')}`,
+                label
+              }));
+            } else {
+              options = [
+                { id: 'meaning-01', label: 'Nghĩa phương án 1' },
+                { id: 'meaning-02', label: 'Nghĩa phương án 2' },
+                { id: 'meaning-03', label: 'Nghĩa phương án 3' },
+                { id: 'meaning-04', label: 'Nghĩa phương án 4' }
+              ];
+            }
+          }
+
+          block.items = block.items || [];
+          const startingPos = getNextPosition();
+
+          for (let i = 0; i < count; i++) {
+            const currentPos = startingPos + i;
+            const newItemId = generateUuid();
+            const expectedOptId = options[i] ? options[i].id : options[0].id;
+
+            block.items.push({
+              itemFamilyId: generateUuid(),
+              itemVersionId: newItemId,
+              position: currentPos,
+              exerciseId: targetEx.exerciseId,
+              exerciseTitle: targetEx.title,
+              prompt: `Từ vựng câu ${currentPos}`,
+              helpText: '',
+              interactionType: 'text_select_pair',
+              pedagogicalTypeCode: 'vocabulary_pair',
+              layoutType: 'default',
+              graderType: 'accepted_text_exact_option',
+              required: true,
+              maxScore: 1,
+              options: options.map(o => ({ id: o.id, label: o.label })),
+              skillCodes: [],
+              releasePolicy: 'inherit'
+            });
+
+            draftState.gradingKey.items[newItemId] = {
+              graderType: 'accepted_text_exact_option',
+              accepted: [`Từ vựng câu ${currentPos}`],
+              expectedOptionId: expectedOptId,
+              normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            };
+          }
+
+          resequenceItemPositions();
+          markAsDirty();
+          closeModal();
+          render();
+        });
+      }
+
+      modal.style.display = 'flex';
+    }
+
     // Add Vocabulary Pair Question
     const addVocabPairBtns = container.querySelectorAll('.btn-add-vocab-pair');
     addVocabPairBtns.forEach(btn => {
@@ -4114,54 +4355,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
-        const newItemId = generateUuid();
-        block.items = block.items || [];
-
-        // Check if there is an existing vocabulary pair in this block to clone meaning options
-        let inheritedOptions = null;
-        for (let p = block.items.length - 1; p >= 0; p--) {
-          const prev = block.items[p];
-          if (prev && prev.interactionType === 'text_select_pair' && prev.options && prev.options.length >= 2) {
-            inheritedOptions = prev.options.map(o => ({ id: o.id, label: o.label }));
-            break;
-          }
-        }
-
-        const initialOptions = inheritedOptions || [
-          { id: 'opt_1', label: 'Nghĩa phương án 1' },
-          { id: 'opt_2', label: 'Nghĩa phương án 2' },
-          { id: 'opt_3', label: 'Nghĩa phương án 3' },
-          { id: 'opt_4', label: 'Nghĩa phương án 4' }
-        ];
-
-        block.items.push({
-          itemFamilyId: generateUuid(),
-          itemVersionId: newItemId,
-          position: nextPos,
-          exerciseId: targetEx.exerciseId,
-          exerciseTitle: targetEx.title,
-          prompt: `Từ vựng câu ${nextPos}`,
-          helpText: '',
-          interactionType: 'text_select_pair',
-          pedagogicalTypeCode: 'vocabulary_pair',
-          layoutType: 'default',
-          graderType: 'accepted_text_exact_option',
-          required: true,
-          maxScore: 1,
-          options: initialOptions,
-          skillCodes: [],
-          releasePolicy: 'inherit'
-        });
-        draftState.gradingKey.items[newItemId] = {
-          graderType: 'accepted_text_exact_option',
-          accepted: [`Từ vựng câu ${nextPos}`],
-          expectedOptionId: initialOptions[0].id,
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-        };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+        openBatchVocabPairModal(bIdx, targetEx);
       });
     });
 
@@ -4581,6 +4775,80 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         markAsDirty();
         render();
+      });
+    });
+
+    // Toggle Vocab Meaning Bank Collapsible
+    const toggleVocabBankBtns = container.querySelectorAll('.btn-toggle-vocab-bank');
+    toggleVocabBankBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const targetEl = container.querySelector('#' + targetId);
+        if (targetEl) {
+          const isHidden = targetEl.style.display === 'none';
+          targetEl.style.display = isHidden ? 'block' : 'none';
+          btn.textContent = isHidden ? btn.textContent.replace('▼', '▲') : btn.textContent.replace('▲', '▼');
+        }
+      });
+    });
+
+    // Select Vocab Correct Dropdown change
+    const selectVocabDropdowns = container.querySelectorAll('.select-vocab-correct-dropdown');
+    selectVocabDropdowns.forEach(sel => {
+      sel.addEventListener('change', () => {
+        const bIdx = Number(sel.getAttribute('data-block-idx'));
+        const iIdx = Number(sel.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (item) {
+          if (!draftState.gradingKey.items[item.itemVersionId]) {
+            draftState.gradingKey.items[item.itemVersionId] = {
+              graderType: 'accepted_text_exact_option',
+              accepted: [item.prompt || 'word'],
+              expectedOptionId: sel.value,
+              normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            };
+          } else {
+            draftState.gradingKey.items[item.itemVersionId].expectedOptionId = sel.value;
+          }
+          markAsDirty();
+
+          // Also synchronize radio button and highlight state in bank
+          const itemCard = sel.closest('.item-card');
+          if (itemCard) {
+            const allRadios = itemCard.querySelectorAll('.radio-vocab-correct');
+            allRadios.forEach(r => {
+              r.checked = (r.value === sel.value);
+            });
+            const allRows = itemCard.querySelectorAll('.vocab-meaning-row');
+            allRows.forEach(r => {
+              if (r.getAttribute('data-option-id') === sel.value) {
+                r.classList.add('is-correct');
+              } else {
+                r.classList.remove('is-correct');
+              }
+            });
+          }
+        }
+      });
+    });
+
+    // Radio Vocab Correct change syncs back to dropdown
+    const vocabRadios = container.querySelectorAll('.radio-vocab-correct');
+    vocabRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        const itemCard = radio.closest('.item-card');
+        if (itemCard) {
+          const sel = itemCard.querySelector('.select-vocab-correct-dropdown');
+          if (sel) sel.value = radio.value;
+          const allRows = itemCard.querySelectorAll('.vocab-meaning-row');
+          allRows.forEach(r => {
+            if (r.getAttribute('data-option-id') === radio.value) {
+              r.classList.add('is-correct');
+            } else {
+              r.classList.remove('is-correct');
+            }
+          });
+        }
       });
     });
 
@@ -5218,14 +5486,20 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           } else if (isVocabPair) {
             interactiveHtml = `
-              <div class="candidate-vocab-wrap">
-                <span class="vocab-word-badge">${escapeHtml(item.prompt || 'Từ vựng')}</span>
-                <select class="form-select candidate-vocab-select">
-                  <option value="">-- Chọn nghĩa tiếng Việt tương ứng --</option>
-                  ${(item.options || []).map(opt => `
-                    <option value="${opt.id}">${escapeHtml(opt.label || '')}</option>
-                  `).join('')}
-                </select>
+              <div class="candidate-vocab-pair-row">
+                <div class="candidate-vocab-input-col">
+                  <label class="candidate-field-label">1. Từ tiếng Anh nghe được (50% điểm):</label>
+                  <input type="text" class="form-control candidate-vocab-text-input" placeholder="Nhập từ tiếng Anh nghe được..." />
+                </div>
+                <div class="candidate-vocab-select-col">
+                  <label class="candidate-field-label">2. Nghĩa tiếng Việt tương ứng (50% điểm):</label>
+                  <select class="form-select candidate-vocab-select">
+                    <option value="">-- Chọn nghĩa tiếng Việt tương ứng --</option>
+                    ${(item.options || []).map(opt => `
+                      <option value="${opt.id}">${escapeHtml(opt.label || '')}</option>
+                    `).join('')}
+                  </select>
+                </div>
               </div>
             `;
           } else if (isRubricAsync) {
@@ -5253,7 +5527,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                     : (isListeningOrder
                       ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
                       : (isVocabPair
-                        ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+                        ? 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:'
                         : (isInlineCloze
                           ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
                           : (isPictorial
