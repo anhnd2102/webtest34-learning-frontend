@@ -1828,6 +1828,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         `).join('');
 
+        let hasPrevVocabItem = false;
+        for (let p = itemIdx - 1; p >= 0; p--) {
+          if (block.items[p] && block.items[p].interactionType === 'text_select_pair') {
+            hasPrevVocabItem = true;
+            break;
+          }
+        }
+        const totalVocabItemsInBlock = (block.items || []).filter(it => it.interactionType === 'text_select_pair').length;
+
         specificHtml = `
           <div class="template-section template-vocab-pair">
             <div class="vocab-english-box">
@@ -1852,9 +1861,41 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             </div>
 
             <div class="vocab-options-box">
-              <div class="template-header-bar">
+              <div class="template-header-bar vocab-options-header-bar">
                 <label class="form-label" style="margin: 0;"><strong>2. Danh sách nghĩa tiếng Việt (50% điểm - Tích tròn nghĩa đúng):</strong></label>
+                <div class="vocab-options-tools-bar">
+                  <button type="button" class="btn btn-secondary btn-sm btn-bulk-paste-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Dán nhanh nhiều nghĩa từ Excel hoặc Word">
+                    ${renderSvgIcon('copy', 'icon-inline')} Dán nhanh danh sách nghĩa
+                  </button>
+                  ${hasPrevVocabItem ? `
+                    <button type="button" class="btn btn-secondary btn-sm btn-copy-prev-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Sao chép toàn bộ danh sách nghĩa từ câu từ vựng liền trước">
+                      ${renderSvgIcon('download', 'icon-inline')} Lấy nghĩa từ câu trước
+                    </button>
+                  ` : ''}
+                  ${totalVocabItemsInBlock > 1 ? `
+                    <button type="button" class="btn btn-secondary btn-sm btn-sync-vocab-options-to-block" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Áp dụng toàn bộ danh sách nghĩa này cho tất cả câu cặp từ vựng trong phần này">
+                      ${renderSvgIcon('refresh', 'icon-inline')} Áp dụng cho cả phần này
+                    </button>
+                  ` : ''}
+                </div>
               </div>
+
+              <!-- Collapsible Bulk Paste Box -->
+              <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="bulk-paste-caption">
+                  <span>Nhập hoặc dán danh sách nghĩa tiếng Việt (Mỗi dòng là một nghĩa):</span>
+                </div>
+                <textarea class="form-control input-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="hướng ngoại&#10;môi trường&#10;kiên cường, có khả năng phục hồi&#10;thân thiện, cởi mở"></textarea>
+                <div class="bulk-paste-actions">
+                  <button type="button" class="btn btn-primary btn-sm btn-apply-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                    Áp dụng danh sách nghĩa
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-cancel-bulk-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                    Hủy
+                  </button>
+                </div>
+              </div>
+
               <div class="vocab-meaning-grid">
                 ${optionsHtml}
               </div>
@@ -3688,6 +3729,24 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
+
+        // Check if there is an existing vocabulary pair in this block to clone meaning options
+        let inheritedOptions = null;
+        for (let p = block.items.length - 1; p >= 0; p--) {
+          const prev = block.items[p];
+          if (prev && prev.interactionType === 'text_select_pair' && prev.options && prev.options.length >= 2) {
+            inheritedOptions = prev.options.map(o => ({ id: o.id, label: o.label }));
+            break;
+          }
+        }
+
+        const initialOptions = inheritedOptions || [
+          { id: 'opt_1', label: 'Nghĩa phương án 1' },
+          { id: 'opt_2', label: 'Nghĩa phương án 2' },
+          { id: 'opt_3', label: 'Nghĩa phương án 3' },
+          { id: 'opt_4', label: 'Nghĩa phương án 4' }
+        ];
+
         block.items.push({
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
@@ -3700,19 +3759,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           graderType: 'accepted_text_exact_option',
           required: true,
           maxScore: 1,
-          options: [
-            { id: 'opt_1', label: 'Nghĩa phương án 1' },
-            { id: 'opt_2', label: 'Nghĩa phương án 2' }
-          ],
+          options: initialOptions,
           skillCodes: [],
           releasePolicy: 'inherit'
         });
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text_exact_option',
           accepted: [`Từ vựng câu ${nextPos}`],
-          expectedOptionId: 'opt_1',
+          expectedOptionId: initialOptions[0].id,
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        markAsDirty();
         render();
       });
     });
@@ -3962,6 +4019,124 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         } else {
           alert('Một câu hỏi cặp từ vựng phải có ít nhất 2 nghĩa để lựa chọn.');
         }
+      });
+    });
+
+    // Toggle Bulk Paste Panel for Vocab Options
+    const toggleBulkVocabBtns = container.querySelectorAll('.btn-bulk-paste-vocab-options');
+    toggleBulkVocabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const bIdx = btn.getAttribute('data-block-idx');
+        const iIdx = btn.getAttribute('data-item-idx');
+        const panel = container.querySelector(`#vocab-bulk-paste-${bIdx}-${iIdx}`);
+        if (panel) {
+          const isHidden = panel.style.display === 'none' || !panel.style.display;
+          panel.style.display = isHidden ? 'block' : 'none';
+          if (isHidden) {
+            const ta = panel.querySelector('.input-bulk-vocab-options');
+            if (ta) ta.focus();
+          }
+        }
+      });
+    });
+
+    // Cancel Bulk Paste Panel
+    const cancelBulkVocabBtns = container.querySelectorAll('.btn-cancel-bulk-vocab-options');
+    cancelBulkVocabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const bIdx = btn.getAttribute('data-block-idx');
+        const iIdx = btn.getAttribute('data-item-idx');
+        const panel = container.querySelector(`#vocab-bulk-paste-${bIdx}-${iIdx}`);
+        if (panel) panel.style.display = 'none';
+      });
+    });
+
+    // Apply Bulk Paste Vocab Options
+    const applyBulkVocabBtns = container.querySelectorAll('.btn-apply-bulk-vocab-options');
+    applyBulkVocabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const panel = container.querySelector(`#vocab-bulk-paste-${bIdx}-${iIdx}`);
+        const ta = panel?.querySelector('.input-bulk-vocab-options');
+        const rawText = ta ? ta.value : '';
+        const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+        if (lines.length >= 2) {
+          item.options = lines.map((lbl, idx) => ({
+            id: `opt_${idx + 1}`,
+            label: lbl
+          }));
+          const currentExpected = draftState.gradingKey.items[item.itemVersionId]?.expectedOptionId;
+          if (!item.options.some(o => o.id === currentExpected)) {
+            draftState.gradingKey.items[item.itemVersionId].expectedOptionId = item.options[0].id;
+          }
+          markAsDirty();
+          render();
+        } else {
+          alert('Vui lòng nhập hoặc dán ít nhất 2 nghĩa tiếng Việt (mỗi dòng một nghĩa).');
+        }
+      });
+    });
+
+    // Copy Options from Preceding Vocab Pair Item
+    const copyPrevVocabBtns = container.querySelectorAll('.btn-copy-prev-vocab-options');
+    copyPrevVocabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+
+        let prevItem = null;
+        for (let p = iIdx - 1; p >= 0; p--) {
+          const candidate = draftState.blocks[bIdx]?.items?.[p];
+          if (candidate && candidate.interactionType === 'text_select_pair' && candidate.options && candidate.options.length >= 2) {
+            prevItem = candidate;
+            break;
+          }
+        }
+
+        if (prevItem) {
+          item.options = prevItem.options.map(o => ({ id: o.id, label: o.label }));
+          const currentExpected = draftState.gradingKey.items[item.itemVersionId]?.expectedOptionId;
+          if (!item.options.some(o => o.id === currentExpected)) {
+            draftState.gradingKey.items[item.itemVersionId].expectedOptionId = item.options[0].id;
+          }
+          markAsDirty();
+          render();
+        } else {
+          alert('Không tìm thấy câu hỏi cặp từ vựng nào trước câu này để sao chép.');
+        }
+      });
+    });
+
+    // Sync Vocab Options across the whole Block
+    const syncVocabToBlockBtns = container.querySelectorAll('.btn-sync-vocab-options-to-block');
+    syncVocabToBlockBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const sourceItem = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!sourceItem || !sourceItem.options || sourceItem.options.length < 2) return;
+
+        const block = draftState.blocks[bIdx];
+        (block.items || []).forEach(it => {
+          if (it.interactionType === 'text_select_pair' && it.itemVersionId !== sourceItem.itemVersionId) {
+            it.options = sourceItem.options.map(o => ({ id: o.id, label: o.label }));
+            const itKey = draftState.gradingKey.items[it.itemVersionId];
+            if (itKey && !it.options.some(o => o.id === itKey.expectedOptionId)) {
+              itKey.expectedOptionId = it.options[0].id;
+            }
+          }
+        });
+
+        markAsDirty();
+        render();
       });
     });
 
