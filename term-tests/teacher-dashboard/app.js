@@ -186,6 +186,46 @@ export function computeCorrectionScore(answer, gradingKey = {}) {
   return { score, maxScore, isErrorCorrect, isCorrectionCorrect };
 }
 
+export function tokenizeSentence(input) {
+  if (!input || typeof input !== 'string') return [];
+  const trimmed = input.trim();
+  if (!trimmed) return [];
+
+  // Check if contains brackets like [She] [has worked]
+  if (trimmed.includes('[') && trimmed.includes(']')) {
+    const bracketMatches = trimmed.match(/\[([^\]]+)\]/g);
+    if (bracketMatches && bracketMatches.length > 0) {
+      return bracketMatches.map(m => m.slice(1, -1).trim()).filter(Boolean);
+    }
+  }
+
+  // Check if contains slash separator /
+  if (trimmed.includes('/')) {
+    return trimmed.split('/').map(t => t.trim()).filter(Boolean);
+  }
+
+  // Fallback to space-separated words
+  return trimmed.split(/\s+/).filter(Boolean);
+}
+
+export function scrambleTokens(tokens) {
+  if (!Array.isArray(tokens) || tokens.length <= 1) {
+    return Array.isArray(tokens) ? [...tokens] : [];
+  }
+  const copy = [...tokens];
+  let shuffled = [...copy];
+  for (let attempt = 0; attempt < 10; attempt++) {
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const isSame = shuffled.every((val, idx) => val === copy[idx]);
+    if (!isSame) break;
+  }
+  return shuffled;
+}
+
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -993,14 +1033,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     return items.map((item, itemIdx) => {
-      const isErrorCorrection = item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair';
-      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection;
-      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection;
-      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
+      const isSentenceReorder = item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble';
+      const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder;
+      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder;
+      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
+      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
-      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
+      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder;
+      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder;
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -1012,7 +1053,100 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       let specificHtml = '';
 
-      if (isErrorCorrection) {
+      if (isSentenceReorder) {
+        const tokens = item.tokens || itemKey.tokens || tokenizeSentence(item.targetSentence || 'She / has worked / at the company / for five years');
+        const distractors = item.distractors || itemKey.distractors || [];
+        const targetSentence = item.targetSentence || (itemKey.accepted && itemKey.accepted[0]) || tokens.join(' ');
+        const rawTokensStr = tokens.join(' / ');
+        const scrambled = scrambleTokens(tokens);
+
+        const acceptedList = itemKey.accepted || [targetSentence];
+        const chipsHtml = acceptedList.map((v) => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        const distractorChipsHtml = distractors.map((d, dIdx) => `
+          <span class="distractor-chip" data-distractor="${escapeHtml(d)}" data-distractor-idx="${dIdx}">
+            <span class="chip-text">🚫 ${escapeHtml(d)}</span>
+            <button type="button" class="btn-remove-distractor-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-distractor-idx="${dIdx}" title="Xóa từ gây nhiễu">✕</button>
+          </span>
+        `).join('');
+
+        const scrambledPreviewChips = [...scrambled, ...distractors].map((tok) => `
+          <span class="token-chip ${distractors.includes(tok) ? 'token-distractor' : ''}">${escapeHtml(tok)}</span>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-sentence-reorder">
+            <div class="template-header-bar">
+              <span class="section-sublabel"><strong>Cấu hình câu cần sắp xếp (Token Scramble):</strong></span>
+              <span class="badge badge-info">Tự động xáo trộn từ/cụm từ</span>
+            </div>
+
+            <div class="form-group" style="margin-top: 8px;">
+              <label class="form-label"><strong>1. Câu hoàn chỉnh mục tiêu (Target Sentence):</strong></label>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-target-sentence" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetSentence)}" placeholder="Nhập câu chuẩn hoàn chỉnh..." />
+                <button type="button" class="btn btn-secondary btn-tokenize-sentence" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động phân rã câu thành các mảnh từ">
+                  ⚡ Phân rã từ (Tokenize)
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <label class="form-label"><strong>2. Các mảnh từ phân tách bởi dấu gạch chéo <code>/</code> hoặc ngoặc vuông <code>[ ]</code>:</strong></label>
+              <input type="text" class="form-control input-raw-tokens" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(rawTokensStr)}" placeholder="She / has worked / at the company / for five years" />
+              <div class="reorder-tokens-hint" style="font-size:0.78rem;color:#64748b;margin-top:4px;">
+                Ví dụ: <code>She / has worked / at the company / for five years</code> hoặc <code>[We] [have decided] [to postpone]</code>.
+              </div>
+            </div>
+
+            <!-- Scrambled preview pool -->
+            <div class="scrambled-preview-box" style="margin-top: 10px; padding: 10px 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px;">
+              <div class="scrambled-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="preview-mini-label" style="font-size:0.76rem; font-weight:700; color:#475569; text-transform:uppercase;">Mô phỏng ngân hàng thẻ từ xáo trộn (${tokens.length + distractors.length} thẻ):</span>
+                <span class="scramble-refresh-hint" style="font-size:0.75rem; color:#94a3b8;">Học viên bấm vào thẻ để ghép câu</span>
+              </div>
+              <div class="scrambled-tokens-pool" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+                ${scrambledPreviewChips || '<em>Chưa có mảnh từ nào...</em>'}
+              </div>
+            </div>
+
+            <!-- Distractor manager -->
+            <div class="distractors-manager-box" style="margin-top: 12px;">
+              <label class="form-label"><strong>3. Từ gây nhiễu (Distractor Tokens - Tùy chọn):</strong></label>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-add-distractor" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="Nhập từ gây nhiễu (không có trong câu đúng)..." />
+                <button type="button" class="btn btn-secondary btn-sm btn-add-distractor-btn" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  + Thêm từ nhiễu
+                </button>
+              </div>
+              <div class="distractor-chips-wrap" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+                ${distractorChipsHtml || '<span style="font-size:0.8rem;color:#94a3b8;">Chưa có từ gây nhiễu.</span>'}
+              </div>
+            </div>
+
+            <!-- Accepted sentence variants -->
+            <div class="variant-chips-container" style="margin-top: 12px;">
+              <div class="chips-meta-bar">
+                <span class="chips-count-badge">Các biến thể câu được chấp nhận (${acceptedList.length}/20)</span>
+                <button type="button" class="btn btn-secondary btn-sm btn-generate-reorder-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  ⚡ Tự động sinh biến thể dấu câu
+                </button>
+                <div class="quick-add-variant">
+                  <input type="text" class="form-control form-control-sm input-add-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm câu biến thể (Enter)..." />
+                </div>
+              </div>
+              <div class="variant-chips-wrap">
+                ${chipsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isErrorCorrection) {
         const expectedErrors = itemKey.expectedErrors || ['she'];
         const expectedCorrections = itemKey.expectedCorrections || ['her'];
         const scoringRule = itemKey.scoringRule || item.scoringRule || 'split_points';
@@ -1587,17 +1721,19 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         ? 'Trắc nghiệm 1 đáp án (Single Choice)'
         : (isMultiGroup
           ? 'Nhóm chọn nhiều (Multi-Select Group)'
-          : (isErrorCorrection
-            ? 'Tìm và sửa lỗi (Error Correction)'
-            : (isVocabPair
-              ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
-              : (isRubricAsync
-                ? 'Tự luận chấm AI (AI-Graded Rubric)'
-                : (isPictorial
-                  ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
-                  : (isInlineCloze
-                    ? 'Điền từ nội tuyến (Inline Cloze)'
-                    : 'Điền ô trống (Short Text)'))))));
+          : (isSentenceReorder
+            ? 'Sắp xếp câu (Sentence Reorder)'
+            : (isErrorCorrection
+              ? 'Tìm và sửa lỗi (Error Correction)'
+              : (isVocabPair
+                ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
+                : (isRubricAsync
+                  ? 'Tự luận chấm AI (AI-Graded Rubric)'
+                  : (isPictorial
+                    ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
+                    : (isInlineCloze
+                      ? 'Điền từ nội tuyến (Inline Cloze)'
+                      : 'Điền ô trống (Short Text)')))))));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1684,6 +1820,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-error-correction" data-block-idx="${index}">
                     + Tìm và sửa lỗi (Error Correction)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-reorder" data-block-idx="${index}">
+                    + Sắp xếp câu (Sentence Reorder)
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${index}">
                     + Trắc nghiệm (Single Choice)
@@ -1894,7 +2033,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
 
             // Short text sync
-            if (item.interactionType === 'short_text') {
+            if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble') {
               const chips = iCard.querySelectorAll('.variant-chip');
               const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
               if (variants.length) {
@@ -1904,6 +2043,39 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                 };
               }
+            }
+
+            // Sentence reorder sync
+            if (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') {
+              const rawTokensInput = iCard.querySelector('.input-raw-tokens');
+              const targetSentInput = iCard.querySelector('.input-target-sentence');
+
+              if (targetSentInput) {
+                item.targetSentence = targetSentInput.value.trim();
+              }
+
+              if (rawTokensInput) {
+                const rawVal = rawTokensInput.value.trim();
+                if (rawVal) {
+                  item.tokens = tokenizeSentence(rawVal);
+                }
+              }
+
+              const distractorChips = iCard.querySelectorAll('.distractor-chip');
+              item.distractors = Array.from(distractorChips).map(c => c.getAttribute('data-distractor')).filter(Boolean);
+
+              const chips = iCard.querySelectorAll('.variant-chip.accepted-chip');
+              const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              const targetSent = item.targetSentence || (item.tokens ? item.tokens.join(' ') : '');
+              const acceptedList = variants.length ? variants : (targetSent ? [targetSent] : []);
+
+              draftState.gradingKey.items[item.itemVersionId] = {
+                graderType: 'accepted_text',
+                accepted: acceptedList,
+                tokens: item.tokens || [],
+                distractors: item.distractors || [],
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
             }
 
             // Error correction sync
@@ -2728,6 +2900,175 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    // Add Sentence Reorder Question
+    const addSentenceReorderBtns = container.querySelectorAll('.btn-add-sentence-reorder');
+    addSentenceReorderBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        const defaultTokens = ['She', 'has worked', 'at the company', 'for five years'];
+        const defaultSentence = 'She has worked at the company for five years.';
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:',
+          helpText: '',
+          interactionType: 'short_text',
+          pedagogicalTypeCode: 'sentence_reorder',
+          layoutType: 'token_scramble',
+          graderType: 'accepted_text',
+          required: true,
+          maxScore: 1,
+          tokens: defaultTokens,
+          distractors: [],
+          targetSentence: defaultSentence,
+          options: [],
+          skillCodes: ['grammar'],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'accepted_text',
+          accepted: [defaultSentence],
+          tokens: defaultTokens,
+          distractors: [],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Tokenize Sentence
+    const tokenizeBtns = container.querySelectorAll('.btn-tokenize-sentence');
+    tokenizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const card = btn.closest('.builder-item-card');
+        const targetInput = card?.querySelector('.input-target-sentence');
+        const rawTokensInput = card?.querySelector('.input-raw-tokens');
+        const textToTokenize = (targetInput?.value?.trim() || rawTokensInput?.value?.trim() || item.targetSentence || '');
+        if (!textToTokenize) {
+          alert('Vui lòng nhập câu hoàn chỉnh hoặc chuỗi mảnh từ trước khi phân rã.');
+          return;
+        }
+        item.tokens = tokenizeSentence(textToTokenize);
+        if (targetInput && targetInput.value.trim()) {
+          item.targetSentence = targetInput.value.trim();
+        } else {
+          item.targetSentence = item.tokens.join(' ');
+        }
+        const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+          graderType: 'accepted_text',
+          accepted: [],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        currentKey.tokens = item.tokens;
+        if (!currentKey.accepted || !currentKey.accepted.length) {
+          currentKey.accepted = [item.targetSentence];
+        }
+        draftState.gradingKey.items[item.itemVersionId] = currentKey;
+        render();
+      });
+    });
+
+    // Add Distractor button click
+    const addDistractorBtns = container.querySelectorAll('.btn-add-distractor-btn');
+    addDistractorBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const card = btn.closest('.builder-item-card');
+        const input = card?.querySelector('.input-add-distractor');
+        const val = input?.value?.trim() || '';
+        if (!val) return;
+        item.distractors = item.distractors || [];
+        if (!item.distractors.includes(val)) {
+          item.distractors.push(val);
+        }
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (currentKey) currentKey.distractors = item.distractors;
+        render();
+      });
+    });
+
+    // Add Distractor on Enter
+    const addDistractorInputs = container.querySelectorAll('.input-add-distractor');
+    addDistractorInputs.forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = input.value.trim();
+          if (!val) return;
+          syncInputs();
+          const bIdx = Number(input.getAttribute('data-block-idx'));
+          const iIdx = Number(input.getAttribute('data-item-idx'));
+          const item = draftState.blocks[bIdx]?.items?.[iIdx];
+          if (!item) return;
+          item.distractors = item.distractors || [];
+          if (!item.distractors.includes(val)) {
+            item.distractors.push(val);
+          }
+          const currentKey = draftState.gradingKey.items[item.itemVersionId];
+          if (currentKey) currentKey.distractors = item.distractors;
+          render();
+        }
+      });
+    });
+
+    // Remove Distractor chip
+    const removeDistractorChipBtns = container.querySelectorAll('.btn-remove-distractor-chip');
+    removeDistractorChipBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const dIdx = Number(btn.getAttribute('data-distractor-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item || !item.distractors) return;
+        item.distractors.splice(dIdx, 1);
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (currentKey) currentKey.distractors = item.distractors;
+        render();
+      });
+    });
+
+    // Generate Sentence Reorder Variants
+    const genReorderVariantsBtns = container.querySelectorAll('.btn-generate-reorder-variants');
+    genReorderVariantsBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const target = item.targetSentence || (item.tokens ? item.tokens.join(' ') : '');
+        if (!target) {
+          alert('Vui lòng nhập câu hoàn chỉnh trước khi sinh biến thể.');
+          return;
+        }
+        const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+          graderType: 'accepted_text',
+          accepted: [],
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        currentKey.accepted = expandSentenceVariants([target]);
+        draftState.gradingKey.items[item.itemVersionId] = currentKey;
+        render();
+      });
+    });
+
     // Add Pictorial Vocabulary Question
     const addPictorialBtns = container.querySelectorAll('.btn-add-pictorial');
     addPictorialBtns.forEach(btn => {
@@ -3465,14 +3806,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const items = b.items || [];
 
         const itemsHtml = items.map((item) => {
-          const isErrorCorrection = item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair';
-          const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection;
-          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection;
-          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
+          const isSentenceReorder = item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble';
+          const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder;
+          const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder;
+          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
+          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-          const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
-          const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
+          const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder;
+          const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder;
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -3582,6 +3924,34 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 ${renderInlineClozeMarkup(item.prompt || '', [item])}
               </div>
             `;
+          } else if (isSentenceReorder) {
+            const tokens = item.tokens || tokenizeSentence(item.targetSentence || '');
+            const distractors = item.distractors || [];
+            const allChips = scrambleTokens([...tokens, ...distractors]);
+            interactiveHtml = `
+              <div class="candidate-sentence-reorder-wrap" data-item-id="${item.itemVersionId}">
+                <div class="candidate-token-bank-header">
+                  <span class="token-bank-label">Ngân hàng từ / Cụm từ (Bấm vào thẻ để ghép câu):</span>
+                </div>
+                <div class="candidate-token-bank" data-item-id="${item.itemVersionId}">
+                  ${allChips.map((tok, idx) => `
+                    <button type="button" class="btn-token-chip" data-token="${escapeHtml(tok)}" data-token-id="t-${idx}">
+                      ${escapeHtml(tok)}
+                    </button>
+                  `).join('')}
+                </div>
+
+                <div class="candidate-assembly-area" style="margin-top: 12px;">
+                  <label class="form-label" style="font-size:0.8rem; font-weight:600; color:#334155;">Câu bạn ghép được (Có thể bấm thẻ phía trên hoặc gõ trực tiếp):</label>
+                  <div class="assembly-input-wrap">
+                    <input type="text" class="form-control candidate-reorder-input" data-item-id="${item.itemVersionId}" placeholder="Bấm các thẻ từ ở trên hoặc gõ câu hoàn chỉnh vào đây..." />
+                    <button type="button" class="btn btn-secondary btn-sm btn-clear-assembly" data-item-id="${item.itemVersionId}" title="Xóa và ghép lại từ đầu">
+                      ↺ Ghép lại
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
           } else if (isErrorCorrection) {
             interactiveHtml = `
               <div class="candidate-error-correction-grid">
@@ -3625,25 +3995,27 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
-          const promptDisplay = isErrorCorrection
-            ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
-            : (isReadingMatching
-              ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
-              : (isListeningOrder
-                ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
-                : (isVocabPair
-                  ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
-                  : (isInlineCloze
-                    ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
-                    : (isPictorial
-                      ? 'Nhìn hình và hoàn thành từ vựng:'
-                      : escapeHtml(item.prompt || ''))))));
+          const promptDisplay = isSentenceReorder
+            ? `Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:${item.prompt && item.prompt !== 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:' ? `<br/><blockquote class="reorder-prompt-quote">${escapeHtml(item.prompt)}</blockquote>` : ''}`
+            : (isErrorCorrection
+              ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+              : (isReadingMatching
+                ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
+                : (isListeningOrder
+                  ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
+                  : (isVocabPair
+                    ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+                    : (isInlineCloze
+                      ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+                      : (isPictorial
+                        ? 'Nhìn hình và hoàn thành từ vựng:'
+                        : escapeHtml(item.prompt || '')))))));
 
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))))))}</span>
+                <span class="question-type-badge">${isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}
@@ -3807,6 +4179,32 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             readingCol?.classList.remove('active-pane');
             questionsCol?.classList.add('active-pane');
           }
+        });
+      });
+
+      // Sentence Reorder token assembling interactions
+      const tokenChips = modal.querySelectorAll('.btn-token-chip');
+      tokenChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          if (chip.classList.contains('is-used')) return;
+          const wrap = chip.closest('.candidate-sentence-reorder-wrap');
+          const input = wrap?.querySelector('.candidate-reorder-input');
+          const token = chip.getAttribute('data-token');
+          if (input && token) {
+            const current = input.value.trim();
+            input.value = current ? `${current} ${token}` : token;
+            chip.classList.add('is-used');
+          }
+        });
+      });
+
+      const clearAssemblyBtns = modal.querySelectorAll('.btn-clear-assembly');
+      clearAssemblyBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const wrap = btn.closest('.candidate-sentence-reorder-wrap');
+          const input = wrap?.querySelector('.candidate-reorder-input');
+          if (input) input.value = '';
+          wrap?.querySelectorAll('.btn-token-chip').forEach(c => c.classList.remove('is-used'));
         });
       });
     }
