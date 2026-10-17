@@ -23,7 +23,8 @@ export function learningRequestMethod(path) {
 
 // Mọi request lượt làm gửi kèm mã thiết bị theo tab; Exam Mode dùng nó để chỉ cho một máy làm bài.
 export function learningRequestBody(path, body, deviceId) {
-  return path.startsWith('/attempts/') ? { ...body, deviceId } : body;
+  // /attempts/review có schema strict, không nhận deviceId.
+  return path.startsWith('/attempts/') && path !== '/attempts/review' ? { ...body, deviceId } : body;
 }
 
 // 'waiting' → phòng chờ (chưa có đề); 'running' → vào đề và bật Exam Guard; 'off' → luồng thường.
@@ -883,10 +884,15 @@ export async function mount(course) {
               </div>
             </div>
 
-            <div style="display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #f1f5f9;padding-top:20px">
+            <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px 0;border-top:1px solid #f1f5f9;padding-top:20px">
+              <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700;margin-right:12px">Xem kết quả</button>
               <button type="button" class="btn btn-primary" id="startExamBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Bắt đầu làm bài →</button>
             </div>
           </div>
+        </main>
+        <main id="reviewMain" class="demo-width" hidden style="max-width:672px;margin:20px auto;padding:0 16px">
+          <button type="button" class="btn btn-secondary" id="reviewBackBtn">← Chọn lại tên</button>
+          <div id="reviewBody" aria-live="polite"></div>
         </main>
       </div>
     `;
@@ -906,6 +912,24 @@ export async function mount(course) {
       button.btn-secondary{background:white;color:#334155;border-color:#cbd5e1}
       button.btn-secondary:not(:disabled):hover{background:#f8fafc;border-color:#94a3b8}
       button:disabled{opacity:.5;cursor:not-allowed}
+      .review-screen{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.04);margin-top:16px;line-height:1.5;color:#1e293b}
+      .review-header h1{font-size:22px;margin:0 0 4px;color:#174266}.review-header p{margin:0;color:#64748b;font-size:14px}
+      .review-total{margin:16px 0;padding:16px;border-radius:12px;background:#fff7f8;border:1px solid #f5d8dd;text-align:center}
+      .review-total strong{display:block;font-size:32px;color:#db0829}
+      .review-provisional{color:#8a5a00;font-weight:700}
+      .review-section{border:1px solid #e2e8f0;border-radius:12px;margin-top:12px;overflow:hidden}
+      .review-section-toggle{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;border:0;background:#fff;padding:12px 16px;text-align:left;font:inherit;cursor:pointer}
+      .review-section-toggle strong{font-size:17px}.review-section-toggle span{font-size:13px;color:#64748b}
+      .review-section-items{list-style:none;margin:0;padding:0 16px 8px}
+      .review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid #e2e8f0;font-size:14px}
+      .review-verdict{flex:0 0 auto;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700;background:#f1f5f9}
+      .review-verdict.correct{background:#e8f7f0;color:#12805c}.review-verdict.incorrect{background:#fff0f2;color:#db0829}
+      .review-verdict.partial,.review-verdict.pending,.review-verdict.manual_review{background:#fff7e8;color:#8a5a00}
+      .review-answer{color:#64748b;word-break:break-word}.review-expected{margin-top:4px}.review-expected.muted{color:#64748b;font-size:13px}
+      .review-feedback{margin-top:8px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;font-size:13px}
+      .review-inline-error{margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff0f2;border:1px solid #f5d8dd}
+      .review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:#db0829;color:#fff;font-weight:700;cursor:pointer}
+      @media(max-width:520px){.content-demo main.demo-width>div{padding:20px!important}.demo-top{padding:10px 12px}.timer{display:none}#viewResultBtn,#startExamBtn{width:100%;margin:0!important}#loadRosterBtn{min-width:0!important;padding:0 12px!important}}
     `;
     document.head.append(canonicalStyle);
 
@@ -1146,6 +1170,136 @@ export async function mount(course) {
         startBtn.disabled = false;
         startBtn.textContent = 'Bắt đầu làm bài →';
         alert(`Không mở được phiên làm bài: ${err.message}`);
+      }
+    });
+
+    // --- XEM KẾT QUẢ: chỉ đọc qua /attempts/review + /attempts/result, không start, không âm thanh, không Exam Guard ---
+    const viewBtn = document.querySelector('#viewResultBtn');
+    const introMain = document.querySelector('main.demo-width:not(#reviewMain)');
+    const reviewMain = document.querySelector('#reviewMain');
+    const reviewBody = document.querySelector('#reviewBody');
+    const REVIEW_POLL_MAX_MS = 45 * 60 * 1000;
+    let reviewApi = null;
+    let reviewModulePromise = null;
+    let reviewModuleTries = 0;
+    let reviewRetry = null;
+    let reviewTimer = null;
+    let reviewRun = 0;
+    let reviewLastHtml = '';
+    let reviewSubmittedAt = '';
+    let reviewShown = false;
+
+    // Lỗi nạp module không được nuốt: mỗi lần thử lại dùng URL mới để tránh cache lỗi.
+    function loadReviewModule() {
+      reviewModulePromise ||= import(`../34-shared/review-module.mjs?rev=20261017-review-v1${reviewModuleTries++ ? `&retry=${Date.now()}` : ''}`)
+        .then(module => (reviewApi = module), error => { reviewModulePromise = null; throw error; });
+      return reviewModulePromise;
+    }
+    loadReviewModule().catch(() => {});
+    studentSelect.addEventListener('change', () => { viewBtn.disabled = !studentSelect.value; });
+
+    function stopReviewPolling() {
+      clearTimeout(reviewTimer);
+      reviewTimer = null;
+      reviewRun += 1;
+    }
+
+    // input: phần còn lại của reviewViewModel ({state, result, definition, error}).
+    function renderReview(input) {
+      if (!reviewApi) {
+        loadReviewModule().then(() => renderReview(input), () => {
+          reviewRetry = () => renderReview(input);
+          reviewBody.innerHTML = '<section class="review-screen review-error" style="padding:16px"><p role="alert">Không tải được màn hình kết quả. Kiểm tra kết nối mạng rồi thử lại.</p><button type="button" class="review-retry" data-review-retry>Thử lại</button></section>';
+          reviewLastHtml = '';
+        });
+        return;
+      }
+      const meta = {
+        testTitle: document.querySelector('.brand-sub')?.textContent || title,
+        studentName: learningState.studentName,
+        className: learningState.className,
+        submittedAt: reviewSubmittedAt
+      };
+      const html = reviewApi.reviewHtml(reviewApi.reviewViewModel({ meta, ...input }));
+      if (html === reviewLastHtml) return; // polling không dựng lại khi nội dung không đổi
+      const expanded = [...reviewBody.querySelectorAll('[data-review-section][aria-expanded="true"]')].map(btn => btn.dataset.reviewSection);
+      reviewBody.innerHTML = reviewLastHtml = html;
+      expanded.forEach(id => {
+        reviewBody.querySelector(`[data-review-section="${id}"]`)?.setAttribute('aria-expanded', 'true');
+        const list = document.getElementById(id);
+        if (list) list.hidden = false;
+      });
+    }
+
+    const reviewError = (error, retry) => { reviewRetry = retry; renderReview({ state: 'error', error }); };
+
+    async function openReview() {
+      if (!learningState.studentRef) return;
+      stopReviewPolling();
+      const run = reviewRun;
+      reviewLastHtml = '';
+      reviewSubmittedAt = '';
+      reviewShown = false;
+      introMain.hidden = true;
+      reviewMain.hidden = false;
+      renderReview({ state: 'loading' });
+      try {
+        const review = await apiRequest('/attempts/review', { testToken, courseCode: learningState.courseCode, studentRef: learningState.studentRef });
+        if (run !== reviewRun) return;
+        if (review.status === 'not_submitted') return renderReview({ state: 'no_submission' });
+        if (review.status !== 'submitted_unpublished' && review.status !== 'published') throw new Error(`Trạng thái không hợp lệ: ${review.status}`);
+        reviewSubmittedAt = review.submittedAt || '';
+        if (review.status === 'submitted_unpublished') renderReview({ state: 'not_released' });
+        pollReview(review.attemptToken, run, Date.now(), 0);
+      } catch (error) {
+        if (run === reviewRun) reviewError(error, openReview);
+      }
+    }
+
+    // Chưa công bố: hỏi chậm 15s để tự cập nhật khi giảng viên công bố; đã công bố nhưng còn câu chờ chấm: 2s.
+    async function pollReview(attemptToken, run, startedAt, delay) {
+      if (delay) await new Promise(resolve => { reviewTimer = setTimeout(resolve, delay); });
+      if (run !== reviewRun) return;
+      let next = 15_000;
+      try {
+        const res = await apiRequest('/attempts/result', { attemptToken });
+        if (run !== reviewRun) return;
+        const result = res.result;
+        if (result?.publication?.published && Array.isArray(result.items)) {
+          // Chế độ thi 'waiting' không trả definition lúc resolve; dùng definition từ /attempts/result trước.
+          const definition = res.definition || learningState.definition;
+          reviewShown = true;
+          renderReview({ state: 'ready', result, definition: { blocks: definition?.blocks, sections: definition?.sections } });
+          if (['complete', 'manual_review'].includes(result.gradingStatus) && !result.summary?.pendingItemCount) return;
+          next = 2000;
+        }
+      } catch (error) {
+        if (run !== reviewRun) return;
+        if (error.status === 429 && reviewShown) {
+          next = 30_000; // đã có kết quả trên màn hình: chỉ giãn nhịp hỏi
+        } else {
+          // Chưa có gì để hiện (hoặc lỗi bền): dừng polling và hiện Thử lại.
+          reviewError(error, () => { stopReviewPolling(); renderReview({ state: 'loading' }); pollReview(attemptToken, reviewRun, Date.now(), 0); });
+          return;
+        }
+      }
+      if (Date.now() - startedAt < REVIEW_POLL_MAX_MS) void pollReview(attemptToken, run, startedAt, next);
+    }
+
+    viewBtn.addEventListener('click', openReview);
+    document.querySelector('#reviewBackBtn').addEventListener('click', () => {
+      stopReviewPolling();
+      reviewMain.hidden = true;
+      introMain.hidden = false;
+    });
+    reviewMain.addEventListener('click', event => {
+      if (event.target.closest('[data-review-retry]')) reviewRetry?.();
+      const toggle = event.target.closest('[data-review-section]');
+      if (toggle) {
+        const list = document.getElementById(toggle.dataset.reviewSection);
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (list) list.hidden = expanded;
+        toggle.setAttribute('aria-expanded', String(!expanded));
       }
     });
 
