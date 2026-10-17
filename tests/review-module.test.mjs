@@ -116,3 +116,9 @@ test('trạng thái lỗi/đang tải không cần WEBTEST34_LEARNING_RESULT', (
   delete globalThis.WEBTEST34_LEARNING_RESULT;
   try { assert.equal(reviewViewModel({ state: 'error' }).kind, 'error'); } finally { globalThis.WEBTEST34_LEARNING_RESULT = saved; }
 });
+
+test('loại câu lạ (listening_mcq) vẫn dựng được kết quả, không ném lỗi', () => {
+  const vm = reviewViewModel(ready([item('i1', 1, 'correct', 1, 1, { pedagogicalTypeCode: 'listening_mcq' }), item('i2', 2, 'correct', 1, 1), item('i3', 3, 'correct', 1, 1)]));
+  assert.equal(vm.kind, 'ready');
+  assert.equal(vm.score, '3 / 3');
+});

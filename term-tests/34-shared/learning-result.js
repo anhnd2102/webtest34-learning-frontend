@@ -57,7 +57,9 @@
     }
 
     for (const item of items || []) {
-      const fallbackId = item.pedagogicalTypeCode ? sectionIdForType(item.pedagogicalTypeCode) : '';
+      // Loại câu lạ (vd. listening_mcq) không được làm hỏng cả màn hình: thiếu nhóm thì rơi vào unmatchedItems.
+      let fallbackId = '';
+      try { fallbackId = item.pedagogicalTypeCode ? sectionIdForType(item.pedagogicalTypeCode) : ''; } catch { /* bỏ qua */ }
       const group = groupsByItemId.get(item.itemVersionId) || groupsByFallbackId.get(fallbackId);
       if (!group) {
         unmatchedItems.push(item);
