@@ -1031,6 +1031,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
   if (!draftState.blocks.length) {
     const initialItemId = generateUuid();
+    const initialExId = generateUuid();
     draftState.blocks.push({
       blockId: generateUuid(),
       checkpoint: 1,
@@ -1038,11 +1039,24 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       instructions: '',
       audioUrl: '',
       readingPassage: '',
+      exercises: [
+        {
+          exerciseId: initialExId,
+          exerciseNumber: 1,
+          title: 'Bài tập 1: Khởi động',
+          instructions: '',
+          audioUrl: null,
+          readingPassage: null,
+          itemIds: [initialItemId]
+        }
+      ],
       items: [
         {
           itemFamilyId: generateUuid(),
           itemVersionId: initialItemId,
           position: 1,
+          exerciseId: initialExId,
+          exerciseTitle: 'Bài tập 1: Khởi động',
           prompt: 'Câu hỏi 1:',
           helpText: '',
           interactionType: 'single_choice',
@@ -1066,6 +1080,74 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       graderType: 'exact_option',
       expectedOptionId: 'A'
     };
+  }
+
+  // Normalize exercises in each block for 3-level hierarchy (Block -> Exercise -> Item)
+  for (const block of draftState.blocks) {
+    if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
+      const defaultExId = generateUuid();
+      block.exercises = [
+        {
+          exerciseId: defaultExId,
+          exerciseNumber: 1,
+          title: block.title ? `${block.title}` : 'Exercise 1',
+          instructions: block.instructions || '',
+          audioUrl: block.audioUrl || null,
+          readingPassage: block.readingPassage || null,
+          itemIds: (block.items || []).map(it => it.itemVersionId)
+        }
+      ];
+    } else {
+      block.exercises.forEach((ex, idx) => {
+        ex.exerciseNumber = idx + 1;
+        if (!ex.exerciseId) ex.exerciseId = generateUuid();
+        if (!ex.title) ex.title = `Exercise ${idx + 1}`;
+      });
+    }
+
+    const exIdMap = new Map(block.exercises.map(e => [e.exerciseId, e]));
+    const firstEx = block.exercises[0];
+
+    for (const itm of block.items || []) {
+      if (!itm.exerciseId || !exIdMap.has(itm.exerciseId)) {
+        itm.exerciseId = firstEx.exerciseId;
+        itm.exerciseTitle = itm.exerciseTitle || firstEx.title;
+      } else {
+        itm.exerciseTitle = itm.exerciseTitle || exIdMap.get(itm.exerciseId)?.title;
+      }
+    }
+
+    for (const ex of block.exercises) {
+      ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
+    }
+  }
+
+  function resolveTargetExercise(block, btn) {
+    if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
+      const defaultExId = generateUuid();
+      block.exercises = [
+        {
+          exerciseId: defaultExId,
+          exerciseNumber: 1,
+          title: block.title ? `${block.title}` : 'Exercise 1',
+          instructions: block.instructions || '',
+          audioUrl: block.audioUrl || null,
+          readingPassage: block.readingPassage || null,
+          itemIds: (block.items || []).map(it => it.itemVersionId)
+        }
+      ];
+    }
+    const exId = btn ? btn.getAttribute('data-exercise-id') : null;
+    const exIdxStr = btn ? btn.getAttribute('data-exercise-idx') : null;
+    const exIdx = exIdxStr !== null && exIdxStr !== undefined && exIdxStr !== '' ? Number(exIdxStr) : null;
+    if (exId) {
+      const found = block.exercises.find(e => e.exerciseId === exId);
+      if (found) return found;
+    }
+    if (exIdx !== null && block.exercises[exIdx]) {
+      return block.exercises[exIdx];
+    }
+    return block.exercises[0];
   }
 
   // Ensure initial grading key entries exist
@@ -1112,13 +1194,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
   }
 
-  function renderBlockItems(block, blockIdx) {
-    const items = block.items || [];
-    if (!items.length) {
-      return `<div class="empty-items-notice">Chưa có câu hỏi nào trong phần này. Chọn một dạng câu hỏi bên dưới để thêm.</div>`;
-    }
-
-    return items.map((item, itemIdx) => {
+  function renderItemCard(item, itemIdx, block, blockIdx) {
       const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
       const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
       const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
@@ -2050,7 +2126,101 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         </div>
       `;
+  }
+
+  function renderExerciseItems(block, blockIdx, exercise, exIdx) {
+    const items = (block.items || []).filter(it => it.exerciseId === exercise.exerciseId);
+    if (!items.length) {
+      return `<div class="empty-items-notice">Chưa có câu hỏi nào trong bài tập này. Chọn một dạng câu hỏi bên dưới để thêm.</div>`;
+    }
+    return items.map(item => {
+      const itemIdx = block.items.indexOf(item);
+      return renderItemCard(item, itemIdx, block, blockIdx);
     }).join('');
+  }
+
+  function renderBlockExercises(block, blockIdx) {
+    const exercises = block.exercises || [];
+    return exercises.map((ex, exIdx) => {
+      const exItems = (block.items || []).filter(it => it.exerciseId === ex.exerciseId);
+      const isFirst = exIdx === 0;
+      const isLast = exIdx === exercises.length - 1;
+      const isOnly = exercises.length <= 1;
+
+      return `
+        <div class="builder-exercise-card" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+          <div class="builder-exercise-header">
+            <div class="exercise-header-left">
+              <span class="exercise-badge">Exercise ${ex.exerciseNumber || (exIdx + 1)}</span>
+              <input type="text" class="exercise-title-input form-control form-control-sm" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" value="${escapeHtml(ex.title || '')}" placeholder="Tiêu đề bài tập (Ví dụ: Nghe từ và chọn nghĩa)..." />
+              <span class="badge badge-info exercise-items-count">${exItems.length} câu hỏi</span>
+            </div>
+            <div class="exercise-header-actions">
+              <button type="button" class="btn btn-icon btn-sm btn-move-exercise-up" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isFirst ? 'disabled' : ''} title="Di chuyển bài tập lên">↑</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-exercise-down" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isLast ? 'disabled' : ''} title="Di chuyển bài tập xuống">↓</button>
+              <button type="button" class="btn btn-icon btn-sm btn-delete-exercise" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isOnly ? 'disabled' : ''} title="Xóa bài tập này">✕</button>
+            </div>
+          </div>
+          <div class="builder-exercise-body">
+            <div class="form-group exercise-field">
+              <label class="form-label"><strong>Hướng dẫn làm bài tập (Exercise Instructions):</strong></label>
+              <textarea class="form-control exercise-instructions-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="2" placeholder="Ví dụ: Listen and note down the words/phrases you hear from the audio...">${escapeHtml(ex.instructions || '')}</textarea>
+            </div>
+            <div class="exercise-items-list block-items-list" data-exercise-id="${ex.exerciseId}">
+              ${renderExerciseItems(block, blockIdx, ex, exIdx)}
+            </div>
+            <div class="exercise-add-item-bar block-add-item-bar">
+              <span class="add-item-caption">+ Thêm câu hỏi vào Exercise ${ex.exerciseNumber || (exIdx + 1)}:</span>
+              <div class="add-item-buttons">
+                <button type="button" class="btn btn-secondary btn-sm btn-add-reading-matching" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Bài đọc chia đôi & Nối (Reading Split-Pane)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Sắp xếp thứ tự nghe (Listening Order)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-error-correction" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Tìm và sửa lỗi (Error Correction)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-reorder" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Sắp xếp câu (Sentence Reorder)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Biến đổi câu (Transformation)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Phát âm & Ký hiệu IPA (Pronunciation)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Trắc nghiệm (Single Choice)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-multi-group" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Nhóm chọn nhiều (Multi-Select Group)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-fitb" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Điền ô trống (Short Text)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-inline-cloze" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Điền từ nội tuyến (Inline Cloze)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-pictorial" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Thẻ từ vựng qua ảnh (Pictorial)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-pair" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Cặp từ vựng (Vocabulary Pair)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm btn-add-rubric-async" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                  + Tự luận chấm AI (AI Rubric)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderBlockItems(block, blockIdx) {
+    return renderBlockExercises(block, blockIdx);
   }
 
   function render() {
@@ -2094,54 +2264,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             <div class="block-items-section">
               <div class="block-items-header-bar">
-                <h4>Danh sách câu hỏi (${itemsCount} câu)</h4>
+                <h4>Danh sách bài tập & câu hỏi (${itemsCount} câu · ${(block.exercises || []).length} bài tập)</h4>
               </div>
-              <div class="block-items-list">
-                ${renderBlockItems(block, index)}
+              <div class="block-exercises-container block-items-list" data-block-idx="${index}">
+                ${renderBlockExercises(block, index)}
               </div>
-              <div class="block-add-item-bar">
-                <span class="add-item-caption">+ Thêm câu hỏi:</span>
-                <div class="add-item-buttons">
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-reading-matching" data-block-idx="${index}">
-                    + Bài đọc chia đôi & Nối (Reading Split-Pane)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${index}">
-                    + Sắp xếp thứ tự nghe (Listening Order)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-error-correction" data-block-idx="${index}">
-                    + Tìm và sửa lỗi (Error Correction)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-reorder" data-block-idx="${index}">
-                    + Sắp xếp câu (Sentence Reorder)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${index}">
-                    + Biến đổi câu (Transformation)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice" data-block-idx="${index}">
-                    + Phát âm & Ký hiệu IPA (Pronunciation)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${index}">
-                    + Trắc nghiệm (Single Choice)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-multi-group" data-block-idx="${index}">
-                    + Nhóm chọn nhiều (Multi-Select Group)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-fitb" data-block-idx="${index}">
-                    + Điền ô trống (Short Text)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-inline-cloze" data-block-idx="${index}">
-                    + Điền từ nội tuyến (Inline Cloze)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-pictorial" data-block-idx="${index}">
-                    + Thẻ từ vựng qua ảnh (Pictorial)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-pair" data-block-idx="${index}">
-                    + Cặp từ vựng (Vocabulary Pair)
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm btn-add-rubric-async" data-block-idx="${index}">
-                    + Tự luận chấm AI (AI Rubric)
-                  </button>
-                </div>
+              <div class="block-exercise-actions" style="margin-top: 14px;">
+                <button type="button" class="btn btn-outline-primary btn-add-exercise" data-block-idx="${index}">
+                  + Thêm bài tập (Exercise)
+                </button>
               </div>
             </div>
           </div>
@@ -2270,6 +2401,27 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         if (readingEl) {
           block.readingPassage = readingEl.value || null;
           block.stimulusReadingPassage = block.readingPassage;
+        }
+
+        const exCards = bCard.querySelectorAll('.builder-exercise-card');
+        if (exCards && typeof exCards.forEach === 'function') {
+          exCards.forEach((exCard, exIdx) => {
+            const ex = block.exercises?.[exIdx];
+            if (!ex) return;
+            const exTitleEl = exCard.querySelector('.exercise-title-input');
+            if (exTitleEl) ex.title = exTitleEl.value.trim();
+            const exInstEl = exCard.querySelector('.exercise-instructions-input');
+            if (exInstEl) ex.instructions = exInstEl.value;
+          });
+        }
+
+        for (const ex of block.exercises || []) {
+          for (const itm of block.items || []) {
+            if (itm.exerciseId === ex.exerciseId) {
+              itm.exerciseTitle = ex.title;
+            }
+          }
+          ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
         }
 
         const itemCards = bCard.querySelectorAll('.builder-item-card');
@@ -2633,6 +2785,118 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       backBtn.addEventListener('click', options.onBack);
     }
 
+    // Add Exercise to block
+    const addExerciseBtns = container.querySelectorAll('.btn-add-exercise');
+    addExerciseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        if (!Array.isArray(block.exercises)) block.exercises = [];
+        const nextExNum = block.exercises.length + 1;
+        const newExId = generateUuid();
+        block.exercises.push({
+          exerciseId: newExId,
+          exerciseNumber: nextExNum,
+          title: `Bài tập ${nextExNum}`,
+          instructions: '',
+          audioUrl: null,
+          readingPassage: null,
+          itemIds: []
+        });
+        render();
+      });
+    });
+
+    // Move Exercise Up
+    const moveExUpBtns = container.querySelectorAll('.btn-move-exercise-up');
+    moveExUpBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const exIdx = Number(btn.getAttribute('data-exercise-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block || !block.exercises || exIdx <= 0) return;
+        const temp = block.exercises[exIdx];
+        block.exercises[exIdx] = block.exercises[exIdx - 1];
+        block.exercises[exIdx - 1] = temp;
+        block.exercises.forEach((ex, idx) => { ex.exerciseNumber = idx + 1; });
+        const orderMap = new Map();
+        block.exercises.forEach((ex, idx) => orderMap.set(ex.exerciseId, idx));
+        (block.items || []).sort((a, b) => {
+          const ordA = orderMap.get(a.exerciseId) ?? 999;
+          const ordB = orderMap.get(b.exerciseId) ?? 999;
+          if (ordA !== ordB) return ordA - ordB;
+          return (a.position || 0) - (b.position || 0);
+        });
+        let pos = 1;
+        for (const b of draftState.blocks) {
+          for (const it of b.items || []) {
+            it.position = pos++;
+          }
+        }
+        render();
+      });
+    });
+
+    // Move Exercise Down
+    const moveExDownBtns = container.querySelectorAll('.btn-move-exercise-down');
+    moveExDownBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const exIdx = Number(btn.getAttribute('data-exercise-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block || !block.exercises || exIdx >= block.exercises.length - 1) return;
+        const temp = block.exercises[exIdx];
+        block.exercises[exIdx] = block.exercises[exIdx + 1];
+        block.exercises[exIdx + 1] = temp;
+        block.exercises.forEach((ex, idx) => { ex.exerciseNumber = idx + 1; });
+        const orderMap = new Map();
+        block.exercises.forEach((ex, idx) => orderMap.set(ex.exerciseId, idx));
+        (block.items || []).sort((a, b) => {
+          const ordA = orderMap.get(a.exerciseId) ?? 999;
+          const ordB = orderMap.get(b.exerciseId) ?? 999;
+          if (ordA !== ordB) return ordA - ordB;
+          return (a.position || 0) - (b.position || 0);
+        });
+        let pos = 1;
+        for (const b of draftState.blocks) {
+          for (const it of b.items || []) {
+            it.position = pos++;
+          }
+        }
+        render();
+      });
+    });
+
+    // Delete Exercise
+    const deleteExBtns = container.querySelectorAll('.btn-delete-exercise');
+    deleteExBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const exIdx = Number(btn.getAttribute('data-exercise-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block || !block.exercises || block.exercises.length <= 1) return;
+        const deletedEx = block.exercises[exIdx];
+        block.exercises.splice(exIdx, 1);
+        const survivorEx = block.exercises[Math.max(0, exIdx - 1)] || block.exercises[0];
+        (block.items || []).forEach(it => {
+          if (it.exerciseId === deletedEx.exerciseId) {
+            it.exerciseId = survivorEx.exerciseId;
+            it.exerciseTitle = survivorEx.title;
+          }
+        });
+        block.exercises.forEach((ex, idx) => {
+          ex.exerciseNumber = idx + 1;
+          ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
+        });
+        render();
+      });
+    });
+
     const addBlockBtn = container.querySelector('#btn-add-block');
     if (addBlockBtn && typeof addBlockBtn.addEventListener === 'function') {
       addBlockBtn.addEventListener('click', () => {
@@ -2640,6 +2904,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextIdx = draftState.blocks.length + 1;
         const nextPos = getNextPosition();
         const initialItemId = generateUuid();
+        const initialExId = generateUuid();
 
         draftState.blocks.push({
           blockId: generateUuid(),
@@ -2650,11 +2915,24 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           readingPassage: null,
           stimulusAudioUrl: null,
           stimulusReadingPassage: null,
+          exercises: [
+            {
+              exerciseId: initialExId,
+              exerciseNumber: 1,
+              title: `Bài tập 1: Phần ${nextIdx}`,
+              instructions: '',
+              audioUrl: null,
+              readingPassage: null,
+              itemIds: [initialItemId]
+            }
+          ],
           items: [
             {
               itemFamilyId: generateUuid(),
               itemVersionId: initialItemId,
               position: nextPos,
+              exerciseId: initialExId,
+              exerciseTitle: `Bài tập 1: Phần ${nextIdx}`,
               prompt: `Câu hỏi ${nextPos}:`,
               helpText: '',
               interactionType: 'single_choice',
@@ -2690,6 +2968,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -2697,6 +2976,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Câu hỏi ${nextPos}:`,
           helpText: '',
           interactionType: 'single_choice',
@@ -2730,6 +3011,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const groupId = `group_${bIdx + 1}_${Date.now().toString(36)}`;
         const newItem1Id = generateUuid();
@@ -2746,6 +3028,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItem1Id,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Chọn 2 đáp án chính xác (Vị trí 1):`,
           helpText: '',
           interactionType: 'multi_choice_group',
@@ -2763,6 +3047,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItem2Id,
           position: nextPos + 1,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Chọn 2 đáp án chính xác (Vị trí 2):`,
           helpText: '',
           interactionType: 'multi_choice_group',
@@ -2792,6 +3078,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3659,6 +3946,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3666,6 +3954,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: 'Nhìn hình và hoàn thành từ vựng:',
           helpText: '',
           interactionType: 'short_text',
@@ -4485,6 +4775,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               readingPassage: b.readingPassage || null,
               stimulusAudioUrl: b.audioUrl || null,
               stimulusReadingPassage: b.readingPassage || null,
+              exercises: b.exercises || [],
               items: b.items || []
             })),
             gradingKey: draftState.gradingKey
@@ -4549,8 +4840,19 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const audioUrl = b.audioUrl || b.stimulusAudioUrl || '';
         const reading = b.readingPassage || b.stimulusReadingPassage || '';
         const items = b.items || [];
+        const exercises = (b.exercises && b.exercises.length > 0) ? b.exercises : [
+          {
+            exerciseId: b.blockId,
+            exerciseNumber: 1,
+            title: b.title || `Phần ${bIdx + 1}`,
+            instructions: b.instructions || '',
+            audioUrl,
+            readingPassage: reading,
+            itemIds: items.map(it => it.itemVersionId)
+          }
+        ];
 
-        const itemsHtml = items.map((item) => {
+        const renderSimQuestionCard = (item) => {
           const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
           const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
           const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
@@ -4815,67 +5117,69 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               ${interactiveHtml}
             </div>
           `;
-        }).join('');
+        };
 
-        const isSplitPane = b.layoutType === 'split_pane_matching' || items.some(it => it.pedagogicalTypeCode === 'reading_matching' || it.layoutType === 'split_pane_matching');
+        const exercisesHtml = exercises.map((ex, exIdx) => {
+          const exItems = items.filter(it => it.exerciseId === ex.exerciseId);
+          const exItemsList = exItems.length ? exItems : (exercises.length === 1 ? items : []);
+          const exPoints = exItemsList.reduce((sum, it) => sum + (it.maxScore || 1), 0);
+          const exAudioUrl = ex.audioUrl || (exercises.length === 1 ? audioUrl : '');
+          const exReading = ex.readingPassage || (exercises.length === 1 ? reading : '');
+          const exItemsHtml = exItemsList.map(renderSimQuestionCard).join('');
 
-        if (isSplitPane && reading) {
-          return `
-            <section class="simulation-section-card section-page simulation-split-pane-section ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
-              <div class="exercise">
+          const isSplitPane = exItemsList.some(it => it.pedagogicalTypeCode === 'reading_matching' || it.layoutType === 'split_pane_matching');
+
+          if (isSplitPane && exReading) {
+            return `
+              <div class="exercise simulation-split-pane-exercise" data-exercise-id="${ex.exerciseId}">
                 <div class="exercise-head sim-section-header">
                   <div>
-                    <h2>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>
-                    ${b.instructions ? `<div class="sim-instructions"><p>${escapeHtml(b.instructions)}</p></div>` : ''}
+                    <h3>${exercises.length > 1 ? `Exercise ${ex.exerciseNumber || (exIdx + 1)}: ` : ''}${escapeHtml(ex.title || `Bài tập ${ex.exerciseNumber || (exIdx + 1)}`)}</h3>
+                    ${ex.instructions ? `<div class="sim-instructions"><p>${escapeHtml(ex.instructions)}</p></div>` : ''}
                   </div>
-                  <span class="points">${items.length} ô trả lời</span>
+                  <span class="points">${exItemsList.length} ô trả lời · ${exPoints} điểm</span>
                 </div>
 
-                <!-- Mobile View Switcher Tabs -->
                 <div class="split-pane-mobile-toggle">
-                  <button type="button" class="btn btn-sm btn-outline-primary active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">${renderSvgIcon('book', 'icon-inline')} Xem bài đọc</button>
-                  <button type="button" class="btn btn-sm btn-outline-primary toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi ghép nối (${items.length})</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary active toggle-pane-btn" data-pane="reading" data-section="${bIdx}_${exIdx}">${renderSvgIcon('book', 'icon-inline')} Xem bài đọc</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary toggle-pane-btn" data-pane="questions" data-section="${bIdx}_${exIdx}">Xem câu hỏi ghép nối (${exItemsList.length})</button>
                 </div>
 
-                <div class="split-pane-reading" id="split-pane-${bIdx}">
-                  <!-- Left Column: Reading Passage (Independent scroll & sticky header) -->
+                <div class="split-pane-reading" id="split-pane-${bIdx}_${exIdx}">
                   <div class="reading-passage-column active-pane" data-pane-type="reading">
                     <div class="reading-passage-sticky-header">
                       <span class="reading-title-badge">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu (Reading Passage)</span>
                       <span class="reading-hint">Cuộn độc lập để tra cứu</span>
                     </div>
                     <div class="reading-passage-content">
-                      ${escapeHtml(reading).replace(/\n/g, '<br/>')}
+                      ${escapeHtml(exReading).replace(/\n/g, '<br/>')}
                     </div>
                   </div>
 
-                  <!-- Right Column: Matching Questions -->
                   <div class="matching-questions-column" data-pane-type="questions">
                     <div class="matching-column-header">
                       <span class="matching-title-badge">Danh sách câu hỏi ghép nối</span>
                     </div>
                     <div class="sim-questions-list matching-items-list">
-                      ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
+                      ${exItemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong bài tập này.</div>'}
                     </div>
                   </div>
                 </div>
               </div>
-            </section>
-          `;
-        }
+            `;
+          }
 
-        return `
-          <section class="simulation-section-card section-page ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
-            <div class="exercise">
+          return `
+            <div class="exercise" data-exercise-id="${ex.exerciseId}">
               <div class="exercise-head sim-section-header">
                 <div>
-                  <h2>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>
-                  ${b.instructions ? `<div class="sim-instructions"><p>${escapeHtml(b.instructions)}</p></div>` : ''}
+                  <h3>${exercises.length > 1 ? `Exercise ${ex.exerciseNumber || (exIdx + 1)}: ` : ''}${escapeHtml(ex.title || `Bài tập ${ex.exerciseNumber || (exIdx + 1)}`)}</h3>
+                  ${ex.instructions ? `<div class="sim-instructions"><p>${escapeHtml(ex.instructions)}</p></div>` : ''}
                 </div>
-                <span class="points">${items.length} ô trả lời</span>
+                <span class="points">${exItemsList.length} ô trả lời · ${exPoints} điểm</span>
               </div>
 
-              ${audioUrl ? `
+              ${exAudioUrl ? `
                 <div class="audio-dock sim-audio-dock">
                   <div class="audio-dock-controls">
                     <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">
@@ -4883,20 +5187,49 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                     </button>
                     <span class="audio-note">🔊 Đã mở khóa nội dung câu hỏi để kiểm tra đề.</span>
                   </div>
-                  <audio controls src="${escapeHtml(audioUrl)}" class="sim-audio-player" style="display:none;"></audio>
+                  <audio controls src="${escapeHtml(exAudioUrl)}" class="sim-audio-player" style="display:none;"></audio>
                 </div>
               ` : ''}
 
-              ${reading ? `
+              ${exReading ? `
                 <div class="sim-reading-dock">
                   <div class="reading-header">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu:</div>
-                  <div class="reading-content">${escapeHtml(reading).replace(/\n/g, '<br/>')}</div>
+                  <div class="reading-content">${escapeHtml(exReading).replace(/\n/g, '<br/>')}</div>
                 </div>
               ` : ''}
 
               <div class="sim-questions-list">
-                ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
+                ${exItemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong bài tập này.</div>'}
               </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <section class="simulation-section-card section-page ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
+            ${(b.instructions || audioUrl || reading) && exercises.length > 1 ? `
+              <div class="sim-section-lead-head" style="margin-bottom:18px; padding:12px 16px; background:#f8fafc; border-left:4px solid #174266; border-radius:6px;">
+                <h2 style="margin:0 0 6px 0; font-size:1.15rem; color:#174266;">Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>
+                ${b.instructions ? `<div class="sim-instructions"><p style="margin:0; color:#475569; font-size:0.9rem;">${escapeHtml(b.instructions)}</p></div>` : ''}
+                ${audioUrl && !exercises.some(e => e.audioUrl) ? `
+                  <div class="audio-dock sim-audio-dock" style="margin-top:10px;">
+                    <div class="audio-dock-controls">
+                      <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">▶ Phát audio phần thi</button>
+                    </div>
+                    <audio controls src="${escapeHtml(audioUrl)}" class="sim-audio-player" style="display:none;"></audio>
+                  </div>
+                ` : ''}
+                ${reading && !exercises.some(e => e.readingPassage) ? `
+                  <div class="sim-reading-dock" style="margin-top:10px;">
+                    <div class="reading-header">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu phần ${bIdx + 1}:</div>
+                    <div class="reading-content">${escapeHtml(reading).replace(/\n/g, '<br/>')}</div>
+                  </div>
+                ` : ''}
+              </div>
+            ` : ''}
+
+            <div class="section-exercises-wrapper">
+              ${exercisesHtml}
             </div>
           </section>
         `;
@@ -4930,7 +5263,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               ${blocks.map((b, i) => `
                 <button type="button" class="section-tab simulation-nav-pill ${i === 0 ? 'active' : ''}" data-section-target="sim-block-${i}">
                   <span>${escapeHtml(b.title || `Phần ${i + 1}`)}</span>
-                  <span class="tab-count">0/${(b.items || []).length}</span>
+                  <span class="tab-count">${(b.exercises || []).length > 1 ? `${(b.exercises || []).length} bài tập · ` : ''}${(b.items || []).length} câu</span>
                 </button>
               `).join('')}
             </nav>
