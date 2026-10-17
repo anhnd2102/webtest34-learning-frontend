@@ -141,6 +141,18 @@ export function validateListeningOrderUniqueness(events) {
   return { isValid, duplicates, missingRanks };
 }
 
+export function extractParagraphLabels(passage = '') {
+  if (!passage || typeof passage !== 'string') return [];
+  const labels = new Set();
+  const pattern = /(?:Paragraph\s+([A-Z])|\[([A-Z])\])/gi;
+  let match;
+  while ((match = pattern.exec(passage)) !== null) {
+    const letter = (match[1] || match[2] || '').toUpperCase();
+    if (letter) labels.add(letter);
+  }
+  return Array.from(labels).sort();
+}
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -948,12 +960,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     return items.map((item, itemIdx) => {
-      const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence';
-      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder;
+      const isReadingMatching = item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching';
+      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching;
+      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching;
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
       const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
       const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder;
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -965,7 +978,56 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       let specificHtml = '';
 
-      if (isListeningOrder) {
+      if (isReadingMatching) {
+        const passageText = block.readingPassage || block.stimulusReadingPassage || item.readingPassage || '';
+        const detectedParagraphs = extractParagraphLabels(passageText);
+        const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || '';
+        const optionsList = item.options || [];
+
+        const optionsHtml = optionsList.map(opt => `
+          <div class="matching-heading-row" data-option-id="${opt.id}">
+            <label class="option-select-label" title="Chọn làm tiêu đề/đáp án đúng cho câu này">
+              <input type="radio" name="radio_matching_correct_${item.itemVersionId}" class="radio-matching-correct" value="${opt.id}" ${opt.id === expectedId ? 'checked' : ''} data-correct="${opt.id}">
+              <span class="option-key-pill">${opt.id}</span>
+            </label>
+            <input type="text" class="form-control form-control-sm matching-heading-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Nội dung Heading / Tiêu đề ${opt.id}..." />
+            <button type="button" class="btn btn-icon btn-sm btn-del-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
+          </div>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-reading-matching">
+            <div class="split-pane-header-bar">
+              <span class="badge badge-info split-pane-preview-badge">⚡ Bố cục chia đôi màn hình (Split-Pane 2 cột: Bài đọc bên trái, Câu hỏi bên phải)</span>
+              ${detectedParagraphs.length ? `<span class="badge badge-success">Phát hiện ${detectedParagraphs.length} đoạn văn: [${detectedParagraphs.join(', ')}]</span>` : ''}
+            </div>
+
+            <div class="form-group passage-input-group" style="margin-top: 8px;">
+              <div class="passage-label-bar">
+                <label class="form-label" style="margin: 0;"><strong>Văn bản bài đọc (Reading Passage):</strong></label>
+                <button type="button" class="btn btn-secondary btn-sm btn-extract-paragraphs" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động nhận diện các đoạn văn Paragraph A, B, C...">
+                  🔍 Quét nhãn đoạn văn
+                </button>
+              </div>
+              <textarea class="form-control input-reading-passage" rows="6" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
+            </div>
+
+            <div class="matching-headings-pool" style="margin-top: 12px;">
+              <div class="template-header-bar">
+                <span class="section-sublabel"><strong>Danh sách Headings / Tiêu đề lựa chọn (Tích chọn đáp án đúng):</strong></span>
+              </div>
+              <div class="matching-headings-list">
+                ${optionsHtml}
+              </div>
+              <div class="options-actions" style="margin-top: 8px;">
+                <button type="button" class="btn btn-secondary btn-sm btn-add-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  + Thêm Heading mới
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isListeningOrder) {
         const events = item.events || [
           { label: 'A', rank: 1, text: 'Sự kiện A' },
           { label: 'B', rank: 2, text: 'Sự kiện B' },
@@ -1503,6 +1565,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="block-add-item-bar">
                 <span class="add-item-caption">+ Thêm câu hỏi:</span>
                 <div class="add-item-buttons">
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-reading-matching" data-block-idx="${index}">
+                    + Bài đọc chia đôi & Nối (Reading Split-Pane)
+                  </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${index}">
                     + Sắp xếp thứ tự nghe (Listening Order)
                   </button>
@@ -1753,6 +1818,30 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   expectedSequence: expectedSeq
                 };
               }
+            }
+
+            // Reading matching sync
+            if (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') {
+              const passageInput = iCard.querySelector('.input-reading-passage');
+              if (passageInput) {
+                const passageVal = passageInput.value;
+                block.readingPassage = passageVal;
+                block.stimulusReadingPassage = passageVal;
+                item.readingPassage = passageVal;
+              }
+              const radioChecked = iCard.querySelector('.radio-matching-correct:checked');
+              if (radioChecked) {
+                draftState.gradingKey.items[item.itemVersionId] = {
+                  graderType: 'exact_option',
+                  expectedOptionId: radioChecked.value
+                };
+              }
+              const optInputs = iCard.querySelectorAll('.matching-heading-input');
+              optInputs.forEach(optIn => {
+                const optId = optIn.getAttribute('data-option-id');
+                const optObj = item.options.find(o => o.id === optId);
+                if (optObj) optObj.label = optIn.value.trim();
+              });
             }
 
             // Pictorial card sync
@@ -2089,6 +2178,108 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         if (!item.prompt.includes(token)) {
           item.prompt = item.prompt ? `${item.prompt} ${token}` : `Câu hỏi với ${token}`;
         }
+        render();
+      });
+    });
+
+    // Add Reading Split-Pane & Matching Question
+    const addReadingMatchingBtns = container.querySelectorAll('.btn-add-reading-matching');
+    addReadingMatchingBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.layoutType = 'split_pane_matching';
+        if (!block.readingPassage) {
+          block.readingPassage = 'Paragraph A: The introduction and context of the phenomenon...\n\nParagraph B: Analysis of technological implementations...\n\nParagraph C: Findings, evidence and experimental conclusions...';
+          block.stimulusReadingPassage = block.readingPassage;
+        }
+        const defaultHeadings = [
+          { id: 'i', label: 'i. The spy in the sky' },
+          { id: 'ii', label: 'ii. The spread of technology' },
+          { id: 'iii', label: 'iii. The limitations of cameras' },
+          { id: 'iv', label: 'iv. The cost of cameras' },
+          { id: 'v', label: 'v. Advantages and disadvantages' }
+        ];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: `Paragraph B`,
+          helpText: '',
+          interactionType: 'single_choice',
+          pedagogicalTypeCode: 'reading_matching',
+          layoutType: 'split_pane_matching',
+          graderType: 'exact_option',
+          required: true,
+          maxScore: 1,
+          readingPassage: block.readingPassage,
+          options: defaultHeadings,
+          skillCodes: ['reading'],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'exact_option',
+          expectedOptionId: 'ii'
+        };
+        render();
+      });
+    });
+
+    // Extract paragraph labels from reading passage
+    const extractParaBtns = container.querySelectorAll('.btn-extract-paragraphs');
+    extractParaBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const passage = block.readingPassage || '';
+        const labels = extractParagraphLabels(passage);
+        if (labels.length) {
+          alert(`Đã nhận diện thành công ${labels.length} đoạn văn trong bài đọc: [${labels.join(', ')}]`);
+        } else {
+          alert('Chưa tìm thấy nhãn đoạn văn dạng "Paragraph A" hoặc "[A]" trong bài đọc. Vui lòng thêm tiền tố nhãn vào các đoạn văn.');
+        }
+        render();
+      });
+    });
+
+    // Add matching option button
+    const addMatchingOptBtns = container.querySelectorAll('.btn-add-matching-option');
+    addMatchingOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        item.options = item.options || [];
+        const romanNumerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii'];
+        const nextId = romanNumerals[item.options.length] || `h${item.options.length + 1}`;
+        item.options.push({ id: nextId, label: `${nextId}. Tiêu đề mới` });
+        render();
+      });
+    });
+
+    // Delete matching option button
+    const delMatchingOptBtns = container.querySelectorAll('.btn-del-matching-option');
+    delMatchingOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const optId = btn.getAttribute('data-option-id');
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item || !item.options || item.options.length <= 2) {
+          alert('Mỗi câu hỏi ghép nối cần tối thiểu 2 phương án lựa chọn.');
+          return;
+        }
+        item.options = item.options.filter(o => o.id !== optId);
         render();
       });
     });
@@ -2924,12 +3115,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const items = b.items || [];
 
         const itemsHtml = items.map((item) => {
-          const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence';
-          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder;
+          const isReadingMatching = item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching';
+          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching;
+          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching;
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
           const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
           const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder;
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -2937,7 +3129,19 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
 
           let interactiveHtml = '';
-          if (isListeningOrder) {
+          if (isReadingMatching) {
+            interactiveHtml = `
+              <div class="candidate-matching-wrap">
+                <label class="form-label" style="font-size:0.8rem;color:#64748b;margin-bottom:4px;">Chọn Heading / Tiêu đề phù hợp:</label>
+                <select class="form-select form-select-sm matching-select candidate-choice-select" data-item-id="${item.itemVersionId}">
+                  <option value="">-- Chọn Heading tương ứng --</option>
+                  ${(item.options || []).map(opt => `
+                    <option value="${escapeHtml(opt.id)}">${escapeHtml(opt.label || opt.id)}</option>
+                  `).join('')}
+                </select>
+              </div>
+            `;
+          } else if (isListeningOrder) {
             const events = item.events || [];
             const audioSrc = item.audioUrl || audioUrl || '';
             interactiveHtml = `
@@ -3057,21 +3261,23 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
-          const promptDisplay = isListeningOrder
-            ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
-            : (isVocabPair
-              ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
-              : (isInlineCloze
-                ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
-                : (isPictorial
-                  ? 'Nhìn hình và hoàn thành từ vựng:'
-                  : escapeHtml(item.prompt || ''))));
+          const promptDisplay = isReadingMatching
+            ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
+            : (isListeningOrder
+              ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
+              : (isVocabPair
+                ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+                : (isInlineCloze
+                  ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+                  : (isPictorial
+                    ? 'Nhìn hình và hoàn thành từ vựng:'
+                    : escapeHtml(item.prompt || '')))));
 
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))))}</span>
+                <span class="question-type-badge">${isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}
@@ -3080,6 +3286,48 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             </div>
           `;
         }).join('');
+
+        const isSplitPane = b.layoutType === 'split_pane_matching' || items.some(it => it.pedagogicalTypeCode === 'reading_matching' || it.layoutType === 'split_pane_matching');
+
+        if (isSplitPane && reading) {
+          return `
+            <section class="simulation-section-card simulation-split-pane-section" id="sim-block-${bIdx}">
+              <div class="sim-section-header">
+                <h3>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h3>
+                ${b.instructions ? `<div class="sim-instructions"><strong>Hướng dẫn:</strong> ${escapeHtml(b.instructions)}</div>` : ''}
+              </div>
+
+              <!-- Mobile View Switcher Tabs -->
+              <div class="split-pane-mobile-toggle">
+                <button type="button" class="btn btn-sm btn-outline-primary active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">📖 Xem bài đọc</button>
+                <button type="button" class="btn btn-sm btn-outline-primary toggle-pane-btn" data-pane="questions" data-section="${bIdx}">❓ Xem câu hỏi ghép nối (${items.length})</button>
+              </div>
+
+              <div class="split-pane-reading" id="split-pane-${bIdx}">
+                <!-- Left Column: Reading Passage (Independent scroll & sticky header) -->
+                <div class="reading-passage-column active-pane" data-pane-type="reading">
+                  <div class="reading-passage-sticky-header">
+                    <span class="reading-title-badge">📖 Bài đọc hiểu (Reading Passage)</span>
+                    <span class="reading-hint">Cuộn độc lập để tra cứu</span>
+                  </div>
+                  <div class="reading-passage-content">
+                    ${escapeHtml(reading).replace(/\n/g, '<br/>')}
+                  </div>
+                </div>
+
+                <!-- Right Column: Matching Questions -->
+                <div class="matching-questions-column" data-pane-type="questions">
+                  <div class="matching-column-header">
+                    <span class="matching-title-badge">Danh sách câu hỏi ghép nối</span>
+                  </div>
+                  <div class="sim-questions-list matching-items-list">
+                    ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
+                  </div>
+                </div>
+              </div>
+            </section>
+          `;
+        }
 
         return `
           <section class="simulation-section-card" id="sim-block-${bIdx}">
@@ -3168,6 +3416,31 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const count = text ? text.split(/\s+/).filter(Boolean).length : 0;
           const countEl = ta.closest('.candidate-open-wrap')?.querySelector('.word-count-badge strong');
           if (countEl) countEl.textContent = count;
+        });
+      });
+
+      // Mobile Split-Pane switcher handling
+      const toggleBtns = modal.querySelectorAll('.toggle-pane-btn');
+      toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const secIdx = btn.getAttribute('data-section');
+          const targetPane = btn.getAttribute('data-pane');
+          const containerSection = modal.querySelector(`#sim-block-${secIdx}`);
+          if (!containerSection) return;
+
+          containerSection.querySelectorAll('.toggle-pane-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const readingCol = containerSection.querySelector('.reading-passage-column');
+          const questionsCol = containerSection.querySelector('.matching-questions-column');
+
+          if (targetPane === 'reading') {
+            readingCol?.classList.add('active-pane');
+            questionsCol?.classList.remove('active-pane');
+          } else {
+            readingCol?.classList.remove('active-pane');
+            questionsCol?.classList.add('active-pane');
+          }
         });
       });
     }
