@@ -27,8 +27,9 @@ h2 { margin-top: 0; font-weight: 700; letter-spacing: -0.01em; color: #0f172a; }
 .exam-room-clickable { cursor: pointer; }
 #exam-room-timeline { margin-top: 16px; }
 label { display: grid; gap: 6px; font-weight: 600; font-size: 0.9rem; color: #334155; }
-input, select, button { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-input:focus, select:focus { outline: none; border-color: #db0829; box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.12); }
+input, select, textarea, button, .form-control { box-sizing: border-box !important; font-family: inherit; }
+input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #db0829; box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.12); }
 button { border-color: #db0829; background: #db0829; color: white; font-weight: 700; cursor: pointer; border-radius: 10px; box-shadow: 0 2px 8px rgba(219, 8, 41, 0.22); transition: all 0.15s ease; }
 button:hover:not(:disabled) { background: #b80521; border-color: #b80521; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(219, 8, 41, 0.28); }
 button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
@@ -2834,12 +2835,58 @@ body:not(.login-page) #auth-panel {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: nowrap;
 }
 
 .builder-status-msg {
   font-size: 0.85rem;
   font-weight: 500;
   color: #0284c7;
+  white-space: nowrap;
+}
+
+.builder-actions-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+#btn-preview-test,
+#btn-save-draft,
+#btn-publish-test,
+.btn-preview-test,
+.btn-save-draft,
+.btn-publish-test {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  line-height: 40px !important;
+  padding: 0 16px !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  width: auto !important;
+  min-width: fit-content !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+}
+
+#btn-preview-test .btn-text,
+#btn-save-draft .btn-text,
+#btn-publish-test .btn-text,
+#btn-preview-test span,
+#btn-save-draft span,
+#btn-publish-test span {
+  white-space: nowrap !important;
+  display: inline-block !important;
 }
 
 .alert-immutable {
@@ -3220,12 +3267,35 @@ body:not(.login-page) #auth-panel {
   font-weight: 500;
 }
 
+.block-instructions-input,
+.block-reading-input,
 .item-prompt-input {
-  min-height: 120px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  font-family: inherit;
+}
+
+.block-instructions-input {
+  min-height: 80px !important;
+  resize: vertical;
+}
+
+.block-reading-input {
+  min-height: 180px !important;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.item-prompt-input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 110px;
   font-size: 0.95rem;
   line-height: 1.6;
   padding: 10px 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
   resize: vertical;
   color: #0f172a;
@@ -5860,13 +5930,16 @@ button.btn-publish-test:hover:not(:disabled) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 20px 16px;
+  overflow-y: auto;
 }
 
 .candidate-simulation-shell,
 .candidate-simulation-dialog {
   width: min(1360px, 96vw);
-  max-height: 94vh;
+  height: 92vh;
+  max-height: 92vh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background: #f3f4f6;
@@ -6058,7 +6131,9 @@ button.btn-publish-test:hover:not(:disabled) {
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 24px;
   overflow-y: auto;
-  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 0;
+  min-height: 0;
   align-items: start;
   background: #f3f4f6;
   box-sizing: border-box;
@@ -6073,6 +6148,7 @@ button.btn-publish-test:hover:not(:disabled) {
 .main-column,
 .simulation-viewport {
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;

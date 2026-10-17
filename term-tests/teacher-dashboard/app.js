@@ -2000,10 +2000,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           <div class="builder-item-body">
             <div class="form-group item-prompt-group">
               <div class="item-prompt-header-bar">
-                <label class="form-label">Nội dung câu hỏi (Prompt):</label>
+                <label class="form-label">Đề bài / Nội dung câu hỏi (Question Prompt):</label>
                 <span class="prompt-char-count">${(item.prompt || '').length} ký tự</span>
               </div>
-              <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Nhập đề bài câu hỏi...">${escapeHtml(item.prompt || '')}</textarea>
+              <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Nhập đề bài, trích đoạn hoặc yêu cầu của câu hỏi...">${escapeHtml(item.prompt || '')}</textarea>
             </div>
             ${specificHtml}
           </div>
@@ -2040,17 +2040,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           <div class="builder-block-body">
             <div class="form-group block-field">
               <label class="form-label">Hướng dẫn phần thi (Instructions):</label>
-              <textarea class="form-control block-instructions-input" data-index="${index}" rows="2" placeholder="Nhập hướng dẫn làm bài cho phần này...">${escapeHtml(block.instructions || '')}</textarea>
+              <textarea class="form-control block-instructions-input" data-index="${index}" rows="3" placeholder="Nhập hướng dẫn làm bài cho phần này...">${escapeHtml(block.instructions || '')}</textarea>
             </div>
-            <div class="stimulus-grid">
-              <div class="form-group stimulus-col">
-                <label class="form-label">File âm thanh (Audio URL / Path):</label>
-                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="assets/34/test-1/listening.mp3 hoặc https://..." />
-              </div>
-              <div class="form-group stimulus-col">
-                <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
-                <textarea class="form-control block-reading-input" data-index="${index}" rows="3" placeholder="Dán văn bản đọc hiểu (nếu có)...">${escapeHtml(readingVal)}</textarea>
-              </div>
+            <div class="form-group block-field">
+              <label class="form-label">File âm thanh (Audio URL / Path):</label>
+              <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="assets/34/test-1/listening.mp3 hoặc https://..." />
+            </div>
+            <div class="form-group block-field">
+              <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
+              <textarea class="form-control block-reading-input" data-index="${index}" rows="8" placeholder="Dán văn bản đọc hiểu (nếu có)...">${escapeHtml(readingVal)}</textarea>
             </div>
 
             <div class="block-items-section">
@@ -2128,15 +2126,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
           <div class="builder-top-right">
             <span class="builder-status-msg" id="builder-status-msg" aria-live="polite"></span>
-            <button type="button" class="btn btn-secondary btn-sm" id="btn-preview-test" title="Xem trước giao diện bài thi của học sinh">
-              ${renderSvgIcon('view', 'icon-inline')} <span>Xem trước bài thi</span>
-            </button>
-            <button type="button" class="btn btn-primary btn-save-draft" id="btn-save-draft">
-              ${renderSvgIcon('save', 'icon-inline')} <span>Lưu bản nháp</span>
-            </button>
-            <button type="button" class="btn btn-success btn-sm btn-publish-test" id="btn-publish-test" title="Công bố đề thi cho các lớp">
-              ${renderSvgIcon('publish', 'icon-inline')} <span>Công bố đề thi</span>
-            </button>
+            <div class="builder-actions-group">
+              <button type="button" class="btn btn-secondary btn-sm btn-preview-test" id="btn-preview-test" title="Xem trước giao diện bài thi của học sinh">
+                ${renderSvgIcon('view', 'icon-inline')} <span class="btn-text">Xem trước bài thi</span>
+              </button>
+              <button type="button" class="btn btn-primary btn-save-draft" id="btn-save-draft">
+                ${renderSvgIcon('save', 'icon-inline')} <span class="btn-text">Lưu bản nháp</span>
+              </button>
+              <button type="button" class="btn btn-success btn-sm btn-publish-test" id="btn-publish-test" title="Công bố đề thi cho các lớp">
+                ${renderSvgIcon('publish', 'icon-inline')} <span class="btn-text">Công bố đề thi</span>
+              </button>
+            </div>
           </div>
         </div>
 
