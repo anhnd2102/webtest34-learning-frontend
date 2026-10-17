@@ -1122,6 +1122,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
   }
 
+  let isDirty = false;
+  function markAsDirty() {
+    isDirty = true;
+  }
+
   function resolveTargetExercise(block, btn) {
     if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
       const defaultExId = generateUuid();
@@ -2168,7 +2173,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
   }
 
   function renderExerciseItems(block, blockIdx, exercise, exIdx) {
-    const items = (block.items || []).filter(it => it.exerciseId === exercise.exerciseId);
+    const items = (block.items || []).filter(it => {
+      if (it.exerciseId === exercise.exerciseId) return true;
+      if (!it.exerciseId && exIdx === 0) {
+        it.exerciseId = exercise.exerciseId;
+        it.exerciseTitle = exercise.title || `Exercise ${exercise.exerciseNumber || 1}`;
+        return true;
+      }
+      return false;
+    });
     if (!items.length) {
       return `<div class="empty-items-notice">Chưa có câu hỏi nào trong bài tập này. Chọn một dạng câu hỏi bên dưới để thêm.</div>`;
     }
@@ -3038,6 +3051,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           graderType: 'exact_option',
           expectedOptionId: 'A'
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3105,6 +3120,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           graderType: 'unordered_group_slot',
           expectedOptionIds: ['A', 'B']
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3125,6 +3142,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Điền vào ô trống câu ${nextPos}:`,
           helpText: '',
           interactionType: 'short_text',
@@ -3142,6 +3161,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: ['answer'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3154,6 +3175,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3161,6 +3183,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `The cruise departs from Miami and visits (${nextPos}) __________ Caribbean islands.`,
           helpText: '',
           interactionType: 'short_text',
@@ -3178,6 +3202,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: ['six'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3207,6 +3233,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3226,6 +3253,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Paragraph B`,
           helpText: '',
           interactionType: 'single_choice',
@@ -3243,6 +3272,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           graderType: 'exact_option',
           expectedOptionId: 'ii'
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3309,6 +3340,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3323,6 +3355,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: 'Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:',
           helpText: '',
           interactionType: 'single_choice',
@@ -3342,6 +3376,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           graderType: 'ordered_sequence',
           expectedSequence: sorted.map(e => e.label)
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3403,6 +3439,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3410,6 +3447,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: 'She sister is a good student.',
           helpText: '',
           interactionType: 'correction_pair',
@@ -3430,6 +3469,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           scoringRule: 'split_points',
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3601,6 +3642,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3610,6 +3652,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:',
           helpText: '',
           interactionType: 'short_text',
@@ -3632,6 +3676,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           distractors: [],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3644,6 +3690,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3656,6 +3703,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: defaultPrompt,
           helpText: '',
           interactionType: 'short_text',
@@ -3680,6 +3729,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: [defaultAnswer],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -3692,6 +3743,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -3706,6 +3758,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Choose the correct pronunciation for "${defaultWord}":`,
           helpText: '',
           interactionType: 'single_choice',
@@ -3727,6 +3781,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           targetWord: defaultWord,
           ipaTranscription: defaultIpa
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -4015,6 +4071,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: ['school kids'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -4055,6 +4113,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -4080,6 +4139,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Từ vựng câu ${nextPos}`,
           helpText: '',
           interactionType: 'text_select_pair',
@@ -4098,6 +4159,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           expectedOptionId: initialOptions[0].id,
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        resequenceItemPositions();
         markAsDirty();
         render();
       });
@@ -4111,6 +4173,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
@@ -4118,6 +4181,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
           prompt: `Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi ${nextPos}:`,
           helpText: '',
           interactionType: 'long_text',
@@ -4143,6 +4208,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             ]
           }
         };
+        resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -5208,7 +5275,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         };
 
         const exercisesHtml = exercises.map((ex, exIdx) => {
-          const exItems = items.filter(it => it.exerciseId === ex.exerciseId);
+          const exItems = items.filter(it => it.exerciseId === ex.exerciseId || (!it.exerciseId && exIdx === 0));
           const exItemsList = exItems.length ? exItems : (exercises.length === 1 ? items : []);
           const exPoints = exItemsList.reduce((sum, it) => sum + (it.maxScore || 1), 0);
           const exAudioUrl = ex.audioUrl || (exercises.length === 1 ? audioUrl : '');
