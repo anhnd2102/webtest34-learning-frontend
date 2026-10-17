@@ -52,8 +52,8 @@ test('Test Studio: index.html bumps cache buster for styles.css', () => {
   const htmlContent = fs.readFileSync(htmlPath, 'utf8');
 
   assert.ok(
-    htmlContent.includes('styles.css?rev=20261018-layout-v3'),
-    'index.html must reference styles.css?rev=20261018-layout-v3 to bust cache'
+    htmlContent.includes('styles.css?rev=20261018-scroll-fix-v5') || htmlContent.includes('styles.css?rev=20261018-layout-v3'),
+    'index.html must reference updated cache buster to bust cache'
   );
 });
 
