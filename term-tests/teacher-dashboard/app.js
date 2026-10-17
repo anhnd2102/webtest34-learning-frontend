@@ -321,7 +321,15 @@ export const ICONS = {
   filter: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
   rotate: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>',
   clipboard: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
-  logout: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>'
+  logout: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+  save: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
+  publish: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>',
+  lock: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  edit: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
+  clock: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  zap: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  arrowLeft: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>',
+  audio: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>'
 };
 
 export function renderSvgIcon(name, customClass = '') {
@@ -1259,7 +1267,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-transformation-answer" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetAnswer)}" placeholder="Ví dụ: prevented him" />
                 <button type="button" class="btn btn-secondary btn-generate-transformation-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh các biến thể viết tắt/mở rộng">
-                  ⚡ Sinh biến thể (Generate Variants)
+                  ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể
                 </button>
               </div>
             </div>
@@ -1304,7 +1312,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         const distractorChipsHtml = distractors.map((d, dIdx) => `
           <span class="distractor-chip" data-distractor="${escapeHtml(d)}" data-distractor-idx="${dIdx}">
-            <span class="chip-text">🚫 ${escapeHtml(d)}</span>
+            <span class="chip-text"><span class="distractor-symbol">×</span> ${escapeHtml(d)}</span>
             <button type="button" class="btn-remove-distractor-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-distractor-idx="${dIdx}" title="Xóa từ gây nhiễu">✕</button>
           </span>
         `).join('');
@@ -1325,7 +1333,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-target-sentence" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetSentence)}" placeholder="Nhập câu chuẩn hoàn chỉnh..." />
                 <button type="button" class="btn btn-secondary btn-tokenize-sentence" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động phân rã câu thành các mảnh từ">
-                  ⚡ Phân rã từ (Tokenize)
+                  ${renderSvgIcon('zap', 'icon-inline')} Phân rã từ (Tokenize)
                 </button>
               </div>
             </div>
@@ -1368,7 +1376,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="chips-meta-bar">
                 <span class="chips-count-badge">Các biến thể câu được chấp nhận (${acceptedList.length}/20)</span>
                 <button type="button" class="btn btn-secondary btn-sm btn-generate-reorder-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ⚡ Tự động sinh biến thể dấu câu
+                  ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
                 </button>
                 <div class="quick-add-variant">
                   <input type="text" class="form-control form-control-sm input-add-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm câu biến thể (Enter)..." />
@@ -1419,7 +1427,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <div class="fitb-input-group">
                   <input type="text" class="form-control input-error-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedErrors[0] || '')}" placeholder="Từ / cụm từ sai (ví dụ: she)..." />
                   <button type="button" class="btn btn-secondary btn-sm btn-generate-error-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh biến thể cho lỗi sai">
-                    ⚡ Sinh biến thể
+                    ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể
                   </button>
                 </div>
                 <div class="variant-chips-container" style="margin-top: 8px;">
@@ -1439,7 +1447,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <div class="fitb-input-group">
                   <input type="text" class="form-control input-correction-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedCorrections[0] || '')}" placeholder="Từ / cụm từ sửa đúng (ví dụ: her)..." />
                   <button type="button" class="btn btn-secondary btn-sm btn-generate-correction-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh biến thể cho phần sửa">
-                    ⚡ Sinh biến thể
+                    ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể
                   </button>
                 </div>
                 <div class="variant-chips-container" style="margin-top: 8px;">
@@ -1475,7 +1483,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         specificHtml = `
           <div class="template-section template-reading-matching">
             <div class="split-pane-header-bar">
-              <span class="badge badge-info split-pane-preview-badge">⚡ Bố cục chia đôi màn hình (Split-Pane 2 cột: Bài đọc bên trái, Câu hỏi bên phải)</span>
+              <span class="badge badge-info split-pane-preview-badge">${renderSvgIcon('book', 'icon-inline')} Bố cục chia đôi màn hình (Split-Pane 2 cột: Bài đọc bên trái, Câu hỏi bên phải)</span>
               ${detectedParagraphs.length ? `<span class="badge badge-success">Phát hiện ${detectedParagraphs.length} đoạn văn: [${detectedParagraphs.join(', ')}]</span>` : ''}
             </div>
 
@@ -1483,7 +1491,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="passage-label-bar">
                 <label class="form-label" style="margin: 0;"><strong>Văn bản bài đọc (Reading Passage):</strong></label>
                 <button type="button" class="btn btn-secondary btn-sm btn-extract-paragraphs" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động nhận diện các đoạn văn Paragraph A, B, C...">
-                  🔍 Quét nhãn đoạn văn
+                  ${renderSvgIcon('search', 'icon-inline')} Quét nhãn đoạn văn
                 </button>
               </div>
               <textarea class="form-control input-reading-passage" rows="8" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
@@ -1669,7 +1677,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="cloze-toolbar">
                 <span class="cloze-tool-label"><strong>Soạn thảo nội dung chỗ trống (Inline Cloze):</strong></span>
                 <button type="button" class="btn btn-secondary btn-sm btn-insert-blank-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn chỗ trống (${item.position}) __________">
-                  ➕ Chèn chỗ trống (${item.position}) __________
+                  + Chèn chỗ trống (${item.position}) __________
                 </button>
               </div>
               <p class="cloze-help-text" style="font-size: 0.8rem; color: #64748b; margin: 4px 0 8px;">
@@ -1689,7 +1697,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập đáp án chuẩn cho chỗ trống..." />
                 <button type="button" class="btn btn-secondary btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ⚡ Tự động sinh biến thể
+                  ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
                 </button>
               </div>
               <div class="variant-chips-container" style="margin-top: 8px;">
@@ -1733,7 +1741,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <div class="fitb-input-group">
                   <input type="text" class="form-control input-pictorial-target input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập từ/cụm từ mẫu (ví dụ: school kids)..." />
                   <button type="button" class="btn btn-secondary btn-generate-hangman" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động tạo gợi ý Hangman từ từ mục tiêu">
-                    ⚡ Sinh gợi ý Hangman
+                    ${renderSvgIcon('zap', 'icon-inline')} Sinh gợi ý Hangman
                   </button>
                 </div>
               </div>
@@ -1754,7 +1762,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="chips-meta-bar">
                 <span class="chips-count-badge">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
                 <button type="button" class="btn btn-secondary btn-sm btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ⚡ Tự động sinh biến thể
+                  ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
                 </button>
                 <div class="quick-add-variant">
                   <input type="text" class="form-control form-control-sm input-add-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
@@ -1782,7 +1790,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập đáp án chuẩn..." />
                 <button type="button" class="btn btn-secondary btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ⚡ Tự động sinh biến thể
+                  ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
                 </button>
               </div>
             </div>
@@ -1827,7 +1835,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-vocab-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || item.prompt || '')}" placeholder="Nhập từ tiếng Anh chuẩn..." />
                 <button type="button" class="btn btn-secondary btn-generate-vocab-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ⚡ Sinh biến thể tự động
+                  ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể tự động
                 </button>
               </div>
               <div class="variant-chips-container" style="margin-top: 8px;">
@@ -1939,7 +1947,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                     <div class="sandbox-input-group">
                       <textarea class="form-control input-sandbox-sample" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="3" placeholder="Nhập câu trả lời mẫu của học viên để chấm thử..."></textarea>
                       <button type="button" class="btn btn-primary btn-sm btn-trigger-sandbox" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                        ⚡ Chấm thử AI
+                        ${renderSvgIcon('zap', 'icon-inline')} Chấm thử AI
                       </button>
                     </div>
                     <div class="sandbox-results-container" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="display: none;"></div>
@@ -2107,34 +2115,34 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         <div class="test-builder-top-bar">
           <div class="builder-top-left">
             <button type="button" class="btn btn-secondary btn-sm btn-back-to-catalog" id="btn-back-to-catalog">
-              ← Quay lại danh mục
+              ${renderSvgIcon('arrowLeft', 'icon-inline')} <span>Quay lại danh mục</span>
             </button>
             <div class="builder-status-tags">
               <span class="version-tag">Phiên bản: <strong>v${draftState.version}</strong></span>
               <span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span>
               ${isImmutable
-                ? `<span class="immutability-badge warning" title="Đã có học viên nộp bài — Chỉnh sửa sẽ tạo bản nháp mới v${draftState.version + 1}">🔒 Đã có ${draftState.submissionCount} bài nộp</span>`
-                : `<span class="immutability-badge mutable" title="Chưa có học viên nộp bài — Sẽ lưu trực tiếp trên bản nháp v${draftState.version}">✏️ Chưa có bài nộp</span>`
+                ? `<span class="immutability-badge warning" title="Đã có học viên nộp bài — Chỉnh sửa sẽ tạo bản nháp mới v${draftState.version + 1}">${renderSvgIcon('lock', 'icon-inline')} Đã có ${draftState.submissionCount} bài nộp</span>`
+                : `<span class="immutability-badge mutable" title="Chưa có học viên nộp bài — Sẽ lưu trực tiếp trên bản nháp v${draftState.version}">${renderSvgIcon('edit', 'icon-inline')} Chưa có bài nộp</span>`
               }
             </div>
           </div>
           <div class="builder-top-right">
             <span class="builder-status-msg" id="builder-status-msg" aria-live="polite"></span>
             <button type="button" class="btn btn-secondary btn-sm" id="btn-preview-test" title="Xem trước giao diện bài thi của học sinh">
-              👁️ Xem trước bài thi
+              ${renderSvgIcon('view', 'icon-inline')} <span>Xem trước bài thi</span>
             </button>
             <button type="button" class="btn btn-primary btn-save-draft" id="btn-save-draft">
-              💾 Lưu bản nháp
+              ${renderSvgIcon('save', 'icon-inline')} <span>Lưu bản nháp</span>
             </button>
             <button type="button" class="btn btn-success btn-sm btn-publish-test" id="btn-publish-test" title="Công bố đề thi cho các lớp">
-              🚀 Công bố đề thi
+              ${renderSvgIcon('publish', 'icon-inline')} <span>Công bố đề thi</span>
             </button>
           </div>
         </div>
 
         ${isImmutable ? `
           <div class="alert-notice alert-immutable">
-            <div class="notice-icon">⚠️</div>
+            <div class="notice-icon">${renderSvgIcon('alert', 'icon-inline')}</div>
             <div class="notice-text">
               <strong>Bảo toàn tính bất biến (Content Immutability):</strong> Đề thi này đã có <strong>${draftState.submissionCount} bài nộp</strong>. Khi bạn lưu thay đổi, hệ thống sẽ tự động tạo một phiên bản nháp mới (<strong>v${draftState.version + 1}</strong>) để giữ nguyên vẹn kết quả và dữ liệu chấm điểm của các bài thi đã nộp.
             </div>
@@ -4281,7 +4289,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       saveBtn.addEventListener('click', async () => {
         syncInputs();
         saveBtn.disabled = true;
-        if (statusMsg) statusMsg.textContent = 'Đang lưu bản nháp...';
+        saveBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang lưu...</span>`;
+        if (statusMsg) {
+          statusMsg.className = 'builder-status-pill saving';
+          statusMsg.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang lưu bản nháp...</span>`;
+        }
 
         try {
           const payload = {
@@ -4304,6 +4316,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           };
 
           const res = await options.onSaveDraft(payload);
+          const now = new Date();
+          const timeStr = [now.getHours(), now.getMinutes(), now.getSeconds()].map(n => String(n).padStart(2, '0')).join(':');
+
           if (res && res.forked) {
             draftState.formVersionId = res.formVersionId;
             draftState.version = res.version;
@@ -4312,17 +4327,27 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             render();
             const newStatusMsg = container.querySelector('#builder-status-msg');
             if (newStatusMsg) {
-              newStatusMsg.textContent = `Đã tự động tạo bản nháp mới v${res.version} (đề gốc đã có bài nộp).`;
+              newStatusMsg.className = 'builder-status-pill forked';
+              newStatusMsg.innerHTML = `${renderSvgIcon('alert', 'icon-inline')} <span>Đã tạo bản nháp mới v${res.version} (bảo toàn đề cũ đã có bài nộp)</span>`;
             }
           } else {
             if (res && res.version) draftState.version = res.version;
-            if (statusMsg) statusMsg.textContent = `Đã lưu bản nháp v${draftState.version} thành công!`;
+            if (statusMsg) {
+              statusMsg.className = 'builder-status-pill success';
+              statusMsg.innerHTML = `${renderSvgIcon('check', 'icon-inline')} <span>Đã lưu bản nháp v${draftState.version} lúc ${timeStr}</span>`;
+            }
           }
         } catch (err) {
-          if (statusMsg) statusMsg.textContent = `Lỗi khi lưu: ${err.message || 'Không thể lưu bản nháp'}`;
+          if (statusMsg) {
+            statusMsg.className = 'builder-status-pill error';
+            statusMsg.innerHTML = `${renderSvgIcon('alert', 'icon-inline')} <span>Lỗi khi lưu: ${escapeHtml(err.message || 'Không thể lưu bản nháp')}</span>`;
+          }
         } finally {
           const activeSaveBtn = container.querySelector('#btn-save-draft');
-          if (activeSaveBtn) activeSaveBtn.disabled = false;
+          if (activeSaveBtn) {
+            activeSaveBtn.disabled = false;
+            activeSaveBtn.innerHTML = `${renderSvgIcon('save', 'icon-inline')} <span>Lưu bản nháp</span>`;
+          }
         }
       });
     }
@@ -4378,7 +4403,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   <div class="candidate-ipa-badge">${escapeHtml(formattedIpa || '/.../')}</div>
                   ${audioSrc ? `
                     <button type="button" class="btn btn-sm btn-secondary candidate-ipa-audio-btn" data-audio-src="${escapeHtml(audioSrc)}" title="Nghe phát âm mẫu">
-                      🔊 Nghe phát âm
+                      ${renderSvgIcon('audio', 'icon-inline')} Nghe phát âm
                     </button>
                     <audio src="${escapeHtml(audioSrc)}" class="ipa-inline-audio" style="display:none;"></audio>
                   ` : ''}
@@ -4629,15 +4654,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
               <!-- Mobile View Switcher Tabs -->
               <div class="split-pane-mobile-toggle">
-                <button type="button" class="btn btn-sm btn-outline-primary active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">📖 Xem bài đọc</button>
-                <button type="button" class="btn btn-sm btn-outline-primary toggle-pane-btn" data-pane="questions" data-section="${bIdx}">❓ Xem câu hỏi ghép nối (${items.length})</button>
+                <button type="button" class="btn btn-sm btn-outline-primary active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">${renderSvgIcon('book', 'icon-inline')} Xem bài đọc</button>
+                <button type="button" class="btn btn-sm btn-outline-primary toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi ghép nối (${items.length})</button>
               </div>
 
               <div class="split-pane-reading" id="split-pane-${bIdx}">
                 <!-- Left Column: Reading Passage (Independent scroll & sticky header) -->
                 <div class="reading-passage-column active-pane" data-pane-type="reading">
                   <div class="reading-passage-sticky-header">
-                    <span class="reading-title-badge">📖 Bài đọc hiểu (Reading Passage)</span>
+                    <span class="reading-title-badge">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu (Reading Passage)</span>
                     <span class="reading-hint">Cuộn độc lập để tra cứu</span>
                   </div>
                   <div class="reading-passage-content">
@@ -4668,14 +4693,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             ${audioUrl ? `
               <div class="sim-audio-dock">
-                <div class="audio-title">🎧 Đoạn ghi âm phần thi:</div>
+                <div class="audio-title">${renderSvgIcon('audio', 'icon-inline')} Đoạn ghi âm phần thi:</div>
                 <audio controls src="${escapeHtml(audioUrl)}" class="sim-audio-player"></audio>
               </div>
             ` : ''}
 
             ${reading ? `
               <div class="sim-reading-dock">
-                <div class="reading-header">📖 Bài đọc hiểu:</div>
+                <div class="reading-header">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu:</div>
                 <div class="reading-content">${escapeHtml(reading).replace(/\n/g, '<br/>')}</div>
               </div>
             ` : ''}
@@ -4691,14 +4716,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         <div class="candidate-simulation-dialog">
           <header class="simulation-top-header">
             <div class="sim-title-area">
-              <span class="sim-badge">Candidate Simulation</span>
+              <span class="sim-badge">IZONE · CANDIDATE SIMULATION</span>
               <h2>${escapeHtml(draftState.title || 'Đề thi')}</h2>
             </div>
             <div class="sim-meta-badges">
-              <span class="meta-pill">⏱️ Thời lượng: ${draftState.durationMinutes} phút</span>
-              <span class="meta-pill">📑 ${blocks.length} phần thi</span>
-              <span class="meta-pill">🔒 Phiên bản: v${draftState.version}</span>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-close-simulation">✕ Thoát xem trước</button>
+              <span class="meta-pill">${renderSvgIcon('clock', 'icon-inline')} ${draftState.durationMinutes} phút</span>
+              <span class="meta-pill">${renderSvgIcon('book', 'icon-inline')} ${blocks.length} phần thi</span>
+              <span class="meta-pill">${renderSvgIcon('lock', 'icon-inline')} v${draftState.version}</span>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-close-simulation">${renderSvgIcon('close', 'icon-inline')} <span>Thoát xem trước</span></button>
             </div>
           </header>
 
@@ -4711,7 +4736,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
 
           <footer class="simulation-footer">
-            <div class="footer-note">💡 Đây là màn hình mô phỏng trực quan giao diện bài thi của thí sinh. Mọi thao tác làm bài tại đây chỉ dùng để kiểm tra hiển thị.</div>
+            <div class="footer-note">Đây là màn hình mô phỏng trực quan giao diện bài thi của thí sinh theo chuẩn IZONE. Mọi thao tác làm bài tại đây chỉ dùng để kiểm tra hiển thị.</div>
             <button type="button" class="btn btn-primary btn-sm" id="btn-close-simulation-footer">Hoàn tất kiểm tra</button>
           </footer>
         </div>
