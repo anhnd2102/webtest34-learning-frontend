@@ -1150,6 +1150,43 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     return block.exercises[0];
   }
 
+  function updatePromptPosition(prompt, newPos) {
+    if (typeof prompt !== 'string') return prompt;
+    let updated = prompt;
+    if (/^Câu hỏi \d+(:?)/i.test(updated)) {
+      updated = updated.replace(/^Câu hỏi \d+(:?)/i, `Câu hỏi ${newPos}$1`);
+    } else if (/^Câu \d+([:.]?)/i.test(updated)) {
+      updated = updated.replace(/^Câu \d+([:.]?)/i, `Câu ${newPos}$1`);
+    } else if (/^Question \d+([:.]?)/i.test(updated)) {
+      updated = updated.replace(/^Question \d+([:.]?)/i, `Question ${newPos}$1`);
+    } else if (/^Điền vào ô trống câu \d+(:?)/i.test(updated)) {
+      updated = updated.replace(/^Điền vào ô trống câu \d+(:?)/i, `Điền vào ô trống câu ${newPos}$1`);
+    } else if (/^Từ vựng câu \d+/i.test(updated)) {
+      updated = updated.replace(/^Từ vựng câu \d+/i, `Từ vựng câu ${newPos}`);
+    } else if (/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i.test(updated)) {
+      updated = updated.replace(/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i, `Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi ${newPos}$1`);
+    } else if (/\(\d+\) __________/i.test(updated)) {
+      updated = updated.replace(/\(\d+\) __________/i, `(${newPos}) __________`);
+    }
+    return updated;
+  }
+
+  function resequenceItemPositions() {
+    let pos = 1;
+    for (const b of draftState.blocks) {
+      for (const itm of b.items || []) {
+        itm.position = pos;
+        if (itm.prompt) {
+          itm.prompt = updatePromptPosition(itm.prompt, pos);
+        }
+        pos++;
+      }
+      for (const ex of b.exercises || []) {
+        ex.itemIds = (b.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
+      }
+    }
+  }
+
   // Ensure initial grading key entries exist
   for (const block of draftState.blocks) {
     for (const itm of block.items || []) {
@@ -2108,6 +2145,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="item-prompt-preview-snippet">${escapeHtml((item.prompt || '').trim().substring(0, 55) + ((item.prompt || '').length > 55 ? '...' : ''))}</span>
             </div>
             <div class="item-header-controls">
+              <button type="button" class="btn btn-icon btn-sm btn-move-item-up" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === 0 ? 'disabled' : ''} title="Di chuyển câu hỏi lên">↑</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-item-down" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === (block.items || []).length - 1 ? 'disabled' : ''} title="Di chuyển câu hỏi xuống">↓</button>
               <label class="item-score-label">Điểm:
                 <input type="number" class="form-control form-control-sm item-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${item.maxScore || 1}" min="0" max="100" />
               </label>
@@ -4120,6 +4159,50 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    // Move Question Item Up
+    const moveItemUpBtns = container.querySelectorAll('.btn-move-item-up');
+    moveItemUpBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block || !block.items || iIdx <= 0) return;
+        const currentItem = block.items[iIdx];
+        const prevItem = block.items[iIdx - 1];
+        block.items[iIdx] = prevItem;
+        block.items[iIdx - 1] = currentItem;
+        if (prevItem.exerciseId && prevItem.exerciseId !== currentItem.exerciseId) {
+          currentItem.exerciseId = prevItem.exerciseId;
+          currentItem.exerciseTitle = prevItem.exerciseTitle;
+        }
+        resequenceItemPositions();
+        render();
+      });
+    });
+
+    // Move Question Item Down
+    const moveItemDownBtns = container.querySelectorAll('.btn-move-item-down');
+    moveItemDownBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block || !block.items || iIdx >= block.items.length - 1) return;
+        const currentItem = block.items[iIdx];
+        const nextItem = block.items[iIdx + 1];
+        block.items[iIdx] = nextItem;
+        block.items[iIdx + 1] = currentItem;
+        if (nextItem.exerciseId && nextItem.exerciseId !== currentItem.exerciseId) {
+          currentItem.exerciseId = nextItem.exerciseId;
+          currentItem.exerciseTitle = nextItem.exerciseTitle;
+        }
+        resequenceItemPositions();
+        render();
+      });
+    });
+
     // Delete Question Item
     const delItemBtns = container.querySelectorAll('.btn-delete-item');
     delItemBtns.forEach(btn => {
@@ -4129,7 +4212,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const iIdx = Number(btn.getAttribute('data-item-idx'));
         const block = draftState.blocks[bIdx];
         if (block && block.items) {
-          block.items.splice(iIdx, 1);
+          const [deletedItem] = block.items.splice(iIdx, 1);
+          if (deletedItem?.itemVersionId) {
+            delete draftState.gradingKey.items[deletedItem.itemVersionId];
+          }
+          resequenceItemPositions();
           render();
         }
       });
@@ -4741,6 +4828,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             if (draftState.blocks.length > 1) {
               draftState.blocks.splice(idx, 1);
               draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
+              resequenceItemPositions();
               render();
             }
           });
