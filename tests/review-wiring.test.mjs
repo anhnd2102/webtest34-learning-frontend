@@ -64,3 +64,8 @@ test('lỗi nạp module kết quả có thông báo và Thử lại với URL c
   assert.match(html, /&retry=\$\{Date\.now\(\)\}/);
   assert.match(html, /Không tải được màn hình kết quả/);
 });
+
+test('definition trả kèm /attempts/result là nguồn đầu tiên để ghép nhóm kết quả', () => {
+  assert.match(html, /if\(result\.definition\?\.blocks\) state\.learning\.definition = result\.definition;/);
+  assert.match(html, /return state\.learning\?\.definition\?\.blocks \|\| rosterData\.assignment\?\.definition\?\.blocks \|\| \[\];/);
+});

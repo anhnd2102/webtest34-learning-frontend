@@ -833,6 +833,7 @@
       const result = await learningRequest('/attempts/result', {attemptToken: state.learning.attemptToken});
       state.learning.gradingStatus = result.receipt?.gradingStatus || result.result?.gradingStatus || state.learning.gradingStatus;
       if(result.result) state.learning.studentResult = result.result;
+      if(result.definition?.blocks) state.learning.definition = result.definition;
       persist();
       if(result.result) renderLearningResult(result.result);
       learningResultPublished = !!result.result?.publication?.published;
@@ -909,7 +910,8 @@
   }
 
   function learningDefinitionBlocks(){
-    return rosterData.assignment?.definition?.blocks || state.learning?.definition?.blocks || [];
+    // state.learning.definition có thể đến từ /attempts/result (sau công bố) khi resolve không trả definition.
+    return state.learning?.definition?.blocks || rosterData.assignment?.definition?.blocks || [];
   }
 
   function queueLearningDraft(){
