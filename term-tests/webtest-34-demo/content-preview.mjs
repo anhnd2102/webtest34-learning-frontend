@@ -23,8 +23,8 @@ export function learningRequestMethod(path) {
 
 // Mọi request lượt làm gửi kèm mã thiết bị theo tab; Exam Mode dùng nó để chỉ cho một máy làm bài.
 export function learningRequestBody(path, body, deviceId) {
-  // /attempts/review có schema strict, không nhận deviceId.
-  return path.startsWith('/attempts/') && path !== '/attempts/review' ? { ...body, deviceId } : body;
+  // /attempts/review và /attempts/result có schema strict, không nhận deviceId.
+  return path.startsWith('/attempts/') && !['/attempts/review', '/attempts/result'].includes(path) ? { ...body, deviceId } : body;
 }
 
 // 'waiting' → phòng chờ (chưa có đề); 'running' → vào đề và bật Exam Guard; 'off' → luồng thường.
