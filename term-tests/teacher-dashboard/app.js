@@ -4631,7 +4631,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
-                <span class="question-num-badge">Câu ${item.position}</span>
+                <span class="question-num-badge qnum">Câu ${item.position}</span>
                 <span class="question-type-badge">${isPronunciation ? 'Phát âm' : (isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))))))))}</span>
               </div>
               <div class="candidate-question-prompt">
@@ -4646,37 +4646,42 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         if (isSplitPane && reading) {
           return `
-            <section class="simulation-section-card simulation-split-pane-section" id="sim-block-${bIdx}">
-              <div class="sim-section-header">
-                <h3>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h3>
-                ${b.instructions ? `<div class="sim-instructions"><strong>Hướng dẫn:</strong> ${escapeHtml(b.instructions)}</div>` : ''}
-              </div>
-
-              <!-- Mobile View Switcher Tabs -->
-              <div class="split-pane-mobile-toggle">
-                <button type="button" class="btn btn-sm btn-outline-primary active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">${renderSvgIcon('book', 'icon-inline')} Xem bài đọc</button>
-                <button type="button" class="btn btn-sm btn-outline-primary toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi ghép nối (${items.length})</button>
-              </div>
-
-              <div class="split-pane-reading" id="split-pane-${bIdx}">
-                <!-- Left Column: Reading Passage (Independent scroll & sticky header) -->
-                <div class="reading-passage-column active-pane" data-pane-type="reading">
-                  <div class="reading-passage-sticky-header">
-                    <span class="reading-title-badge">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu (Reading Passage)</span>
-                    <span class="reading-hint">Cuộn độc lập để tra cứu</span>
+            <section class="simulation-section-card section-page simulation-split-pane-section ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
+              <div class="exercise">
+                <div class="exercise-head sim-section-header">
+                  <div>
+                    <h2>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>
+                    ${b.instructions ? `<div class="sim-instructions"><p>${escapeHtml(b.instructions)}</p></div>` : ''}
                   </div>
-                  <div class="reading-passage-content">
-                    ${escapeHtml(reading).replace(/\n/g, '<br/>')}
-                  </div>
+                  <span class="points">${items.length} ô trả lời</span>
                 </div>
 
-                <!-- Right Column: Matching Questions -->
-                <div class="matching-questions-column" data-pane-type="questions">
-                  <div class="matching-column-header">
-                    <span class="matching-title-badge">Danh sách câu hỏi ghép nối</span>
+                <!-- Mobile View Switcher Tabs -->
+                <div class="split-pane-mobile-toggle">
+                  <button type="button" class="btn btn-sm btn-outline-primary active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">${renderSvgIcon('book', 'icon-inline')} Xem bài đọc</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi ghép nối (${items.length})</button>
+                </div>
+
+                <div class="split-pane-reading" id="split-pane-${bIdx}">
+                  <!-- Left Column: Reading Passage (Independent scroll & sticky header) -->
+                  <div class="reading-passage-column active-pane" data-pane-type="reading">
+                    <div class="reading-passage-sticky-header">
+                      <span class="reading-title-badge">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu (Reading Passage)</span>
+                      <span class="reading-hint">Cuộn độc lập để tra cứu</span>
+                    </div>
+                    <div class="reading-passage-content">
+                      ${escapeHtml(reading).replace(/\n/g, '<br/>')}
+                    </div>
                   </div>
-                  <div class="sim-questions-list matching-items-list">
-                    ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
+
+                  <!-- Right Column: Matching Questions -->
+                  <div class="matching-questions-column" data-pane-type="questions">
+                    <div class="matching-column-header">
+                      <span class="matching-title-badge">Danh sách câu hỏi ghép nối</span>
+                    </div>
+                    <div class="sim-questions-list matching-items-list">
+                      ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -4685,54 +4690,108 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
 
         return `
-          <section class="simulation-section-card" id="sim-block-${bIdx}">
-            <div class="sim-section-header">
-              <h3>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h3>
-              ${b.instructions ? `<div class="sim-instructions"><strong>Hướng dẫn:</strong> ${escapeHtml(b.instructions)}</div>` : ''}
-            </div>
-
-            ${audioUrl ? `
-              <div class="sim-audio-dock">
-                <div class="audio-title">${renderSvgIcon('audio', 'icon-inline')} Đoạn ghi âm phần thi:</div>
-                <audio controls src="${escapeHtml(audioUrl)}" class="sim-audio-player"></audio>
+          <section class="simulation-section-card section-page ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
+            <div class="exercise">
+              <div class="exercise-head sim-section-header">
+                <div>
+                  <h2>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>
+                  ${b.instructions ? `<div class="sim-instructions"><p>${escapeHtml(b.instructions)}</p></div>` : ''}
+                </div>
+                <span class="points">${items.length} ô trả lời</span>
               </div>
-            ` : ''}
 
-            ${reading ? `
-              <div class="sim-reading-dock">
-                <div class="reading-header">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu:</div>
-                <div class="reading-content">${escapeHtml(reading).replace(/\n/g, '<br/>')}</div>
+              ${audioUrl ? `
+                <div class="audio-dock sim-audio-dock">
+                  <div class="audio-dock-controls">
+                    <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">
+                      ▶ Phát audio (nếu có)
+                    </button>
+                    <span class="audio-note">🔊 Đã mở khóa nội dung câu hỏi để kiểm tra đề.</span>
+                  </div>
+                  <audio controls src="${escapeHtml(audioUrl)}" class="sim-audio-player" style="display:none;"></audio>
+                </div>
+              ` : ''}
+
+              ${reading ? `
+                <div class="sim-reading-dock">
+                  <div class="reading-header">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu:</div>
+                  <div class="reading-content">${escapeHtml(reading).replace(/\n/g, '<br/>')}</div>
+                </div>
+              ` : ''}
+
+              <div class="sim-questions-list">
+                ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
               </div>
-            ` : ''}
-
-            <div class="sim-questions-list">
-              ${itemsHtml || '<div class="sim-empty-items">Chưa có câu hỏi trong phần này.</div>'}
             </div>
           </section>
         `;
       }).join('');
 
+      const totalItems = blocks.reduce((sum, b) => sum + (b.items || []).length, 0);
+
       modal.innerHTML = `
-        <div class="candidate-simulation-dialog">
-          <header class="simulation-top-header">
-            <div class="sim-title-area">
-              <span class="sim-badge">IZONE · CANDIDATE SIMULATION</span>
-              <h2>${escapeHtml(draftState.title || 'Đề thi')}</h2>
-            </div>
-            <div class="sim-meta-badges">
-              <span class="meta-pill">${renderSvgIcon('clock', 'icon-inline')} ${draftState.durationMinutes} phút</span>
-              <span class="meta-pill">${renderSvgIcon('book', 'icon-inline')} ${blocks.length} phần thi</span>
-              <span class="meta-pill">${renderSvgIcon('lock', 'icon-inline')} v${draftState.version}</span>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-close-simulation">${renderSvgIcon('close', 'icon-inline')} <span>Thoát xem trước</span></button>
+        <div class="candidate-simulation-shell candidate-simulation-dialog">
+          <header class="topbar simulation-topbar simulation-top-header">
+            <div class="topbar-inner">
+              <div class="brand sim-title-area">
+                <div class="brand-mark">IZ</div>
+                <div class="brand-copy">
+                  <div class="brand-title">IZONE · ${escapeHtml(draftState.title || 'Đề thi')}</div>
+                  <div class="brand-sub">IZONE · CANDIDATE SIMULATION · Chế độ xem trước giáo viên</div>
+                </div>
+              </div>
+              <div class="top-actions sim-meta-badges">
+                <span class="preview-badge">Đang xem trước</span>
+                <span class="meta-pill">${renderSvgIcon('clock', 'icon-inline')} ${draftState.durationMinutes} phút</span>
+                <span class="meta-pill">${renderSvgIcon('book', 'icon-inline')} ${blocks.length} phần thi</span>
+                <span class="meta-pill">${renderSvgIcon('lock', 'icon-inline')} v${draftState.version}</span>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-close-simulation">${renderSvgIcon('close', 'icon-inline')} <span>Thoát xem trước</span></button>
+              </div>
             </div>
           </header>
 
-          <nav class="simulation-nav-bar">
-            ${sectionsNavHtml}
-          </nav>
+          <div class="section-nav-wrap">
+            <nav class="section-nav simulation-nav-bar">
+              ${blocks.map((b, i) => `
+                <button type="button" class="section-tab simulation-nav-pill ${i === 0 ? 'active' : ''}" data-section-target="sim-block-${i}">
+                  <span>${escapeHtml(b.title || `Phần ${i + 1}`)}</span>
+                  <span class="tab-count">0/${(b.items || []).length}</span>
+                </button>
+              `).join('')}
+            </nav>
+          </div>
 
-          <div class="simulation-viewport">
-            ${simulationBlocksHtml}
+          <div class="exam-layout">
+            <div class="main-column simulation-viewport">
+              ${simulationBlocksHtml}
+            </div>
+
+            <aside class="side-panel">
+              <div class="panel-card">
+                <div class="progress-row">
+                  <strong>Tiến độ làm bài</strong>
+                  <span class="progress-ratio">0/${totalItems}</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <div class="section-list">
+                  ${blocks.map((b, i) => `
+                    <button type="button" class="side-section-btn ${i === 0 ? 'active' : ''}" data-section-target="sim-block-${i}">
+                      <span>${escapeHtml(b.title || `Phần ${i + 1}`)}</span>
+                      <span class="side-count">0/${(b.items || []).length}</span>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="panel-card">
+                <strong>Lưu ý khi làm bài</strong>
+                <p class="sim-notice-text">
+                  Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.
+                </p>
+              </div>
+            </aside>
           </div>
 
           <footer class="simulation-footer">
@@ -4751,15 +4810,38 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         });
       });
 
-      const navPills = modal.querySelectorAll('.simulation-nav-pill');
-      navPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-          navPills.forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          const targetId = pill.getAttribute('data-section-target');
+      const allNavBtns = modal.querySelectorAll('.section-tab, .simulation-nav-pill, .side-section-btn');
+      allNavBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-section-target');
+          modal.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
+          });
+          modal.querySelectorAll('.side-section-btn').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
+          });
+          modal.querySelectorAll('.section-page, .simulation-section-card').forEach(sec => {
+            sec.classList.toggle('active', sec.id === targetId);
+          });
           const targetEl = modal.querySelector(`#${targetId}`);
           if (targetEl) {
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      const audioPlayBtns = modal.querySelectorAll('.btn-sim-audio-play');
+      audioPlayBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const audioEl = btn.closest('.audio-dock')?.querySelector('audio');
+          if (audioEl) {
+            if (audioEl.paused) {
+              audioEl.play().catch(() => {});
+              btn.textContent = '⏸ Tạm dừng audio';
+            } else {
+              audioEl.pause();
+              btn.textContent = '▶ Phát audio (nếu có)';
+            }
           }
         });
       });
