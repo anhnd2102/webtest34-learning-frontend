@@ -1250,6 +1250,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
+      const hasRedundantPrompt = isVocabPair || isPictorial || isPronunciation || isSentenceRewrite || isSentenceReorder || isErrorCorrection || isReadingMatching || isListeningOrder;
 
       const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
       const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
@@ -2187,8 +2188,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               </label>
               <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này">✕</button>
             </div>
-          </div>
           <div class="builder-item-body">
+            ${!hasRedundantPrompt ? `
             <div class="form-group item-prompt-group">
               <div class="item-prompt-header-bar">
                 <label class="form-label">Đề bài / Nội dung câu hỏi (Question Prompt):</label>
@@ -2196,6 +2197,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               </div>
               <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Nhập đề bài, trích đoạn hoặc yêu cầu của câu hỏi...">${escapeHtml(item.prompt || '')}</textarea>
             </div>
+            ` : ''}
             ${specificHtml}
           </div>
         </div>
@@ -2513,7 +2515,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             if (!item) return;
 
             const promptEl = iCard.querySelector('.item-prompt-input');
-            if (promptEl) item.prompt = promptEl.value.trim();
+            if (promptEl) {
+              item.prompt = promptEl.value.trim();
+            } else if (!item.prompt) {
+              item.prompt = `Câu ${item.position}`;
+            }
 
             const scoreEl = iCard.querySelector('.item-max-score-input');
             if (scoreEl) {
@@ -4064,6 +4070,153 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    function createSinglePictorialItem(bIdx, targetEx) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const nextPos = getNextPosition();
+      const newItemId = generateUuid();
+      block.items = block.items || [];
+      block.items.push({
+        itemFamilyId: generateUuid(),
+        itemVersionId: newItemId,
+        position: nextPos,
+        exerciseId: targetEx.exerciseId,
+        exerciseTitle: targetEx.title,
+        prompt: `Từ vựng qua ảnh ${nextPos}`,
+        helpText: '',
+        interactionType: 'short_text',
+        pedagogicalTypeCode: 'pictorial_vocabulary',
+        layoutType: 'pictorial_card',
+        graderType: 'accepted_text',
+        required: true,
+        maxScore: 1,
+        image: `assets/test 1/vocabulary/image${nextPos}.png`,
+        captionHint: '',
+        letterHint: '',
+        options: [],
+        skillCodes: ['vocabulary'],
+        releasePolicy: 'inherit'
+      });
+      draftState.gradingKey.items[newItemId] = {
+        graderType: 'accepted_text',
+        accepted: [],
+        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+      };
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
+    function openBatchPictorialModal(bIdx, targetEx) {
+      if (typeof document === 'undefined') {
+        createSinglePictorialItem(bIdx, targetEx);
+        return;
+      }
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+
+      let modal = document.querySelector('#batch-pictorial-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'batch-pictorial-modal';
+        modal.className = 'modal-batch-vocab-overlay';
+        document.body.appendChild(modal);
+      }
+
+      modal.innerHTML = `
+        <div class="modal-batch-vocab-card">
+          <div class="modal-batch-vocab-header">
+            <h3>⚡ Tạo hàng loạt câu hỏi Thẻ từ vựng qua ảnh</h3>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">✕</button>
+          </div>
+          <div class="modal-batch-vocab-body">
+            <div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">
+              Tạo nhanh các câu hỏi Thẻ từ vựng qua ảnh thuộc bài tập <strong>${escapeHtml(targetEx.title || 'Bài tập')}</strong>. Sau khi sinh hàng loạt, giáo viên sẽ điền hình ảnh, từ mục tiêu và sinh gợi ý Hangman trực tiếp trên từng câu.
+            </div>
+            <div class="form-group">
+              <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
+              <input type="number" class="form-control input-batch-pictorial-count" min="1" max="100" value="25" style="max-width: 160px; font-weight: 700;" />
+              <span style="font-size: 0.8rem; color: #64748b;">(Ví dụ: 25 câu hoặc 50 câu)</span>
+            </div>
+          </div>
+          <div class="modal-batch-vocab-footer">
+            <button type="button" class="btn btn-secondary btn-batch-single">
+              + Chỉ tạo 1 câu
+            </button>
+            <button type="button" class="btn btn-primary btn-batch-confirm">
+              ⚡ Tạo câu hỏi hàng loạt
+            </button>
+          </div>
+        </div>
+      `;
+
+      const closeModal = () => {
+        modal.style.display = 'none';
+      };
+
+      const closeBtn = modal.querySelector('.btn-close-batch-modal');
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+      const singleBtn = modal.querySelector('.btn-batch-single');
+      if (singleBtn) {
+        singleBtn.addEventListener('click', () => {
+          closeModal();
+          createSinglePictorialItem(bIdx, targetEx);
+        });
+      }
+
+      const confirmBtn = modal.querySelector('.btn-batch-confirm');
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+          const countInput = modal.querySelector('.input-batch-pictorial-count');
+          const count = Math.max(1, Math.min(100, parseInt(countInput?.value, 10) || 25));
+
+          block.items = block.items || [];
+          const startingPos = getNextPosition();
+
+          for (let i = 0; i < count; i++) {
+            const currentPos = startingPos + i;
+            const newItemId = generateUuid();
+
+            block.items.push({
+              itemFamilyId: generateUuid(),
+              itemVersionId: newItemId,
+              position: currentPos,
+              exerciseId: targetEx.exerciseId,
+              exerciseTitle: targetEx.title,
+              prompt: `Từ vựng qua ảnh ${currentPos}`,
+              helpText: '',
+              interactionType: 'short_text',
+              pedagogicalTypeCode: 'pictorial_vocabulary',
+              layoutType: 'pictorial_card',
+              graderType: 'accepted_text',
+              required: true,
+              maxScore: 1,
+              image: `assets/test 1/vocabulary/image${currentPos}.png`,
+              captionHint: '',
+              letterHint: '',
+              options: [],
+              skillCodes: ['vocabulary'],
+              releasePolicy: 'inherit'
+            });
+
+            draftState.gradingKey.items[newItemId] = {
+              graderType: 'accepted_text',
+              accepted: [],
+              normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            };
+          }
+
+          resequenceItemPositions();
+          markAsDirty();
+          closeModal();
+          render();
+        });
+      }
+
+      modal.style.display = 'flex';
+    }
+
     // Add Pictorial Vocabulary Question
     const addPictorialBtns = container.querySelectorAll('.btn-add-pictorial');
     addPictorialBtns.forEach(btn => {
@@ -4073,38 +4226,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
-        const newItemId = generateUuid();
-        block.items = block.items || [];
-        block.items.push({
-          itemFamilyId: generateUuid(),
-          itemVersionId: newItemId,
-          position: nextPos,
-          exerciseId: targetEx.exerciseId,
-          exerciseTitle: targetEx.title,
-          prompt: 'Nhìn hình và hoàn thành từ vựng:',
-          helpText: '',
-          interactionType: 'short_text',
-          pedagogicalTypeCode: 'pictorial_vocabulary',
-          layoutType: 'pictorial_card',
-          graderType: 'accepted_text',
-          required: true,
-          maxScore: 1,
-          image: 'assets/test 1/vocabulary/image3.png',
-          captionHint: '(gợi ý)',
-          letterHint: 's _ _ _ _ _ k _ _ _',
-          options: [],
-          skillCodes: ['vocabulary'],
-          releasePolicy: 'inherit'
-        });
-        draftState.gradingKey.items[newItemId] = {
-          graderType: 'accepted_text',
-          accepted: ['school kids'],
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-        };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+        openBatchPictorialModal(bIdx, targetEx);
       });
     });
 
