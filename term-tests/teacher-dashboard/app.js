@@ -153,6 +153,39 @@ export function extractParagraphLabels(passage = '') {
   return Array.from(labels).sort();
 }
 
+export function computeCorrectionScore(answer, gradingKey = {}) {
+  const maxScore = Number(gradingKey.maxScore) || 1;
+  if (!answer || typeof answer !== 'object') {
+    return { score: 0, maxScore, isErrorCorrect: false, isCorrectionCorrect: false };
+  }
+
+  const rawError = String(answer.error || '').trim().toLowerCase();
+  const rawCorrection = String(answer.correction || '').trim().toLowerCase();
+
+  const expectedErrors = (gradingKey.expectedErrors || []).map(e => String(e).trim().toLowerCase());
+  const expectedCorrections = (gradingKey.expectedCorrections || []).map(c => String(c).trim().toLowerCase());
+
+  const isErrorCorrect = expectedErrors.length > 0 && expectedErrors.includes(rawError);
+  const isCorrectionCorrect = expectedCorrections.length > 0 && expectedCorrections.includes(rawCorrection);
+
+  const scoringRule = gradingKey.scoringRule || 'split_points';
+  let score = 0;
+
+  if (scoringRule === 'all_or_nothing') {
+    score = (isErrorCorrect && isCorrectionCorrect) ? maxScore : 0;
+  } else {
+    if (isErrorCorrect && isCorrectionCorrect) {
+      score = maxScore;
+    } else if (isErrorCorrect || isCorrectionCorrect) {
+      score = maxScore / 2;
+    } else {
+      score = 0;
+    }
+  }
+
+  return { score, maxScore, isErrorCorrect, isCorrectionCorrect };
+}
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -960,13 +993,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     return items.map((item, itemIdx) => {
-      const isReadingMatching = item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching';
-      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching;
-      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching;
+      const isErrorCorrection = item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair';
+      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection;
+      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection;
+      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
       const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
       const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching;
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -978,7 +1012,82 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       let specificHtml = '';
 
-      if (isReadingMatching) {
+      if (isErrorCorrection) {
+        const expectedErrors = itemKey.expectedErrors || ['she'];
+        const expectedCorrections = itemKey.expectedCorrections || ['her'];
+        const scoringRule = itemKey.scoringRule || item.scoringRule || 'split_points';
+
+        const errorChipsHtml = expectedErrors.map(v => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-error-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        const correctionChipsHtml = expectedCorrections.map(v => `
+          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+            <span class="chip-text">${escapeHtml(v)}</span>
+            <button type="button" class="btn-remove-correction-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+          </span>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-error-correction">
+            <div class="template-header-bar">
+              <span class="section-sublabel"><strong>Cặp dữ liệu tìm lỗi sai và sửa lại:</strong></span>
+              <div class="scoring-rule-selector">
+                <label class="form-label" style="margin: 0; font-size: 0.8rem; font-weight: 600;">Quy tắc chấm điểm:</label>
+                <select class="form-select form-select-sm select-scoring-rule" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  <option value="split_points" ${scoringRule === 'split_points' ? 'selected' : ''}>Chia điểm (50% Lỗi sai + 50% Sửa lại)</option>
+                  <option value="all_or_nothing" ${scoringRule === 'all_or_nothing' ? 'selected' : ''}>Trọn điểm (Đúng cả 2 mới có điểm)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="dual-input-grid">
+              <!-- Error identification box -->
+              <div class="dual-box error-box">
+                <label class="form-label"><strong>1. Lỗi sai trong câu (Identified Error):</strong></label>
+                <div class="fitb-input-group">
+                  <input type="text" class="form-control input-error-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedErrors[0] || '')}" placeholder="Từ / cụm từ sai (ví dụ: she)..." />
+                  <button type="button" class="btn btn-secondary btn-sm btn-generate-error-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh biến thể cho lỗi sai">
+                    ⚡ Sinh biến thể
+                  </button>
+                </div>
+                <div class="variant-chips-container" style="margin-top: 8px;">
+                  <div class="chips-meta-bar">
+                    <span class="chips-count-badge">Biến thể lỗi sai (${expectedErrors.length}/20)</span>
+                    <input type="text" class="form-control form-control-sm input-add-error-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể lỗi (Enter)..." />
+                  </div>
+                  <div class="variant-chips-wrap">
+                    ${errorChipsHtml}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Correction box -->
+              <div class="dual-box correction-box">
+                <label class="form-label"><strong>2. Phần sửa lại đúng (Correction):</strong></label>
+                <div class="fitb-input-group">
+                  <input type="text" class="form-control input-correction-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedCorrections[0] || '')}" placeholder="Từ / cụm từ sửa đúng (ví dụ: her)..." />
+                  <button type="button" class="btn btn-secondary btn-sm btn-generate-correction-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh biến thể cho phần sửa">
+                    ⚡ Sinh biến thể
+                  </button>
+                </div>
+                <div class="variant-chips-container" style="margin-top: 8px;">
+                  <div class="chips-meta-bar">
+                    <span class="chips-count-badge">Biến thể sửa đúng (${expectedCorrections.length}/20)</span>
+                    <input type="text" class="form-control form-control-sm input-add-correction-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể sửa (Enter)..." />
+                  </div>
+                  <div class="variant-chips-wrap">
+                    ${correctionChipsHtml}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isReadingMatching) {
         const passageText = block.readingPassage || block.stimulusReadingPassage || item.readingPassage || '';
         const detectedParagraphs = extractParagraphLabels(passageText);
         const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || '';
@@ -1478,15 +1587,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         ? 'Trắc nghiệm 1 đáp án (Single Choice)'
         : (isMultiGroup
           ? 'Nhóm chọn nhiều (Multi-Select Group)'
-          : (isVocabPair
-            ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
-            : (isRubricAsync
-              ? 'Tự luận chấm AI (AI-Graded Rubric)'
-              : (isPictorial
-                ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
-                : (isInlineCloze
-                  ? 'Điền từ nội tuyến (Inline Cloze)'
-                  : 'Điền ô trống (Short Text)')))));
+          : (isErrorCorrection
+            ? 'Tìm và sửa lỗi (Error Correction)'
+            : (isVocabPair
+              ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
+              : (isRubricAsync
+                ? 'Tự luận chấm AI (AI-Graded Rubric)'
+                : (isPictorial
+                  ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
+                  : (isInlineCloze
+                    ? 'Điền từ nội tuyến (Inline Cloze)'
+                    : 'Điền ô trống (Short Text)'))))));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1570,6 +1681,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${index}">
                     + Sắp xếp thứ tự nghe (Listening Order)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-error-correction" data-block-idx="${index}">
+                    + Tìm và sửa lỗi (Error Correction)
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${index}">
                     + Trắc nghiệm (Single Choice)
@@ -1790,6 +1904,44 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                 };
               }
+            }
+
+            // Error correction sync
+            if (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') {
+              const errorTokenInput = iCard.querySelector('.input-error-token');
+              const correctionTokenInput = iCard.querySelector('.input-correction-token');
+              const scoringRuleSelect = iCard.querySelector('.select-scoring-rule');
+
+              const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+                graderType: 'correction_pair',
+                expectedErrors: ['she'],
+                expectedCorrections: ['her'],
+                scoringRule: 'split_points',
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+
+              if (scoringRuleSelect) {
+                currentKey.scoringRule = scoringRuleSelect.value;
+                item.scoringRule = scoringRuleSelect.value;
+              }
+
+              const errorChips = iCard.querySelectorAll('.btn-remove-error-chip');
+              const errVariants = Array.from(errorChips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              if (errVariants.length) {
+                currentKey.expectedErrors = errVariants;
+              } else if (errorTokenInput && errorTokenInput.value.trim()) {
+                currentKey.expectedErrors = [errorTokenInput.value.trim()];
+              }
+
+              const corrChips = iCard.querySelectorAll('.btn-remove-correction-chip');
+              const corrVariants = Array.from(corrChips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              if (corrVariants.length) {
+                currentKey.expectedCorrections = corrVariants;
+              } else if (correctionTokenInput && correctionTokenInput.value.trim()) {
+                currentKey.expectedCorrections = [correctionTokenInput.value.trim()];
+              }
+
+              draftState.gradingKey.items[item.itemVersionId] = currentKey;
             }
 
             // Listening order sync
@@ -2374,6 +2526,204 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           ev.label = String.fromCharCode(65 + idx);
         });
         item.options = item.events.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` }));
+        render();
+      });
+    });
+
+    // Add Error Correction Question
+    const addErrorCorrectionBtns = container.querySelectorAll('.btn-add-error-correction');
+    addErrorCorrectionBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: 'She sister is a good student.',
+          helpText: '',
+          interactionType: 'correction_pair',
+          pedagogicalTypeCode: 'error_correction',
+          layoutType: 'default',
+          graderType: 'correction_pair',
+          required: true,
+          maxScore: 1,
+          scoringRule: 'split_points',
+          options: [],
+          skillCodes: ['grammar'],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'correction_pair',
+          expectedErrors: ['she', 'She'],
+          expectedCorrections: ['her', 'Her'],
+          scoringRule: 'split_points',
+          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        };
+        render();
+      });
+    });
+
+    // Generate Error Variants
+    const genErrorVariantsBtns = container.querySelectorAll('.btn-generate-error-variants');
+    genErrorVariantsBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const card = btn.closest('.builder-item-card');
+        const input = card?.querySelector('.input-error-token');
+        const raw = input?.value?.trim() || '';
+        if (!raw) {
+          alert('Vui lòng nhập từ/cụm từ lỗi trước khi sinh biến thể.');
+          return;
+        }
+        const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+          graderType: 'correction_pair',
+          expectedErrors: [],
+          expectedCorrections: [],
+          scoringRule: 'split_points'
+        };
+        currentKey.expectedErrors = expandSentenceVariants([raw]);
+        draftState.gradingKey.items[item.itemVersionId] = currentKey;
+        render();
+      });
+    });
+
+    // Generate Correction Variants
+    const genCorrVariantsBtns = container.querySelectorAll('.btn-generate-correction-variants');
+    genCorrVariantsBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const card = btn.closest('.builder-item-card');
+        const input = card?.querySelector('.input-correction-token');
+        const raw = input?.value?.trim() || '';
+        if (!raw) {
+          alert('Vui lòng nhập từ/cụm từ sửa đúng trước khi sinh biến thể.');
+          return;
+        }
+        const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+          graderType: 'correction_pair',
+          expectedErrors: [],
+          expectedCorrections: [],
+          scoringRule: 'split_points'
+        };
+        currentKey.expectedCorrections = expandSentenceVariants([raw]);
+        draftState.gradingKey.items[item.itemVersionId] = currentKey;
+        render();
+      });
+    });
+
+    // Manual add error variant on Enter
+    const addErrInputs = container.querySelectorAll('.input-add-error-variant');
+    addErrInputs.forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = input.value.trim();
+          if (!val) return;
+          syncInputs();
+          const bIdx = Number(input.getAttribute('data-block-idx'));
+          const iIdx = Number(input.getAttribute('data-item-idx'));
+          const item = draftState.blocks[bIdx]?.items?.[iIdx];
+          if (!item) return;
+          const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+            graderType: 'correction_pair',
+            expectedErrors: [],
+            expectedCorrections: []
+          };
+          currentKey.expectedErrors = currentKey.expectedErrors || [];
+          if (!currentKey.expectedErrors.includes(val)) {
+            currentKey.expectedErrors.push(val);
+          }
+          draftState.gradingKey.items[item.itemVersionId] = currentKey;
+          render();
+        }
+      });
+    });
+
+    // Manual add correction variant on Enter
+    const addCorrInputs = container.querySelectorAll('.input-add-correction-variant');
+    addCorrInputs.forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = input.value.trim();
+          if (!val) return;
+          syncInputs();
+          const bIdx = Number(input.getAttribute('data-block-idx'));
+          const iIdx = Number(input.getAttribute('data-item-idx'));
+          const item = draftState.blocks[bIdx]?.items?.[iIdx];
+          if (!item) return;
+          const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+            graderType: 'correction_pair',
+            expectedErrors: [],
+            expectedCorrections: []
+          };
+          currentKey.expectedCorrections = currentKey.expectedCorrections || [];
+          if (!currentKey.expectedCorrections.includes(val)) {
+            currentKey.expectedCorrections.push(val);
+          }
+          draftState.gradingKey.items[item.itemVersionId] = currentKey;
+          render();
+        }
+      });
+    });
+
+    // Remove error variant chip
+    const removeErrChipBtns = container.querySelectorAll('.btn-remove-error-chip');
+    removeErrChipBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const variantToRemove = btn.getAttribute('data-variant');
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (currentKey && currentKey.expectedErrors) {
+          currentKey.expectedErrors = currentKey.expectedErrors.filter(v => v !== variantToRemove);
+          if (!currentKey.expectedErrors.length) currentKey.expectedErrors = [''];
+        }
+        render();
+      });
+    });
+
+    // Remove correction variant chip
+    const removeCorrChipBtns = container.querySelectorAll('.btn-remove-correction-chip');
+    removeCorrChipBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const variantToRemove = btn.getAttribute('data-variant');
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+        if (currentKey && currentKey.expectedCorrections) {
+          currentKey.expectedCorrections = currentKey.expectedCorrections.filter(v => v !== variantToRemove);
+          if (!currentKey.expectedCorrections.length) currentKey.expectedCorrections = [''];
+        }
+        render();
+      });
+    });
+
+    // Scoring rule selector change
+    const scoringRuleSelectors = container.querySelectorAll('.select-scoring-rule');
+    scoringRuleSelectors.forEach(sel => {
+      sel.addEventListener('change', () => {
+        syncInputs();
         render();
       });
     });
@@ -3115,13 +3465,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const items = b.items || [];
 
         const itemsHtml = items.map((item) => {
-          const isReadingMatching = item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching';
-          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching;
-          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching;
+          const isErrorCorrection = item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair';
+          const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection;
+          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection;
+          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
           const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
           const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze';
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching;
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -3231,6 +3582,19 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 ${renderInlineClozeMarkup(item.prompt || '', [item])}
               </div>
             `;
+          } else if (isErrorCorrection) {
+            interactiveHtml = `
+              <div class="candidate-error-correction-grid">
+                <div class="candidate-dual-box candidate-error-box">
+                  <label class="form-label" style="font-size:0.8rem;font-weight:600;color:#b91c1c;">1. Lỗi sai trong câu (Error):</label>
+                  <input type="text" class="form-control candidate-error-input" data-item-id="${item.itemVersionId}" placeholder="Từ/cụm từ sai..." />
+                </div>
+                <div class="candidate-dual-box candidate-correction-box">
+                  <label class="form-label" style="font-size:0.8rem;font-weight:600;color:#15803d;">2. Sửa lại thành (Correction):</label>
+                  <input type="text" class="form-control candidate-correction-input" data-item-id="${item.itemVersionId}" placeholder="Từ/cụm từ sửa đúng..." />
+                </div>
+              </div>
+            `;
           } else if (isShortText) {
             interactiveHtml = `
               <div class="candidate-short-wrap">
@@ -3261,23 +3625,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
-          const promptDisplay = isReadingMatching
-            ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
-            : (isListeningOrder
-              ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
-              : (isVocabPair
-                ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
-                : (isInlineCloze
-                  ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
-                  : (isPictorial
-                    ? 'Nhìn hình và hoàn thành từ vựng:'
-                    : escapeHtml(item.prompt || '')))));
+          const promptDisplay = isErrorCorrection
+            ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+            : (isReadingMatching
+              ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
+              : (isListeningOrder
+                ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
+                : (isVocabPair
+                  ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+                  : (isInlineCloze
+                    ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+                    : (isPictorial
+                      ? 'Nhìn hình và hoàn thành từ vựng:'
+                      : escapeHtml(item.prompt || ''))))));
 
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))))}</span>
+                <span class="question-type-badge">${isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}

@@ -4908,7 +4908,126 @@ body:not(.login-page) #auth-panel {
   .matching-questions-column.active-pane {
     display: flex;
   }
+/* Error Identification & Correction Question Template Styles */
+.template-error-correction {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
+
+.template-error-correction .template-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.scoring-rule-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scoring-rule-selector select {
+  width: auto;
+  min-width: 260px;
+  font-weight: 600;
+}
+
+.dual-input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dual-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dual-box.error-box {
+  border-left: 4px solid #ef4444;
+  background: #fffafa;
+}
+
+.dual-box.error-box label {
+  color: #991b1b;
+}
+
+.dual-box.correction-box {
+  border-left: 4px solid #10b981;
+  background: #f0fdf4;
+}
+
+.dual-box.correction-box label {
+  color: #166534;
+}
+
+/* Candidate Simulation Error Correction Layout */
+.candidate-error-correction-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.candidate-dual-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.candidate-dual-box.candidate-error-box {
+  border-left: 4px solid #ef4444;
+  background: #fffafa;
+}
+
+.candidate-dual-box.candidate-correction-box {
+  border-left: 4px solid #10b981;
+  background: #f0fdf4;
+}
+
+.candidate-error-input:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.candidate-correction-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.correction-prompt-quote {
+  margin: 6px 0 0 0;
+  padding: 8px 14px;
+  border-left: 3px solid #3b82f6;
+  background: #f1f5f9;
+  border-radius: 0 6px 6px 0;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: #1e293b;
+}
+
+@media (max-width: 768px) {
+  .dual-input-grid,
+  .candidate-error-correction-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 
 
