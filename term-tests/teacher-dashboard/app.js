@@ -1157,7 +1157,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${opt.id}</span>
             </label>
             <input type="text" class="form-control form-control-sm input-pron-option-label" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Ký hiệu phiên âm hoặc từ cho phương án ${opt.id}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-del-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
           </div>
         `).join('');
 
@@ -1468,7 +1468,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${opt.id}</span>
             </label>
             <input type="text" class="form-control form-control-sm matching-heading-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Nội dung Heading / Tiêu đề ${opt.id}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-del-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
           </div>
         `).join('');
 
@@ -1486,7 +1486,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   🔍 Quét nhãn đoạn văn
                 </button>
               </div>
-              <textarea class="form-control input-reading-passage" rows="6" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
+              <textarea class="form-control input-reading-passage" rows="8" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
             </div>
 
             <div class="matching-headings-pool" style="margin-top: 12px;">
@@ -1528,7 +1528,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 `).join('')}
               </select>
             </div>
-            <button type="button" class="btn btn-icon btn-sm btn-del-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" title="Xóa sự kiện">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" title="Xóa sự kiện">✕</button>
           </div>
         `).join('');
 
@@ -1582,7 +1582,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${opt.id}</span>
             </label>
             <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${opt.id}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
           </div>
         `).join('');
 
@@ -1619,7 +1619,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${opt.id}</span>
             </label>
             <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${opt.id}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
           </div>
         `).join('');
 
@@ -1977,20 +1977,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
           <div class="builder-item-header">
             <div class="item-title-info">
+              <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi">▾</button>
               <span class="item-pos-pill">Câu ${item.position}</span>
               <span class="item-kind-pill ${item.interactionType}">${typeLabel}</span>
+              <span class="item-prompt-preview-snippet">${escapeHtml((item.prompt || '').trim().substring(0, 55) + ((item.prompt || '').length > 55 ? '...' : ''))}</span>
             </div>
             <div class="item-header-controls">
               <label class="item-score-label">Điểm:
                 <input type="number" class="form-control form-control-sm item-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${item.maxScore || 1}" min="0" max="100" />
               </label>
-              <button type="button" class="btn btn-icon btn-sm btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này">✕</button>
+              <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này">✕</button>
             </div>
           </div>
           <div class="builder-item-body">
             <div class="form-group item-prompt-group">
-              <label class="form-label">Nội dung câu hỏi (Prompt):</label>
-              <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="2" placeholder="Nhập đề bài câu hỏi...">${escapeHtml(item.prompt || '')}</textarea>
+              <div class="item-prompt-header-bar">
+                <label class="form-label">Nội dung câu hỏi (Prompt):</label>
+                <span class="prompt-char-count">${(item.prompt || '').length} ký tự</span>
+              </div>
+              <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Nhập đề bài câu hỏi...">${escapeHtml(item.prompt || '')}</textarea>
             </div>
             ${specificHtml}
           </div>
@@ -3745,6 +3750,18 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           }
         };
         render();
+      });
+    });
+
+    // Toggle Collapse / Expand Question Item Card
+    const toggleCollapseBtns = container.querySelectorAll('.btn-toggle-item-collapse');
+    toggleCollapseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.builder-item-card');
+        if (!card) return;
+        const isCollapsed = card.classList.toggle('is-collapsed');
+        btn.textContent = isCollapsed ? '▸' : '▾';
+        btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
       });
     });
 
