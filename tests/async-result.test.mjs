@@ -51,3 +51,8 @@ test('result rendering replaces legacy database mojibake with reviewed local gro
   assert.equal(localized.blocks[0].instructions, 'Nghe và điền từ');
   assert.equal(definition.blocks[0].title, 'Listening Â· Äiá»n tá»«');
 });
+
+test('re-entering a submitted attempt refetches the result once instead of relying on localStorage', async () => {
+  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
+  assert.match(html, /state\.submittedAt && state\.learning\?\.status !== 'superseded'[^\n]*void refreshLearningResult\(\)/);
+});

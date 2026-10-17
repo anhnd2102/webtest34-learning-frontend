@@ -1385,6 +1385,8 @@
       }
     }
     if(state.submittedAt || ['submitted', 'superseded'].includes(state.learning?.status)) lockSubmittedAttempt();
+    // Vào lại link sau khi đã nộp: lấy kết quả mới từ server một lần (cache localStorage có thể trống hoặc cũ).
+    if(state.submittedAt && state.learning?.status !== 'superseded' && !state.learning?.studentResult?.publication?.published) void refreshLearningResult();
   }
 
   function lockSubmittedAttempt(){
