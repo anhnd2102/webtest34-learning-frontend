@@ -289,6 +289,21 @@ export function scoreTransformationAnswer(studentAnswer, gradingKey) {
   return { score: 0, isCorrect: false };
 }
 
+export const COMMON_IPA_SYMBOLS = [
+  'æ', 'θ', 'ð', 'ʃ', 'ʒ', 'tʃ', 'dʒ', 'ŋ', 'ʌ', 'ɔː', 'ə', 'ɜː', 'ˈ', 'ˌ'
+];
+
+export function formatIpaTranscription(rawIpa) {
+  if (!rawIpa || typeof rawIpa !== 'string') return '';
+  const trimmed = rawIpa.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('/') && trimmed.endsWith('/') && trimmed.length > 2) {
+    return trimmed;
+  }
+  const clean = trimmed.replace(/^\/+|\/+$/g, '').trim();
+  return clean ? `/${clean}/` : '';
+}
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -1096,16 +1111,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     return items.map((item, itemIdx) => {
-      const isSentenceRewrite = item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation';
-      const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite;
-      const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite;
-      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
-      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
-      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+      const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
+      const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
+      const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
+      const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite;
-      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite;
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -1117,7 +1133,91 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       let specificHtml = '';
 
-      if (isSentenceRewrite) {
+      if (isPronunciation) {
+        const targetWord = item.targetWord || itemKey.targetWord || 'camera';
+        const ipaTranscription = item.ipaTranscription || itemKey.ipaTranscription || '/ˈkæm.ər.ə/';
+        const audioUrl = item.audioUrl || itemKey.audioUrl || '';
+        const optionsList = item.options && item.options.length ? item.options : [
+          { id: 'A', label: '/ˈkæm.ər.ə/' },
+          { id: 'B', label: '/kəˈmɪər.ə/' },
+          { id: 'C', label: '/ˈkæm.eɪ.rə/' }
+        ];
+        const expectedOptionId = itemKey.expectedOptionId || optionsList[0]?.id || 'A';
+
+        const ipaButtonsHtml = COMMON_IPA_SYMBOLS.map(sym => `
+          <button type="button" class="btn btn-secondary btn-sm btn-ipa-symbol" data-symbol="${escapeHtml(sym)}" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ký tự phiên âm ${escapeHtml(sym)}">
+            ${escapeHtml(sym)}
+          </button>
+        `).join('');
+
+        const optionsHtml = optionsList.map(opt => `
+          <div class="pronunciation-option-row">
+            <label class="option-select-label" title="Chọn làm đáp án đúng">
+              <input type="radio" name="pron_correct_${item.itemVersionId}" class="radio-pron-correct" value="${opt.id}" ${opt.id === expectedOptionId ? 'checked' : ''} data-correct="${opt.id}" />
+              <span class="option-key-pill">${opt.id}</span>
+            </label>
+            <input type="text" class="form-control form-control-sm input-pron-option-label" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Ký hiệu phiên âm hoặc từ cho phương án ${opt.id}..." />
+            <button type="button" class="btn btn-icon btn-sm btn-del-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
+          </div>
+        `).join('');
+
+        specificHtml = `
+          <div class="template-section template-pronunciation-ipa">
+            <div class="template-header-bar">
+              <span class="section-sublabel"><strong>Cấu hình câu hỏi Phát âm & Phiên âm IPA (Pronunciation):</strong></span>
+              <span class="badge badge-info">Bàn phím ký tự IPA 1-click & Audio</span>
+            </div>
+
+            <div class="pronunciation-grid-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px;">
+              <div class="form-group">
+                <label class="form-label"><strong>1. Từ / Cụm từ mục tiêu (Target Word):</strong></label>
+                <input type="text" class="form-control input-pronunciation-word" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetWord)}" placeholder="Ví dụ: camera, generous, though..." />
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>2. File âm thanh mẫu (Audio Pronunciation URL - Tùy chọn):</strong></label>
+                <input type="text" class="form-control input-pronunciation-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="https://assets.izone.edu.vn/audio/..." />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:10px;">
+              <label class="form-label"><strong>3. Ký hiệu phiên âm chuẩn quốc tế (IPA Transcription):</strong></label>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-ipa-transcription" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(ipaTranscription)}" placeholder="Ví dụ: /ˈkæm.ər.ə/" style="font-family: 'Consolas', 'Menlo', monospace; font-size: 1.05rem;" />
+              </div>
+            </div>
+
+            <div class="ipa-symbol-keyboard-panel" style="margin-top:8px;">
+              <div class="ipa-keyboard-header" style="font-size:0.8rem; font-weight:700; color:#64748b; margin-bottom:4px; text-transform:uppercase;">
+                Bàn phím chèn nhanh ký tự IPA (Bấm để chèn vào ô phiên âm):
+              </div>
+              <div class="ipa-symbol-keyboard" style="display:flex; flex-wrap:wrap; gap:5px;">
+                ${ipaButtonsHtml}
+              </div>
+            </div>
+
+            <div class="ipa-phonetic-badge-wrap" style="margin-top:12px; padding:12px 16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+              <span class="ipa-preview-label" style="font-size:0.8rem; font-weight:700; color:#64748b; text-transform:uppercase;">Xem trước huy hiệu phiên âm (IPA Badge Preview):</span>
+              <div class="ipa-phonetic-badge" style="margin-top:6px; display:inline-flex; align-items:center; padding:4px 14px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-family:'Consolas', 'Menlo', monospace; font-size:1.15rem; font-weight:700; color:#0f172a; letter-spacing:0.04em;">
+                ${escapeHtml(formatIpaTranscription(ipaTranscription) || '/.../')}
+              </div>
+            </div>
+
+            <div class="pronunciation-options-section" style="margin-top:14px;">
+              <div class="template-header-bar">
+                <span class="section-sublabel"><strong>Danh sách phương án phân biệt (Tích chọn đáp án đúng):</strong></span>
+              </div>
+              <div class="pronunciation-options-list" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+                ${optionsHtml}
+              </div>
+              <div class="options-actions" style="margin-top:8px;">
+                <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  + Thêm phương án IPA
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isSentenceRewrite) {
         const keyword = item.keyword || itemKey.keyword || 'PREVENTED';
         const framePrefix = item.framePrefix ?? itemKey.framePrefix ?? 'His severe illness';
         const frameSuffix = item.frameSuffix ?? itemKey.frameSuffix ?? 'from going to the conference.';
@@ -1851,25 +1951,27 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         `;
       }
 
-      const typeLabel = isSentenceRewrite
-        ? 'Biến đổi câu (Transformation)'
-        : (isSingleChoice
-          ? 'Trắc nghiệm 1 đáp án (Single Choice)'
-          : (isMultiGroup
-            ? 'Nhóm chọn nhiều (Multi-Select Group)'
-            : (isSentenceReorder
-              ? 'Sắp xếp câu (Sentence Reorder)'
-              : (isErrorCorrection
-                ? 'Tìm và sửa lỗi (Error Correction)'
-                : (isVocabPair
-                  ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
-                  : (isRubricAsync
-                    ? 'Tự luận chấm AI (AI-Graded Rubric)'
-                    : (isPictorial
-                      ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
-                      : (isInlineCloze
-                        ? 'Điền từ nội tuyến (Inline Cloze)'
-                        : 'Điền ô trống (Short Text)'))))))));
+      const typeLabel = isPronunciation
+        ? 'Phát âm (Pronunciation)'
+        : (isSentenceRewrite
+          ? 'Biến đổi câu (Transformation)'
+          : (isSingleChoice
+            ? 'Trắc nghiệm 1 đáp án (Single Choice)'
+            : (isMultiGroup
+              ? 'Nhóm chọn nhiều (Multi-Select Group)'
+              : (isSentenceReorder
+                ? 'Sắp xếp câu (Sentence Reorder)'
+                : (isErrorCorrection
+                  ? 'Tìm và sửa lỗi (Error Correction)'
+                  : (isVocabPair
+                    ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
+                    : (isRubricAsync
+                      ? 'Tự luận chấm AI (AI-Graded Rubric)'
+                      : (isPictorial
+                        ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
+                        : (isInlineCloze
+                          ? 'Điền từ nội tuyến (Inline Cloze)'
+                          : 'Điền ô trống (Short Text)')))))))));
 
       return `
         <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
@@ -1962,6 +2064,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${index}">
                     + Biến đổi câu (Transformation)
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice" data-block-idx="${index}">
+                    + Phát âm & Ký hiệu IPA (Pronunciation)
                   </button>
                   <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${index}">
                     + Trắc nghiệm (Single Choice)
@@ -2131,8 +2236,42 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             const layoutEl = iCard.querySelector('.select-layout');
             if (layoutEl) item.layoutType = layoutEl.value;
 
+            // Pronunciation sync
+            if (item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card') {
+              const wordInput = iCard.querySelector('.input-pronunciation-word');
+              const audioInput = iCard.querySelector('.input-pronunciation-audio');
+              const ipaInput = iCard.querySelector('.input-ipa-transcription');
+
+              if (wordInput) {
+                item.targetWord = wordInput.value.trim();
+              }
+              if (audioInput) {
+                item.audioUrl = audioInput.value.trim();
+              }
+              if (ipaInput) {
+                item.ipaTranscription = ipaInput.value.trim();
+              }
+
+              const radioChecked = iCard.querySelector('.radio-pron-correct:checked');
+              const expectedId = radioChecked ? radioChecked.value : (item.options?.[0]?.id || 'A');
+
+              const optInputs = iCard.querySelectorAll('.input-pron-option-label');
+              optInputs.forEach(optIn => {
+                const optId = optIn.getAttribute('data-option-id');
+                const optObj = item.options.find(o => o.id === optId);
+                if (optObj) optObj.label = optIn.value.trim();
+              });
+
+              draftState.gradingKey.items[item.itemVersionId] = {
+                graderType: 'exact_option',
+                expectedOptionId: expectedId,
+                targetWord: item.targetWord || '',
+                ipaTranscription: item.ipaTranscription || ''
+              };
+            }
+
             // Single choice sync
-            if (item.interactionType === 'single_choice') {
+            if (item.interactionType === 'single_choice' && item.pedagogicalTypeCode !== 'pronunciation_choice' && item.pedagogicalTypeCode !== 'pronunciation_word' && item.layoutType !== 'ipa_card') {
               const radioChecked = iCard.querySelector('.radio-correct:checked');
               if (radioChecked) {
                 draftState.gradingKey.items[item.itemVersionId] = {
@@ -3165,6 +3304,119 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    // Add Pronunciation Choice Question
+    const addPronunciationChoiceBtns = container.querySelectorAll('.btn-add-pronunciation-choice');
+    addPronunciationChoiceBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const nextPos = getNextPosition();
+        const newItemId = generateUuid();
+        block.items = block.items || [];
+        const defaultWord = 'camera';
+        const defaultIpa = '/ˈkæm.ər.ə/';
+        const defaultOptions = [
+          { id: 'A', label: '/ˈkæm.ər.ə/' },
+          { id: 'B', label: '/kəˈmɪər.ə/' },
+          { id: 'C', label: '/ˈkæm.eɪ.rə/' }
+        ];
+        block.items.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: nextPos,
+          prompt: `Choose the correct pronunciation for "${defaultWord}":`,
+          helpText: '',
+          interactionType: 'single_choice',
+          pedagogicalTypeCode: 'pronunciation_choice',
+          layoutType: 'ipa_card',
+          graderType: 'exact_option',
+          required: true,
+          maxScore: 0.5,
+          targetWord: defaultWord,
+          ipaTranscription: defaultIpa,
+          audioUrl: '',
+          options: defaultOptions,
+          skillCodes: ['pronunciation'],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'exact_option',
+          expectedOptionId: 'A',
+          targetWord: defaultWord,
+          ipaTranscription: defaultIpa
+        };
+        render();
+      });
+    });
+
+    // IPA Symbol click to insert
+    const ipaSymbolBtns = container.querySelectorAll('.btn-ipa-symbol');
+    ipaSymbolBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const symbol = btn.getAttribute('data-symbol');
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item || !symbol) return;
+        const card = btn.closest('.builder-item-card');
+        const ipaInput = card?.querySelector('.input-ipa-transcription');
+        if (ipaInput) {
+          const start = ipaInput.selectionStart ?? ipaInput.value.length;
+          const end = ipaInput.selectionEnd ?? ipaInput.value.length;
+          const val = ipaInput.value;
+          ipaInput.value = val.slice(0, start) + symbol + val.slice(end);
+          ipaInput.focus();
+          const newPos = start + symbol.length;
+          ipaInput.setSelectionRange?.(newPos, newPos);
+          item.ipaTranscription = ipaInput.value.trim();
+          const badge = card?.querySelector('.ipa-phonetic-badge');
+          if (badge) {
+            badge.textContent = formatIpaTranscription(item.ipaTranscription) || '/.../';
+          }
+          if (draftState.gradingKey.items[item.itemVersionId]) {
+            draftState.gradingKey.items[item.itemVersionId].ipaTranscription = item.ipaTranscription;
+          }
+        }
+      });
+    });
+
+    // Add Option to Pronunciation
+    const addPronOptBtns = container.querySelectorAll('.btn-add-pronunciation-option');
+    addPronOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nextId = alphabet[item.options.length] || `OPT${item.options.length + 1}`;
+        item.options = item.options || [];
+        item.options.push({ id: nextId, label: `/${item.targetWord || 'word'}/` });
+        render();
+      });
+    });
+
+    // Delete Option from Pronunciation
+    const delPronOptBtns = container.querySelectorAll('.btn-del-pronunciation-option');
+    delPronOptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const optId = btn.getAttribute('data-option-id');
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (item && item.options && item.options.length > 2) {
+          item.options = item.options.filter(o => o.id !== optId);
+          render();
+        } else {
+          alert('Một câu hỏi lựa chọn phải có ít nhất 2 phương án.');
+        }
+      });
+    });
+
     // Generate Sentence Transformation Variants
     const genTransformationVariantsBtns = container.querySelectorAll('.btn-generate-transformation-variants');
     genTransformationVariantsBtns.forEach(btn => {
@@ -4082,16 +4334,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const items = b.items || [];
 
         const itemsHtml = items.map((item) => {
-          const isSentenceRewrite = item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation';
-          const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite;
-          const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite;
-          const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
-          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
-          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+          const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
+          const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
+          const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
+          const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+          const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+          const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+          const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
           const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-          const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite;
-          const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite;
-          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite;
+          const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+          const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+          const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
@@ -4099,7 +4352,33 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
 
           let interactiveHtml = '';
-          if (isSentenceRewrite) {
+          if (isPronunciation) {
+            const formattedIpa = formatIpaTranscription(item.ipaTranscription || '');
+            const audioSrc = item.audioUrl || '';
+            interactiveHtml = `
+              <div class="candidate-pronunciation-wrap" data-item-id="${item.itemVersionId}">
+                <div class="candidate-ipa-display-dock">
+                  <div class="candidate-ipa-badge">${escapeHtml(formattedIpa || '/.../')}</div>
+                  ${audioSrc ? `
+                    <button type="button" class="btn btn-sm btn-secondary candidate-ipa-audio-btn" data-audio-src="${escapeHtml(audioSrc)}" title="Nghe phát âm mẫu">
+                      🔊 Nghe phát âm
+                    </button>
+                    <audio src="${escapeHtml(audioSrc)}" class="ipa-inline-audio" style="display:none;"></audio>
+                  ` : ''}
+                </div>
+
+                <div class="candidate-pron-options-grid ${colsClass}" style="margin-top: 10px;">
+                  ${(item.options || []).map(opt => `
+                    <label class="candidate-choice-label candidate-pron-option-label">
+                      <input type="radio" name="sim_pron_${item.itemVersionId}" value="${opt.id}" />
+                      <span class="choice-key">${opt.id}</span>
+                      <span class="choice-text choice-ipa-text">${escapeHtml(opt.label || '')}</span>
+                    </label>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          } else if (isSentenceRewrite) {
             const kw = (item.keyword || '').toUpperCase();
             interactiveHtml = `
               <div class="candidate-transformation-wrap" data-item-id="${item.itemVersionId}">
@@ -4287,29 +4566,31 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
-          const promptDisplay = isSentenceRewrite
-            ? `Hoàn thành câu thứ hai sao cho có nghĩa tương đương với câu gốc, sử dụng từ in hoa đã cho:<br/><blockquote class="transformation-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
-            : (isSentenceReorder
-              ? `Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:${item.prompt && item.prompt !== 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:' ? `<br/><blockquote class="reorder-prompt-quote">${escapeHtml(item.prompt)}</blockquote>` : ''}`
-              : (isErrorCorrection
-                ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
-                : (isReadingMatching
-                  ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
-                  : (isListeningOrder
-                    ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
-                    : (isVocabPair
-                      ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
-                      : (isInlineCloze
-                        ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
-                        : (isPictorial
-                          ? 'Nhìn hình và hoàn thành từ vựng:'
-                          : escapeHtml(item.prompt || ''))))))));
+          const promptDisplay = isPronunciation
+            ? `${escapeHtml(item.prompt || `Chọn phiên âm / trọng âm đúng cho "${item.targetWord || 'từ'}"`)}`
+            : (isSentenceRewrite
+              ? `Hoàn thành câu thứ hai sao cho có nghĩa tương đương với câu gốc, sử dụng từ in hoa đã cho:<br/><blockquote class="transformation-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+              : (isSentenceReorder
+                ? `Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:${item.prompt && item.prompt !== 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:' ? `<br/><blockquote class="reorder-prompt-quote">${escapeHtml(item.prompt)}</blockquote>` : ''}`
+                : (isErrorCorrection
+                  ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+                  : (isReadingMatching
+                    ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
+                    : (isListeningOrder
+                      ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
+                      : (isVocabPair
+                        ? 'Chọn định nghĩa tương ứng cho từ vựng sau:'
+                        : (isInlineCloze
+                          ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+                          : (isPictorial
+                            ? 'Nhìn hình và hoàn thành từ vựng:'
+                            : escapeHtml(item.prompt || '')))))))));
 
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge">Câu ${item.position}</span>
-                <span class="question-type-badge">${isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI'))))))))))}</span>
+                <span class="question-type-badge">${isPronunciation ? 'Phát âm' : (isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))))))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}

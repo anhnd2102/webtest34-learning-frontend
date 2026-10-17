@@ -5345,3 +5345,171 @@ body:not(.login-page) #auth-panel {
   font-style: italic;
   color: #334155;
 }
+
+/* Pronunciation & IPA Transcription Question Template Styles */
+.template-pronunciation-ipa {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.template-pronunciation-ipa .template-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.pronunciation-grid-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .pronunciation-grid-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ipa-symbol-keyboard-panel {
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.ipa-keyboard-header {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ipa-symbol-keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.btn-ipa-symbol {
+  min-width: 38px;
+  height: 34px;
+  padding: 2px 8px;
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.btn-ipa-symbol:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.ipa-phonetic-badge-wrap {
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.ipa-phonetic-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  background: #0f172a;
+  color: #38bdf8;
+  border-radius: 8px;
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.pronunciation-options-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pronunciation-option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.input-pron-option-label {
+  flex: 1;
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 0.95rem;
+}
+
+/* Candidate Simulation Pronunciation Card */
+.candidate-pronunciation-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 10px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.candidate-ipa-display-dock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.candidate-ipa-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 18px;
+  background: #0f172a;
+  color: #38bdf8;
+  border-radius: 8px;
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.candidate-ipa-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  padding: 6px 12px;
+}
+
+.choice-ipa-text {
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
