@@ -1209,7 +1209,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       } else if (itm.interactionType === 'text_select_pair' && !draftState.gradingKey.items[itm.itemVersionId]) {
         draftState.gradingKey.items[itm.itemVersionId] = {
           graderType: 'accepted_text_exact_option',
-          accepted: [itm.prompt || 'word'],
+          accepted: (itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? [itm.prompt] : [],
           expectedOptionId: itm.options?.[0]?.id || 'opt_1',
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
@@ -1927,7 +1927,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         `;
       } else if (isVocabPair) {
-        const acceptedList = itemKey.accepted || [item.prompt || ''];
+        const rawAccepted = itemKey.accepted || [];
+        const filteredAccepted = rawAccepted.filter(v => v && !/^Từ vựng câu \d+/i.test(v));
+        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
@@ -1969,12 +1971,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
         const totalVocabItemsInBlock = (block.items || []).filter(it => it.interactionType === 'text_select_pair').length;
 
+        const rawVocabVal = acceptedList[0] || (item.prompt && !/^Từ vựng câu \d+/i.test(item.prompt) ? item.prompt : '');
+
         specificHtml = `
           <div class="template-section template-vocab-pair">
             <div class="vocab-english-box">
               <label class="form-label"><strong>1. Từ tiếng Anh chuẩn (50% điểm):</strong></label>
               <div class="fitb-input-group">
-                <input type="text" class="form-control input-vocab-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || item.prompt || '')}" placeholder="Nhập từ tiếng Anh chuẩn..." />
+                <input type="text" class="form-control input-vocab-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(rawVocabVal)}" placeholder="Nhập từ tiếng Anh chuẩn..." />
                 <button type="button" class="btn btn-secondary btn-generate-vocab-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                   ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể tự động
                 </button>
@@ -2188,6 +2192,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               </label>
               <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này">✕</button>
             </div>
+          </div>
           <div class="builder-item-body">
             ${!hasRedundantPrompt ? `
             <div class="form-group item-prompt-group">
@@ -2791,15 +2796,22 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             // Vocabulary pair sync
             if (item.interactionType === 'text_select_pair') {
-              const chips = iCard.querySelectorAll('.variant-chip');
-              const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              const chips = iCard.querySelectorAll('.template-vocab-pair .variant-chip');
+              const rawVariants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              const variants = Array.from(new Set(rawVariants.filter(v => !/^Từ vựng câu \d+/i.test(v)))).slice(0, 40);
               const dropdownVal = iCard.querySelector('.select-vocab-correct-dropdown')?.value;
               const radioChecked = iCard.querySelector('.radio-vocab-correct:checked');
               const expectedOptId = dropdownVal || (radioChecked ? radioChecked.value : (item.options?.[0]?.id || 'opt_1'));
 
+              const rawWordInput = iCard.querySelector('.input-vocab-raw');
+              const rawWordVal = rawWordInput ? rawWordInput.value.trim() : '';
+              if (!variants.length && rawWordVal && !/^Từ vựng câu \d+/i.test(rawWordVal)) {
+                variants.push(rawWordVal);
+              }
+
               draftState.gradingKey.items[item.itemVersionId] = {
                 graderType: 'accepted_text_exact_option',
-                accepted: variants.length ? variants : [item.prompt || 'word'],
+                accepted: variants,
                 expectedOptionId: expectedOptId,
                 normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
               };
@@ -4302,7 +4314,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
       draftState.gradingKey.items[newItemId] = {
         graderType: 'accepted_text_exact_option',
-        accepted: [`Từ vựng câu ${nextPos}`],
+        accepted: [],
         expectedOptionId: initialOptions[0].id,
         normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
       };
@@ -4452,7 +4464,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             draftState.gradingKey.items[newItemId] = {
               graderType: 'accepted_text_exact_option',
-              accepted: [`Từ vựng câu ${currentPos}`],
+              accepted: [],
               expectedOptionId: expectedOptId,
               normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
             };

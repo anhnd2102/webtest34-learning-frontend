@@ -197,3 +197,77 @@ test('Test Studio renders + Cặp từ vựng (Vocabulary Pair) button with batc
     'Displays Vocabulary Pair label in button'
   );
 });
+
+test('Test Studio builder-item-card has properly closed header and body is sibling', () => {
+  const container = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+  const mockForm = {
+    id: '04030000-0000-4000-8000-000000000004',
+    version: 1,
+    status: 'draft',
+    title: 'Nesting Check Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '04030000-0000-4000-8000-000000000004',
+      title: 'Nesting Check Test',
+      blocks: [
+        {
+          blockId: 'b1',
+          checkpoint: 1,
+          title: 'Phần 1',
+          exercises: [{ exerciseId: 'ex1', title: 'Ex 1', itemIds: ['i1', 'i2'] }],
+          items: [
+            {
+              itemFamilyId: 'f1',
+              itemVersionId: 'i1',
+              position: 1,
+              exerciseId: 'ex1',
+              prompt: 'Từ vựng câu 1',
+              interactionType: 'text_select_pair',
+              pedagogicalTypeCode: 'vocabulary_pair',
+              graderType: 'accepted_text_exact_option',
+              options: [{ id: 'opt_1', label: 'nghĩa 1' }]
+            },
+            {
+              itemFamilyId: 'f2',
+              itemVersionId: 'i2',
+              position: 2,
+              exerciseId: 'ex1',
+              prompt: 'Từ vựng câu 2',
+              interactionType: 'text_select_pair',
+              pedagogicalTypeCode: 'vocabulary_pair',
+              graderType: 'accepted_text_exact_option',
+              options: [{ id: 'opt_1', label: 'nghĩa 1' }]
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        i1: { graderType: 'accepted_text_exact_option', accepted: [], expectedOptionId: 'opt_1' },
+        i2: { graderType: 'accepted_text_exact_option', accepted: [], expectedOptionId: 'opt_1' }
+      }
+    }
+  };
+
+  renderTestBuilderView(container, mockForm);
+
+  // Verify that builder-item-header is explicitly closed before builder-item-body
+  assert.ok(
+    container.innerHTML.includes('</div>\n          </div>\n          <div class="builder-item-body">') ||
+    container.innerHTML.includes('</div>\r\n          </div>\r\n          <div class="builder-item-body">') ||
+    container.innerHTML.includes('</div>\n          <div class="builder-item-body">'),
+    'builder-item-header closes before builder-item-body opens'
+  );
+
+  // Accepted variants must not contain placeholder "Từ vựng câu 1"
+  assert.ok(
+    !container.innerHTML.includes('data-variant="Từ vựng câu 1"'),
+    'Placeholder "Từ vựng câu 1" is not rendered as an accepted variant chip'
+  );
+  assert.ok(
+    container.innerHTML.includes('(0/40)'),
+    'Shows initial count 0/40 when no English variants have been entered'
+  );
+});
