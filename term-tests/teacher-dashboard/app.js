@@ -6919,9 +6919,13 @@ async function startDashboard() {
               return rawCourse.includes(String(currentStudioCourseId).toLowerCase());
             });
 
+            const formObj = detailRes?.formVersion || detailRes?.form || {};
             renderTestBuilderView(container, {
-              ...detailRes.formVersion,
-              submissionCount: detailRes.submissionCount || 0
+              ...formObj,
+              id: formObj.id || formObj.formVersionId || postRes.formVersionId,
+              formVersionId: formObj.formVersionId || formObj.id || postRes.formVersionId,
+              gradingKey: detailRes?.gradingKey || formObj.gradingKey,
+              submissionCount: detailRes?.submissionCount || 0
             }, {
               teacherRole,
               courseId: currentStudioCourseId,
@@ -6959,7 +6963,8 @@ async function startDashboard() {
           try {
             container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang tải dữ liệu bài thi...</p></div>';
             const detailRes = await request(formDetailPath(formVersionId));
-            if (!detailRes || !detailRes.formVersion) {
+            const formObj = detailRes?.formVersion || detailRes?.form;
+            if (!detailRes || !formObj) {
               throw new Error(detailRes?.message || 'Không tìm thấy dữ liệu bài thi');
             }
             const relevantClasses = (state.classes || []).filter(c => {
@@ -6968,9 +6973,12 @@ async function startDashboard() {
             });
 
             renderTestBuilderView(container, {
-              ...detailRes.formVersion,
+              ...formObj,
+              id: formObj.id || formObj.formVersionId || formVersionId,
+              formVersionId: formObj.formVersionId || formObj.id || formVersionId,
+              gradingKey: detailRes?.gradingKey || formObj.gradingKey,
               testKey,
-              submissionCount: detailRes.submissionCount || 0
+              submissionCount: detailRes?.submissionCount || 0
             }, {
               teacherRole,
               courseId: currentStudioCourseId,
