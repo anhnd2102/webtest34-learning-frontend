@@ -2559,9 +2559,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             const promptEl = iCard.querySelector('.item-prompt-input');
             if (promptEl) {
-              item.prompt = promptEl.value.trim();
-            } else if (!item.prompt) {
-              item.prompt = `Câu ${item.position}`;
+              item.prompt = promptEl.value.trim() || `Câu ${item.position || iIdx + 1}`;
+            } else if (!item.prompt || !item.prompt.trim()) {
+              item.prompt = `Câu ${item.position || iIdx + 1}`;
             }
 
             const scoreEl = iCard.querySelector('.item-max-score-input');
@@ -5493,7 +5493,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               stimulusAudioUrl: b.audioUrl || null,
               stimulusReadingPassage: b.readingPassage || null,
               exercises: b.exercises || [],
-              items: b.items || []
+              items: (b.items || []).map((itm, itmIdx) => ({
+                ...itm,
+                prompt: (typeof itm.prompt === 'string' && itm.prompt.trim()) ? itm.prompt.trim() : `Câu ${itm.position || itmIdx + 1}`
+              }))
             })),
             gradingKey: draftState.gradingKey
           };
