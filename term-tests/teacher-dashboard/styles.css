@@ -3133,6 +3133,81 @@ body:not(.login-page) #auth-panel {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
+/* Drag and Drop Reordering */
+.item-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  cursor: grab;
+  color: #94a3b8;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -2px;
+  user-select: none;
+  border-radius: 4px;
+  margin-right: 4px;
+  transition: all 0.15s ease;
+}
+
+.item-drag-handle:hover {
+  color: var(--izone-navy, #174266);
+  background: #f1f5f9;
+}
+
+.item-drag-handle:active {
+  cursor: grabbing;
+}
+
+.builder-item-card.dragging {
+  opacity: 0.45;
+  transform: scale(0.99);
+  border: 2px dashed #3b82f6 !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+}
+
+.builder-item-card.drop-target-above {
+  position: relative;
+}
+
+.builder-item-card.drop-target-above::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #2563eb;
+  border-radius: 2px;
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+}
+
+.builder-item-card.drop-target-below {
+  position: relative;
+}
+
+.builder-item-card.drop-target-below::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #2563eb;
+  border-radius: 2px;
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+}
+
+.exercise-items-list.drag-over-empty {
+  outline: 2px dashed #2563eb;
+  outline-offset: 4px;
+  background: rgba(37, 99, 235, 0.04);
+  border-radius: 8px;
+}
+
 .builder-item-card.is-collapsed {
   background: #fbfcfe;
   border-color: #e2e8f0;

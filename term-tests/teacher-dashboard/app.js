@@ -1127,6 +1127,56 @@ export function insertItemsIntoBlockExercise(block, targetEx, newItems) {
   block.items.push(...itemsList);
 }
 
+export function reorderBlockItem(draftState, sourceBlockIdx, sourceItemIdx, targetBlockIdx, targetItemIdx, positionAbove = false, targetExerciseId = null) {
+  const sourceBlock = draftState?.blocks?.[sourceBlockIdx];
+  const targetBlock = draftState?.blocks?.[targetBlockIdx];
+  if (!sourceBlock || !targetBlock || !sourceBlock.items || !targetBlock.items) return null;
+
+  if (sourceBlockIdx === targetBlockIdx && sourceItemIdx === targetItemIdx) {
+    return sourceBlock.items[sourceItemIdx] || null;
+  }
+
+  const [movedItem] = sourceBlock.items.splice(sourceItemIdx, 1);
+  if (!movedItem) return null;
+
+  let insertIdx = targetItemIdx;
+  if (sourceBlockIdx === targetBlockIdx) {
+    if (sourceItemIdx < targetItemIdx) {
+      insertIdx = positionAbove ? targetItemIdx - 1 : targetItemIdx;
+    } else {
+      insertIdx = positionAbove ? targetItemIdx : targetItemIdx + 1;
+    }
+  } else {
+    insertIdx = positionAbove ? targetItemIdx : targetItemIdx + 1;
+  }
+
+  insertIdx = Math.max(0, Math.min(targetBlock.items.length, insertIdx));
+
+  if (targetExerciseId) {
+    movedItem.exerciseId = targetExerciseId;
+    const targetExObj = (targetBlock.exercises || []).find(ex => ex.exerciseId === targetExerciseId);
+    if (targetExObj) {
+      movedItem.exerciseTitle = targetExObj.title;
+    }
+  }
+
+  targetBlock.items.splice(insertIdx, 0, movedItem);
+  return movedItem;
+}
+
+export function moveItemToExercise(draftState, sourceBlockIdx, sourceItemIdx, targetBlockIdx, targetExerciseId) {
+  const sourceBlock = draftState?.blocks?.[sourceBlockIdx];
+  const targetBlock = draftState?.blocks?.[targetBlockIdx];
+  if (!sourceBlock || !targetBlock || !sourceBlock.items) return null;
+
+  const [movedItem] = sourceBlock.items.splice(sourceItemIdx, 1);
+  if (!movedItem) return null;
+
+  const targetExObj = (targetBlock.exercises || []).find(ex => ex.exerciseId === targetExerciseId);
+  insertItemsIntoBlockExercise(targetBlock, targetExObj, movedItem);
+  return movedItem;
+}
+
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
   if (!container) return;
 
@@ -2295,9 +2345,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                           : 'Điền ô trống (Short Text)')))))))));
 
       return `
-        <div class="builder-item-card" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}">
+        <div class="builder-item-card" draggable="true" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
           <div class="builder-item-header">
             <div class="item-title-info">
+              <span class="drag-handle item-drag-handle" title="Kéo thả để sắp xếp câu hỏi" aria-label="Kéo thả sắp xếp">⋮⋮</span>
               <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi">▾</button>
               <span class="item-pos-pill">Câu ${item.position}</span>
               <span class="item-kind-pill ${item.interactionType}">${typeLabel}</span>
@@ -2375,7 +2426,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <label class="form-label"><strong>Hướng dẫn làm bài tập (Exercise Instructions):</strong></label>
               <textarea class="form-control exercise-instructions-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="2" placeholder="Ví dụ: Listen and note down the words/phrases you hear from the audio...">${escapeHtml(ex.instructions || '')}</textarea>
             </div>
-            <div class="exercise-items-list block-items-list" data-exercise-id="${ex.exerciseId}">
+            <div class="exercise-items-list block-items-list" data-exercise-id="${ex.exerciseId}" data-block-idx="${blockIdx}">
               ${renderExerciseItems(block, blockIdx, ex, exIdx)}
             </div>
             <div class="exercise-add-item-bar block-add-item-bar">
@@ -4874,6 +4925,150 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         render();
       });
     });
+
+    // HTML5 Drag and Drop for Question Items
+    const draggableItemCards = container.querySelectorAll('.builder-item-card');
+    let draggedItemInfo = null;
+
+    if (draggableItemCards && typeof draggableItemCards.forEach === 'function') {
+      draggableItemCards.forEach(card => {
+        if (typeof card.addEventListener !== 'function') return;
+
+        card.addEventListener('dragstart', (e) => {
+          const targetTag = e.target?.tagName?.toLowerCase();
+          if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || targetTag === 'button') {
+            e.preventDefault();
+            return;
+          }
+          syncInputs();
+          draggedItemInfo = {
+            blockIdx: Number(card.getAttribute('data-block-idx')),
+            itemIdx: Number(card.getAttribute('data-item-idx')),
+            itemId: card.getAttribute('data-item-id'),
+            exerciseId: card.getAttribute('data-exercise-id')
+          };
+          if (e.dataTransfer) {
+            e.dataTransfer.effectAllowed = 'move';
+            try {
+              e.dataTransfer.setData('text/plain', card.getAttribute('data-item-id') || '');
+            } catch (_) {}
+          }
+          if (card.classList && typeof card.classList.add === 'function') {
+            card.classList.add('dragging');
+          }
+        });
+
+        card.addEventListener('dragover', (e) => {
+          if (!draggedItemInfo) return;
+          e.preventDefault();
+          if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+
+          const rect = typeof card.getBoundingClientRect === 'function' ? card.getBoundingClientRect() : null;
+          const isTopHalf = rect ? ((e.clientY - rect.top) < (rect.height / 2)) : false;
+
+          if (card.classList && typeof card.classList.remove === 'function') {
+            card.classList.remove('drop-target-above', 'drop-target-below');
+            if (isTopHalf) {
+              card.classList.add('drop-target-above');
+            } else {
+              card.classList.add('drop-target-below');
+            }
+          }
+        });
+
+        card.addEventListener('dragleave', () => {
+          if (card.classList && typeof card.classList.remove === 'function') {
+            card.classList.remove('drop-target-above', 'drop-target-below');
+          }
+        });
+
+        card.addEventListener('drop', (e) => {
+          if (!draggedItemInfo) return;
+          e.preventDefault();
+          if (typeof e.stopPropagation === 'function') e.stopPropagation();
+
+          if (card.classList && typeof card.classList.remove === 'function') {
+            card.classList.remove('drop-target-above', 'drop-target-below');
+          }
+
+          const sourceBlockIdx = draggedItemInfo.blockIdx;
+          const sourceItemIdx = draggedItemInfo.itemIdx;
+          const targetBlockIdx = Number(card.getAttribute('data-block-idx'));
+          const targetItemIdx = Number(card.getAttribute('data-item-idx'));
+          const targetExerciseId = card.getAttribute('data-exercise-id');
+
+          const rect = typeof card.getBoundingClientRect === 'function' ? card.getBoundingClientRect() : null;
+          const positionAbove = rect ? ((e.clientY - rect.top) < (rect.height / 2)) : false;
+
+          reorderBlockItem(draftState, sourceBlockIdx, sourceItemIdx, targetBlockIdx, targetItemIdx, positionAbove, targetExerciseId);
+
+          resequenceItemPositions();
+          markAsDirty();
+          render();
+        });
+
+        card.addEventListener('dragend', () => {
+          draggedItemInfo = null;
+          const allCards = container.querySelectorAll('.builder-item-card');
+          if (allCards && typeof allCards.forEach === 'function') {
+            allCards.forEach(c => {
+              if (c.classList && typeof c.classList.remove === 'function') {
+                c.classList.remove('dragging', 'drop-target-above', 'drop-target-below');
+              }
+            });
+          }
+          const allLists = container.querySelectorAll('.exercise-items-list');
+          if (allLists && typeof allLists.forEach === 'function') {
+            allLists.forEach(l => {
+              if (l.classList && typeof l.classList.remove === 'function') {
+                l.classList.remove('drag-over-empty');
+              }
+            });
+          }
+        });
+      });
+    }
+
+    // Drop onto empty exercise items container
+    const exerciseLists = container.querySelectorAll('.exercise-items-list');
+    if (exerciseLists && typeof exerciseLists.forEach === 'function') {
+      exerciseLists.forEach(list => {
+        if (typeof list.addEventListener !== 'function') return;
+
+        list.addEventListener('dragover', (e) => {
+          if (!draggedItemInfo) return;
+          e.preventDefault();
+          if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+          if (list.classList && typeof list.classList.add === 'function') {
+            list.classList.add('drag-over-empty');
+          }
+        });
+
+        list.addEventListener('dragleave', () => {
+          if (list.classList && typeof list.classList.remove === 'function') {
+            list.classList.remove('drag-over-empty');
+          }
+        });
+
+        list.addEventListener('drop', (e) => {
+          if (e.target && typeof e.target.closest === 'function' && e.target.closest('.builder-item-card')) return;
+          if (!draggedItemInfo) return;
+          e.preventDefault();
+          if (list.classList && typeof list.classList.remove === 'function') {
+            list.classList.remove('drag-over-empty');
+          }
+
+          const targetExerciseId = list.getAttribute('data-exercise-id');
+          const targetBlockIdx = Number(list.getAttribute('data-block-idx'));
+
+          moveItemToExercise(draftState, draggedItemInfo.blockIdx, draggedItemInfo.itemIdx, targetBlockIdx, targetExerciseId);
+
+          resequenceItemPositions();
+          markAsDirty();
+          render();
+        });
+      });
+    }
 
     // Delete Question Item
     const delItemBtns = container.querySelectorAll('.btn-delete-item');
