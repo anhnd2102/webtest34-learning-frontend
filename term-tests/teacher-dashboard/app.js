@@ -2932,6 +2932,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 });
                 const sorted = [...item.events].sort((a, b) => (Number(a.rank) || 0) - (Number(b.rank) || 0));
                 const expectedSeq = sorted.map(e => e.label);
+                item.graderType = 'ordered_sequence';
                 draftState.gradingKey.items[item.itemVersionId] = {
                   graderType: 'ordered_sequence',
                   expectedSequence: expectedSeq
@@ -3607,7 +3608,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           interactionType: 'single_choice',
           pedagogicalTypeCode: 'listening_order',
           layoutType: 'timeline_sequence',
-          graderType: 'exact_option',
+          graderType: 'ordered_sequence',
           required: true,
           maxScore: 5,
           audioUrl: block.audioUrl || 'assets/34/test-1/listening.mp3',
@@ -5829,6 +5830,22 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
             if (itmKey && itmKey.graderType === 'accepted_text_exact_option' && !itmKey.expectedOptionId) {
               itmKey.expectedOptionId = 'opt_1';
+            }
+            if (itmKey && itmKey.graderType === 'ordered_sequence') {
+              if (!Array.isArray(itmKey.expectedSequence) || itmKey.expectedSequence.length === 0) {
+                itmKey.expectedSequence = ['A', 'B', 'C', 'D', 'E'];
+              }
+            }
+            if (itmKey && itmKey.graderType === 'correction_pair') {
+              if (!Array.isArray(itmKey.expectedErrors) || itmKey.expectedErrors.length === 0) {
+                itmKey.expectedErrors = ['error'];
+              }
+              if (!Array.isArray(itmKey.expectedCorrections) || itmKey.expectedCorrections.length === 0) {
+                itmKey.expectedCorrections = ['correction'];
+              }
+              if (!itmKey.scoringRule) {
+                itmKey.scoringRule = 'split_points';
+              }
             }
           }
           payload.gradingKey = cleanGradingKey;
