@@ -2240,6 +2240,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         <div class="builder-exercise-card" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
           <div class="builder-exercise-header">
             <div class="exercise-header-left">
+              <button type="button" class="btn btn-icon btn-sm btn-toggle-exercise-collapse" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" title="Thu gọn / Mở rộng bài tập" aria-label="Thu gọn hoặc mở rộng bài tập" aria-expanded="true">▾</button>
               <span class="exercise-badge">Exercise ${ex.exerciseNumber || (exIdx + 1)}</span>
               <input type="text" class="exercise-title-input form-control form-control-sm" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" value="${escapeHtml(ex.title || '')}" placeholder="Tiêu đề bài tập (Ví dụ: Nghe từ và chọn nghĩa)..." />
               <span class="badge badge-info exercise-items-count">${exItems.length} câu hỏi</span>
@@ -2329,6 +2330,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       return `
         <div class="builder-block-card" data-block-id="${block.blockId}" data-index="${index}">
           <div class="builder-block-header">
+            <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="true">▾</button>
             <div class="block-checkpoint-pill">Phần ${index + 1}</div>
             <input type="text" class="block-title-input form-control" data-index="${index}" value="${escapeHtml(block.title || '')}" placeholder="Tiêu đề phần thi..." />
             <div class="block-header-actions">
@@ -2438,9 +2440,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <h3>Cấu trúc các phần thi (${draftState.blocks.length} phần)</h3>
                 <p class="subtitle">Mỗi phần thi (Block) đại diện cho một chặng bài làm với âm thanh, bài đọc hoặc hướng dẫn riêng.</p>
               </div>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-add-block">
-                + Thêm phần thi (Block)
-              </button>
+              <div class="blocks-header-actions-group">
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-collapse-all" title="Thu gọn toàn bộ phần thi và bài tập">
+                  Thu gọn tất cả
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-expand-all" title="Mở rộng toàn bộ phần thi và bài tập">
+                  Mở rộng tất cả
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-add-block">
+                  + Thêm phần thi (Block)
+                </button>
+              </div>
             </div>
 
             <div class="builder-blocks-list" id="builder-blocks-list">
@@ -4542,17 +4552,135 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
+    // Toggle Collapse / Expand Block Card
+    const toggleBlockCollapseBtns = container.querySelectorAll('.btn-toggle-block-collapse');
+    if (toggleBlockCollapseBtns && typeof toggleBlockCollapseBtns.forEach === 'function') {
+      toggleBlockCollapseBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            const card = typeof btn.closest === 'function' ? btn.closest('.builder-block-card') : null;
+            if (!card) return;
+            const isCollapsed = card.classList.toggle('is-collapsed');
+            btn.textContent = isCollapsed ? '▸' : '▾';
+            btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+          });
+        }
+      });
+    }
+
+    // Toggle Collapse / Expand Exercise Card
+    const toggleExerciseCollapseBtns = container.querySelectorAll('.btn-toggle-exercise-collapse');
+    if (toggleExerciseCollapseBtns && typeof toggleExerciseCollapseBtns.forEach === 'function') {
+      toggleExerciseCollapseBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            const card = typeof btn.closest === 'function' ? btn.closest('.builder-exercise-card') : null;
+            if (!card) return;
+            const isCollapsed = card.classList.toggle('is-collapsed');
+            btn.textContent = isCollapsed ? '▸' : '▾';
+            btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+          });
+        }
+      });
+    }
+
     // Toggle Collapse / Expand Question Item Card
     const toggleCollapseBtns = container.querySelectorAll('.btn-toggle-item-collapse');
-    toggleCollapseBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const card = btn.closest('.builder-item-card');
-        if (!card) return;
-        const isCollapsed = card.classList.toggle('is-collapsed');
-        btn.textContent = isCollapsed ? '▸' : '▾';
-        btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    if (toggleCollapseBtns && typeof toggleCollapseBtns.forEach === 'function') {
+      toggleCollapseBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            const card = typeof btn.closest === 'function' ? btn.closest('.builder-item-card') : null;
+            if (!card) return;
+            const isCollapsed = card.classList.toggle('is-collapsed');
+            btn.textContent = isCollapsed ? '▸' : '▾';
+            btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+          });
+        }
       });
-    });
+    }
+
+    // Bulk Collapse All
+    const btnCollapseAll = typeof container.querySelector === 'function' ? container.querySelector('#btn-collapse-all') : null;
+    if (btnCollapseAll && typeof btnCollapseAll.addEventListener === 'function') {
+      btnCollapseAll.addEventListener('click', () => {
+        const blocks = container.querySelectorAll('.builder-block-card');
+        if (blocks && typeof blocks.forEach === 'function') {
+          blocks.forEach(card => card.classList?.add('is-collapsed'));
+        }
+        const exercises = container.querySelectorAll('.builder-exercise-card');
+        if (exercises && typeof exercises.forEach === 'function') {
+          exercises.forEach(card => card.classList?.add('is-collapsed'));
+        }
+        const items = container.querySelectorAll('.builder-item-card');
+        if (items && typeof items.forEach === 'function') {
+          items.forEach(card => card.classList?.add('is-collapsed'));
+        }
+
+        const blockToggles = container.querySelectorAll('.btn-toggle-block-collapse');
+        if (blockToggles && typeof blockToggles.forEach === 'function') {
+          blockToggles.forEach(b => {
+            b.textContent = '▸';
+            if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'false');
+          });
+        }
+        const exToggles = container.querySelectorAll('.btn-toggle-exercise-collapse');
+        if (exToggles && typeof exToggles.forEach === 'function') {
+          exToggles.forEach(b => {
+            b.textContent = '▸';
+            if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'false');
+          });
+        }
+        const itemToggles = container.querySelectorAll('.btn-toggle-item-collapse');
+        if (itemToggles && typeof itemToggles.forEach === 'function') {
+          itemToggles.forEach(b => {
+            b.textContent = '▸';
+            if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+    }
+
+    // Bulk Expand All
+    const btnExpandAll = typeof container.querySelector === 'function' ? container.querySelector('#btn-expand-all') : null;
+    if (btnExpandAll && typeof btnExpandAll.addEventListener === 'function') {
+      btnExpandAll.addEventListener('click', () => {
+        const blocks = container.querySelectorAll('.builder-block-card');
+        if (blocks && typeof blocks.forEach === 'function') {
+          blocks.forEach(card => card.classList?.remove('is-collapsed'));
+        }
+        const exercises = container.querySelectorAll('.builder-exercise-card');
+        if (exercises && typeof exercises.forEach === 'function') {
+          exercises.forEach(card => card.classList?.remove('is-collapsed'));
+        }
+        const items = container.querySelectorAll('.builder-item-card');
+        if (items && typeof items.forEach === 'function') {
+          items.forEach(card => card.classList?.remove('is-collapsed'));
+        }
+
+        const blockToggles = container.querySelectorAll('.btn-toggle-block-collapse');
+        if (blockToggles && typeof blockToggles.forEach === 'function') {
+          blockToggles.forEach(b => {
+            b.textContent = '▾';
+            if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'true');
+          });
+        }
+        const exToggles = container.querySelectorAll('.btn-toggle-exercise-collapse');
+        if (exToggles && typeof exToggles.forEach === 'function') {
+          exToggles.forEach(b => {
+            b.textContent = '▾';
+            if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'true');
+          });
+        }
+        const itemToggles = container.querySelectorAll('.btn-toggle-item-collapse');
+        if (itemToggles && typeof itemToggles.forEach === 'function') {
+          itemToggles.forEach(b => {
+            b.textContent = '▾';
+            if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'true');
+          });
+        }
+      });
+    }
 
     // Move Question Item Up
     const moveItemUpBtns = container.querySelectorAll('.btn-move-item-up');
@@ -7337,18 +7465,24 @@ async function startDashboard() {
   let currentExamRoom = null;
 
   const currentLocation = typeof window !== 'undefined' ? window.location : null;
-  const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(currentLocation?.hostname || '');
+  const currentHost = currentLocation?.hostname || '';
+  const isTunnel = currentHost.includes('trycloudflare.com') || currentHost.includes('ngrok') || currentHost.includes('loca.lt');
+  const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(currentHost);
   const standardApiBase = defaultApiBase();
 
   if (loginApiBase) {
-    if (isLocalHost && (!loginApiBase.value || loginApiBase.value.includes('webtest.ducanhn.autos'))) {
+    if (isTunnel) {
+      loginApiBase.value = currentLocation.origin;
+    } else if (isLocalHost && (!loginApiBase.value || loginApiBase.value.includes('webtest.ducanhn.autos'))) {
       loginApiBase.value = 'http://127.0.0.1:8788';
     } else if (!loginApiBase.value || (!isLocalHost && loginApiBase.value.includes('localhost'))) {
       loginApiBase.value = standardApiBase;
     }
   }
   if (form?.elements?.apiBase) {
-    if (isLocalHost && (!form.elements.apiBase.value || form.elements.apiBase.value.includes('webtest.ducanhn.autos'))) {
+    if (isTunnel) {
+      form.elements.apiBase.value = currentLocation.origin;
+    } else if (isLocalHost && (!form.elements.apiBase.value || form.elements.apiBase.value.includes('webtest.ducanhn.autos'))) {
       form.elements.apiBase.value = 'http://127.0.0.1:8788';
     } else if (!form.elements.apiBase.value || (!isLocalHost && form.elements.apiBase.value.includes('localhost'))) {
       form.elements.apiBase.value = standardApiBase;

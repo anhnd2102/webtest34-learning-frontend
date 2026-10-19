@@ -33,6 +33,31 @@ const mime = {
 };
 
 const server = http.createServer((req, res) => {
+  // Proxy API requests to backend API server
+  if (req.url.startsWith('/api/') || req.url.startsWith('/internal/') || req.url.startsWith('/health')) {
+    const proxyReq = http.request({
+      hostname: '127.0.0.1',
+      port: 8788,
+      path: req.url,
+      method: req.method,
+      headers: {
+        ...req.headers,
+        host: '127.0.0.1:8788'
+      }
+    }, (proxyRes) => {
+      res.writeHead(proxyRes.statusCode, proxyRes.headers);
+      proxyRes.pipe(res);
+    });
+
+    proxyReq.on('error', (err) => {
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: 'BACKEND_GATEWAY_ERROR', message: 'Không thể kết nối đến backend local: ' + err.message }));
+    });
+
+    req.pipe(proxyReq);
+    return;
+  }
+
   // Strip query string
   const urlPath = req.url.split('?')[0].split('#')[0];
   const decoded = decodeURIComponent(urlPath);

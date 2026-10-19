@@ -3111,6 +3111,24 @@ body:not(.login-page) #auth-panel {
   display: none;
 }
 
+.builder-block-card.is-collapsed {
+  background: #fbfcfe;
+  border-color: #e2e8f0;
+}
+
+.builder-block-card.is-collapsed .builder-block-body {
+  display: none;
+}
+
+.builder-exercise-card.is-collapsed {
+  background: #fbfcfe;
+  border-color: #e2e8f0;
+}
+
+.builder-exercise-card.is-collapsed .builder-exercise-body {
+  display: none;
+}
+
 .builder-item-card.is-collapsed .item-prompt-preview-snippet {
   display: inline-block;
 }
@@ -3126,7 +3144,9 @@ body:not(.login-page) #auth-panel {
   white-space: nowrap;
 }
 
-.btn-toggle-item-collapse {
+.btn-toggle-item-collapse,
+.btn-toggle-block-collapse,
+.btn-toggle-exercise-collapse {
   width: 26px;
   height: 26px;
   padding: 0;
@@ -3136,16 +3156,25 @@ body:not(.login-page) #auth-panel {
   align-items: center;
   justify-content: center;
   background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   color: #475569;
   cursor: pointer;
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
-.btn-toggle-item-collapse:hover {
+.btn-toggle-item-collapse:hover,
+.btn-toggle-block-collapse:hover,
+.btn-toggle-exercise-collapse:hover {
   background: #e2e8f0;
   color: #0f172a;
+}
+
+.blocks-header-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-ghost-subtle {

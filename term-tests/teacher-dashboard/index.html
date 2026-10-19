@@ -15,8 +15,17 @@
   <link rel="stylesheet" href="./styles.css?rev=20261018-scroll-fix-v5">
   <script>
     (function () {
-      var isLocal = ['localhost', '127.0.0.1', '[::1]', '::1'].indexOf(window.location.hostname) !== -1;
-      if (isLocal) {
+      var hostname = window.location.hostname;
+      var isTunnel = hostname.indexOf('trycloudflare.com') !== -1 || hostname.indexOf('ngrok') !== -1 || hostname.indexOf('loca.lt') !== -1;
+      var isLocal = ['localhost', '127.0.0.1', '[::1]', '::1'].indexOf(hostname) !== -1;
+      if (isTunnel) {
+        document.addEventListener('DOMContentLoaded', function () {
+          var els = document.querySelectorAll('#login-api-base, input[name="apiBase"]');
+          els.forEach(function (el) {
+            el.value = window.location.origin;
+          });
+        });
+      } else if (isLocal) {
         document.addEventListener('DOMContentLoaded', function () {
           var els = document.querySelectorAll('#login-api-base, input[name="apiBase"]');
           els.forEach(function (el) {
