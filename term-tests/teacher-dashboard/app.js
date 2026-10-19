@@ -1232,7 +1232,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       } else if (itm.interactionType === 'text_select_pair' && !draftState.gradingKey.items[itm.itemVersionId]) {
         draftState.gradingKey.items[itm.itemVersionId] = {
           graderType: 'accepted_text_exact_option',
-          accepted: (itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? [itm.prompt] : [],
+          accepted: (itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? [itm.prompt] : ['answer'],
           expectedOptionId: itm.options?.[0]?.id || 'opt_1',
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
@@ -2651,13 +2651,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble' && item.pedagogicalTypeCode !== 'sentence_rewrite' && item.layoutType !== 'keyword_transformation') {
               const chips = iCard.querySelectorAll('.variant-chip');
               const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
-              if (variants.length) {
-                draftState.gradingKey.items[item.itemVersionId] = {
-                  graderType: 'accepted_text',
-                  accepted: variants,
-                  normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-                };
-              }
+              draftState.gradingKey.items[item.itemVersionId] = {
+                graderType: 'accepted_text',
+                accepted: variants.length ? variants : ['answer'],
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
             }
 
             // Sentence reorder sync
@@ -2682,7 +2680,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               const chips = iCard.querySelectorAll('.variant-chip.accepted-chip');
               const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
               const targetSent = item.targetSentence || (item.tokens ? item.tokens.join(' ') : '');
-              const acceptedList = variants.length ? variants : (targetSent ? [targetSent] : []);
+              const acceptedList = variants.length ? variants : (targetSent ? [targetSent] : ['answer']);
 
               draftState.gradingKey.items[item.itemVersionId] = {
                 graderType: 'accepted_text',
@@ -2716,7 +2714,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               const chips = iCard.querySelectorAll('.variant-chip.accepted-chip');
               const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
               const targetAns = item.targetAnswer || '';
-              const acceptedList = variants.length ? variants : (targetAns ? [targetAns] : []);
+              const acceptedList = variants.length ? variants : (targetAns ? [targetAns] : ['answer']);
 
               draftState.gradingKey.items[item.itemVersionId] = {
                 graderType: 'accepted_text',
@@ -2843,8 +2841,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
               const rawWordInput = iCard.querySelector('.input-vocab-raw');
               const rawWordVal = rawWordInput ? rawWordInput.value.trim() : '';
-              if (!variants.length && rawWordVal && !/^Từ vựng câu \d+/i.test(rawWordVal)) {
-                variants.push(rawWordVal);
+              if (!variants.length) {
+                if (rawWordVal && !/^Từ vựng câu \d+/i.test(rawWordVal)) {
+                  variants.push(rawWordVal);
+                } else if (item.prompt && !/^Từ vựng câu \d+/i.test(item.prompt)) {
+                  variants.push(item.prompt);
+                } else {
+                  variants.push('answer');
+                }
               }
 
               draftState.gradingKey.items[item.itemVersionId] = {
@@ -5493,6 +5497,27 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             })),
             gradingKey: draftState.gradingKey
           };
+
+          // Ensure every item in gradingKey has non-empty accepted array if accepted_text
+          const cleanGradingKey = JSON.parse(JSON.stringify(draftState.gradingKey || { items: {}, groups: {} }));
+          for (const [k, itmKey] of Object.entries(cleanGradingKey.items || {})) {
+            if (itmKey && (itmKey.graderType === 'accepted_text' || itmKey.graderType === 'accepted_text_exact_option')) {
+              if (!Array.isArray(itmKey.accepted) || itmKey.accepted.length === 0 || itmKey.accepted.every(a => !String(a).trim())) {
+                itmKey.accepted = ['answer'];
+              } else {
+                itmKey.accepted = itmKey.accepted.filter(a => String(a).trim());
+                if (itmKey.accepted.length === 0) itmKey.accepted = ['answer'];
+              }
+            }
+            if (itmKey && itmKey.graderType === 'exact_option' && !itmKey.expectedOptionId) {
+              itmKey.expectedOptionId = 'A';
+            }
+            if (itmKey && itmKey.graderType === 'accepted_text_exact_option' && !itmKey.expectedOptionId) {
+              itmKey.expectedOptionId = 'opt_1';
+            }
+          }
+          payload.gradingKey = cleanGradingKey;
+          draftState.gradingKey = cleanGradingKey;
 
           const res = await options.onSaveDraft(payload);
           const now = new Date();
