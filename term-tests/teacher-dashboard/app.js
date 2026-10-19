@@ -1033,6 +1033,100 @@ export function renderInlineClozeMarkup(text, items = [], responses = {}, option
   return html;
 }
 
+export function updatePromptPosition(prompt, newPos) {
+  if (typeof prompt !== 'string') return prompt;
+  let updated = prompt;
+  if (/^Câu hỏi \d+(:?)/i.test(updated)) {
+    updated = updated.replace(/^Câu hỏi \d+(:?)/i, `Câu hỏi ${newPos}$1`);
+  } else if (/^Câu \d+([:.]?)/i.test(updated)) {
+    updated = updated.replace(/^Câu \d+([:.]?)/i, `Câu ${newPos}$1`);
+  } else if (/^Question \d+([:.]?)/i.test(updated)) {
+    updated = updated.replace(/^Question \d+([:.]?)/i, `Question ${newPos}$1`);
+  } else if (/^Điền vào ô trống câu \d+(:?)/i.test(updated)) {
+    updated = updated.replace(/^Điền vào ô trống câu \d+(:?)/i, `Điền vào ô trống câu ${newPos}$1`);
+  } else if (/^Từ vựng qua ảnh \d+/i.test(updated)) {
+    updated = updated.replace(/^Từ vựng qua ảnh \d+/i, `Từ vựng qua ảnh ${newPos}`);
+  } else if (/^Từ vựng câu \d+/i.test(updated)) {
+    updated = updated.replace(/^Từ vựng câu \d+/i, `Từ vựng câu ${newPos}`);
+  } else if (/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i.test(updated)) {
+    updated = updated.replace(/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i, `Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi ${newPos}$1`);
+  } else if (/\(\d+\) __________/i.test(updated)) {
+    updated = updated.replace(/\(\d+\) __________/i, `(${newPos}) __________`);
+  }
+  return updated;
+}
+
+export function insertItemsIntoBlockExercise(block, targetEx, newItems) {
+  if (!block) return;
+  const itemsList = Array.isArray(newItems) ? newItems : (newItems ? [newItems] : []);
+  if (!itemsList.length) return;
+  block.items = block.items || [];
+
+  for (const itm of itemsList) {
+    if (targetEx) {
+      itm.exerciseId = targetEx.exerciseId;
+      itm.exerciseTitle = targetEx.title;
+    }
+  }
+
+  if (!targetEx || !Array.isArray(block.exercises) || block.exercises.length <= 1) {
+    block.items.push(...itemsList);
+    return;
+  }
+
+  // 1. Check if targetEx already has items in block.items
+  let lastItemIndex = -1;
+  for (let i = block.items.length - 1; i >= 0; i--) {
+    if (block.items[i].exerciseId === targetEx.exerciseId) {
+      lastItemIndex = i;
+      break;
+    }
+  }
+
+  if (lastItemIndex !== -1) {
+    block.items.splice(lastItemIndex + 1, 0, ...itemsList);
+    return;
+  }
+
+  // 2. targetEx has no items yet in block.items:
+  // Determine targetEx's position among block.exercises
+  const targetExIdx = block.exercises.findIndex(e => e.exerciseId === targetEx.exerciseId);
+  if (targetExIdx > 0) {
+    let precedingLastIndex = -1;
+    for (let p = targetExIdx - 1; p >= 0; p--) {
+      const prevEx = block.exercises[p];
+      for (let i = block.items.length - 1; i >= 0; i--) {
+        if (block.items[i].exerciseId === prevEx.exerciseId) {
+          precedingLastIndex = i;
+          break;
+        }
+      }
+      if (precedingLastIndex !== -1) break;
+    }
+
+    if (precedingLastIndex !== -1) {
+      block.items.splice(precedingLastIndex + 1, 0, ...itemsList);
+      return;
+    }
+  }
+
+  // 3. If targetEx is the first exercise (index 0) and has no items yet,
+  // or no preceding items found, check if there are succeeding exercises:
+  if (targetExIdx !== -1) {
+    for (let s = targetExIdx + 1; s < block.exercises.length; s++) {
+      const nextEx = block.exercises[s];
+      const firstNextIndex = block.items.findIndex(it => it.exerciseId === nextEx.exerciseId);
+      if (firstNextIndex !== -1) {
+        block.items.splice(firstNextIndex, 0, ...itemsList);
+        return;
+      }
+    }
+  }
+
+  // Fallback: append to the end of block.items
+  block.items.push(...itemsList);
+}
+
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
   if (!container) return;
 
@@ -1189,6 +1283,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       updated = updated.replace(/^Question \d+([:.]?)/i, `Question ${newPos}$1`);
     } else if (/^Điền vào ô trống câu \d+(:?)/i.test(updated)) {
       updated = updated.replace(/^Điền vào ô trống câu \d+(:?)/i, `Điền vào ô trống câu ${newPos}$1`);
+    } else if (/^Từ vựng qua ảnh \d+/i.test(updated)) {
+      updated = updated.replace(/^Từ vựng qua ảnh \d+/i, `Từ vựng qua ảnh ${newPos}`);
     } else if (/^Từ vựng câu \d+/i.test(updated)) {
       updated = updated.replace(/^Từ vựng câu \d+/i, `Từ vựng câu ${newPos}`);
     } else if (/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i.test(updated)) {
@@ -3115,7 +3211,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3137,7 +3233,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           ],
           skillCodes: [],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'exact_option',
           expectedOptionId: 'A'
@@ -3169,44 +3266,47 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           { id: 'D', label: 'Phương án D' },
           { id: 'E', label: 'Phương án E' }
         ];
-        block.items.push({
-          itemFamilyId: generateUuid(),
-          itemVersionId: newItem1Id,
-          position: nextPos,
-          exerciseId: targetEx.exerciseId,
-          exerciseTitle: targetEx.title,
-          prompt: `Chọn 2 đáp án chính xác (Vị trí 1):`,
-          helpText: '',
-          interactionType: 'multi_choice_group',
-          pedagogicalTypeCode: 'multiple_choice_group',
-          layoutType: 'grid_3',
-          graderType: 'unordered_group_slot',
-          groupId,
-          required: true,
-          maxScore: 1,
-          options: JSON.parse(JSON.stringify(optionsList)),
-          skillCodes: [],
-          releasePolicy: 'inherit'
-        });
-        block.items.push({
-          itemFamilyId: generateUuid(),
-          itemVersionId: newItem2Id,
-          position: nextPos + 1,
-          exerciseId: targetEx.exerciseId,
-          exerciseTitle: targetEx.title,
-          prompt: `Chọn 2 đáp án chính xác (Vị trí 2):`,
-          helpText: '',
-          interactionType: 'multi_choice_group',
-          pedagogicalTypeCode: 'multiple_choice_group',
-          layoutType: 'grid_3',
-          graderType: 'unordered_group_slot',
-          groupId,
-          required: true,
-          maxScore: 1,
-          options: JSON.parse(JSON.stringify(optionsList)),
-          skillCodes: [],
-          releasePolicy: 'inherit'
-        });
+        const newGroupItems = [
+          {
+            itemFamilyId: generateUuid(),
+            itemVersionId: newItem1Id,
+            position: nextPos,
+            exerciseId: targetEx.exerciseId,
+            exerciseTitle: targetEx.title,
+            prompt: `Chọn 2 đáp án chính xác (Vị trí 1):`,
+            helpText: '',
+            interactionType: 'multi_choice_group',
+            pedagogicalTypeCode: 'multiple_choice_group',
+            layoutType: 'grid_3',
+            graderType: 'unordered_group_slot',
+            groupId,
+            required: true,
+            maxScore: 1,
+            options: JSON.parse(JSON.stringify(optionsList)),
+            skillCodes: [],
+            releasePolicy: 'inherit'
+          },
+          {
+            itemFamilyId: generateUuid(),
+            itemVersionId: newItem2Id,
+            position: nextPos + 1,
+            exerciseId: targetEx.exerciseId,
+            exerciseTitle: targetEx.title,
+            prompt: `Chọn 2 đáp án chính xác (Vị trí 2):`,
+            helpText: '',
+            interactionType: 'multi_choice_group',
+            pedagogicalTypeCode: 'multiple_choice_group',
+            layoutType: 'grid_3',
+            graderType: 'unordered_group_slot',
+            groupId,
+            required: true,
+            maxScore: 1,
+            options: JSON.parse(JSON.stringify(optionsList)),
+            skillCodes: [],
+            releasePolicy: 'inherit'
+          }
+        ];
+        insertItemsIntoBlockExercise(block, targetEx, newGroupItems);
         draftState.gradingKey.groups[groupId] = {
           graderType: 'unordered_group_slot',
           expectedOptionIds: ['A', 'B']
@@ -3229,7 +3329,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3246,7 +3346,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: [],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text',
           accepted: ['answer'],
@@ -3270,7 +3371,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3287,7 +3388,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: ['listening'],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text',
           accepted: ['six'],
@@ -3340,7 +3442,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           { id: 'iv', label: 'iv. The cost of cameras' },
           { id: 'v', label: 'v. Advantages and disadvantages' }
         ];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3358,7 +3460,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: defaultHeadings,
           skillCodes: ['reading'],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'exact_option',
           expectedOptionId: 'ii'
@@ -3442,7 +3545,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           { label: 'D', rank: 5, text: 'Sự kiện D' },
           { label: 'E', rank: 2, text: 'Sự kiện E' }
         ];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3461,7 +3564,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: defaultEvents.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` })),
           skillCodes: ['listening'],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         const sorted = [...defaultEvents].sort((a, b) => a.rank - b.rank);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'ordered_sequence',
@@ -3534,7 +3638,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3552,7 +3656,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: ['grammar'],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'correction_pair',
           expectedErrors: ['she', 'She'],
@@ -3739,7 +3844,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         block.items = block.items || [];
         const defaultTokens = ['She', 'has worked', 'at the company', 'for five years'];
         const defaultSentence = 'She has worked at the company for five years.';
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3759,7 +3864,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: ['grammar'],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text',
           accepted: [defaultSentence],
@@ -3790,7 +3896,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const defaultSuffix = 'from going to the conference.';
         const defaultAnswer = 'prevented him';
         const defaultPrompt = 'He could not go to the conference because he was severely ill.';
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3811,7 +3917,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: ['grammar'],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text',
           keyword: defaultKw,
@@ -3845,7 +3952,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           { id: 'B', label: '/kəˈmɪər.ə/' },
           { id: 'C', label: '/ˈkæm.eɪ.rə/' }
         ];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -3865,7 +3972,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: defaultOptions,
           skillCodes: ['pronunciation'],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'exact_option',
           expectedOptionId: 'A',
@@ -4130,7 +4238,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const nextPos = getNextPosition();
       const newItemId = generateUuid();
       block.items = block.items || [];
-      block.items.push({
+      const newItem = {
         itemFamilyId: generateUuid(),
         itemVersionId: newItemId,
         position: nextPos,
@@ -4150,7 +4258,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         options: [],
         skillCodes: ['vocabulary'],
         releasePolicy: 'inherit'
-      });
+      };
+      insertItemsIntoBlockExercise(block, targetEx, newItem);
       draftState.gradingKey.items[newItemId] = {
         graderType: 'accepted_text',
         accepted: [],
@@ -4227,12 +4336,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           block.items = block.items || [];
           const startingPos = getNextPosition();
+          const batchItems = [];
 
           for (let i = 0; i < count; i++) {
             const currentPos = startingPos + i;
             const newItemId = generateUuid();
 
-            block.items.push({
+            batchItems.push({
               itemFamilyId: generateUuid(),
               itemVersionId: newItemId,
               position: currentPos,
@@ -4260,6 +4370,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
             };
           }
+
+          insertItemsIntoBlockExercise(block, targetEx, batchItems);
 
           resequenceItemPositions();
           markAsDirty();
@@ -4336,7 +4448,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         { id: 'opt_4', label: 'Nghĩa phương án 4' }
       ];
 
-      block.items.push({
+      const newItem = {
         itemFamilyId: generateUuid(),
         itemVersionId: newItemId,
         position: nextPos,
@@ -4353,7 +4465,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         options: initialOptions,
         skillCodes: [],
         releasePolicy: 'inherit'
-      });
+      };
+      insertItemsIntoBlockExercise(block, targetEx, newItem);
       draftState.gradingKey.items[newItemId] = {
         graderType: 'accepted_text_exact_option',
         accepted: [],
@@ -4479,13 +4592,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           block.items = block.items || [];
           const startingPos = getNextPosition();
+          const batchItems = [];
 
           for (let i = 0; i < count; i++) {
             const currentPos = startingPos + i;
             const newItemId = generateUuid();
             const expectedOptId = options[i] ? options[i].id : options[0].id;
 
-            block.items.push({
+            batchItems.push({
               itemFamilyId: generateUuid(),
               itemVersionId: newItemId,
               position: currentPos,
@@ -4511,6 +4625,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
             };
           }
+
+          insertItemsIntoBlockExercise(block, targetEx, batchItems);
 
           resequenceItemPositions();
           markAsDirty();
@@ -4547,7 +4663,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextPos = getNextPosition();
         const newItemId = generateUuid();
         block.items = block.items || [];
-        block.items.push({
+        const newItem = {
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
           position: nextPos,
@@ -4564,7 +4680,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: [],
           releasePolicy: 'inherit'
-        });
+        };
+        insertItemsIntoBlockExercise(block, targetEx, newItem);
         draftState.gradingKey.items[newItemId] = {
           graderType: 'rubric_async',
           rubricCode: 'rubric_translation_v1',
