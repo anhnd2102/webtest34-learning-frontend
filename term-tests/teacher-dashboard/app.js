@@ -329,7 +329,8 @@ export const ICONS = {
   clock: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
   zap: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
   arrowLeft: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>',
-  audio: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>'
+  audio: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>',
+  trash: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
 };
 
 export function renderSvgIcon(name, customClass = '') {
@@ -840,6 +841,11 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
             <button type="button" class="btn btn-secondary btn-sm btn-edit-test" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}">
               Chỉnh sửa
             </button>
+            ${!isPublished ? `
+              <button type="button" class="btn btn-outline-danger btn-sm btn-delete-test-draft" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}" title="Xóa bản nháp này">
+                ${renderSvgIcon('trash', 'icon-inline')} Xóa
+              </button>
+            ` : ''}
           </td>
         </tr>
       `;
@@ -914,6 +920,23 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
         const testKey = btn.getAttribute('data-test-key');
         const formVersionId = btn.getAttribute('data-form-version-id');
         options.onEditTest({ testKey, formVersionId });
+      });
+    });
+  }
+
+  if (typeof options.onDeleteDraft === 'function') {
+    const delBtns = container.querySelectorAll('.btn-delete-test-draft');
+    delBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const testKey = btn.getAttribute('data-test-key');
+        const formVersionId = btn.getAttribute('data-form-version-id');
+        if (!formVersionId) return;
+        const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
+          ? window.confirm('Bạn có chắc chắn muốn xóa bản nháp này không? Thao tác này không thể hoàn tác.')
+          : true;
+        if (confirmed) {
+          options.onDeleteDraft({ testKey, formVersionId });
+        }
       });
     });
   }
@@ -2393,6 +2416,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <button type="button" class="btn btn-secondary btn-sm btn-preview-test" id="btn-preview-test" title="Xem trước giao diện bài thi của học sinh">
                 ${renderSvgIcon('view', 'icon-inline')} <span class="btn-text">Xem trước bài thi</span>
               </button>
+              ${!isPublished && !isImmutable ? `
+                <button type="button" class="btn btn-outline-danger btn-sm btn-delete-draft-workspace" id="btn-delete-draft-workspace" title="Xóa bản nháp này">
+                  ${renderSvgIcon('trash', 'icon-inline')} <span class="btn-text">Xóa bản nháp</span>
+                </button>
+              ` : ''}
               <button type="button" class="btn btn-primary btn-save-draft" id="btn-save-draft">
                 ${renderSvgIcon('save', 'icon-inline')} <span class="btn-text">Lưu bản nháp</span>
               </button>
@@ -6395,6 +6423,21 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         openPublishingModal();
       });
     }
+
+    const deleteDraftBtn = container.querySelector('#btn-delete-draft-workspace');
+    if (deleteDraftBtn) {
+      deleteDraftBtn.addEventListener('click', () => {
+        const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
+          ? window.confirm('Bạn có chắc chắn muốn xóa bản nháp này không? Thao tác này không thể hoàn tác.')
+          : true;
+        if (confirmed && typeof options.onDeleteDraft === 'function') {
+          options.onDeleteDraft({
+            formVersionId: draftState.formVersionId,
+            testKey: formVersionData.testKey || ''
+          });
+        }
+      });
+    }
   }
 
   render();
@@ -7013,12 +7056,30 @@ async function startDashboard() {
       const endpoint = courseTestCatalogPath(currentStudioCourseId);
       const res = await request(endpoint);
       const catalog = res.catalog || [];
+      const handleDeleteDraft = async ({ formVersionId }) => {
+        if (!formVersionId) return;
+        try {
+          container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang xóa bản nháp...</p></div>';
+          const delRes = await request(formDraftPath(formVersionId), {
+            method: 'DELETE'
+          });
+          if (delRes && delRes.success) {
+            alert('Đã xóa bản nháp bài thi thành công.');
+          }
+          await loadAndRenderTestStudio(currentStudioCourseId);
+        } catch (err) {
+          alert('Lỗi xóa bản nháp: ' + (err.message || 'Lỗi kết nối'));
+          await loadAndRenderTestStudio(currentStudioCourseId);
+        }
+      };
+
       renderCourseTestCatalogView(container, catalog, {
         teacherRole,
         courseId: currentStudioCourseId,
         onCourseChange: (newCid) => {
           loadAndRenderTestStudio(newCid);
         },
+        onDeleteDraft: handleDeleteDraft,
         onAddTest: async () => {
           try {
             const courseNames = { 1: '03', 2: '34', 3: '45' };
@@ -7061,6 +7122,7 @@ async function startDashboard() {
               onBack: () => {
                 loadAndRenderTestStudio(currentStudioCourseId);
               },
+              onDeleteDraft: handleDeleteDraft,
               onSaveDraft: async (updatedPayload) => {
                 const putRes = await request(formDraftPath(updatedPayload.formVersionId), {
                   method: 'PUT',
@@ -7114,6 +7176,7 @@ async function startDashboard() {
               onBack: () => {
                 loadAndRenderTestStudio(currentStudioCourseId);
               },
+              onDeleteDraft: handleDeleteDraft,
               onSaveDraft: async (updatedPayload) => {
                 const putRes = await request(formDraftPath(updatedPayload.formVersionId), {
                   method: 'PUT',

@@ -2770,6 +2770,37 @@ body:not(.login-page) #auth-panel {
   color: #0f172a;
 }
 
+.catalog-table td.col-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  box-shadow: none;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.btn-outline-danger:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.btn-outline-danger svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+}
+
 /* Test Builder Workspace */
 .test-builder-workspace {
   display: flex;
