@@ -33,6 +33,14 @@ export function examPhase(attempt) {
   return ['waiting', 'running'].includes(attempt.exam.status) ? attempt.exam.status : 'off';
 }
 
+// Banner luật/bộ đếm của chế độ Tự giám sát; rỗng khi bài không bật chế độ này.
+export function selfProctoringBannerHtml(selfProctoring) {
+  if (!selfProctoring) return '';
+  const { level, text } = globalThis.selfProctoringNotice(selfProctoring);
+  const colors = { info: '#eff6ff;color:#1e3a8a;border-color:#bfdbfe', danger: '#fef2f2;color:#991b1b;border-color:#fecaca', submitted: '#fffbeb;color:#92400e;border-color:#fde68a' };
+  return `<div id="selfProctoringBanner" class="demo-notice ${level}" role="status" aria-live="polite" style="font-weight:600;background:${colors[level]}">${text}</div>`;
+}
+
 export function resetLocalAttemptState(state) {
   state.answers = {};
   state.submittedAt = null;
@@ -500,6 +508,7 @@ export async function mount(course) {
     status: '',
     expiresAt: null,
     exam: null,
+    selfProctoring: null,
     result: null,
     pollTimer: null
   };
@@ -662,11 +671,27 @@ export async function mount(course) {
       .catch(() => (opening ? undefined : apiRequest('/attempts/exam/incidents/open', { ...body, type: 'left_exam' })))
       .then(() => apiRequest(opening ? '/attempts/exam/incidents/open' : '/attempts/exam/incidents/close', body));
     examIncidentOperations.set(command.incidentId, operation);
-    void operation.catch(err => {
+    void operation.then(data => {
+      if (data?.selfProctoring) applySelfProctoring(data.selfProctoring);
+    }).catch(err => {
       if (err.code === 'EXAM_DEVICE_SUPERSEDED') return;
       const message = document.querySelector('#examGuardMessage');
       if (message) message.textContent = 'Không thể lưu sự cố rời bài. Hãy giữ trang mở và thử quay lại bài thi.';
     });
+  }
+
+  // Server trả số lần thoát sau mỗi sự cố; vượt giới hạn thì server đã tự nộp bài.
+  function applySelfProctoring(next) {
+    learningState.selfProctoring = { ...learningState.selfProctoring, ...next };
+    const { text } = globalThis.selfProctoringNotice(learningState.selfProctoring);
+    const banner = document.querySelector('#selfProctoringBanner');
+    if (banner) banner.outerHTML = selfProctoringBannerHtml(learningState.selfProctoring);
+    const message = document.querySelector('#examGuardMessage');
+    if (message) message.textContent = text;
+    if (learningState.selfProctoring.autoSubmitted && learningState.status === 'active') {
+      learningState.status = 'submitted';
+      learningState.onAutoSubmitted?.(text);
+    }
   }
 
   function runExamGuardCommand(command) {
@@ -693,8 +718,8 @@ export async function mount(course) {
     mountExamGuard();
     examGuardState = {
       ...examGuardState,
-      running: learningState.exam?.status === 'running' && learningState.status === 'active',
-      fullscreenSupported: supportsFullscreen()
+      running: (learningState.exam?.status === 'running' || Boolean(learningState.selfProctoring)) && learningState.status === 'active',
+      fullscreenSupported: !learningState.selfProctoring && supportsFullscreen()
     };
     const result = globalThis.examGuardReducer(examGuardState, event);
     examGuardState = result.state;
@@ -728,7 +753,7 @@ export async function mount(course) {
           <button type="button" class="btn btn-primary" id="examGuardReturn">Quay lại bài thi</button></div>
         </div>`);
       document.querySelector('#examGuardReturn').addEventListener('click', () => {
-        document.querySelector('#examGuardMessage').textContent = 'Giáo viên sẽ được thông báo.';
+        document.querySelector('#examGuardMessage').textContent = learningState.selfProctoring ? globalThis.selfProctoringNotice(learningState.selfProctoring).text : 'Giáo viên sẽ được thông báo.';
         dispatchExamGuard({ type: 'return_click', at: Date.now() });
       });
     }
@@ -1153,6 +1178,7 @@ export async function mount(course) {
           state.submittedAt = state.submittedAt || Date.now();
         }
         learningState.exam = startRes.attempt.exam || null;
+        learningState.selfProctoring = startRes.attempt.selfProctoring || null;
         if (startRes.attempt.definition) learningState.definition = startRes.attempt.definition;
         const phase = examPhase(startRes.attempt);
         if (phase === 'waiting') {
@@ -1162,6 +1188,7 @@ export async function mount(course) {
           return;
         }
         renderExamInterface();
+        if (learningState.selfProctoring && learningState.status === 'active') mountExamGuard();
         if (phase === 'running') {
           mountExamGuard();
           void connectExamEvents();
@@ -1317,9 +1344,7 @@ export async function mount(course) {
       : `Bài thi demo · ${form.durationMinutes} phút theo đề`;
 
     const noticeBanner = isLearningMode
-      ? `<div class="demo-notice" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534">
-          <strong>Phiên thi chính thức:</strong> Câu trả lời được tự động lưu lên máy chủ. Sau khi hoàn thành, hãy bấm <strong>Nộp bài</strong> để hệ thống và AI chấm điểm.
-        </div>`
+      ? selfProctoringBannerHtml(learningState.selfProctoring)
       : `<div class="demo-notice">
           Bản xem thử để duyệt đề. Câu trả lời chỉ lưu trên trình duyệt này; nộp thử chưa chấm điểm hoặc gửi lên hệ thống.
           Dùng link thi có token do người phụ trách cung cấp để mở phiên chấm điểm.
@@ -1754,6 +1779,18 @@ export async function mount(course) {
         }
       } catch {}
     }
+
+    learningState.onAutoSubmitted = text => {
+      state.submittedAt = Date.now();
+      stopExamConnections();
+      persist();
+      update();
+      if (examTimerInterval) clearInterval(examTimerInterval);
+      if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
+      query('#demo-result').hidden = false;
+      query('#demo-result').textContent = text;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     query('#demo-confirm-submit').addEventListener('click', async () => {
       query('#demo-confirm-submit').disabled = true;

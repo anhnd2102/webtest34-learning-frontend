@@ -379,6 +379,24 @@ export function assignmentExamModePath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam-mode`;
 }
 
+export function assignmentSelfProctoringPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/self-proctoring`;
+}
+
+export function selfProctoringRequestBody(enabled, rawLimit) {
+  if (!enabled) return { exitLimit: null };
+  const text = String(rawLimit ?? '').trim();
+  if (!/^\d+$/.test(text)) throw new Error('Giới hạn thoát phải là số nguyên ≥ 0.');
+  return { exitLimit: Number(text) };
+}
+
+export function incidentCellText(student) {
+  if (!student.attemptId) return '—';
+  const count = student.incidentCount ?? 0;
+  if (student.exitLimit === null || student.exitLimit === undefined) return String(count);
+  return `${count}/${student.exitLimit}${student.autoSubmitted ? ' · Tự nộp do vượt giới hạn' : ''}`;
+}
+
 export function assignmentExamRoomPath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam/room`;
 }
@@ -1016,6 +1034,9 @@ async function startDashboard() {
   const showcaseStatusBadge = document.querySelector('#showcase-status-badge');
   const examModeToggle = document.querySelector('#exam-mode-toggle');
   const examModeStatusPill = document.querySelector('#exam-mode-status-pill');
+  const selfProctoringToggle = document.querySelector('#self-proctoring-toggle');
+  const selfProctoringLimit = document.querySelector('#self-proctoring-limit');
+  const selfProctoringSave = document.querySelector('#self-proctoring-save');
   const examRoomOpenButton = document.querySelector('#exam-room-open');
   const examRoom = document.querySelector('#exam-room');
   const examRoomSummary = document.querySelector('#exam-room-summary');
@@ -1317,6 +1338,7 @@ async function startDashboard() {
     if (examRoom) examRoom.hidden = true;
     if (examRoomOpenButton) examRoomOpenButton.hidden = !assignment.examMode;
     updateExamModeUI(assignment.examMode);
+    updateSelfProctoringUI(assignment.exitLimit, assignment.examMode);
     const selectedClassOpt = classSelect?.selectedOptions?.[0];
     const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
 
@@ -1641,6 +1663,39 @@ async function startDashboard() {
     }
   }
 
+  function updateSelfProctoringUI(exitLimit, examMode) {
+    const enabled = exitLimit !== null && exitLimit !== undefined;
+    if (selfProctoringToggle) { selfProctoringToggle.checked = enabled; selfProctoringToggle.disabled = Boolean(examMode); }
+    if (selfProctoringLimit) { selfProctoringLimit.value = enabled ? String(exitLimit) : ''; selfProctoringLimit.disabled = !enabled; }
+    if (selfProctoringSave) selfProctoringSave.disabled = !enabled && !selfProctoringToggle?.checked;
+    if (examModeToggle) examModeToggle.disabled = enabled;
+  }
+
+  selfProctoringToggle?.addEventListener('change', () => {
+    selfProctoringLimit.disabled = !selfProctoringToggle.checked;
+    if (selfProctoringToggle.checked) selfProctoringLimit.focus();
+    selfProctoringSave.disabled = false;
+  });
+
+  selfProctoringSave?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    selfProctoringSave.disabled = true;
+    try {
+      const body = selfProctoringRequestBody(selfProctoringToggle.checked, selfProctoringLimit.value);
+      const payload = await request(assignmentSelfProctoringPath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      currentSelectedAssignment.exitLimit = payload.exitLimit;
+      status.textContent = payload.exitLimit === null ? 'Đã tắt Tự giám sát.' : `Đã bật Tự giám sát: thoát quá ${payload.exitLimit} lần thì bài tự nộp.`;
+    } catch (error) {
+      status.textContent = error.message;
+    } finally {
+      updateSelfProctoringUI(currentSelectedAssignment.exitLimit, currentSelectedAssignment.examMode);
+    }
+  });
+
   examModeToggle?.addEventListener('change', async () => {
     if (!currentSelectedAssignment) return;
     examModeToggle.disabled = true;
@@ -1652,6 +1707,7 @@ async function startDashboard() {
       });
       currentSelectedAssignment.examMode = payload.examMode;
       updateExamModeUI(payload.examMode);
+      updateSelfProctoringUI(currentSelectedAssignment.exitLimit, payload.examMode);
       if (examRoomOpenButton) examRoomOpenButton.hidden = !payload.examMode;
       if (!payload.examMode && examRoom) examRoom.hidden = true;
       status.textContent = payload.examMode ? 'Exam Mode đã bật. Học viên sẽ chờ giáo viên bắt đầu.' : 'Exam Mode đã tắt.';
@@ -1880,7 +1936,7 @@ async function startDashboard() {
         }
 
         const incidentCell = document.createElement('td');
-        incidentCell.textContent = student.attemptId ? String(student.incidentCount ?? 0) : '—';
+        incidentCell.textContent = incidentCellText(student);
         row.append(incidentCell);
 
         // 5. Submitted At Cell: Two-line layout (Line 1: Time, Line 2: Date)

@@ -256,6 +256,17 @@
                 </label>
                 <span id="exam-mode-status-pill" class="exam-mode-status-pill">Đang tắt</span>
               </div>
+              <div class="exam-mode-switch-wrap" id="self-proctoring-controls">
+                <label class="exam-mode-toggle" for="self-proctoring-toggle" title="Không có giáo viên trông: vượt số lần thoát thì bài tự nộp">
+                  <input id="self-proctoring-toggle" type="checkbox">
+                  <span class="toggle-slider" aria-hidden="true"></span>
+                  <span class="toggle-label-text">Tự giám sát (không có giáo viên)</span>
+                </label>
+                <label for="self-proctoring-limit">Cho phép thoát tối đa</label>
+                <input id="self-proctoring-limit" type="number" min="0" step="1" inputmode="numeric" required disabled style="width:5rem">
+                <span>lần</span>
+                <button id="self-proctoring-save" class="btn-secondary" type="button" disabled>Lưu</button>
+              </div>
               <button id="exam-room-open" class="btn-secondary btn-exam-room" type="button" hidden>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 8 6 4-6 4Z"/></svg>
                 <span>Mở Phòng thi</span>
