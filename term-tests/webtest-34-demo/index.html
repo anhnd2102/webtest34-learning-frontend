@@ -51,6 +51,9 @@
     button,input,textarea,select{font:inherit}
     button{cursor:pointer}
     .hidden{display:none!important}
+    .self-proctoring-banner{position:sticky;top:0;z-index:40;padding:10px 24px;text-align:center;font-weight:600;background:#eff6ff;color:#1e3a8a;border-bottom:1px solid #bfdbfe}
+    .self-proctoring-banner.danger{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+    .self-proctoring-banner.submitted{background:#fffbeb;color:#92400e;border-color:#fde68a}
     #examApp.exam-guard-blurred{filter:blur(7px);pointer-events:none;user-select:none}
     .exam-guard-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;background:rgba(17,24,39,.72)}
     .exam-guard-card{width:min(100%,480px);padding:28px;border-radius:18px;background:#fff;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.3)}
@@ -426,6 +429,7 @@
       </div>
     </section>
 
+    <div class="self-proctoring-banner hidden" id="selfProctoringBanner" role="status" aria-live="polite"></div>
     <section class="exam-layout hidden" id="examApp">
       <div class="main-column" id="mainColumn"></div>
       <aside class="side-panel">
@@ -1359,7 +1363,24 @@
     const timerInt=setInterval(tick,1000); tick();
   }
 
+  function renderSelfProctoringNotice(){
+    const banner = $('#selfProctoringBanner');
+    const sp = state.learning?.selfProctoring;
+    banner.classList.toggle('hidden', !sp);
+    if(!sp) return;
+    const notice = window.selfProctoringNotice(sp);
+    banner.textContent = notice.text;
+    banner.className = `self-proctoring-banner ${notice.level}`;
+    $('#examGuardMessage').textContent = notice.text;
+    if(sp.autoSubmitted){
+      state.learning.status = 'submitted';
+      state.submittedAt = state.submittedAt || Date.now();
+      lockSubmittedAttempt();
+    }
+  }
+
   function showExam(){
+    renderSelfProctoringNotice();
     $('#introScreen').classList.add('hidden'); $('#audioCheckScreen').classList.add('hidden'); $('#examApp').classList.remove('hidden'); $('#examHeader').classList.remove('hidden'); $('#mobileBottom').classList.remove('hidden');
     document.documentElement.style.setProperty('--font-scale',fontScale);
     $('#studentLabel').textContent=[state.studentName,state.classCode].filter(Boolean).join(' · ') || 'Bài kiểm tra 120 phút';
@@ -2129,7 +2150,8 @@
           status: result.attempt.status || 'active',
           expiresAt: result.attempt.expiresAt ? Date.parse(result.attempt.expiresAt) : null,
           definition: result.attempt.definition || state.learning?.definition,
-          exam: result.attempt.exam || state.learning?.exam || null
+          exam: result.attempt.exam || state.learning?.exam || null,
+          selfProctoring: result.attempt.selfProctoring || null
         };
         if(result.attempt.definition && rosterData.assignment) {
           rosterData.assignment = {...rosterData.assignment, definition: result.attempt.definition};
@@ -2218,7 +2240,11 @@
     const operation = previous.catch(() => opening ? undefined : learningRequest('/attempts/exam/incidents/open', {...body, type: 'left_exam'}))
       .then(() => learningRequest(path, body));
     examIncidentOperations.set(command.incidentId, operation);
-    void operation.catch(error => {
+    void operation.then(data => {
+      if(!data?.selfProctoring) return;
+      state.learning.selfProctoring = {...state.learning.selfProctoring, ...data.selfProctoring};
+      renderSelfProctoringNotice();
+    }).catch(error => {
       if(error.code === 'DEVICE_SUPERSEDED') return;
       examGuardMessage.textContent = 'Không thể lưu sự cố rời bài. Hãy giữ trang mở và thử quay lại bài thi.';
     });
@@ -2251,8 +2277,8 @@
   function dispatchExamGuard(event){
     examGuardState = {
       ...examGuardState,
-      running: state.learning?.exam?.status === 'running' && state.learning?.status === 'active',
-      fullscreenSupported: typeof document.documentElement.requestFullscreen === 'function'
+      running: (state.learning?.exam?.status === 'running' || Boolean(state.learning?.selfProctoring)) && state.learning?.status === 'active',
+      fullscreenSupported: !state.learning?.selfProctoring && typeof document.documentElement.requestFullscreen === 'function'
     };
     const result = window.examGuardReducer(examGuardState, event);
     examGuardState = result.state;
@@ -2285,7 +2311,8 @@
     }
   });
   $('#examGuardReturn').addEventListener('click', () => {
-    examGuardMessage.textContent = 'Giáo viên sẽ được thông báo.';
+    if(state.learning?.selfProctoring) renderSelfProctoringNotice();
+    else examGuardMessage.textContent = 'Giáo viên sẽ được thông báo.';
     dispatchExamGuard({ type: 'return_click', at: Date.now() });
   });
 
