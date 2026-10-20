@@ -1369,12 +1369,23 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           graderType: 'exact_option',
           expectedOptionId: itm.options?.[0]?.id || 'A'
         };
-      } else if (itm.interactionType === 'short_text' && !draftState.gradingKey.items[itm.itemVersionId]) {
-        draftState.gradingKey.items[itm.itemVersionId] = {
-          graderType: 'accepted_text',
-          accepted: ['answer'],
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-        };
+      } else if (itm.interactionType === 'short_text') {
+        const initialWord = itm.targetWord || ((itm.prompt && !/^Câu \d+/i.test(itm.prompt) && !/^Từ vựng qua ảnh \d+/i.test(itm.prompt)) ? itm.prompt : '');
+        if (!draftState.gradingKey.items[itm.itemVersionId]) {
+          draftState.gradingKey.items[itm.itemVersionId] = {
+            graderType: 'accepted_text',
+            accepted: initialWord ? [initialWord] : [],
+            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          };
+        } else {
+          const currentKey = draftState.gradingKey.items[itm.itemVersionId];
+          if (Array.isArray(currentKey.accepted)) {
+            currentKey.accepted = currentKey.accepted.filter(v => v !== 'answer' && v !== 'draft_placeholder');
+            if (!currentKey.accepted.length && initialWord) {
+              currentKey.accepted = [initialWord];
+            }
+          }
+        }
       } else if (itm.interactionType === 'text_select_pair') {
         const initialWord = itm.targetWord || ((itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? itm.prompt : '');
         if (!draftState.gradingKey.items[itm.itemVersionId]) {
@@ -1960,7 +1971,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         `;
       } else if (isInlineCloze) {
-        const acceptedList = itemKey.accepted || [''];
+        const rawAccepted = itemKey.accepted || [];
+        const filteredAccepted = rawAccepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder');
+        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
@@ -1969,6 +1982,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         `).join('');
 
         const livePreviewHtml = renderInlineClozeMarkup(item.prompt || '', [item], {}, { disabled: true });
+        const rawClozeVal = item.targetWord || (acceptedList[0] || '');
 
         specificHtml = `
           <div class="template-section template-inline-cloze">
@@ -1994,7 +2008,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="cloze-answers-config" style="margin-top: 12px;">
               <label class="form-label"><strong>Đáp án chuẩn cho chỗ trống (${item.position}):</strong></label>
               <div class="fitb-input-group">
-                <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập đáp án chuẩn cho chỗ trống..." />
+                <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(rawClozeVal)}" placeholder="Nhập đáp án chuẩn cho chỗ trống..." />
                 <button type="button" class="btn btn-secondary btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                   ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
                 </button>
@@ -2014,7 +2028,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         `;
       } else if (isPictorial) {
-        const acceptedList = itemKey.accepted || [''];
+        const rawAccepted = itemKey.accepted || [];
+        const filteredAccepted = rawAccepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder' && !/^Từ vựng qua ảnh \d+/i.test(v));
+        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
@@ -2022,6 +2038,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </span>
         `).join('');
 
+        const rawTargetVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Từ vựng qua ảnh \d+/i.test(item.prompt) ? item.prompt : '');
         const imgSrc = item.image || item.stimulusImageUrl || '';
 
         specificHtml = `
@@ -2038,7 +2055,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="form-group pictorial-target-group">
                 <label class="form-label"><strong>Từ / Cụm từ tiếng Anh chuẩn:</strong></label>
                 <div class="fitb-input-group">
-                  <input type="text" class="form-control input-pictorial-target input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập từ/cụm từ mẫu (ví dụ: school kids)..." />
+                  <input type="text" class="form-control input-pictorial-target input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(rawTargetVal)}" placeholder="Nhập từ/cụm từ mẫu (ví dụ: school kids)..." />
                   <button type="button" class="btn btn-secondary btn-generate-hangman" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động tạo gợi ý Hangman từ từ mục tiêu">
                     ${renderSvgIcon('zap', 'icon-inline')} Sinh gợi ý Hangman
                   </button>
@@ -2074,7 +2091,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         `;
       } else if (isShortText) {
-        const acceptedList = itemKey.accepted || [''];
+        const rawAccepted = itemKey.accepted || [];
+        const filteredAccepted = rawAccepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder');
+        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
@@ -2082,12 +2101,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </span>
         `).join('');
 
+        const rawFitbVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Câu \d+/i.test(item.prompt) ? item.prompt : '');
+
         specificHtml = `
           <div class="template-section template-fitb">
             <div class="fitb-raw-box">
               <label class="form-label">Đáp án gốc (Nhập từ/câu mẫu để tự động mở rộng biến thể dấu câu, viết tắt, nháy đơn):</label>
               <div class="fitb-input-group">
-                <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(acceptedList[0] || '')}" placeholder="Nhập đáp án chuẩn..." />
+                <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(rawFitbVal)}" placeholder="Nhập đáp án chuẩn..." />
                 <button type="button" class="btn btn-secondary btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                   ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
                 </button>
@@ -2807,11 +2828,34 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             // Short text sync
             if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble' && item.pedagogicalTypeCode !== 'sentence_rewrite' && item.layoutType !== 'keyword_transformation') {
+              const rawInput = iCard.querySelector('.input-fitb-raw, .input-pictorial-target');
+              const rawVal = rawInput ? rawInput.value.trim() : '';
+
+              if (rawVal && !/^Câu \d+/i.test(rawVal) && !/^Từ vựng qua ảnh \d+/i.test(rawVal)) {
+                item.targetWord = rawVal;
+              }
+
               const chips = iCard.querySelectorAll('.variant-chip');
-              const variants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              const rawVariants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+              let variants = Array.from(new Set(rawVariants.filter(v => v !== 'answer' && v !== 'draft_placeholder'))).slice(0, 40);
+
+              if (rawVal && !/^Câu \d+/i.test(rawVal) && !/^Từ vựng qua ảnh \d+/i.test(rawVal)) {
+                if (!variants.includes(rawVal)) {
+                  variants = [rawVal, ...variants];
+                }
+              }
+
+              if (!variants.length) {
+                if (item.targetWord && !/^Câu \d+/i.test(item.targetWord) && !/^Từ vựng qua ảnh \d+/i.test(item.targetWord)) {
+                  variants.push(item.targetWord);
+                } else if (item.prompt && !/^Câu \d+/i.test(item.prompt) && !/^Từ vựng qua ảnh \d+/i.test(item.prompt)) {
+                  variants.push(item.prompt);
+                }
+              }
+
               draftState.gradingKey.items[item.itemVersionId] = {
                 graderType: 'accepted_text',
-                accepted: variants.length ? variants : ['answer'],
+                accepted: variants,
                 normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
               };
             }
@@ -2977,6 +3021,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             // Pictorial card sync
             if (item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary')) {
+              const targetInput = iCard.querySelector('.input-pictorial-target, .input-fitb-raw');
+              if (targetInput) {
+                const targetVal = targetInput.value.trim();
+                if (targetVal && !/^Từ vựng qua ảnh \d+/i.test(targetVal)) {
+                  item.targetWord = targetVal;
+                }
+              }
               const imgInput = iCard.querySelector('.input-pictorial-image');
               if (imgInput) {
                 const imgVal = imgInput.value.trim();
