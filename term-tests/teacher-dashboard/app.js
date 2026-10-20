@@ -1464,7 +1464,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
-      const hasRedundantPrompt = isVocabPair || isPictorial || isPronunciation || isSentenceRewrite || isSentenceReorder || isErrorCorrection || isReadingMatching || isListeningOrder;
+      const hasRedundantPrompt = isVocabPair || isPictorial || isPronunciation || isSentenceRewrite || isSentenceReorder || isReadingMatching || isListeningOrder;
 
       const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
       const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
@@ -2500,10 +2500,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             ${!hasRedundantPrompt ? `
             <div class="form-group item-prompt-group">
               <div class="item-prompt-header-bar">
-                <label class="form-label">Đề bài / Nội dung câu hỏi (Question Prompt):</label>
+                <label class="form-label">${isErrorCorrection ? 'Câu văn gốc chứa lỗi sai (Original Sentence with Error):' : 'Đề bài / Nội dung câu hỏi (Question Prompt):'}</label>
                 <span class="prompt-char-count">${(item.prompt || '').length} ký tự</span>
               </div>
-              <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Nhập đề bài, trích đoạn hoặc yêu cầu của câu hỏi...">${escapeHtml(item.prompt || '')}</textarea>
+              <textarea class="form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="${isErrorCorrection ? 3 : 4}" placeholder="${isErrorCorrection ? 'Nhập câu văn chứa lỗi sai (ví dụ: There are much people in the classroom.)...' : 'Nhập đề bài, trích đoạn hoặc yêu cầu của câu hỏi...'}">${escapeHtml(item.prompt || '')}</textarea>
             </div>
             ` : ''}
             ${specificHtml}
