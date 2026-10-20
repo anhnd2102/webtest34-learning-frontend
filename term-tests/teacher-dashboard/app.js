@@ -1214,6 +1214,211 @@ export function moveItemToExercise(draftState, sourceBlockIdx, sourceItemIdx, ta
   return movedItem;
 }
 
+export function openGenericBatchModal({
+  title = 'Tạo câu hỏi hàng loạt',
+  subtitle = '',
+  defaultCount = 5,
+  minCount = 1,
+  maxCount = 50,
+  extraConfigHtml = '',
+  onConfirm,
+  onSingle
+} = {}) {
+  if (typeof document === 'undefined') {
+    if (typeof onSingle === 'function') onSingle({ count: 1 });
+    return null;
+  }
+
+  // Remove previous modal instance if already present to avoid dangling listeners
+  let modal = document.querySelector('#generic-batch-modal');
+  if (modal && modal.parentNode) {
+    modal.parentNode.removeChild(modal);
+  }
+
+  modal = document.createElement('div');
+  modal.id = 'generic-batch-modal';
+  modal.className = 'modal-generic-batch-overlay modal-batch-vocab-overlay';
+  document.body.appendChild(modal);
+
+  modal.style.display = 'flex';
+
+  const initialCount = Math.max(minCount, Math.min(maxCount, parseInt(defaultCount, 10) || minCount));
+
+  modal.innerHTML = `
+    <div class="modal-generic-batch-card modal-batch-vocab-card" role="dialog" aria-modal="true" aria-labelledby="generic-batch-modal-title">
+      <div class="modal-generic-batch-header modal-batch-vocab-header">
+        <h3 id="generic-batch-modal-title">⚡ ${escapeHtml(title)}</h3>
+        <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng" aria-label="Đóng">✕</button>
+      </div>
+      <div class="modal-generic-batch-body modal-batch-vocab-body">
+        ${subtitle ? `<div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">${escapeHtml(subtitle)}</div>` : ''}
+        <div class="form-group batch-count-form-group">
+          <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
+          <div class="batch-count-stepper-wrap">
+            <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
+            <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+            <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+          </div>
+          <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
+        </div>
+        ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
+      </div>
+      <div class="modal-generic-batch-footer modal-batch-vocab-footer">
+        <button type="button" class="btn btn-secondary btn-batch-single">
+          + Tạo 1 câu lẻ
+        </button>
+        <button type="button" class="btn btn-primary btn-batch-confirm">
+          ⚡ Tạo ${initialCount} câu hỏi
+        </button>
+      </div>
+    </div>
+  `;
+
+  const countInput = modal.querySelector('.input-batch-count');
+  const stepDownBtn = modal.querySelector('.btn-batch-step-down');
+  const stepUpBtn = modal.querySelector('.btn-batch-step-up');
+  const confirmBtn = modal.querySelector('.btn-batch-confirm');
+  const singleBtn = modal.querySelector('.btn-batch-single');
+  const closeBtn = modal.querySelector('.btn-close-batch-modal');
+
+  const getSafeCount = () => {
+    const raw = parseInt(countInput?.value, 10);
+    if (isNaN(raw)) return minCount;
+    return Math.max(minCount, Math.min(maxCount, raw));
+  };
+
+  const updateConfirmButton = (cnt) => {
+    if (confirmBtn) {
+      confirmBtn.textContent = `⚡ Tạo ${cnt} câu hỏi`;
+    }
+  };
+
+  const handleStep = (delta) => {
+    const cur = getSafeCount();
+    const next = Math.max(minCount, Math.min(maxCount, cur + delta));
+    if (countInput) countInput.value = next;
+    updateConfirmButton(next);
+  };
+
+  if (stepDownBtn) {
+    stepDownBtn.addEventListener('click', (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      handleStep(-1);
+    });
+  }
+
+  if (stepUpBtn) {
+    stepUpBtn.addEventListener('click', (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      handleStep(1);
+    });
+  }
+
+  if (countInput) {
+    countInput.addEventListener('input', () => {
+      const val = parseInt(countInput.value, 10);
+      if (!isNaN(val)) {
+        const clamped = Math.max(minCount, Math.min(maxCount, val));
+        updateConfirmButton(clamped);
+      }
+    });
+
+    countInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (e.preventDefault) e.preventDefault();
+        doConfirm();
+      }
+    });
+  }
+
+  let cleanupKeydown = null;
+
+  const closeModal = () => {
+    modal.style.display = 'none';
+    if (cleanupKeydown) {
+      if (typeof window !== 'undefined' && window.removeEventListener) {
+        window.removeEventListener('keydown', cleanupKeydown);
+      }
+      cleanupKeydown = null;
+    }
+  };
+
+  const doConfirm = () => {
+    const finalCount = getSafeCount();
+    closeModal();
+    if (typeof onConfirm === 'function') {
+      const resultObj = {
+        count: finalCount,
+        modal,
+        valueOf: () => finalCount,
+        [Symbol.toPrimitive]: () => finalCount
+      };
+      onConfirm(resultObj, finalCount);
+    }
+  };
+
+  const doSingle = () => {
+    closeModal();
+    if (typeof onSingle === 'function') {
+      const resultObj = {
+        count: 1,
+        modal,
+        valueOf: () => 1,
+        [Symbol.toPrimitive]: () => 1
+      };
+      onSingle(resultObj, 1);
+    }
+  };
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener('click', (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      doConfirm();
+    });
+  }
+
+  if (singleBtn) {
+    singleBtn.addEventListener('click', (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      doSingle();
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      closeModal();
+    });
+  }
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  cleanupKeydown = (e) => {
+    if (e.key === 'Escape') {
+      if (e.preventDefault) e.preventDefault();
+      closeModal();
+    }
+  };
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('keydown', cleanupKeydown);
+  }
+
+  if (countInput) {
+    setTimeout(() => {
+      try {
+        countInput.focus();
+        countInput.select();
+      } catch (_) {}
+    }, 50);
+  }
+
+  return modal;
+}
+
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
   if (!container) return;
 

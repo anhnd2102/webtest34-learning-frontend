@@ -4091,6 +4091,80 @@ body:not(.login-page) #auth-panel {
   gap: 10px;
 }
 
+/* Generic Batch Question Creation Modal */
+.modal-generic-batch-card {
+  max-width: 520px;
+}
+
+.batch-count-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.batch-count-stepper-wrap {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.batch-count-stepper-wrap .btn-batch-step {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.batch-count-stepper-wrap .btn-batch-step:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.batch-count-stepper-wrap .btn-batch-step:active {
+  background: #cbd5e1;
+}
+
+.batch-count-stepper-wrap .input-batch-count {
+  border: none;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  border-radius: 0;
+  box-shadow: none;
+  height: 38px;
+  margin: 0;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.batch-count-stepper-wrap .input-batch-count::-webkit-outer-spin-button,
+.batch-count-stepper-wrap .input-batch-count::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.batch-extra-config {
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
 .item-kind-pill.text_select_pair {
   background: #fdf2f8;
   color: #9d174d;
