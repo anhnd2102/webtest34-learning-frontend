@@ -2404,23 +2404,41 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         ? 'Phát âm (Pronunciation)'
         : (isSentenceRewrite
           ? 'Biến đổi câu (Transformation)'
-          : (isSingleChoice
-            ? 'Trắc nghiệm 1 đáp án (Single Choice)'
-            : (isMultiGroup
-              ? 'Nhóm chọn nhiều (Multi-Select Group)'
-              : (isSentenceReorder
-                ? 'Sắp xếp câu (Sentence Reorder)'
-                : (isErrorCorrection
-                  ? 'Tìm và sửa lỗi (Error Correction)'
-                  : (isVocabPair
-                    ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
-                    : (isRubricAsync
-                      ? 'Tự luận chấm AI (AI-Graded Rubric)'
-                      : (isPictorial
-                        ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
-                        : (isInlineCloze
-                          ? 'Điền từ nội tuyến (Inline Cloze)'
-                          : 'Điền ô trống (Short Text)')))))))));
+          : (isSentenceReorder
+            ? 'Sắp xếp câu (Sentence Reorder)'
+            : (isErrorCorrection
+              ? 'Tìm và sửa lỗi (Error Correction)'
+              : (isReadingMatching
+                ? 'Ghép nối (Reading Matching)'
+                : (isListeningOrder
+                  ? 'Sắp xếp thứ tự nghe (Listening Order)'
+                  : (isSingleChoice
+                    ? 'Trắc nghiệm 1 đáp án (Single Choice)'
+                    : (isMultiGroup
+                      ? 'Nhóm chọn nhiều (Multi-Select Group)'
+                      : (isVocabPair
+                        ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
+                        : (isRubricAsync
+                          ? 'Tự luận chấm AI (AI-Graded Rubric)'
+                          : (isPictorial
+                            ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
+                            : (isInlineCloze
+                              ? 'Điền từ nội tuyến (Inline Cloze)'
+                              : 'Điền ô trống (Short Text)')))))))))));
+
+      const kindClass = isListeningOrder
+        ? 'listening_order'
+        : (isReadingMatching
+          ? 'reading_matching'
+          : (isPictorial
+            ? 'pictorial_vocabulary'
+            : (isInlineCloze
+              ? 'inline_cloze'
+              : item.interactionType)));
+
+      const itemDisplayScore = (isListeningOrder && (!item.maxScore || item.maxScore === 1) && item.events?.length)
+        ? item.events.length
+        : (item.maxScore || 1);
 
       return `
         <div class="builder-item-card" draggable="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
@@ -2429,14 +2447,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="drag-handle item-drag-handle" title="Kéo thả để sắp xếp câu hỏi" aria-label="Kéo thả sắp xếp">⋮⋮</span>
               <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi">▾</button>
               <span class="item-pos-pill">Câu ${item.position}</span>
-              <span class="item-kind-pill ${item.interactionType}">${typeLabel}</span>
+              <span class="item-kind-pill ${kindClass}">${typeLabel}</span>
               <span class="item-prompt-preview-snippet">${escapeHtml((item.prompt || '').trim().substring(0, 55) + ((item.prompt || '').length > 55 ? '...' : ''))}</span>
             </div>
             <div class="item-header-controls">
               <button type="button" class="btn btn-icon btn-sm btn-move-item-up" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === 0 ? 'disabled' : ''} title="Di chuyển câu hỏi lên">↑</button>
               <button type="button" class="btn btn-icon btn-sm btn-move-item-down" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === (block.items || []).length - 1 ? 'disabled' : ''} title="Di chuyển câu hỏi xuống">↓</button>
               <label class="item-score-label">Điểm:
-                <input type="number" class="form-control form-control-sm item-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${item.maxScore || 1}" min="0" max="100" />
+                <input type="number" class="form-control form-control-sm item-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${itemDisplayScore}" min="0" max="100" />
               </label>
               <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này">✕</button>
             </div>
@@ -3819,6 +3837,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const nextRank = item.events.length + 1;
         item.events.push({ label: nextLabel, rank: nextRank, text: `Sự kiện ${nextLabel}` });
         item.options = item.events.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` }));
+        item.maxScore = item.events.length;
         render();
       });
     });
@@ -3841,6 +3860,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           ev.label = String.fromCharCode(65 + idx);
         });
         item.options = item.events.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` }));
+        item.maxScore = item.events.length;
         render();
       });
     });

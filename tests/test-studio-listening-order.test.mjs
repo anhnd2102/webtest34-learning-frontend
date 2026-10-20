@@ -158,3 +158,159 @@ test('renderTestBuilderView displays warning status when listening order ranks a
   assert.ok(container.innerHTML.includes('Trùng hoặc thiếu thứ tự'), 'Shows warning for duplicate ranks');
   assert.ok(container.innerHTML.includes('Trùng [#1]'), 'Identifies duplicated rank 1');
 });
+
+test('Test Studio: Listening order card displays correct pedagogical badge and event-based maxScore', () => {
+  const container = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+  const mockForm = {
+    id: '09010000-0000-4000-8000-000000000003',
+    version: 1,
+    status: 'draft',
+    title: 'Listening Order Badge Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '09010000-0000-4000-8000-000000000003',
+      title: 'Listening Order Badge Test',
+      durationMinutes: 40,
+      blocks: [
+        {
+          blockId: 'b0903',
+          checkpoint: 1,
+          title: 'Listening',
+          items: [
+            {
+              itemFamilyId: 'f0903',
+              itemVersionId: 'i0903',
+              position: 51,
+              prompt: 'Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:',
+              interactionType: 'short_text',
+              pedagogicalTypeCode: 'listening_order',
+              layoutType: 'timeline_sequence',
+              graderType: 'ordered_sequence',
+              maxScore: 5,
+              events: [
+                { label: 'A', rank: 1, text: 'Event A' },
+                { label: 'B', rank: 2, text: 'Event B' },
+                { label: 'C', rank: 3, text: 'Event C' },
+                { label: 'D', rank: 4, text: 'Event D' },
+                { label: 'E', rank: 5, text: 'Event E' }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        i0903: {
+          graderType: 'ordered_sequence',
+          expectedSequence: ['A', 'B', 'C', 'D', 'E']
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(container, mockForm);
+
+  assert.ok(
+    container.innerHTML.includes('<span class="item-kind-pill listening_order">Sắp xếp thứ tự nghe (Listening Order)</span>'),
+    'Displays "Sắp xếp thứ tự nghe (Listening Order)" badge in card header'
+  );
+  assert.ok(
+    container.innerHTML.includes('value="5"'),
+    'Initializes maxScore input to 5 matching 5 events'
+  );
+});
+
+test('Test Studio: Adding or deleting listening events automatically recalculates maxScore', () => {
+  const listeners = {};
+  const queryMap = {};
+
+  const container = {
+    innerHTML: '',
+    querySelector: (sel) => queryMap[sel] || null,
+    querySelectorAll: (sel) => {
+      if (sel === '.btn-add-listening-event') {
+        return [{
+          getAttribute: (attr) => (attr === 'data-block-idx' ? '0' : '0'),
+          addEventListener: (evt, cb) => { listeners['addEvent'] = cb; }
+        }];
+      }
+      if (sel === '.btn-del-event') {
+        return [{
+          getAttribute: (attr) => (attr === 'data-block-idx' ? '0' : attr === 'data-item-idx' ? '0' : '0'),
+          addEventListener: (evt, cb) => { listeners['delEvent'] = cb; }
+        }];
+      }
+      return [];
+    }
+  };
+
+  const mockForm = {
+    id: '09010000-0000-4000-8000-000000000004',
+    version: 1,
+    status: 'draft',
+    title: 'Event Score Recalculation Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '09010000-0000-4000-8000-000000000004',
+      title: 'Event Score Recalculation Test',
+      durationMinutes: 40,
+      blocks: [
+        {
+          blockId: 'b0904',
+          checkpoint: 1,
+          title: 'Listening',
+          items: [
+            {
+              itemFamilyId: 'f0904',
+              itemVersionId: 'i0904',
+              position: 51,
+              prompt: 'Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:',
+              interactionType: 'short_text',
+              pedagogicalTypeCode: 'listening_order',
+              layoutType: 'timeline_sequence',
+              graderType: 'ordered_sequence',
+              maxScore: 5,
+              events: [
+                { label: 'A', rank: 1, text: 'Event A' },
+                { label: 'B', rank: 2, text: 'Event B' },
+                { label: 'C', rank: 3, text: 'Event C' },
+                { label: 'D', rank: 4, text: 'Event D' },
+                { label: 'E', rank: 5, text: 'Event E' }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        i0904: {
+          graderType: 'ordered_sequence',
+          expectedSequence: ['A', 'B', 'C', 'D', 'E']
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(container, mockForm);
+
+  assert.ok(container.innerHTML.includes('value="5"'), 'Initial score is 5');
+
+  // Trigger add event button
+  if (listeners['addEvent']) {
+    listeners['addEvent']();
+    assert.ok(container.innerHTML.includes('value="6"'), 'maxScore input updated to 6');
+    assert.ok(container.innerHTML.includes('Sự kiện F'), 'Added event F');
+  }
+
+  // Trigger delete event button
+  if (listeners['delEvent']) {
+    listeners['delEvent']();
+    assert.ok(container.innerHTML.includes('value="5"'), 'maxScore input decreased back to 5');
+  }
+});
+
+
