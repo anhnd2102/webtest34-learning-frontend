@@ -135,3 +135,145 @@ test('renderInlineClozeMarkup renders table fill-in-the-blank rows correctly', (
   assert.ok(html.includes('data-item-id="it-2"'), 'Embeds input widget for item 2 in row');
 });
 
+test('Test Studio: Inline Cloze with 5 blanks renders 5 separate answer configuration blocks', () => {
+  const container = { innerHTML: '' };
+  const mockForm = {
+    id: '07010000-0000-4000-8000-000000000002',
+    version: 1,
+    status: 'draft',
+    title: 'Mr Lambert Cloze Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '07010000-0000-4000-8000-000000000002',
+      title: 'Mr Lambert Cloze Test',
+      durationMinutes: 45,
+      blocks: [
+        {
+          blockId: 'b0702',
+          checkpoint: 1,
+          title: 'Reading · Cloze Test',
+          instructions: 'Fill in the blanks with appropriate words',
+          items: [
+            {
+              itemFamilyId: 'f0702',
+              itemVersionId: 'i0702',
+              position: 52,
+              prompt: `My favorite teacher - Mr. Lambert
+His appearance - dark hair
+(1)____ short legs
+- thick beard
+His teaching style - brings energy to the class
+- always look for new ways of teaching to communicate ideas
+- does not use (2)___ English in his French classes
+An unforgettable experience Once, he used a desk, a blackboard and a (3)____ wastebasket to communicate the word "above". The students loved it as he was really (4)____ excited about teaching it.
+Why he is loved by students When the students made him (5)_____ angry, he still loved his students`,
+              helpText: '',
+              interactionType: 'short_text',
+              pedagogicalTypeCode: 'table_completion',
+              layoutType: 'inline_cloze',
+              graderType: 'accepted_text',
+              maxScore: 5,
+              options: [],
+              clozeAnswers: {
+                1: { targetWord: 'short legs', accepted: ['short legs'] },
+                2: { targetWord: 'English', accepted: ['English', 'english'] }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        i0702: {
+          graderType: 'accepted_text',
+          accepted: ['short legs']
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(container, mockForm);
+
+  assert.ok(container.innerHTML.includes('Chỗ trống (1)'), 'Renders answer block for Blank 1');
+  assert.ok(container.innerHTML.includes('Chỗ trống (2)'), 'Renders answer block for Blank 2');
+  assert.ok(container.innerHTML.includes('Chỗ trống (3)'), 'Renders answer block for Blank 3');
+  assert.ok(container.innerHTML.includes('Chỗ trống (4)'), 'Renders answer block for Blank 4');
+  assert.ok(container.innerHTML.includes('Chỗ trống (5)'), 'Renders answer block for Blank 5');
+  assert.ok(container.innerHTML.includes('data-blank-num="1"'), 'Contains data-blank-num="1"');
+  assert.ok(container.innerHTML.includes('data-blank-num="5"'), 'Contains data-blank-num="5"');
+  assert.ok(container.innerHTML.includes('value="short legs"'), 'Populates target word for blank 1');
+  assert.ok(container.innerHTML.includes('value="English"'), 'Populates target word for blank 2');
+  assert.ok(container.innerHTML.includes('data-next-num="6"'), 'Next blank button targets blank 6');
+  assert.ok(container.innerHTML.includes('+ Chèn chỗ trống (6) __________'), 'Button label indicates blank 6');
+});
+
+test('Test Studio: Inline Cloze preserves clozeAnswers during onSaveDraft', async () => {
+  let savedPayload = null;
+  const container = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+  const mockForm = {
+    id: '07010000-0000-4000-8000-000000000003',
+    version: 1,
+    status: 'draft',
+    title: 'Multi-Blank Save Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '07010000-0000-4000-8000-000000000003',
+      title: 'Multi-Blank Save Test',
+      durationMinutes: 45,
+      blocks: [
+        {
+          blockId: 'b0703',
+          checkpoint: 1,
+          title: 'Reading',
+          items: [
+            {
+              itemFamilyId: 'f0703',
+              itemVersionId: 'i0703',
+              position: 1,
+              prompt: 'One (1) ____ and two (2) ____.',
+              interactionType: 'short_text',
+              pedagogicalTypeCode: 'table_completion',
+              layoutType: 'inline_cloze',
+              graderType: 'accepted_text',
+              maxScore: 2,
+              clozeAnswers: {
+                1: { targetWord: 'first', accepted: ['first', '1st'] },
+                2: { targetWord: 'second', accepted: ['second', '2nd'] }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        i0703: {
+          graderType: 'accepted_text',
+          accepted: ['first']
+        }
+      }
+    }
+  };
+
+  const options = {
+    onSaveDraft: async (payload) => {
+      savedPayload = payload;
+      return { success: true };
+    }
+  };
+
+  renderTestBuilderView(container, mockForm, options);
+
+  // Directly verify draft item has clozeAnswers
+  const savedItem = mockForm.publicDefinition.blocks[0].items[0];
+  assert.ok(savedItem.clozeAnswers, 'Item retains clozeAnswers object');
+  assert.equal(savedItem.clozeAnswers[1].targetWord, 'first');
+  assert.equal(savedItem.clozeAnswers[2].targetWord, 'second');
+  assert.deepEqual(savedItem.clozeAnswers[1].accepted, ['first', '1st']);
+});
+
+
+

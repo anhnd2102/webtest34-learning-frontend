@@ -1014,11 +1014,16 @@ export function renderInlineClozeMarkup(text, items = [], responses = {}, option
 
   for (const match of text.matchAll(pattern)) {
     const num = Number(match[1] || match[2]);
-    const item = Array.isArray(items) ? (items.find(it => it.position === num) || items[num - 1]) : null;
+    let item = Array.isArray(items) ? (items.find(it => it.position === num) || items[num - 1]) : null;
+    if (!item && Array.isArray(items) && items.length === 1 && items[0]) {
+      item = items[0];
+    }
     html += escapeHtml(text.slice(last, match.index)).replace(/\n/g, '<br/>');
 
-    const itemId = item?.itemVersionId || `blank-${num}`;
-    const userVal = escapeHtml(responses[itemId] || '');
+    const itemId = item?.itemVersionId 
+      ? (item.position === num ? item.itemVersionId : `${item.itemVersionId}__b${num}`)
+      : `blank-${num}`;
+    const userVal = escapeHtml(responses[itemId] || (responses[item?.itemVersionId] && item?.position === num ? responses[item?.itemVersionId] : ''));
     const disabledAttr = options.disabled ? 'disabled' : '';
 
     html += `<span class="inline-blank-wrapper" data-item-id="${escapeHtml(itemId)}">` +
@@ -1971,30 +1976,85 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         `;
       } else if (isInlineCloze) {
-        const rawAccepted = itemKey.accepted || [];
-        const filteredAccepted = rawAccepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder');
-        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
-        const chipsHtml = acceptedList.map((v) => `
-          <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
-            <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
-          </span>
-        `).join('');
+        const detectedBlanks = parseClozeBlanks(item.prompt || '');
+        const uniqueBlankNums = [];
+        for (const b of detectedBlanks) {
+          if (!uniqueBlankNums.includes(b.number)) {
+            uniqueBlankNums.push(b.number);
+          }
+        }
+        if (!uniqueBlankNums.length) {
+          uniqueBlankNums.push(item.position || 1);
+        }
 
+        item.clozeAnswers = item.clozeAnswers || {};
+
+        const blanksConfigHtml = uniqueBlankNums.map((bNum, idx) => {
+          const bAnswer = item.clozeAnswers[bNum] || item.clozeAnswers[String(bNum)];
+          let targetWord = bAnswer?.targetWord || (bAnswer?.accepted?.[0] || '');
+          let accepted = bAnswer?.accepted || [];
+
+          if (!targetWord && (uniqueBlankNums.length === 1 || idx === 0 || bNum === item.position)) {
+            targetWord = item.targetWord || (itemKey.accepted?.[0] || '');
+          }
+          if (!accepted.length && (uniqueBlankNums.length === 1 || idx === 0 || bNum === item.position)) {
+            accepted = itemKey.accepted || [];
+          }
+
+          const filteredAccepted = accepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder');
+          const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
+          const blankTargetVal = targetWord || (acceptedList[0] || '');
+
+          const chipsHtml = acceptedList.map((v) => `
+            <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
+              <span class="chip-text">${escapeHtml(v)}</span>
+              <button type="button" class="btn-remove-chip btn-remove-cloze-blank-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            </span>
+          `).join('');
+
+          return `
+            <div class="cloze-blank-config-card" data-blank-num="${bNum}" style="margin-top: 10px; padding: 10px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+              <div class="cloze-blank-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+                <span class="cloze-blank-badge" style="font-size: 0.85rem; font-weight: 700; color: #1e293b;">
+                  Chỗ trống (${bNum})
+                </span>
+              </div>
+              <div class="fitb-input-group">
+                <input type="text" class="form-control input-fitb-raw input-cloze-blank-target" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" value="${escapeHtml(blankTargetVal)}" placeholder="Nhập đáp án chuẩn cho chỗ trống (${bNum})..." />
+                <button type="button" class="btn btn-secondary btn-sm btn-generate-variants btn-generate-cloze-blank-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" title="Tự động sinh biến thể cho chỗ trống (${bNum})">
+                  ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
+                </button>
+              </div>
+              <div class="variant-chips-container" style="margin-top: 6px;">
+                <div class="chips-meta-bar" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                  <span class="chips-count-badge" style="font-size:0.75rem; color:#64748b;">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
+                  <div class="quick-add-variant" style="flex:1; max-width:260px;">
+                    <input type="text" class="form-control form-control-sm input-add-variant input-add-cloze-blank-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
+                  </div>
+                </div>
+                <div class="variant-chips-wrap" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+                  ${chipsHtml}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const maxBlankNum = uniqueBlankNums.length ? Math.max(...uniqueBlankNums) : (item.position || 1);
+        const nextBlankNum = uniqueBlankNums.length ? maxBlankNum + 1 : (item.position || 1);
         const livePreviewHtml = renderInlineClozeMarkup(item.prompt || '', [item], {}, { disabled: true });
-        const rawClozeVal = item.targetWord || (acceptedList[0] || '');
 
         specificHtml = `
           <div class="template-section template-inline-cloze">
             <div class="cloze-editor-box">
               <div class="cloze-toolbar">
                 <span class="cloze-tool-label"><strong>Soạn thảo nội dung chỗ trống (Inline Cloze):</strong></span>
-                <button type="button" class="btn btn-secondary btn-sm btn-insert-blank-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn chỗ trống (${item.position}) __________">
-                  + Chèn chỗ trống (${item.position}) __________
+                <button type="button" class="btn btn-secondary btn-sm btn-insert-blank-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-next-num="${nextBlankNum}" title="Chèn chỗ trống (${nextBlankNum}) __________">
+                  + Chèn chỗ trống (${nextBlankNum}) __________
                 </button>
               </div>
               <p class="cloze-help-text" style="font-size: 0.8rem; color: #64748b; margin: 4px 0 8px;">
-                Nhập câu hoặc đoạn văn bản chứa token định dạng <code>(${item.position}) __________</code> hoặc <code>{{${item.position}}}</code>. Trình thi sẽ tự động nhúng ô nhập trực tiếp vào dòng chữ.
+                Nhập câu hoặc đoạn văn bản chứa token định dạng <code>(1) __________</code> hoặc <code>{{1}}</code>. Trình thi sẽ tự động nhúng ô nhập trực tiếp vào dòng chữ.
               </p>
             </div>
 
@@ -2006,23 +2066,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             </div>
 
             <div class="cloze-answers-config" style="margin-top: 12px;">
-              <label class="form-label"><strong>Đáp án chuẩn cho chỗ trống (${item.position}):</strong></label>
-              <div class="fitb-input-group">
-                <input type="text" class="form-control input-fitb-raw" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(rawClozeVal)}" placeholder="Nhập đáp án chuẩn cho chỗ trống..." />
-                <button type="button" class="btn btn-secondary btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
-                </button>
-              </div>
-              <div class="variant-chips-container" style="margin-top: 8px;">
-                <div class="chips-meta-bar">
-                  <span class="chips-count-badge">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
-                  <div class="quick-add-variant">
-                    <input type="text" class="form-control form-control-sm input-add-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
-                  </div>
-                </div>
-                <div class="variant-chips-wrap">
-                  ${chipsHtml}
-                </div>
+              <label class="form-label"><strong>Cấu hình đáp án chuẩn cho các chỗ trống (${uniqueBlankNums.length} chỗ trống):</strong></label>
+              <div class="cloze-blanks-list">
+                ${blanksConfigHtml}
               </div>
             </div>
           </div>
@@ -2826,8 +2872,51 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               });
             }
 
-            // Short text sync
-            if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble' && item.pedagogicalTypeCode !== 'sentence_rewrite' && item.layoutType !== 'keyword_transformation') {
+            // Inline cloze sync
+            if (item.interactionType === 'short_text' && item.layoutType === 'inline_cloze') {
+              item.clozeAnswers = item.clozeAnswers || {};
+              const blankCards = iCard.querySelectorAll('.cloze-blank-config-card');
+              let primaryVariants = [];
+
+              blankCards.forEach((bCard, bIdx) => {
+                const bNum = Number(bCard.getAttribute('data-blank-num')) || (bIdx + 1);
+                const bTargetInput = bCard.querySelector('.input-cloze-blank-target');
+                const bVal = bTargetInput ? bTargetInput.value.trim() : '';
+
+                item.clozeAnswers[bNum] = item.clozeAnswers[bNum] || { accepted: [] };
+                if (bVal && !/^Câu \d+/i.test(bVal)) {
+                  item.clozeAnswers[bNum].targetWord = bVal;
+                }
+
+                const bChips = bCard.querySelectorAll('.variant-chip');
+                const rawBVariants = Array.from(bChips).map(c => c.getAttribute('data-variant')).filter(Boolean);
+                let bVariants = Array.from(new Set(rawBVariants.filter(v => v !== 'answer' && v !== 'draft_placeholder'))).slice(0, 40);
+
+                if (bVal && !/^Câu \d+/i.test(bVal) && !bVariants.includes(bVal)) {
+                  bVariants = [bVal, ...bVariants];
+                }
+
+                if (!bVariants.length && item.clozeAnswers[bNum].targetWord) {
+                  bVariants.push(item.clozeAnswers[bNum].targetWord);
+                }
+
+                item.clozeAnswers[bNum].accepted = bVariants;
+                if (bIdx === 0) {
+                  primaryVariants = bVariants;
+                  if (bVal) item.targetWord = bVal;
+                }
+              });
+
+              if (!primaryVariants.length && item.targetWord) {
+                primaryVariants = [item.targetWord];
+              }
+
+              draftState.gradingKey.items[item.itemVersionId] = {
+                graderType: 'accepted_text',
+                accepted: primaryVariants.length ? primaryVariants : ['answer'],
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+            } else if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble' && item.pedagogicalTypeCode !== 'sentence_rewrite' && item.layoutType !== 'keyword_transformation') {
               const rawInput = iCard.querySelector('.input-fitb-raw, .input-pictorial-target');
               const rawVal = rawInput ? rawInput.value.trim() : '';
 
@@ -3535,9 +3624,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const iIdx = Number(btn.getAttribute('data-item-idx'));
         const item = draftState.blocks[bIdx]?.items?.[iIdx];
         if (!item) return;
-        const token = `(${item.position}) __________`;
-        if (!item.prompt.includes(token)) {
-          item.prompt = item.prompt ? `${item.prompt} ${token}` : `Câu hỏi với ${token}`;
+        const detected = parseClozeBlanks(item.prompt || '');
+        const maxNum = detected.length ? Math.max(...detected.map(b => b.number)) : 0;
+        const nextNum = maxNum > 0 ? maxNum + 1 : (item.position || 1);
+        const token = `(${nextNum}) __________`;
+        item.prompt = item.prompt ? `${item.prompt} ${token}` : `Câu hỏi với ${token}`;
+        item.clozeAnswers = item.clozeAnswers || {};
+        if (!item.clozeAnswers[nextNum]) {
+          item.clozeAnswers[nextNum] = { targetWord: '', accepted: [] };
         }
         render();
       });
@@ -4956,6 +5050,21 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     }
 
+    // Prompt change listener for inline cloze
+    const promptInputs = container.querySelectorAll('.item-prompt-input');
+    promptInputs.forEach(promptEl => {
+      promptEl.addEventListener('change', () => {
+        const bIdx = Number(promptEl.getAttribute('data-block-idx'));
+        const iIdx = Number(promptEl.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        syncInputs();
+        if (item.layoutType === 'inline_cloze') {
+          render();
+        }
+      });
+    });
+
     // Move Question Item Up
     const moveItemUpBtns = container.querySelectorAll('.btn-move-item-up');
     moveItemUpBtns.forEach(btn => {
@@ -5253,21 +5362,40 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         syncInputs();
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const blankNum = btn.getAttribute('data-blank-num');
         const item = draftState.blocks[bIdx]?.items?.[iIdx];
         if (!item) return;
         const card = btn.closest('.builder-item-card');
-        const rawInput = card?.querySelector('.input-fitb-raw');
+        const blankCard = btn.closest('.cloze-blank-config-card');
+        const rawInput = blankCard ? blankCard.querySelector('.input-cloze-blank-target') : card?.querySelector('.input-fitb-raw');
         const rawVal = rawInput?.value?.trim() || '';
         if (!rawVal) {
           alert('Vui lòng nhập đáp án chuẩn trước khi sinh biến thể.');
           return;
         }
         const generated = expandSentenceVariants([rawVal]);
-        draftState.gradingKey.items[item.itemVersionId] = {
-          graderType: 'accepted_text',
-          accepted: generated,
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-        };
+        if (blankNum && item.layoutType === 'inline_cloze') {
+          item.clozeAnswers = item.clozeAnswers || {};
+          item.clozeAnswers[blankNum] = {
+            targetWord: rawVal,
+            accepted: generated
+          };
+          const detected = parseClozeBlanks(item.prompt || '');
+          const firstNum = detected.length ? detected[0].number : (item.position || 1);
+          if (Number(blankNum) === firstNum) {
+            draftState.gradingKey.items[item.itemVersionId] = {
+              graderType: 'accepted_text',
+              accepted: generated,
+              normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            };
+          }
+        } else {
+          draftState.gradingKey.items[item.itemVersionId] = {
+            graderType: 'accepted_text',
+            accepted: generated,
+            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          };
+        }
         render();
       });
     });
@@ -5279,9 +5407,26 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         syncInputs();
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const blankNum = btn.getAttribute('data-blank-num');
         const item = draftState.blocks[bIdx]?.items?.[iIdx];
         const variantToRemove = btn.getAttribute('data-variant');
         if (!item) return;
+        if (blankNum && item.layoutType === 'inline_cloze') {
+          item.clozeAnswers = item.clozeAnswers || {};
+          if (item.clozeAnswers[blankNum] && Array.isArray(item.clozeAnswers[blankNum].accepted)) {
+            item.clozeAnswers[blankNum].accepted = item.clozeAnswers[blankNum].accepted.filter(v => v !== variantToRemove);
+          }
+          const detected = parseClozeBlanks(item.prompt || '');
+          const firstNum = detected.length ? detected[0].number : (item.position || 1);
+          if (Number(blankNum) === firstNum) {
+            const currentKey = draftState.gradingKey.items[item.itemVersionId];
+            if (currentKey && Array.isArray(currentKey.accepted)) {
+              currentKey.accepted = currentKey.accepted.filter(v => v !== variantToRemove);
+            }
+          }
+          render();
+          return;
+        }
         const currentKey = draftState.gradingKey.items[item.itemVersionId];
         if (currentKey && Array.isArray(currentKey.accepted)) {
           currentKey.accepted = currentKey.accepted.filter(v => v !== variantToRemove);
@@ -5592,8 +5737,35 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           syncInputs();
           const bIdx = Number(input.getAttribute('data-block-idx'));
           const iIdx = Number(input.getAttribute('data-item-idx'));
+          const blankNum = input.getAttribute('data-blank-num');
           const item = draftState.blocks[bIdx]?.items?.[iIdx];
           if (!item) return;
+
+          if (blankNum && item.layoutType === 'inline_cloze') {
+            item.clozeAnswers = item.clozeAnswers || {};
+            item.clozeAnswers[blankNum] = item.clozeAnswers[blankNum] || { accepted: [] };
+            if (!item.clozeAnswers[blankNum].accepted.includes(val)) {
+              item.clozeAnswers[blankNum].accepted.push(val);
+              if (item.clozeAnswers[blankNum].accepted.length > 40) item.clozeAnswers[blankNum].accepted.pop();
+            }
+            const detected = parseClozeBlanks(item.prompt || '');
+            const firstNum = detected.length ? detected[0].number : (item.position || 1);
+            if (Number(blankNum) === firstNum) {
+              const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
+                graderType: 'accepted_text',
+                accepted: [],
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+              if (!currentKey.accepted.includes(val)) {
+                currentKey.accepted.push(val);
+                if (currentKey.accepted.length > 40) currentKey.accepted.pop();
+                draftState.gradingKey.items[item.itemVersionId] = currentKey;
+              }
+            }
+            render();
+            return;
+          }
+
           const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
             graderType: 'accepted_text',
             accepted: [],
