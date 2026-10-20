@@ -6381,9 +6381,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   <div class="timeline-slots-title">Trình tự diễn ra theo thời gian:</div>
                   <div class="timeline-slots-grid">
                     ${events.map((_, idx) => `
-                      <div class="timeline-slot-card" data-slot-index="${idx + 1}">
-                        <div class="slot-badge">Thứ ${idx + 1}</div>
-                        <select class="form-select form-select-sm candidate-sequence-select" data-slot="${idx + 1}">
+                      <div class="timeline-slot-card" data-slot-index="${idx + 1}" data-position="${item.position + idx}" data-item-id="${item.itemVersionId}">
+                        <div class="slot-badge">Câu ${item.position + idx} · Thứ ${idx + 1}</div>
+                        <select class="form-select form-select-sm candidate-sequence-select" data-slot="${idx + 1}" data-position="${item.position + idx}" data-item-id="${item.itemVersionId}">
                           <option value="">-- Chọn sự kiện --</option>
                           ${events.map(ev => `
                             <option value="${escapeHtml(ev.label)}">${escapeHtml(ev.label)}: ${escapeHtml(ev.text ? (ev.text.length > 30 ? ev.text.substring(0, 30) + '...' : ev.text) : '')}</option>
@@ -6672,6 +6672,73 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       const totalItems = blocks.reduce((sum, b) => sum + (b.items || []).reduce((s, it) => s + getItemSpanCount(it), 0), 0);
 
+      const navigatorButtonsHtml = blocks.flatMap((b, bIdx) => {
+        const items = b.items || [];
+        return items.flatMap(item => {
+          const span = getItemSpanCount(item);
+          const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
+            item.layoutType === 'inline_cloze' ||
+            item.layoutType === 'inline_dropdown_table' ||
+            (item.interactionType === 'short_text' && (
+              (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
+              (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
+            ));
+          const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
+            item.layoutType === 'timeline_sequence' ||
+            item.graderType === 'ordered_sequence' ||
+            (Array.isArray(item.events) && item.events.length > 0);
+
+          if (isInlineCloze && span > 1) {
+            const detected = parseClozeBlanks(item.prompt || '');
+            const uniqueNums = [];
+            for (const d of detected) {
+              if (!uniqueNums.includes(d.number)) uniqueNums.push(d.number);
+            }
+            if (item.clozeAnswers) {
+              Object.keys(item.clozeAnswers).forEach(k => {
+                const n = Number(k);
+                if (!Number.isNaN(n) && !uniqueNums.includes(n)) uniqueNums.push(n);
+              });
+            }
+            uniqueNums.sort((a, b) => a - b);
+            const btns = [];
+            for (let k = 0; k < span; k++) {
+              const qPos = item.position + k;
+              const blankNum = uniqueNums[k] ?? qPos;
+              btns.push(`
+                <button type="button" class="btn-qnav" data-pos="${qPos}" data-blank-pos="${blankNum}" data-item-id="${item.itemVersionId}" data-section-target="sim-block-${bIdx}" title="Câu ${qPos} (Chỗ trống ${blankNum})">
+                  <span class="qnav-num">${qPos}</span>
+                </button>
+              `);
+            }
+            return btns;
+          }
+
+          if (isListeningOrder && span > 1) {
+            const btns = [];
+            for (let k = 0; k < span; k++) {
+              const qPos = item.position + k;
+              const slotNum = k + 1;
+              btns.push(`
+                <button type="button" class="btn-qnav" data-pos="${qPos}" data-slot-num="${slotNum}" data-item-id="${item.itemVersionId}" data-section-target="sim-block-${bIdx}" title="Câu ${qPos} (Bước thứ ${slotNum})">
+                  <span class="qnav-num">${qPos}</span>
+                </button>
+              `);
+            }
+            return btns;
+          }
+
+          const qPos = item.position || 1;
+          return [
+            `
+            <button type="button" class="btn-qnav" data-pos="${qPos}" data-item-id="${item.itemVersionId}" data-section-target="sim-block-${bIdx}" title="Câu ${qPos}">
+              <span class="qnav-num">${qPos}</span>
+            </button>
+            `
+          ];
+        });
+      }).join('');
+
       modal.innerHTML = `
         <div class="candidate-simulation-shell candidate-simulation-dialog">
           <header class="topbar simulation-topbar simulation-top-header">
@@ -6734,6 +6801,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 </div>
               </div>
 
+              <!-- Question Navigator Card -->
+              <div class="panel-card question-navigator-card">
+                <div class="navigator-header">
+                  <strong>Bảng câu hỏi</strong>
+                  <span class="navigator-summary" id="qnav-summary">${totalItems} câu</span>
+                </div>
+                <div class="question-navigator-grid">
+                  ${navigatorButtonsHtml}
+                </div>
+              </div>
+
               <div class="panel-card">
                 <strong>Lưu ý khi làm bài</strong>
                 <p class="sim-notice-text">
@@ -6745,8 +6823,31 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           <footer class="simulation-footer">
             <div class="footer-note">Đây là màn hình mô phỏng trực quan giao diện bài thi của thí sinh theo chuẩn IZONE. Mọi thao tác làm bài tại đây chỉ dùng để kiểm tra hiển thị.</div>
-            <button type="button" class="btn btn-primary btn-sm" id="btn-close-simulation-footer">Hoàn tất kiểm tra</button>
+            <div class="footer-actions" style="display:flex; gap:10px; align-items:center;">
+              <button type="button" class="btn btn-success btn-sm btn-submit-simulation" id="btn-submit-simulation">
+                ${renderSvgIcon('check', 'icon-inline')} <span>Nộp bài & Chấm thử</span>
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" id="btn-close-simulation-footer">Hoàn tất kiểm tra</button>
+            </div>
           </footer>
+
+          <!-- Simulation Results Modal -->
+          <div class="simulation-results-modal" id="simulation-results-modal" style="display: none;">
+            <div class="sim-results-dialog">
+              <header class="sim-results-header">
+                <div class="sim-results-title-wrap">
+                  <span class="sim-results-badge">Kết quả mô phỏng</span>
+                  <h3>Bảng tổng hợp chấm điểm</h3>
+                </div>
+                <button type="button" class="btn-close-sim-results" id="btn-close-sim-results">✕</button>
+              </header>
+              <div class="sim-results-body" id="sim-results-body"></div>
+              <footer class="sim-results-footer">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-retest-simulation">Xem lại trên bài thi</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-done-simulation-results">Đóng kết quả</button>
+              </footer>
+            </div>
+          </div>
         </div>
       `;
 
@@ -6776,6 +6877,276 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           if (targetEl) {
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
+        });
+      });
+
+      // Question Navigator click-to-focus and section navigation
+      const qnavBtns = modal.querySelectorAll('.btn-qnav');
+      qnavBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetSectionId = btn.getAttribute('data-section-target');
+          const pos = btn.getAttribute('data-pos');
+          const blankPos = btn.getAttribute('data-blank-pos');
+          const slotNum = btn.getAttribute('data-slot-num');
+          const itemId = btn.getAttribute('data-item-id');
+
+          // 1. Activate target section tab if needed
+          if (targetSectionId) {
+            modal.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
+              b.classList.toggle('active', b.getAttribute('data-section-target') === targetSectionId);
+            });
+            modal.querySelectorAll('.side-section-btn').forEach(b => {
+              b.classList.toggle('active', b.getAttribute('data-section-target') === targetSectionId);
+            });
+            modal.querySelectorAll('.section-page, .simulation-section-card').forEach(sec => {
+              sec.classList.toggle('active', sec.id === targetSectionId);
+            });
+          }
+
+          // 2. Find target element
+          let targetEl = null;
+          if (blankPos || btn.hasAttribute('data-blank-pos')) {
+            targetEl = modal.querySelector(`.inline-fill-input[data-position="${blankPos}"]`) ||
+              modal.querySelector(`.inline-fill-input[data-position="${pos}"]`);
+          } else if (slotNum || btn.hasAttribute('data-slot-num')) {
+            targetEl = modal.querySelector(`.candidate-sequence-select[data-position="${pos}"]`) ||
+              modal.querySelector(`[data-item-id="${itemId}"] .candidate-sequence-select[data-slot="${slotNum}"]`) ||
+              modal.querySelector(`.candidate-sequence-select[data-slot="${slotNum}"]`);
+          } else if (itemId) {
+            const itemCard = modal.querySelector(`.candidate-question-card[data-item-id="${itemId}"]`) ||
+              modal.querySelector(`[data-item-id="${itemId}"]`);
+            if (itemCard) {
+              targetEl = itemCard.querySelector('input:not([type="hidden"]), select, textarea') || itemCard;
+            }
+          }
+
+          if (targetEl) {
+            if (typeof targetEl.scrollIntoView === 'function') {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if (typeof targetEl.focus === 'function') {
+              targetEl.focus();
+            }
+            targetEl.classList.add('nav-focus-pulse');
+            setTimeout(() => {
+              targetEl.classList.remove('nav-focus-pulse');
+            }, 1200);
+          }
+        });
+      });
+
+      // Update answered state on candidate input/change
+      function updateAnsweredState() {
+        qnavBtns.forEach(btn => {
+          const pos = btn.getAttribute('data-pos');
+          const blankPos = btn.getAttribute('data-blank-pos');
+          const slotNum = btn.getAttribute('data-slot-num');
+          const itemId = btn.getAttribute('data-item-id');
+
+          let isAnswered = false;
+          if (blankPos || btn.hasAttribute('data-blank-pos')) {
+            const input = modal.querySelector(`.inline-fill-input[data-position="${blankPos || pos}"]`);
+            if (input && input.value && input.value.trim().length > 0) {
+              isAnswered = true;
+            }
+          } else if (slotNum || btn.hasAttribute('data-slot-num')) {
+            const select = modal.querySelector(`.candidate-sequence-select[data-position="${pos}"]`) ||
+              modal.querySelector(`[data-item-id="${itemId}"] .candidate-sequence-select[data-slot="${slotNum}"]`) ||
+              modal.querySelector(`.candidate-sequence-select[data-slot="${slotNum}"]`);
+            if (select && select.value && select.value.trim().length > 0) {
+              isAnswered = true;
+            }
+          } else if (itemId) {
+            const checkedRadio = modal.querySelector(`input[name="sim_choice_${itemId}"]:checked, input[name="sim_pron_${itemId}"]:checked`);
+            if (checkedRadio) isAnswered = true;
+            const checkedMulti = modal.querySelector(`input[name="sim_multi_${itemId}"]:checked`);
+            if (checkedMulti) isAnswered = true;
+            const textInput = modal.querySelector(`.candidate-transformation-input[data-item-id="${itemId}"], .candidate-reorder-input[data-item-id="${itemId}"], .candidate-open-textarea[data-item-id="${itemId}"], .candidate-pictorial-input[data-item-id="${itemId}"]`);
+            if (textInput && textInput.value && textInput.value.trim().length > 0) isAnswered = true;
+            const selectEl = modal.querySelector(`.candidate-choice-select[data-item-id="${itemId}"]`);
+            if (selectEl && selectEl.value && selectEl.value.trim().length > 0) isAnswered = true;
+          }
+
+          btn.classList.toggle('answered', isAnswered);
+        });
+
+        const answeredCount = modal.querySelectorAll('.btn-qnav.answered').length;
+        const totalCount = qnavBtns.length || totalItems;
+        const ratioEl = modal.querySelector('.progress-ratio');
+        if (ratioEl) {
+          ratioEl.textContent = `${answeredCount}/${totalCount}`;
+        }
+        const fillEl = modal.querySelector('.progress-fill');
+        if (fillEl) {
+          const pct = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
+          fillEl.style.width = `${pct}%`;
+        }
+      }
+
+      if (typeof modal.addEventListener === 'function') {
+        modal.addEventListener('input', updateAnsweredState);
+        modal.addEventListener('change', updateAnsweredState);
+      }
+
+      // Simulation Submission & Grading
+      const submitSimBtn = modal.querySelector('#btn-submit-simulation');
+      if (submitSimBtn) {
+        submitSimBtn.addEventListener('click', () => {
+          let totalAchieved = 0;
+          let totalMax = 0;
+          const details = [];
+
+          const allItemsMap = new Map();
+          for (const b of blocks) {
+            for (const it of (b.items || [])) {
+              allItemsMap.set(it.itemVersionId, it);
+            }
+          }
+
+          const qnavButtons = modal.querySelectorAll('.btn-qnav');
+          qnavButtons.forEach(btn => {
+            const pos = Number(btn.getAttribute('data-pos'));
+            const blankPos = btn.getAttribute('data-blank-pos');
+            const slotNum = btn.getAttribute('data-slot-num') ? Number(btn.getAttribute('data-slot-num')) : null;
+            const itemId = btn.getAttribute('data-item-id');
+            const item = allItemsMap.get(itemId);
+            const itemKey = draftState.gradingKey?.items?.[itemId] || {};
+
+            let candidateAnswer = '';
+            let correctAnswer = '';
+            let isCorrect = false;
+            let score = 0;
+            let maxScore = 1;
+            let typeLabel = 'Câu hỏi';
+
+            if (blankPos !== null && blankPos !== undefined) {
+              typeLabel = 'Điền từ nội tuyến';
+              const input = modal.querySelector(`.inline-fill-input[data-position="${blankPos}"]`) ||
+                modal.querySelector(`.inline-fill-input[data-position="${pos}"]`);
+              candidateAnswer = input?.value?.trim() || '';
+              const bAnswer = item?.clozeAnswers?.[blankPos] || item?.clozeAnswers?.[String(blankPos)] || itemKey;
+              const accepted = (bAnswer?.accepted && bAnswer.accepted.length > 0)
+                ? bAnswer.accepted
+                : (bAnswer?.targetWord ? [bAnswer.targetWord] : (itemKey.accepted || []));
+              correctAnswer = accepted[0] || '—';
+              isCorrect = accepted.some(acc => acc.trim().toLowerCase() === candidateAnswer.toLowerCase());
+              score = isCorrect ? 1 : 0;
+              maxScore = 1;
+            } else if (slotNum !== null && slotNum !== undefined) {
+              typeLabel = 'Thứ tự nghe';
+              const select = modal.querySelector(`.candidate-sequence-select[data-position="${pos}"]`) ||
+                modal.querySelector(`[data-item-id="${itemId}"] .candidate-sequence-select[data-slot="${slotNum}"]`) ||
+                modal.querySelector(`.candidate-sequence-select[data-slot="${slotNum}"]`);
+              candidateAnswer = select?.value?.trim() || '';
+              const expectedSeq = itemKey.expectedSequence || (item?.events ? [...item.events].sort((a,b)=>a.rank-b.rank).map(e=>e.label) : []);
+              const expectedLabel = expectedSeq[slotNum - 1] || '';
+              correctAnswer = `Thứ ${slotNum}: ${expectedLabel}`;
+              isCorrect = candidateAnswer !== '' && candidateAnswer.toUpperCase() === expectedLabel.toUpperCase();
+              score = isCorrect ? 1 : 0;
+              maxScore = 1;
+            } else if (item?.pedagogicalTypeCode === 'sentence_rewrite') {
+              typeLabel = 'Biến đổi câu';
+              const input = modal.querySelector(`.candidate-transformation-input[data-item-id="${itemId}"]`);
+              candidateAnswer = input?.value?.trim() || '';
+              const res = scoreTransformationAnswer(candidateAnswer, itemKey);
+              isCorrect = res.isCorrect;
+              score = res.score;
+              maxScore = Number(itemKey.maxScore || item?.maxScore) || 1;
+              correctAnswer = (itemKey.accepted || [])[0] || '—';
+            } else if (item?.pedagogicalTypeCode === 'sentence_reorder') {
+              typeLabel = 'Sắp xếp câu';
+              const input = modal.querySelector(`.candidate-reorder-input[data-item-id="${itemId}"]`);
+              candidateAnswer = input?.value?.trim() || '';
+              const target = item?.targetSentence || (itemKey.accepted || [])[0] || '';
+              correctAnswer = target;
+              isCorrect = candidateAnswer.toLowerCase().replace(/[.!?]+$/, '').trim() === target.toLowerCase().replace(/[.!?]+$/, '').trim();
+              score = isCorrect ? (item?.maxScore || 1) : 0;
+              maxScore = item?.maxScore || 1;
+            } else if (item?.interactionType === 'single_choice' || item?.pedagogicalTypeCode === 'pronunciation_choice' || item?.pedagogicalTypeCode === 'pronunciation_word') {
+              typeLabel = 'Trắc nghiệm';
+              const checked = modal.querySelector(`input[name="sim_choice_${itemId}"]:checked, input[name="sim_pron_${itemId}"]:checked`);
+              candidateAnswer = checked?.value || '';
+              const expOpt = itemKey.expectedOptionId || '';
+              correctAnswer = expOpt;
+              isCorrect = candidateAnswer !== '' && candidateAnswer === expOpt;
+              score = isCorrect ? (item?.maxScore || 1) : 0;
+              maxScore = item?.maxScore || 1;
+            } else {
+              typeLabel = 'Điền khuyết';
+              const input = modal.querySelector(`.candidate-open-textarea[data-item-id="${itemId}"], .candidate-pictorial-input[data-item-id="${itemId}"]`);
+              candidateAnswer = input?.value?.trim() || '';
+              const accepted = itemKey.accepted || [];
+              correctAnswer = accepted[0] || '—';
+              isCorrect = accepted.some(acc => acc.trim().toLowerCase() === candidateAnswer.toLowerCase());
+              score = isCorrect ? (item?.maxScore || 1) : 0;
+              maxScore = item?.maxScore || 1;
+            }
+
+            totalAchieved += score;
+            totalMax += maxScore;
+
+            btn.classList.remove('is-correct', 'is-incorrect');
+            btn.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+
+            details.push({
+              pos,
+              typeLabel,
+              candidateAnswer: candidateAnswer || '(Chưa trả lời)',
+              correctAnswer,
+              score,
+              maxScore,
+              isCorrect
+            });
+          });
+
+          // Render summary breakdown
+          const resultsModal = modal.querySelector('#simulation-results-modal');
+          const resultsBody = modal.querySelector('#sim-results-body');
+          if (resultsBody && resultsModal) {
+            resultsBody.innerHTML = `
+              <div class="sim-score-banner">
+                <div class="score-banner-title">Tổng điểm đạt được:</div>
+                <div class="score-banner-value">${totalAchieved}/${totalMax}đ</div>
+                <div class="score-banner-sub">Đã chấm chi tiết toàn bộ ${details.length} câu hỏi theo bộ đáp án của đề thi.</div>
+              </div>
+              <div class="sim-breakdown-table-wrap">
+                <table class="sim-breakdown-table">
+                  <thead>
+                    <tr>
+                      <th>Câu</th>
+                      <th>Dạng câu</th>
+                      <th>Bài làm của bạn</th>
+                      <th>Đáp án đúng</th>
+                      <th>Điểm</th>
+                      <th>Đánh giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${details.map(d => `
+                      <tr class="${d.isCorrect ? 'row-correct' : 'row-incorrect'}">
+                        <td><strong>Câu ${d.pos}</strong></td>
+                        <td><span class="type-badge">${escapeHtml(d.typeLabel)}</span></td>
+                        <td>${escapeHtml(d.candidateAnswer)}</td>
+                        <td><span class="correct-badge">${escapeHtml(d.correctAnswer)}</span></td>
+                        <td><strong>${d.score}/${d.maxScore}đ</strong></td>
+                        <td>${d.isCorrect ? '<span class="status-correct">✅ Đúng</span>' : '<span class="status-incorrect">❌ Chưa đúng</span>'}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            `;
+            resultsModal.style.display = 'flex';
+          }
+        });
+      }
+
+      // Close simulation results handlers
+      const closeResultsBtns = modal.querySelectorAll('#btn-close-sim-results, #btn-done-simulation-results, #btn-retest-simulation');
+      closeResultsBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const resModal = modal.querySelector('#simulation-results-modal');
+          if (resModal) resModal.style.display = 'none';
         });
       });
 
