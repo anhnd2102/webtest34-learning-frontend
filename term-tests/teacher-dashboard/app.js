@@ -1351,6 +1351,9 @@ async function startDashboard() {
 
     selectedAssignmentCard.hidden = false;
     currentSelectedAssignment = assignment;
+    // Đóng form sửa thời hạn của bài trước, tránh lưu nhầm sang bài vừa chọn.
+    document.querySelector('#window-edit-form').hidden = true;
+    document.querySelector('#window-edit-btn').hidden = false;
     if (examRoom) examRoom.hidden = true;
     if (examRoomOpenButton) examRoomOpenButton.hidden = !assignment.examMode;
     updateExamModeUI(assignment.examMode);
