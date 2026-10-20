@@ -1331,6 +1331,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     isDirty = true;
   }
 
+  const collapsedCardKeys = new Set();
+
   function resolveTargetExercise(block, btn) {
     if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
       const defaultExId = generateUuid();
@@ -2472,12 +2474,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             ? ((!item.maxScore || item.maxScore === 1) && spanCount > 1 ? spanCount : (item.maxScore || 1))
             : (item.maxScore || 1));
 
+      const itemCardKey = item.itemVersionId || `item-${blockIdx}-${itemIdx}`;
+      const isItemCollapsed = collapsedCardKeys.has(itemCardKey);
+
       return `
-        <div class="builder-item-card" draggable="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
+        <div class="builder-item-card${isItemCollapsed ? ' is-collapsed' : ''}" draggable="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
           <div class="builder-item-header">
             <div class="item-title-info">
               <span class="drag-handle item-drag-handle" title="Kéo thả để sắp xếp câu hỏi" aria-label="Kéo thả sắp xếp">⋮⋮</span>
-              <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi">▾</button>
+              <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi" aria-expanded="${isItemCollapsed ? 'false' : 'true'}">${isItemCollapsed ? '▸' : '▾'}</button>
               <span class="item-pos-pill${spanCount > 1 ? ' has-span' : ''}">${itemPosLabel}</span>
               <span class="item-kind-pill ${kindClass}">${typeLabel}</span>
               <span class="item-prompt-preview-snippet">${escapeHtml((item.prompt || '').trim().substring(0, 55) + ((item.prompt || '').length > 55 ? '...' : ''))}</span>
@@ -2535,11 +2540,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const isLast = exIdx === exercises.length - 1;
       const isOnly = exercises.length <= 1;
 
+      const exCardKey = ex.exerciseId || `ex-${blockIdx}-${exIdx}`;
+      const isExCollapsed = collapsedCardKeys.has(exCardKey);
+
       return `
-        <div class="builder-exercise-card" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+        <div class="builder-exercise-card${isExCollapsed ? ' is-collapsed' : ''}" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
           <div class="builder-exercise-header">
             <div class="exercise-header-left">
-              <button type="button" class="btn btn-icon btn-sm btn-toggle-exercise-collapse" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" title="Thu gọn / Mở rộng bài tập" aria-label="Thu gọn hoặc mở rộng bài tập" aria-expanded="true">▾</button>
+              <button type="button" class="btn btn-icon btn-sm btn-toggle-exercise-collapse" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" title="Thu gọn / Mở rộng bài tập" aria-label="Thu gọn hoặc mở rộng bài tập" aria-expanded="${isExCollapsed ? 'false' : 'true'}">${isExCollapsed ? '▸' : '▾'}</button>
               <span class="exercise-badge">Exercise ${ex.exerciseNumber || (exIdx + 1)}</span>
               <input type="text" class="exercise-title-input form-control form-control-sm" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" value="${escapeHtml(ex.title || '')}" placeholder="Tiêu đề bài tập (Ví dụ: Nghe từ và chọn nghĩa)..." />
               <span class="badge badge-info exercise-items-count">${exQuestionsCount} câu hỏi</span>
@@ -2629,11 +2637,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const audioVal = block.audioUrl || block.stimulusAudioUrl || '';
       const readingVal = block.readingPassage || block.stimulusReadingPassage || '';
       const itemsCount = (block.items || []).reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
+      const blockCardKey = block.blockId || `b-${index}`;
+      const isBlockCollapsed = collapsedCardKeys.has(blockCardKey);
 
       return `
-        <div class="builder-block-card" data-block-id="${block.blockId}" data-index="${index}">
+        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}" data-block-id="${block.blockId}" data-index="${index}">
           <div class="builder-block-header">
-            <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="true">▾</button>
+            <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? '▸' : '▾'}</button>
             <div class="block-checkpoint-pill">Phần ${index + 1}</div>
             <input type="text" class="block-title-input form-control" data-index="${index}" value="${escapeHtml(block.title || '')}" placeholder="Tiêu đề phần thi..." />
             <div class="block-header-actions">
@@ -2673,6 +2683,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         </div>
       `;
     }).join('');
+
+    const savedWindowScrollY = (typeof window !== 'undefined')
+      ? (window.scrollY ?? window.pageYOffset ?? (typeof document !== 'undefined' ? document.documentElement?.scrollTop : 0) ?? 0)
+      : 0;
+    const savedContainerScrollTop = container ? (container.scrollTop || 0) : 0;
 
     container.innerHTML = `
       <div class="test-builder-workspace">
@@ -2771,6 +2786,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     `;
 
     bindEvents();
+
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
+    }
+    if (container && typeof savedContainerScrollTop === 'number') {
+      container.scrollTop = savedContainerScrollTop;
+    }
   }
 
   function syncInputs() {
@@ -4992,9 +5014,19 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           btn.addEventListener('click', () => {
             const card = typeof btn.closest === 'function' ? btn.closest('.builder-block-card') : null;
             if (!card) return;
+            const bIdx = Number((typeof btn.getAttribute === 'function' ? btn.getAttribute('data-index') : null) || (card.getAttribute && card.getAttribute('data-index')) || 0);
+            const block = draftState.blocks[bIdx];
+            const blockCardKey = (block && block.blockId) || (card.getAttribute && card.getAttribute('data-block-id')) || `b-${bIdx}`;
             const isCollapsed = card.classList.toggle('is-collapsed');
+            if (isCollapsed) {
+              collapsedCardKeys.add(blockCardKey);
+            } else {
+              collapsedCardKeys.delete(blockCardKey);
+            }
             btn.textContent = isCollapsed ? '▸' : '▾';
-            btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+            if (typeof btn.setAttribute === 'function') {
+              btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+            }
           });
         }
       });
@@ -5008,9 +5040,20 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           btn.addEventListener('click', () => {
             const card = typeof btn.closest === 'function' ? btn.closest('.builder-exercise-card') : null;
             if (!card) return;
+            const bIdx = Number((typeof btn.getAttribute === 'function' ? btn.getAttribute('data-block-idx') : null) || (card.getAttribute && card.getAttribute('data-block-idx')) || 0);
+            const eIdx = Number((typeof btn.getAttribute === 'function' ? btn.getAttribute('data-exercise-idx') : null) || (card.getAttribute && card.getAttribute('data-exercise-idx')) || 0);
+            const ex = draftState.blocks[bIdx]?.exercises?.[eIdx];
+            const exCardKey = (ex && ex.exerciseId) || (card.getAttribute && card.getAttribute('data-exercise-id')) || `ex-${bIdx}-${eIdx}`;
             const isCollapsed = card.classList.toggle('is-collapsed');
+            if (isCollapsed) {
+              collapsedCardKeys.add(exCardKey);
+            } else {
+              collapsedCardKeys.delete(exCardKey);
+            }
             btn.textContent = isCollapsed ? '▸' : '▾';
-            btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+            if (typeof btn.setAttribute === 'function') {
+              btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+            }
           });
         }
       });
@@ -5024,9 +5067,20 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           btn.addEventListener('click', () => {
             const card = typeof btn.closest === 'function' ? btn.closest('.builder-item-card') : null;
             if (!card) return;
+            const bIdx = Number((typeof btn.getAttribute === 'function' ? btn.getAttribute('data-block-idx') : null) || (card.getAttribute && card.getAttribute('data-block-idx')) || 0);
+            const iIdx = Number((typeof btn.getAttribute === 'function' ? btn.getAttribute('data-item-idx') : null) || (card.getAttribute && card.getAttribute('data-item-idx')) || 0);
+            const item = draftState.blocks[bIdx]?.items?.[iIdx];
+            const itemCardKey = (item && item.itemVersionId) || (card.getAttribute && card.getAttribute('data-item-id')) || `item-${bIdx}-${iIdx}`;
             const isCollapsed = card.classList.toggle('is-collapsed');
+            if (isCollapsed) {
+              collapsedCardKeys.add(itemCardKey);
+            } else {
+              collapsedCardKeys.delete(itemCardKey);
+            }
             btn.textContent = isCollapsed ? '▸' : '▾';
-            btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+            if (typeof btn.setAttribute === 'function') {
+              btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+            }
           });
         }
       });
@@ -5036,6 +5090,16 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     const btnCollapseAll = typeof container.querySelector === 'function' ? container.querySelector('#btn-collapse-all') : null;
     if (btnCollapseAll && typeof btnCollapseAll.addEventListener === 'function') {
       btnCollapseAll.addEventListener('click', () => {
+        draftState.blocks.forEach((block, bIdx) => {
+          collapsedCardKeys.add(block.blockId || `b-${bIdx}`);
+          (block.exercises || []).forEach((ex, eIdx) => {
+            collapsedCardKeys.add(ex.exerciseId || `ex-${bIdx}-${eIdx}`);
+          });
+          (block.items || []).forEach((item, iIdx) => {
+            collapsedCardKeys.add(item.itemVersionId || `item-${bIdx}-${iIdx}`);
+          });
+        });
+
         const blocks = container.querySelectorAll('.builder-block-card');
         if (blocks && typeof blocks.forEach === 'function') {
           blocks.forEach(card => card.classList?.add('is-collapsed'));
@@ -5077,6 +5141,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     const btnExpandAll = typeof container.querySelector === 'function' ? container.querySelector('#btn-expand-all') : null;
     if (btnExpandAll && typeof btnExpandAll.addEventListener === 'function') {
       btnExpandAll.addEventListener('click', () => {
+        collapsedCardKeys.clear();
+
         const blocks = container.querySelectorAll('.builder-block-card');
         if (blocks && typeof blocks.forEach === 'function') {
           blocks.forEach(card => card.classList?.remove('is-collapsed'));
