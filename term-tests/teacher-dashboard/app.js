@@ -1038,24 +1038,56 @@ export function renderInlineClozeMarkup(text, items = [], responses = {}, option
   return html;
 }
 
-export function updatePromptPosition(prompt, newPos) {
+export function getItemSpanCount(item) {
+  if (!item) return 1;
+  const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
+    item.layoutType === 'timeline_sequence' ||
+    item.graderType === 'ordered_sequence' ||
+    (Array.isArray(item.events) && item.events.length > 0);
+  if (isListeningOrder) {
+    return Math.max(1, Array.isArray(item.events) ? item.events.length : 1);
+  }
+  const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
+    item.layoutType === 'inline_cloze' ||
+    item.layoutType === 'inline_dropdown_table' ||
+    (item.interactionType === 'short_text' && (
+      (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
+      (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
+    ));
+  if (isInlineCloze) {
+    const blanksFromPrompt = parseClozeBlanks(item.prompt || '');
+    const uniqueNums = new Set(blanksFromPrompt.map(b => Number(b.number)));
+    if (item.clozeAnswers) {
+      Object.keys(item.clozeAnswers).forEach(k => {
+        const n = Number(k);
+        if (!Number.isNaN(n)) uniqueNums.add(n);
+        else uniqueNums.add(k);
+      });
+    }
+    return Math.max(1, uniqueNums.size || blanksFromPrompt.length || 1);
+  }
+  return 1;
+}
+
+export function updatePromptPosition(prompt, newPos, span = 1) {
   if (typeof prompt !== 'string') return prompt;
   let updated = prompt;
-  if (/^Câu hỏi \d+(:?)/i.test(updated)) {
-    updated = updated.replace(/^Câu hỏi \d+(:?)/i, `Câu hỏi ${newPos}$1`);
-  } else if (/^Câu \d+([:.]?)/i.test(updated)) {
-    updated = updated.replace(/^Câu \d+([:.]?)/i, `Câu ${newPos}$1`);
-  } else if (/^Question \d+([:.]?)/i.test(updated)) {
-    updated = updated.replace(/^Question \d+([:.]?)/i, `Question ${newPos}$1`);
-  } else if (/^Điền vào ô trống câu \d+(:?)/i.test(updated)) {
-    updated = updated.replace(/^Điền vào ô trống câu \d+(:?)/i, `Điền vào ô trống câu ${newPos}$1`);
+  const posStr = (span > 1) ? `${newPos} – ${newPos + span - 1}` : `${newPos}`;
+  if (/^Câu hỏi \d+(?:\s*[–\-]\s*\d+)?(:?)/i.test(updated)) {
+    updated = updated.replace(/^Câu hỏi \d+(?:\s*[–\-]\s*\d+)?(:?)/i, `Câu hỏi ${posStr}$1`);
+  } else if (/^Câu \d+(?:\s*[–\-]\s*\d+)?([:.]?)/i.test(updated)) {
+    updated = updated.replace(/^Câu \d+(?:\s*[–\-]\s*\d+)?([:.]?)/i, `Câu ${posStr}$1`);
+  } else if (/^Question \d+(?:\s*[–\-]\s*\d+)?([:.]?)/i.test(updated)) {
+    updated = updated.replace(/^Question \d+(?:\s*[–\-]\s*\d+)?([:.]?)/i, `Question ${posStr}$1`);
+  } else if (/^Điền vào ô trống câu \d+(?:\s*[–\-]\s*\d+)?(:?)/i.test(updated)) {
+    updated = updated.replace(/^Điền vào ô trống câu \d+(?:\s*[–\-]\s*\d+)?(:?)/i, `Điền vào ô trống câu ${posStr}$1`);
   } else if (/^Từ vựng qua ảnh \d+/i.test(updated)) {
     updated = updated.replace(/^Từ vựng qua ảnh \d+/i, `Từ vựng qua ảnh ${newPos}`);
   } else if (/^Từ vựng câu \d+/i.test(updated)) {
     updated = updated.replace(/^Từ vựng câu \d+/i, `Từ vựng câu ${newPos}`);
   } else if (/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i.test(updated)) {
     updated = updated.replace(/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i, `Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi ${newPos}$1`);
-  } else if (/\(\d+\) __________/i.test(updated)) {
+  } else if (span === 1 && /\(\d+\) __________/i.test(updated)) {
     updated = updated.replace(/\(\d+\) __________/i, `(${newPos}) __________`);
   }
   return updated;
@@ -1327,38 +1359,22 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     return block.exercises[0];
   }
 
-  function updatePromptPosition(prompt, newPos) {
-    if (typeof prompt !== 'string') return prompt;
-    let updated = prompt;
-    if (/^Câu hỏi \d+(:?)/i.test(updated)) {
-      updated = updated.replace(/^Câu hỏi \d+(:?)/i, `Câu hỏi ${newPos}$1`);
-    } else if (/^Câu \d+([:.]?)/i.test(updated)) {
-      updated = updated.replace(/^Câu \d+([:.]?)/i, `Câu ${newPos}$1`);
-    } else if (/^Question \d+([:.]?)/i.test(updated)) {
-      updated = updated.replace(/^Question \d+([:.]?)/i, `Question ${newPos}$1`);
-    } else if (/^Điền vào ô trống câu \d+(:?)/i.test(updated)) {
-      updated = updated.replace(/^Điền vào ô trống câu \d+(:?)/i, `Điền vào ô trống câu ${newPos}$1`);
-    } else if (/^Từ vựng qua ảnh \d+/i.test(updated)) {
-      updated = updated.replace(/^Từ vựng qua ảnh \d+/i, `Từ vựng qua ảnh ${newPos}`);
-    } else if (/^Từ vựng câu \d+/i.test(updated)) {
-      updated = updated.replace(/^Từ vựng câu \d+/i, `Từ vựng câu ${newPos}`);
-    } else if (/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i.test(updated)) {
-      updated = updated.replace(/^Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi \d+(:?)/i, `Dịch câu sau sang tiếng Anh hoặc trả lời câu hỏi ${newPos}$1`);
-    } else if (/\(\d+\) __________/i.test(updated)) {
-      updated = updated.replace(/\(\d+\) __________/i, `(${newPos}) __________`);
-    }
-    return updated;
+  function updatePromptPositionLocal(prompt, newPos, span = 1) {
+    return updatePromptPosition(prompt, newPos, span);
   }
 
   function resequenceItemPositions() {
-    let pos = 1;
+    const firstPos = draftState.blocks[0]?.items?.[0]?.position;
+    let pos = (typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
     for (const b of draftState.blocks) {
       for (const itm of b.items || []) {
+        const span = getItemSpanCount(itm);
+        itm.spanCount = span;
         itm.position = pos;
         if (itm.prompt) {
-          itm.prompt = updatePromptPosition(itm.prompt, pos);
+          itm.prompt = updatePromptPositionLocal(itm.prompt, pos, span);
         }
-        pos++;
+        pos += span;
       }
       for (const ex of b.exercises || []) {
         ex.itemIds = (b.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
@@ -1442,7 +1458,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
       const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
       const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+      const isInlineCloze = (item.pedagogicalTypeCode === 'inline_cloze' || item.layoutType === 'inline_cloze' || (item.interactionType === 'short_text' && item.layoutType === 'inline_cloze')) && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
       const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
       const isVocabPair = item.interactionType === 'text_select_pair';
       const isRubricAsync = item.graderType === 'rubric_async';
@@ -2436,9 +2452,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               ? 'inline_cloze'
               : item.interactionType)));
 
-      const itemDisplayScore = (isListeningOrder && (!item.maxScore || item.maxScore === 1) && item.events?.length)
-        ? item.events.length
-        : (item.maxScore || 1);
+      const spanCount = getItemSpanCount(item);
+      item.spanCount = spanCount;
+      let itemPosLabel = `Câu ${item.position}`;
+      if (spanCount > 1) {
+        const endPos = item.position + spanCount - 1;
+        if (isListeningOrder) {
+          itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} bước sự kiện)`;
+        } else if (isInlineCloze) {
+          itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} chỗ trống)`;
+        } else {
+          itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} câu)`;
+        }
+      }
+
+      const itemDisplayScore = isListeningOrder
+        ? ((!item.maxScore || item.maxScore === 1) && item.events?.length ? item.events.length : (item.maxScore || 1))
+        : (isInlineCloze
+            ? ((!item.maxScore || item.maxScore === 1) && spanCount > 1 ? spanCount : (item.maxScore || 1))
+            : (item.maxScore || 1));
 
       return `
         <div class="builder-item-card" draggable="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
@@ -2446,7 +2478,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="item-title-info">
               <span class="drag-handle item-drag-handle" title="Kéo thả để sắp xếp câu hỏi" aria-label="Kéo thả sắp xếp">⋮⋮</span>
               <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi">▾</button>
-              <span class="item-pos-pill">Câu ${item.position}</span>
+              <span class="item-pos-pill${spanCount > 1 ? ' has-span' : ''}">${itemPosLabel}</span>
               <span class="item-kind-pill ${kindClass}">${typeLabel}</span>
               <span class="item-prompt-preview-snippet">${escapeHtml((item.prompt || '').trim().substring(0, 55) + ((item.prompt || '').length > 55 ? '...' : ''))}</span>
             </div>
@@ -2498,6 +2530,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     const exercises = block.exercises || [];
     return exercises.map((ex, exIdx) => {
       const exItems = (block.items || []).filter(it => it.exerciseId === ex.exerciseId);
+      const exQuestionsCount = exItems.reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
       const isFirst = exIdx === 0;
       const isLast = exIdx === exercises.length - 1;
       const isOnly = exercises.length <= 1;
@@ -2509,7 +2542,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <button type="button" class="btn btn-icon btn-sm btn-toggle-exercise-collapse" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" title="Thu gọn / Mở rộng bài tập" aria-label="Thu gọn hoặc mở rộng bài tập" aria-expanded="true">▾</button>
               <span class="exercise-badge">Exercise ${ex.exerciseNumber || (exIdx + 1)}</span>
               <input type="text" class="exercise-title-input form-control form-control-sm" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" value="${escapeHtml(ex.title || '')}" placeholder="Tiêu đề bài tập (Ví dụ: Nghe từ và chọn nghĩa)..." />
-              <span class="badge badge-info exercise-items-count">${exItems.length} câu hỏi</span>
+              <span class="badge badge-info exercise-items-count">${exQuestionsCount} câu hỏi</span>
             </div>
             <div class="exercise-header-actions">
               <button type="button" class="btn btn-icon btn-sm btn-move-exercise-up" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isFirst ? 'disabled' : ''} title="Di chuyển bài tập lên">↑</button>
@@ -2585,13 +2618,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     const statusBadgeClass = isPublished ? 'badge-published' : 'badge-draft';
     const statusBadgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
 
+    const totalExamQuestions = draftState.blocks.reduce((sum, b) => {
+      return sum + (b.items || []).reduce((s, itm) => s + getItemSpanCount(itm), 0);
+    }, 0);
+
     const blocksHtml = draftState.blocks.map((block, index) => {
       const isFirst = index === 0;
       const isLast = index === draftState.blocks.length - 1;
       const isOnly = draftState.blocks.length <= 1;
       const audioVal = block.audioUrl || block.stimulusAudioUrl || '';
       const readingVal = block.readingPassage || block.stimulusReadingPassage || '';
-      const itemsCount = block.items?.length || 0;
+      const itemsCount = (block.items || []).reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
 
       return `
         <div class="builder-block-card" data-block-id="${block.blockId}" data-index="${index}">
@@ -2647,6 +2684,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="builder-status-tags">
               <span class="version-tag">Phiên bản: <strong>v${draftState.version}</strong></span>
               <span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span>
+              <span class="total-questions-tag">Tổng cộng: <strong>${totalExamQuestions} câu hỏi</strong></span>
               ${isImmutable
                 ? `<span class="immutability-badge warning" title="Đã có học viên nộp bài — Chỉnh sửa sẽ tạo bản nháp mới v${draftState.version + 1}">${renderSvgIcon('lock', 'icon-inline')} Đã có ${draftState.submissionCount} bài nộp</span>`
                 : `<span class="immutability-badge mutable" title="Chưa có học viên nộp bài — Sẽ lưu trực tiếp trên bản nháp v${draftState.version}">${renderSvgIcon('edit', 'icon-inline')} Chưa có bài nộp</span>`
@@ -2708,7 +2746,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           <div class="builder-blocks-section">
             <div class="blocks-section-header">
               <div class="blocks-title-wrap">
-                <h3>Cấu trúc các phần thi (${draftState.blocks.length} phần)</h3>
+                <h3>Cấu trúc các phần thi (${draftState.blocks.length} phần · ${totalExamQuestions} câu hỏi)</h3>
                 <p class="subtitle">Mỗi phần thi (Block) đại diện cho một chặng bài làm với âm thanh, bài đọc hoặc hướng dẫn riêng.</p>
               </div>
               <div class="blocks-header-actions-group">
@@ -3240,8 +3278,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     let nextPos = 1;
     for (const b of draftState.blocks) {
       for (const itm of b.items || []) {
-        if (typeof itm.position === 'number' && itm.position >= nextPos) {
-          nextPos = itm.position + 1;
+        const span = getItemSpanCount(itm);
+        const endPos = (typeof itm.position === 'number') ? (itm.position + span) : nextPos;
+        if (endPos >= nextPos) {
+          nextPos = endPos;
         }
       }
     }
@@ -3651,6 +3691,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         if (!item.clozeAnswers[nextNum]) {
           item.clozeAnswers[nextNum] = { targetWord: '', accepted: [] };
         }
+        item.maxScore = getItemSpanCount(item);
+        resequenceItemPositions();
         render();
       });
     });
@@ -3838,6 +3880,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         item.events.push({ label: nextLabel, rank: nextRank, text: `Sự kiện ${nextLabel}` });
         item.options = item.events.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` }));
         item.maxScore = item.events.length;
+        resequenceItemPositions();
         render();
       });
     });
@@ -3861,6 +3904,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         });
         item.options = item.events.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` }));
         item.maxScore = item.events.length;
+        resequenceItemPositions();
         render();
       });
     });
@@ -5079,7 +5123,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const item = draftState.blocks[bIdx]?.items?.[iIdx];
         if (!item) return;
         syncInputs();
-        if (item.layoutType === 'inline_cloze') {
+        if (item.layoutType === 'inline_cloze' || item.pedagogicalTypeCode === 'inline_cloze') {
+          resequenceItemPositions();
           render();
         }
       });
@@ -6625,7 +6670,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         `;
       }).join('');
 
-      const totalItems = blocks.reduce((sum, b) => sum + (b.items || []).length, 0);
+      const totalItems = blocks.reduce((sum, b) => sum + (b.items || []).reduce((s, it) => s + getItemSpanCount(it), 0), 0);
 
       modal.innerHTML = `
         <div class="candidate-simulation-shell candidate-simulation-dialog">
@@ -6650,12 +6695,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           <div class="section-nav-wrap">
             <nav class="section-nav simulation-nav-bar">
-              ${blocks.map((b, i) => `
+              ${blocks.map((b, i) => {
+                const bCount = (b.items || []).reduce((s, it) => s + getItemSpanCount(it), 0);
+                return `
                 <button type="button" class="section-tab simulation-nav-pill ${i === 0 ? 'active' : ''}" data-section-target="sim-block-${i}">
                   <span>${escapeHtml(b.title || `Phần ${i + 1}`)}</span>
-                  <span class="tab-count">${(b.exercises || []).length > 1 ? `${(b.exercises || []).length} bài tập · ` : ''}${(b.items || []).length} câu</span>
+                  <span class="tab-count">${(b.exercises || []).length > 1 ? `${(b.exercises || []).length} bài tập · ` : ''}${bCount} câu</span>
                 </button>
-              `).join('')}
+              `;
+              }).join('')}
             </nav>
           </div>
 
@@ -6674,12 +6722,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   <div class="progress-fill" style="width: 0%;"></div>
                 </div>
                 <div class="section-list">
-                  ${blocks.map((b, i) => `
+                  ${blocks.map((b, i) => {
+                    const bCount = (b.items || []).reduce((s, it) => s + getItemSpanCount(it), 0);
+                    return `
                     <button type="button" class="side-section-btn ${i === 0 ? 'active' : ''}" data-section-target="sim-block-${i}">
                       <span>${escapeHtml(b.title || `Phần ${i + 1}`)}</span>
-                      <span class="side-count">0/${(b.items || []).length}</span>
+                      <span class="side-count">0/${bCount}</span>
                     </button>
-                  `).join('')}
+                  `;
+                  }).join('')}
                 </div>
               </div>
 
