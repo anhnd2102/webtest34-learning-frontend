@@ -1375,13 +1375,24 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: ['answer'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-      } else if (itm.interactionType === 'text_select_pair' && !draftState.gradingKey.items[itm.itemVersionId]) {
-        draftState.gradingKey.items[itm.itemVersionId] = {
-          graderType: 'accepted_text_exact_option',
-          accepted: (itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? [itm.prompt] : ['answer'],
-          expectedOptionId: itm.options?.[0]?.id || 'opt_1',
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-        };
+      } else if (itm.interactionType === 'text_select_pair') {
+        const initialWord = itm.targetWord || ((itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? itm.prompt : '');
+        if (!draftState.gradingKey.items[itm.itemVersionId]) {
+          draftState.gradingKey.items[itm.itemVersionId] = {
+            graderType: 'accepted_text_exact_option',
+            accepted: initialWord ? [initialWord] : [],
+            expectedOptionId: itm.options?.[0]?.id || 'opt_1',
+            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          };
+        } else {
+          const currentKey = draftState.gradingKey.items[itm.itemVersionId];
+          if (Array.isArray(currentKey.accepted)) {
+            currentKey.accepted = currentKey.accepted.filter(v => v !== 'answer' && v !== 'draft_placeholder');
+            if (!currentKey.accepted.length && initialWord) {
+              currentKey.accepted = [initialWord];
+            }
+          }
+        }
       } else if (itm.graderType === 'rubric_async' && !draftState.gradingKey.items[itm.itemVersionId]) {
         draftState.gradingKey.items[itm.itemVersionId] = {
           graderType: 'rubric_async',
@@ -2097,7 +2108,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         `;
       } else if (isVocabPair) {
         const rawAccepted = itemKey.accepted || [];
-        const filteredAccepted = rawAccepted.filter(v => v && !/^Từ vựng câu \d+/i.test(v));
+        const filteredAccepted = rawAccepted.filter(v => v && !/^Từ vựng câu \d+/i.test(v) && v !== 'answer' && v !== 'draft_placeholder');
         const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
@@ -2140,7 +2151,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
         const totalVocabItemsInBlock = (block.items || []).filter(it => it.interactionType === 'text_select_pair').length;
 
-        const rawVocabVal = acceptedList[0] || (item.prompt && !/^Từ vựng câu \d+/i.test(item.prompt) ? item.prompt : '');
+        const rawVocabVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Từ vựng câu \d+/i.test(item.prompt) ? item.prompt : '');
 
         specificHtml = `
           <div class="template-section template-vocab-pair">
@@ -2980,22 +2991,33 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             // Vocabulary pair sync
             if (item.interactionType === 'text_select_pair') {
+              const rawWordInput = iCard.querySelector('.input-vocab-raw');
+              const rawWordVal = rawWordInput ? rawWordInput.value.trim() : '';
+
+              if (rawWordVal && !/^Từ vựng câu \d+/i.test(rawWordVal)) {
+                item.targetWord = rawWordVal;
+                item.prompt = rawWordVal;
+              }
+
               const chips = iCard.querySelectorAll('.template-vocab-pair .variant-chip');
               const rawVariants = Array.from(chips).map(c => c.getAttribute('data-variant')).filter(Boolean);
-              const variants = Array.from(new Set(rawVariants.filter(v => !/^Từ vựng câu \d+/i.test(v)))).slice(0, 40);
+              let variants = Array.from(new Set(rawVariants.filter(v => v !== 'answer' && v !== 'draft_placeholder' && !/^Từ vựng câu \d+/i.test(v)))).slice(0, 40);
+
               const dropdownVal = iCard.querySelector('.select-vocab-correct-dropdown')?.value;
               const radioChecked = iCard.querySelector('.radio-vocab-correct:checked');
               const expectedOptId = dropdownVal || (radioChecked ? radioChecked.value : (item.options?.[0]?.id || 'opt_1'));
 
-              const rawWordInput = iCard.querySelector('.input-vocab-raw');
-              const rawWordVal = rawWordInput ? rawWordInput.value.trim() : '';
+              if (rawWordVal && !/^Từ vựng câu \d+/i.test(rawWordVal)) {
+                if (!variants.includes(rawWordVal)) {
+                  variants = [rawWordVal, ...variants];
+                }
+              }
+
               if (!variants.length) {
-                if (rawWordVal && !/^Từ vựng câu \d+/i.test(rawWordVal)) {
-                  variants.push(rawWordVal);
+                if (item.targetWord && !/^Từ vựng câu \d+/i.test(item.targetWord)) {
+                  variants.push(item.targetWord);
                 } else if (item.prompt && !/^Từ vựng câu \d+/i.test(item.prompt)) {
                   variants.push(item.prompt);
-                } else {
-                  variants.push('answer');
                 }
               }
 
