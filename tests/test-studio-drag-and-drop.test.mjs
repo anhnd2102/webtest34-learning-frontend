@@ -43,7 +43,7 @@ test('Test Studio Drag-and-Drop: Item cards render draggable attribute, drag han
   renderTestBuilderView(container, mockForm);
 
   const html = container.innerHTML;
-  assert.ok(html.includes('draggable="true"'), 'Item cards must have draggable="true" attribute');
+  assert.ok(html.includes('draggable="false"'), 'Item cards must have draggable="false" attribute by default');
   assert.ok(html.includes('item-drag-handle'), 'Item cards must have .item-drag-handle element');
   assert.ok(html.includes('⋮⋮'), 'Drag handle must display ⋮⋮ icon');
   assert.ok(html.includes('btn-move-item-up'), 'Move Up button (↑) must remain present');
@@ -160,12 +160,27 @@ test('Test Studio Drag-and-Drop: DOM event simulation executes dragstart, drop-i
   const classes1 = new Set();
   const classes2 = new Set();
 
+  const handleListeners1 = {};
+  const handle1Mock = {
+    classList: {
+      contains: (cls) => cls === 'item-drag-handle'
+    },
+    addEventListener: (evt, fn) => {
+      handleListeners1[evt] = fn;
+    }
+  };
+
   const card1Mock = {
     getAttribute: (name) => {
       if (name === 'data-block-idx') return '0';
       if (name === 'data-item-idx') return '0';
       if (name === 'data-item-id') return 'item-1';
       if (name === 'data-exercise-id') return 'ex-1';
+      return null;
+    },
+    setAttribute: () => {},
+    querySelector: (sel) => {
+      if (sel === '.item-drag-handle') return handle1Mock;
       return null;
     },
     classList: {
@@ -187,6 +202,8 @@ test('Test Studio Drag-and-Drop: DOM event simulation executes dragstart, drop-i
       if (name === 'data-exercise-id') return 'ex-1';
       return null;
     },
+    setAttribute: () => {},
+    querySelector: () => null,
     classList: {
       add: (cls) => classes2.add(cls),
       remove: (cls) => classes2.delete(cls),
@@ -255,14 +272,16 @@ test('Test Studio Drag-and-Drop: DOM event simulation executes dragstart, drop-i
     }
   });
 
-  // Step 1: User starts dragging Card 1
+  // Step 1: User mousedowns on handle, then starts dragging Card 1
   assert.ok(typeof listeners1.dragstart === 'function', 'dragstart listener must be registered on card1');
+  assert.ok(typeof handleListeners1.mousedown === 'function', 'mousedown listener must be registered on handle1');
+  handleListeners1.mousedown();
   const mockDataTransfer = {
     effectAllowed: '',
     dropEffect: '',
     setData: () => {}
   };
-  listeners1.dragstart({ target: card1Mock, dataTransfer: mockDataTransfer, preventDefault: () => {} });
+  listeners1.dragstart({ target: handle1Mock, dataTransfer: mockDataTransfer, preventDefault: () => {} });
   assert.ok(classes1.has('dragging'), 'Card 1 must have .dragging class on dragstart');
 
   // Step 2: User drags over bottom half of Card 2 (clientY = 260, top = 200, height = 80 => relative Y = 60 > 40)

@@ -2345,7 +2345,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                           : 'Điền ô trống (Short Text)')))))))));
 
       return `
-        <div class="builder-item-card" draggable="true" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
+        <div class="builder-item-card" draggable="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
           <div class="builder-item-header">
             <div class="item-title-info">
               <span class="drag-handle item-drag-handle" title="Kéo thả để sắp xếp câu hỏi" aria-label="Kéo thả sắp xếp">⋮⋮</span>
@@ -4927,20 +4927,52 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    // HTML5 Drag and Drop for Question Items
+    // HTML5 Drag and Drop for Question Items (Drag Handle Isolated)
     const draggableItemCards = container.querySelectorAll('.builder-item-card');
     let draggedItemInfo = null;
+    let isDragHandleActive = false;
+    let activeDragCard = null;
 
     if (draggableItemCards && typeof draggableItemCards.forEach === 'function') {
       draggableItemCards.forEach(card => {
         if (typeof card.addEventListener !== 'function') return;
 
+        const handle = card.querySelector ? card.querySelector('.item-drag-handle') : null;
+        if (handle && typeof handle.addEventListener === 'function') {
+          handle.addEventListener('mousedown', () => {
+            isDragHandleActive = true;
+            activeDragCard = card;
+            if (typeof card.setAttribute === 'function') {
+              card.setAttribute('draggable', 'true');
+            }
+          });
+
+          const resetHandleState = () => {
+            if (!draggedItemInfo) {
+              isDragHandleActive = false;
+              activeDragCard = null;
+              if (typeof card.setAttribute === 'function') {
+                card.setAttribute('draggable', 'false');
+              }
+            }
+          };
+
+          handle.addEventListener('mouseup', resetHandleState);
+        }
+
         card.addEventListener('dragstart', (e) => {
           const targetTag = e.target?.tagName?.toLowerCase();
-          if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || targetTag === 'button') {
-            e.preventDefault();
+          const isInputOrControl = targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || targetTag === 'button';
+          const isTargetFromHandle = (isDragHandleActive && activeDragCard === card) ||
+            (e.target && typeof e.target.closest === 'function' && Boolean(e.target.closest('.item-drag-handle')));
+
+          if (!isTargetFromHandle || isInputOrControl) {
+            if (typeof e.preventDefault === 'function') {
+              e.preventDefault();
+            }
             return;
           }
+
           syncInputs();
           draggedItemInfo = {
             blockIdx: Number(card.getAttribute('data-block-idx')),
@@ -5010,9 +5042,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         card.addEventListener('dragend', () => {
           draggedItemInfo = null;
+          isDragHandleActive = false;
+          activeDragCard = null;
           const allCards = container.querySelectorAll('.builder-item-card');
           if (allCards && typeof allCards.forEach === 'function') {
             allCards.forEach(c => {
+              if (typeof c.setAttribute === 'function') {
+                c.setAttribute('draggable', 'false');
+              }
               if (c.classList && typeof c.classList.remove === 'function') {
                 c.classList.remove('dragging', 'drop-target-above', 'drop-target-below');
               }
@@ -5027,6 +5064,18 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             });
           }
         });
+      });
+    }
+
+    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+      document.addEventListener('mouseup', () => {
+        if (isDragHandleActive && !draggedItemInfo) {
+          isDragHandleActive = false;
+          if (activeDragCard && typeof activeDragCard.setAttribute === 'function') {
+            activeDragCard.setAttribute('draggable', 'false');
+          }
+          activeDragCard = null;
+        }
       });
     }
 
