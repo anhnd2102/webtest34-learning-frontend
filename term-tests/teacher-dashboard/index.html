@@ -275,6 +275,13 @@
             <div class="showcase-window" id="showcase-window">
               <span class="window-label">Thời hạn làm bài:</span>
               <span id="showcase-window-text">—</span>
+              <button type="button" id="window-edit-btn">Sửa</button>
+              <form id="window-edit-form" hidden>
+                <label>Mở <input id="window-opens-input" type="datetime-local"></label>
+                <label>Đóng <input id="window-closes-input" type="datetime-local"></label>
+                <button type="submit" id="window-save-btn">Lưu</button>
+                <button type="button" id="window-cancel-btn">Hủy</button>
+              </form>
             </div>
 
             <!-- Submission Progress Bar -->
