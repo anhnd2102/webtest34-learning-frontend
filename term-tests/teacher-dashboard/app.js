@@ -343,7 +343,18 @@ export const ICONS = {
   trash: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
   upload: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
   download: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
-  fileText: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
+  fileText: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+  bold: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>',
+  italic: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>',
+  underline: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>',
+  strike: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4H9a3 3 0 0 0-2.83 4"/><path d="M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/></svg>',
+  heading: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="m17 12 3-2v8"/></svg>',
+  listUl: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+  listOl: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>',
+  alignLeft: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>',
+  alignCenter: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg>',
+  alignRight: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>',
+  removeFormat: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M5 20h6"/><path d="M13 4 8 20"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="21" y1="15" x2="15" y2="21"/></svg>'
 };
 
 export function renderSvgIcon(name, customClass = '') {
@@ -1335,6 +1346,64 @@ export function renderRichHtmlEditor(container, {
     <div class="rich-editor rich-html-editor-wrap">
       <div class="rich-editor__toolbar rich-editor-toolbar">
         <div class="rich-editor__toolbar-left toolbar-group">
+          <!-- Heading Dropdown -->
+          <div class="rich-editor__control control-heading-select">
+            <select class="form-select form-select-sm select-format-heading" title="Chọn cấp độ tiêu đề">
+              <option value="p">Đoạn văn (Normal)</option>
+              <option value="h2">Tiêu đề lớn (H2)</option>
+              <option value="h3">Tiêu đề mục (H3)</option>
+              <option value="h4">Tiêu đề nhỏ (H4)</option>
+            </select>
+          </div>
+
+          <div class="toolbar-divider" aria-hidden="true"></div>
+
+          <!-- Inline Formatting Actions -->
+          <button type="button" class="btn-editor-action btn-format-bold" title="Tô đậm (Bold - Ctrl+B)">
+            ${renderSvgIcon('bold', 'icon-inline')}
+          </button>
+          <button type="button" class="btn-editor-action btn-format-italic" title="In nghiêng (Italic - Ctrl+I)">
+            ${renderSvgIcon('italic', 'icon-inline')}
+          </button>
+          <button type="button" class="btn-editor-action btn-format-underline" title="Gạch chân (Underline - Ctrl+U)">
+            ${renderSvgIcon('underline', 'icon-inline')}
+          </button>
+          <button type="button" class="btn-editor-action btn-format-strike" title="Gạch ngang (Strikethrough)">
+            ${renderSvgIcon('strike', 'icon-inline')}
+          </button>
+
+          <div class="toolbar-divider" aria-hidden="true"></div>
+
+          <!-- Lists -->
+          <button type="button" class="btn-editor-action btn-format-ul" title="Danh sách dấu chấm (Bullet List)">
+            ${renderSvgIcon('listUl', 'icon-inline')}
+          </button>
+          <button type="button" class="btn-editor-action btn-format-ol" title="Danh sách số (Numbered List)">
+            ${renderSvgIcon('listOl', 'icon-inline')}
+          </button>
+
+          <div class="toolbar-divider" aria-hidden="true"></div>
+
+          <!-- Alignment -->
+          <button type="button" class="btn-editor-action btn-format-align-left" title="Căn trái">
+            ${renderSvgIcon('alignLeft', 'icon-inline')}
+          </button>
+          <button type="button" class="btn-editor-action btn-format-align-center" title="Căn giữa">
+            ${renderSvgIcon('alignCenter', 'icon-inline')}
+          </button>
+          <button type="button" class="btn-editor-action btn-format-align-right" title="Căn phải">
+            ${renderSvgIcon('alignRight', 'icon-inline')}
+          </button>
+
+          <div class="toolbar-divider" aria-hidden="true"></div>
+
+          <!-- Clear Formatting -->
+          <button type="button" class="btn-editor-action btn-format-clear" title="Xóa toàn bộ định dạng">
+            ${renderSvgIcon('removeFormat', 'icon-inline')}
+          </button>
+
+          <div class="toolbar-divider" aria-hidden="true"></div>
+
           <!-- Table Control & Popup -->
           <div class="rich-editor__control dropdown-table-wrap">
             <button type="button" class="btn-editor-action btn-rich-insert-table" title="Chèn Bảng dữ liệu">
@@ -1415,6 +1484,19 @@ export function renderRichHtmlEditor(container, {
   const imageErrorEl = container.querySelector ? container.querySelector('.popup-image-error') : null;
   const generalErrorEl = container.querySelector ? container.querySelector('.general-editor-error') : null;
   const blankBtn = container.querySelector ? container.querySelector('.btn-rich-insert-blank') : null;
+
+  // New Rich Text Controls
+  const headingSelect = container.querySelector ? container.querySelector('.select-format-heading') : null;
+  const boldBtn = container.querySelector ? container.querySelector('.btn-format-bold') : null;
+  const italicBtn = container.querySelector ? container.querySelector('.btn-format-italic') : null;
+  const underlineBtn = container.querySelector ? container.querySelector('.btn-format-underline') : null;
+  const strikeBtn = container.querySelector ? container.querySelector('.btn-format-strike') : null;
+  const ulBtn = container.querySelector ? container.querySelector('.btn-format-ul') : null;
+  const olBtn = container.querySelector ? container.querySelector('.btn-format-ol') : null;
+  const alignLeftBtn = container.querySelector ? container.querySelector('.btn-format-align-left') : null;
+  const alignCenterBtn = container.querySelector ? container.querySelector('.btn-format-align-center') : null;
+  const alignRightBtn = container.querySelector ? container.querySelector('.btn-format-align-right') : null;
+  const clearBtn = container.querySelector ? container.querySelector('.btn-format-clear') : null;
 
   let savedRange = null;
 
@@ -1687,6 +1769,75 @@ export function renderRichHtmlEditor(container, {
     blankBtn.addEventListener?.('click', () => {
       saveSelection();
       onInsertBlankToken(insertHtmlAtCursor);
+    });
+  }
+
+  // Formatting commands execution
+  const executeFormatCommand = (command, value = null) => {
+    closeAllPopups();
+
+    if (isCodeMode && codeEl) {
+      const start = codeEl.selectionStart || 0;
+      const end = codeEl.selectionEnd || 0;
+      const selected = codeEl.value.substring(start, end);
+      let replacement = selected;
+
+      if (command === 'bold') replacement = `<strong>${selected}</strong>`;
+      else if (command === 'italic') replacement = `<em>${selected}</em>`;
+      else if (command === 'underline') replacement = `<u>${selected}</u>`;
+      else if (command === 'strikeThrough') replacement = `<s>${selected}</s>`;
+      else if (command === 'insertUnorderedList') replacement = `\n<ul>\n  <li>${selected || 'Mục danh sách'}</li>\n</ul>\n`;
+      else if (command === 'insertOrderedList') replacement = `\n<ol>\n  <li>${selected || 'Mục danh sách'}</li>\n</ol>\n`;
+      else if (command === 'formatBlock' && value) replacement = `\n<${value}>${selected}</${value}>\n`;
+      else if (command === 'justifyLeft') replacement = `<div style="text-align: left;">${selected}</div>`;
+      else if (command === 'justifyCenter') replacement = `<div style="text-align: center;">${selected}</div>`;
+      else if (command === 'justifyRight') replacement = `<div style="text-align: right;">${selected}</div>`;
+      else if (command === 'removeFormat') replacement = selected.replace(/<[^>]+>/g, '');
+
+      codeEl.value = codeEl.value.substring(0, start) + replacement + codeEl.value.substring(end);
+      syncToVisual();
+      return;
+    }
+
+    if (visualEl) {
+      visualEl.focus?.();
+      if (typeof document !== 'undefined' && document.execCommand) {
+        document.execCommand(command, false, value);
+      }
+      saveSelection();
+      syncToCode();
+    }
+  };
+
+  const bindFormatButton = (btn, command, value = null) => {
+    if (!btn || typeof btn.addEventListener !== 'function') return;
+    btn.addEventListener('mousedown', (e) => {
+      e?.preventDefault?.();
+    });
+    btn.addEventListener('click', (e) => {
+      e?.preventDefault?.();
+      executeFormatCommand(command, value);
+    });
+  };
+
+  bindFormatButton(boldBtn, 'bold');
+  bindFormatButton(italicBtn, 'italic');
+  bindFormatButton(underlineBtn, 'underline');
+  bindFormatButton(strikeBtn, 'strikeThrough');
+  bindFormatButton(ulBtn, 'insertUnorderedList');
+  bindFormatButton(olBtn, 'insertOrderedList');
+  bindFormatButton(alignLeftBtn, 'justifyLeft');
+  bindFormatButton(alignCenterBtn, 'justifyCenter');
+  bindFormatButton(alignRightBtn, 'justifyRight');
+  bindFormatButton(clearBtn, 'removeFormat');
+
+  if (headingSelect && typeof headingSelect.addEventListener === 'function') {
+    headingSelect.addEventListener('mousedown', (e) => {
+      saveSelection();
+    });
+    headingSelect.addEventListener('change', () => {
+      const tag = headingSelect.value || 'p';
+      executeFormatCommand('formatBlock', tag);
     });
   }
 
