@@ -2577,3 +2577,9 @@ body:not(.login-page) #auth-panel {
 }
 
 
+
+.proctoring-lock-hint {
+  flex-basis: 100%;
+  font-size: 0.82rem;
+  color: #b45309;
+}

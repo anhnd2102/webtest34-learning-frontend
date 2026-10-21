@@ -383,6 +383,17 @@ export function assignmentSelfProctoringPath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/self-proctoring`;
 }
 
+// Lý do toggle bị khoá, để giáo viên không phải đoán vì sao không bấm được.
+export function examModeLockReason({ exitLimit } = {}) {
+  return exitLimit === null || exitLimit === undefined ? '' : 'Bài đang bật Tự giám sát nên không bật được Exam Mode. Tắt Tự giám sát trước; nếu đã có học viên bắt đầu làm thì không tắt được nữa.';
+}
+
+export function selfProctoringLockReason({ examMode, examSession } = {}) {
+  if (examMode) return 'Bài đang bật Exam Mode: tắt Exam Mode trước khi bật Tự giám sát.';
+  if (examSession) return 'Bài đã chuyển từ Exam Mode sang Tự giám sát nên không đổi lại được; giới hạn thoát cố định.';
+  return '';
+}
+
 export function selfProctoringRequestBody(enabled, rawLimit) {
   if (!enabled) return { exitLimit: null };
   const text = String(rawLimit ?? '').trim();
@@ -1092,6 +1103,8 @@ async function startDashboard() {
   const examModeToggle = document.querySelector('#exam-mode-toggle');
   const examModeStatusPill = document.querySelector('#exam-mode-status-pill');
   const selfProctoringToggle = document.querySelector('#self-proctoring-toggle');
+  const examModeLockHint = document.querySelector('#exam-mode-lock-hint');
+  const selfProctoringLockHint = document.querySelector('#self-proctoring-lock-hint');
   const selfProctoringLimit = document.querySelector('#self-proctoring-limit');
   const selfProctoringSave = document.querySelector('#self-proctoring-save');
   const examSwitchControls = document.querySelector('#exam-switch-controls');
@@ -1737,6 +1750,10 @@ async function startDashboard() {
     if (selfProctoringLimit) { selfProctoringLimit.value = enabled ? String(exitLimit) : ''; selfProctoringLimit.disabled = !enabled || lockedAfterExam; }
     if (selfProctoringSave) selfProctoringSave.disabled = lockedAfterExam || (!enabled && !selfProctoringToggle?.checked);
     if (examModeToggle) examModeToggle.disabled = enabled;
+    const examReason = examModeLockReason({ exitLimit });
+    const selfReason = selfProctoringLockReason({ examMode, examSession: currentSelectedAssignment?.examSession });
+    if (examModeLockHint) { examModeLockHint.textContent = examReason; examModeLockHint.hidden = !examReason; }
+    if (selfProctoringLockHint) { selfProctoringLockHint.textContent = selfReason; selfProctoringLockHint.hidden = !selfReason; }
   }
 
   // Khối "Chuyển sang Tự giám sát": hiện khi phiên thi đã bắt đầu; kết quả cuối cùng luôn đọc lại từ server.

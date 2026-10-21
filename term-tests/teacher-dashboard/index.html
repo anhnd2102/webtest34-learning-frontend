@@ -255,6 +255,7 @@
                   <span class="toggle-label-text">Chế độ thi tập trung (Exam Mode)</span>
                 </label>
                 <span id="exam-mode-status-pill" class="exam-mode-status-pill">Đang tắt</span>
+                <small id="exam-mode-lock-hint" class="proctoring-lock-hint" hidden></small>
               </div>
               <div class="exam-mode-switch-wrap" id="self-proctoring-controls">
                 <label class="exam-mode-toggle" for="self-proctoring-toggle" title="Không có giáo viên trông: vượt số lần thoát thì bài tự nộp">
@@ -266,6 +267,7 @@
                 <input id="self-proctoring-limit" type="number" min="0" step="1" inputmode="numeric" required disabled style="width:5rem">
                 <span>lần</span>
                 <button id="self-proctoring-save" class="btn-secondary" type="button" disabled>Lưu</button>
+                <small id="self-proctoring-lock-hint" class="proctoring-lock-hint" hidden></small>
               </div>
               <div class="exam-switch-panel" id="exam-switch-controls" hidden>
                 <strong>Chuyển sang Tự giám sát</strong>
