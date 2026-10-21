@@ -227,18 +227,6 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shado
   flex-direction: column;
   gap: 12px;
 }
-.showcase-window {
-  font-size: 0.88rem;
-  color: #64748b;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.window-label {
-  font-weight: 600;
-  color: #475569;
-}
 
 /* Compact Assignment Chips & Active Test Focus */
 .assignment-chips {

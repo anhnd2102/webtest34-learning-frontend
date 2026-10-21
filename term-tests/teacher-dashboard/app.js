@@ -383,22 +383,6 @@ export function assignmentSelfProctoringPath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/self-proctoring`;
 }
 
-export function assignmentWindowPath(classId, assignmentId) {
-  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/window`;
-}
-
-// Giờ Việt Nam cố định UTC+7, không có giờ mùa hè nên cộng/trừ 7 giờ là đủ.
-const VN_OFFSET_MS = 7 * 3600 * 1000;
-
-export function isoToVnInputValue(iso) {
-  return iso ? new Date(new Date(iso).getTime() + VN_OFFSET_MS).toISOString().slice(0, 16) : '';
-}
-
-export function assignmentWindowRequestBody(opensValue, closesValue) {
-  const toIso = value => value ? new Date(`${value}:00+07:00`).toISOString() : null;
-  return { opensAt: toIso(opensValue), closesAt: toIso(closesValue) };
-}
-
 export function selfProctoringRequestBody(enabled, rawLimit) {
   if (!enabled) return { exitLimit: null };
   const text = String(rawLimit ?? '').trim();
@@ -1125,7 +1109,6 @@ async function startDashboard() {
   const examRoomExtensionMinutes = document.querySelector('#exam-room-extension-minutes');
   const examRoomRefreshButton = document.querySelector('#exam-room-refresh');
   const examRoomCloseButton = document.querySelector('#exam-room-close');
-  const showcaseWindowText = document.querySelector('#showcase-window-text');
   const showcaseLinkBar = document.querySelector('#showcase-link-bar');
   const showcaseStudentUrl = document.querySelector('#showcase-student-url');
   const copyShowcaseLinkBtn = document.querySelector('#copy-showcase-link-btn');
@@ -1415,9 +1398,6 @@ async function startDashboard() {
 
     selectedAssignmentCard.hidden = false;
     currentSelectedAssignment = assignment;
-    // Đóng form sửa thời hạn của bài trước, tránh lưu nhầm sang bài vừa chọn.
-    document.querySelector('#window-edit-form').hidden = true;
-    document.querySelector('#window-edit-btn').hidden = false;
     if (examRoom) examRoom.hidden = true;
     // Phòng thi vẫn mở được sau khi đã chuyển chế độ để xem lại sự cố của phiên cũ.
     if (examRoomOpenButton) examRoomOpenButton.hidden = !(assignment.examMode || assignment.examSession);
@@ -1447,9 +1427,6 @@ async function startDashboard() {
     }
     if (showcaseStatusBadge) {
       showcaseStatusBadge.textContent = assignment.status === 'published' ? 'Đang phát hành' : assignment.status;
-    }
-    if (showcaseWindowText) {
-      showcaseWindowText.textContent = formatAssignmentWindow(assignment.opensAt, assignment.closesAt);
     }
 
     const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation);
@@ -1825,48 +1802,6 @@ async function startDashboard() {
     selfProctoringLimit.disabled = !selfProctoringToggle.checked;
     if (selfProctoringToggle.checked) selfProctoringLimit.focus();
     selfProctoringSave.disabled = false;
-  });
-
-  const windowEditBtn = document.querySelector('#window-edit-btn');
-  const windowEditForm = document.querySelector('#window-edit-form');
-  const windowOpensInput = document.querySelector('#window-opens-input');
-  const windowClosesInput = document.querySelector('#window-closes-input');
-  const windowSaveBtn = document.querySelector('#window-save-btn');
-
-  windowEditBtn?.addEventListener('click', () => {
-    if (!currentSelectedAssignment) return;
-    windowOpensInput.value = isoToVnInputValue(currentSelectedAssignment.opensAt);
-    windowClosesInput.value = isoToVnInputValue(currentSelectedAssignment.closesAt);
-    windowEditForm.hidden = false;
-    windowEditBtn.hidden = true;
-  });
-
-  document.querySelector('#window-cancel-btn')?.addEventListener('click', () => {
-    windowEditForm.hidden = true;
-    windowEditBtn.hidden = false;
-  });
-
-  windowEditForm?.addEventListener('submit', async event => {
-    event.preventDefault();
-    if (!currentSelectedAssignment) return;
-    windowSaveBtn.disabled = true;
-    try {
-      const payload = await request(assignmentWindowPath(state.classId, currentSelectedAssignment.assignmentId), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(assignmentWindowRequestBody(windowOpensInput.value, windowClosesInput.value))
-      });
-      currentSelectedAssignment.opensAt = payload.opensAt;
-      currentSelectedAssignment.closesAt = payload.closesAt;
-      showcaseWindowText.textContent = formatAssignmentWindow(payload.opensAt, payload.closesAt);
-      status.textContent = 'Đã cập nhật thời hạn làm bài.';
-      windowEditForm.hidden = true;
-      windowEditBtn.hidden = false;
-    } catch (error) {
-      status.textContent = error.message;
-    } finally {
-      windowSaveBtn.disabled = false;
-    }
   });
 
   selfProctoringSave?.addEventListener('click', async () => {
