@@ -140,3 +140,82 @@ test('Formatting buttons wire mousedown preventDefault to persist editor selecti
   });
   assert.ok(defaultPrevented, 'Calls preventDefault on mousedown to retain text selection');
 });
+
+test('renderTestBuilderView renders rich text formatting tools in inline cloze builder item card', async () => {
+  const { renderTestBuilderView } = await import('../term-tests/teacher-dashboard/app.js');
+
+  const mockContainer = {
+    innerHTML: '',
+    querySelector: () => null,
+    querySelectorAll: () => []
+  };
+
+  const mockForm = {
+    id: '48010000-0000-4000-8000-000000000001',
+    version: 1,
+    status: 'draft',
+    title: 'Rich Editor Format Tools Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '48010000-0000-4000-8000-000000000001',
+      title: 'Rich Editor Format Tools Test',
+      durationMinutes: 45,
+      blocks: [
+        {
+          blockId: 'b1',
+          checkpoint: 1,
+          title: 'Inline Cloze Block',
+          items: [
+            {
+              itemFamilyId: 'f1',
+              itemVersionId: 'it-cloze-1',
+              position: 1,
+              prompt: 'The cruise departs from Miami: (1) __________ Caribbean islands.',
+              interactionType: 'short_text',
+              pedagogicalTypeCode: 'inline_cloze',
+              layoutType: 'inline_cloze',
+              graderType: 'accepted_text',
+              maxScore: 1,
+              options: []
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        'it-cloze-1': { graderType: 'accepted_text', accepted: ['six'] }
+      }
+    }
+  };
+
+  renderTestBuilderView(mockContainer, mockForm);
+
+  const html = mockContainer.innerHTML;
+
+  // Heading dropdown in inline cloze card
+  assert.ok(html.includes('select-format-heading'), 'Inline cloze card contains select-format-heading');
+
+  // Inline formatting buttons in inline cloze card
+  assert.ok(html.includes('btn-format-bold'), 'Inline cloze card contains btn-format-bold');
+  assert.ok(html.includes('btn-format-italic'), 'Inline cloze card contains btn-format-italic');
+  assert.ok(html.includes('btn-format-underline'), 'Inline cloze card contains btn-format-underline');
+  assert.ok(html.includes('btn-format-strike'), 'Inline cloze card contains btn-format-strike');
+
+  // Lists in inline cloze card
+  assert.ok(html.includes('btn-format-ul'), 'Inline cloze card contains btn-format-ul');
+  assert.ok(html.includes('btn-format-ol'), 'Inline cloze card contains btn-format-ol');
+
+  // Alignment buttons in inline cloze card
+  assert.ok(html.includes('btn-format-align-left'), 'Inline cloze card contains btn-format-align-left');
+  assert.ok(html.includes('btn-format-align-center'), 'Inline cloze card contains btn-format-align-center');
+  assert.ok(html.includes('btn-format-align-right'), 'Inline cloze card contains btn-format-align-right');
+
+  // Clear format button
+  assert.ok(html.includes('btn-format-clear'), 'Inline cloze card contains btn-format-clear');
+
+  // Toolbar dividers
+  assert.ok(html.includes('toolbar-divider'), 'Inline cloze card contains toolbar-divider');
+});
+

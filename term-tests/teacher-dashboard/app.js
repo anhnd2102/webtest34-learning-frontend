@@ -1420,9 +1420,9 @@ export function renderRichHtmlEditor(container, {
               <small>Số dòng chưa tính dòng tiêu đề.</small>
               <div class="rich-editor__presets-section">
                 <small>Mẫu sư phạm IELTS</small>
-                <button type="button" class="btn-table-preset" data-preset="itinerary">🚢 Lịch trình chuyến đi (Itinerary)</button>
-                <button type="button" class="btn-table-preset" data-preset="notes">📝 Ghi chú bài nghe (Note Completion)</button>
-                <button type="button" class="btn-table-preset" data-preset="vocabulary">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+                <button type="button" class="btn-table-preset" data-preset="itinerary">Lịch trình chuyến đi (Itinerary)</button>
+                <button type="button" class="btn-table-preset" data-preset="notes">Ghi chú bài nghe (Note Completion)</button>
+                <button type="button" class="btn-table-preset" data-preset="vocabulary">Bảng từ vựng 4 cột (Vocabulary)</button>
               </div>
             </div>
           </div>
@@ -2930,8 +2930,61 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   <button type="button" class="btn btn-secondary btn-sm btn-extract-paragraphs" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động nhận diện các đoạn văn Paragraph A, B, C...">
                     ${renderSvgIcon('search', 'icon-inline')} Quét nhãn đoạn văn
                   </button>
+                  <div class="rich-editor__control control-heading-select">
+                    <select class="form-select form-select-sm select-format-heading" title="Chọn cấp độ tiêu đề">
+                      <option value="p">Đoạn văn (Normal)</option>
+                      <option value="h2">Tiêu đề lớn (H2)</option>
+                      <option value="h3">Tiêu đề mục (H3)</option>
+                      <option value="h4">Tiêu đề nhỏ (H4)</option>
+                    </select>
+                  </div>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <button type="button" class="btn-editor-action btn-format-bold" title="Tô đậm (Bold - Ctrl+B)">
+                    ${renderSvgIcon('bold', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-italic" title="In nghiêng (Italic - Ctrl+I)">
+                    ${renderSvgIcon('italic', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-underline" title="Gạch chân (Underline - Ctrl+U)">
+                    ${renderSvgIcon('underline', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-strike" title="Gạch ngang (Strikethrough)">
+                    ${renderSvgIcon('strike', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <button type="button" class="btn-editor-action btn-format-ul" title="Danh sách dấu chấm (Bullet List)">
+                    ${renderSvgIcon('listUl', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-ol" title="Danh sách số (Numbered List)">
+                    ${renderSvgIcon('listOl', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <button type="button" class="btn-editor-action btn-format-align-left" title="Căn trái">
+                    ${renderSvgIcon('alignLeft', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-align-center" title="Căn giữa">
+                    ${renderSvgIcon('alignCenter', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-align-right" title="Căn phải">
+                    ${renderSvgIcon('alignRight', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <button type="button" class="btn-editor-action btn-format-clear" title="Xóa toàn bộ định dạng">
+                    ${renderSvgIcon('removeFormat', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
                   <div class="rich-editor__control dropdown-table-wrap">
-                    <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
+                    <button type="button" class="btn btn-secondary btn-sm btn-editor-action btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
                       ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
                     </button>
                     <div class="rich-editor__popup table-presets-menu" style="display: none;">
@@ -2945,9 +2998,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                       <small>Số dòng chưa tính dòng tiêu đề.</small>
                       <div class="rich-editor__presets-section">
                         <small>Mẫu sư phạm IELTS</small>
-                        <button type="button" class="btn-table-preset" data-preset="itinerary">🚢 Lịch trình chuyến đi (Itinerary)</button>
-                        <button type="button" class="btn-table-preset" data-preset="notes">📝 Ghi chú bài nghe (Note Completion)</button>
-                        <button type="button" class="btn-table-preset" data-preset="vocabulary">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+                        <button type="button" class="btn-table-preset" data-preset="itinerary">Lịch trình chuyến đi (Itinerary)</button>
+                        <button type="button" class="btn-table-preset" data-preset="notes">Ghi chú bài nghe (Note Completion)</button>
+                        <button type="button" class="btn-table-preset" data-preset="vocabulary">Bảng từ vựng 4 cột (Vocabulary)</button>
                       </div>
                     </div>
                   </div>
@@ -3653,8 +3706,66 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="rich-editor rich-html-editor-wrap item-prompt-group" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
               <div class="rich-editor__toolbar rich-editor-toolbar">
                 <div class="rich-editor__toolbar-left toolbar-group">
+                  <!-- Heading Dropdown -->
+                  <div class="rich-editor__control control-heading-select">
+                    <select class="form-select form-select-sm select-format-heading" title="Chọn cấp độ tiêu đề">
+                      <option value="p">Đoạn văn (Normal)</option>
+                      <option value="h2">Tiêu đề lớn (H2)</option>
+                      <option value="h3">Tiêu đề mục (H3)</option>
+                      <option value="h4">Tiêu đề nhỏ (H4)</option>
+                    </select>
+                  </div>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <!-- Inline Formatting Actions -->
+                  <button type="button" class="btn-editor-action btn-format-bold" title="Tô đậm (Bold - Ctrl+B)">
+                    ${renderSvgIcon('bold', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-italic" title="In nghiêng (Italic - Ctrl+I)">
+                    ${renderSvgIcon('italic', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-underline" title="Gạch chân (Underline - Ctrl+U)">
+                    ${renderSvgIcon('underline', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-strike" title="Gạch ngang (Strikethrough)">
+                    ${renderSvgIcon('strike', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <!-- Lists -->
+                  <button type="button" class="btn-editor-action btn-format-ul" title="Danh sách dấu chấm (Bullet List)">
+                    ${renderSvgIcon('listUl', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-ol" title="Danh sách số (Numbered List)">
+                    ${renderSvgIcon('listOl', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <!-- Alignment -->
+                  <button type="button" class="btn-editor-action btn-format-align-left" title="Căn trái">
+                    ${renderSvgIcon('alignLeft', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-align-center" title="Căn giữa">
+                    ${renderSvgIcon('alignCenter', 'icon-inline')}
+                  </button>
+                  <button type="button" class="btn-editor-action btn-format-align-right" title="Căn phải">
+                    ${renderSvgIcon('alignRight', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
+                  <!-- Clear Formatting -->
+                  <button type="button" class="btn-editor-action btn-format-clear" title="Xóa toàn bộ định dạng">
+                    ${renderSvgIcon('removeFormat', 'icon-inline')}
+                  </button>
+
+                  <div class="toolbar-divider" aria-hidden="true"></div>
+
                   <div class="rich-editor__control dropdown-table-wrap">
-                    <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
+                    <button type="button" class="btn btn-secondary btn-sm btn-editor-action btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
                       ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
                     </button>
                     <div class="rich-editor__popup table-presets-menu" style="display: none;">
@@ -3668,9 +3779,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                       <small>Số dòng chưa tính dòng tiêu đề.</small>
                       <div class="rich-editor__presets-section">
                         <small>Mẫu sư phạm IELTS</small>
-                        <button type="button" class="btn-table-preset" data-preset="itinerary">🚢 Lịch trình chuyến đi (Itinerary)</button>
-                        <button type="button" class="btn-table-preset" data-preset="notes">📝 Ghi chú bài nghe (Note Completion)</button>
-                        <button type="button" class="btn-table-preset" data-preset="vocabulary">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+                        <button type="button" class="btn-table-preset" data-preset="itinerary">Lịch trình chuyến đi (Itinerary)</button>
+                        <button type="button" class="btn-table-preset" data-preset="notes">Ghi chú bài nghe (Note Completion)</button>
+                        <button type="button" class="btn-table-preset" data-preset="vocabulary">Bảng từ vựng 4 cột (Vocabulary)</button>
                       </div>
                     </div>
                   </div>
@@ -9437,6 +9548,50 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         if (codeEl && codeEl.addEventListener) {
           codeEl.addEventListener('input', syncToVisual);
         }
+
+        // Heading format dropdown
+        const headingSelect = wrap.querySelector ? wrap.querySelector('.select-format-heading') : null;
+        if (headingSelect && headingSelect.addEventListener) {
+          headingSelect.addEventListener('change', () => {
+            const tag = headingSelect.value;
+            visualEl?.focus?.();
+            if (typeof document !== 'undefined' && document.execCommand) {
+              document.execCommand('formatBlock', false, tag === 'p' ? '<p>' : `<${tag}>`);
+            }
+            syncToCode();
+          });
+        }
+
+        // Formatting action buttons (Bold, Italic, Underline, Strikethrough, Lists, Alignment, Clear)
+        const formatBtnConfigs = [
+          { sel: '.btn-format-bold', cmd: 'bold' },
+          { sel: '.btn-format-italic', cmd: 'italic' },
+          { sel: '.btn-format-underline', cmd: 'underline' },
+          { sel: '.btn-format-strike', cmd: 'strikeThrough' },
+          { sel: '.btn-format-ul', cmd: 'insertUnorderedList' },
+          { sel: '.btn-format-ol', cmd: 'insertOrderedList' },
+          { sel: '.btn-format-align-left', cmd: 'justifyLeft' },
+          { sel: '.btn-format-align-center', cmd: 'justifyCenter' },
+          { sel: '.btn-format-align-right', cmd: 'justifyRight' },
+          { sel: '.btn-format-clear', cmd: 'removeFormat' }
+        ];
+
+        formatBtnConfigs.forEach(({ sel, cmd }) => {
+          const btn = wrap.querySelector ? wrap.querySelector(sel) : null;
+          if (btn && btn.addEventListener) {
+            btn.addEventListener('mousedown', (e) => {
+              e.preventDefault?.(); // Prevent loss of selection
+            });
+            btn.addEventListener('click', (e) => {
+              e.preventDefault?.();
+              visualEl?.focus?.();
+              if (typeof document !== 'undefined' && document.execCommand) {
+                document.execCommand(cmd, false, null);
+              }
+              syncToCode();
+            });
+          }
+        });
 
         if (tableBtn && tableMenu && tableBtn.addEventListener) {
           tableBtn.addEventListener?.('mousedown', saveSelection);
