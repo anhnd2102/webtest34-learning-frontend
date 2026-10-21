@@ -267,6 +267,18 @@
                 <span>lần</span>
                 <button id="self-proctoring-save" class="btn-secondary" type="button" disabled>Lưu</button>
               </div>
+              <div class="exam-switch-panel" id="exam-switch-controls" hidden>
+                <strong>Chuyển sang Tự giám sát</strong>
+                <p id="exam-switch-hint" class="exam-switch-hint"></p>
+                <div class="exam-mode-switch-wrap">
+                  <label for="exam-switch-limit">Cho phép thoát tối đa</label>
+                  <input id="exam-switch-limit" type="number" min="0" step="1" inputmode="numeric" required style="width:5rem" placeholder="N">
+                  <span>lần</span>
+                  <button id="exam-switch-btn" class="btn-secondary" type="button">Chuyển sang Tự giám sát</button>
+                </div>
+                <p class="exam-switch-note">Giữ nguyên link, điểm, lịch sử phiên thi và quyền làm lại. Chế độ mới chỉ áp dụng cho lượt làm bắt đầu sau khi chuyển; học viên đã nộp vẫn cần được cấp làm lại.</p>
+              </div>
+              <p id="exam-switch-message" class="exam-switch-message" role="status" aria-live="polite"></p>
               <button id="exam-room-open" class="btn-secondary btn-exam-room" type="button" hidden>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 8 6 4-6 4Z"/></svg>
                 <span>Mở Phòng thi</span>
