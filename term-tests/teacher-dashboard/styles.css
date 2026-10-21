@@ -4666,6 +4666,38 @@ body:not(.login-page) #auth-panel {
   color: #1e293b;
 }
 
+.cloze-preview-content table,
+.cloze-live-preview-box table {
+  width: 100%;
+  margin: 10px 0;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  background: #ffffff;
+}
+
+.cloze-preview-content th,
+.cloze-preview-content td,
+.cloze-live-preview-box th,
+.cloze-live-preview-box td {
+  min-width: 80px;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.cloze-preview-content th,
+.cloze-live-preview-box th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cloze-preview-content tbody tr:nth-child(even),
+.cloze-live-preview-box tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
 /* Inline Blank Widget Embedded in Sentences / Tables */
 .inline-blank-wrapper {
   display: inline-flex;

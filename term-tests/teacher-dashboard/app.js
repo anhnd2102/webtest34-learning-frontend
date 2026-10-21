@@ -2947,18 +2947,6 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         specificHtml = `
           <div class="template-section template-inline-cloze">
-            <div class="cloze-editor-box">
-              <div class="cloze-toolbar">
-                <span class="cloze-tool-label"><strong>Soạn thảo nội dung chỗ trống (Inline Cloze):</strong></span>
-                <button type="button" class="btn btn-secondary btn-sm btn-insert-blank-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-next-num="${nextBlankNum}" title="Chèn chỗ trống (${nextBlankNum}) __________">
-                  + Chèn chỗ trống (${nextBlankNum}) __________
-                </button>
-              </div>
-              <p class="cloze-help-text" style="font-size: 0.8rem; color: #64748b; margin: 4px 0 8px;">
-                Nhập câu hoặc đoạn văn bản chứa token định dạng <code>(1) __________</code> hoặc <code>{{1}}</code>. Trình thi sẽ tự động nhúng ô nhập trực tiếp vào dòng chữ.
-              </p>
-            </div>
-
             <div class="cloze-live-preview-box" style="margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px;">
               <span class="preview-mini-label" style="font-size: 0.76rem; font-weight: 700; color: #475569; text-transform: uppercase;">Xem trước hiển thị nội tuyến:</span>
               <div class="cloze-preview-content" style="margin-top: 6px; line-height: 1.8;">
@@ -8871,6 +8859,27 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const clean = sanitizeRichContent(visualEl.innerHTML || '');
           codeEl.value = clean;
           markAsDirty();
+
+          // Real-time sync to draftState and live preview
+          const bIdx = wrap.getAttribute ? wrap.getAttribute('data-block-idx') : null;
+          const iIdx = wrap.getAttribute ? wrap.getAttribute('data-item-idx') : null;
+          if (bIdx !== null && iIdx !== null) {
+            const blockIndex = Number(bIdx);
+            const itemIndex = Number(iIdx);
+            const item = draftState.blocks?.[blockIndex]?.items?.[itemIndex];
+            if (item) {
+              item.prompt = clean;
+              const itemCard = (typeof wrap.closest === 'function') ? wrap.closest('.builder-item-card') : (wrap.parentElement || null);
+              const previewEl = itemCard?.querySelector ? itemCard.querySelector('.cloze-preview-content') : null;
+              if (previewEl) {
+                previewEl.innerHTML = renderInlineClozeMarkup(clean, [item], {}, { disabled: true }) || '<em>Chưa có nội dung văn bản chứa chỗ trống...</em>';
+              }
+              const charCountEl = wrap.querySelector ? wrap.querySelector('.prompt-char-count') : null;
+              if (charCountEl) {
+                charCountEl.textContent = `${clean.length} ký tự`;
+              }
+            }
+          }
         };
 
         const syncToVisual = () => {
@@ -8878,6 +8887,22 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const clean = sanitizeRichContent(codeEl.value || '');
           visualEl.innerHTML = clean;
           markAsDirty();
+
+          const bIdx = wrap.getAttribute ? wrap.getAttribute('data-block-idx') : null;
+          const iIdx = wrap.getAttribute ? wrap.getAttribute('data-item-idx') : null;
+          if (bIdx !== null && iIdx !== null) {
+            const blockIndex = Number(bIdx);
+            const itemIndex = Number(iIdx);
+            const item = draftState.blocks?.[blockIndex]?.items?.[itemIndex];
+            if (item) {
+              item.prompt = clean;
+              const itemCard = (typeof wrap.closest === 'function') ? wrap.closest('.builder-item-card') : (wrap.parentElement || null);
+              const previewEl = itemCard?.querySelector ? itemCard.querySelector('.cloze-preview-content') : null;
+              if (previewEl) {
+                previewEl.innerHTML = renderInlineClozeMarkup(clean, [item], {}, { disabled: true }) || '<em>Chưa có nội dung văn bản chứa chỗ trống...</em>';
+              }
+            }
+          }
         };
 
         const insertHtmlAtCursor = (htmlToInsert) => {
