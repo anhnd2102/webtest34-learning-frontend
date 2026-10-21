@@ -174,5 +174,42 @@ test('Test Studio: inline_cloze and reading_matching mount Rich HTML Editor tool
   assert.ok(mockContainer.innerHTML.includes('btn-rich-insert-image'), 'Mounts Insert Image button');
   assert.ok(mockContainer.innerHTML.includes('btn-toggle-html-mode'), 'Mounts Mode Toggle button');
   assert.ok(mockContainer.innerHTML.includes('rich-editor-visual'), 'Mounts visual contenteditable area');
+  assert.ok(mockContainer.innerHTML.includes('table-presets-menu'), 'Mounts Table Presets popup');
+  assert.ok(mockContainer.innerHTML.includes('image-insert-popup'), 'Mounts Image Insert popup');
+  assert.ok(mockContainer.innerHTML.includes('rich-editor__footer'), 'Mounts editor keyboard shortcuts footer');
 });
+
+test('renderRichHtmlEditor provides modern table and image popups and guidance notes from insert_image_table', () => {
+  const container = {
+    innerHTML: '',
+    querySelector: () => ({ style: {}, addEventListener: () => {} }),
+    querySelectorAll: () => []
+  };
+
+  renderRichHtmlEditor(container, {
+    value: '<p>Test content</p>',
+    placeholder: 'Nhập nội dung...'
+  });
+
+  // Table options: 2x2, 3x3, 2x4, 4x5
+  assert.ok(container.innerHTML.includes('2 cột × 2 dòng'), 'Has 2x2 table option');
+  assert.ok(container.innerHTML.includes('3 cột × 3 dòng'), 'Has 3x3 table option');
+  assert.ok(container.innerHTML.includes('2 cột × 4 dòng'), 'Has 2x4 table option');
+  assert.ok(container.innerHTML.includes('4 cột × 5 dòng'), 'Has 4x5 table option');
+
+  // IELTS presets
+  assert.ok(container.innerHTML.includes('data-preset="itinerary"'), 'Has itinerary preset button');
+  assert.ok(container.innerHTML.includes('data-preset="notes"'), 'Has notes preset button');
+  assert.ok(container.innerHTML.includes('data-preset="vocabulary"'), 'Has vocabulary preset button');
+
+  // Image popup with Drive guidance
+  assert.ok(container.innerHTML.includes('input-image-link'), 'Has image link input');
+  assert.ok(container.innerHTML.includes('Ảnh Drive cần chia sẻ'), 'Has Drive sharing guide');
+  assert.ok(container.innerHTML.includes('btn-confirm-insert-image'), 'Has confirm image insert button');
+
+  // Error element and footer
+  assert.ok(container.innerHTML.includes('general-editor-error'), 'Has general editor error banner');
+  assert.ok(container.innerHTML.includes('Enter để xuống dòng'), 'Has footer shortcut guidance');
+});
+
 

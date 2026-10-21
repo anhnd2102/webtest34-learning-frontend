@@ -1208,50 +1208,73 @@ export function renderRichHtmlEditor(container, {
   const sanitized = sanitizeRichContent(value || '');
 
   container.innerHTML = `
-    <div class="rich-html-editor-wrap">
-      <div class="rich-editor-toolbar">
-        <div class="toolbar-group">
-          <!-- Insert Table Dropdown -->
-          <div class="dropdown-table-wrap" style="position: relative; display: inline-block;">
-            <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-table" title="Chèn Bảng dữ liệu">
-              ${renderSvgIcon('table', 'icon-inline')} Chèn Bảng ▾
+    <div class="rich-editor rich-html-editor-wrap">
+      <div class="rich-editor__toolbar rich-editor-toolbar">
+        <div class="rich-editor__toolbar-left toolbar-group">
+          <!-- Table Control & Popup -->
+          <div class="rich-editor__control dropdown-table-wrap">
+            <button type="button" class="btn-editor-action btn-rich-insert-table" title="Chèn Bảng dữ liệu">
+              ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
             </button>
-            <div class="table-presets-menu" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 1000; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 8px; min-width: 230px;">
-              <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; padding: 4px 8px; text-transform: uppercase;">Kích thước lưới</div>
-              <button type="button" class="dropdown-item btn-table-grid" data-rows="2" data-cols="2" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 2 hàng × 2 cột</button>
-              <button type="button" class="dropdown-item btn-table-grid" data-rows="3" data-cols="3" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 3 hàng × 3 cột</button>
-              <button type="button" class="dropdown-item btn-table-grid" data-rows="4" data-cols="2" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 4 hàng × 2 cột</button>
-              <button type="button" class="dropdown-item btn-table-grid" data-rows="5" data-cols="4" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 5 hàng × 4 cột</button>
-              <div style="border-top: 1px dashed #e2e8f0; margin: 6px 0;"></div>
-              <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; padding: 4px 8px; text-transform: uppercase;">Mẫu sư phạm IELTS</div>
-              <button type="button" class="dropdown-item btn-table-preset" data-preset="itinerary" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">🚢 Lịch trình chuyến đi (Itinerary)</button>
-              <button type="button" class="dropdown-item btn-table-preset" data-preset="notes" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">📝 Ghi chú bài nghe (Note Completion)</button>
-              <button type="button" class="dropdown-item btn-table-preset" data-preset="vocabulary" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+            <div class="rich-editor__popup table-presets-menu" style="display: none;">
+              <strong>Tạo bảng nhanh</strong>
+              <div class="rich-editor__table-options">
+                <button type="button" class="btn-table-grid" data-rows="2" data-cols="2">2 cột × 2 dòng</button>
+                <button type="button" class="btn-table-grid" data-rows="3" data-cols="3">3 cột × 3 dòng</button>
+                <button type="button" class="btn-table-grid" data-rows="4" data-cols="2">2 cột × 4 dòng</button>
+                <button type="button" class="btn-table-grid" data-rows="5" data-cols="4">4 cột × 5 dòng</button>
+              </div>
+              <small>Số dòng chưa tính dòng tiêu đề.</small>
+              <div class="rich-editor__presets-section">
+                <small>Mẫu sư phạm IELTS</small>
+                <button type="button" class="btn-table-preset" data-preset="itinerary">🚢 Lịch trình chuyến đi (Itinerary)</button>
+                <button type="button" class="btn-table-preset" data-preset="notes">📝 Ghi chú bài nghe (Note Completion)</button>
+                <button type="button" class="btn-table-preset" data-preset="vocabulary">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+              </div>
             </div>
           </div>
 
-          <!-- Insert Image Button -->
-          <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
-            ${renderSvgIcon('image', 'icon-inline')} Chèn Ảnh
-          </button>
+          <!-- Image Control & Popup -->
+          <div class="rich-editor__control dropdown-image-wrap">
+            <button type="button" class="btn-editor-action btn-rich-insert-image" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
+              ${renderSvgIcon('image', 'icon-inline')} ▧ Chèn ảnh
+            </button>
+            <div class="rich-editor__popup image-insert-popup" style="display: none;">
+              <label>
+                Link ảnh
+                <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
+              </label>
+              <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
+              <div class="rich-editor__error popup-image-error" style="display: none; padding: 6px 10px; font-size: 12px; margin-top: 4px;"></div>
+              <div class="rich-editor__actions">
+                <button type="button" class="btn-confirm-insert-image">Chèn</button>
+              </div>
+            </div>
+          </div>
 
           ${onInsertBlankToken ? `
-            <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-blank" title="Chèn chỗ trống">
+            <button type="button" class="btn-editor-action btn-rich-insert-blank" title="Chèn chỗ trống tại vị trí con trỏ">
               + Chèn chỗ trống
             </button>
           ` : ''}
         </div>
 
-        <div class="toolbar-group toolbar-mode-toggle">
-          <button type="button" class="btn btn-sm btn-ghost btn-toggle-html-mode" title="Chuyển chế độ [Trực quan ⇄ Mã HTML]">
+        <div class="rich-editor__toolbar-right toolbar-group toolbar-mode-toggle">
+          <button type="button" class="btn-editor-action btn-toggle-html-mode" title="Chuyển chế độ [Trực quan ⇄ Mã HTML]">
             &lt;/&gt; Mã HTML
           </button>
         </div>
       </div>
 
-      <div class="rich-editor-content-area" style="position: relative; margin-top: 6px;">
-        <div class="rich-editor-visual" contenteditable="true" spellcheck="false" data-placeholder="${escapeHtml(placeholder)}" style="min-height: 140px; padding: 12px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; outline: none; line-height: 1.6; overflow-y: auto;">${sanitized}</div>
-        <textarea class="rich-editor-code form-control" style="display: none; min-height: 140px; font-family: monospace; font-size: 0.85rem; line-height: 1.5;" rows="6">${escapeHtml(sanitized)}</textarea>
+      <div class="rich-editor__content-area" style="position: relative;">
+        <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-placeholder="${escapeHtml(placeholder)}" role="textbox" aria-label="Nội dung bài" aria-multiline="true">${sanitized}</div>
+        <textarea class="rich-editor__code rich-editor-code form-control" style="display: none;" rows="8">${escapeHtml(sanitized)}</textarea>
+      </div>
+
+      <div class="rich-editor__error general-editor-error" style="display: none;" role="alert"></div>
+
+      <div class="rich-editor__footer">
+        <span>Enter để xuống dòng. Shift+Enter để ngắt dòng mềm. Nhấp vào ô bảng để chỉnh sửa.</span>
       </div>
     </div>
   `;
@@ -1262,24 +1285,47 @@ export function renderRichHtmlEditor(container, {
   const tableBtn = container.querySelector ? container.querySelector('.btn-rich-insert-table') : null;
   const tableMenu = container.querySelector ? container.querySelector('.table-presets-menu') : null;
   const imageBtn = container.querySelector ? container.querySelector('.btn-rich-insert-image') : null;
+  const imagePopup = container.querySelector ? container.querySelector('.image-insert-popup') : null;
+  const imageLinkInput = container.querySelector ? container.querySelector('.input-image-link') : null;
+  const confirmImageBtn = container.querySelector ? container.querySelector('.btn-confirm-insert-image') : null;
+  const imageErrorEl = container.querySelector ? container.querySelector('.popup-image-error') : null;
+  const generalErrorEl = container.querySelector ? container.querySelector('.general-editor-error') : null;
   const blankBtn = container.querySelector ? container.querySelector('.btn-rich-insert-blank') : null;
 
   let savedRange = null;
+
   const saveSelection = () => {
     if (typeof window !== 'undefined' && window.getSelection) {
       const sel = window.getSelection();
-      if (sel && sel.rangeCount > 0) {
-        savedRange = sel.getRangeAt(0);
+      if (!visualEl || !sel?.rangeCount) return;
+      const range = sel.getRangeAt(0);
+      if (visualEl.contains && visualEl.contains(range.commonAncestorContainer)) {
+        savedRange = range.cloneRange();
       }
     }
   };
 
-  const restoreSelection = () => {
-    if (typeof window !== 'undefined' && window.getSelection && savedRange) {
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(savedRange);
+  const closeAllPopups = () => {
+    if (tableMenu && tableMenu.style) tableMenu.style.display = 'none';
+    if (imagePopup && imagePopup.style) {
+      imagePopup.style.display = 'none';
+      if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
     }
+  };
+
+  const showError = (msg) => {
+    if (generalErrorEl) {
+      generalErrorEl.textContent = msg;
+      if (generalErrorEl.style) generalErrorEl.style.display = 'flex';
+      setTimeout(() => {
+        if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
+      }, 5000);
+    }
+  };
+
+  const clearError = () => {
+    if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
+    if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
   };
 
   const syncToCode = () => {
@@ -1300,6 +1346,7 @@ export function renderRichHtmlEditor(container, {
 
   const insertHtmlAtCursor = (htmlToInsert) => {
     if (!htmlToInsert) return;
+
     if (isCodeMode && codeEl) {
       const start = codeEl.selectionStart || codeEl.value.length;
       const end = codeEl.selectionEnd || codeEl.value.length;
@@ -1307,12 +1354,33 @@ export function renderRichHtmlEditor(container, {
       syncToVisual();
       return;
     }
+
     if (visualEl) {
       visualEl.focus?.();
-      restoreSelection();
-      if (typeof document !== 'undefined' && document.execCommand) {
-        const ok = document.execCommand('insertHTML', false, htmlToInsert);
-        if (!ok) visualEl.innerHTML += htmlToInsert;
+      let range = savedRange;
+      if (!range || (visualEl.contains && !visualEl.contains(range.commonAncestorContainer))) {
+        if (typeof document !== 'undefined' && document.createRange) {
+          range = document.createRange();
+          range.selectNodeContents(visualEl);
+          range.collapse(false);
+        }
+      }
+
+      if (range && range.createContextualFragment) {
+        range.deleteContents?.();
+        const fragment = range.createContextualFragment(htmlToInsert);
+        const lastNode = fragment.lastChild;
+        range.insertNode?.(fragment);
+        if (lastNode && range.setStartAfter) {
+          range.setStartAfter(lastNode);
+          range.collapse?.(true);
+        }
+        if (typeof window !== 'undefined' && window.getSelection) {
+          const sel = window.getSelection();
+          sel.removeAllRanges?.();
+          sel.addRange?.(range);
+          savedRange = range.cloneRange ? range.cloneRange() : range;
+        }
       } else {
         visualEl.innerHTML += htmlToInsert;
       }
@@ -1323,8 +1391,9 @@ export function renderRichHtmlEditor(container, {
   let isCodeMode = false;
 
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
+    toggleBtn.addEventListener?.('click', () => {
       isCodeMode = !isCodeMode;
+      closeAllPopups();
       if (isCodeMode) {
         syncToCode();
         if (visualEl && visualEl.style) visualEl.style.display = 'none';
@@ -1347,33 +1416,53 @@ export function renderRichHtmlEditor(container, {
     visualEl.addEventListener('input', syncToCode);
     visualEl.addEventListener('blur', syncToCode);
 
-    // Block base64 and data URLs on paste
-    visualEl.addEventListener('paste', (e) => {
-      const clipboardData = e.clipboardData;
-      if (clipboardData) {
-        const items = clipboardData.items;
-        if (items) {
-          for (let i = 0; i < items.length; i++) {
-            if (items[i].type && items[i].type.indexOf('image') !== -1) {
-              e.preventDefault?.();
-              alert('Hệ thống không hỗ trợ dán file ảnh trực tiếp base64. Vui lòng tải ảnh lên Google Drive và dùng nút [Chèn Ảnh] để bảo toàn tốc độ trang!');
-              return;
-            }
-          }
-        }
-        const pastedHtml = clipboardData.getData?.('text/html');
-        if (pastedHtml && /data:image\/[a-z]+;base64/i.test(pastedHtml)) {
-          e.preventDefault?.();
-          const safeHtml = pastedHtml.replace(/<img[^>]+src=["']data:image\/[^"']+["'][^>]*>/gi, '');
-          if (typeof document !== 'undefined' && document.execCommand) {
-            document.execCommand('insertHTML', false, sanitizeRichContent(safeHtml));
+    // Advanced paste handler with DOMParser
+    visualEl.addEventListener('paste', (event) => {
+      const cd = event.clipboardData;
+      if (!cd) return;
+
+      const html = cd.getData?.('text/html');
+      if (html && typeof DOMParser !== 'undefined') {
+        const parsed = new DOMParser().parseFromString(html, 'text/html');
+        const embeddedImages = Array.from(parsed.body.querySelectorAll('img')).filter(
+          img => !/^https:/i.test(img.getAttribute('src') || '')
+        );
+        const hasImageFile = Array.from(cd.files || []).some(
+          file => file.type && file.type.startsWith('image/')
+        );
+
+        if (embeddedImages.length || hasImageFile) {
+          event.preventDefault?.();
+          saveSelection();
+          embeddedImages.forEach(img => img.remove());
+          if (html) {
+            insertHtmlAtCursor(parsed.body.innerHTML);
           } else {
-            visualEl.innerHTML += sanitizeRichContent(safeHtml);
+            insertHtmlAtCursor(escapeHtml(cd.getData?.('text/plain') || ''));
           }
-          syncToCode();
-          alert('Đã tự động loại bỏ ảnh base64 khi dán. Vui lòng sử dụng Google Drive để lưu trữ ảnh!');
+          showError('Hãy tải ảnh lên Google Drive rồi dùng nút “Chèn ảnh”.');
           return;
         }
+      }
+
+      if (cd.items) {
+        for (let i = 0; i < cd.items.length; i++) {
+          if (cd.items[i].type && cd.items[i].type.indexOf('image') !== -1) {
+            event.preventDefault?.();
+            showError('Hệ thống không hỗ trợ dán ảnh trực tiếp base64. Vui lòng dùng Google Drive.');
+            return;
+          }
+        }
+      }
+    });
+
+    visualEl.addEventListener('drop', (event) => {
+      const hasImage = Array.from(event.dataTransfer?.files || []).some(
+        file => file.type && file.type.startsWith('image/')
+      );
+      if (hasImage) {
+        event.preventDefault?.();
+        showError('Hãy dùng nút “Chèn ảnh” để nhập link ảnh.');
       }
     });
   }
@@ -1384,62 +1473,104 @@ export function renderRichHtmlEditor(container, {
   }
 
   if (tableBtn && tableMenu) {
-    tableBtn.addEventListener('click', (e) => {
+    tableBtn.addEventListener?.('mousedown', saveSelection);
+    tableBtn.addEventListener?.('click', (e) => {
       e.stopPropagation?.();
       saveSelection();
       const isVisible = tableMenu.style?.display !== 'none';
-      if (tableMenu.style) tableMenu.style.display = isVisible ? 'none' : 'block';
+      closeAllPopups();
+      if (tableMenu.style) tableMenu.style.display = isVisible ? 'none' : 'grid';
     });
-
-    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
-      document.addEventListener('click', () => {
-        if (tableMenu.style) tableMenu.style.display = 'none';
-      });
-    }
 
     const gridBtns = tableMenu.querySelectorAll?.('.btn-table-grid') || [];
     gridBtns.forEach?.(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener?.('click', (e) => {
         e.stopPropagation?.();
         const r = Number(btn.getAttribute('data-rows')) || 2;
         const c = Number(btn.getAttribute('data-cols')) || 2;
-        if (tableMenu.style) tableMenu.style.display = 'none';
-        const tblHtml = generateTableHtml(r, c);
+        closeAllPopups();
+        const tblHtml = generateTableHtml(r, c) + '<p><br></p>';
         insertHtmlAtCursor(tblHtml);
       });
     });
 
     const presetBtns = tableMenu.querySelectorAll?.('.btn-table-preset') || [];
     presetBtns.forEach?.(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener?.('click', (e) => {
         e.stopPropagation?.();
         const preset = btn.getAttribute('data-preset');
-        if (tableMenu.style) tableMenu.style.display = 'none';
-        const tblHtml = generateTableHtml(null, null, preset);
+        closeAllPopups();
+        const tblHtml = generateTableHtml(null, null, preset) + '<p><br></p>';
         insertHtmlAtCursor(tblHtml);
       });
     });
   }
 
-  if (imageBtn) {
-    imageBtn.addEventListener('click', () => {
+  if (imageBtn && imagePopup) {
+    imageBtn.addEventListener?.('mousedown', saveSelection);
+    imageBtn.addEventListener?.('click', (e) => {
+      e.stopPropagation?.();
       saveSelection();
-      const url = prompt('Nhập đường dẫn ảnh (URL HTTPS hoặc Link chia sẻ Google Drive):');
-      if (!url) return;
-      const converted = convertGoogleDriveImageUrl(url.trim());
-      if (!validateImageUrl(converted)) {
-        alert('URL ảnh không hợp lệ! Vui lòng dùng URL https:// an toàn hoặc Google Drive chia sẻ công khai.');
+      const isVisible = imagePopup.style?.display !== 'none';
+      closeAllPopups();
+      if (imagePopup.style) {
+        imagePopup.style.display = isVisible ? 'none' : 'grid';
+        if (!isVisible && imageLinkInput) {
+          imageLinkInput.value = '';
+          clearError();
+          setTimeout(() => imageLinkInput.focus?.(), 50);
+        }
+      }
+    });
+
+    const executeInsertImage = () => {
+      const urlVal = imageLinkInput?.value?.trim() || '';
+      if (!urlVal) {
+        if (imageErrorEl) {
+          imageErrorEl.textContent = 'Vui lòng nhập đường dẫn ảnh.';
+          if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+        }
         return;
       }
-      const imgTag = `<img src="${escapeHtml(converted)}" alt="Hình ảnh" style="max-width: 100%; border-radius: 6px; margin: 8px 0;" />`;
+      const converted = convertGoogleDriveImageUrl(urlVal);
+      if (!validateImageUrl(converted)) {
+        if (imageErrorEl) {
+          imageErrorEl.textContent = 'Link không hợp lệ. Hãy dùng link HTTPS hoặc Google Drive.';
+          if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+        }
+        return;
+      }
+      const imgTag = `<img src="${escapeHtml(converted)}" alt="" />`;
       insertHtmlAtCursor(imgTag);
+      closeAllPopups();
+    };
+
+    confirmImageBtn?.addEventListener?.('click', (e) => {
+      e.stopPropagation?.();
+      executeInsertImage();
+    });
+
+    imageLinkInput?.addEventListener?.('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault?.();
+        executeInsertImage();
+      }
     });
   }
 
   if (blankBtn && typeof onInsertBlankToken === 'function') {
-    blankBtn.addEventListener('click', () => {
+    blankBtn.addEventListener?.('mousedown', saveSelection);
+    blankBtn.addEventListener?.('click', () => {
       saveSelection();
       onInsertBlankToken(insertHtmlAtCursor);
+    });
+  }
+
+  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+    document.addEventListener('click', (e) => {
+      if (!container.contains?.(e.target)) {
+        closeAllPopups();
+      }
     });
   }
 
@@ -2518,41 +2649,67 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               ${detectedParagraphs.length ? `<span class="badge badge-success">Phát hiện ${detectedParagraphs.length} đoạn văn: [${detectedParagraphs.join(', ')}]</span>` : ''}
             </div>
 
-            <div class="form-group passage-input-group rich-html-editor-wrap" style="margin-top: 8px;" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-              <div class="passage-label-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <label class="form-label" style="margin: 0;"><strong>Văn bản bài đọc (Reading Passage):</strong></label>
-                <div class="rich-toolbar-actions-bar" style="display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+            <div class="rich-editor rich-html-editor-wrap" style="margin-top: 8px;" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+              <div class="rich-editor__toolbar rich-editor-toolbar">
+                <div class="rich-editor__toolbar-left toolbar-group">
                   <button type="button" class="btn btn-secondary btn-sm btn-extract-paragraphs" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động nhận diện các đoạn văn Paragraph A, B, C...">
                     ${renderSvgIcon('search', 'icon-inline')} Quét nhãn đoạn văn
                   </button>
-                  <div class="dropdown-table-wrap" style="position: relative; display: inline-block;">
+                  <div class="rich-editor__control dropdown-table-wrap">
                     <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
-                      ${renderSvgIcon('table', 'icon-inline')} Chèn Bảng ▾
+                      ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
                     </button>
-                    <div class="table-presets-menu" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 1000; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 8px; min-width: 230px;">
-                      <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; padding: 4px 8px; text-transform: uppercase;">Kích thước lưới</div>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="2" data-cols="2" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 2 hàng × 2 cột</button>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="3" data-cols="3" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 3 hàng × 3 cột</button>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="4" data-cols="2" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 4 hàng × 2 cột</button>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="5" data-cols="4" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 5 hàng × 4 cột</button>
-                      <div style="border-top: 1px dashed #e2e8f0; margin: 6px 0;"></div>
-                      <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; padding: 4px 8px; text-transform: uppercase;">Mẫu sư phạm IELTS</div>
-                      <button type="button" class="dropdown-item btn-table-preset" data-preset="itinerary" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">🚢 Lịch trình chuyến đi (Itinerary)</button>
-                      <button type="button" class="dropdown-item btn-table-preset" data-preset="notes" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">📝 Ghi chú bài nghe (Note Completion)</button>
-                      <button type="button" class="dropdown-item btn-table-preset" data-preset="vocabulary" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+                    <div class="rich-editor__popup table-presets-menu" style="display: none;">
+                      <strong>Tạo bảng nhanh</strong>
+                      <div class="rich-editor__table-options">
+                        <button type="button" class="btn-table-grid" data-rows="2" data-cols="2">2 cột × 2 dòng</button>
+                        <button type="button" class="btn-table-grid" data-rows="3" data-cols="3">3 cột × 3 dòng</button>
+                        <button type="button" class="btn-table-grid" data-rows="4" data-cols="2">2 cột × 4 dòng</button>
+                        <button type="button" class="btn-table-grid" data-rows="5" data-cols="4">4 cột × 5 dòng</button>
+                      </div>
+                      <small>Số dòng chưa tính dòng tiêu đề.</small>
+                      <div class="rich-editor__presets-section">
+                        <small>Mẫu sư phạm IELTS</small>
+                        <button type="button" class="btn-table-preset" data-preset="itinerary">🚢 Lịch trình chuyến đi (Itinerary)</button>
+                        <button type="button" class="btn-table-preset" data-preset="notes">📝 Ghi chú bài nghe (Note Completion)</button>
+                        <button type="button" class="btn-table-preset" data-preset="vocabulary">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+                      </div>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
-                    ${renderSvgIcon('image', 'icon-inline')} Chèn Ảnh
-                  </button>
+                  <div class="rich-editor__control dropdown-image-wrap">
+                    <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
+                      ${renderSvgIcon('image', 'icon-inline')} ▧ Chèn ảnh
+                    </button>
+                    <div class="rich-editor__popup image-insert-popup" style="display: none;">
+                      <label>
+                        Link ảnh
+                        <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
+                      </label>
+                      <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
+                      <div class="rich-editor__error popup-image-error" style="display: none; padding: 6px 10px; font-size: 12px; margin-top: 4px;"></div>
+                      <div class="rich-editor__actions">
+                        <button type="button" class="btn-confirm-insert-image">Chèn</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rich-editor__toolbar-right toolbar-group">
                   <button type="button" class="btn btn-sm btn-ghost-subtle btn-toggle-html-mode" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chuyển chế độ [Trực quan ⇄ Mã HTML]">
                     &lt;/&gt; Mã HTML
                   </button>
                 </div>
               </div>
-              <div class="rich-editor-content-area" style="position: relative; margin-top: 6px;">
-                <div class="rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="min-height: 180px; padding: 12px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; outline: none; line-height: 1.6; overflow-y: auto;">${sanitizeRichContent(passageText)}</div>
-                <textarea class="form-control input-reading-passage rich-editor-code" rows="8" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="display: none; font-family: monospace; font-size: 0.85rem;" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
+
+              <div class="rich-editor__content-area" style="position: relative;">
+                <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">${sanitizeRichContent(passageText)}</div>
+                <textarea class="rich-editor__code rich-editor-code form-control input-reading-passage" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="8" style="display: none;" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
+              </div>
+
+              <div class="rich-editor__error general-editor-error" style="display: none;" role="alert"></div>
+
+              <div class="rich-editor__footer">
+                Enter để xuống dòng. Shift+Enter để ngắt dòng mềm. Nhấp vào ô bảng để chỉnh sửa.
               </div>
             </div>
 
@@ -3230,42 +3387,70 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
           <div class="builder-item-body">
             ${!hasRedundantPrompt ? (isInlineCloze ? `
-            <div class="form-group item-prompt-group rich-html-editor-wrap" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-              <div class="item-prompt-header-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <label class="form-label" style="margin: 0;">Đề bài / Nội dung chỗ trống (Inline Cloze):</label>
-                <div class="rich-toolbar-actions-bar" style="display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                  <div class="dropdown-table-wrap" style="position: relative; display: inline-block;">
+            <div class="rich-editor rich-html-editor-wrap item-prompt-group" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+              <div class="rich-editor__toolbar rich-editor-toolbar">
+                <div class="rich-editor__toolbar-left toolbar-group">
+                  <div class="rich-editor__control dropdown-table-wrap">
                     <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
-                      ${renderSvgIcon('table', 'icon-inline')} Chèn Bảng ▾
+                      ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
                     </button>
-                    <div class="table-presets-menu" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 1000; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 8px; min-width: 230px;">
-                      <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; padding: 4px 8px; text-transform: uppercase;">Kích thước lưới</div>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="2" data-cols="2" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 2 hàng × 2 cột</button>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="3" data-cols="3" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 3 hàng × 3 cột</button>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="4" data-cols="2" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 4 hàng × 2 cột</button>
-                      <button type="button" class="dropdown-item btn-table-grid" data-rows="5" data-cols="4" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">⊞ Bảng 5 hàng × 4 cột</button>
-                      <div style="border-top: 1px dashed #e2e8f0; margin: 6px 0;"></div>
-                      <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; padding: 4px 8px; text-transform: uppercase;">Mẫu sư phạm IELTS</div>
-                      <button type="button" class="dropdown-item btn-table-preset" data-preset="itinerary" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">🚢 Lịch trình chuyến đi (Itinerary)</button>
-                      <button type="button" class="dropdown-item btn-table-preset" data-preset="notes" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">📝 Ghi chú bài nghe (Note Completion)</button>
-                      <button type="button" class="dropdown-item btn-table-preset" data-preset="vocabulary" style="width: 100%; text-align: left; padding: 6px 8px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 0.84rem;">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+                    <div class="rich-editor__popup table-presets-menu" style="display: none;">
+                      <strong>Tạo bảng nhanh</strong>
+                      <div class="rich-editor__table-options">
+                        <button type="button" class="btn-table-grid" data-rows="2" data-cols="2">2 cột × 2 dòng</button>
+                        <button type="button" class="btn-table-grid" data-rows="3" data-cols="3">3 cột × 3 dòng</button>
+                        <button type="button" class="btn-table-grid" data-rows="4" data-cols="2">2 cột × 4 dòng</button>
+                        <button type="button" class="btn-table-grid" data-rows="5" data-cols="4">4 cột × 5 dòng</button>
+                      </div>
+                      <small>Số dòng chưa tính dòng tiêu đề.</small>
+                      <div class="rich-editor__presets-section">
+                        <small>Mẫu sư phạm IELTS</small>
+                        <button type="button" class="btn-table-preset" data-preset="itinerary">🚢 Lịch trình chuyến đi (Itinerary)</button>
+                        <button type="button" class="btn-table-preset" data-preset="notes">📝 Ghi chú bài nghe (Note Completion)</button>
+                        <button type="button" class="btn-table-preset" data-preset="vocabulary">📖 Bảng từ vựng 4 cột (Vocabulary)</button>
+                      </div>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
-                    ${renderSvgIcon('image', 'icon-inline')} Chèn Ảnh
-                  </button>
+
+                  <div class="rich-editor__control dropdown-image-wrap">
+                    <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
+                      ${renderSvgIcon('image', 'icon-inline')} ▧ Chèn ảnh
+                    </button>
+                    <div class="rich-editor__popup image-insert-popup" style="display: none;">
+                      <label>
+                        Link ảnh
+                        <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
+                      </label>
+                      <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
+                      <div class="rich-editor__error popup-image-error" style="display: none; padding: 6px 10px; font-size: 12px; margin-top: 4px;"></div>
+                      <div class="rich-editor__actions">
+                        <button type="button" class="btn-confirm-insert-image">Chèn</button>
+                      </div>
+                    </div>
+                  </div>
+
                   <button type="button" class="btn btn-secondary btn-sm btn-insert-blank-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-next-num="${nextBlankNum}" title="Chèn chỗ trống (${nextBlankNum}) __________">
                     + Chèn chỗ trống (${nextBlankNum}) __________
                   </button>
+                </div>
+
+                <div class="rich-editor__toolbar-right toolbar-group">
+                  <span class="prompt-char-count">${(item.prompt || '').length} ký tự</span>
                   <button type="button" class="btn btn-sm btn-ghost-subtle btn-toggle-html-mode" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chuyển chế độ [Trực quan ⇄ Mã HTML]">
                     &lt;/&gt; Mã HTML
                   </button>
                 </div>
-                <span class="prompt-char-count">${(item.prompt || '').length} ký tự</span>
               </div>
-              <div class="rich-editor-content-area" style="position: relative; margin-top: 6px;">
-                <div class="rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="min-height: 120px; padding: 12px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; outline: none; line-height: 1.6; overflow-y: auto;">${sanitizeRichContent(item.prompt || '')}</div>
-                <textarea class="form-control item-prompt-input rich-editor-code" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" style="display: none; font-family: monospace; font-size: 0.85rem;" placeholder="Nhập đề bài hoặc đoạn văn chứa token (1) __________...">${escapeHtml(item.prompt || '')}</textarea>
+
+              <div class="rich-editor__content-area" style="position: relative;">
+                <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">${sanitizeRichContent(item.prompt || '')}</div>
+                <textarea class="rich-editor__code rich-editor-code form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" style="display: none;" placeholder="Nhập đề bài hoặc đoạn văn chứa token (1) __________...">${escapeHtml(item.prompt || '')}</textarea>
+              </div>
+
+              <div class="rich-editor__error general-editor-error" style="display: none;" role="alert"></div>
+
+              <div class="rich-editor__footer">
+                Enter để xuống dòng. Shift+Enter để ngắt dòng mềm. Nhấp vào ô bảng để chỉnh sửa.
               </div>
             </div>
             ` : `
@@ -8640,35 +8825,59 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const tableBtn = wrap.querySelector ? wrap.querySelector('.btn-rich-insert-table') : null;
         const tableMenu = wrap.querySelector ? wrap.querySelector('.table-presets-menu') : null;
         const imageBtn = wrap.querySelector ? wrap.querySelector('.btn-rich-insert-image') : null;
+        const imagePopup = wrap.querySelector ? wrap.querySelector('.image-insert-popup') : null;
+        const imageLinkInput = wrap.querySelector ? wrap.querySelector('.input-image-link') : null;
+        const confirmImageBtn = wrap.querySelector ? wrap.querySelector('.btn-confirm-insert-image') : null;
+        const imageErrorEl = wrap.querySelector ? wrap.querySelector('.popup-image-error') : null;
+        const generalErrorEl = wrap.querySelector ? wrap.querySelector('.general-editor-error') : null;
 
         let savedRange = null;
         const saveSelection = () => {
           if (typeof window !== 'undefined' && window.getSelection) {
             const sel = window.getSelection();
-            if (sel && sel.rangeCount > 0) {
-              savedRange = sel.getRangeAt(0);
+            if (!visualEl || !sel?.rangeCount) return;
+            const range = sel.getRangeAt(0);
+            if (visualEl.contains && visualEl.contains(range.commonAncestorContainer)) {
+              savedRange = range.cloneRange();
             }
           }
         };
 
-        const restoreSelection = () => {
-          if (typeof window !== 'undefined' && window.getSelection && savedRange) {
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(savedRange);
+        const closeAllPopups = () => {
+          if (tableMenu && tableMenu.style) tableMenu.style.display = 'none';
+          if (imagePopup && imagePopup.style) {
+            imagePopup.style.display = 'none';
+            if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
           }
+        };
+
+        const showError = (msg) => {
+          if (generalErrorEl) {
+            generalErrorEl.textContent = msg;
+            if (generalErrorEl.style) generalErrorEl.style.display = 'flex';
+            setTimeout(() => {
+              if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
+            }, 5000);
+          }
+        };
+
+        const clearError = () => {
+          if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
+          if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
         };
 
         const syncToCode = () => {
           if (!visualEl || !codeEl) return;
           const clean = sanitizeRichContent(visualEl.innerHTML || '');
           codeEl.value = clean;
+          markAsDirty();
         };
 
         const syncToVisual = () => {
           if (!visualEl || !codeEl) return;
           const clean = sanitizeRichContent(codeEl.value || '');
           visualEl.innerHTML = clean;
+          markAsDirty();
         };
 
         const insertHtmlAtCursor = (htmlToInsert) => {
@@ -8683,10 +8892,30 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           }
           if (visualEl) {
             visualEl.focus?.();
-            restoreSelection();
-            if (typeof document !== 'undefined' && document.execCommand) {
-              const ok = document.execCommand('insertHTML', false, htmlToInsert);
-              if (!ok) visualEl.innerHTML += htmlToInsert;
+            let range = savedRange;
+            if (!range || (visualEl.contains && !visualEl.contains(range.commonAncestorContainer))) {
+              if (typeof document !== 'undefined' && document.createRange) {
+                range = document.createRange();
+                range.selectNodeContents(visualEl);
+                range.collapse(false);
+              }
+            }
+
+            if (range && range.createContextualFragment) {
+              range.deleteContents?.();
+              const fragment = range.createContextualFragment(htmlToInsert);
+              const lastNode = fragment.lastChild;
+              range.insertNode?.(fragment);
+              if (lastNode && range.setStartAfter) {
+                range.setStartAfter(lastNode);
+                range.collapse?.(true);
+              }
+              if (typeof window !== 'undefined' && window.getSelection) {
+                const sel = window.getSelection();
+                sel.removeAllRanges?.();
+                sel.addRange?.(range);
+                savedRange = range.cloneRange ? range.cloneRange() : range;
+              }
             } else {
               visualEl.innerHTML += htmlToInsert;
             }
@@ -8696,6 +8925,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         if (toggleBtn && visualEl && codeEl && toggleBtn.addEventListener) {
           toggleBtn.addEventListener('click', () => {
+            closeAllPopups();
             const isCurrentlyVisual = visualEl.style && visualEl.style.display !== 'none';
             if (isCurrentlyVisual) {
               syncToCode();
@@ -8719,33 +8949,53 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           visualEl.addEventListener('input', syncToCode);
           visualEl.addEventListener('blur', syncToCode);
 
-          // Block base64 on paste
-          visualEl.addEventListener('paste', (e) => {
-            const cd = e.clipboardData;
-            if (cd) {
-              const items = cd.items;
-              if (items) {
-                for (let i = 0; i < items.length; i++) {
-                  if (items[i].type && items[i].type.indexOf('image') !== -1) {
-                    e.preventDefault?.();
-                    alert('Hệ thống không hỗ trợ dán ảnh trực tiếp base64. Vui lòng tải ảnh lên Google Drive và dùng nút [Chèn Ảnh] với link chia sẻ!');
-                    return;
-                  }
-                }
-              }
-              const pastedHtml = cd.getData?.('text/html');
-              if (pastedHtml && /data:image\/[a-z]+;base64/i.test(pastedHtml)) {
-                e.preventDefault?.();
-                const safeHtml = pastedHtml.replace(/<img[^>]+src=["']data:image\/[^"']+["'][^>]*>/gi, '');
-                if (typeof document !== 'undefined' && document.execCommand) {
-                  document.execCommand('insertHTML', false, sanitizeRichContent(safeHtml));
+          // Advanced paste handler with DOMParser
+          visualEl.addEventListener('paste', (event) => {
+            const cd = event.clipboardData;
+            if (!cd) return;
+
+            const html = cd.getData?.('text/html');
+            if (html && typeof DOMParser !== 'undefined') {
+              const parsed = new DOMParser().parseFromString(html, 'text/html');
+              const embeddedImages = Array.from(parsed.body.querySelectorAll('img')).filter(
+                img => !/^https:/i.test(img.getAttribute('src') || '')
+              );
+              const hasImageFile = Array.from(cd.files || []).some(
+                file => file.type && file.type.startsWith('image/')
+              );
+
+              if (embeddedImages.length || hasImageFile) {
+                event.preventDefault?.();
+                saveSelection();
+                embeddedImages.forEach(img => img.remove());
+                if (html) {
+                  insertHtmlAtCursor(parsed.body.innerHTML);
                 } else {
-                  visualEl.innerHTML += sanitizeRichContent(safeHtml);
+                  insertHtmlAtCursor(escapeHtml(cd.getData?.('text/plain') || ''));
                 }
-                syncToCode();
-                alert('Đã tự động loại bỏ ảnh base64 khi dán. Vui lòng đưa ảnh lên Google Drive để tối ưu dung lượng!');
+                showError('Hãy tải ảnh lên Google Drive rồi dùng nút “Chèn ảnh”.');
                 return;
               }
+            }
+
+            if (cd.items) {
+              for (let i = 0; i < cd.items.length; i++) {
+                if (cd.items[i].type && cd.items[i].type.indexOf('image') !== -1) {
+                  event.preventDefault?.();
+                  showError('Hệ thống không hỗ trợ dán ảnh trực tiếp base64. Vui lòng dùng Google Drive.');
+                  return;
+                }
+              }
+            }
+          });
+
+          visualEl.addEventListener('drop', (event) => {
+            const hasImage = Array.from(event.dataTransfer?.files || []).some(
+              file => file.type && file.type.startsWith('image/')
+            );
+            if (hasImage) {
+              event.preventDefault?.();
+              showError('Hãy dùng nút “Chèn ảnh” để nhập link ảnh.');
             }
           });
         }
@@ -8755,11 +9005,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
 
         if (tableBtn && tableMenu && tableBtn.addEventListener) {
+          tableBtn.addEventListener?.('mousedown', saveSelection);
           tableBtn.addEventListener('click', (e) => {
             e.stopPropagation?.();
             saveSelection();
             const isVisible = tableMenu.style?.display !== 'none';
-            if (tableMenu.style) tableMenu.style.display = isVisible ? 'none' : 'block';
+            closeAllPopups();
+            if (tableMenu.style) tableMenu.style.display = isVisible ? 'none' : 'grid';
           });
 
           const gridBtns = tableMenu.querySelectorAll?.('.btn-table-grid') || [];
@@ -8769,8 +9021,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 e.stopPropagation?.();
                 const r = Number(btn.getAttribute('data-rows')) || 2;
                 const c = Number(btn.getAttribute('data-cols')) || 2;
-                if (tableMenu.style) tableMenu.style.display = 'none';
-                const tblHtml = generateTableHtml(r, c);
+                closeAllPopups();
+                const tblHtml = generateTableHtml(r, c) + '<p><br></p>';
                 insertHtmlAtCursor(tblHtml);
               });
             });
@@ -8782,36 +9034,77 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               btn.addEventListener?.('click', (e) => {
                 e.stopPropagation?.();
                 const preset = btn.getAttribute('data-preset');
-                if (tableMenu.style) tableMenu.style.display = 'none';
-                const tblHtml = generateTableHtml(null, null, preset);
+                closeAllPopups();
+                const tblHtml = generateTableHtml(null, null, preset) + '<p><br></p>';
                 insertHtmlAtCursor(tblHtml);
               });
             });
           }
         }
 
-        if (imageBtn && imageBtn.addEventListener) {
-          imageBtn.addEventListener('click', () => {
+        if (imageBtn && imagePopup) {
+          imageBtn.addEventListener?.('mousedown', saveSelection);
+          imageBtn.addEventListener('click', (e) => {
+            e.stopPropagation?.();
             saveSelection();
-            const url = prompt('Nhập đường dẫn ảnh (URL HTTPS hoặc Link chia sẻ Google Drive):');
-            if (!url) return;
-            const converted = convertGoogleDriveImageUrl(url.trim());
-            if (!validateImageUrl(converted)) {
-              alert('URL ảnh không hợp lệ! Vui lòng dùng URL https:// an toàn hoặc link chia sẻ Google Drive.');
+            const isVisible = imagePopup.style?.display !== 'none';
+            closeAllPopups();
+            if (imagePopup.style) {
+              imagePopup.style.display = isVisible ? 'none' : 'grid';
+              if (!isVisible && imageLinkInput) {
+                imageLinkInput.value = '';
+                clearError();
+                setTimeout(() => imageLinkInput.focus?.(), 50);
+              }
+            }
+          });
+
+          const executeInsertImage = () => {
+            const urlVal = imageLinkInput?.value?.trim() || '';
+            if (!urlVal) {
+              if (imageErrorEl) {
+                imageErrorEl.textContent = 'Vui lòng nhập đường dẫn ảnh.';
+                if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+              }
               return;
             }
-            const imgTag = `<img src="${escapeHtml(converted)}" alt="Hình ảnh" style="max-width: 100%; border-radius: 6px; margin: 8px 0;" />`;
+            const converted = convertGoogleDriveImageUrl(urlVal);
+            if (!validateImageUrl(converted)) {
+              if (imageErrorEl) {
+                imageErrorEl.textContent = 'Link không hợp lệ. Hãy dùng link HTTPS hoặc Google Drive.';
+                if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+              }
+              return;
+            }
+            const imgTag = `<img src="${escapeHtml(converted)}" alt="" />`;
             insertHtmlAtCursor(imgTag);
+            closeAllPopups();
+          };
+
+          confirmImageBtn?.addEventListener?.('click', (e) => {
+            e.stopPropagation?.();
+            executeInsertImage();
+          });
+
+          imageLinkInput?.addEventListener?.('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault?.();
+              executeInsertImage();
+            }
           });
         }
       });
     }
 
     if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
-      document.addEventListener('click', () => {
-        const openMenus = container.querySelectorAll ? container.querySelectorAll('.table-presets-menu') : [];
+      document.addEventListener('click', (e) => {
+        const openMenus = container.querySelectorAll ? container.querySelectorAll('.table-presets-menu, .image-insert-popup') : [];
         if (openMenus.forEach) {
-          openMenus.forEach(m => { if (m.style) m.style.display = 'none'; });
+          openMenus.forEach(m => {
+            if (!e.target || !m.contains?.(e.target)) {
+              if (m.style) m.style.display = 'none';
+            }
+          });
         }
       });
     }
