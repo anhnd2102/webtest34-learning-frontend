@@ -1093,6 +1093,40 @@ export function sanitizeRichContent(html) {
 export function renderInlineClozeMarkup(text, items = [], responses = {}, options = {}) {
   if (!text || typeof text !== 'string') return '';
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+
+  const containsHtml = /<[a-z][\s\S]*>/i.test(text);
+
+  if (containsHtml) {
+    const cleanHtml = sanitizeRichContent(text);
+    let html = '';
+    let last = 0;
+
+    for (const match of cleanHtml.matchAll(pattern)) {
+      const num = Number(match[1] || match[2]);
+      let item = Array.isArray(items) ? (items.find(it => it.position === num) || items[num - 1]) : null;
+      if (!item && Array.isArray(items) && items.length === 1 && items[0]) {
+        item = items[0];
+      }
+      html += cleanHtml.slice(last, match.index);
+
+      const itemId = item?.itemVersionId 
+        ? (item.position === num ? item.itemVersionId : `${item.itemVersionId}__b${num}`)
+        : `blank-${num}`;
+      const userVal = escapeHtml(responses[itemId] || (responses[item?.itemVersionId] && item?.position === num ? responses[item?.itemVersionId] : ''));
+      const disabledAttr = options.disabled ? 'disabled' : '';
+
+      html += `<span class="inline-blank-wrapper" data-item-id="${escapeHtml(itemId)}">` +
+        `<span class="inline-blank-number">(${num})</span>` +
+        `<input type="text" class="form-control inline-fill-input" data-item-id="${escapeHtml(itemId)}" data-position="${num}" placeholder="${num}" value="${userVal}" ${disabledAttr} />` +
+        `</span>`;
+
+      last = match.index + match[0].length;
+    }
+
+    html += cleanHtml.slice(last);
+    return html;
+  }
+
   let html = '';
   let last = 0;
 
@@ -2398,11 +2432,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           <div class="template-section template-pictorial-vocab">
             <div class="pictorial-meta-grid">
               <div class="form-group pictorial-image-group">
-                <label class="form-label"><strong>Ảnh minh họa (Image URL / Path):</strong></label>
+                <label class="form-label"><strong>Ảnh minh họa (Image URL / Path / Google Drive Link):</strong></label>
                 <div class="fitb-input-group">
-                  <input type="text" class="form-control input-pictorial-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(imgSrc)}" placeholder="assets/test 1/vocabulary/image1.png hoặc https://..." />
+                  <input type="text" class="form-control input-pictorial-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(imgSrc)}" placeholder="assets/test 1/vocabulary/image1.png hoặc https://drive.google.com/..." />
+                  <button type="button" class="btn btn-secondary btn-sm btn-preview-drive-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xem trước ảnh hoặc chuyển đổi link Google Drive">
+                    ${renderSvgIcon('eye', 'icon-inline')} Xem trước ảnh
+                  </button>
                 </div>
-                ${imgSrc ? `<div class="pictorial-thumb-preview"><img src="${escapeHtml(imgSrc)}" alt="Image Preview" onerror="this.style.display='none'" /></div>` : ''}
+                <div class="pictorial-preview-wrap pictorial-thumb-preview" style="margin-top: 8px;">
+                  <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview" style="${imgSrc ? 'max-height: 180px; max-width: 100%; border-radius: 6px; border: 1px solid #e2e8f0; object-fit: contain;' : 'display: none;'}" onerror="this.style.display='none'; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='inline-block';" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='none'; this.style.display='inline-block';" />
+                  <span class="pictorial-preview-error badge badge-warning" style="display: none; margin-top: 4px;">⚠ Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
+                </div>
               </div>
 
               <div class="form-group pictorial-target-group">
@@ -3487,8 +3527,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               const imgInput = iCard.querySelector('.input-pictorial-image');
               if (imgInput) {
                 const imgVal = imgInput.value.trim();
-                item.image = imgVal || null;
-                item.stimulusImageUrl = imgVal || null;
+                const converted = convertGoogleDriveImageUrl(imgVal);
+                item.image = converted || null;
+                item.stimulusImageUrl = converted || null;
               }
               const letterInput = iCard.querySelector('.input-pictorial-letter-hint');
               if (letterInput) item.letterHint = letterInput.value.trim() || null;
@@ -5192,6 +5233,76 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         currentKey.accepted = expandSentenceVariants([targetVal]);
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
+      });
+    });
+
+    // Pictorial Drive image conversion & preview listeners
+    const pictorialImageInputs = container.querySelectorAll('.input-pictorial-image');
+    pictorialImageInputs.forEach(input => {
+      const updatePreview = () => {
+        const raw = input.value ? input.value.trim() : '';
+        const converted = convertGoogleDriveImageUrl(raw);
+        if (converted !== raw) {
+          input.value = converted;
+        }
+        const bIdx = Number(input.getAttribute('data-block-idx'));
+        const iIdx = Number(input.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (item) {
+          item.image = converted || null;
+          item.stimulusImageUrl = converted || null;
+        }
+        const card = input.closest ? (input.closest('.builder-item-card') || input.parentElement?.parentElement) : null;
+        const previewImg = card?.querySelector ? card.querySelector('.pictorial-preview-img') : null;
+        const previewErr = card?.querySelector ? card.querySelector('.pictorial-preview-error') : null;
+        if (previewImg) {
+          if (converted) {
+            previewImg.src = converted;
+            previewImg.style.display = 'inline-block';
+            if (previewErr) previewErr.style.display = 'none';
+          } else {
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            if (previewErr) previewErr.style.display = 'none';
+          }
+        }
+      };
+      input.addEventListener('input', updatePreview);
+      input.addEventListener('change', updatePreview);
+      input.addEventListener('paste', () => {
+        setTimeout(updatePreview, 20);
+      });
+    });
+
+    const previewDriveBtns = container.querySelectorAll('.btn-preview-drive-image');
+    previewDriveBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest ? (btn.closest('.builder-item-card') || btn.parentElement?.parentElement) : null;
+        const input = card?.querySelector ? card.querySelector('.input-pictorial-image') : null;
+        if (input) {
+          const raw = input.value ? input.value.trim() : '';
+          const converted = convertGoogleDriveImageUrl(raw);
+          if (converted !== raw) input.value = converted;
+          const bIdx = Number(btn.getAttribute('data-block-idx'));
+          const iIdx = Number(btn.getAttribute('data-item-idx'));
+          const item = draftState.blocks[bIdx]?.items?.[iIdx];
+          if (item) {
+            item.image = converted || null;
+            item.stimulusImageUrl = converted || null;
+          }
+          const previewImg = card?.querySelector ? card.querySelector('.pictorial-preview-img') : null;
+          const previewErr = card?.querySelector ? card.querySelector('.pictorial-preview-error') : null;
+          if (previewImg) {
+            if (converted) {
+              previewImg.src = converted;
+              previewImg.style.display = 'inline-block';
+              if (previewErr) previewErr.style.display = 'none';
+            } else {
+              previewImg.src = '';
+              previewImg.style.display = 'none';
+            }
+          }
+        }
       });
     });
 
