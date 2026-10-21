@@ -2,7 +2,7 @@ import { parseSseChunk } from './exam-room-sse.js';
 import {
   portalTestsPath, portalLinkPath, portalSyncPreviewPath, portalSyncPath, portalSyncStatusPath,
   portalSyncErrorView, previewRowView, selectableRefs, syncRequestBody, syncConfirmMessage,
-  syncResultView, retryRefs, linkedPortalTest, syncSummaryText
+  syncResultView, retryRefs, linkedPortalTest, syncSummaryText, scaleWarningText, selectAllState, shouldReloadPreviewAfterSyncError
 } from './portal-sync-view.js';
 
 export function defaultApiBase() {
@@ -1953,7 +1953,6 @@ async function startDashboard() {
     portalEl('portal-sync-btn').disabled = !writable;
     portalEl('portal-sync-btn').title = writable ? '' : 'Đang ở chế độ chỉ xem trước.';
     portalEl('portal-retry-btn').hidden = !retryRefs([...portal.sync.values()]).length;
-    portalEl('portal-select-all').checked = true;
     updatePortalSyncButton();
   }
 
@@ -1964,6 +1963,22 @@ async function startDashboard() {
     const btn = portalEl('portal-sync-btn');
     btn.textContent = count ? `Đồng bộ điểm Portal (${count})` : 'Đồng bộ điểm Portal';
     if (portal.preview?.mode === 'write') btn.disabled = !count || portal.busy;
+    const all = portalEl('portal-select-all');
+    const state = selectAllState(document.querySelectorAll('.portal-pick:not(:disabled)').length, count);
+    Object.assign(all, state);
+  }
+
+  // Khóa nút thao tác trong lúc một thao tác Portal đang chạy.
+  function applyPortalBusy() {
+    for (const id of ['portal-unlink-btn', 'portal-preview-btn', 'portal-retry-btn', 'portal-reload-btn']) portalEl(id).disabled = portal.busy;
+    portalEl('portal-link-btn').disabled = portal.busy || !portal.tests.some(t => !t.linkedAssignmentId);
+    updatePortalSyncButton();
+  }
+
+  function resetPortal() {
+    Object.assign(portal, { key: '', tests: [], link: null, preview: null, sync: new Map(), lastSync: null, pending: null });
+    const section = portalEl('portal-sync');
+    if (section) section.hidden = true;
   }
 
   function renderPortalLastSync() {
@@ -1992,10 +2007,15 @@ async function startDashboard() {
     }
     renderPortalLastSync();
     renderPortalPreview();
+    const warning = portalEl('portal-scale-warning');
+    warning.textContent = scaleWarningText(portal.preview?.scaleWarning);
+    warning.hidden = !warning.textContent;
+    applyPortalBusy();
   }
 
-  async function loadPortalLastSync() {
+  async function loadPortalLastSync(key) {
     const { sync } = await request(portalSyncStatusPath(state.classId, state.assignmentId));
+    if (portal.key !== key) return;
     portal.lastSync = null;
     if (!sync) return;
     // Backend không trả họ tên trong vết; tên chỉ lấy từ bản xem trước đang hiển thị.
@@ -2007,15 +2027,19 @@ async function startDashboard() {
 
   // keepResults: giữ kết quả từng dòng của lần ghi vừa xong khi tải lại bản xem trước (vân tay mới).
   async function loadPortalPreview({ keepResults = false, message = '' } = {}) {
+    const key = portal.key;
     portalMessage('Đang xem trước điểm Portal…');
     if (!keepResults) portal.sync = new Map();
     portal.preview = null;
     try {
       const { preview } = await request(portalSyncPreviewPath(state.classId, state.assignmentId));
+      if (portal.key !== key) return;
       portal.preview = preview;
-      await loadPortalLastSync();
+      await loadPortalLastSync(key);
+      if (portal.key !== key) return;
       portalMessage(message || (preview.mode === 'write' ? '' : 'Chế độ chỉ xem trước: chưa thể ghi điểm sang Portal.'));
     } catch (error) {
+      if (portal.key !== key) return;
       portalMessage(portalSyncErrorView(error).message);
     }
     renderPortalPanel();
@@ -2030,6 +2054,7 @@ async function startDashboard() {
     portalEl('portal-sync-link').hidden = true;
     portalEl('portal-sync-linked').hidden = true;
     portalEl('portal-preview').hidden = true;
+    portalEl('portal-reload-btn').hidden = true;
     portalEl('portal-last-sync').textContent = '';
     section.hidden = false;
     portalMessage('Đang tải bài test Portal…');
@@ -2046,9 +2071,11 @@ async function startDashboard() {
       if (portal.key !== key) return;
       const view = portalSyncErrorView(error);
       portalMessage(view.message);
-      // Chế độ tắt: giữ phần báo rõ, ẩn mọi nút điều khiển.
       renderPortalPanel();
       portalEl('portal-sync-link').hidden = true;
+      portalEl('portal-sync-linked').hidden = true;
+      // Chỉ chế độ tắt mới ẩn hết điều khiển; lỗi khác cho tải lại và chọn lại đợt sẽ tự tải lại.
+      if (!view.disabled) { portal.key = ''; portalEl('portal-reload-btn').hidden = false; }
     }
   }
 
@@ -2058,21 +2085,34 @@ async function startDashboard() {
   }
 
   async function runPortalAction(action) {
+    if (portal.busy) return;
     portal.busy = true;
-    try { await action(); } catch (error) { portalMessage(portalSyncErrorView(error).message); } finally { portal.busy = false; updatePortalSyncButton(); }
+    applyPortalBusy();
+    try { await action(); } catch (error) { portalMessage(portalSyncErrorView(error).message); } finally { portal.busy = false; applyPortalBusy(); }
   }
 
   async function doPortalSync(refs) {
     const preview = portal.preview;
+    const key = portal.key;
     portalMessage('Đang ghi điểm sang Portal và đọc lại để xác nhận…');
-    const { sync } = await request(portalSyncPath(state.classId, state.assignmentId), {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(syncRequestBody(preview.fingerprint, refs))
-    });
+    let sync;
+    try {
+      ({ sync } = await request(portalSyncPath(state.classId, state.assignmentId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(syncRequestBody(preview.fingerprint, refs))
+      }));
+    } catch (error) {
+      if (!shouldReloadPreviewAfterSyncError(error)) throw error;
+      // Không giữ vân tay cũ: tải lại bản xem trước và kết quả lần đồng bộ gần nhất.
+      const suffix = error.code === 'PORTAL_PREVIEW_STALE' ? '' : ' Kết quả ghi chưa rõ, hãy kiểm tra lại bên dưới.';
+      await loadPortalPreview({ message: `${portalSyncErrorView(error).message}${suffix}` });
+      return;
+    }
+    if (portal.key !== key) return;
     portal.sync = new Map(sync.rows.map(r => [r.studentRef, r]));
     const text = syncSummaryText(sync.summary);
     // Lần ghi vừa xong làm vân tay cũ hết hiệu lực: tải lại bản xem trước, giữ kết quả từng dòng.
-    await loadPortalPreview({ keepResults: true, message: sync.stopped ? `Đã dừng do lỗi ${sync.stopped}. ${text}` : text });
+    await loadPortalPreview({ keepResults: true, message: sync.stopped ? `Đã dừng: ${portalSyncErrorView({ code: sync.stopped }).message} ${text}` : text });
   }
 
   function askPortalConfirm(refs) {
@@ -2092,11 +2132,13 @@ async function startDashboard() {
     await loadPortalPanel();
   }));
   portalEl('portal-unlink-btn')?.addEventListener('click', () => runPortalAction(async () => {
+    if (!window.confirm('Gỡ gắn bài test Portal khỏi đợt giao bài này?')) return;
     await request(portalLinkPath(state.classId, state.assignmentId), { method: 'DELETE' });
     portal.key = '';
     await loadPortalPanel();
   }));
   portalEl('portal-preview-btn')?.addEventListener('click', () => runPortalAction(loadPortalPreview));
+  portalEl('portal-reload-btn')?.addEventListener('click', () => runPortalAction(loadPortalPanel));
   portalEl('portal-select-all')?.addEventListener('change', event => {
     document.querySelectorAll('.portal-pick:not(:disabled)').forEach(i => { i.checked = event.target.checked; });
     updatePortalSyncButton();
@@ -3886,6 +3928,7 @@ async function startDashboard() {
 
   function handleLogout() {
     stopExamRoomEvents();
+    resetPortal();
     if (roleCapabilitiesPopover) roleCapabilitiesPopover.hidden = true;
     document.body.classList.add('login-page');
     sessionToken = '';

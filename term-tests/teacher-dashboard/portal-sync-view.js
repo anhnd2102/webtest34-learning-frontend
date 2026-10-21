@@ -14,6 +14,7 @@ const ERROR_TEXT = {
   PORTAL_SYNC_WRITE_DISABLED: 'Đồng bộ điểm Portal đang ở chế độ chỉ xem trước, chưa được ghi điểm.',
   PORTAL_PREVIEW_STALE: 'Dữ liệu đã thay đổi từ lúc xem trước. Hãy xem trước lại.',
   PORTAL_AUTH_FAILED: 'Đăng nhập Portal thất bại. Hãy báo quản trị hệ thống.',
+  PORTAL_LINK_CHANGED: 'Liên kết bài test Portal đã bị người khác thay đổi. Hãy xem trước lại.',
   PORTAL_NOT_CONFIGURED: 'Chưa cấu hình kết nối Portal.'
 };
 
@@ -34,6 +35,8 @@ const BLOCK_REASON = {
   portal_test_missing: 'Bài test Portal không còn trong lớp', score_out_of_range: 'Điểm ngoài thang',
   retake_pending: 'Đang chờ làm lại', student_not_in_preview: 'Không có trong bản xem trước'
 };
+// Lý do chặn nghĩa là không có ô điểm Portal để so sánh.
+const NO_PORTAL_CELL = new Set(['not_in_portal_class', 'portal_test_missing', 'link_missing']);
 const num = value => (value === null || value === undefined ? null : Number(value));
 
 export function previewRowView(row) {
@@ -48,7 +51,7 @@ export function previewRowView(row) {
     selectable: row.status === 'ready',
     reasonText: row.reason ? (BLOCK_REASON[row.reason] || row.reason) : '',
     webtestText: hasScore ? `${earned}/${num(row.webtestMaximum)}${converted === null ? '' : ` → ${converted}`}` : '—',
-    portalText: row.status === 'blocked' && !hasScore ? '—' : (num(row.portalScore) === null ? 'Trống' : String(num(row.portalScore)))
+    portalText: (row.status === 'blocked' && !hasScore) || NO_PORTAL_CELL.has(row.reason) ? '—' : (num(row.portalScore) === null ? 'Trống' : String(num(row.portalScore)))
   };
 }
 
@@ -73,8 +76,10 @@ const SYNC_ERROR = {
   PORTAL_UNAVAILABLE: 'Portal không phản hồi',
   SYNC_IN_PROGRESS: 'Đang có lần đồng bộ khác chạy',
   SYNC_STALE: 'Lần đồng bộ trước bị treo',
-  SYNC_INTERNAL_ERROR: 'Lỗi nội bộ'
+  SYNC_INTERNAL_ERROR: 'Lỗi nội bộ khi đồng bộ, hãy thử lại sau'
 };
+
+const RETRYABLE = new Set(['failed', 'not_attempted']);
 
 // `confirmed` chỉ đúng khi backend báo `synced` (đã đọc lại Portal thấy đúng điểm).
 export function syncResultView(row) {
@@ -84,18 +89,29 @@ export function syncResultView(row) {
   return {
     studentRef: row.studentRef, statusLabel, tone,
     confirmed: row.status === 'synced',
-    retryable: row.status === 'failed',
+    retryable: RETRYABLE.has(row.status),
     errorText: errorText || reason
   };
 }
 
-export const retryRefs = rows => rows.filter(r => r.status === 'failed' || r.status === 'not_attempted').map(r => r.studentRef);
+export const retryRefs = rows => rows.filter(r => RETRYABLE.has(r.status)).map(r => r.studentRef);
+
+export const selectAllState = (selectable, picked) => ({
+  checked: selectable > 0 && picked === selectable,
+  indeterminate: picked > 0 && picked < selectable,
+  disabled: selectable === 0
+});
+
+// Vân tay cũ hoặc không nhận được phản hồi (mất mạng, hết thời gian): kết quả ghi không rõ, phải xem trước lại.
+export const shouldReloadPreviewAfterSyncError = error => error?.code === 'PORTAL_PREVIEW_STALE' || error?.status === undefined;
+
+export const scaleWarningText = w => (w ? `Thang điểm Portal đã đổi từ ${w.linkedMaxScore} thành ${w.currentMaxScore} kể từ lúc gắn bài test; điểm vẫn được quy đổi theo thang cũ (${w.linkedMaxScore}). Hãy gỡ gắn và gắn lại nếu cần dùng thang mới.` : '');
 
 export const linkedPortalTest = (tests, assignmentId) => (tests || []).find(t => t.linkedAssignmentId === assignmentId) || null;
 
 export function syncSummaryText(summary = {}) {
   const parts = [`Đã đồng bộ ${summary.synced || 0}`];
-  for (const [key, label] of [['skipped', 'Bỏ qua'], ['mismatch', 'Điểm lệch'], ['failed', 'Lỗi'], ['blocked', 'Bị chặn'], ['not_attempted', 'Chưa thử']]) {
+  for (const [key, label] of [['skipped', 'Bỏ qua'], ['mismatch', 'Điểm lệch'], ['failed', 'Lỗi'], ['blocked', 'Bị chặn'], ['not_attempted', 'Chưa thử'], ['pending', 'Đang chờ'], ['processing', 'Đang xử lý'], ['unresolved', 'Chưa xác định']]) {
     if (summary[key]) parts.push(`${label} ${summary[key]}`);
   }
   return parts.join(' · ');

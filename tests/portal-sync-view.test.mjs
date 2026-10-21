@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   portalTestsPath, portalLinkPath, portalSyncPreviewPath, portalSyncPath, portalSyncStatusPath,
   portalSyncErrorView, previewRowView, selectableRefs, syncRequestBody, syncConfirmMessage,
-  syncResultView, retryRefs, linkedPortalTest, syncSummaryText
+  syncResultView, retryRefs, linkedPortalTest, syncSummaryText, selectAllState, scaleWarningText, shouldReloadPreviewAfterSyncError
 } from '../term-tests/teacher-dashboard/portal-sync-view.js';
 
 test('đường dẫn API Portal theo hợp đồng backend', () => {
@@ -76,4 +76,37 @@ test('tìm bài test Portal đang gắn với đợt giao bài', () => {
 test('tóm tắt kết quả đồng bộ không báo thành công khi chưa có dòng synced', () => {
   assert.equal(syncSummaryText({ failed: 1 }), 'Đã đồng bộ 0 · Lỗi 1');
   assert.equal(syncSummaryText({ synced: 2, skipped: 1, mismatch: 1 }), 'Đã đồng bộ 2 · Bỏ qua 1 · Điểm lệch 1');
+});
+
+test('dòng bị chặn không có ô Portal hiện "—", không phải "Trống"', () => {
+  for (const reason of ['not_in_portal_class', 'portal_test_missing', 'link_missing']) {
+    assert.equal(previewRowView({ studentRef: 'a', status: 'blocked', reason, webtestEarned: 5, webtestMaximum: 10, convertedScore: 5 }).portalText, '—', reason);
+  }
+  assert.equal(previewRowView({ studentRef: 'a', status: 'ready', webtestEarned: 5, webtestMaximum: 10 }).portalText, 'Trống');
+});
+
+test('retryable và retryRefs cùng một tập trạng thái; tóm tắt đếm dòng đang chờ', () => {
+  for (const status of ['failed', 'not_attempted']) assert.equal(syncResultView({ status }).retryable, true, status);
+  for (const status of ['synced', 'pending', 'processing', 'blocked']) assert.equal(syncResultView({ status }).retryable, false, status);
+  assert.equal(syncSummaryText({ synced: 1, pending: 2, processing: 1, unresolved: 3 }), 'Đã đồng bộ 1 · Đang chờ 2 · Đang xử lý 1 · Chưa xác định 3');
+});
+
+test('trạng thái checkbox chọn tất cả', () => {
+  assert.deepEqual(selectAllState(0, 0), { checked: false, indeterminate: false, disabled: true });
+  assert.deepEqual(selectAllState(3, 3), { checked: true, indeterminate: false, disabled: false });
+  assert.deepEqual(selectAllState(3, 1), { checked: false, indeterminate: true, disabled: false });
+  assert.deepEqual(selectAllState(3, 0), { checked: false, indeterminate: false, disabled: false });
+});
+
+test('lỗi POST đồng bộ cần tải lại bản xem trước: vân tay cũ hoặc mất kết nối', () => {
+  assert.equal(shouldReloadPreviewAfterSyncError({ code: 'PORTAL_PREVIEW_STALE', status: 409 }), true);
+  assert.equal(shouldReloadPreviewAfterSyncError(new TypeError('Failed to fetch')), true);
+  assert.equal(shouldReloadPreviewAfterSyncError({ code: 'PORTAL_SYNC_WRITE_DISABLED', status: 403 }), false);
+});
+
+test('cảnh báo đổi thang và thông báo dừng do liên kết đổi', () => {
+  assert.equal(scaleWarningText(null), '');
+  assert.match(scaleWarningText({ linkedMaxScore: 10, currentMaxScore: 100 }), /10.*100/);
+  assert.match(portalSyncErrorView({ code: 'PORTAL_LINK_CHANGED' }).message, /thay đổi/);
+  assert.match(syncResultView({ status: 'failed', errorCode: 'SYNC_INTERNAL_ERROR' }).errorText, /nội bộ/);
 });

@@ -27,7 +27,7 @@ async function startStaticServer() {
 }
 
 function fakeApi({ mode }) {
-  const api = { mode, linked: false, syncBodies: [], linkBodies: [], failB: true, syncDone: false, batches: 0 };
+  const api = { mode, linked: false, syncBodies: [], linkBodies: [], failB: true, syncDone: false, batches: 0, testsFail: false, syncStale: false, syncDelay: 0, previewCalls: 0 };
   const rows = () => [
     { studentRef: ref(1), name: 'HV Một', status: api.syncDone ? 'matched' : 'ready', webtestEarned: 17, webtestMaximum: 20, convertedScore: 8.5, portalScore: api.syncDone ? 8.5 : null },
     { studentRef: ref(2), name: 'HV Hai', status: api.b2synced ? 'matched' : 'ready', webtestEarned: 10, webtestMaximum: 20, convertedScore: 5, portalScore: api.b2synced ? 5 : null },
@@ -53,6 +53,7 @@ function fakeApi({ mode }) {
     if (!path.includes('portal')) return reply(200, {});
     if (api.mode === 'off') return err(503, 'PORTAL_SYNC_DISABLED', 'Đồng bộ điểm Portal đang tắt.');
     if (path.endsWith('/portal-tests')) {
+      if (api.testsFail) return err(500, 'INTERNAL', 'Lỗi máy chủ tạm thời');
       return reply(200, { ok: true, portalTests: [
         { portalClassTestId: 7, portalCourseTestId: 70, name: 'Test 1 Portal', maxScore: 10, linkedAssignmentId: api.linked ? assignmentId : null },
         { portalClassTestId: 8, portalCourseTestId: 80, name: 'Test 2 Portal', maxScore: 10, linkedAssignmentId: 'other' }
@@ -60,7 +61,8 @@ function fakeApi({ mode }) {
     }
     if (path.endsWith('/portal-link') && request.method() === 'POST') { api.linkBodies.push(request.postDataJSON()); api.linked = true; return reply(201, { ok: true, portalLink: {} }); }
     if (path.endsWith('/portal-link') && request.method() === 'DELETE') { api.linked = false; return reply(200, { ok: true, unlinked: true }); }
-    if (path.endsWith('/portal-sync/preview')) return reply(200, { ok: true, preview: { assignmentId, mode: api.mode, rows: rows(), summary: {}, fingerprint: FP } });
+    if (path.endsWith('/portal-sync/preview')) api.previewCalls += 1;
+    if (path.endsWith('/portal-sync/preview')) return reply(200, { ok: true, preview: { assignmentId, mode: api.mode, scaleWarning: api.scaleWarning || null, rows: rows(), summary: {}, fingerprint: FP } });
     if (path.endsWith('/portal-sync/status')) {
       return reply(200, { ok: true, sync: api.batches ? { batchId: 'b', actorEmail: teacher.email, startedAt: '2026-10-21T04:05:00.000Z', rows: [] } : null });
     }
@@ -68,6 +70,8 @@ function fakeApi({ mode }) {
       if (api.mode !== 'write') return err(403, 'PORTAL_SYNC_WRITE_DISABLED', 'x');
       const body = request.postDataJSON();
       api.syncBodies.push(body);
+      if (api.syncDelay) await new Promise(resolve => setTimeout(resolve, api.syncDelay));
+      if (api.syncStale) { api.syncStale = false; return err(409, 'PORTAL_PREVIEW_STALE', 'x'); }
       api.batches += 1;
       api.syncDone = true;
       const failNow = api.failB;
@@ -86,11 +90,12 @@ function fakeApi({ mode }) {
 
 const press = (page, selector) => page.locator(selector).click();
 
-async function open(t, mode) {
+async function open(t, mode, setup) {
   const server = await startStaticServer();
   const browser = await chromium.launch({ ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {}), headless: true });
   t.after(async () => { await browser.close(); server.stop(); });
   const api = fakeApi({ mode });
+  setup?.(api);
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -175,8 +180,69 @@ test('gắn, xem trước, đồng bộ, lỗi đọc lại, thử lại, gỡ g
   assert.deepEqual(api.syncBodies[1], { fingerprint: FP, studentRefs: [ref(2)], confirm: true });
   await expect(rows.nth(1)).toContainText('Đã đồng bộ');
 
+  page.once('dialog', dialog => dialog.dismiss());
+  await page.locator('#portal-unlink-btn').click();
+  await expect(page.locator('#portal-unlink-btn')).toBeVisible();
+  page.once('dialog', dialog => dialog.accept());
   await page.locator('#portal-unlink-btn').click();
   await expect(page.locator('#portal-link-btn')).toBeVisible();
   await expect(page.locator('#portal-preview')).toBeHidden();
   assert.deepEqual(errors, []);
+});
+
+test('cảnh báo đổi thang điểm hiện gần bản xem trước', async t => {
+  const { page } = await open(t, 'write', a => { a.scaleWarning = { linkedMaxScore: 10, currentMaxScore: 100 }; a.linked = true; });
+  await expect(page.locator('#portal-scale-warning')).toContainText('thang cũ');
+});
+
+test('select-all phản ánh lựa chọn từng dòng', async t => {
+  const { page } = await open(t, 'write');
+  await page.locator('#portal-test-select').selectOption('7');
+  await page.locator('#portal-link-btn').click();
+  const all = page.locator('#portal-select-all');
+  await expect(all).toBeChecked();
+  await page.locator('.portal-pick').nth(1).uncheck();
+  await expect(all).not.toBeChecked();
+  assert.equal(await all.evaluate(el => el.indeterminate), true);
+  await page.locator('.portal-pick').nth(0).uncheck();
+  assert.equal(await all.evaluate(el => el.indeterminate), false);
+});
+
+test('POST đồng bộ báo vân tay cũ: tải lại bản xem trước, nút không bị kẹt', async t => {
+  const { page, api } = await open(t, 'write');
+  await page.locator('#portal-test-select').selectOption('7');
+  await page.locator('#portal-link-btn').click();
+  await expect(page.locator('#portal-preview-rows tr')).toHaveCount(5);
+  api.syncStale = true;
+  const before = api.previewCalls;
+  await press(page, '#portal-sync-btn');
+  await page.locator('#portal-sync-confirm-btn').click();
+  await expect(page.locator('#portal-sync-message')).toContainText('Hãy xem trước lại');
+  assert.ok(api.previewCalls > before);
+  await expect(page.locator('#portal-sync-btn')).toBeEnabled();
+});
+
+test('portal-tests lỗi tạm thời: có nút tải lại và phục hồi được', async t => {
+  const { page, api } = await open(t, 'write', a => { a.testsFail = true; });
+  await expect(page.locator('#portal-reload-btn')).toBeVisible();
+  api.testsFail = false;
+  await page.locator('#portal-reload-btn').click();
+  await expect(page.locator('#portal-reload-btn')).toBeHidden();
+  await expect(page.locator('#portal-link-btn')).toBeVisible();
+});
+
+test('đang đồng bộ: nút bị khóa, bấm đôi chỉ gửi một POST', async t => {
+  const { page, api } = await open(t, 'write');
+  await page.locator('#portal-test-select').selectOption('7');
+  await page.locator('#portal-link-btn').click();
+  await expect(page.locator('#portal-preview-rows tr')).toHaveCount(5);
+  api.syncDelay = 600;
+  await press(page, '#portal-sync-btn');
+  await page.locator('#portal-sync-confirm-btn').click();
+  await expect(page.locator('#portal-preview-btn')).toBeDisabled();
+  await expect(page.locator('#portal-unlink-btn')).toBeDisabled();
+  await expect(page.locator('#portal-sync-btn')).toBeDisabled();
+  await expect(page.locator('#portal-sync-message')).toContainText('Đã đồng bộ');
+  assert.equal(api.syncBodies.length, 1);
+  await expect(page.locator('#portal-preview-btn')).toBeEnabled();
 });

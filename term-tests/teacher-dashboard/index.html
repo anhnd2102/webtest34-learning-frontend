@@ -484,7 +484,8 @@
       <section id="portal-sync" class="portal-sync" hidden aria-labelledby="portal-sync-title">
         <h3 id="portal-sync-title">Đồng bộ điểm Portal</h3>
         <p id="portal-sync-message" class="meta-info" role="status" aria-live="polite"></p>
-        <div id="portal-sync-link" class="portal-sync-row" hidden>
+        <button id="portal-reload-btn" type="button" class="btn-secondary" hidden>Tải lại</button>
+        <div id="portal-sync-link"class="portal-sync-row" hidden>
           <label>
             <span>Bài test Portal</span>
             <select id="portal-test-select"></select>
@@ -496,6 +497,7 @@
           <button id="portal-unlink-btn" type="button" class="btn-secondary">Gỡ gắn</button>
           <button id="portal-preview-btn" type="button" class="btn-secondary">Xem trước</button>
         </div>
+        <p id="portal-scale-warning" class="meta-info" role="alert" hidden></p>
         <p id="portal-last-sync" class="meta-info"></p>
         <div id="portal-preview" hidden>
           <div class="results-scroll">
