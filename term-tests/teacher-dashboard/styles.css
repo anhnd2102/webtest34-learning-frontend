@@ -2297,6 +2297,42 @@ body:not(.login-page) #auth-panel {
   border-color: #bbf7d0;
 }
 
+.exam-switch-panel {
+  flex: 1 1 100%;
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px dashed #94a3b8;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.exam-switch-hint,
+.exam-switch-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.exam-switch-message {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 0.86rem;
+  color: #1e293b;
+}
+
+.exam-switch-message:empty {
+  display: none;
+}
+
+.exam-switch-message[data-level="error"] {
+  color: #b91c1c;
+}
+
+.exam-switch-message[data-level="success"] {
+  color: #15803d;
+}
+
 .btn-exam-room {
   display: inline-flex;
   align-items: center;

@@ -406,6 +406,63 @@ export function selfProctoringRequestBody(enabled, rawLimit) {
   return { exitLimit: Number(text) };
 }
 
+// Chuyển Exam Mode đã kết thúc → Tự giám sát: một request duy nhất, N bắt buộc nhập, không có giá trị mặc định.
+export function examSwitchRequestBody(rawLimit) {
+  const text = String(rawLimit ?? '').trim();
+  if (!/^\d+$/.test(text)) throw new Error('Giới hạn thoát phải là số nguyên ≥ 0.');
+  return { enabled: false, switchTo: 'self-proctoring', exitLimit: Number(text) };
+}
+
+export function formatExamDeadline(iso, locale = 'vi-VN', timeZone = 'Asia/Ho_Chi_Minh') {
+  const date = new Date(iso);
+  if (!iso || Number.isNaN(date.getTime())) return 'chưa xác định';
+  const text = new Intl.DateTimeFormat(locale, {
+    hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric', timeZone
+  }).format(date);
+  return `${text} (giờ Việt Nam, UTC+7)`;
+}
+
+// Khối chuyển chế độ chỉ dựa vào phiên thi do server trả về. Không so với Date.now() và không suy hạn 150 phút:
+// việc cho chuyển hay không do server quyết định khi bấm; ở đây chỉ giải thích deadline cho giáo viên.
+export function examSwitchView(assignment, { serverNow = null } = {}) {
+  const session = assignment?.examSession;
+  if (!assignment?.examMode || !session || !['running', 'ended'].includes(session.status)) return { visible: false };
+  const deadline = formatExamDeadline(session.deadlineAt);
+  const deadlineMs = Date.parse(session.deadlineAt);
+  const serverNowMs = Date.parse(serverNow);
+  let hint;
+  if (session.status === 'ended') hint = 'Phiên thi đã kết thúc. Có thể chuyển sang Tự giám sát.';
+  else if (!Number.isFinite(deadlineMs)) hint = 'Chưa xác định được hạn nộp của phiên thi; máy chủ sẽ từ chối chuyển cho đến khi có dữ liệu hợp lệ.';
+  else if (Number.isFinite(serverNowMs) && serverNowMs >= deadlineMs) hint = `Phiên thi đã quá hạn nộp (${deadline}) theo đồng hồ máy chủ. Bấm chuyển để máy chủ chốt các bài còn dở và đổi chế độ.`;
+  else hint = `Phiên thi đang diễn ra, hạn nộp ${deadline}. Chỉ chuyển được sau thời điểm này; máy chủ sẽ kiểm tra lại khi bạn bấm.`;
+  return { visible: true, status: session.status, deadline, hint };
+}
+
+export function examSwitchErrorView(error) {
+  const details = error?.details || {};
+  switch (error?.code) {
+    case 'EXAM_SESSION_STILL_RUNNING':
+      return { text: `Phiên thi chưa kết thúc. Hạn nộp: ${formatExamDeadline(details.deadlineAt)}. Hãy chuyển sau thời điểm này.`, retryable: false };
+    case 'EXAM_SETTLEMENT_PENDING':
+      return { text: 'Hệ thống chưa chốt xong bài của phiên thi cũ nên chưa đổi chế độ. Chưa có gì bị thay đổi, hãy bấm Thử lại sau ít phút.', retryable: true };
+    case 'INVALID_EXAM_DEADLINE':
+    case 'INVALID_EXAM_SESSION':
+      return { text: 'Không xác định được hạn nộp của phiên thi nên chưa thể chuyển. Hãy báo quản trị viên kiểm tra dữ liệu phiên thi.', retryable: false };
+    case 'EXAM_SESSION_NOT_STARTED':
+      return { text: 'Phiên thi chưa bắt đầu nên chưa thể chuyển sang Tự giám sát.', retryable: false };
+    case 'SELF_PROCTORING_LOCKED':
+      return { text: 'Bài đã chuyển sang Tự giám sát với giới hạn thoát khác, không thể đổi lại.', retryable: false };
+    default:
+      return { text: error?.message || 'Không chuyển được chế độ. Chưa có gì bị thay đổi, hãy thử lại.', retryable: true };
+  }
+}
+
+export function examSwitchSuccessText(payload) {
+  const limit = payload?.exitLimit;
+  const lead = payload?.switched === false ? 'Bài đã ở Tự giám sát' : 'Đã chuyển sang Tự giám sát';
+  return `${lead}: thoát quá ${limit} lần thì bài tự nộp. Chế độ mới chỉ áp dụng cho lượt làm bắt đầu từ bây giờ; điểm, lịch sử phiên thi và quyền làm lại được giữ nguyên, học viên đã nộp vẫn cần được cấp làm lại.`;
+}
+
 export function incidentCellText(student) {
   if (!student.attemptId) return '—';
   const count = student.incidentCount ?? 0;
@@ -1053,6 +1110,11 @@ async function startDashboard() {
   const selfProctoringToggle = document.querySelector('#self-proctoring-toggle');
   const selfProctoringLimit = document.querySelector('#self-proctoring-limit');
   const selfProctoringSave = document.querySelector('#self-proctoring-save');
+  const examSwitchControls = document.querySelector('#exam-switch-controls');
+  const examSwitchHint = document.querySelector('#exam-switch-hint');
+  const examSwitchLimit = document.querySelector('#exam-switch-limit');
+  const examSwitchButton = document.querySelector('#exam-switch-btn');
+  const examSwitchMessage = document.querySelector('#exam-switch-message');
   const examRoomOpenButton = document.querySelector('#exam-room-open');
   const examRoom = document.querySelector('#exam-room');
   const examRoomSummary = document.querySelector('#exam-room-summary');
@@ -1089,6 +1151,7 @@ async function startDashboard() {
   const gradingBackToDashboardBtn = document.querySelector('#grading-back-to-dashboard-btn');
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
+  let currentServerNow = null;
   let isSwitchingAssignment = false;
   let currentSelectedAssignment = null;
   let examRoomReturnToResults = false;
@@ -1346,6 +1409,7 @@ async function startDashboard() {
       if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = '#';
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
       if (examRoomOpenButton) examRoomOpenButton.hidden = true;
+      if (examSwitchControls) examSwitchControls.hidden = true;
       return;
     }
 
@@ -1355,9 +1419,11 @@ async function startDashboard() {
     document.querySelector('#window-edit-form').hidden = true;
     document.querySelector('#window-edit-btn').hidden = false;
     if (examRoom) examRoom.hidden = true;
-    if (examRoomOpenButton) examRoomOpenButton.hidden = !assignment.examMode;
+    // Phòng thi vẫn mở được sau khi đã chuyển chế độ để xem lại sự cố của phiên cũ.
+    if (examRoomOpenButton) examRoomOpenButton.hidden = !(assignment.examMode || assignment.examSession);
     updateExamModeUI(assignment.examMode);
     updateSelfProctoringUI(assignment.exitLimit, assignment.examMode);
+    renderExamSwitch(assignment);
     const selectedClassOpt = classSelect?.selectedOptions?.[0];
     const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
 
@@ -1478,7 +1544,11 @@ async function startDashboard() {
       endSession();
       throw new Error(payload.message || 'Yêu cầu đăng nhập.');
     }
-    if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
+    if (!response.ok) {
+      throw Object.assign(new Error(payload.message || 'Không tải được dữ liệu.'), {
+        code: payload.error, details: payload.details, status: response.status
+      });
+    }
     return payload;
   };
 
@@ -1684,11 +1754,72 @@ async function startDashboard() {
 
   function updateSelfProctoringUI(exitLimit, examMode) {
     const enabled = exitLimit !== null && exitLimit !== undefined;
-    if (selfProctoringToggle) { selfProctoringToggle.checked = enabled; selfProctoringToggle.disabled = Boolean(examMode); }
-    if (selfProctoringLimit) { selfProctoringLimit.value = enabled ? String(exitLimit) : ''; selfProctoringLimit.disabled = !enabled; }
-    if (selfProctoringSave) selfProctoringSave.disabled = !enabled && !selfProctoringToggle?.checked;
+    // Bài đã chuyển từ Exam Mode sang Tự giám sát: server khoá đổi N, nên khoá luôn các ô để không hứa điều server từ chối.
+    const lockedAfterExam = !examMode && Boolean(currentSelectedAssignment?.examSession);
+    if (selfProctoringToggle) { selfProctoringToggle.checked = enabled; selfProctoringToggle.disabled = Boolean(examMode) || lockedAfterExam; }
+    if (selfProctoringLimit) { selfProctoringLimit.value = enabled ? String(exitLimit) : ''; selfProctoringLimit.disabled = !enabled || lockedAfterExam; }
+    if (selfProctoringSave) selfProctoringSave.disabled = lockedAfterExam || (!enabled && !selfProctoringToggle?.checked);
     if (examModeToggle) examModeToggle.disabled = enabled;
   }
+
+  // Khối "Chuyển sang Tự giám sát": hiện khi phiên thi đã bắt đầu; kết quả cuối cùng luôn đọc lại từ server.
+  let examSwitchAssignmentId = '';
+  let examSwitchBusy = false;
+  function setExamSwitchMessage(text, level = 'info') {
+    if (!examSwitchMessage) return;
+    examSwitchMessage.textContent = text;
+    examSwitchMessage.dataset.level = level;
+  }
+  function renderExamSwitch(assignment) {
+    if (!examSwitchControls) return;
+    if (assignment?.assignmentId !== examSwitchAssignmentId) {
+      examSwitchAssignmentId = assignment?.assignmentId || '';
+      setExamSwitchMessage('');
+      if (examSwitchLimit) examSwitchLimit.value = '';
+    }
+    const view = examSwitchView(assignment, { serverNow: currentServerNow });
+    examSwitchControls.hidden = !view.visible;
+    if (!view.visible) return;
+    examSwitchHint.textContent = view.hint;
+    examSwitchButton.disabled = examSwitchBusy;
+  }
+  examSwitchButton?.addEventListener('click', async () => {
+    const target = currentSelectedAssignment;
+    if (!target || examSwitchBusy) return;
+    let body;
+    try { body = examSwitchRequestBody(examSwitchLimit.value); }
+    catch (error) { setExamSwitchMessage(error.message, 'error'); examSwitchLimit.focus(); return; }
+    examSwitchBusy = true;
+    examSwitchButton.disabled = true;
+    examSwitchLimit.disabled = true;
+    setExamSwitchMessage('Đang chuyển chế độ…');
+    let payload;
+    try {
+      payload = await request(assignmentExamModePath(state.classId, target.assignmentId), {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      });
+    } catch (error) {
+      const view = examSwitchErrorView(error);
+      setExamSwitchMessage(view.text, 'error');
+      examSwitchButton.textContent = view.retryable ? 'Thử lại' : 'Chuyển sang Tự giám sát';
+      examSwitchBusy = false;
+      examSwitchLimit.disabled = false;
+      examSwitchButton.disabled = false;
+      return;
+    }
+    // Chỉ báo thành công sau khi đọc lại trạng thái từ server; reload cũng thấy đúng như vậy.
+    examSwitchBusy = false;
+    examSwitchLimit.disabled = false;
+    examSwitchButton.textContent = 'Chuyển sang Tự giám sát';
+    try {
+      await loadAssignments(state.classId, target.assignmentId);
+      setExamSwitchMessage(examSwitchSuccessText(payload), 'success');
+      status.textContent = 'Đã chuyển sang Tự giám sát.';
+    } catch (error) {
+      setExamSwitchMessage(`Máy chủ đã nhận yêu cầu chuyển nhưng chưa tải lại được trạng thái mới: ${error.message}. Hãy tải lại trang để xác nhận.`, 'error');
+      examSwitchButton.disabled = false;
+    }
+  });
 
   selfProctoringToggle?.addEventListener('change', () => {
     selfProctoringLimit.disabled = !selfProctoringToggle.checked;
@@ -2632,6 +2763,7 @@ async function startDashboard() {
     status.textContent = 'Đang tải bài được giao…';
     const payload = await request(`/api/teacher/classes/${encodeURIComponent(classId)}/assignments`);
     currentAssignmentsList = payload.assignments || [];
+    currentServerNow = payload.serverNow || null;
     let selectedExists = false;
 
     if (assignmentSelect) {

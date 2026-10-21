@@ -2150,7 +2150,9 @@
           status: result.attempt.status || 'active',
           expiresAt: result.attempt.expiresAt ? Date.parse(result.attempt.expiresAt) : null,
           definition: result.attempt.definition || state.learning?.definition,
-          exam: result.attempt.exam || state.learning?.exam || null,
+          // Chế độ của lượt do server trả về cho đúng lượt này; không giữ ngữ cảnh Exam Mode cũ trong trình duyệt
+          // (bài đã chuyển sang Tự giám sát thì lượt mới không được vào phòng chờ hay gọi thiết bị của phiên cũ).
+          exam: result.attempt.exam || null,
           selfProctoring: result.attempt.selfProctoring || null
         };
         if(result.attempt.definition && rosterData.assignment) {
