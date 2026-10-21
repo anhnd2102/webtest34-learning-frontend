@@ -1006,6 +1006,90 @@ export function parseClozeBlanks(text) {
   return blanks;
 }
 
+export function convertGoogleDriveImageUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+
+  if (trimmed.includes('drive.google.com')) {
+    let fileId = null;
+    let resourceKey = null;
+
+    const fileDMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (fileDMatch) {
+      fileId = fileDMatch[1];
+    }
+
+    if (!fileId) {
+      const idParamMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (idParamMatch) {
+        fileId = idParamMatch[1];
+      }
+    }
+
+    const resKeyMatch = trimmed.match(/[?&]resourcekey=([a-zA-Z0-9_-]+)/);
+    if (resKeyMatch) {
+      resourceKey = resKeyMatch[1];
+    }
+
+    if (fileId) {
+      let result = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
+      if (resourceKey) {
+        result += `&resourcekey=${resourceKey}`;
+      }
+      return result;
+    }
+  }
+
+  return trimmed;
+}
+
+export function validateImageUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  const trimmed = url.trim();
+  if (!trimmed) return false;
+
+  if (/^(?:javascript|data|file|http):/i.test(trimmed)) {
+    return false;
+  }
+
+  if (/^https:\/\//i.test(trimmed)) {
+    return true;
+  }
+  if (/^\/?assets\//i.test(trimmed)) {
+    return true;
+  }
+
+  return false;
+}
+
+export function sanitizeRichContent(html) {
+  if (!html || typeof html !== 'string') return '';
+
+  let clean = html;
+
+  clean = clean.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  clean = clean.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+  clean = clean.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+  clean = clean.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, '');
+  clean = clean.replace(/<link\b[^>]*>/gi, '');
+  clean = clean.replace(/<meta\b[^>]*>/gi, '');
+
+  clean = clean.replace(/\s+on[a-zA-Z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+  clean = clean.replace(/(?:href|src)\s*=\s*["']\s*javascript:[^"']*["']/gi, '');
+
+  clean = clean.replace(/<img\b([^>]*)>/gi, (match, attrs) => {
+    const srcMatch = attrs.match(/\bsrc\s*=\s*["']([^"']*)["']/i);
+    const src = srcMatch ? srcMatch[1].trim() : '';
+    if (!src || !validateImageUrl(src)) {
+      return '';
+    }
+    return match;
+  });
+
+  return clean;
+}
+
 export function renderInlineClozeMarkup(text, items = [], responses = {}, options = {}) {
   if (!text || typeof text !== 'string') return '';
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
