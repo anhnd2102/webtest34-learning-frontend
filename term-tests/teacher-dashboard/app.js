@@ -1,4 +1,9 @@
 import { parseSseChunk } from './exam-room-sse.js';
+import {
+  portalTestsPath, portalLinkPath, portalSyncPreviewPath, portalSyncPath, portalSyncStatusPath,
+  portalSyncErrorView, previewRowView, selectableRefs, syncRequestBody, syncConfirmMessage,
+  syncResultView, retryRefs, linkedPortalTest, syncSummaryText
+} from './portal-sync-view.js';
 
 export function defaultApiBase() {
   return 'https://webtest.ducanhn.autos';
@@ -1902,6 +1907,214 @@ async function startDashboard() {
     }
   }
 
+  // ---- Đồng bộ điểm Portal: chỉ hiển thị dữ liệu backend trả về, không tính điểm hay luật ở trình duyệt.
+  const portalEl = id => document.querySelector(`#${id}`);
+  const portal = { key: '', tests: [], link: null, preview: null, sync: new Map(), names: new Map(), lastSync: null, busy: false };
+
+  function portalMessage(text) { portalEl('portal-sync-message').textContent = text || ''; }
+
+  function portalCell(row, text, tone) {
+    const cell = document.createElement('td');
+    cell.textContent = text;
+    if (tone) cell.className = `portal-tone-${tone}`;
+    row.append(cell);
+  }
+
+  function renderPortalPreview() {
+    const box = portalEl('portal-preview');
+    const body = portalEl('portal-preview-rows');
+    body.replaceChildren();
+    const preview = portal.preview;
+    box.hidden = !preview;
+    if (!preview) return;
+    for (const raw of preview.rows) {
+      const view = previewRowView(raw);
+      const result = portal.sync.has(raw.studentRef) ? syncResultView(portal.sync.get(raw.studentRef)) : null;
+      const tr = document.createElement('tr');
+      const pick = document.createElement('td');
+      const box2 = document.createElement('input');
+      box2.type = 'checkbox';
+      box2.className = 'portal-pick';
+      box2.value = raw.studentRef;
+      box2.disabled = !view.selectable;
+      box2.checked = view.selectable;
+      box2.setAttribute('aria-label', `Chọn ${view.name}`);
+      box2.addEventListener('change', updatePortalSyncButton);
+      pick.append(box2);
+      tr.append(pick);
+      portalCell(tr, view.name);
+      portalCell(tr, view.webtestText);
+      portalCell(tr, view.portalText);
+      portalCell(tr, view.reasonText ? `${view.statusLabel}: ${view.reasonText}` : view.statusLabel, view.tone);
+      portalCell(tr, result ? [result.statusLabel, result.errorText].filter(Boolean).join(': ') : '', result?.tone);
+      body.append(tr);
+    }
+    const writable = preview.mode === 'write';
+    portalEl('portal-sync-btn').disabled = !writable;
+    portalEl('portal-sync-btn').title = writable ? '' : 'Đang ở chế độ chỉ xem trước.';
+    portalEl('portal-retry-btn').hidden = !retryRefs([...portal.sync.values()]).length;
+    portalEl('portal-select-all').checked = true;
+    updatePortalSyncButton();
+  }
+
+  const pickedRefs = () => [...document.querySelectorAll('.portal-pick:checked')].map(i => i.value);
+
+  function updatePortalSyncButton() {
+    const count = pickedRefs().length;
+    const btn = portalEl('portal-sync-btn');
+    btn.textContent = count ? `Đồng bộ điểm Portal (${count})` : 'Đồng bộ điểm Portal';
+    if (portal.preview?.mode === 'write') btn.disabled = !count || portal.busy;
+  }
+
+  function renderPortalLastSync() {
+    const last = portal.lastSync;
+    portalEl('portal-last-sync').textContent = last
+      ? `Lần đồng bộ gần nhất: ${new Date(last.startedAt).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })} · ${last.actorEmail} · ${syncSummaryText(last.summary)}`
+      : '';
+  }
+
+  function renderPortalPanel() {
+    const linked = portal.link;
+    portalEl('portal-sync-link').hidden = !!linked;
+    portalEl('portal-sync-linked').hidden = !linked;
+    if (linked) portalEl('portal-linked-name').textContent = `${linked.name} (thang ${linked.maxScore})`;
+    else {
+      const select = portalEl('portal-test-select');
+      select.replaceChildren();
+      for (const t of portal.tests) {
+        const option = document.createElement('option');
+        option.value = String(t.portalClassTestId);
+        option.textContent = `${t.name} (thang ${t.maxScore})${t.linkedAssignmentId ? ' — đã gắn với đợt khác' : ''}`;
+        option.disabled = !!t.linkedAssignmentId;
+        select.append(option);
+      }
+      portalEl('portal-link-btn').disabled = !portal.tests.some(t => !t.linkedAssignmentId);
+    }
+    renderPortalLastSync();
+    renderPortalPreview();
+  }
+
+  async function loadPortalLastSync() {
+    const { sync } = await request(portalSyncStatusPath(state.classId, state.assignmentId));
+    portal.lastSync = null;
+    if (!sync) return;
+    // Backend không trả họ tên trong vết; tên chỉ lấy từ bản xem trước đang hiển thị.
+    const summary = {};
+    for (const r of sync.rows) summary[r.status] = (summary[r.status] || 0) + 1;
+    portal.lastSync = { ...sync, summary };
+    for (const r of sync.rows) if (!portal.sync.has(r.studentRef)) portal.sync.set(r.studentRef, r);
+  }
+
+  // keepResults: giữ kết quả từng dòng của lần ghi vừa xong khi tải lại bản xem trước (vân tay mới).
+  async function loadPortalPreview({ keepResults = false, message = '' } = {}) {
+    portalMessage('Đang xem trước điểm Portal…');
+    if (!keepResults) portal.sync = new Map();
+    portal.preview = null;
+    try {
+      const { preview } = await request(portalSyncPreviewPath(state.classId, state.assignmentId));
+      portal.preview = preview;
+      await loadPortalLastSync();
+      portalMessage(message || (preview.mode === 'write' ? '' : 'Chế độ chỉ xem trước: chưa thể ghi điểm sang Portal.'));
+    } catch (error) {
+      portalMessage(portalSyncErrorView(error).message);
+    }
+    renderPortalPanel();
+  }
+
+  async function loadPortalPanel() {
+    const section = portalEl('portal-sync');
+    if (!section) return;
+    const key = `${state.classId}/${state.assignmentId}`;
+    portal.key = key;
+    portal.link = null; portal.preview = null; portal.tests = []; portal.sync = new Map(); portal.lastSync = null;
+    portalEl('portal-sync-link').hidden = true;
+    portalEl('portal-sync-linked').hidden = true;
+    portalEl('portal-preview').hidden = true;
+    portalEl('portal-last-sync').textContent = '';
+    section.hidden = false;
+    portalMessage('Đang tải bài test Portal…');
+    try {
+      const { portalTests } = await request(portalTestsPath(state.classId));
+      if (portal.key !== key) return;
+      portal.tests = Array.isArray(portalTests) ? portalTests : [];
+      const linked = linkedPortalTest(portal.tests, state.assignmentId);
+      portal.link = linked ? { name: linked.name, maxScore: linked.maxScore } : null;
+      portalMessage(linked ? '' : 'Chưa gắn bài test Portal cho đợt giao bài này.');
+      renderPortalPanel();
+      if (linked) await loadPortalPreview();
+    } catch (error) {
+      if (portal.key !== key) return;
+      const view = portalSyncErrorView(error);
+      portalMessage(view.message);
+      // Chế độ tắt: giữ phần báo rõ, ẩn mọi nút điều khiển.
+      renderPortalPanel();
+      portalEl('portal-sync-link').hidden = true;
+    }
+  }
+
+  function ensurePortalPanel() {
+    if (!state.classId || !state.assignmentId) { portalEl('portal-sync').hidden = true; portal.key = ''; return; }
+    if (portal.key !== `${state.classId}/${state.assignmentId}`) loadPortalPanel();
+  }
+
+  async function runPortalAction(action) {
+    portal.busy = true;
+    try { await action(); } catch (error) { portalMessage(portalSyncErrorView(error).message); } finally { portal.busy = false; updatePortalSyncButton(); }
+  }
+
+  async function doPortalSync(refs) {
+    const preview = portal.preview;
+    portalMessage('Đang ghi điểm sang Portal và đọc lại để xác nhận…');
+    const { sync } = await request(portalSyncPath(state.classId, state.assignmentId), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(syncRequestBody(preview.fingerprint, refs))
+    });
+    portal.sync = new Map(sync.rows.map(r => [r.studentRef, r]));
+    const text = syncSummaryText(sync.summary);
+    // Lần ghi vừa xong làm vân tay cũ hết hiệu lực: tải lại bản xem trước, giữ kết quả từng dòng.
+    await loadPortalPreview({ keepResults: true, message: sync.stopped ? `Đã dừng do lỗi ${sync.stopped}. ${text}` : text });
+  }
+
+  function askPortalConfirm(refs) {
+    const dialog = portalEl('portal-sync-confirm');
+    portalEl('portal-sync-confirm-text').textContent = syncConfirmMessage(refs.length);
+    portal.pending = refs;
+    dialog.showModal();
+  }
+
+  portalEl('portal-link-btn')?.addEventListener('click', () => runPortalAction(async () => {
+    const id = Number(portalEl('portal-test-select').value);
+    if (!id) return;
+    await request(portalLinkPath(state.classId, state.assignmentId), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ portalClassTestId: id })
+    });
+    portal.key = '';
+    await loadPortalPanel();
+  }));
+  portalEl('portal-unlink-btn')?.addEventListener('click', () => runPortalAction(async () => {
+    await request(portalLinkPath(state.classId, state.assignmentId), { method: 'DELETE' });
+    portal.key = '';
+    await loadPortalPanel();
+  }));
+  portalEl('portal-preview-btn')?.addEventListener('click', () => runPortalAction(loadPortalPreview));
+  portalEl('portal-select-all')?.addEventListener('change', event => {
+    document.querySelectorAll('.portal-pick:not(:disabled)').forEach(i => { i.checked = event.target.checked; });
+    updatePortalSyncButton();
+  });
+  portalEl('portal-sync-btn')?.addEventListener('click', () => { const refs = pickedRefs(); if (refs.length) askPortalConfirm(refs); });
+  portalEl('portal-retry-btn')?.addEventListener('click', () => runPortalAction(async () => {
+    const wanted = new Set(retryRefs([...portal.sync.values()]));
+    await loadPortalPreview();   // vân tay mới; chỉ dòng còn "Điền được" mới thử lại được
+    const refs = selectableRefs(portal.preview?.rows || []).filter(r => wanted.has(r));
+    if (refs.length) askPortalConfirm(refs); else portalMessage('Không còn dòng nào có thể thử lại.');
+  }));
+  portalEl('portal-sync-cancel')?.addEventListener('click', () => portalEl('portal-sync-confirm').close());
+  portalEl('portal-sync-confirm-btn')?.addEventListener('click', event => {
+    event.preventDefault();
+    portalEl('portal-sync-confirm').close();
+    runPortalAction(() => doPortalSync(portal.pending || []));
+  });
+
   function renderResults(payload) {
     toggleExportXlsxButton(exportXlsxBtn, payload?.assignment ? state.assignmentId : '');
     if (!payload || !payload.assignment) {
@@ -1910,6 +2123,7 @@ async function startDashboard() {
       return;
     }
     currentResultsPayload = payload;
+    ensurePortalPanel();
     resultsContent.replaceChildren();
     if (assignmentHeading) assignmentHeading.textContent = payload.assignment.title;
     if (assignmentMeta) {
