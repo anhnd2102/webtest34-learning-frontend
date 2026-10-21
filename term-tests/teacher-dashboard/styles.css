@@ -2583,3 +2583,14 @@ body:not(.login-page) #auth-panel {
   font-size: 0.82rem;
   color: #b45309;
 }
+
+/* Đồng bộ điểm Portal */
+.portal-sync { display: grid; gap: 10px; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
+.portal-sync h3 { margin: 0; font-size: 1rem; }
+.portal-sync-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.portal-tone-ready { color: #1d4ed8; font-weight: 600; }
+.portal-tone-ok { color: #166534; font-weight: 600; }
+.portal-tone-warn { color: #b45309; font-weight: 600; }
+.portal-tone-blocked { color: #b91c1c; font-weight: 600; }
+.portal-sync input[type="checkbox"] { width: 18px; height: 18px; padding: 0; margin: 0; box-shadow: none; }
+.portal-sync .portal-sync-row button { width: auto; }

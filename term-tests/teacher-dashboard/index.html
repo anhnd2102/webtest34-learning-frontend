@@ -481,6 +481,51 @@
         </form>
       </dialog>
 
+      <section id="portal-sync" class="portal-sync" hidden aria-labelledby="portal-sync-title">
+        <h3 id="portal-sync-title">Đồng bộ điểm Portal</h3>
+        <p id="portal-sync-message" class="meta-info" role="status" aria-live="polite"></p>
+        <button id="portal-reload-btn" type="button" class="btn-secondary" hidden>Tải lại</button>
+        <div id="portal-sync-link"class="portal-sync-row" hidden>
+          <label>
+            <span>Bài test Portal</span>
+            <select id="portal-test-select"></select>
+          </label>
+          <button id="portal-link-btn" type="button" class="btn-secondary">Gắn bài test Portal</button>
+        </div>
+        <div id="portal-sync-linked" class="portal-sync-row" hidden>
+          <strong id="portal-linked-name"></strong>
+          <button id="portal-unlink-btn" type="button" class="btn-secondary">Gỡ gắn</button>
+          <button id="portal-preview-btn" type="button" class="btn-secondary">Xem trước</button>
+        </div>
+        <p id="portal-scale-warning" class="meta-info" role="alert" hidden></p>
+        <p id="portal-last-sync" class="meta-info"></p>
+        <div id="portal-preview" hidden>
+          <div class="results-scroll">
+            <table>
+              <thead><tr>
+                <th><input id="portal-select-all" type="checkbox" aria-label="Chọn tất cả học viên điền được"></th>
+                <th>Học viên</th><th>Webtest</th><th>Portal</th><th>Trạng thái</th><th>Sau đồng bộ</th>
+              </tr></thead>
+              <tbody id="portal-preview-rows"></tbody>
+            </table>
+          </div>
+          <div class="portal-sync-row">
+            <button id="portal-sync-btn" type="button" class="btn-primary">Đồng bộ điểm Portal</button>
+            <button id="portal-retry-btn" type="button" class="btn-secondary" hidden>Thử lại dòng lỗi</button>
+          </div>
+        </div>
+        <dialog id="portal-sync-confirm" class="modal">
+          <form method="dialog" class="modal-form">
+            <h3>Xác nhận đồng bộ điểm Portal</h3>
+            <p id="portal-sync-confirm-text" class="modal-desc"></p>
+            <div class="modal-actions">
+              <button id="portal-sync-cancel" type="button" class="btn-secondary">Hủy</button>
+              <button id="portal-sync-confirm-btn" type="submit" class="btn-primary">Đồng bộ</button>
+            </div>
+          </form>
+        </dialog>
+      </section>
+
       <div id="class-skill-summary" class="class-skill-summary" aria-label="Thống kê năng lực kỹ năng toàn lớp"></div>
 
       <form id="filters-toolbar" class="toolbar-grid" role="search" aria-label="Bộ lọc và tìm kiếm">
