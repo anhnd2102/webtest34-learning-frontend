@@ -31,20 +31,30 @@ export function expandSentenceVariants(sentences = []) {
     [/(\b)did not(\b)/gi, "$1didn't$2"],
     [/(\b)can('t|’t)(\b)/gi, '$1cannot$3'],
     [/(\b)cannot(\b)/gi, "$1can't$2"],
-    [/(\b)won('t|’t)(\b)/gi, '$1will not$3'],
-    [/(\b)will not(\b)/gi, "$1won't$2"],
-    [/(\b)isn('t|’t)(\b)/gi, '$1is not$3'],
-    [/(\b)is not(\b)/gi, "$1isn't$2"],
-    [/(\b)aren('t|’t)(\b)/gi, '$1are not$3'],
-    [/(\b)are not(\b)/gi, "$1aren't$2"],
-    [/(\b)wasn('t|’t)(\b)/gi, '$1was not$3'],
-    [/(\b)was not(\b)/gi, "$1wasn't$2"],
-    [/(\b)weren('t|’t)(\b)/gi, '$1were not$3'],
-    [/(\b)weren't(\b)/gi, "$1were not$2"],
-    [/(\b)hasn('t|’t)(\b)/gi, '$1has not$3'],
-    [/(\b)has not(\b)/gi, "$1hasn't$2"],
+    [/(\b)cant(\b)/gi, "$1can't$2"],
+    [/(\b)cant(\b)/gi, '$1cannot$2'],
+    [/(\b)dont(\b)/gi, "$1don't$2"],
+    [/(\b)dont(\b)/gi, '$1do not$2'],
+    [/(\b)doesnt(\b)/gi, "$1doesn't$2"],
+    [/(\b)doesnt(\b)/gi, '$1does not$2'],
+    [/(\b)didnt(\b)/gi, "$1didn't$2"],
+    [/(\b)didnt(\b)/gi, '$1did not$2'],
+    [/(\b)wont(\b)/gi, "$1won't$2"],
+    [/(\b)wont(\b)/gi, '$1will not$2'],
+    [/(\b)isnt(\b)/gi, "$1isn't$2"],
+    [/(\b)isnt(\b)/gi, '$1is not$2'],
+    [/(\b)arent(\b)/gi, "$1aren't$2"],
+    [/(\b)arent(\b)/gi, '$1are not$2'],
+    [/(\b)wasnt(\b)/gi, "$1wasn't$2"],
+    [/(\b)wasnt(\b)/gi, '$1was not$2'],
+    [/(\b)werent(\b)/gi, "$1weren't$2"],
+    [/(\b)werent(\b)/gi, '$1were not$2'],
+    [/(\b)hasnt(\b)/gi, "$1hasn't$2"],
+    [/(\b)hasnt(\b)/gi, '$1has not$2'],
     [/(\b)haven('t|’t)(\b)/gi, '$1have not$3'],
-    [/(\b)have not(\b)/gi, "$1haven't$2"]
+    [/(\b)have not(\b)/gi, "$1haven't$2"],
+    [/(\b)havent(\b)/gi, "$1haven't$2"],
+    [/(\b)havent(\b)/gi, '$1have not$2']
   ];
 
   for (const s of list) {
@@ -330,7 +340,10 @@ export const ICONS = {
   zap: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
   arrowLeft: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>',
   audio: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>',
-  trash: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
+  trash: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
+  upload: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  download: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+  fileText: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
 };
 
 export function renderSvgIcon(name, customClass = '') {
@@ -338,6 +351,117 @@ export function renderSvgIcon(name, customClass = '') {
   if (!icon) return '';
   if (!customClass) return icon;
   return icon.replace('class="', `class="${customClass} `);
+}
+
+export function parseVocabPairCsv(rawText = '') {
+  const result = {
+    validRows: [],
+    invalidRows: []
+  };
+
+  if (!rawText || typeof rawText !== 'string') {
+    return result;
+  }
+
+  const cleaned = rawText.replace(/^\uFEFF/, '');
+  const lines = cleaned.split(/\r?\n/);
+  let checkedHeader = false;
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+
+    let col1 = '';
+    let col2 = '';
+
+    if (line.includes('\t')) {
+      const parts = line.split('\t');
+      col1 = (parts[0] || '').trim();
+      col2 = parts.slice(1).join('\t').trim();
+    } else if (line.includes(',')) {
+      const parts = line.split(',');
+      col1 = (parts[0] || '').trim().replace(/^["']|["']$/g, '');
+      col2 = parts.slice(1).join(',').trim().replace(/^["']|["']$/g, '');
+    } else {
+      col1 = trimmed;
+      col2 = '';
+    }
+
+    if (!checkedHeader) {
+      checkedHeader = true;
+      const c1Low = col1.toLowerCase();
+      const c2Low = col2.toLowerCase();
+      if (
+        (c1Low === 'english' && c2Low === 'vietnamese') ||
+        (c1Low.includes('tiếng anh') && c2Low.includes('tiếng việt')) ||
+        (c1Low === 'word' && c2Low === 'meaning') ||
+        (c1Low === 'từ vựng' && c2Low === 'nghĩa')
+      ) {
+        return;
+      }
+    }
+
+    if (col1 && col2) {
+      result.validRows.push({ english: col1, vietnamese: col2 });
+    } else {
+      result.invalidRows.push({
+        line: index + 1,
+        raw: line,
+        reason: !col2 ? 'Thiếu cột nghĩa tiếng Việt' : 'Thiếu cột từ tiếng Anh'
+      });
+    }
+  });
+
+  return result;
+}
+
+export function generateVocabPairTemplateCsv() {
+  const bom = '\uFEFF';
+  const header = 'English,Vietnamese';
+  const rows = [
+    'destination,điểm đến',
+    'itinerary,lịch trình chuyến đi',
+    'resilient,kiên cường',
+    'sustainable,bền vững',
+    'environment,môi trường'
+  ];
+  return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
+}
+
+export function batchGenerateExerciseVocabVariants(block, targetExercise, draftState) {
+  if (!block || !Array.isArray(block.items) || !targetExercise || !draftState) return 0;
+  const targetExerciseId = targetExercise.exerciseId;
+  const vocabItems = block.items.filter(it => 
+    it.exerciseId === targetExerciseId && it.interactionType === 'text_select_pair'
+  );
+
+  let updatedCount = 0;
+  vocabItems.forEach(item => {
+    const rawWord = (item.targetWord || item.prompt || '').trim();
+    if (!rawWord) return;
+
+    if (!draftState.gradingKey) draftState.gradingKey = { items: {} };
+    if (!draftState.gradingKey.items) draftState.gradingKey.items = {};
+
+    let currentKey = draftState.gradingKey.items[item.itemVersionId];
+    if (!currentKey) {
+      currentKey = {
+        graderType: 'accepted_text_exact_option',
+        accepted: [],
+        expectedOptionId: (item.options && item.options[0]) ? item.options[0].id : ''
+      };
+      draftState.gradingKey.items[item.itemVersionId] = currentKey;
+    }
+
+    const currentAccepted = Array.isArray(currentKey.accepted) ? currentKey.accepted.filter(Boolean) : [];
+    const generatedVariants = expandSentenceVariants([rawWord]);
+
+    const merged = Array.from(new Set([...currentAccepted, ...generatedVariants])).slice(0, 40);
+    currentKey.accepted = merged;
+    updatedCount++;
+  });
+
+  return updatedCount;
 }
 
 // Dashboard chạy local (run-local.sh) thì link học viên trỏ về static server local; production giữ nguyên link backend trả.
@@ -3497,6 +3621,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="badge badge-info exercise-items-count">${exQuestionsCount} câu hỏi</span>
             </div>
             <div class="exercise-header-actions">
+              <button type="button" class="btn btn-secondary btn-sm btn-upload-vocab-csv" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Nhập danh sách từ vựng từ CSV hoặc dán Excel">
+                ${renderSvgIcon('upload', 'icon-inline')} <span>Nhập CSV</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm btn-batch-generate-exercise-variants" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Tự động sinh biến thể đáp án cho toàn bộ câu hỏi từ vựng trong bài tập này">
+                ${renderSvgIcon('zap', 'icon-inline')} <span>Sinh biến thể cả bài</span>
+              </button>
               <button type="button" class="btn btn-icon btn-sm btn-move-exercise-up" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isFirst ? 'disabled' : ''} title="Di chuyển bài tập lên">↑</button>
               <button type="button" class="btn btn-icon btn-sm btn-move-exercise-down" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isLast ? 'disabled' : ''} title="Di chuyển bài tập xuống">↓</button>
               <button type="button" class="btn btn-icon btn-sm btn-delete-exercise" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isOnly ? 'disabled' : ''} title="Xóa bài tập này">✕</button>
@@ -4299,6 +4429,45 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         render();
       });
     });
+
+    // Upload Vocab Pair CSV
+    const uploadVocabCsvBtns = container.querySelectorAll('.btn-upload-vocab-csv');
+    if (uploadVocabCsvBtns && typeof uploadVocabCsvBtns.forEach === 'function') {
+      uploadVocabCsvBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            syncInputs();
+            const bIdx = Number(btn.getAttribute('data-block-idx'));
+            const block = draftState.blocks[bIdx];
+            if (!block) return;
+            const targetEx = resolveTargetExercise(block, btn);
+            openBatchVocabPairModal(bIdx, targetEx);
+          });
+        }
+      });
+    }
+
+    // Batch Generate Exercise Vocab Variants
+    const batchGenVariantBtns = container.querySelectorAll('.btn-batch-generate-exercise-variants');
+    if (batchGenVariantBtns && typeof batchGenVariantBtns.forEach === 'function') {
+      batchGenVariantBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            syncInputs();
+            const bIdx = Number(btn.getAttribute('data-block-idx'));
+            const block = draftState.blocks[bIdx];
+            if (!block) return;
+            const targetEx = resolveTargetExercise(block, btn);
+            const count = batchGenerateExerciseVocabVariants(block, targetEx, draftState);
+            markAsDirty();
+            render();
+            if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+              window.alert(`Đã tự động sinh biến thể đáp án cho ${count} câu hỏi Cặp từ vựng.`);
+            }
+          });
+        }
+      });
+    }
 
     // Move Exercise Up
     const moveExUpBtns = container.querySelectorAll('.btn-move-exercise-up');
@@ -6020,31 +6189,59 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       modal.innerHTML = `
         <div class="modal-batch-vocab-card">
           <div class="modal-batch-vocab-header">
-            <h3>⚡ Tạo hàng loạt câu hỏi Cặp từ vựng</h3>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              ${renderSvgIcon('fileText', 'icon-inline')}
+              <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Nhập Cặp từ vựng vào Exercise (CSV / Excel)</h3>
+            </div>
             <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">✕</button>
           </div>
           <div class="modal-batch-vocab-body">
             <div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">
-              Tạo nhanh nhiều câu hỏi cặp từ vựng thuộc bài tập <strong>${escapeHtml(targetEx.title || 'Bài tập')}</strong>. Toàn bộ các câu hỏi sẽ dùng chung danh sách nghĩa tiếng Việt trong ô dropdown.
+              Nhập danh sách từ vựng cho bài tập <strong>${escapeHtml(targetEx.title || 'Bài tập')}</strong>. Cột 2 (nghĩa tiếng Việt) sẽ tự động được gộp trùng, sắp xếp tăng dần A-Z tiếng Việt và ánh xạ chính xác vào đáp án.
             </div>
-            <div class="form-group">
-              <label class="form-label"><strong>1. Tổng số câu hỏi cần tạo:</strong></label>
-              <input type="number" class="form-control input-batch-count" min="1" max="100" value="25" style="max-width: 160px; font-weight: 700;" />
-              <span style="font-size: 0.8rem; color: #64748b;">(Ví dụ: 25 câu hoặc 50 câu)</span>
+
+            <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary btn-sm btn-download-template">
+                ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm btn-trigger-csv-file">
+                ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file .CSV</span>
+              </button>
+              <input type="file" class="input-vocab-csv-file" accept=".csv,text/csv,text/plain" style="display:none;" />
+              <span style="font-size: 0.8rem; color: #64748b;">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
             </div>
-            <div class="form-group">
-              <label class="form-label"><strong>2. Danh sách nghĩa tiếng Việt dùng chung (Mỗi dòng một nghĩa):</strong></label>
-              <textarea class="form-control textarea-batch-meanings" rows="8" placeholder="hướng ngoại&#10;môi trường&#10;kiên cường, có khả năng phục hồi&#10;thân thiện, cởi mở&#10;...">${escapeHtml(defaultMeanings)}</textarea>
-              <span style="font-size: 0.8rem; color: #64748b;">Gợi ý: Dán danh sách các nghĩa. Các câu hỏi tạo ra sẽ lần lượt nhận nghĩa đúng từ dòng 1 đến N.</span>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label class="form-label" style="display: flex; justify-content: space-between;">
+                <strong>Dán 2 cột từ Excel / Sheets hoặc nội dung CSV:</strong>
+                <span style="font-size: 0.8rem; color: #64748b;">Cột 1: Từ tiếng Anh | Cột 2: Nghĩa tiếng Việt</span>
+              </label>
+              <textarea class="form-control textarea-batch-vocab-csv" rows="8" placeholder="destination&#9;điểm đến&#10;itinerary&#9;lịch trình chuyến đi&#10;resilient&#9;kiên cường&#10;sustainable&#9;bền vững&#10;environment&#9;môi trường"></textarea>
+            </div>
+
+            <div class="vocab-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem; cursor: pointer;">
+                <input type="checkbox" class="chk-auto-variants" checked />
+                <span>Tự động sinh biến thể đáp án sau khi nhập (Apostrophe, contractions, NFKC)</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem; cursor: pointer;">
+                <input type="checkbox" class="chk-replace-existing" />
+                <span>Xóa các câu từ vựng cũ trong bài tập này trước khi nhập (Mặc định: Thêm tiếp vào sau)</span>
+              </label>
             </div>
           </div>
-          <div class="modal-batch-vocab-footer">
+          <div class="modal-batch-vocab-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
             <button type="button" class="btn btn-secondary btn-batch-single">
-              + Chỉ tạo 1 câu
+              + Chỉ tạo 1 câu thủ công
             </button>
-            <button type="button" class="btn btn-primary btn-batch-confirm">
-              ⚡ Tạo câu hỏi hàng loạt
-            </button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-secondary btn-close-batch-modal-btn">Hủy bỏ</button>
+              <button type="button" class="btn btn-primary btn-batch-confirm">
+                ${renderSvgIcon('check', 'icon-inline')} <span>Xác nhận nhập dữ liệu</span>
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -6053,8 +6250,72 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         modal.style.display = 'none';
       };
 
-      const closeBtn = modal.querySelector('.btn-close-batch-modal');
-      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      const closeBtns = modal.querySelectorAll('.btn-close-batch-modal, .btn-close-batch-modal-btn');
+      closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
+
+      // Download CSV Template
+      const downloadBtn = modal.querySelector('.btn-download-template');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+          const csvContent = generateVocabPairTemplateCsv();
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', 'mau_cap_tu_vung.csv');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        });
+      }
+
+      // File Upload trigger
+      const triggerFileBtn = modal.querySelector('.btn-trigger-csv-file');
+      const fileInput = modal.querySelector('.input-vocab-csv-file');
+      const textarea = modal.querySelector('.textarea-batch-vocab-csv');
+      const previewBox = modal.querySelector('.vocab-preview-summary');
+
+      const updatePreview = () => {
+        if (!textarea || !previewBox) return;
+        const val = textarea.value.trim();
+        if (!val) {
+          previewBox.style.display = 'none';
+          return;
+        }
+        const parsed = parseVocabPairCsv(val);
+        previewBox.style.display = 'block';
+        if (parsed.validRows.length === 0) {
+          previewBox.innerHTML = `<span style="color: #ef4444;">Chưa tìm thấy cặp từ vựng hợp lệ nào. Vui lòng kiểm tra định dạng dữ liệu (mỗi dòng gồm 2 cột cách nhau bằng Tab hoặc phẩy).</span>`;
+        } else {
+          let html = `<span style="color: #10b981; font-weight: 600;">Tìm thấy ${parsed.validRows.length} cặp từ vựng hợp lệ.</span> Sắp xếp A-Z tiếng Việt và tự động ánh xạ đáp án.`;
+          if (parsed.invalidRows.length > 0) {
+            html += `<br/><span style="color: #f59e0b;">Bỏ qua ${parsed.invalidRows.length} dòng không đủ 2 cột (Dòng: ${parsed.invalidRows.slice(0, 5).map(r => r.line).join(', ')}${parsed.invalidRows.length > 5 ? '...' : ''}).</span>`;
+          }
+          previewBox.innerHTML = html;
+        }
+      };
+
+      if (triggerFileBtn && fileInput) {
+        triggerFileBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            const text = evt.target.result;
+            if (textarea) {
+              textarea.value = text;
+              updatePreview();
+            }
+          };
+          reader.readAsText(file, 'utf-8');
+        });
+      }
+
+      if (textarea) {
+        textarea.addEventListener('input', updatePreview);
+      }
 
       // Single item creation
       const singleBtn = modal.querySelector('.btn-batch-single');
@@ -6069,79 +6330,76 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const confirmBtn = modal.querySelector('.btn-batch-confirm');
       if (confirmBtn) {
         confirmBtn.addEventListener('click', () => {
-          const countInput = modal.querySelector('.input-batch-count');
-          const count = Math.max(1, Math.min(100, parseInt(countInput?.value, 10) || 25));
-          const meaningsText = modal.querySelector('.textarea-batch-meanings')?.value?.trim() || '';
+          const val = textarea?.value?.trim() || '';
+          const autoVariants = modal.querySelector('.chk-auto-variants')?.checked !== false;
+          const replaceExisting = modal.querySelector('.chk-replace-existing')?.checked === true;
 
-          let options = [];
-          if (meaningsText) {
-            const lines = meaningsText.split('\n').map(l => l.trim()).filter(Boolean);
-            if (lines.length >= 2) {
-              options = lines.map((line, idx) => ({
-                id: `meaning-${String(idx + 1).padStart(2, '0')}`,
-                label: line
-              }));
+          const parsed = parseVocabPairCsv(val);
+
+          if (parsed.validRows.length > 0) {
+            if (replaceExisting) {
+              block.items = (block.items || []).filter(it => !(it.exerciseId === targetEx.exerciseId && it.interactionType === 'text_select_pair'));
             }
-          }
 
-          if (!options.length) {
-            if (inheritedOptions && inheritedOptions.length >= 2) {
-              options = inheritedOptions.map((label, idx) => ({
-                id: `meaning-${String(idx + 1).padStart(2, '0')}`,
-                label
-              }));
-            } else {
-              options = [
-                { id: 'meaning-01', label: 'Nghĩa phương án 1' },
-                { id: 'meaning-02', label: 'Nghĩa phương án 2' },
-                { id: 'meaning-03', label: 'Nghĩa phương án 3' },
-                { id: 'meaning-04', label: 'Nghĩa phương án 4' }
-              ];
-            }
-          }
+            block.items = block.items || [];
 
-          block.items = block.items || [];
-          const startingPos = getNextPosition();
-          const batchItems = [];
+            // Thu thập toàn bộ nghĩa tiếng Việt và sắp xếp tăng dần theo tiếng Việt (A-Z)
+            const allVietnamese = Array.from(new Set(parsed.validRows.map(r => r.vietnamese))).sort((a, b) => a.localeCompare(b, 'vi', { sensitivity: 'base' }));
 
-          for (let i = 0; i < count; i++) {
-            const currentPos = startingPos + i;
-            const newItemId = generateUuid();
-            const expectedOptId = options[i] ? options[i].id : options[0].id;
+            const options = allVietnamese.map((label, idx) => ({
+              id: `meaning-${String(idx + 1).padStart(2, '0')}`,
+              label
+            }));
 
-            batchItems.push({
-              itemFamilyId: generateUuid(),
-              itemVersionId: newItemId,
-              position: currentPos,
-              exerciseId: targetEx.exerciseId,
-              exerciseTitle: targetEx.title,
-              prompt: `Từ vựng câu ${currentPos}`,
-              helpText: '',
-              interactionType: 'text_select_pair',
-              pedagogicalTypeCode: 'vocabulary_pair',
-              layoutType: 'default',
-              graderType: 'accepted_text_exact_option',
-              required: true,
-              maxScore: 1,
-              options: options.map(o => ({ id: o.id, label: o.label })),
-              skillCodes: [],
-              releasePolicy: 'inherit'
+            const startingPos = getNextPosition();
+            const batchItems = [];
+
+            parsed.validRows.forEach((row, i) => {
+              const currentPos = startingPos + i;
+              const newItemId = generateUuid();
+              const matchedOpt = options.find(o => o.label === row.vietnamese) || options[0];
+
+              batchItems.push({
+                itemFamilyId: generateUuid(),
+                itemVersionId: newItemId,
+                position: currentPos,
+                exerciseId: targetEx.exerciseId,
+                exerciseTitle: targetEx.title,
+                prompt: row.english,
+                targetWord: row.english,
+                helpText: '',
+                interactionType: 'text_select_pair',
+                pedagogicalTypeCode: 'vocabulary_pair',
+                layoutType: 'default',
+                graderType: 'accepted_text_exact_option',
+                required: true,
+                maxScore: 1,
+                options: options.map(o => ({ id: o.id, label: o.label })),
+                skillCodes: [],
+                releasePolicy: 'inherit'
+              });
+
+              const acceptedVariants = autoVariants ? expandSentenceVariants([row.english]) : [row.english];
+
+              draftState.gradingKey.items[newItemId] = {
+                graderType: 'accepted_text_exact_option',
+                accepted: acceptedVariants,
+                expectedOptionId: matchedOpt.id,
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
             });
 
-            draftState.gradingKey.items[newItemId] = {
-              graderType: 'accepted_text_exact_option',
-              accepted: [],
-              expectedOptionId: expectedOptId,
-              normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-            };
+            insertItemsIntoBlockExercise(block, targetEx, batchItems);
+            resequenceItemPositions();
+            markAsDirty();
+            closeModal();
+            render();
+            return;
           }
 
-          insertItemsIntoBlockExercise(block, targetEx, batchItems);
-
-          resequenceItemPositions();
-          markAsDirty();
+          // Fallback nếu không có nội dung CSV hợp lệ: tạo 1 câu đơn
           closeModal();
-          render();
+          createSingleVocabItem(bIdx, targetEx);
         });
       }
 
