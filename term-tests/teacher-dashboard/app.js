@@ -2789,7 +2789,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Biến đổi câu (Transformation)
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice btn-add-pronunciation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Phát âm & Ký hiệu IPA (Pronunciation)
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
@@ -2798,7 +2798,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <button type="button" class="btn btn-secondary btn-sm btn-add-multi-group" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Nhóm chọn nhiều (Multi-Select Group)
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-add-fitb" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                <button type="button" class="btn btn-secondary btn-sm btn-add-fitb btn-add-short-text" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Điền ô trống (Short Text)
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-inline-cloze" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
@@ -3816,25 +3816,23 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    // Add Fill In The Blank Question
-    const addFitbBtns = container.querySelectorAll('.btn-add-fitb');
-    addFitbBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        syncInputs();
-        const bIdx = Number(btn.getAttribute('data-block-idx'));
-        const block = draftState.blocks[bIdx];
-        if (!block) return;
-        const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
+    function createBatchFitb(bIdx, targetEx, count = 1) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const startingPos = getNextPosition();
+      block.items = block.items || [];
+      const batchItems = [];
+
+      for (let i = 0; i < count; i++) {
+        const currentPos = startingPos + i;
         const newItemId = generateUuid();
-        block.items = block.items || [];
-        const newItem = {
+        batchItems.push({
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
-          position: nextPos,
+          position: currentPos,
           exerciseId: targetEx.exerciseId,
           exerciseTitle: targetEx.title,
-          prompt: `Điền vào ô trống câu ${nextPos}:`,
+          prompt: `Điền vào ô trống câu ${currentPos}:`,
           helpText: '',
           interactionType: 'short_text',
           pedagogicalTypeCode: 'fill_in_the_blank',
@@ -3845,16 +3843,42 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: [],
           releasePolicy: 'inherit'
-        };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
+        });
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text',
           accepted: ['answer'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+      }
+
+      insertItemsIntoBlockExercise(block, targetEx, batchItems);
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
+    // Add Fill In The Blank Question
+    const addFitbBtns = container.querySelectorAll('.btn-add-fitb, .btn-add-short-text');
+    addFitbBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
+        openGenericBatchModal({
+          title: 'Tạo hàng loạt câu hỏi Điền ô trống',
+          subtitle: `Tạo nhanh các câu hỏi Điền từ ngắn vào ô trống thuộc bài tập ${targetEx.title || 'bài tập'}.`,
+          defaultCount: 5,
+          minCount: 1,
+          maxCount: 50,
+          onConfirm: ({ count }) => {
+            createBatchFitb(bIdx, targetEx, count);
+          },
+          onSingle: () => {
+            createBatchFitb(bIdx, targetEx, 1);
+          }
+        });
       });
     });
 
@@ -4136,25 +4160,23 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    // Add Error Correction Question
-    const addErrorCorrectionBtns = container.querySelectorAll('.btn-add-error-correction');
-    addErrorCorrectionBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        syncInputs();
-        const bIdx = Number(btn.getAttribute('data-block-idx'));
-        const block = draftState.blocks[bIdx];
-        if (!block) return;
-        const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
+    function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const startingPos = getNextPosition();
+      block.items = block.items || [];
+      const batchItems = [];
+
+      for (let i = 0; i < count; i++) {
+        const currentPos = startingPos + i;
         const newItemId = generateUuid();
-        block.items = block.items || [];
-        const newItem = {
+        batchItems.push({
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
-          position: nextPos,
+          position: currentPos,
           exerciseId: targetEx.exerciseId,
           exerciseTitle: targetEx.title,
-          prompt: 'She sister is a good student.',
+          prompt: '',
           helpText: '',
           interactionType: 'correction_pair',
           pedagogicalTypeCode: 'error_correction',
@@ -4166,18 +4188,44 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: ['grammar'],
           releasePolicy: 'inherit'
-        };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
+        });
         draftState.gradingKey.items[newItemId] = {
           graderType: 'correction_pair',
-          expectedErrors: ['she', 'She'],
-          expectedCorrections: ['her', 'Her'],
+          expectedErrors: [''],
+          expectedCorrections: [''],
           scoringRule: 'split_points',
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+      }
+
+      insertItemsIntoBlockExercise(block, targetEx, batchItems);
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
+    // Add Error Correction Question
+    const addErrorCorrectionBtns = container.querySelectorAll('.btn-add-error-correction');
+    addErrorCorrectionBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
+        openGenericBatchModal({
+          title: 'Tạo hàng loạt câu hỏi Tìm và sửa lỗi',
+          subtitle: `Tạo nhanh các câu hỏi Tìm và sửa lỗi thuộc bài tập ${targetEx.title || 'bài tập'}. Mỗi câu gồm đề bài và các ô nhập từ lỗi/sửa lại để trống để giáo viên điền trực tiếp.`,
+          defaultCount: 8,
+          minCount: 1,
+          maxCount: 50,
+          onConfirm: ({ count }) => {
+            createBatchErrorCorrection(bIdx, targetEx, count);
+          },
+          onSingle: () => {
+            createBatchErrorCorrection(bIdx, targetEx, 1);
+          }
+        });
       });
     });
 
@@ -4340,24 +4388,22 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    // Add Sentence Reorder Question
-    const addSentenceReorderBtns = container.querySelectorAll('.btn-add-sentence-reorder');
-    addSentenceReorderBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        syncInputs();
-        const bIdx = Number(btn.getAttribute('data-block-idx'));
-        const block = draftState.blocks[bIdx];
-        if (!block) return;
-        const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
+    function createBatchSentenceReorder(bIdx, targetEx, count = 1) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const startingPos = getNextPosition();
+      block.items = block.items || [];
+      const batchItems = [];
+      const defaultTokens = ['She', 'has worked', 'at the company', 'for five years'];
+      const defaultSentence = 'She has worked at the company for five years.';
+
+      for (let i = 0; i < count; i++) {
+        const currentPos = startingPos + i;
         const newItemId = generateUuid();
-        block.items = block.items || [];
-        const defaultTokens = ['She', 'has worked', 'at the company', 'for five years'];
-        const defaultSentence = 'She has worked at the company for five years.';
-        const newItem = {
+        batchItems.push({
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
-          position: nextPos,
+          position: currentPos,
           exerciseId: targetEx.exerciseId,
           exerciseTitle: targetEx.title,
           prompt: 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:',
@@ -4368,48 +4414,72 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           graderType: 'accepted_text',
           required: true,
           maxScore: 1,
-          tokens: defaultTokens,
+          tokens: [...defaultTokens],
           distractors: [],
           targetSentence: defaultSentence,
           options: [],
           skillCodes: ['grammar'],
           releasePolicy: 'inherit'
-        };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
+        });
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text',
           accepted: [defaultSentence],
-          tokens: defaultTokens,
+          tokens: [...defaultTokens],
           distractors: [],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
-      });
-    });
+      }
 
-    // Add Sentence Transformation Question
-    const addSentenceTransformationBtns = container.querySelectorAll('.btn-add-sentence-transformation');
-    addSentenceTransformationBtns.forEach(btn => {
+      insertItemsIntoBlockExercise(block, targetEx, batchItems);
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
+    // Add Sentence Reorder Question
+    const addSentenceReorderBtns = container.querySelectorAll('.btn-add-sentence-reorder');
+    addSentenceReorderBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         syncInputs();
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
+        openGenericBatchModal({
+          title: 'Tạo hàng loạt câu hỏi Sắp xếp câu',
+          subtitle: `Tạo nhanh các câu hỏi Sắp xếp từ/cụm từ thuộc bài tập ${targetEx.title || 'bài tập'}.`,
+          defaultCount: 5,
+          minCount: 1,
+          maxCount: 50,
+          onConfirm: ({ count }) => {
+            createBatchSentenceReorder(bIdx, targetEx, count);
+          },
+          onSingle: () => {
+            createBatchSentenceReorder(bIdx, targetEx, 1);
+          }
+        });
+      });
+    });
+
+    function createBatchSentenceTransformation(bIdx, targetEx, count = 1) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const startingPos = getNextPosition();
+      block.items = block.items || [];
+      const batchItems = [];
+      const defaultKw = 'PREVENTED';
+      const defaultPrefix = 'His severe illness';
+      const defaultSuffix = 'from going to the conference.';
+      const defaultAnswer = 'prevented him';
+      const defaultPrompt = 'He could not go to the conference because he was severely ill.';
+
+      for (let i = 0; i < count; i++) {
+        const currentPos = startingPos + i;
         const newItemId = generateUuid();
-        block.items = block.items || [];
-        const defaultKw = 'PREVENTED';
-        const defaultPrefix = 'His severe illness';
-        const defaultSuffix = 'from going to the conference.';
-        const defaultAnswer = 'prevented him';
-        const defaultPrompt = 'He could not go to the conference because he was severely ill.';
-        const newItem = {
+        batchItems.push({
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
-          position: nextPos,
+          position: currentPos,
           exerciseId: targetEx.exerciseId,
           exerciseTitle: targetEx.title,
           prompt: defaultPrompt,
@@ -4427,8 +4497,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           options: [],
           skillCodes: ['grammar'],
           releasePolicy: 'inherit'
-        };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
+        });
         draftState.gradingKey.items[newItemId] = {
           graderType: 'accepted_text',
           keyword: defaultKw,
@@ -4437,35 +4506,60 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: [defaultAnswer],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
-      });
-    });
+      }
 
-    // Add Pronunciation Choice Question
-    const addPronunciationChoiceBtns = container.querySelectorAll('.btn-add-pronunciation-choice');
-    addPronunciationChoiceBtns.forEach(btn => {
+      insertItemsIntoBlockExercise(block, targetEx, batchItems);
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
+    // Add Sentence Transformation Question
+    const addSentenceTransformationBtns = container.querySelectorAll('.btn-add-sentence-transformation');
+    addSentenceTransformationBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         syncInputs();
         const bIdx = Number(btn.getAttribute('data-block-idx'));
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
+        openGenericBatchModal({
+          title: 'Tạo hàng loạt câu hỏi Biến đổi câu',
+          subtitle: `Tạo nhanh các câu hỏi Viết lại câu với từ gợi ý thuộc bài tập ${targetEx.title || 'bài tập'}.`,
+          defaultCount: 5,
+          minCount: 1,
+          maxCount: 50,
+          onConfirm: ({ count }) => {
+            createBatchSentenceTransformation(bIdx, targetEx, count);
+          },
+          onSingle: () => {
+            createBatchSentenceTransformation(bIdx, targetEx, 1);
+          }
+        });
+      });
+    });
+
+    function createBatchPronunciation(bIdx, targetEx, count = 1) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const startingPos = getNextPosition();
+      block.items = block.items || [];
+      const batchItems = [];
+      const defaultWord = 'camera';
+      const defaultIpa = '/ˈkæm.ər.ə/';
+      const defaultOptions = [
+        { id: 'A', label: '/ˈkæm.ər.ə/' },
+        { id: 'B', label: '/kəˈmɪər.ə/' },
+        { id: 'C', label: '/ˈkæm.eɪ.rə/' }
+      ];
+
+      for (let i = 0; i < count; i++) {
+        const currentPos = startingPos + i;
         const newItemId = generateUuid();
-        block.items = block.items || [];
-        const defaultWord = 'camera';
-        const defaultIpa = '/ˈkæm.ər.ə/';
-        const defaultOptions = [
-          { id: 'A', label: '/ˈkæm.ər.ə/' },
-          { id: 'B', label: '/kəˈmɪər.ə/' },
-          { id: 'C', label: '/ˈkæm.eɪ.rə/' }
-        ];
-        const newItem = {
+        batchItems.push({
           itemFamilyId: generateUuid(),
           itemVersionId: newItemId,
-          position: nextPos,
+          position: currentPos,
           exerciseId: targetEx.exerciseId,
           exerciseTitle: targetEx.title,
           prompt: `Choose the correct pronunciation for "${defaultWord}":`,
@@ -4479,20 +4573,46 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           targetWord: defaultWord,
           ipaTranscription: defaultIpa,
           audioUrl: '',
-          options: defaultOptions,
+          options: defaultOptions.map(o => ({ ...o })),
           skillCodes: ['pronunciation'],
           releasePolicy: 'inherit'
-        };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
+        });
         draftState.gradingKey.items[newItemId] = {
           graderType: 'exact_option',
           expectedOptionId: 'A',
           targetWord: defaultWord,
           ipaTranscription: defaultIpa
         };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+      }
+
+      insertItemsIntoBlockExercise(block, targetEx, batchItems);
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
+    // Add Pronunciation Choice Question
+    const addPronunciationChoiceBtns = container.querySelectorAll('.btn-add-pronunciation-choice, .btn-add-pronunciation');
+    addPronunciationChoiceBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const block = draftState.blocks[bIdx];
+        if (!block) return;
+        const targetEx = resolveTargetExercise(block, btn);
+        openGenericBatchModal({
+          title: 'Tạo hàng loạt câu hỏi Phát âm & Ký hiệu IPA',
+          subtitle: `Tạo nhanh các câu hỏi Phát âm & Ký hiệu IPA thuộc bài tập ${targetEx.title || 'bài tập'}.`,
+          defaultCount: 5,
+          minCount: 1,
+          maxCount: 50,
+          onConfirm: ({ count }) => {
+            createBatchPronunciation(bIdx, targetEx, count);
+          },
+          onSingle: () => {
+            createBatchPronunciation(bIdx, targetEx, 1);
+          }
+        });
       });
     });
 
