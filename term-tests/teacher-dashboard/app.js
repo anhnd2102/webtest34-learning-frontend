@@ -2394,6 +2394,7 @@ export function openGenericBatchModal({
   minCount = 1,
   maxCount = 50,
   extraConfigHtml = '',
+  csvConfig = null,
   onConfirm,
   onSingle
 } = {}) {
@@ -2416,17 +2417,45 @@ export function openGenericBatchModal({
   modal.style.display = 'flex';
 
   const initialCount = Math.max(minCount, Math.min(maxCount, parseInt(defaultCount, 10) || minCount));
+  const hasCsv = Boolean(csvConfig);
 
   modal.innerHTML = `
-    <div class="modal-generic-batch-card modal-batch-vocab-card" role="dialog" aria-modal="true" aria-labelledby="generic-batch-modal-title">
+    <div class="modal-generic-batch-card modal-batch-vocab-card" style="max-width: 680px;" role="dialog" aria-modal="true" aria-labelledby="generic-batch-modal-title">
       <div class="modal-generic-batch-header modal-batch-vocab-header">
-        <h3 id="generic-batch-modal-title">⚡ ${escapeHtml(title)}</h3>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          ${hasCsv ? renderSvgIcon('fileText', 'icon-inline') : ''}
+          <h3 id="generic-batch-modal-title" style="margin: 0; font-size: 1.1rem; font-weight: 600;">${hasCsv ? escapeHtml(title) : `⚡ ${escapeHtml(title)}`}</h3>
+        </div>
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng" aria-label="Đóng">✕</button>
       </div>
-      <div class="modal-generic-batch-body modal-batch-vocab-body">
-        ${subtitle ? `<div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">${escapeHtml(subtitle)}</div>` : ''}
-        <div class="form-group batch-count-form-group">
-          <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
+      <div class="modal-generic-batch-body modal-batch-vocab-body" style="padding: 16px 20px;">
+        ${subtitle ? `<div class="alert-notice alert-info" style="margin: 0 0 12px 0; padding: 10px 14px; font-size: 0.85rem;">${escapeHtml(subtitle)}</div>` : ''}
+
+        ${hasCsv ? `
+          <div style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary btn-sm btn-download-template">
+              ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV</span>
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm btn-trigger-csv-file">
+              ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file .CSV</span>
+            </button>
+            <input type="file" class="input-csv-file" accept=".csv,text/csv,text/plain,.tsv" style="display: none;" />
+            <span style="font-size: 0.8rem; color: #64748b;">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label class="form-label" style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+              <strong>Dán các cột từ Excel / Sheets hoặc nội dung CSV:</strong>
+              ${csvConfig.columnsHint ? `<span style="font-size: 0.8rem; color: #64748b;">${escapeHtml(csvConfig.columnsHint)}</span>` : ''}
+            </label>
+            <textarea class="form-control textarea-batch-csv" rows="7" placeholder="${escapeHtml(csvConfig.placeholder || 'Dán các dòng dữ liệu copy từ Excel hoặc file CSV...')}" style="font-family: monospace; font-size: 13px;"></textarea>
+          </div>
+
+          <div class="vocab-preview-summary csv-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
+        ` : ''}
+
+        <div class="form-group batch-count-form-group" style="${hasCsv ? 'margin-top: 14px; border-top: 1px dashed #e2e8f0; padding-top: 12px;' : ''}">
+          <label class="form-label"><strong>${hasCsv ? 'Hoặc tạo nhanh các câu trống để điền trực tiếp:' : 'Tổng số câu hỏi cần tạo:'}</strong></label>
           <div class="batch-count-stepper-wrap">
             <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
             <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
@@ -2436,13 +2465,20 @@ export function openGenericBatchModal({
         </div>
         ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
       </div>
-      <div class="modal-generic-batch-footer modal-batch-vocab-footer">
+      <div class="modal-generic-batch-footer modal-batch-vocab-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 8px 8px;">
         <button type="button" class="btn btn-secondary btn-batch-single">
-          + Tạo 1 câu lẻ
+          + Chỉ tạo 1 câu thủ công
         </button>
-        <button type="button" class="btn btn-primary btn-batch-confirm">
-          ⚡ Tạo ${initialCount} câu hỏi
-        </button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn btn-secondary btn-close-batch-modal-btn">Hủy bỏ</button>
+          ${hasCsv ? `
+            <button type="button" class="btn btn-primary btn-batch-confirm btn-confirm-csv-import">
+              ${renderSvgIcon('check', 'icon-inline')} <span>✓ Xác nhận nhập dữ liệu</span>
+            </button>
+          ` : `
+            <button type="button" class="btn btn-primary btn-batch-confirm">⚡ Tạo ${initialCount} câu hỏi</button>
+          `}
+        </div>
       </div>
     </div>
   `;
@@ -2453,6 +2489,7 @@ export function openGenericBatchModal({
   const confirmBtn = modal.querySelector('.btn-batch-confirm');
   const singleBtn = modal.querySelector('.btn-batch-single');
   const closeBtn = modal.querySelector('.btn-close-batch-modal');
+  const closeCancelBtn = modal.querySelector('.btn-close-batch-modal-btn');
 
   const getSafeCount = () => {
     const raw = parseInt(countInput?.value, 10);
@@ -2461,7 +2498,7 @@ export function openGenericBatchModal({
   };
 
   const updateConfirmButton = (cnt) => {
-    if (confirmBtn) {
+    if (confirmBtn && !hasCsv) {
       confirmBtn.textContent = `⚡ Tạo ${cnt} câu hỏi`;
     }
   };
@@ -2504,6 +2541,86 @@ export function openGenericBatchModal({
     });
   }
 
+  let parsedItems = [];
+  if (hasCsv) {
+    const downloadBtn = modal.querySelector('.btn-download-template');
+    if (downloadBtn && typeof csvConfig.getTemplateCsv === 'function') {
+      downloadBtn.addEventListener('click', () => {
+        const csvContent = csvConfig.getTemplateCsv();
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', csvConfig.templateFileName || 'mau_cau_hoi.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    const triggerFileBtn = modal.querySelector('.btn-trigger-csv-file');
+    const fileInput = modal.querySelector('.input-csv-file');
+    const textarea = modal.querySelector('.textarea-batch-csv');
+    const previewBox = modal.querySelector('.csv-preview-summary');
+
+    const updatePreview = () => {
+      if (!textarea || !previewBox) return;
+      const val = textarea.value.trim();
+      if (!val) {
+        previewBox.style.display = 'none';
+        return;
+      }
+
+      const parseFn = typeof csvConfig.parseCsv === 'function' ? csvConfig.parseCsv : () => ({ items: [] });
+      const parsed = parseFn(val);
+      parsedItems = parsed.items || [];
+      previewBox.style.display = 'block';
+
+      if (parsedItems.length === 0) {
+        previewBox.innerHTML = `<span style="color: #ef4444; font-weight: 500;">Chưa tìm thấy câu hỏi hợp lệ nào. Vui lòng kiểm tra lại cấu trúc cột hoặc bấm “Tải file mẫu CSV” để xem định dạng chuẩn.</span>`;
+      } else {
+        let html = `<div style="color: #10b981; font-weight: 600; margin-bottom: 6px;">Tìm thấy ${parsedItems.length} câu hỏi hợp lệ.</div>`;
+        if (parsed.invalidRows && parsed.invalidRows.length > 0) {
+          html += `<div style="color: #f59e0b; font-size: 12px; margin-bottom: 6px;">Bỏ qua ${parsed.invalidRows.length} dòng không hợp lệ (Dòng: ${parsed.invalidRows.slice(0, 5).map(r => r.line).join(', ')}${parsed.invalidRows.length > 5 ? '...' : ''}).</div>`;
+        }
+        html += `<div class="csv-preview-items" style="max-height: 140px; overflow-y: auto; border-top: 1px dashed #cbd5e1; padding-top: 6px;">`;
+        parsedItems.slice(0, 3).forEach((itm, idx) => {
+          if (typeof csvConfig.renderPreviewRow === 'function') {
+            html += `<div style="margin-bottom: 4px; font-size: 12px;">${csvConfig.renderPreviewRow(itm, idx + 1)}</div>`;
+          } else {
+            html += `<div style="margin-bottom: 4px; font-size: 12px;"><strong>Câu ${idx + 1}:</strong> ${escapeHtml(itm.prompt || '')}</div>`;
+          }
+        });
+        if (parsedItems.length > 3) {
+          html += `<div style="font-size: 11px; color: #64748b; font-style: italic;">... và ${parsedItems.length - 3} câu hỏi khác</div>`;
+        }
+        html += `</div>`;
+        previewBox.innerHTML = html;
+      }
+    };
+
+    if (triggerFileBtn && fileInput) {
+      triggerFileBtn.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          if (textarea) {
+            textarea.value = evt.target.result || '';
+            updatePreview();
+          }
+        };
+        reader.readAsText(file, 'utf-8');
+      });
+    }
+
+    if (textarea) {
+      textarea.addEventListener('input', updatePreview);
+    }
+  }
+
   let cleanupKeydown = null;
 
   const closeModal = () => {
@@ -2518,6 +2635,20 @@ export function openGenericBatchModal({
 
   const doConfirm = () => {
     const finalCount = getSafeCount();
+    const textarea = modal.querySelector('.textarea-batch-csv');
+    const csvVal = textarea ? textarea.value.trim() : '';
+
+    if (hasCsv && csvVal) {
+      if (parsedItems.length > 0 && typeof csvConfig.onImport === 'function') {
+        closeModal();
+        csvConfig.onImport(parsedItems);
+        return;
+      } else if (parsedItems.length === 0) {
+        alert('Dữ liệu CSV không hợp lệ hoặc chưa có câu hỏi nào. Vui lòng kiểm tra lại trước khi xác nhận.');
+        return;
+      }
+    }
+
     closeModal();
     if (typeof onConfirm === 'function') {
       const resultObj = {
@@ -2564,6 +2695,13 @@ export function openGenericBatchModal({
     });
   }
 
+  if (closeCancelBtn) {
+    closeCancelBtn.addEventListener('click', (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      closeModal();
+    });
+  }
+
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       closeModal();
@@ -2592,178 +2730,38 @@ export function openGenericBatchModal({
   return modal;
 }
 
-export function openCsvUploadModal({
-  title = 'Nhập câu hỏi từ file CSV',
-  subtitle = '',
-  templateFileName = 'mau_cau_hoi.csv',
-  getTemplateCsv = () => '',
-  parseCsv = () => ({ items: [], invalidRows: [] }),
-  renderPreviewRow = null,
-  onImport = () => {}
-} = {}) {
-  if (typeof document === 'undefined') {
-    return null;
-  }
+export function openCsvUploadModal(opts = {}) {
+  const {
+    title = 'Nhập câu hỏi từ file CSV',
+    subtitle = '',
+    templateFileName = 'mau_cau_hoi.csv',
+    columnsHint = '',
+    placeholder = '',
+    getTemplateCsv = () => '',
+    parseCsv = () => ({ items: [], invalidRows: [] }),
+    renderPreviewRow = null,
+    onImport = () => {},
+    onSingle = null
+  } = opts;
 
-  let modal = document.querySelector('#generic-csv-upload-modal');
-  if (modal && modal.parentNode) {
-    modal.parentNode.removeChild(modal);
-  }
-
-  modal = document.createElement('div');
-  modal.id = 'generic-csv-upload-modal';
-  modal.className = 'modal-generic-batch-overlay modal-batch-vocab-overlay';
-  document.body.appendChild(modal);
-  modal.style.display = 'flex';
-
-  modal.innerHTML = `
-    <div class="modal-generic-batch-card modal-batch-vocab-card" style="max-width: 660px;" role="dialog" aria-modal="true">
-      <div class="modal-generic-batch-header modal-batch-vocab-header">
-        <div>
-          <h3 style="margin: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 6px;">
-            ${renderSvgIcon('upload', 'icon-inline')} ${escapeHtml(title)}
-          </h3>
-          ${subtitle ? `<div style="font-size: 0.82rem; color: #64748b; margin-top: 4px;">${escapeHtml(subtitle)}</div>` : ''}
-        </div>
-        <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng" aria-label="Đóng">✕</button>
-      </div>
-
-      <div class="modal-generic-batch-body modal-batch-vocab-body" style="padding: 16px 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px;">
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn btn-secondary btn-sm btn-trigger-csv-file">
-              ${renderSvgIcon('upload', 'icon-inline')} Chọn file .csv từ máy tính
-            </button>
-            <input type="file" class="input-csv-file" accept=".csv,.txt,.tsv" style="display: none;" />
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-primary btn-download-template" style="text-decoration: none;">
-            ${renderSvgIcon('download', 'icon-inline')} Tải file mẫu (.csv)
-          </button>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 8px;">
-          <label class="form-label"><strong>Dán dữ liệu bảng tính hoặc nội dung CSV vào đây:</strong></label>
-          <textarea class="form-control textarea-batch-csv" rows="6" placeholder="Dán các cột được copy từ Excel hoặc file CSV..."></textarea>
-          <small class="form-text text-muted" style="font-size: 0.8rem; color: #64748b; margin-top: 4px; display: block;">
-            Hệ thống tự động nhận diện dấu phẩy (,), tab (\\t) và chuẩn UTF-8/BOM. Dòng đầu tiên là tiêu đề cột sẽ tự động được bỏ qua.
-          </small>
-        </div>
-
-        <div class="csv-preview-summary" style="display: none; margin-top: 10px; padding: 10px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;"></div>
-      </div>
-
-      <div class="modal-generic-batch-footer modal-batch-vocab-footer">
-        <button type="button" class="btn btn-secondary btn-close-batch-modal-btn">Hủy</button>
-        <button type="button" class="btn btn-primary btn-confirm-csv-import" disabled>
-          Nhập câu hỏi vào bài
-        </button>
-      </div>
-    </div>
-  `;
-
-  const closeModal = () => {
-    modal.style.display = 'none';
-  };
-
-  modal.querySelectorAll('.btn-close-batch-modal, .btn-close-batch-modal-btn').forEach(btn => {
-    btn.addEventListener('click', closeModal);
+  return openGenericBatchModal({
+    title,
+    subtitle,
+    defaultCount: 5,
+    minCount: 1,
+    maxCount: 50,
+    csvConfig: {
+      templateFileName,
+      columnsHint,
+      placeholder,
+      getTemplateCsv,
+      parseCsv,
+      renderPreviewRow,
+      onImport
+    },
+    onConfirm: ({ count }) => {},
+    onSingle: typeof onSingle === 'function' ? onSingle : null
   });
-
-  const downloadBtn = modal.querySelector('.btn-download-template');
-  if (downloadBtn) {
-    downloadBtn.addEventListener('click', () => {
-      const csvContent = getTemplateCsv();
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', templateFileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    });
-  }
-
-  const triggerFileBtn = modal.querySelector('.btn-trigger-csv-file');
-  const fileInput = modal.querySelector('.input-csv-file');
-  const textarea = modal.querySelector('.textarea-batch-csv');
-  const previewBox = modal.querySelector('.csv-preview-summary');
-  const confirmBtn = modal.querySelector('.btn-confirm-csv-import');
-
-  let parsedItems = [];
-
-  const updatePreview = () => {
-    if (!textarea || !previewBox || !confirmBtn) return;
-    const val = textarea.value.trim();
-    if (!val) {
-      previewBox.style.display = 'none';
-      confirmBtn.disabled = true;
-      confirmBtn.textContent = 'Nhập câu hỏi vào bài';
-      return;
-    }
-
-    const parsed = parseCsv(val);
-    parsedItems = parsed.items || [];
-    previewBox.style.display = 'block';
-
-    if (parsedItems.length === 0) {
-      previewBox.innerHTML = `<span style="color: #ef4444; font-weight: 500;">Chưa tìm thấy câu hỏi hợp lệ nào. Vui lòng kiểm tra lại cấu trúc cột hoặc bấm “Tải file mẫu (.csv)” để xem định dạng chuẩn.</span>`;
-      confirmBtn.disabled = true;
-      confirmBtn.textContent = 'Nhập câu hỏi vào bài';
-    } else {
-      let html = `<div style="color: #10b981; font-weight: 600; margin-bottom: 6px;">Tìm thấy ${parsedItems.length} câu hỏi hợp lệ.</div>`;
-      if (parsed.invalidRows && parsed.invalidRows.length > 0) {
-        html += `<div style="color: #f59e0b; font-size: 12px; margin-bottom: 6px;">Bỏ qua ${parsed.invalidRows.length} dòng không hợp lệ (Dòng: ${parsed.invalidRows.slice(0, 5).map(r => r.line).join(', ')}${parsed.invalidRows.length > 5 ? '...' : ''}).</div>`;
-      }
-      html += `<div class="csv-preview-items" style="max-height: 140px; overflow-y: auto; border-top: 1px dashed #cbd5e1; padding-top: 6px;">`;
-      parsedItems.slice(0, 3).forEach((itm, idx) => {
-        if (typeof renderPreviewRow === 'function') {
-          html += `<div style="margin-bottom: 4px; font-size: 12px;">${renderPreviewRow(itm, idx + 1)}</div>`;
-        } else {
-          html += `<div style="margin-bottom: 4px; font-size: 12px;"><strong>Câu ${idx + 1}:</strong> ${escapeHtml(itm.prompt || '')}</div>`;
-        }
-      });
-      if (parsedItems.length > 3) {
-        html += `<div style="font-size: 11px; color: #64748b; font-style: italic;">... và ${parsedItems.length - 3} câu hỏi khác</div>`;
-      }
-      html += `</div>`;
-      previewBox.innerHTML = html;
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = `Nhập ${parsedItems.length} câu hỏi vào bài`;
-    }
-  };
-
-  if (triggerFileBtn && fileInput) {
-    triggerFileBtn.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        if (textarea) {
-          textarea.value = evt.target.result || '';
-          updatePreview();
-        }
-      };
-      reader.readAsText(file, 'utf-8');
-    });
-  }
-
-  if (textarea) {
-    textarea.addEventListener('input', updatePreview);
-  }
-
-  if (confirmBtn) {
-    confirmBtn.addEventListener('click', () => {
-      if (parsedItems.length > 0 && typeof onImport === 'function') {
-        onImport(parsedItems);
-        closeModal();
-      }
-    });
-  }
-
-  return modal;
 }
 
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
@@ -4370,14 +4368,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Sắp xếp thứ tự nghe (Listening Order)
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-upload-listening-order-csv" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Nhập danh sách sự kiện nghe từ file CSV">
-                  ${renderSvgIcon('upload', 'icon-inline')} Nhập CSV
-                </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-error-correction" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Tìm và sửa lỗi (Error Correction)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-upload-error-correction-csv" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Nhập câu tìm và sửa lỗi từ file CSV">
-                  ${renderSvgIcon('upload', 'icon-inline')} Nhập CSV
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-reorder" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Sắp xếp câu (Sentence Reorder)
@@ -4385,17 +4377,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Biến đổi câu (Transformation)
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-upload-transformation-csv" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Nhập câu viết lại với từ khóa từ file CSV">
-                  ${renderSvgIcon('upload', 'icon-inline')} Nhập CSV
-                </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice btn-add-pronunciation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Phát âm & Ký hiệu IPA (Pronunciation)
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Trắc nghiệm (Single Choice)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-upload-sc-csv" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Nhập danh sách câu hỏi Trắc nghiệm từ file CSV">
-                  ${renderSvgIcon('upload', 'icon-inline')} Nhập CSV
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-multi-group" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Nhóm chọn nhiều (Multi-Select Group)
@@ -5398,125 +5384,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       render();
     }
 
-    // Add Single Choice Question
+    // Add Single Choice Question (Opens CSV / Excel import popup with single item creation option)
     const addScBtns = container.querySelectorAll('.btn-add-single-choice');
     addScBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        syncInputs();
-        const bIdx = Number(btn.getAttribute('data-block-idx'));
-        const block = draftState.blocks[bIdx];
-        if (!block) return;
-        const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
-          title: 'Tạo hàng loạt câu hỏi Trắc nghiệm',
-          subtitle: `Tạo nhanh các câu hỏi Trắc nghiệm (Single Choice) thuộc bài tập ${targetEx.title || 'bài tập'}.`,
-          defaultCount: 5,
-          minCount: 1,
-          maxCount: 50,
-          extraConfigHtml: `
-            <div class="form-group batch-option-count-form-group" style="margin-top: 14px;">
-              <label class="form-label"><strong>Số lượng phương án mỗi câu:</strong></label>
-              <div class="batch-option-radios">
-                <label class="batch-radio-label">
-                  <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="2" />
-                  <span><strong>2 phương án</strong> (A, B)</span>
-                </label>
-                <label class="batch-radio-label">
-                  <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="3" />
-                  <span><strong>3 phương án</strong> (A, B, C)</span>
-                </label>
-                <label class="batch-radio-label">
-                  <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="4" checked />
-                  <span><strong>4 phương án</strong> (A, B, C, D)</span>
-                </label>
-              </div>
-            </div>
-          `,
-          onConfirm: ({ count, modal }) => {
-            let optCount = 4;
-            if (modal) {
-              const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
-                              modal.querySelector('.radio-batch-options:checked') ||
-                              modal.querySelector('.select-batch-option-count');
-              if (checked) optCount = parseInt(checked.value, 10) || 4;
-            }
-            createBatchSingleChoice(bIdx, targetEx, count, optCount);
-          },
-          onSingle: ({ modal } = {}) => {
-            let optCount = 4;
-            if (modal) {
-              const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
-                              modal.querySelector('.radio-batch-options:checked') ||
-                              modal.querySelector('.select-batch-option-count');
-              if (checked) optCount = parseInt(checked.value, 10) || 4;
-            }
-            createBatchSingleChoice(bIdx, targetEx, 1, optCount);
-          }
-        });
-
-        // Wire modal CSV trigger
-        if (typeof document !== 'undefined') {
-          const activeModal = document.querySelector('#generic-batch-modal');
-          const csvSwitchBtn = activeModal?.querySelector ? activeModal.querySelector('.btn-trigger-sc-csv-from-modal') : null;
-          if (csvSwitchBtn && csvSwitchBtn.addEventListener) {
-            csvSwitchBtn.addEventListener('click', () => {
-              if (activeModal.style) activeModal.style.display = 'none';
-              triggerScCsvUpload(bIdx, targetEx);
-            });
-          }
-        }
-      });
-    });
-
-    function triggerScCsvUpload(bIdx, targetEx) {
-      const block = draftState.blocks[bIdx];
-      if (!block) return;
-      openCsvUploadModal({
-        title: 'Nhập câu hỏi Trắc nghiệm từ file CSV',
-        subtitle: `Tải lên danh sách câu hỏi Trắc nghiệm (Single Choice) vào Exercise ${targetEx.title || targetEx.exerciseNumber || ''}.`,
-        templateFileName: 'mau_trac_nghiem_don.csv',
-        getTemplateCsv: generateSingleChoiceTemplateCsv,
-        parseCsv: parseSingleChoiceCsv,
-        renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId.toUpperCase().replace('OPT_', ''))}</em> (${itm.options.length} phương án)`,
-        onImport: (items) => {
-          const startingPos = getNextPosition();
-          const batchItems = [];
-          items.forEach((parsed, idx) => {
-            const newItemId = generateUuid();
-            batchItems.push({
-              itemFamilyId: generateUuid(),
-              itemVersionId: newItemId,
-              position: startingPos + idx,
-              exerciseId: targetEx.exerciseId,
-              exerciseTitle: targetEx.title,
-              prompt: parsed.prompt,
-              helpText: '',
-              interactionType: 'single_choice',
-              pedagogicalTypeCode: 'multiple_choice',
-              layoutType: parsed.layoutType || 'grid_4',
-              graderType: 'exact_option',
-              required: true,
-              maxScore: 1,
-              options: parsed.options,
-              explanation: parsed.explanation || '',
-              skillCodes: [],
-              releasePolicy: 'inherit'
-            });
-            draftState.gradingKey.items[newItemId] = {
-              graderType: 'exact_option',
-              expectedOptionId: parsed.expectedOptionId
-            };
-          });
-          insertItemsIntoBlockExercise(block, targetEx, batchItems);
-          resequenceItemPositions();
-          markAsDirty();
-          render();
-        }
-      });
-    }
-
-    const uploadScCsvBtns = container.querySelectorAll('.btn-upload-sc-csv');
-    uploadScCsvBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         syncInputs();
         const bIdx = Number(btn.getAttribute('data-block-idx'));
@@ -5527,22 +5397,22 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    const uploadLoCsvBtns = container.querySelectorAll('.btn-upload-listening-order-csv');
-    uploadLoCsvBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        syncInputs();
-        const bIdx = Number(btn.getAttribute('data-block-idx'));
-        const block = draftState.blocks[bIdx];
-        if (!block) return;
-        const targetEx = resolveTargetExercise(block, btn);
-
-        openCsvUploadModal({
-          title: 'Nhập bài tập Sắp xếp thứ tự nghe từ CSV',
-          subtitle: `Tải lên nhóm các sự kiện bài nghe vào Exercise ${targetEx.title || targetEx.exerciseNumber || ''}.`,
-          templateFileName: 'mau_sap_xep_thu_tu_nghe.csv',
-          getTemplateCsv: generateListeningOrderTemplateCsv,
-          parseCsv: parseListeningOrderCsv,
-          renderPreviewRow: (itm, idx) => `<strong>Nhóm ${idx}:</strong> ${escapeHtml(itm.prompt)} (${itm.listeningEvents.length} sự kiện nghe, điểm tối đa: ${itm.maxScore})`,
+    function triggerScCsvUpload(bIdx, targetEx) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      openGenericBatchModal({
+        title: 'Trắc nghiệm',
+        subtitle: `Nhập danh sách câu hỏi Trắc nghiệm cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ 2, 3 hoặc 4 phương án (A, B, C, D) và tự động ánh xạ đáp án đúng.`,
+        defaultCount: 5,
+        minCount: 1,
+        maxCount: 50,
+        csvConfig: {
+          templateFileName: 'mau_trac_nghiem_don.csv',
+          columnsHint: 'Cột: Đề bài | Phương án A | B | C | D | Đáp án đúng | Giải thích',
+          placeholder: 'The cruise departs ___ Miami.,at,from,on,in,B,Cụm từ depart from\nShe is interested ___ marine life.,in,at,on,,A,Interested in',
+          getTemplateCsv: generateSingleChoiceTemplateCsv,
+          parseCsv: parseSingleChoiceCsv,
+          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId.toUpperCase().replace('OPT_', ''))}</em> (${itm.options.length} phương án)`,
           onImport: (items) => {
             const startingPos = getNextPosition();
             const batchItems = [];
@@ -5556,74 +5426,20 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 exerciseTitle: targetEx.title,
                 prompt: parsed.prompt,
                 helpText: '',
-                interactionType: 'listening_order',
-                pedagogicalTypeCode: 'listening_order',
-                layoutType: 'event_timeline_order',
-                graderType: 'exact_order',
-                required: true,
-                maxScore: parsed.maxScore,
-                listeningEvents: parsed.listeningEvents,
-                skillCodes: ['listening'],
-                releasePolicy: 'inherit'
-              });
-              draftState.gradingKey.items[newItemId] = {
-                graderType: 'exact_order',
-                listeningEvents: parsed.listeningEvents
-              };
-            });
-            insertItemsIntoBlockExercise(block, targetEx, batchItems);
-            resequenceItemPositions();
-            markAsDirty();
-            render();
-          }
-        });
-      });
-    });
-
-    const uploadEcCsvBtns = container.querySelectorAll('.btn-upload-error-correction-csv');
-    uploadEcCsvBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        syncInputs();
-        const bIdx = Number(btn.getAttribute('data-block-idx'));
-        const block = draftState.blocks[bIdx];
-        if (!block) return;
-        const targetEx = resolveTargetExercise(block, btn);
-
-        openCsvUploadModal({
-          title: 'Nhập câu hỏi Tìm & Sửa lỗi sai từ CSV',
-          subtitle: `Tải lên danh sách câu hỏi Tìm và sửa lỗi sai vào Exercise ${targetEx.title || targetEx.exerciseNumber || ''}.`,
-          templateFileName: 'mau_tim_sua_loi_sai.csv',
-          getTemplateCsv: generateErrorCorrectionTemplateCsv,
-          parseCsv: parseErrorCorrectionCsv,
-          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Lỗi: <span style="color:#ef4444;text-decoration:line-through;">${escapeHtml(itm.targetWord)}</span> ➔ <span style="color:#10b981;">${escapeHtml(itm.accepted[0] || '')}</span>]`,
-          onImport: (items) => {
-            const startingPos = getNextPosition();
-            const batchItems = [];
-            items.forEach((parsed, idx) => {
-              const newItemId = generateUuid();
-              batchItems.push({
-                itemFamilyId: generateUuid(),
-                itemVersionId: newItemId,
-                position: startingPos + idx,
-                exerciseId: targetEx.exerciseId,
-                exerciseTitle: targetEx.title,
-                prompt: parsed.prompt,
-                helpText: '',
-                interactionType: 'error_correction',
-                pedagogicalTypeCode: 'error_correction',
-                layoutType: 'correction_inline',
-                graderType: 'accepted_text',
+                interactionType: 'single_choice',
+                pedagogicalTypeCode: 'multiple_choice',
+                layoutType: parsed.layoutType || 'grid_4',
+                graderType: 'exact_option',
                 required: true,
                 maxScore: 1,
-                targetWord: parsed.targetWord,
+                options: parsed.options,
                 explanation: parsed.explanation || '',
-                skillCodes: ['grammar'],
+                skillCodes: [],
                 releasePolicy: 'inherit'
               });
               draftState.gradingKey.items[newItemId] = {
-                graderType: 'accepted_text',
-                accepted: parsed.accepted || [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                graderType: 'exact_option',
+                expectedOptionId: parsed.expectedOptionId
               };
             });
             insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -5631,64 +5447,48 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             markAsDirty();
             render();
           }
-        });
-      });
-    });
-
-    const uploadTransCsvBtns = container.querySelectorAll('.btn-upload-transformation-csv');
-    uploadTransCsvBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        syncInputs();
-        const bIdx = Number(btn.getAttribute('data-block-idx'));
-        const block = draftState.blocks[bIdx];
-        if (!block) return;
-        const targetEx = resolveTargetExercise(block, btn);
-
-        openCsvUploadModal({
-          title: 'Nhập câu hỏi Viết lại câu từ CSV',
-          subtitle: `Tải lên danh sách câu hỏi Viết lại câu có từ khóa vào Exercise ${targetEx.title || targetEx.exerciseNumber || ''}.`,
-          templateFileName: 'mau_viet_lai_cau.csv',
-          getTemplateCsv: generateSentenceTransformationTemplateCsv,
-          parseCsv: parseSentenceTransformationCsv,
-          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Từ khóa: <strong>${escapeHtml(itm.mandatoryKeyword)}</strong> ➔ Đáp án: <em>${escapeHtml(itm.accepted[0] || '')}</em>]`,
-          onImport: (items) => {
-            const startingPos = getNextPosition();
-            const batchItems = [];
-            items.forEach((parsed, idx) => {
-              const newItemId = generateUuid();
-              batchItems.push({
-                itemFamilyId: generateUuid(),
-                itemVersionId: newItemId,
-                position: startingPos + idx,
-                exerciseId: targetEx.exerciseId,
-                exerciseTitle: targetEx.title,
-                prompt: parsed.prompt,
-                helpText: '',
-                interactionType: 'sentence_transformation',
-                pedagogicalTypeCode: 'sentence_transformation',
-                layoutType: 'transformation_card',
-                graderType: 'accepted_text',
-                required: true,
-                maxScore: 1,
-                mandatoryKeyword: parsed.mandatoryKeyword,
-                targetSentence: parsed.targetSentence || '(1) __________',
-                skillCodes: ['writing'],
-                releasePolicy: 'inherit'
-              });
-              draftState.gradingKey.items[newItemId] = {
-                graderType: 'accepted_text',
-                accepted: parsed.accepted || [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-              };
-            });
-            insertItemsIntoBlockExercise(block, targetEx, batchItems);
-            resequenceItemPositions();
-            markAsDirty();
-            render();
+        },
+        extraConfigHtml: `
+          <div class="form-group batch-option-count-form-group" style="margin-top: 14px;">
+            <label class="form-label"><strong>Số lượng phương án mỗi câu (khi tạo câu trống):</strong></label>
+            <div class="batch-option-radios">
+              <label class="batch-radio-label">
+                <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="2" />
+                <span><strong>2 phương án</strong> (A, B)</span>
+              </label>
+              <label class="batch-radio-label">
+                <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="3" />
+                <span><strong>3 phương án</strong> (A, B, C)</span>
+              </label>
+              <label class="batch-radio-label">
+                <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="4" checked />
+                <span><strong>4 phương án</strong> (A, B, C, D)</span>
+              </label>
+            </div>
+          </div>
+        `,
+        onConfirm: ({ count, modal }) => {
+          let optCount = 4;
+          if (modal) {
+            const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
+                            modal.querySelector('.radio-batch-options:checked') ||
+                            modal.querySelector('.select-batch-option-count');
+            if (checked) optCount = parseInt(checked.value, 10) || 4;
           }
-        });
+          createBatchSingleChoice(bIdx, targetEx, count, optCount);
+        },
+        onSingle: ({ modal } = {}) => {
+          let optCount = 4;
+          if (modal) {
+            const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
+                            modal.querySelector('.radio-batch-options:checked') ||
+                            modal.querySelector('.select-batch-option-count');
+            if (checked) optCount = parseInt(checked.value, 10) || 4;
+          }
+          createBatchSingleChoice(bIdx, targetEx, 1, optCount);
+        }
       });
-    });
+    }
 
     // Add Multi-Select Group Question
     const addMgBtns = container.querySelectorAll('.btn-add-multi-group');
@@ -6002,7 +5802,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    // Add Listening Order Question
+    // Add Listening Order Question (Opens CSV / Excel import popup with single item creation option)
     const addListeningOrderBtns = container.querySelectorAll('.btn-add-listening-order');
     addListeningOrderBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -6011,45 +5811,97 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
-        const newItemId = generateUuid();
-        block.items = block.items || [];
-        const defaultEvents = [
-          { label: 'A', rank: 3, text: 'Sự kiện A' },
-          { label: 'B', rank: 4, text: 'Sự kiện B' },
-          { label: 'C', rank: 1, text: 'Sự kiện C' },
-          { label: 'D', rank: 5, text: 'Sự kiện D' },
-          { label: 'E', rank: 2, text: 'Sự kiện E' }
-        ];
-        const newItem = {
-          itemFamilyId: generateUuid(),
-          itemVersionId: newItemId,
-          position: nextPos,
-          exerciseId: targetEx.exerciseId,
-          exerciseTitle: targetEx.title,
-          prompt: 'Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:',
-          helpText: '',
-          interactionType: 'single_choice',
-          pedagogicalTypeCode: 'listening_order',
-          layoutType: 'timeline_sequence',
-          graderType: 'ordered_sequence',
-          required: true,
-          maxScore: 5,
-          audioUrl: block.audioUrl || 'assets/34/test-1/listening.mp3',
-          events: defaultEvents,
-          options: defaultEvents.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` })),
-          skillCodes: ['listening'],
-          releasePolicy: 'inherit'
+
+        const createSingleListeningOrder = () => {
+          const nextPos = getNextPosition();
+          const newItemId = generateUuid();
+          block.items = block.items || [];
+          const defaultEvents = [
+            { label: 'A', rank: 3, text: 'Sự kiện A' },
+            { label: 'B', rank: 4, text: 'Sự kiện B' },
+            { label: 'C', rank: 1, text: 'Sự kiện C' },
+            { label: 'D', rank: 5, text: 'Sự kiện D' },
+            { label: 'E', rank: 2, text: 'Sự kiện E' }
+          ];
+          const newItem = {
+            itemFamilyId: generateUuid(),
+            itemVersionId: newItemId,
+            position: nextPos,
+            exerciseId: targetEx.exerciseId,
+            exerciseTitle: targetEx.title,
+            prompt: 'Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:',
+            helpText: '',
+            interactionType: 'single_choice',
+            pedagogicalTypeCode: 'listening_order',
+            layoutType: 'timeline_sequence',
+            graderType: 'ordered_sequence',
+            required: true,
+            maxScore: 5,
+            audioUrl: block.audioUrl || 'assets/34/test-1/listening.mp3',
+            events: defaultEvents,
+            options: defaultEvents.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` })),
+            skillCodes: ['listening'],
+            releasePolicy: 'inherit'
+          };
+          insertItemsIntoBlockExercise(block, targetEx, newItem);
+          const sorted = [...defaultEvents].sort((a, b) => a.rank - b.rank);
+          draftState.gradingKey.items[newItemId] = {
+            graderType: 'ordered_sequence',
+            expectedSequence: sorted.map(e => e.label)
+          };
+          resequenceItemPositions();
+          markAsDirty();
+          render();
         };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
-        const sorted = [...defaultEvents].sort((a, b) => a.rank - b.rank);
-        draftState.gradingKey.items[newItemId] = {
-          graderType: 'ordered_sequence',
-          expectedSequence: sorted.map(e => e.label)
-        };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+
+        openCsvUploadModal({
+          title: 'Nhập bài tập Sắp xếp thứ tự nghe vào Exercise (CSV / Excel)',
+          subtitle: `Nhập nhóm các sự kiện bài nghe cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Các sự kiện cùng mã nhóm (Group ID) sẽ được gom thành 1 câu hỏi sắp xếp thứ tự timeline.`,
+          templateFileName: 'mau_sap_xep_thu_tu_nghe.csv',
+          columnsHint: 'Cột: Mã nhóm | Đề bài | Nhãn (A-Z) | Thứ tự đúng (1-N) | Nội dung sự kiện | File Audio',
+          placeholder: 'GROUP_1,Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:,A,3,Sự kiện A,assets/34/test-1/listening.mp3\nGROUP_1,Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:,B,4,Sự kiện B,assets/34/test-1/listening.mp3\nGROUP_1,Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:,C,1,Sự kiện C,assets/34/test-1/listening.mp3\nGROUP_1,Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:,D,5,Sự kiện D,assets/34/test-1/listening.mp3\nGROUP_1,Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:,E,2,Sự kiện E,assets/34/test-1/listening.mp3',
+          getTemplateCsv: generateListeningOrderTemplateCsv,
+          parseCsv: parseListeningOrderCsv,
+          renderPreviewRow: (itm, idx) => `<strong>Nhóm ${idx}:</strong> ${escapeHtml(itm.prompt)} (${itm.listeningEvents.length} sự kiện nghe, điểm tối đa: ${itm.maxScore})`,
+          onSingle: () => {
+            createSingleListeningOrder();
+          },
+          onImport: (items) => {
+            const startingPos = getNextPosition();
+            const batchItems = [];
+            items.forEach((parsed, idx) => {
+              const newItemId = generateUuid();
+              batchItems.push({
+                itemFamilyId: generateUuid(),
+                itemVersionId: newItemId,
+                position: startingPos + idx,
+                exerciseId: targetEx.exerciseId,
+                exerciseTitle: targetEx.title,
+                prompt: parsed.prompt,
+                helpText: '',
+                interactionType: 'single_choice',
+                pedagogicalTypeCode: 'listening_order',
+                layoutType: 'timeline_sequence',
+                graderType: 'ordered_sequence',
+                required: true,
+                maxScore: parsed.maxScore,
+                audioUrl: parsed.audioUrl || block.audioUrl || 'assets/34/test-1/listening.mp3',
+                events: parsed.listeningEvents,
+                options: parsed.listeningEvents.map(e => ({ id: e.label, label: `Sự kiện ${e.label}` })),
+                skillCodes: ['listening'],
+                releasePolicy: 'inherit'
+              });
+              draftState.gradingKey.items[newItemId] = {
+                graderType: 'ordered_sequence',
+                expectedSequence: parsed.listeningEvents.map(e => e.label)
+              };
+            });
+            insertItemsIntoBlockExercise(block, targetEx, batchItems);
+            resequenceItemPositions();
+            markAsDirty();
+            render();
+          }
+        });
       });
     });
 
@@ -6150,7 +6002,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       render();
     }
 
-    // Add Error Correction Question
+    // Add Error Correction Question (Opens CSV / Excel import popup with single item creation option)
     const addErrorCorrectionBtns = container.querySelectorAll('.btn-add-error-correction');
     addErrorCorrectionBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -6159,12 +6011,56 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
+
         openGenericBatchModal({
-          title: 'Tạo hàng loạt câu hỏi Tìm và sửa lỗi',
-          subtitle: `Tạo nhanh các câu hỏi Tìm và sửa lỗi thuộc bài tập ${targetEx.title || 'bài tập'}. Mỗi câu gồm đề bài và các ô nhập từ lỗi/sửa lại để trống để giáo viên điền trực tiếp.`,
+          title: 'Nhập câu hỏi Tìm và sửa lỗi vào Exercise (CSV / Excel)',
+          subtitle: `Nhập danh sách câu hỏi Tìm và sửa lỗi cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ nhập từ lỗi và các đáp án sửa đúng phân tách bằng dấu gạch đứng (|).`,
           defaultCount: 8,
           minCount: 1,
           maxCount: 50,
+          csvConfig: {
+            templateFileName: 'mau_tim_sua_loi_sai.csv',
+            columnsHint: 'Cột: Đề bài câu | Từ/cụm từ lỗi | Các đáp án sửa đúng (|) | Giải thích',
+            placeholder: 'She do not like swimming in cold weather.,do,does|doesn\'t,Chủ ngữ số ít đi với does\nI have seen him yesterday morning.,have seen,saw,Hành động có mốc thời gian quá khứ',
+            getTemplateCsv: generateErrorCorrectionTemplateCsv,
+            parseCsv: parseErrorCorrectionCsv,
+            renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Lỗi: <span style="color:#ef4444;text-decoration:line-through;">${escapeHtml(itm.targetWord)}</span> ➔ <span style="color:#10b981;">${escapeHtml(itm.accepted[0] || '')}</span>]`,
+            onImport: (items) => {
+              const startingPos = getNextPosition();
+              const batchItems = [];
+              items.forEach((parsed, idx) => {
+                const newItemId = generateUuid();
+                batchItems.push({
+                  itemFamilyId: generateUuid(),
+                  itemVersionId: newItemId,
+                  position: startingPos + idx,
+                  exerciseId: targetEx.exerciseId,
+                  exerciseTitle: targetEx.title,
+                  prompt: parsed.prompt,
+                  helpText: '',
+                  interactionType: 'error_correction',
+                  pedagogicalTypeCode: 'error_correction',
+                  layoutType: 'correction_inline',
+                  graderType: 'accepted_text',
+                  required: true,
+                  maxScore: 1,
+                  targetWord: parsed.targetWord,
+                  explanation: parsed.explanation || '',
+                  skillCodes: ['grammar'],
+                  releasePolicy: 'inherit'
+                });
+                draftState.gradingKey.items[newItemId] = {
+                  graderType: 'accepted_text',
+                  accepted: parsed.accepted || [],
+                  normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                };
+              });
+              insertItemsIntoBlockExercise(block, targetEx, batchItems);
+              resequenceItemPositions();
+              markAsDirty();
+              render();
+            }
+          },
           onConfirm: ({ count }) => {
             createBatchErrorCorrection(bIdx, targetEx, count);
           },
@@ -6460,7 +6356,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       render();
     }
 
-    // Add Sentence Transformation Question
+    // Add Sentence Transformation Question (Opens CSV / Excel import popup with single item creation option)
     const addSentenceTransformationBtns = container.querySelectorAll('.btn-add-sentence-transformation');
     addSentenceTransformationBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -6469,12 +6365,61 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
+
         openGenericBatchModal({
-          title: 'Tạo hàng loạt câu hỏi Biến đổi câu',
-          subtitle: `Tạo nhanh các câu hỏi Viết lại câu với từ gợi ý thuộc bài tập ${targetEx.title || 'bài tập'}.`,
+          title: 'Nhập câu hỏi Biến đổi câu vào Exercise (CSV / Excel)',
+          subtitle: `Nhập danh sách câu hỏi Biến đổi câu có từ gợi ý cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ nhập từ khóa bắt buộc và các đáp án đúng phân tách bằng dấu gạch đứng (|).`,
           defaultCount: 5,
           minCount: 1,
           maxCount: 50,
+          csvConfig: {
+            templateFileName: 'mau_viet_lai_cau.csv',
+            columnsHint: 'Cột: Câu gốc | Từ khóa bắt buộc | Câu gợi ý / Chỗ trống | Các phương án đúng (|) | Giải thích',
+            placeholder: 'He could not go because of illness.,PREVENTED,His severe illness (1) __________ from going.,prevented him,Cấu trúc prevent someone from doing\nIt is not necessary for you to come.,NEED,You (1) __________ come tomorrow.,need not|do not need to|don\'t need to,Need not do sth',
+            getTemplateCsv: generateSentenceTransformationTemplateCsv,
+            parseCsv: parseSentenceTransformationCsv,
+            renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Từ khóa: <strong>${escapeHtml(itm.mandatoryKeyword)}</strong> ➔ Đáp án: <em>${escapeHtml(itm.accepted[0] || '')}</em>]`,
+            onImport: (items) => {
+              const startingPos = getNextPosition();
+              const batchItems = [];
+              items.forEach((parsed, idx) => {
+                const newItemId = generateUuid();
+                batchItems.push({
+                  itemFamilyId: generateUuid(),
+                  itemVersionId: newItemId,
+                  position: startingPos + idx,
+                  exerciseId: targetEx.exerciseId,
+                  exerciseTitle: targetEx.title,
+                  prompt: parsed.prompt,
+                  helpText: '',
+                  interactionType: 'short_text',
+                  pedagogicalTypeCode: 'sentence_rewrite',
+                  layoutType: 'keyword_transformation',
+                  graderType: 'accepted_text',
+                  required: true,
+                  maxScore: 1,
+                  keyword: parsed.mandatoryKeyword,
+                  framePrefix: '',
+                  frameSuffix: '',
+                  targetAnswer: parsed.accepted?.[0] || '',
+                  targetSentence: parsed.targetSentence || '(1) __________',
+                  options: [],
+                  skillCodes: ['grammar'],
+                  releasePolicy: 'inherit'
+                });
+                draftState.gradingKey.items[newItemId] = {
+                  graderType: 'accepted_text',
+                  keyword: parsed.mandatoryKeyword,
+                  accepted: parsed.accepted || [],
+                  normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                };
+              });
+              insertItemsIntoBlockExercise(block, targetEx, batchItems);
+              resequenceItemPositions();
+              markAsDirty();
+              render();
+            }
+          },
           onConfirm: ({ count }) => {
             createBatchSentenceTransformation(bIdx, targetEx, count);
           },

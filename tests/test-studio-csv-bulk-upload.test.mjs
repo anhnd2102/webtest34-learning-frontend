@@ -154,7 +154,7 @@ test('CSV Parser resilience: handles RFC 4180 quotes, commas inside fields, and 
   assert.equal(tabResult.items[0].options[0].label, 'Miami');
 });
 
-test('UI: openCsvUploadModal is exported and renderTestBuilderView renders CSV upload buttons for all 4 templates', async () => {
+test('UI: openCsvUploadModal is exported, question type buttons exist in toolbar without cluttered outer CSV buttons, and modal provides bulk import & single creation', async () => {
   const { openCsvUploadModal, renderTestBuilderView } = await import('../term-tests/teacher-dashboard/app.js');
 
   assert.equal(typeof openCsvUploadModal, 'function', 'openCsvUploadModal must be an exported function');
@@ -201,20 +201,27 @@ test('UI: openCsvUploadModal is exported and renderTestBuilderView renders CSV u
 
   const html = mockContainer.innerHTML;
 
-  // Single choice CSV button
-  assert.ok(html.includes('btn-upload-sc-csv'), 'Renders Single Choice CSV upload button (.btn-upload-sc-csv)');
+  // Question type buttons exist in Exercise toolbar
+  assert.ok(html.includes('btn-add-single-choice'), 'Renders Single Choice button in toolbar');
+  assert.ok(html.includes('btn-add-listening-order'), 'Renders Listening Order button in toolbar');
+  assert.ok(html.includes('btn-add-error-correction'), 'Renders Error Correction button in toolbar');
+  assert.ok(html.includes('btn-add-sentence-transformation'), 'Renders Sentence Transformation button in toolbar');
 
-  // Listening order CSV button
-  assert.ok(html.includes('btn-upload-listening-order-csv'), 'Renders Listening Order CSV upload button (.btn-upload-listening-order-csv)');
+  // Cluttered outer CSV buttons are eliminated from toolbar
+  assert.ok(!html.includes('btn-upload-sc-csv'), 'Does not clutter outer toolbar with btn-upload-sc-csv');
+  assert.ok(!html.includes('btn-upload-listening-order-csv'), 'Does not clutter outer toolbar with btn-upload-listening-order-csv');
+  assert.ok(!html.includes('btn-upload-error-correction-csv'), 'Does not clutter outer toolbar with btn-upload-error-correction-csv');
+  assert.ok(!html.includes('btn-upload-transformation-csv'), 'Does not clutter outer toolbar with btn-upload-transformation-csv');
 
-  // Error correction CSV button
-  assert.ok(html.includes('btn-upload-error-correction-csv'), 'Renders Error Correction CSV upload button (.btn-upload-error-correction-csv)');
-
-  // Sentence transformation CSV button
-  assert.ok(html.includes('btn-upload-transformation-csv'), 'Renders Sentence Transformation CSV upload button (.btn-upload-transformation-csv)');
-
-  // Monochrome SVG icon requirement
-  assert.ok(html.includes('icon-inline'), 'Uses icon-inline SVG class on CSV buttons');
-  assert.ok(!html.includes('⚡ Nhập CSV'), 'Does not use colorful emojis on CSV upload buttons');
+  // Verify openCsvUploadModal returns a proper modal or executes onSingle in headless environment
+  let singleClicked = false;
+  openCsvUploadModal({
+    title: 'Nhập câu hỏi Trắc nghiệm vào Exercise (CSV / Excel)',
+    subtitle: 'Hướng dẫn nhập dữ liệu',
+    onSingle: () => {
+      singleClicked = true;
+    }
+  });
+  assert.equal(singleClicked, true, 'Headless invocation of openCsvUploadModal correctly invokes onSingle fallback');
 });
 
