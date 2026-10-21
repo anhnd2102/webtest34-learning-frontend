@@ -4164,6 +4164,37 @@ body:not(.login-page) #auth-panel {
   gap: 8px;
 }
 
+.batch-option-radios {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.batch-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  transition: all 0.15s ease-in-out;
+  user-select: none;
+}
+
+.batch-radio-label:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.batch-radio-label input[type="radio"] {
+  cursor: pointer;
+  accent-color: #0f172a;
+}
+
 
 .item-kind-pill.text_select_pair {
   background: #fdf2f8;

@@ -3698,6 +3698,51 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     }
 
+    function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const startingPos = getNextPosition();
+      block.items = block.items || [];
+      const batchItems = [];
+      const safeOptCount = Math.max(2, Math.min(4, parseInt(optionCount, 10) || 4));
+      const layout = safeOptCount === 2 ? 'grid_2' : (safeOptCount === 3 ? 'grid_3' : 'grid_4');
+
+      for (let i = 0; i < count; i++) {
+        const currentPos = startingPos + i;
+        const newItemId = generateUuid();
+        batchItems.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: currentPos,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
+          prompt: `Câu hỏi ${currentPos}:`,
+          helpText: '',
+          interactionType: 'single_choice',
+          pedagogicalTypeCode: 'multiple_choice',
+          layoutType: layout,
+          graderType: 'exact_option',
+          required: true,
+          maxScore: 1,
+          options: Array.from({ length: safeOptCount }, (_, oIdx) => ({
+            id: String.fromCharCode(65 + oIdx),
+            label: ''
+          })),
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'exact_option',
+          expectedOptionId: 'A'
+        };
+      }
+
+      insertItemsIntoBlockExercise(block, targetEx, batchItems);
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
     // Add Single Choice Question
     const addScBtns = container.querySelectorAll('.btn-add-single-choice');
     addScBtns.forEach(btn => {
@@ -3707,40 +3752,52 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
-        const newItemId = generateUuid();
-        block.items = block.items || [];
-        const newItem = {
-          itemFamilyId: generateUuid(),
-          itemVersionId: newItemId,
-          position: nextPos,
-          exerciseId: targetEx.exerciseId,
-          exerciseTitle: targetEx.title,
-          prompt: `Câu hỏi ${nextPos}:`,
-          helpText: '',
-          interactionType: 'single_choice',
-          pedagogicalTypeCode: 'multiple_choice',
-          layoutType: 'grid_4',
-          graderType: 'exact_option',
-          required: true,
-          maxScore: 1,
-          options: [
-            { id: 'A', label: 'Phương án A' },
-            { id: 'B', label: 'Phương án B' },
-            { id: 'C', label: 'Phương án C' },
-            { id: 'D', label: 'Phương án D' }
-          ],
-          skillCodes: [],
-          releasePolicy: 'inherit'
-        };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
-        draftState.gradingKey.items[newItemId] = {
-          graderType: 'exact_option',
-          expectedOptionId: 'A'
-        };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+        openGenericBatchModal({
+          title: 'Tạo hàng loạt câu hỏi Trắc nghiệm',
+          subtitle: `Tạo nhanh các câu hỏi Trắc nghiệm (Single Choice) thuộc bài tập ${targetEx.title || 'bài tập'}.`,
+          defaultCount: 5,
+          minCount: 1,
+          maxCount: 50,
+          extraConfigHtml: `
+            <div class="form-group batch-option-count-form-group" style="margin-top: 14px;">
+              <label class="form-label"><strong>Số lượng phương án mỗi câu:</strong></label>
+              <div class="batch-option-radios">
+                <label class="batch-radio-label">
+                  <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="2" />
+                  <span><strong>2 phương án</strong> (A, B)</span>
+                </label>
+                <label class="batch-radio-label">
+                  <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="3" />
+                  <span><strong>3 phương án</strong> (A, B, C)</span>
+                </label>
+                <label class="batch-radio-label">
+                  <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="4" checked />
+                  <span><strong>4 phương án</strong> (A, B, C, D)</span>
+                </label>
+              </div>
+            </div>
+          `,
+          onConfirm: ({ count, modal }) => {
+            let optCount = 4;
+            if (modal) {
+              const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
+                              modal.querySelector('.radio-batch-options:checked') ||
+                              modal.querySelector('.select-batch-option-count');
+              if (checked) optCount = parseInt(checked.value, 10) || 4;
+            }
+            createBatchSingleChoice(bIdx, targetEx, count, optCount);
+          },
+          onSingle: ({ modal } = {}) => {
+            let optCount = 4;
+            if (modal) {
+              const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
+                              modal.querySelector('.radio-batch-options:checked') ||
+                              modal.querySelector('.select-batch-option-count');
+              if (checked) optCount = parseInt(checked.value, 10) || 4;
+            }
+            createBatchSingleChoice(bIdx, targetEx, 1, optCount);
+          }
+        });
       });
     });
 
