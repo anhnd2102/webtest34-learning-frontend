@@ -1466,6 +1466,218 @@ export function convertGoogleDriveImageUrl(url) {
   return trimmed;
 }
 
+export function convertGoogleDriveAudioUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+
+  if (trimmed.includes('drive.google.com') || trimmed.includes('docs.google.com')) {
+    let fileId = null;
+    let resourceKey = null;
+
+    const fileDMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (fileDMatch) {
+      fileId = fileDMatch[1];
+    }
+
+    if (!fileId) {
+      const idParamMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (idParamMatch) {
+        fileId = idParamMatch[1];
+      }
+    }
+
+    const resKeyMatch = trimmed.match(/[?&]resourcekey=([a-zA-Z0-9_-]+)/);
+    if (resKeyMatch) {
+      resourceKey = resKeyMatch[1];
+    }
+
+    if (fileId) {
+      let result = `https://docs.google.com/uc?export=download&id=${fileId}`;
+      if (resourceKey) {
+        result += `&resourcekey=${resourceKey}`;
+      }
+      return result;
+    }
+  }
+
+  return trimmed;
+}
+
+export function renderStrictCandidateAudioDock(container, options = {}) {
+  const rawUrl = options.audioUrl || '';
+  const streamUrl = convertGoogleDriveAudioUrl(rawUrl);
+  if (!streamUrl) return '';
+
+  const label = options.label || 'Bài nghe phần thi';
+  const dockHtml = `
+    <div class="strict-audio-dock candidate-audio-dock" data-audio-url="${escapeHtml(streamUrl)}">
+      <div class="strict-audio-header">
+        <span class="audio-badge">${renderSvgIcon('audio', 'icon-inline')} ${escapeHtml(label)}</span>
+        <div class="audio-volume-control">
+          <label class="volume-label" title="Âm lượng loa">
+            ${renderSvgIcon('volume', 'icon-inline')}
+          </label>
+          <input type="range" class="candidate-audio-volume" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng loa" />
+          <output class="volume-output">100%</output>
+        </div>
+      </div>
+      <div class="strict-audio-body">
+        <button type="button" class="btn btn-primary btn-sm btn-start-listening">
+          ${renderSvgIcon('play', 'icon-inline')} Bắt đầu nghe
+        </button>
+        <div class="audio-live-status" style="display:none;">
+          <span class="dot"></span>
+          <span class="status-text">Đang phát bài nghe…</span>
+        </div>
+        <div class="audio-ended-notice" style="display:none;">
+          <span class="dot dot-ended" style="background:#12805c;"></span>
+          <span class="audio-note">Đã phát xong · Audio chỉ được nghe một lần.</span>
+        </div>
+      </div>
+      <audio class="audio-hidden-element" src="${escapeHtml(streamUrl)}" preload="none" style="display:none;"></audio>
+    </div>
+  `;
+
+  if (container && typeof container === 'object') {
+    container.innerHTML = dockHtml;
+    const startBtn = container.querySelector('.btn-start-listening');
+    const volumeInput = container.querySelector('.candidate-audio-volume');
+    const volumeOutput = container.querySelector('.volume-output');
+    const liveStatus = container.querySelector('.audio-live-status');
+    const endedNotice = container.querySelector('.audio-ended-notice');
+    const audioEl = container.querySelector('.audio-hidden-element');
+
+    if (audioEl) {
+      let hasStarted = false;
+      let maxPlayedTime = 0;
+
+      if (startBtn) {
+        startBtn.addEventListener('click', async () => {
+          if (hasStarted) return;
+          hasStarted = true;
+          startBtn.style.display = 'none';
+          if (liveStatus) liveStatus.style.display = 'inline-flex';
+          try {
+            await audioEl.play();
+          } catch (err) {
+            console.error('Không thể tự động phát audio:', err);
+          }
+        });
+      }
+
+      if (volumeInput) {
+        volumeInput.addEventListener('input', (e) => {
+          const val = Number(e.target.value) || 0;
+          audioEl.volume = val;
+          if (volumeOutput) {
+            volumeOutput.textContent = `${Math.round(val * 100)}%`;
+          }
+        });
+      }
+
+      if (typeof audioEl.addEventListener === 'function') {
+        audioEl.addEventListener('timeupdate', () => {
+          maxPlayedTime = Math.max(maxPlayedTime, audioEl.currentTime);
+        });
+
+        // Strict Exam Mode: Chặn tua lại hoặc tua tiến
+        audioEl.addEventListener('seeking', () => {
+          if (Math.abs(audioEl.currentTime - maxPlayedTime) > 1.2) {
+            audioEl.currentTime = maxPlayedTime;
+          }
+        });
+
+        // Strict Exam Mode: Chặn dừng bài nghe (ngoại trừ khi kết thúc)
+        audioEl.addEventListener('pause', () => {
+          if (!audioEl.ended && hasStarted) {
+            audioEl.play().catch(() => {});
+          }
+        });
+
+        audioEl.addEventListener('ended', () => {
+          if (liveStatus) liveStatus.style.display = 'none';
+          if (endedNotice) endedNotice.style.display = 'inline-flex';
+          if (startBtn) {
+            startBtn.disabled = true;
+          }
+        });
+      }
+    }
+  }
+
+  return dockHtml;
+}
+
+export function initStrictCandidateAudioDocks(rootEl) {
+  if (!rootEl || typeof rootEl.querySelectorAll !== 'function') return;
+  const docks = rootEl.querySelectorAll('.strict-audio-dock');
+  docks.forEach(dock => {
+    const startBtn = dock.querySelector('.btn-start-listening');
+    const volumeInput = dock.querySelector('.candidate-audio-volume');
+    const volumeOutput = dock.querySelector('.volume-output');
+    const liveStatus = dock.querySelector('.audio-live-status');
+    const endedNotice = dock.querySelector('.audio-ended-notice');
+    const audioEl = dock.querySelector('.audio-hidden-element');
+
+    if (!audioEl) return;
+    let hasStarted = false;
+    let maxPlayedTime = 0;
+
+    if (startBtn) {
+      startBtn.addEventListener('click', async () => {
+        if (hasStarted) return;
+        hasStarted = true;
+        startBtn.style.display = 'none';
+        if (liveStatus) liveStatus.style.display = 'inline-flex';
+        try {
+          await audioEl.play();
+        } catch (err) {
+          console.error('Không thể tự động phát audio:', err);
+        }
+      });
+    }
+
+    if (volumeInput) {
+      volumeInput.addEventListener('input', (e) => {
+        const val = Number(e.target.value) || 0;
+        audioEl.volume = val;
+        if (volumeOutput) {
+          volumeOutput.textContent = `${Math.round(val * 100)}%`;
+        }
+      });
+    }
+
+    if (typeof audioEl.addEventListener === 'function') {
+      audioEl.addEventListener('timeupdate', () => {
+        maxPlayedTime = Math.max(maxPlayedTime, audioEl.currentTime);
+      });
+
+      // Strict Exam Mode: Chặn tua lại hoặc tua tiến
+      audioEl.addEventListener('seeking', () => {
+        if (Math.abs(audioEl.currentTime - maxPlayedTime) > 1.2) {
+          audioEl.currentTime = maxPlayedTime;
+        }
+      });
+
+      // Strict Exam Mode: Chặn dừng bài nghe (ngoại trừ khi kết thúc)
+      audioEl.addEventListener('pause', () => {
+        if (!audioEl.ended && hasStarted) {
+          audioEl.play().catch(() => {});
+        }
+      });
+
+      audioEl.addEventListener('ended', () => {
+        if (liveStatus) liveStatus.style.display = 'none';
+        if (endedNotice) endedNotice.style.display = 'inline-flex';
+        if (startBtn) {
+          startBtn.disabled = true;
+        }
+      });
+    }
+  });
+}
+
 export function validateImageUrl(url) {
   if (!url || typeof url !== 'string') return false;
   const trimmed = url.trim();
@@ -3139,7 +3351,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               </div>
               <div class="form-group">
                 <label class="form-label"><strong>2. File âm thanh mẫu (Audio Pronunciation URL - Tùy chọn):</strong></label>
-                <input type="text" class="form-control input-pronunciation-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="https://assets.izone.edu.vn/audio/..." />
+                <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
+                  <input type="text" class="form-control input-pronunciation-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="https://assets.izone.edu.vn/audio/... hoặc link Google Drive" style="flex:1;" />
+                  <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="pron" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Nghe thử file âm thanh">
+                    ${renderSvgIcon('play', 'icon-inline')} Nghe thử
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -3614,7 +3831,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           <div class="template-section template-listening-order">
             <div class="form-group audio-input-group">
               <label class="form-label"><strong>File ghi âm Audio (URL / Path):</strong></label>
-              <input type="text" class="form-control form-control-sm input-listening-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="assets/34/test-1/listening.mp3 hoặc https://..." />
+              <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
+                <input type="text" class="form-control form-control-sm input-listening-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="assets/34/test-1/listening.mp3 hoặc link Google Drive" style="flex:1;" />
+                <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Nghe thử file âm thanh">
+                  ${renderSvgIcon('play', 'icon-inline')} Nghe thử
+                </button>
+              </div>
             </div>
 
             <div class="template-header-bar" style="margin-top: 12px;">
@@ -4517,7 +4739,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             </div>
             <div class="form-group block-field">
               <label class="form-label">File âm thanh (Audio URL / Path):</label>
-              <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="assets/34/test-1/listening.mp3 hoặc https://..." />
+              <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
+                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="assets/34/test-1/listening.mp3 hoặc link Google Drive" style="flex:1;" />
+                <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="block" data-index="${index}" title="Nghe thử file âm thanh">
+                  ${renderSvgIcon('play', 'icon-inline')} Nghe thử
+                </button>
+              </div>
             </div>
             <div class="form-group block-field">
               <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
@@ -4694,7 +4921,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         const audioEl = bCard.querySelector('.block-audio-input');
         if (audioEl) {
-          block.audioUrl = audioEl.value.trim() || null;
+          block.audioUrl = convertGoogleDriveAudioUrl(audioEl.value) || null;
           block.stimulusAudioUrl = block.audioUrl;
         }
 
@@ -4757,7 +4984,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 item.targetWord = wordInput.value.trim();
               }
               if (audioInput) {
-                item.audioUrl = audioInput.value.trim();
+                item.audioUrl = convertGoogleDriveAudioUrl(audioInput.value);
               }
               if (ipaInput) {
                 item.ipaTranscription = ipaInput.value.trim();
@@ -5008,7 +5235,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             if (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') {
               const audioInput = iCard.querySelector('.input-listening-audio');
               if (audioInput) {
-                const audVal = audioInput.value.trim();
+                const audVal = convertGoogleDriveAudioUrl(audioInput.value);
                 item.audioUrl = audVal || null;
                 item.stimulusAudioUrl = item.audioUrl;
               }
@@ -5340,6 +5567,63 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         render();
       });
     });
+
+    let currentPreviewAudio = null;
+    let currentPreviewBtn = null;
+
+    const previewAudioBtns = container.querySelectorAll('.btn-preview-audio');
+    if (previewAudioBtns && typeof previewAudioBtns.forEach === 'function') {
+      previewAudioBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const inputWrap = btn.closest('.audio-input-with-preview');
+          const inputEl = inputWrap?.querySelector('input[type="text"]');
+          if (!inputEl) return;
+          const rawUrl = inputEl.value.trim();
+          if (!rawUrl) {
+            alert('Vui lòng nhập đường dẫn file âm thanh hoặc link Google Drive trước khi nghe thử.');
+            return;
+          }
+
+          const streamUrl = convertGoogleDriveAudioUrl(rawUrl);
+          if (inputEl.value !== streamUrl) {
+            inputEl.value = streamUrl;
+          }
+
+          if (currentPreviewAudio && !currentPreviewAudio.paused && currentPreviewBtn === btn) {
+            currentPreviewAudio.pause();
+            btn.innerHTML = `${renderSvgIcon('play', 'icon-inline')} Nghe thử`;
+            return;
+          }
+
+          if (currentPreviewAudio) {
+            currentPreviewAudio.pause();
+            if (currentPreviewBtn) {
+              currentPreviewBtn.innerHTML = `${renderSvgIcon('play', 'icon-inline')} Nghe thử`;
+            }
+          }
+
+          if (typeof Audio !== 'undefined') {
+            currentPreviewAudio = new Audio(streamUrl);
+            currentPreviewBtn = btn;
+            btn.innerHTML = `${renderSvgIcon('pause', 'icon-inline')} Tạm dừng`;
+
+            currentPreviewAudio.addEventListener('ended', () => {
+              btn.innerHTML = `${renderSvgIcon('play', 'icon-inline')} Nghe thử`;
+            });
+
+            currentPreviewAudio.addEventListener('error', () => {
+              btn.innerHTML = `${renderSvgIcon('play', 'icon-inline')} Nghe thử`;
+              alert('Không thể phát file âm thanh. Nếu dùng link Google Drive, vui lòng đảm bảo file đã được cài đặt quyền "Bất kỳ ai có đường liên kết đều có thể xem".');
+            });
+
+            currentPreviewAudio.play().catch(err => {
+              btn.innerHTML = `${renderSvgIcon('play', 'icon-inline')} Nghe thử`;
+              console.warn('Playback error:', err);
+            });
+          }
+        });
+      });
+    }
 
     const addBlockBtn = container.querySelector('#btn-add-block');
     if (addBlockBtn && typeof addBlockBtn.addEventListener === 'function') {
@@ -8869,8 +9153,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="candidate-listening-order-wrap">
                 ${audioSrc ? `
                   <div class="candidate-audio-dock">
-                    <div class="audio-caption">${renderSvgIcon('audio', 'icon-inline')} Đoạn ghi âm câu hỏi:</div>
-                    <audio controls src="${escapeHtml(audioSrc)}" class="sim-audio-player"></audio>
+                    ${renderStrictCandidateAudioDock(null, { audioUrl: audioSrc, label: 'Đoạn ghi âm câu hỏi' })}
                   </div>
                 ` : ''}
 
@@ -9125,13 +9408,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
               ${exAudioUrl ? `
                 <div class="audio-dock sim-audio-dock">
-                  <div class="audio-dock-controls">
-                    <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">
-                      ▶ Phát audio (nếu có)
-                    </button>
-                    <span class="audio-note">${renderSvgIcon('audio', 'icon-inline')} Đã mở khóa nội dung câu hỏi để kiểm tra đề.</span>
-                  </div>
-                  <audio controls src="${escapeHtml(exAudioUrl)}" class="sim-audio-player" style="display:none;"></audio>
+                  ${renderStrictCandidateAudioDock(null, { audioUrl: exAudioUrl, label: `Bài nghe: ${ex.title || 'Bài tập'}` })}
                 </div>
               ` : ''}
 
@@ -9157,10 +9434,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 ${b.instructions ? `<div class="sim-instructions"><p style="margin:0; color:#475569; font-size:0.9rem;">${escapeHtml(b.instructions)}</p></div>` : ''}
                 ${audioUrl && !exercises.some(e => e.audioUrl) ? `
                   <div class="audio-dock sim-audio-dock" style="margin-top:10px;">
-                    <div class="audio-dock-controls">
-                      <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">▶ Phát audio phần thi</button>
-                    </div>
-                    <audio controls src="${escapeHtml(audioUrl)}" class="sim-audio-player" style="display:none;"></audio>
+                    ${renderStrictCandidateAudioDock(null, { audioUrl: audioUrl, label: `Bài nghe phần ${bIdx + 1}` })}
                   </div>
                 ` : ''}
                 ${reading && !exercises.some(e => e.readingPassage) ? `
@@ -9361,6 +9635,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       `;
 
       modal.style.display = 'flex';
+      initStrictCandidateAudioDocks(modal);
 
       const closeBtns = modal.querySelectorAll('#btn-close-simulation, #btn-close-simulation-footer');
       closeBtns.forEach(btn => {

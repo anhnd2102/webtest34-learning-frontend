@@ -163,8 +163,8 @@ test('Candidate Simulation Modal renders canonical IZONE exam layout with brand 
     assert.match(modalHtml, /Tiến độ làm bài/, 'Should render Tiến độ làm bài card in side panel');
     assert.match(modalHtml, /Lưu ý khi làm bài/, 'Should render Lưu ý khi làm bài card in side panel');
 
-    // 5. Audio dock with red play button
-    assert.match(modalHtml, /Phát audio \(nếu có\)/, 'Should render audio test button');
+    // 5. Strict Audio dock with start button
+    assert.match(modalHtml, /Bắt đầu nghe/, 'Should render strict audio start button');
 
     // 6. Question numbers with .qnum badge
     assert.match(modalHtml, /qnum/, 'Should render .qnum badge');
