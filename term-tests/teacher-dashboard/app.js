@@ -1506,8 +1506,16 @@ export function convertGoogleDriveAudioUrl(url) {
 
 export function renderStrictCandidateAudioDock(container, options = {}) {
   const rawUrl = options.audioUrl || '';
-  const streamUrl = convertGoogleDriveAudioUrl(rawUrl);
+  let streamUrl = convertGoogleDriveAudioUrl(rawUrl);
   if (!streamUrl) return '';
+
+  const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (driveMatch) {
+    const fileId = driveMatch[1];
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
+    const apiBase = isLocal ? `${window.location.protocol}//${window.location.hostname}:8788` : '';
+    streamUrl = `${apiBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
+  }
 
   const label = options.label || 'Bài nghe phần thi';
   const dockHtml = `
@@ -5589,6 +5597,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             inputEl.value = streamUrl;
           }
 
+          let playUrl = streamUrl;
+          const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+          if (driveMatch) {
+            const fileId = driveMatch[1];
+            const isLocal = typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
+            const apiBase = isLocal ? `${window.location.protocol}//${window.location.hostname}:8788` : '';
+            playUrl = `${apiBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
+          }
+
           if (currentPreviewAudio && !currentPreviewAudio.paused && currentPreviewBtn === btn) {
             currentPreviewAudio.pause();
             btn.innerHTML = `${renderSvgIcon('play', 'icon-inline')} Nghe thử`;
@@ -5603,7 +5620,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           }
 
           if (typeof Audio !== 'undefined') {
-            currentPreviewAudio = new Audio(streamUrl);
+            currentPreviewAudio = new Audio(playUrl);
             currentPreviewBtn = btn;
             btn.innerHTML = `${renderSvgIcon('pause', 'icon-inline')} Tạm dừng`;
 

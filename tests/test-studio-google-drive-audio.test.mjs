@@ -103,8 +103,8 @@ test('renderStrictCandidateAudioDock creates strict candidate listening player w
 
   // Check URL is normalized inside the hidden audio tag
   assert.ok(
-    mockContainer.innerHTML.includes('https://docs.google.com/uc?export=download') &&
-    mockContainer.innerHTML.includes('id=12345'),
-    'Expected normalized direct streaming Google Drive audio URL'
+    mockContainer.innerHTML.includes('id=12345') &&
+    (mockContainer.innerHTML.includes('docs.google.com/uc') || mockContainer.innerHTML.includes('/api/teacher/media/drive-stream')),
+    'Expected normalized direct streaming or proxy Google Drive audio URL'
   );
 });
