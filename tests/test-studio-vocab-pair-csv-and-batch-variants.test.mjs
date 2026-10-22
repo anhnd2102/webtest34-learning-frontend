@@ -171,8 +171,8 @@ test('renderTestBuilderView renders CSV upload button and batch generate variant
 
   renderTestBuilderView(mockContainer, mockForm);
 
-  // Must render CSV Upload button on Exercise actions
-  assert.ok(mockContainer.innerHTML.includes('btn-upload-vocab-csv'), 'Renders Nhập CSV button');
+  // Must NOT render cluttered CSV Upload button on Exercise header (it is now cleanly inside question type modal)
+  assert.ok(!mockContainer.innerHTML.includes('btn-upload-vocab-csv'), 'Does not render cluttered Nhập CSV button on Exercise header');
 
   // Must render Batch Generate Variants button on Exercise actions
   assert.ok(mockContainer.innerHTML.includes('btn-batch-generate-exercise-variants'), 'Renders Sinh biến thể cả bài button');

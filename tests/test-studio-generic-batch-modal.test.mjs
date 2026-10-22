@@ -406,3 +406,38 @@ test('openGenericBatchModal close button and backdrop click close modal without 
   }
 });
 
+test('openGenericBatchModal supports 2-tab layout with CSV and Stepper panels when csvConfig is provided', () => {
+  const { mockDoc, mockWindow } = createMockEnvironment();
+  const prevDoc = globalThis.document;
+  const prevWin = globalThis.window;
+  globalThis.document = mockDoc;
+  globalThis.window = mockWindow;
+
+  try {
+    const modal = openGenericBatchModal({
+      title: 'Tạo câu hỏi Trắc nghiệm đơn',
+      defaultCount: 6,
+      csvConfig: {
+        placeholder: 'Dán CSV trắc nghiệm...',
+        columnsHint: 'Cột: Đề bài, A, B, C, D, Đáp án đúng',
+        getTemplateCsv: () => 'prompt,a,b,c,d,correct\n',
+        parseCsv: () => ({ items: [] }),
+        onImport: () => {}
+      }
+    });
+
+    assert.ok(modal, 'Modal rendered');
+    assert.match(modal.innerHTML, /modal-batch-tabs/);
+    assert.match(modal.innerHTML, /data-tab="csv"/);
+    assert.match(modal.innerHTML, /data-tab="stepper"/);
+    assert.match(modal.innerHTML, /data-panel="csv"/);
+    assert.match(modal.innerHTML, /data-panel="stepper"/);
+    assert.match(modal.innerHTML, /Nhập từ CSV \/ Excel/);
+    assert.match(modal.innerHTML, /Tạo nhanh câu trống/);
+  } finally {
+    globalThis.document = prevDoc;
+    globalThis.window = prevWin;
+  }
+});
+
+

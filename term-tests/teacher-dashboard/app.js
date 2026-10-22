@@ -2432,38 +2432,62 @@ export function openGenericBatchModal({
         ${subtitle ? `<div class="alert-notice alert-info" style="margin: 0 0 12px 0; padding: 10px 14px; font-size: 0.85rem;">${escapeHtml(subtitle)}</div>` : ''}
 
         ${hasCsv ? `
-          <div style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap;">
-            <button type="button" class="btn btn-secondary btn-sm btn-download-template">
-              ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV</span>
+          <div class="modal-batch-tabs" role="tablist">
+            <button type="button" class="modal-batch-tab-btn active" data-tab="csv" role="tab" aria-selected="true">
+              ${renderSvgIcon('upload', 'icon-inline')} <span>Nhập từ CSV / Excel</span>
             </button>
-            <button type="button" class="btn btn-secondary btn-sm btn-trigger-csv-file">
-              ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file .CSV</span>
+            <button type="button" class="modal-batch-tab-btn" data-tab="stepper" role="tab" aria-selected="false">
+              ${renderSvgIcon('zap', 'icon-inline')} <span>Tạo nhanh câu trống</span>
             </button>
-            <input type="file" class="input-csv-file" accept=".csv,text/csv,text/plain,.tsv" style="display: none;" />
-            <span style="font-size: 0.8rem; color: #64748b;">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
           </div>
 
-          <div class="form-group" style="margin-bottom: 8px;">
-            <label class="form-label" style="display: flex; justify-content: space-between; font-size: 0.875rem;">
-              <strong>Dán các cột từ Excel / Sheets hoặc nội dung CSV:</strong>
-              ${csvConfig.columnsHint ? `<span style="font-size: 0.8rem; color: #64748b;">${escapeHtml(csvConfig.columnsHint)}</span>` : ''}
-            </label>
-            <textarea class="form-control textarea-batch-csv" rows="7" placeholder="${escapeHtml(csvConfig.placeholder || 'Dán các dòng dữ liệu copy từ Excel hoặc file CSV...')}" style="font-family: monospace; font-size: 13px;"></textarea>
+          <div class="modal-batch-tab-panel active" data-panel="csv">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary btn-sm btn-download-template">
+                ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm btn-trigger-csv-file">
+                ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file .CSV</span>
+              </button>
+              <input type="file" class="input-csv-file" accept=".csv,text/csv,text/plain,.tsv" style="display: none;" />
+              <span style="font-size: 0.8rem; color: #64748b;">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 8px;">
+              <label class="form-label" style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+                <strong>Dán các cột từ Excel / Sheets hoặc nội dung CSV:</strong>
+                ${csvConfig.columnsHint ? `<span style="font-size: 0.8rem; color: #64748b;">${escapeHtml(csvConfig.columnsHint)}</span>` : ''}
+              </label>
+              <textarea class="form-control textarea-batch-csv" rows="7" placeholder="${escapeHtml(csvConfig.placeholder || 'Dán các dòng dữ liệu copy từ Excel hoặc file CSV...')}" style="font-family: monospace; font-size: 13px;"></textarea>
+            </div>
+
+            <div class="vocab-preview-summary csv-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
           </div>
 
-          <div class="vocab-preview-summary csv-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
-        ` : ''}
-
-        <div class="form-group batch-count-form-group" style="${hasCsv ? 'margin-top: 14px; border-top: 1px dashed #e2e8f0; padding-top: 12px;' : ''}">
-          <label class="form-label"><strong>${hasCsv ? 'Hoặc tạo nhanh các câu trống để điền trực tiếp:' : 'Tổng số câu hỏi cần tạo:'}</strong></label>
-          <div class="batch-count-stepper-wrap">
-            <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
-            <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
-            <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+          <div class="modal-batch-tab-panel" data-panel="stepper" style="display: none;">
+            <div class="form-group batch-count-form-group">
+              <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
+              <div class="batch-count-stepper-wrap">
+                <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
+                <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+              </div>
+              <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
+            </div>
+            ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
           </div>
-          <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
-        </div>
-        ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
+        ` : `
+          <div class="form-group batch-count-form-group">
+            <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
+            <div class="batch-count-stepper-wrap">
+              <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
+              <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+              <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+            </div>
+            <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
+          </div>
+          ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
+        `}
       </div>
       <div class="modal-generic-batch-footer modal-batch-vocab-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 8px 8px;">
         <button type="button" class="btn btn-secondary btn-batch-single">
@@ -2491,6 +2515,8 @@ export function openGenericBatchModal({
   const closeBtn = modal.querySelector('.btn-close-batch-modal');
   const closeCancelBtn = modal.querySelector('.btn-close-batch-modal-btn');
 
+  let activeTab = hasCsv ? 'csv' : 'stepper';
+
   const getSafeCount = () => {
     const raw = parseInt(countInput?.value, 10);
     if (isNaN(raw)) return minCount;
@@ -2498,10 +2524,40 @@ export function openGenericBatchModal({
   };
 
   const updateConfirmButton = (cnt) => {
-    if (confirmBtn && !hasCsv) {
+    if (!confirmBtn) return;
+    if (!hasCsv) {
       confirmBtn.textContent = `⚡ Tạo ${cnt} câu hỏi`;
+    } else if (activeTab === 'csv') {
+      confirmBtn.className = 'btn btn-primary btn-batch-confirm btn-confirm-csv-import';
+      confirmBtn.innerHTML = `${renderSvgIcon('check', 'icon-inline')} <span>✓ Xác nhận nhập dữ liệu</span>`;
+    } else {
+      confirmBtn.className = 'btn btn-primary btn-batch-confirm';
+      confirmBtn.innerHTML = `${renderSvgIcon('zap', 'icon-inline')} <span>⚡ Tạo ${cnt} câu hỏi</span>`;
     }
   };
+
+  if (hasCsv) {
+    const tabBtns = modal.querySelectorAll('.modal-batch-tab-btn');
+    const panels = modal.querySelectorAll('.modal-batch-tab-panel');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const targetTab = btn.getAttribute('data-tab');
+        activeTab = targetTab;
+        tabBtns.forEach(b => {
+          const isActive = b === btn;
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        panels.forEach(p => {
+          const isPanelActive = p.getAttribute('data-panel') === targetTab;
+          p.classList.toggle('active', isPanelActive);
+          p.style.display = isPanelActive ? 'block' : 'none';
+        });
+        updateConfirmButton(getSafeCount());
+      });
+    });
+  }
 
   const handleStep = (delta) => {
     const cur = getSafeCount();
@@ -2638,13 +2694,17 @@ export function openGenericBatchModal({
     const textarea = modal.querySelector('.textarea-batch-csv');
     const csvVal = textarea ? textarea.value.trim() : '';
 
-    if (hasCsv && csvVal) {
+    if (hasCsv && activeTab === 'csv' && csvVal) {
       if (parsedItems.length > 0 && typeof csvConfig.onImport === 'function') {
         closeModal();
         csvConfig.onImport(parsedItems);
         return;
       } else if (parsedItems.length === 0) {
-        alert('Dữ liệu CSV không hợp lệ hoặc chưa có câu hỏi nào. Vui lòng kiểm tra lại trước khi xác nhận.');
+        if (typeof alert === 'function') {
+          alert('Dữ liệu CSV không hợp lệ hoặc chưa có câu hỏi nào. Vui lòng kiểm tra lại trước khi xác nhận.');
+        } else if (typeof console !== 'undefined' && console.warn) {
+          console.warn('Dữ liệu CSV không hợp lệ hoặc chưa có câu hỏi nào.');
+        }
         return;
       }
     }
@@ -4323,6 +4383,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     return exercises.map((ex, exIdx) => {
       const exItems = (block.items || []).filter(it => it.exerciseId === ex.exerciseId);
       const exQuestionsCount = exItems.reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
+      const hasVariantItems = exItems.some(it => {
+        const type = it.pedagogicalTypeCode || it.itemType;
+        return ['vocabulary_pair', 'error_correction', 'sentence_transformation', 'sentence_reorder'].includes(type);
+      });
       const isFirst = exIdx === 0;
       const isLast = exIdx === exercises.length - 1;
       const isOnly = exercises.length <= 1;
@@ -4340,12 +4404,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="badge badge-info exercise-items-count">${exQuestionsCount} câu hỏi</span>
             </div>
             <div class="exercise-header-actions">
-              <button type="button" class="btn btn-secondary btn-sm btn-upload-vocab-csv" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Nhập danh sách từ vựng từ CSV hoặc dán Excel">
-                ${renderSvgIcon('upload', 'icon-inline')} <span>Nhập CSV</span>
-              </button>
-              <button type="button" class="btn btn-secondary btn-sm btn-batch-generate-exercise-variants" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Tự động sinh biến thể đáp án cho toàn bộ câu hỏi từ vựng trong bài tập này">
-                ${renderSvgIcon('zap', 'icon-inline')} <span>Sinh biến thể cả bài</span>
-              </button>
+              ${hasVariantItems ? `
+                <button type="button" class="btn btn-secondary btn-sm btn-batch-generate-exercise-variants" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Tự động sinh biến thể đáp án cho toàn bộ câu hỏi trong bài tập này">
+                  ${renderSvgIcon('zap', 'icon-inline')} <span>Sinh biến thể cả bài</span>
+                </button>
+              ` : ''}
               <button type="button" class="btn btn-icon btn-sm btn-move-exercise-up" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isFirst ? 'disabled' : ''} title="Di chuyển bài tập lên">↑</button>
               <button type="button" class="btn btn-icon btn-sm btn-move-exercise-down" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isLast ? 'disabled' : ''} title="Di chuyển bài tập xuống">↓</button>
               <button type="button" class="btn btn-icon btn-sm btn-delete-exercise" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isOnly ? 'disabled' : ''} title="Xóa bài tập này">✕</button>

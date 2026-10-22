@@ -7778,3 +7778,262 @@ button.btn-publish-test:hover:not(:disabled) {
   color: #6b7280;
   font-size: 12px;
 }
+
+/* ==========================================================================
+   IZONE Brand Identity & Test Studio Polish
+   ========================================================================== */
+
+/* 1. Neutral Ghost/Outline Icon Buttons (Resetting Global Red Button Overrides) */
+.btn-icon,
+.btn.btn-icon,
+button.btn-icon,
+.btn-toggle-block-collapse,
+.btn-toggle-exercise-collapse,
+.btn-toggle-item-collapse,
+.btn-move-block-up,
+.btn-move-block-down,
+.btn-delete-block,
+.btn-move-exercise-up,
+.btn-move-exercise-down,
+.btn-delete-exercise,
+.btn-move-item-up,
+.btn-move-item-down,
+.btn-delete-item,
+.btn-close-batch-modal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  background: #ffffff !important;
+  color: #64748b !important;
+  border: 1px solid var(--izone-border, #e2e8f0) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-icon:hover:not(:disabled),
+.btn.btn-icon:hover:not(:disabled),
+button.btn-icon:hover:not(:disabled),
+.btn-toggle-block-collapse:hover:not(:disabled),
+.btn-toggle-exercise-collapse:hover:not(:disabled),
+.btn-toggle-item-collapse:hover:not(:disabled),
+.btn-move-block-up:hover:not(:disabled),
+.btn-move-block-down:hover:not(:disabled),
+.btn-move-exercise-up:hover:not(:disabled),
+.btn-move-exercise-down:hover:not(:disabled),
+.btn-move-item-up:hover:not(:disabled),
+.btn-move-item-down:hover:not(:disabled),
+.btn-close-batch-modal:hover:not(:disabled) {
+  background: #f1f5f9 !important;
+  color: var(--izone-navy, #174266) !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Delete Buttons Hover: Warning Red IZONE Accent */
+.btn-delete-block:hover:not(:disabled),
+.btn-delete-exercise:hover:not(:disabled),
+.btn-delete-item:hover:not(:disabled) {
+  background: var(--izone-soft-red, #fff1f2) !important;
+  color: var(--izone-primary, #db0829) !important;
+  border-color: var(--izone-soft-border, #f8ced4) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(219, 8, 41, 0.15) !important;
+}
+
+/* Disabled State for Icon Buttons: Clean Neutral Slate, No Red/Pink Tint */
+.btn-icon:disabled,
+.btn.btn-icon:disabled,
+button.btn-icon:disabled,
+.btn-move-block-up:disabled,
+.btn-move-block-down:disabled,
+.btn-delete-block:disabled,
+.btn-move-exercise-up:disabled,
+.btn-move-exercise-down:disabled,
+.btn-delete-exercise:disabled,
+.btn-move-item-up:disabled,
+.btn-move-item-down:disabled,
+.btn-delete-item:disabled {
+  background: #f8fafc !important;
+  color: #cbd5e1 !important;
+  border-color: #f1f5f9 !important;
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 2. Batch Modal 2-Tab Navigation with IZONE Brand Accent */
+.modal-batch-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--izone-border, #e2e8f0);
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.modal-batch-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent !important;
+  color: #64748b !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  border-radius: 8px 8px 0 0 !important;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: -2px;
+}
+
+.modal-batch-tab-btn:hover:not(.active) {
+  background: #f8fafc !important;
+  color: var(--izone-navy, #174266) !important;
+  transform: none !important;
+}
+
+.modal-batch-tab-btn.active {
+  background: var(--izone-soft-red, #fff1f2) !important;
+  color: var(--izone-primary, #db0829) !important;
+  border-bottom-color: var(--izone-primary, #db0829) !important;
+  font-weight: 700;
+}
+
+.modal-batch-tab-panel {
+  display: none;
+}
+
+.modal-batch-tab-panel.active {
+  display: block;
+}
+
+/* 3. Question Builder & Exercise Visual Hierarchy */
+.builder-exercise-card {
+  background: #ffffff;
+  border: 1px solid var(--izone-border, #e2e8f0);
+  border-left: 4px solid var(--izone-navy, #174266);
+  border-radius: 12px;
+  margin: 16px 0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: box-shadow 0.2s ease;
+}
+
+.builder-exercise-card:hover {
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.builder-exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+  border-radius: 12px 12px 0 0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.exercise-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.exercise-badge {
+  background: var(--izone-navy, #174266);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.exercise-items-count {
+  background: var(--izone-soft-red, #fff1f2);
+  color: var(--izone-primary, #db0829);
+  border: 1px solid var(--izone-soft-border, #f8ced4);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.exercise-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Add Item Question Bar with IZONE Hover Effects */
+.exercise-add-item-bar {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exercise-add-item-bar .add-item-caption {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--izone-navy, #174266);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.exercise-add-item-bar .add-item-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.exercise-add-item-bar button,
+.exercise-add-item-bar .btn-secondary {
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid var(--izone-border, #e2e8f0);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.15s ease;
+}
+
+.exercise-add-item-bar button:hover:not(:disabled),
+.exercise-add-item-bar .btn-secondary:hover:not(:disabled) {
+  background: var(--izone-soft-red, #fff1f2);
+  color: var(--izone-primary, #db0829);
+  border-color: var(--izone-soft-border, #f8ced4);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(219, 8, 41, 0.12);
+}
+
+/* Stepper Input Accent */
+.input-batch-count:focus {
+  border-color: var(--izone-primary, #db0829) !important;
+  box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.14) !important;
+}
+
