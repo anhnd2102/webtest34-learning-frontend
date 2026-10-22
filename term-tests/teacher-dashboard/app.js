@@ -354,7 +354,9 @@ export const ICONS = {
   alignLeft: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>',
   alignCenter: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg>',
   alignRight: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>',
-  removeFormat: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M5 20h6"/><path d="M13 4 8 20"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="21" y1="15" x2="15" y2="21"/></svg>'
+  removeFormat: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M5 20h6"/><path d="M13 4 8 20"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="21" y1="15" x2="15" y2="21"/></svg>',
+  plusCircle: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
+  layers: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
 };
 
 export function renderSvgIcon(name, customClass = '') {
@@ -1890,7 +1892,7 @@ export function renderRichHtmlEditor(container, {
         if (visualEl && visualEl.style) visualEl.style.display = 'none';
         if (codeEl && codeEl.style) codeEl.style.display = 'block';
         toggleBtn.classList?.add?.('active');
-        toggleBtn.textContent = '👁 Trực quan';
+        toggleBtn.textContent = 'Trực quan';
       } else {
         syncToVisual();
         if (codeEl && codeEl.style) codeEl.style.display = 'none';
@@ -2423,8 +2425,8 @@ export function openGenericBatchModal({
     <div class="modal-generic-batch-card modal-batch-vocab-card" style="max-width: 680px;" role="dialog" aria-modal="true" aria-labelledby="generic-batch-modal-title">
       <div class="modal-generic-batch-header modal-batch-vocab-header">
         <div style="display: flex; align-items: center; gap: 8px;">
-          ${hasCsv ? renderSvgIcon('fileText', 'icon-inline') : ''}
-          <h3 id="generic-batch-modal-title" style="margin: 0; font-size: 1.1rem; font-weight: 600;">${hasCsv ? escapeHtml(title) : `⚡ ${escapeHtml(title)}`}</h3>
+          ${hasCsv ? renderSvgIcon('fileText', 'icon-inline') : renderSvgIcon('plusCircle', 'icon-inline')}
+          <h3 id="generic-batch-modal-title" style="margin: 0; font-size: 1.1rem; font-weight: 600;">${escapeHtml(title)}</h3>
         </div>
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng" aria-label="Đóng">✕</button>
       </div>
@@ -2437,7 +2439,7 @@ export function openGenericBatchModal({
               ${renderSvgIcon('upload', 'icon-inline')} <span>Nhập từ CSV / Excel</span>
             </button>
             <button type="button" class="modal-batch-tab-btn" data-tab="stepper" role="tab" aria-selected="false">
-              ${renderSvgIcon('zap', 'icon-inline')} <span>Tạo nhanh câu trống</span>
+              ${renderSvgIcon('plusCircle', 'icon-inline')} <span>Tạo nhanh câu trống</span>
             </button>
           </div>
 
@@ -2497,10 +2499,10 @@ export function openGenericBatchModal({
           <button type="button" class="btn btn-secondary btn-close-batch-modal-btn">Hủy bỏ</button>
           ${hasCsv ? `
             <button type="button" class="btn btn-primary btn-batch-confirm btn-confirm-csv-import">
-              ${renderSvgIcon('check', 'icon-inline')} <span>✓ Xác nhận nhập dữ liệu</span>
+              ${renderSvgIcon('check', 'icon-inline')} <span>Xác nhận nhập dữ liệu</span>
             </button>
           ` : `
-            <button type="button" class="btn btn-primary btn-batch-confirm">⚡ Tạo ${initialCount} câu hỏi</button>
+            <button type="button" class="btn btn-primary btn-batch-confirm">Tạo ${initialCount} câu hỏi</button>
           `}
         </div>
       </div>
@@ -2526,13 +2528,13 @@ export function openGenericBatchModal({
   const updateConfirmButton = (cnt) => {
     if (!confirmBtn) return;
     if (!hasCsv) {
-      confirmBtn.textContent = `⚡ Tạo ${cnt} câu hỏi`;
+      confirmBtn.textContent = `Tạo ${cnt} câu hỏi`;
     } else if (activeTab === 'csv') {
       confirmBtn.className = 'btn btn-primary btn-batch-confirm btn-confirm-csv-import';
-      confirmBtn.innerHTML = `${renderSvgIcon('check', 'icon-inline')} <span>✓ Xác nhận nhập dữ liệu</span>`;
+      confirmBtn.innerHTML = `${renderSvgIcon('check', 'icon-inline')} <span>Xác nhận nhập dữ liệu</span>`;
     } else {
       confirmBtn.className = 'btn btn-primary btn-batch-confirm';
-      confirmBtn.innerHTML = `${renderSvgIcon('zap', 'icon-inline')} <span>⚡ Tạo ${cnt} câu hỏi</span>`;
+      confirmBtn.innerHTML = `${renderSvgIcon('plusCircle', 'icon-inline')} <span>Tạo ${cnt} câu hỏi</span>`;
     }
   };
 
@@ -3619,8 +3621,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="section-sublabel"><strong>Danh sách chuỗi sự kiện & Thứ tự chuẩn:</strong></span>
               <div class="validation-status-wrap">
                 ${orderValidation.isValid 
-                  ? `<span class="badge badge-success">✓ Thứ tự hợp lệ (${events.length} bước)</span>` 
-                  : `<span class="badge badge-warning">⚠ Trùng hoặc thiếu thứ tự: ${orderValidation.duplicates.length ? `Trùng [#${orderValidation.duplicates.join(', ')}]` : ''} ${orderValidation.missingRanks.length ? `Thiếu [#${orderValidation.missingRanks.join(', ')}]` : ''}</span>`}
+                  ? `<span class="badge badge-success">${renderSvgIcon('check', 'icon-inline')} Thứ tự hợp lệ (${events.length} bước)</span>` 
+                  : `<span class="badge badge-warning">${renderSvgIcon('alert', 'icon-inline')} Trùng hoặc thiếu thứ tự: ${orderValidation.duplicates.length ? `Trùng [#${orderValidation.duplicates.join(', ')}]` : ''} ${orderValidation.missingRanks.length ? `Thiếu [#${orderValidation.missingRanks.join(', ')}]` : ''}</span>`}
               </div>
             </div>
 
@@ -3834,7 +3836,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 </div>
                 <div class="pictorial-preview-wrap pictorial-thumb-preview" style="margin-top: 8px;">
                   <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview" style="${imgSrc ? 'max-height: 180px; max-width: 100%; border-radius: 6px; border: 1px solid #e2e8f0; object-fit: contain;' : 'display: none;'}" onerror="this.style.display='none'; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='inline-block';" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='none'; this.style.display='inline-block';" />
-                  <span class="pictorial-preview-error badge badge-warning" style="display: none; margin-top: 4px;">⚠ Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
+                  <span class="pictorial-preview-error badge badge-warning" style="display: none; margin-top: 4px;">${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
                 </div>
               </div>
 
@@ -4095,13 +4097,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="rubric-tabs-container">
               <div class="rubric-tabs-header">
                 <button type="button" class="btn-rubric-tab active" data-tab="criteria" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  📋 Tiêu chí chấm điểm (${criteriaList.length})
+                  ${renderSvgIcon('clipboard', 'icon-inline')} Tiêu chí chấm điểm (${criteriaList.length})
                 </button>
                 <button type="button" class="btn-rubric-tab" data-tab="guidance" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  💡 Hướng dẫn Prompt nâng cao
+                  ${renderSvgIcon('book', 'icon-inline')} Hướng dẫn Prompt nâng cao
                 </button>
                 <button type="button" class="btn-rubric-tab" data-tab="sandbox" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  🧪 Sandbox Chấm thử AI
+                  ${renderSvgIcon('view', 'icon-inline')} Sandbox Chấm thử AI
                 </button>
               </div>
 
@@ -6873,7 +6875,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       modal.innerHTML = `
         <div class="modal-batch-vocab-card">
           <div class="modal-batch-vocab-header">
-            <h3>⚡ Tạo hàng loạt câu hỏi Thẻ từ vựng qua ảnh</h3>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              ${renderSvgIcon('plusCircle', 'icon-inline')}
+              <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Tạo hàng loạt câu hỏi Thẻ từ vựng qua ảnh</h3>
+            </div>
             <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">✕</button>
           </div>
           <div class="modal-batch-vocab-body">
@@ -6891,7 +6896,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               + Chỉ tạo 1 câu
             </button>
             <button type="button" class="btn btn-primary btn-batch-confirm">
-              ⚡ Tạo câu hỏi hàng loạt
+              ${renderSvgIcon('plusCircle', 'icon-inline')} <span>Tạo câu hỏi hàng loạt</span>
             </button>
           </div>
         </div>
@@ -8580,7 +8585,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           }
         } finally {
           btn.disabled = false;
-          btn.textContent = '⚡ Chấm thử AI';
+          btn.innerHTML = `${renderSvgIcon('zap', 'icon-inline')} Chấm thử AI`;
         }
       });
     });
@@ -8864,7 +8869,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="candidate-listening-order-wrap">
                 ${audioSrc ? `
                   <div class="candidate-audio-dock">
-                    <div class="audio-caption">🎧 Đoạn ghi âm câu hỏi:</div>
+                    <div class="audio-caption">${renderSvgIcon('audio', 'icon-inline')} Đoạn ghi âm câu hỏi:</div>
                     <audio controls src="${escapeHtml(audioSrc)}" class="sim-audio-player"></audio>
                   </div>
                 ` : ''}
@@ -9124,7 +9129,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                     <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">
                       ▶ Phát audio (nếu có)
                     </button>
-                    <span class="audio-note">🔊 Đã mở khóa nội dung câu hỏi để kiểm tra đề.</span>
+                    <span class="audio-note">${renderSvgIcon('audio', 'icon-inline')} Đã mở khóa nội dung câu hỏi để kiểm tra đề.</span>
                   </div>
                   <audio controls src="${escapeHtml(exAudioUrl)}" class="sim-audio-player" style="display:none;"></audio>
                 </div>
@@ -9633,7 +9638,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                         <td>${escapeHtml(d.candidateAnswer)}</td>
                         <td><span class="correct-badge">${escapeHtml(d.correctAnswer)}</span></td>
                         <td><strong>${d.score}/${d.maxScore}đ</strong></td>
-                        <td>${d.isCorrect ? '<span class="status-correct">✅ Đúng</span>' : '<span class="status-incorrect">❌ Chưa đúng</span>'}</td>
+                        <td>${d.isCorrect ? `<span class="status-correct">${renderSvgIcon('check', 'icon-inline')} Đúng</span>` : `<span class="status-incorrect">${renderSvgIcon('close', 'icon-inline')} Chưa đúng</span>`}</td>
                       </tr>
                     `).join('')}
                   </tbody>
@@ -9768,7 +9773,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           <div class="publishing-body">
             <div class="alert-notice alert-immutable">
-              <div class="notice-icon">🛡️</div>
+              <div class="notice-icon">${renderSvgIcon('lock', 'icon-inline')}</div>
               <div class="notice-text">
                 <strong>Cơ chế Roster Freezing (Bảo toàn kết quả):</strong>
                 Hệ thống sẽ tự động quét trạng thái bài làm của từng lớp. Bất kỳ lớp nào đã có ít nhất 1 bài nộp (submission_count > 0) sẽ được <strong>BẢO VỆ và ĐÓNG BĂNG</strong>, giữ nguyên phiên bản đề cũ để bảo toàn dữ liệu điểm số.
@@ -9781,7 +9786,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <label class="scope-radio-card">
                   <input type="radio" name="publish_scope" value="whole_course" checked id="radio-scope-whole" />
                   <div class="radio-card-content">
-                    <div class="card-title">🌐 Toàn bộ khối (Mặc định)</div>
+                    <div class="card-title">${renderSvgIcon('book', 'icon-inline')} Toàn bộ khối (Mặc định)</div>
                     <div class="card-desc">Cập nhật đề thi chuẩn cho Danh mục bài test của khối và tự động áp dụng cho tất cả các lớp chưa có học sinh nộp bài.</div>
                   </div>
                 </label>
@@ -9789,7 +9794,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <label class="scope-radio-card">
                   <input type="radio" name="publish_scope" value="specific_classes" id="radio-scope-classes" />
                   <div class="radio-card-content">
-                    <div class="card-title">🏫 Chỉ áp dụng cho các lớp được chọn</div>
+                    <div class="card-title">${renderSvgIcon('classes', 'icon-inline')} Chỉ áp dụng cho các lớp được chọn</div>
                     <div class="card-desc">Chỉ cập nhật đề thi cho các lớp được chỉ định dưới đây (bỏ qua nếu lớp đã thi).</div>
                   </div>
                 </label>
@@ -9814,7 +9819,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           <footer class="publishing-footer">
             <button type="button" class="btn btn-secondary" id="btn-cancel-publish">Hủy</button>
-            <button type="button" class="btn btn-success" id="btn-confirm-publish">🚀 Tiến hành công bố</button>
+            <button type="button" class="btn btn-success" id="btn-confirm-publish">
+              ${renderSvgIcon('publish', 'icon-inline')} <span>Tiến hành công bố</span>
+            </button>
           </footer>
         </div>
       `;
@@ -9904,7 +9911,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           openPublishReportDialog(result);
         } catch (err) {
           confirmBtn.disabled = false;
-          confirmBtn.textContent = '🚀 Tiến hành công bố';
+          confirmBtn.innerHTML = `${renderSvgIcon('publish', 'icon-inline')} Tiến hành công bố`;
           if (errorMsgEl) {
             errorMsgEl.textContent = 'Lỗi công bố: ' + (err.message || 'Lỗi mạng');
             errorMsgEl.style.display = 'block';
@@ -9928,7 +9935,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       const updatedListHtml = updated.length > 0 ? `
         <div class="report-section-block success-block">
-          <h4 class="report-block-title">✅ Các lớp đã cập nhật đề thi mới (${updated.length} lớp):</h4>
+          <h4 class="report-block-title">${renderSvgIcon('check', 'icon-inline')} Các lớp đã cập nhật đề thi mới (${updated.length} lớp):</h4>
           <ul class="report-classes-list">
             ${updated.map(c => `
               <li class="report-class-item updated-item">
@@ -9946,7 +9953,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
       const skippedListHtml = skipped.length > 0 ? `
         <div class="report-section-block warning-block">
-          <h4 class="report-block-title">🔒 Các lớp được bảo vệ & đóng băng (${skipped.length} lớp):</h4>
+          <h4 class="report-block-title">${renderSvgIcon('lock', 'icon-inline')} Các lớp được bảo vệ & đóng băng (${skipped.length} lớp):</h4>
           <p class="skipped-help">Các lớp dưới đây đã có học sinh làm bài thi nên được bảo toàn nguyên vẹn đề gốc.</p>
           <ul class="report-classes-list">
             ${skipped.map(c => `
@@ -9980,7 +9987,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <div class="stat-label">Lớp đóng băng (đã thi)</div>
               </div>
               <div class="report-stat-card stat-info">
-                <div class="stat-icon">${result.catalogUpdated ? '✅' : '—'}</div>
+                <div class="stat-icon">${result.catalogUpdated ? renderSvgIcon('check', 'icon-inline') : '—'}</div>
                 <div class="stat-label">${result.catalogUpdated ? 'Đã cập nhật Catalog khối' : 'Không cập nhật Catalog'}</div>
               </div>
             </div>
@@ -10190,7 +10197,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               if (visualEl.style) visualEl.style.display = 'none';
               if (codeEl.style) codeEl.style.display = 'block';
               toggleBtn.classList?.add?.('active');
-              toggleBtn.textContent = '👁 Trực quan';
+              toggleBtn.textContent = 'Trực quan';
             } else {
               syncToVisual();
               if (codeEl.style) codeEl.style.display = 'none';

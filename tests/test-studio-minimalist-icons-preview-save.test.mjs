@@ -185,3 +185,54 @@ test('teacher dashboard styles.css includes IZONE brand color system tokens', ()
   // Verify btn-save-draft styling with brand red
   assert.ok(css.includes('.btn-save-draft'), 'Should include .btn-save-draft styling');
 });
+
+test('openGenericBatchModal and batch creation interfaces use monochromatic line icons without colorful lightning or checkmark emojis', async () => {
+  const { openGenericBatchModal, ICONS } = await import('../term-tests/teacher-dashboard/app.js');
+  assert.ok(ICONS.plusCircle, 'ICONS should include plusCircle monochromatic icon');
+  assert.ok(ICONS.layers, 'ICONS should include layers monochromatic icon');
+
+  const mockDiv = {
+    id: '',
+    className: '',
+    style: {},
+    innerHTML: '',
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    querySelector: () => null,
+    querySelectorAll: () => []
+  };
+
+  const origDoc = globalThis.document;
+  globalThis.document = {
+    querySelector: () => null,
+    createElement: () => mockDiv,
+    body: { appendChild: () => mockDiv, removeChild: () => {} }
+  };
+
+  try {
+    const modal = openGenericBatchModal({
+      title: 'Trắc nghiệm đơn',
+      defaultCount: 5,
+      csvConfig: {
+        placeholder: 'test',
+        getTemplateCsv: () => '',
+        parseCsv: () => ({ items: [] }),
+        onImport: () => {}
+      }
+    });
+
+    const html = mockDiv.innerHTML;
+    // Must NOT contain colorful lightning or check emojis
+    assert.doesNotMatch(html, /⚡/);
+    assert.doesNotMatch(html, /✓/);
+    assert.doesNotMatch(html, /🚀/);
+    assert.doesNotMatch(html, /🛡️/);
+
+    // Must use plusCircle monochromatic icon for blank questions tab
+    assert.match(html, /data-tab="stepper"/);
+    assert.match(html, /Tạo nhanh câu trống/);
+  } finally {
+    globalThis.document = origDoc;
+  }
+});
+
