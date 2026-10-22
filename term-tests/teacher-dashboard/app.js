@@ -9461,6 +9461,51 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           `;
         };
 
+        const renderSimPictorialGroup = (pictorialItems) => {
+          if (!pictorialItems || !pictorialItems.length) return '';
+          const defaultPrompt = 'Dựa vào hình ảnh và gợi ý, hãy hoàn thành từ/cụm từ tương ứng:';
+          let firstPrompt = defaultPrompt;
+          const rawPrompt = (pictorialItems[0]?.prompt || '').trim();
+          if (rawPrompt && !isVocabTargetWord(rawPrompt, pictorialItems[0]) && rawPrompt !== 'Nhìn hình và hoàn thành từ vựng:') {
+            firstPrompt = rawPrompt;
+          }
+
+          return `
+            <div class="candidate-pictorial-group-container">
+              <div class="candidate-pictorial-group-intro">
+                <div class="candidate-pictorial-group-prompt">
+                  ${escapeHtml(firstPrompt)}
+                </div>
+              </div>
+              <div class="candidate-pictorial-grid">
+                ${pictorialItems.map(item => {
+                  const imgSrc = item.image || item.stimulusImageUrl || '';
+                  return `
+                    <div class="candidate-pictorial-card" data-item-id="${item.itemVersionId}">
+                      <div class="candidate-pictorial-card-header">
+                        <span class="question-num-badge qnum">Câu ${item.position}</span>
+                        <span class="question-type-badge">Từ vựng qua ảnh</span>
+                      </div>
+                      ${imgSrc ? `
+                        <div class="candidate-pictorial-thumb">
+                          <img src="${escapeHtml(imgSrc)}" alt="Câu ${item.position}" onerror="this.parentElement.style.display='none'" />
+                        </div>
+                      ` : ''}
+                      <div class="candidate-pictorial-hints">
+                        ${item.letterHint ? `<div class="pictorial-letter-hint">${escapeHtml(item.letterHint)}</div>` : ''}
+                        ${item.captionHint ? `<div class="pictorial-caption-hint">${escapeHtml(item.captionHint)}</div>` : ''}
+                      </div>
+                      <div class="candidate-pictorial-input-wrap">
+                        <input type="text" class="form-control candidate-pictorial-input" data-item-id="${item.itemVersionId}" placeholder="Nhập từ hoàn chỉnh..." autocomplete="off" />
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        };
+
         const exercisesHtml = exercises.map((ex, exIdx) => {
           const exItems = items.filter(it => it.exerciseId === ex.exerciseId || (!it.exerciseId && exIdx === 0));
           const exItemsList = exItems.length ? exItems : (exercises.length === 1 ? items : []);
@@ -9471,12 +9516,23 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const itemGroups = [];
           exItemsList.forEach(item => {
             const isVocab = item.interactionType === 'text_select_pair';
+            const isSentenceRewrite = item.pedagogicalTypeCode === 'sentence_transformation' || item.layoutType === 'sentence_rewrite';
+            const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.layoutType === 'ipa_card';
+            const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
+            const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+
             const lastGroup = itemGroups[itemGroups.length - 1];
             if (isVocab) {
               if (lastGroup && lastGroup.type === 'vocab_pair_group') {
                 lastGroup.items.push(item);
               } else {
                 itemGroups.push({ type: 'vocab_pair_group', items: [item] });
+              }
+            } else if (isPictorial) {
+              if (lastGroup && lastGroup.type === 'pictorial_group') {
+                lastGroup.items.push(item);
+              } else {
+                itemGroups.push({ type: 'pictorial_group', items: [item] });
               }
             } else {
               itemGroups.push({ type: 'single', item });
@@ -9486,6 +9542,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const exItemsHtml = itemGroups.map(group => {
             if (group.type === 'vocab_pair_group') {
               return renderSimVocabPairTable(group.items);
+            }
+            if (group.type === 'pictorial_group') {
+              return renderSimPictorialGroup(group.items);
             }
             return renderSimQuestionCard(group.item);
           }).join('');
