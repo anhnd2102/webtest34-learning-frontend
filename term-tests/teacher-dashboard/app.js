@@ -314,6 +314,22 @@ export function formatIpaTranscription(rawIpa) {
   return clean ? `/${clean}/` : '';
 }
 
+export function formatOptionDisplayLetter(optId, index = 0) {
+  if (typeof optId === 'string') {
+    const trimmed = optId.trim();
+    const matchOptLetter = trimmed.match(/^opt_([a-zA-Z])$/i);
+    if (matchOptLetter) return matchOptLetter[1].toUpperCase();
+    const matchOptNum = trimmed.match(/^opt_([0-9]+)$/i);
+    if (matchOptNum) {
+      const num = parseInt(matchOptNum[1], 10);
+      if (num >= 1 && num <= 26) return String.fromCharCode(64 + num);
+    }
+    if (/^[A-Za-z]$/.test(trimmed)) return trimmed.toUpperCase();
+  }
+  const safeIdx = typeof index === 'number' && index >= 0 ? index : 0;
+  return String.fromCharCode(65 + safeIdx);
+}
+
 export const ICONS = {
   teacher: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   classes: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
@@ -3309,8 +3325,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         nextBlankNum = uniqueBlankNums.length ? maxBlankNum + 1 : (item.position || 1);
       }
 
-      const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
-      const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
+      const hasLongOption = (item.options || []).some(o => (o.label || '').length > 25);
+      const layout = item.layoutType || (hasLongOption ? 'grid_1' : (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2')));
+      const colsClass = layout === 'grid_1' ? 'grid-cols-1' : (layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2'));
 
       const itemKey = draftState.gradingKey.items[item.itemVersionId] || {};
       const groupKey = item.groupId ? (draftState.gradingKey.groups[item.groupId] || {}) : {};
@@ -3876,16 +3893,19 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         `;
       } else if (isSingleChoice) {
         const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || 'A';
-        const optionsHtml = (item.options || []).map((opt) => `
+        const optionsHtml = (item.options || []).map((opt, optIdx) => {
+          const letter = formatOptionDisplayLetter(opt.id, optIdx);
+          return `
           <div class="option-item-row" data-option-id="${opt.id}">
             <label class="option-select-label" title="Chọn làm đáp án đúng">
               <input type="radio" name="radio_correct_${item.itemVersionId}" class="radio-correct" value="${opt.id}" ${opt.id === expectedId ? 'checked' : ''} data-correct="${opt.id}">
-              <span class="option-key-pill">${opt.id}</span>
+              <span class="option-key-pill">${letter}</span>
             </label>
-            <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${opt.id}..." />
+            <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${letter}..." />
             <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
           </div>
-        `).join('');
+        `;
+        }).join('');
 
         specificHtml = `
           <div class="template-section template-single-choice">
@@ -3894,6 +3914,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="layout-selector-wrap">
                 <span class="layout-title">Bố cục:</span>
                 <select class="form-select form-select-sm select-layout" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  <option value="grid_1" ${layout === 'grid_1' ? 'selected' : ''}>1 cột (Xếp dọc - Phù hợp câu dài)</option>
                   <option value="grid_2" ${layout === 'grid_2' ? 'selected' : ''}>2 cột (grid_2)</option>
                   <option value="grid_3" ${layout === 'grid_3' ? 'selected' : ''}>3 cột (grid_3)</option>
                   <option value="grid_4" ${layout === 'grid_4' ? 'selected' : ''}>4 cột (grid_4)</option>
@@ -3913,16 +3934,19 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       } else if (isMultiGroup) {
         const expectedIds = groupKey.expectedOptionIds || ['A', 'B'];
         const groupIdVal = item.groupId || `group_${blockIdx + 1}`;
-        const optionsHtml = (item.options || []).map((opt) => `
+        const optionsHtml = (item.options || []).map((opt, optIdx) => {
+          const letter = formatOptionDisplayLetter(opt.id, optIdx);
+          return `
           <div class="option-item-row" data-option-id="${opt.id}">
             <label class="option-select-label" title="Tích chọn đáp án đúng cho nhóm">
               <input type="checkbox" class="checkbox-correct" value="${opt.id}" ${expectedIds.includes(opt.id) ? 'checked' : ''} data-correct="${opt.id}">
-              <span class="option-key-pill">${opt.id}</span>
+              <span class="option-key-pill">${letter}</span>
             </label>
-            <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${opt.id}..." />
+            <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${letter}..." />
             <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
           </div>
-        `).join('');
+        `;
+        }).join('');
 
         specificHtml = `
           <div class="template-section template-multi-group">
@@ -3936,6 +3960,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="layout-selector-wrap">
                 <span class="layout-title">Bố cục:</span>
                 <select class="form-select form-select-sm select-layout" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+                  <option value="grid_1" ${layout === 'grid_1' ? 'selected' : ''}>1 cột (Xếp dọc - Phù hợp câu dài)</option>
                   <option value="grid_2" ${layout === 'grid_2' ? 'selected' : ''}>2 cột (grid_2)</option>
                   <option value="grid_3" ${layout === 'grid_3' ? 'selected' : ''}>3 cột (grid_3)</option>
                   <option value="grid_4" ${layout === 'grid_4' ? 'selected' : ''}>4 cột (grid_4)</option>
@@ -9106,8 +9131,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const isVocabPair = item.interactionType === 'text_select_pair';
           const isRubricAsync = item.graderType === 'rubric_async';
 
-          const layout = item.layoutType || (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2'));
-          const colsClass = layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2');
+          const hasLongOption = (item.options || []).some(o => (o.label || '').length > 25);
+          const layout = item.layoutType || (hasLongOption ? 'grid_1' : (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2')));
+          const colsClass = layout === 'grid_1' ? 'grid-cols-1' : (layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2'));
 
           let interactiveHtml = '';
           if (isPronunciation) {
@@ -9126,10 +9152,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 </div>
 
                 <div class="candidate-pron-options-grid ${colsClass}" style="margin-top: 10px;">
-                  ${(item.options || []).map(opt => `
+                  ${(item.options || []).map((opt, optIdx) => `
                     <label class="candidate-choice-label candidate-pron-option-label">
                       <input type="radio" name="sim_pron_${item.itemVersionId}" value="${opt.id}" />
-                      <span class="choice-key">${opt.id}</span>
+                      <span class="choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
                       <span class="choice-text choice-ipa-text">${escapeHtml(opt.label || '')}</span>
                     </label>
                   `).join('')}
@@ -9207,10 +9233,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           } else if (isSingleChoice) {
             interactiveHtml = `
               <div class="candidate-options-grid ${colsClass}">
-                ${(item.options || []).map(opt => `
+                ${(item.options || []).map((opt, optIdx) => `
                   <label class="candidate-choice-label">
                     <input type="radio" name="sim_choice_${item.itemVersionId}" value="${opt.id}" />
-                    <span class="choice-key">${opt.id}</span>
+                    <span class="choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
                     <span class="choice-text">${escapeHtml(opt.label || '')}</span>
                   </label>
                 `).join('')}
@@ -9219,10 +9245,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           } else if (isMultiGroup) {
             interactiveHtml = `
               <div class="candidate-options-grid ${colsClass}">
-                ${(item.options || []).map(opt => `
+                ${(item.options || []).map((opt, optIdx) => `
                   <label class="candidate-choice-label">
                     <input type="checkbox" name="sim_multi_${item.itemVersionId}" value="${opt.id}" />
-                    <span class="choice-key">${opt.id}</span>
+                    <span class="choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
                     <span class="choice-text">${escapeHtml(opt.label || '')}</span>
                   </label>
                 `).join('')}
@@ -12551,11 +12577,31 @@ async function startDashboard() {
 
         const ul = document.createElement('ul');
         ul.className = 'modal-options-list';
-        for (const opt of item.options) {
+        for (let optIdx = 0; optIdx < item.options.length; optIdx++) {
+          const opt = item.options[optIdx];
           const li = document.createElement('li');
           const isSelected = item.studentAnswer === opt.id || (Array.isArray(item.studentAnswer) && item.studentAnswer.includes(opt.id));
-          if (isSelected) li.className = 'is-selected';
-          li.textContent = `${opt.id}: ${opt.label}${isSelected ? ' (Học viên chọn)' : ''}`;
+          const isExpected = item.expectedAnswer === opt.id || item.expectedOptionId === opt.id || (Array.isArray(item.expectedOptionIds) && item.expectedOptionIds.includes(opt.id));
+          const letter = formatOptionDisplayLetter(opt.id, optIdx);
+
+          if (isExpected) {
+            li.classList.add('is-correct-key');
+          } else if (isSelected) {
+            li.classList.add('is-wrong-selection');
+          } else if (isSelected) {
+            li.classList.add('is-selected');
+          }
+
+          let tagText = '';
+          if (isExpected && isSelected) {
+            tagText = ' (✓ Đáp án đúng · Học viên chọn)';
+          } else if (isExpected) {
+            tagText = ' (✓ Đáp án chuẩn)';
+          } else if (isSelected) {
+            tagText = ' (✗ Học viên chọn sai)';
+          }
+
+          li.textContent = `${letter}. ${opt.label || opt.id}${tagText}`;
           ul.append(li);
         }
         optBlock.append(ul);
