@@ -7672,6 +7672,7 @@ button.btn-publish-test:hover:not(:disabled) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .sim-results-title-wrap h3 {
@@ -7710,6 +7711,9 @@ button.btn-publish-test:hover:not(:disabled) {
 .sim-results-body {
   padding: 20px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -7721,6 +7725,7 @@ button.btn-publish-test:hover:not(:disabled) {
   border-radius: 10px;
   padding: 16px 20px;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .score-banner-title {
@@ -7747,7 +7752,9 @@ button.btn-publish-test:hover:not(:disabled) {
 .sim-breakdown-table-wrap {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
 }
 
 .sim-breakdown-table {
@@ -7758,11 +7765,15 @@ button.btn-publish-test:hover:not(:disabled) {
 }
 
 .sim-breakdown-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   background: #f8fafc;
   padding: 10px 12px;
   font-weight: 700;
   color: #475569;
   border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 0 #e2e8f0;
 }
 
 .sim-breakdown-table td {
@@ -7817,6 +7828,7 @@ button.btn-publish-test:hover:not(:disabled) {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 

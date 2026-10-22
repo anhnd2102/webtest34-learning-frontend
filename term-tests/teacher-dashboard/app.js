@@ -9940,9 +9940,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             if (checkedRadio) isAnswered = true;
             const checkedMulti = modal.querySelector(`input[name="sim_multi_${itemId}"]:checked`);
             if (checkedMulti) isAnswered = true;
-            const textInput = modal.querySelector(`.candidate-transformation-input[data-item-id="${itemId}"], .candidate-reorder-input[data-item-id="${itemId}"], .candidate-open-textarea[data-item-id="${itemId}"], .candidate-pictorial-input[data-item-id="${itemId}"]`);
+            const textInput = modal.querySelector(`.candidate-transformation-input[data-item-id="${itemId}"], .candidate-reorder-input[data-item-id="${itemId}"], .candidate-open-textarea[data-item-id="${itemId}"], .candidate-pictorial-input[data-item-id="${itemId}"], .candidate-vocab-text-input[data-item-id="${itemId}"], .candidate-short-input[data-item-id="${itemId}"], .candidate-error-input[data-item-id="${itemId}"], .candidate-correction-input[data-item-id="${itemId}"]`);
             if (textInput && textInput.value && textInput.value.trim().length > 0) isAnswered = true;
-            const selectEl = modal.querySelector(`.candidate-choice-select[data-item-id="${itemId}"]`);
+            const selectEl = modal.querySelector(`.candidate-choice-select[data-item-id="${itemId}"], .candidate-vocab-select[data-item-id="${itemId}"]`);
             if (selectEl && selectEl.value && selectEl.value.trim().length > 0) isAnswered = true;
           }
 
@@ -10023,6 +10023,41 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               isCorrect = candidateAnswer !== '' && candidateAnswer.toUpperCase() === expectedLabel.toUpperCase();
               score = isCorrect ? 1 : 0;
               maxScore = 1;
+            } else if (item?.interactionType === 'text_select_pair' || item?.pedagogicalTypeCode === 'vocabulary_pair') {
+              typeLabel = 'Cặp từ vựng';
+              const textInput = modal.querySelector(`.candidate-vocab-text-input[data-item-id="${itemId}"]`);
+              const selectEl = modal.querySelector(`.candidate-vocab-select[data-item-id="${itemId}"]`);
+              const textVal = textInput?.value?.trim() || '';
+              const optId = selectEl?.value?.trim() || '';
+              const optObj = (item?.options || []).find(o => String(o.id) === String(optId));
+              const selectedOptLabel = optObj?.label || optId;
+
+              if (textVal && selectedOptLabel) {
+                candidateAnswer = `${textVal} · ${selectedOptLabel}`;
+              } else if (textVal) {
+                candidateAnswer = `${textVal} · (chưa chọn nghĩa)`;
+              } else if (selectedOptLabel) {
+                candidateAnswer = `(chưa nhập từ) · ${selectedOptLabel}`;
+              } else {
+                candidateAnswer = '';
+              }
+
+              const accepted = (itemKey.accepted && itemKey.accepted.length > 0)
+                ? itemKey.accepted
+                : (item?.targetWord ? [item.targetWord] : []);
+              const expectedText = accepted[0] || item?.targetWord || '—';
+              const expectedOptId = itemKey.expectedOptionId || '';
+              const expOptObj = (item?.options || []).find(o => String(o.id) === String(expectedOptId));
+              const expectedOptLabel = expOptObj?.label || expectedOptId || '—';
+              correctAnswer = `${expectedText} · ${expectedOptLabel}`;
+
+              const textCorrect = Boolean(textVal) && accepted.some(acc => acc.trim().toLowerCase() === textVal.toLowerCase());
+              const optCorrect = Boolean(optId) && (expectedOptId ? optId === expectedOptId : true);
+
+              maxScore = Number(itemKey.maxScore || item?.maxScore) || 1;
+              const componentScore = maxScore / 2;
+              score = (textCorrect ? componentScore : 0) + (optCorrect ? componentScore : 0);
+              isCorrect = score === maxScore;
             } else if (item?.pedagogicalTypeCode === 'sentence_rewrite') {
               typeLabel = 'Biến đổi câu';
               const input = modal.querySelector(`.candidate-transformation-input[data-item-id="${itemId}"]`);
@@ -10041,6 +10076,31 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               isCorrect = candidateAnswer.toLowerCase().replace(/[.!?]+$/, '').trim() === target.toLowerCase().replace(/[.!?]+$/, '').trim();
               score = isCorrect ? (item?.maxScore || 1) : 0;
               maxScore = item?.maxScore || 1;
+            } else if (item?.interactionType === 'correction_pair' || item?.pedagogicalTypeCode === 'error_correction' || item?.graderType === 'correction_pair') {
+              typeLabel = 'Tìm và sửa lỗi';
+              const errInput = modal.querySelector(`.candidate-error-input[data-item-id="${itemId}"]`);
+              const corrInput = modal.querySelector(`.candidate-correction-input[data-item-id="${itemId}"]`);
+              const errVal = errInput?.value?.trim() || '';
+              const corrVal = corrInput?.value?.trim() || '';
+              candidateAnswer = (errVal || corrVal) ? `${errVal || '(chưa nhập lỗi)'} -> ${corrVal || '(chưa sửa)'}` : '';
+              const expErr = itemKey.expectedError || item?.expectedError || '';
+              const expCorr = itemKey.expectedCorrection || (itemKey.accepted || [])[0] || item?.expectedCorrection || '';
+              correctAnswer = `${expErr} -> ${expCorr}`;
+              const errMatch = !expErr || errVal.toLowerCase() === expErr.toLowerCase();
+              const corrMatch = !expCorr || (itemKey.accepted || [expCorr]).some(a => a.trim().toLowerCase() === corrVal.toLowerCase());
+              maxScore = Number(itemKey.maxScore || item?.maxScore) || 1;
+              const comp = maxScore / 2;
+              score = (errMatch ? comp : 0) + (corrMatch ? comp : 0);
+              isCorrect = score === maxScore;
+            } else if (item?.pedagogicalTypeCode === 'reading_matching' || item?.layoutType === 'split_pane_matching') {
+              typeLabel = 'Ghép nối (Matching)';
+              const select = modal.querySelector(`.candidate-choice-select[data-item-id="${itemId}"]`);
+              candidateAnswer = select?.value?.trim() || '';
+              const expOpt = itemKey.expectedOptionId || item?.expectedOptionId || '';
+              correctAnswer = expOpt || '—';
+              isCorrect = candidateAnswer !== '' && candidateAnswer === expOpt;
+              score = isCorrect ? (item?.maxScore || 1) : 0;
+              maxScore = item?.maxScore || 1;
             } else if (item?.interactionType === 'single_choice' || item?.pedagogicalTypeCode === 'pronunciation_choice' || item?.pedagogicalTypeCode === 'pronunciation_word') {
               typeLabel = 'Trắc nghiệm';
               const checked = modal.querySelector(`input[name="sim_choice_${itemId}"]:checked, input[name="sim_pron_${itemId}"]:checked`);
@@ -10050,11 +10110,39 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               isCorrect = candidateAnswer !== '' && candidateAnswer === expOpt;
               score = isCorrect ? (item?.maxScore || 1) : 0;
               maxScore = item?.maxScore || 1;
-            } else {
-              typeLabel = 'Điền khuyết';
-              const input = modal.querySelector(`.candidate-open-textarea[data-item-id="${itemId}"], .candidate-pictorial-input[data-item-id="${itemId}"]`);
+            } else if (item?.interactionType === 'multi_choice_group') {
+              typeLabel = 'Chọn nhiều';
+              const checkedEls = modal.querySelectorAll(`input[name="sim_multi_${itemId}"]:checked`);
+              const selectedVals = Array.from(checkedEls).map(el => el.value);
+              candidateAnswer = selectedVals.join(', ');
+              const expectedOpts = itemKey.expectedOptionIds || (itemKey.expectedOptionId ? [itemKey.expectedOptionId] : []);
+              correctAnswer = expectedOpts.join(', ');
+              const matchCount = selectedVals.filter(v => expectedOpts.includes(v)).length;
+              maxScore = Number(itemKey.maxScore || item?.maxScore) || 1;
+              score = expectedOpts.length > 0 && selectedVals.length === expectedOpts.length && matchCount === expectedOpts.length ? maxScore : 0;
+              isCorrect = score === maxScore;
+            } else if (item?.pedagogicalTypeCode === 'pictorial_vocabulary' || item?.layoutType === 'pictorial_card') {
+              typeLabel = 'Từ vựng qua ảnh';
+              const input = modal.querySelector(`.candidate-pictorial-input[data-item-id="${itemId}"]`);
               candidateAnswer = input?.value?.trim() || '';
-              const accepted = itemKey.accepted || [];
+              const accepted = (itemKey.accepted && itemKey.accepted.length > 0) ? itemKey.accepted : (item?.targetWord ? [item.targetWord] : []);
+              correctAnswer = accepted[0] || '—';
+              isCorrect = accepted.some(acc => acc.trim().toLowerCase() === candidateAnswer.toLowerCase());
+              score = isCorrect ? (item?.maxScore || 1) : 0;
+              maxScore = item?.maxScore || 1;
+            } else if (item?.graderType === 'rubric_async') {
+              typeLabel = 'Tự luận (AI)';
+              const input = modal.querySelector(`.candidate-open-textarea[data-item-id="${itemId}"]`);
+              candidateAnswer = input?.value?.trim() || '';
+              correctAnswer = '(Chấm tự luận / AI)';
+              score = candidateAnswer ? (item?.maxScore || 4) : 0;
+              maxScore = item?.maxScore || 4;
+              isCorrect = Boolean(candidateAnswer);
+            } else {
+              typeLabel = 'Điền từ';
+              const input = modal.querySelector(`.candidate-short-input[data-item-id="${itemId}"], .candidate-open-textarea[data-item-id="${itemId}"]`);
+              candidateAnswer = input?.value?.trim() || '';
+              const accepted = (itemKey.accepted && itemKey.accepted.length > 0) ? itemKey.accepted : (item?.targetWord ? [item.targetWord] : []);
               correctAnswer = accepted[0] || '—';
               isCorrect = accepted.some(acc => acc.trim().toLowerCase() === candidateAnswer.toLowerCase());
               score = isCorrect ? (item?.maxScore || 1) : 0;
@@ -10102,13 +10190,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </thead>
                   <tbody>
                     ${details.map(d => `
-                      <tr class="${d.isCorrect ? 'row-correct' : 'row-incorrect'}">
+                      <tr class="${d.isCorrect ? 'row-correct' : (d.score > 0 ? 'row-partial' : 'row-incorrect')}">
                         <td><strong>Câu ${d.pos}</strong></td>
                         <td><span class="type-badge">${escapeHtml(d.typeLabel)}</span></td>
                         <td>${escapeHtml(d.candidateAnswer)}</td>
                         <td><span class="correct-badge">${escapeHtml(d.correctAnswer)}</span></td>
                         <td><strong>${d.score}/${d.maxScore}đ</strong></td>
-                        <td>${d.isCorrect ? `<span class="status-correct">${renderSvgIcon('check', 'icon-inline')} Đúng</span>` : `<span class="status-incorrect">${renderSvgIcon('close', 'icon-inline')} Chưa đúng</span>`}</td>
+                        <td>${d.isCorrect ? `<span class="status-correct">${renderSvgIcon('check', 'icon-inline')} Đúng</span>` : (d.score > 0 ? `<span class="status-partial" style="font-weight:700; color:#d97706;">Đúng 50%</span>` : `<span class="status-incorrect">${renderSvgIcon('close', 'icon-inline')} Chưa đúng</span>`)}</td>
                       </tr>
                     `).join('')}
                   </tbody>
