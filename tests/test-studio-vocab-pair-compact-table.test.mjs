@@ -303,3 +303,126 @@ test('Issue 53: Mixed questions exercise groups vocabulary pairs into table whil
     if (originalBodyAppend) globalThis.document.body.appendChild = originalBodyAppend;
   }
 });
+
+test('Issue 53: When item.prompt equals target word (e.g. February), table header prompt falls back to instruction and NEVER leaks the target word', () => {
+  const container = {
+    innerHTML: '',
+    querySelectorAll: () => [],
+    querySelector: (sel) => {
+      if (sel === '#btn-preview-test') {
+        return {
+          addEventListener: (evt, handler) => {
+            if (evt === 'click') handler();
+          }
+        };
+      }
+      return null;
+    }
+  };
+
+  const mockModal = {
+    id: 'candidate-simulation-modal',
+    className: '',
+    innerHTML: '',
+    style: {},
+    classList: { add: () => {}, remove: () => {} },
+    querySelector: () => null,
+    querySelectorAll: () => []
+  };
+
+  const mockForm = {
+    id: '03010000-0000-4000-8000-000000000055',
+    version: 1,
+    status: 'draft',
+    title: 'February Target Word Test',
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '03010000-0000-4000-8000-000000000055',
+      title: 'February Target Word Test',
+      blocks: [
+        {
+          blockId: 'b1',
+          checkpoint: 1,
+          title: 'Section 1',
+          exercises: [
+            {
+              exerciseId: 'ex1',
+              exerciseNumber: 1,
+              title: 'Exercise 1: Bài tập 1: Phần 2',
+              itemIds: ['item_11', 'item_12']
+            }
+          ],
+          items: [
+            {
+              itemFamilyId: 'f11',
+              itemVersionId: 'item_11',
+              position: 11,
+              exerciseId: 'ex1',
+              prompt: 'February', // When syncInputs copies targetWord into prompt
+              targetWord: 'February',
+              interactionType: 'text_select_pair',
+              options: [{ id: 'opt_1', label: 'tháng 2' }]
+            },
+            {
+              itemFamilyId: 'f12',
+              itemVersionId: 'item_12',
+              position: 12,
+              exerciseId: 'ex1',
+              prompt: 'March',
+              targetWord: 'March',
+              interactionType: 'text_select_pair',
+              options: [{ id: 'opt_2', label: 'tháng 3' }]
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        item_11: { graderType: 'accepted_text_exact_option', accepted: ['February'], expectedOptionId: 'opt_1' },
+        item_12: { graderType: 'accepted_text_exact_option', accepted: ['March'], expectedOptionId: 'opt_2' }
+      }
+    }
+  };
+
+  const originalQuerySelector = globalThis.document?.querySelector;
+  const originalCreateElement = globalThis.document?.createElement;
+  const originalBodyAppend = globalThis.document?.body?.appendChild;
+
+  if (!globalThis.document) globalThis.document = {};
+  if (!globalThis.document.body) globalThis.document.body = {};
+
+  globalThis.document.querySelector = (sel) => {
+    if (sel === '#candidate-simulation-modal') return mockModal;
+    return null;
+  };
+  globalThis.document.createElement = () => mockModal;
+  globalThis.document.body.appendChild = (el) => el;
+
+  try {
+    renderTestBuilderView(container, mockForm);
+    const html = mockModal.innerHTML;
+
+    // 1. Phải render table container
+    assert.match(html, /candidate-vocab-table-container/, 'Renders vocab table container');
+
+    // 2. Chữ 'February' KHÔNG ĐƯỢC xuất hiện trong .candidate-vocab-table-prompt (không lộ đáp án lên đầu đề bài)
+    assert.doesNotMatch(
+      html,
+      /<div class="candidate-vocab-table-prompt">\s*February\s*<\/div>/i,
+      'Target word February must NOT be rendered as the prompt of the table'
+    );
+
+    // 3. Thay vào đó, đề bài bảng phải là hướng dẫn chuẩn
+    assert.match(
+      html,
+      /Nghe đoạn ghi âm, nhập từ\/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:/,
+      'Falls back to default instruction prompt when item.prompt is the target word'
+    );
+
+  } finally {
+    if (originalQuerySelector) globalThis.document.querySelector = originalQuerySelector;
+    if (originalCreateElement) globalThis.document.createElement = originalCreateElement;
+    if (originalBodyAppend) globalThis.document.body.appendChild = originalBodyAppend;
+  }
+});

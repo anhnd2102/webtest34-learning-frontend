@@ -9401,9 +9401,27 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           `;
         };
 
+        const isVocabTargetWord = (text, itm) => {
+          if (!text) return true;
+          const t = text.trim();
+          if (itm?.targetWord && itm.targetWord.trim().toLowerCase() === t.toLowerCase()) return true;
+          if (/^Từ vựng( câu \d+)?$/i.test(t)) return true;
+          const accepted = draftState?.gradingKey?.items?.[itm?.itemVersionId]?.accepted || [];
+          if (accepted.some(a => String(a).trim().toLowerCase() === t.toLowerCase())) return true;
+          if (!/(nghe|chọn|điền|nhập|nối|hoàn thành|bài tập|hướng dẫn|listen|write|note|choose|select|match|complete)/i.test(t) && t.split(/\s+/).length <= 5) {
+            return true;
+          }
+          return false;
+        };
+
         const renderSimVocabPairTable = (vocabItems) => {
           if (!vocabItems || !vocabItems.length) return '';
-          const firstPrompt = (vocabItems[0]?.prompt || '').trim() || 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:';
+          const defaultPrompt = 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:';
+          let firstPrompt = defaultPrompt;
+          const rawPrompt = (vocabItems[0]?.prompt || '').trim();
+          if (rawPrompt && !isVocabTargetWord(rawPrompt, vocabItems[0])) {
+            firstPrompt = rawPrompt;
+          }
 
           return `
             <div class="candidate-vocab-table-container">
