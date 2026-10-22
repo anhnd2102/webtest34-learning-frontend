@@ -9383,16 +9383,62 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                             ? 'Nhìn hình và hoàn thành từ vựng:'
                             : escapeHtml(item.prompt || '')))))))));
 
+          if (isVocabPair) {
+            return renderSimVocabPairTable([item]);
+          }
+
           return `
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge qnum">Câu ${item.position}</span>
-                <span class="question-type-badge">${isPronunciation ? 'Phát âm' : (isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : (isVocabPair ? 'Cặp từ vựng' : 'Tự luận chấm AI')))))))))))}</span>
+                <span class="question-type-badge">${isPronunciation ? 'Phát âm' : (isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : 'Tự luận chấm AI'))))))))))}</span>
               </div>
               <div class="candidate-question-prompt">
                 ${promptDisplay}
               </div>
               ${interactiveHtml}
+            </div>
+          `;
+        };
+
+        const renderSimVocabPairTable = (vocabItems) => {
+          if (!vocabItems || !vocabItems.length) return '';
+          const firstPrompt = (vocabItems[0]?.prompt || '').trim() || 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:';
+
+          return `
+            <div class="candidate-vocab-table-container">
+              <div class="candidate-vocab-table-intro">
+                <div class="candidate-vocab-table-prompt">
+                  ${escapeHtml(firstPrompt)}
+                </div>
+              </div>
+              <div class="candidate-vocab-table">
+                <div class="candidate-vocab-table-head">
+                  <div class="vocab-th vocab-th-num">Câu</div>
+                  <div class="vocab-th vocab-th-en">Từ tiếng Anh nghe được (50% điểm)</div>
+                  <div class="vocab-th vocab-th-vi">Nghĩa tiếng Việt tương ứng (50% điểm)</div>
+                </div>
+                <div class="candidate-vocab-table-body">
+                  ${vocabItems.map(item => `
+                    <div class="candidate-vocab-table-row" data-item-id="${item.itemVersionId}">
+                      <div class="vocab-td vocab-td-num">
+                        <span class="vocab-row-num-badge qnum">Câu ${item.position}</span>
+                      </div>
+                      <div class="vocab-td vocab-td-en">
+                        <input type="text" class="form-control candidate-vocab-text-input" data-item-id="${item.itemVersionId}" placeholder="Nhập từ nghe được..." autocomplete="off" />
+                      </div>
+                      <div class="vocab-td vocab-td-vi">
+                        <select class="form-select candidate-vocab-select" data-item-id="${item.itemVersionId}">
+                          <option value="">-- Chọn nghĩa tương ứng --</option>
+                          ${(item.options || []).map(opt => `
+                            <option value="${opt.id}">${escapeHtml(opt.label || '')}</option>
+                          `).join('')}
+                        </select>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
             </div>
           `;
         };
@@ -9403,7 +9449,28 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const exPoints = exItemsList.reduce((sum, it) => sum + (it.maxScore || 1), 0);
           const exAudioUrl = ex.audioUrl || (exercises.length === 1 ? audioUrl : '');
           const exReading = ex.readingPassage || (exercises.length === 1 ? reading : '');
-          const exItemsHtml = exItemsList.map(renderSimQuestionCard).join('');
+
+          const itemGroups = [];
+          exItemsList.forEach(item => {
+            const isVocab = item.interactionType === 'text_select_pair';
+            const lastGroup = itemGroups[itemGroups.length - 1];
+            if (isVocab) {
+              if (lastGroup && lastGroup.type === 'vocab_pair_group') {
+                lastGroup.items.push(item);
+              } else {
+                itemGroups.push({ type: 'vocab_pair_group', items: [item] });
+              }
+            } else {
+              itemGroups.push({ type: 'single', item });
+            }
+          });
+
+          const exItemsHtml = itemGroups.map(group => {
+            if (group.type === 'vocab_pair_group') {
+              return renderSimVocabPairTable(group.items);
+            }
+            return renderSimQuestionCard(group.item);
+          }).join('');
 
           const isSplitPane = exItemsList.some(it => it.pedagogicalTypeCode === 'reading_matching' || it.layoutType === 'split_pane_matching');
 
