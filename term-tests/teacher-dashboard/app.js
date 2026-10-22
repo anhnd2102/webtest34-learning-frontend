@@ -340,7 +340,16 @@ export const ICONS = {
   externalLink: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
   copy: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
   check: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
-  close: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  close: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  chevronDown: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>',
+  chevronUp: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>',
+  chevronRight: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>',
+  chevronLeft: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>',
+  arrowUp: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
+  arrowDown: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
+  arrowRight: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+  table: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/></svg>',
+  image: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
   qr: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
   view: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
   alert: '<svg class="icon-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
@@ -379,7 +388,10 @@ export function renderSvgIcon(name, customClass = '') {
   const icon = ICONS[name];
   if (!icon) return '';
   if (!customClass) return icon;
-  return icon.replace('class="', `class="${customClass} `);
+  if (icon.includes('class="')) {
+    return icon.replace('class="', `class="${customClass} `);
+  }
+  return icon.replace('<svg ', `<svg class="${customClass}" `);
 }
 
 export function parseVocabPairCsv(rawText = '') {
@@ -1244,15 +1256,21 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
     </button>
   `).join('');
 
-  let tableHtml = '';
+  let cardsHtml = '';
   if (!catalog || catalog.length === 0) {
-    tableHtml = `
+    cardsHtml = `
       <div class="empty-catalog-state">
+        <svg class="empty-catalog-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
         <p>Chưa có bài thi nào trong danh mục của khối này.</p>
       </div>
     `;
   } else {
-    const rows = catalog.map(item => {
+    const cards = catalog.map(item => {
       const isPublished = item.status === 'published';
       const badgeClass = isPublished ? 'badge-published' : 'badge-draft';
       const badgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
@@ -1260,52 +1278,42 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
       const phaseBadge = item.phase ? `<span class="phase-pill">Phase ${item.phase}</span>` : '';
 
       return `
-        <tr data-test-key="${item.testKey || ''}" data-test-id="${item.id || ''}">
-          <td class="col-session">
-            <strong>${sessionLabel}</strong>
+        <div class="test-card" data-test-key="${item.testKey || ''}" data-test-id="${item.id || ''}">
+          <div class="test-card-header">
+            <span class="session-badge">${sessionLabel}</span>
             ${phaseBadge}
-          </td>
-          <td class="col-test-key"><code>${item.testKey || '—'}</code></td>
-          <td class="col-title">
-            <span class="test-title-text">${item.title || '—'}</span>
-          </td>
-          <td class="col-version">
-            <span class="version-code" title="${item.formVersionId || ''}">${item.formVersionId ? item.formVersionId.slice(0, 8) + '...' : '—'}</span>
-          </td>
-          <td class="col-status">
             <span class="status-badge ${badgeClass}">${badgeText}</span>
-          </td>
-          <td class="col-actions">
+          </div>
+          <div class="test-card-body">
+            <h3 class="test-card-title">${escapeHtml(item.title || '—')}</h3>
+            <div class="test-card-meta">
+              <span class="meta-item test-key-tag">
+                ${renderSvgIcon('book', 'icon-inline')}
+                <code>${escapeHtml(item.testKey || '—')}</code>
+              </span>
+              <span class="meta-item version-tag" title="${item.formVersionId || ''}">
+                ${renderSvgIcon('lock', 'icon-inline')}
+                <span>${item.formVersionId ? item.formVersionId.slice(0, 8) + '...' : '—'}</span>
+              </span>
+            </div>
+          </div>
+          <div class="test-card-footer">
             <button type="button" class="btn btn-secondary btn-sm btn-edit-test" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}">
-              Chỉnh sửa
+              ${renderSvgIcon('edit', 'icon-inline')} Chỉnh sửa
             </button>
             ${!isPublished ? `
               <button type="button" class="btn btn-outline-danger btn-sm btn-delete-test-draft" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}" title="Xóa bản nháp này">
                 ${renderSvgIcon('trash', 'icon-inline')} Xóa
               </button>
             ` : ''}
-          </td>
-        </tr>
+          </div>
+        </div>
       `;
     }).join('');
 
-    tableHtml = `
-      <div class="catalog-table-wrapper">
-        <table class="catalog-table">
-          <thead>
-            <tr>
-              <th scope="col">Buổi / Phase</th>
-              <th scope="col">Mã bài test</th>
-              <th scope="col">Tên bài thi</th>
-              <th scope="col">Phiên bản Form</th>
-              <th scope="col">Trạng thái</th>
-              <th scope="col">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows}
-          </tbody>
-        </table>
+    cardsHtml = `
+      <div class="test-catalog-grid">
+        ${cards}
       </div>
     `;
   }
@@ -1330,7 +1338,7 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
     </div>
 
     <div class="test-studio-content">
-      ${tableHtml}
+      ${cardsHtml}
     </div>
   `;
 
@@ -1930,7 +1938,7 @@ export function renderRichHtmlEditor(container, {
           <!-- Table Control & Popup -->
           <div class="rich-editor__control dropdown-table-wrap">
             <button type="button" class="btn-editor-action btn-rich-insert-table" title="Chèn Bảng dữ liệu">
-              ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
+              ${renderSvgIcon('table', 'icon-inline')} <span>Chèn bảng</span> ${renderSvgIcon('chevronDown', 'icon-inline')}
             </button>
             <div class="rich-editor__popup table-presets-menu" style="display: none;">
               <strong>Tạo bảng nhanh</strong>
@@ -1953,7 +1961,7 @@ export function renderRichHtmlEditor(container, {
           <!-- Image Control & Popup -->
           <div class="rich-editor__control dropdown-image-wrap">
             <button type="button" class="btn-editor-action btn-rich-insert-image" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
-              ${renderSvgIcon('image', 'icon-inline')} ▧ Chèn ảnh
+              ${renderSvgIcon('image', 'icon-inline')} <span>Chèn ảnh</span>
             </button>
             <div class="rich-editor__popup image-insert-popup" style="display: none;">
               <label>
@@ -2664,7 +2672,7 @@ export function openGenericBatchModal({
           ${hasCsv ? renderSvgIcon('fileText', 'icon-inline') : renderSvgIcon('plusCircle', 'icon-inline')}
           <h3 id="generic-batch-modal-title" style="margin: 0; font-size: 1.1rem; font-weight: 600;">${escapeHtml(title)}</h3>
         </div>
-        <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng" aria-label="Đóng">✕</button>
+        <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
       <div class="modal-generic-batch-body modal-batch-vocab-body" style="padding: 16px 20px;">
         ${subtitle ? `<div class="alert-notice alert-info" style="margin: 0 0 12px 0; padding: 10px 14px; font-size: 0.85rem;">${escapeHtml(subtitle)}</div>` : ''}
@@ -3358,7 +3366,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${opt.id}</span>
             </label>
             <input type="text" class="form-control form-control-sm input-pron-option-label" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Ký hiệu phiên âm hoặc từ cho phương án ${opt.id}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này" aria-label="Xóa phương án này">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
 
@@ -3433,7 +3441,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
@@ -3504,14 +3512,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
         const distractorChipsHtml = distractors.map((d, dIdx) => `
           <span class="distractor-chip" data-distractor="${escapeHtml(d)}" data-distractor-idx="${dIdx}">
             <span class="chip-text"><span class="distractor-symbol">×</span> ${escapeHtml(d)}</span>
-            <button type="button" class="btn-remove-distractor-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-distractor-idx="${dIdx}" title="Xóa từ gây nhiễu">✕</button>
+            <button type="button" class="btn-remove-distractor-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-distractor-idx="${dIdx}" title="Xóa từ gây nhiễu" aria-label="Xóa từ gây nhiễu">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
@@ -3594,14 +3602,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const errorChipsHtml = expectedErrors.map(v => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-error-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            <button type="button" class="btn-remove-error-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
         const correctionChipsHtml = expectedCorrections.map(v => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-correction-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            <button type="button" class="btn-remove-correction-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
@@ -3674,7 +3682,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${opt.id}</span>
             </label>
             <input type="text" class="form-control form-control-sm matching-heading-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Nội dung Heading / Tiêu đề ${opt.id}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này" aria-label="Xóa phương án này">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
 
@@ -3746,7 +3754,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
                   <div class="rich-editor__control dropdown-table-wrap">
                     <button type="button" class="btn btn-secondary btn-sm btn-editor-action btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
-                      ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
+                      ${renderSvgIcon('table', 'icon-inline')} <span>Chèn bảng</span> ${renderSvgIcon('chevronDown', 'icon-inline')}
                     </button>
                     <div class="rich-editor__popup table-presets-menu" style="display: none;">
                       <strong>Tạo bảng nhanh</strong>
@@ -3767,7 +3775,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </div>
                   <div class="rich-editor__control dropdown-image-wrap">
                     <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
-                      ${renderSvgIcon('image', 'icon-inline')} ▧ Chèn ảnh
+                      ${renderSvgIcon('image', 'icon-inline')} <span>Chèn ảnh</span>
                     </button>
                     <div class="rich-editor__popup image-insert-popup" style="display: none;">
                       <label>
@@ -3841,7 +3849,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 `).join('')}
               </select>
             </div>
-            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" title="Xóa sự kiện">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" title="Xóa sự kiện" aria-label="Xóa sự kiện">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
 
@@ -3902,7 +3910,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${letter}</span>
             </label>
             <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${letter}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án" aria-label="Xóa phương án">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `;
         }).join('');
@@ -3943,7 +3951,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${letter}</span>
             </label>
             <input type="text" class="form-control option-label-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Phương án ${letter}..." />
-            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án" aria-label="Xóa phương án">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `;
         }).join('');
@@ -4011,7 +4019,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const chipsHtml = acceptedList.map((v) => `
             <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
               <span class="chip-text">${escapeHtml(v)}</span>
-              <button type="button" class="btn-remove-chip btn-remove-cloze-blank-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+              <button type="button" class="btn-remove-chip btn-remove-cloze-blank-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
             </span>
           `).join('');
 
@@ -4071,7 +4079,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
@@ -4140,7 +4148,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
@@ -4177,7 +4185,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
-            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này">✕</button>
+            <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
 
@@ -4202,7 +4210,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="option-key-pill">${opt.id}</span>
             </label>
             <input type="text" class="form-control vocab-meaning-input" data-option-id="${opt.id}" value="${escapeHtml(opt.label || '')}" placeholder="Nghĩa tiếng Việt..." />
-            <button type="button" class="btn btn-icon btn-sm btn-del-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa nghĩa này">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-del-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa nghĩa này" aria-label="Xóa nghĩa này">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
 
@@ -4325,7 +4333,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="criterion-header-right">
                 <label class="form-label" style="margin:0;font-size:0.76rem;">Điểm:</label>
                 <input type="number" class="form-control form-control-sm criterion-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" value="${crit.maxScore}" step="0.5" min="0" max="100" />
-                <button type="button" class="btn btn-icon btn-sm btn-del-criterion" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" title="Xóa tiêu chí">✕</button>
+                <button type="button" class="btn btn-icon btn-sm btn-del-criterion" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" title="Xóa tiêu chí" aria-label="Xóa tiêu chí">${renderSvgIcon('close', 'icon-inline')}</button>
               </div>
             </div>
             <div class="criterion-card-body">
@@ -4461,18 +4469,18 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           <div class="builder-item-header">
             <div class="item-title-info">
               <span class="drag-handle item-drag-handle" title="Kéo thả để sắp xếp câu hỏi" aria-label="Kéo thả sắp xếp">⋮⋮</span>
-              <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi" aria-expanded="${isItemCollapsed ? 'false' : 'true'}">${isItemCollapsed ? '▸' : '▾'}</button>
+              <button type="button" class="btn btn-icon btn-sm btn-toggle-item-collapse" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Thu gọn / Mở rộng câu hỏi" aria-label="Thu gọn hoặc mở rộng câu hỏi" aria-expanded="${isItemCollapsed ? 'false' : 'true'}">${isItemCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
               <span class="item-pos-pill${spanCount > 1 ? ' has-span' : ''}">${itemPosLabel}</span>
               <span class="item-kind-pill ${kindClass}">${typeLabel}</span>
               <span class="item-prompt-preview-snippet">${escapeHtml((item.prompt || '').trim().substring(0, 55) + ((item.prompt || '').length > 55 ? '...' : ''))}</span>
             </div>
             <div class="item-header-controls">
-              <button type="button" class="btn btn-icon btn-sm btn-move-item-up" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === 0 ? 'disabled' : ''} title="Di chuyển câu hỏi lên">↑</button>
-              <button type="button" class="btn btn-icon btn-sm btn-move-item-down" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === (block.items || []).length - 1 ? 'disabled' : ''} title="Di chuyển câu hỏi xuống">↓</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-item-up" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === 0 ? 'disabled' : ''} title="Di chuyển câu hỏi lên" aria-label="Di chuyển câu hỏi lên">${renderSvgIcon('arrowUp', 'icon-inline')}</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-item-down" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" ${itemIdx === (block.items || []).length - 1 ? 'disabled' : ''} title="Di chuyển câu hỏi xuống" aria-label="Di chuyển câu hỏi xuống">${renderSvgIcon('arrowDown', 'icon-inline')}</button>
               <label class="item-score-label">Điểm:
                 <input type="number" class="form-control form-control-sm item-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${itemDisplayScore}" min="0" max="100" />
               </label>
-              <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này">✕</button>
+              <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-delete-item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Xóa câu hỏi này" aria-label="Xóa câu hỏi này">${renderSvgIcon('close', 'icon-inline')}</button>
             </div>
           </div>
           <div class="builder-item-body">
@@ -4540,7 +4548,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
                   <div class="rich-editor__control dropdown-table-wrap">
                     <button type="button" class="btn btn-secondary btn-sm btn-editor-action btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
-                      ${renderSvgIcon('table', 'icon-inline')} ▦ Chèn bảng ▾
+                      ${renderSvgIcon('table', 'icon-inline')} <span>Chèn bảng</span> ${renderSvgIcon('chevronDown', 'icon-inline')}
                     </button>
                     <div class="rich-editor__popup table-presets-menu" style="display: none;">
                       <strong>Tạo bảng nhanh</strong>
@@ -4562,7 +4570,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
                   <div class="rich-editor__control dropdown-image-wrap">
                     <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
-                      ${renderSvgIcon('image', 'icon-inline')} ▧ Chèn ảnh
+                      ${renderSvgIcon('image', 'icon-inline')} <span>Chèn ảnh</span>
                     </button>
                     <div class="rich-editor__popup image-insert-popup" style="display: none;">
                       <label>
@@ -4655,7 +4663,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         <div class="builder-exercise-card${isExCollapsed ? ' is-collapsed' : ''}" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
           <div class="builder-exercise-header">
             <div class="exercise-header-left">
-              <button type="button" class="btn btn-icon btn-sm btn-toggle-exercise-collapse" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" title="Thu gọn / Mở rộng bài tập" aria-label="Thu gọn hoặc mở rộng bài tập" aria-expanded="${isExCollapsed ? 'false' : 'true'}">${isExCollapsed ? '▸' : '▾'}</button>
+              <button type="button" class="btn btn-icon btn-sm btn-toggle-exercise-collapse" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" title="Thu gọn / Mở rộng bài tập" aria-label="Thu gọn hoặc mở rộng bài tập" aria-expanded="${isExCollapsed ? 'false' : 'true'}">${isExCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
               <span class="exercise-badge">Exercise ${ex.exerciseNumber || (exIdx + 1)}</span>
               <input type="text" class="exercise-title-input form-control form-control-sm" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" value="${escapeHtml(ex.title || '')}" placeholder="Tiêu đề bài tập (Ví dụ: Nghe từ và chọn nghĩa)..." />
               <span class="badge badge-info exercise-items-count">${exQuestionsCount} câu hỏi</span>
@@ -4666,9 +4674,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   ${renderSvgIcon('zap', 'icon-inline')} <span>Sinh biến thể cả bài</span>
                 </button>
               ` : ''}
-              <button type="button" class="btn btn-icon btn-sm btn-move-exercise-up" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isFirst ? 'disabled' : ''} title="Di chuyển bài tập lên">↑</button>
-              <button type="button" class="btn btn-icon btn-sm btn-move-exercise-down" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isLast ? 'disabled' : ''} title="Di chuyển bài tập xuống">↓</button>
-              <button type="button" class="btn btn-icon btn-sm btn-delete-exercise" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isOnly ? 'disabled' : ''} title="Xóa bài tập này">✕</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-exercise-up" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isFirst ? 'disabled' : ''} title="Di chuyển bài tập lên" aria-label="Di chuyển bài tập lên">${renderSvgIcon('arrowUp', 'icon-inline')}</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-exercise-down" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isLast ? 'disabled' : ''} title="Di chuyển bài tập xuống" aria-label="Di chuyển bài tập xuống">${renderSvgIcon('arrowDown', 'icon-inline')}</button>
+              <button type="button" class="btn btn-icon btn-sm btn-delete-exercise" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isOnly ? 'disabled' : ''} title="Xóa bài tập này" aria-label="Xóa bài tập này">${renderSvgIcon('close', 'icon-inline')}</button>
             </div>
           </div>
           <div class="builder-exercise-body">
@@ -4756,13 +4764,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       return `
         <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}" data-block-id="${block.blockId}" data-index="${index}">
           <div class="builder-block-header">
-            <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? '▸' : '▾'}</button>
+            <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
             <div class="block-checkpoint-pill">Phần ${index + 1}</div>
             <input type="text" class="block-title-input form-control" data-index="${index}" value="${escapeHtml(block.title || '')}" placeholder="Tiêu đề phần thi..." />
             <div class="block-header-actions">
-              <button type="button" class="btn btn-icon btn-sm btn-move-block-up" data-index="${index}" ${isFirst ? 'disabled' : ''} title="Di chuyển lên">↑</button>
-              <button type="button" class="btn btn-icon btn-sm btn-move-block-down" data-index="${index}" ${isLast ? 'disabled' : ''} title="Di chuyển xuống">↓</button>
-              <button type="button" class="btn btn-icon btn-sm btn-delete-block" data-index="${index}" ${isOnly ? 'disabled' : ''} title="Xóa phần này">✕</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-block-up" data-index="${index}" ${isFirst ? 'disabled' : ''} title="Di chuyển lên" aria-label="Di chuyển lên">${renderSvgIcon('arrowUp', 'icon-inline')}</button>
+              <button type="button" class="btn btn-icon btn-sm btn-move-block-down" data-index="${index}" ${isLast ? 'disabled' : ''} title="Di chuyển xuống" aria-label="Di chuyển xuống">${renderSvgIcon('arrowDown', 'icon-inline')}</button>
+              <button type="button" class="btn btn-icon btn-sm btn-delete-block" data-index="${index}" ${isOnly ? 'disabled' : ''} title="Xóa phần này" aria-label="Xóa phần này">${renderSvgIcon('close', 'icon-inline')}</button>
             </div>
           </div>
           <div class="builder-block-body">
@@ -6415,7 +6423,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             placeholder: 'She do not like swimming in cold weather.,do,does|doesn\'t,Chủ ngữ số ít đi với does\nI have seen him yesterday morning.,have seen,saw,Hành động có mốc thời gian quá khứ',
             getTemplateCsv: generateErrorCorrectionTemplateCsv,
             parseCsv: parseErrorCorrectionCsv,
-            renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Lỗi: <span style="color:#ef4444;text-decoration:line-through;">${escapeHtml(itm.targetWord)}</span> ➔ <span style="color:#10b981;">${escapeHtml(itm.accepted[0] || '')}</span>]`,
+            renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Lỗi: <span style="color:#ef4444;text-decoration:line-through;">${escapeHtml(itm.targetWord)}</span> → <span style="color:#10b981;">${escapeHtml(itm.accepted[0] || '')}</span>]`,
             onImport: (items) => {
               const startingPos = getNextPosition();
               const batchItems = [];
@@ -6769,7 +6777,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             placeholder: 'He could not go because of illness.,PREVENTED,His severe illness (1) __________ from going.,prevented him,Cấu trúc prevent someone from doing\nIt is not necessary for you to come.,NEED,You (1) __________ come tomorrow.,need not|do not need to|don\'t need to,Need not do sth',
             getTemplateCsv: generateSentenceTransformationTemplateCsv,
             parseCsv: parseSentenceTransformationCsv,
-            renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Từ khóa: <strong>${escapeHtml(itm.mandatoryKeyword)}</strong> ➔ Đáp án: <em>${escapeHtml(itm.accepted[0] || '')}</em>]`,
+            renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Từ khóa: <strong>${escapeHtml(itm.mandatoryKeyword)}</strong> → Đáp án: <em>${escapeHtml(itm.accepted[0] || '')}</em>]`,
             onImport: (items) => {
               const startingPos = getNextPosition();
               const batchItems = [];
@@ -7205,7 +7213,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               ${renderSvgIcon('plusCircle', 'icon-inline')}
               <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Tạo hàng loạt câu hỏi Thẻ từ vựng qua ảnh</h3>
             </div>
-            <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
           <div class="modal-batch-vocab-body">
             <div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">
@@ -7499,7 +7507,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               ${renderSvgIcon('fileText', 'icon-inline')}
               <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Nhập Cặp từ vựng vào Exercise (CSV / Excel)</h3>
             </div>
-            <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">✕</button>
+            <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
           <div class="modal-batch-vocab-body">
             <div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">
@@ -7792,7 +7800,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             } else {
               collapsedCardKeys.delete(blockCardKey);
             }
-            btn.textContent = isCollapsed ? '▸' : '▾';
+            btn.innerHTML = isCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline');
             if (typeof btn.setAttribute === 'function') {
               btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
             }
@@ -7819,7 +7827,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             } else {
               collapsedCardKeys.delete(exCardKey);
             }
-            btn.textContent = isCollapsed ? '▸' : '▾';
+            btn.innerHTML = isCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline');
             if (typeof btn.setAttribute === 'function') {
               btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
             }
@@ -7846,7 +7854,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             } else {
               collapsedCardKeys.delete(itemCardKey);
             }
-            btn.textContent = isCollapsed ? '▸' : '▾';
+            btn.innerHTML = isCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline');
             if (typeof btn.setAttribute === 'function') {
               btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
             }
@@ -7885,21 +7893,21 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const blockToggles = container.querySelectorAll('.btn-toggle-block-collapse');
         if (blockToggles && typeof blockToggles.forEach === 'function') {
           blockToggles.forEach(b => {
-            b.textContent = '▸';
+            b.innerHTML = renderSvgIcon('chevronRight', 'icon-inline');
             if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'false');
           });
         }
         const exToggles = container.querySelectorAll('.btn-toggle-exercise-collapse');
         if (exToggles && typeof exToggles.forEach === 'function') {
           exToggles.forEach(b => {
-            b.textContent = '▸';
+            b.innerHTML = renderSvgIcon('chevronRight', 'icon-inline');
             if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'false');
           });
         }
         const itemToggles = container.querySelectorAll('.btn-toggle-item-collapse');
         if (itemToggles && typeof itemToggles.forEach === 'function') {
           itemToggles.forEach(b => {
-            b.textContent = '▸';
+            b.innerHTML = renderSvgIcon('chevronRight', 'icon-inline');
             if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'false');
           });
         }
@@ -7928,21 +7936,21 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const blockToggles = container.querySelectorAll('.btn-toggle-block-collapse');
         if (blockToggles && typeof blockToggles.forEach === 'function') {
           blockToggles.forEach(b => {
-            b.textContent = '▾';
+            b.innerHTML = renderSvgIcon('chevronDown', 'icon-inline');
             if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'true');
           });
         }
         const exToggles = container.querySelectorAll('.btn-toggle-exercise-collapse');
         if (exToggles && typeof exToggles.forEach === 'function') {
           exToggles.forEach(b => {
-            b.textContent = '▾';
+            b.innerHTML = renderSvgIcon('chevronDown', 'icon-inline');
             if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'true');
           });
         }
         const itemToggles = container.querySelectorAll('.btn-toggle-item-collapse');
         if (itemToggles && typeof itemToggles.forEach === 'function') {
           itemToggles.forEach(b => {
-            b.textContent = '▾';
+            b.innerHTML = renderSvgIcon('chevronDown', 'icon-inline');
             if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', 'true');
           });
         }
@@ -9300,7 +9308,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   <div class="assembly-input-wrap">
                     <input type="text" class="form-control candidate-reorder-input" data-item-id="${item.itemVersionId}" placeholder="Bấm các thẻ từ ở trên hoặc gõ câu hoàn chỉnh vào đây..." />
                     <button type="button" class="btn btn-secondary btn-sm btn-clear-assembly" data-item-id="${item.itemVersionId}" title="Xóa và ghép lại từ đầu">
-                      ↺ Ghép lại
+                      ${renderSvgIcon('rotate', 'icon-inline')} <span>Ghép lại</span>
                     </button>
                   </div>
                 </div>
@@ -9665,7 +9673,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   <span class="sim-results-badge">Kết quả mô phỏng</span>
                   <h3>Bảng tổng hợp chấm điểm</h3>
                 </div>
-                <button type="button" class="btn-close-sim-results" id="btn-close-sim-results">✕</button>
+                <button type="button" class="btn-close-sim-results" id="btn-close-sim-results" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
               </header>
               <div class="sim-results-body" id="sim-results-body"></div>
               <footer class="sim-results-footer">
@@ -10086,7 +10094,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <h3>Công bố đề thi — v${draftState.version}</h3>
               <p class="publish-test-title">${escapeHtml(draftState.title || '')}</p>
             </div>
-            <button type="button" class="btn-close-publish-modal" id="btn-close-publish-modal">✕</button>
+            <button type="button" class="btn-close-publish-modal" id="btn-close-publish-modal" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
           </header>
 
           <div class="publishing-body">
@@ -10291,7 +10299,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <span class="report-badge">Smart Publishing Report</span>
               <h3>Báo cáo kết quả công bố đề thi</h3>
             </div>
-            <button type="button" class="btn-close-report" id="btn-close-report-x">✕</button>
+            <button type="button" class="btn-close-report" id="btn-close-report-x" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
           </header>
 
           <div class="report-body">
@@ -12584,24 +12592,23 @@ async function startDashboard() {
           const isExpected = item.expectedAnswer === opt.id || item.expectedOptionId === opt.id || (Array.isArray(item.expectedOptionIds) && item.expectedOptionIds.includes(opt.id));
           const letter = formatOptionDisplayLetter(opt.id, optIdx);
 
+          li.className = 'modal-options-item';
           if (isExpected) {
             li.classList.add('is-correct-key');
           } else if (isSelected) {
             li.classList.add('is-wrong-selection');
-          } else if (isSelected) {
-            li.classList.add('is-selected');
           }
 
-          let tagText = '';
+          let badgeHtml = '';
           if (isExpected && isSelected) {
-            tagText = ' (✓ Đáp án đúng · Học viên chọn)';
+            badgeHtml = `<span class="opt-tag tag-correct">${renderSvgIcon('check', 'icon-inline')} <span>Đáp án đúng · Học viên chọn</span></span>`;
           } else if (isExpected) {
-            tagText = ' (✓ Đáp án chuẩn)';
+            badgeHtml = `<span class="opt-tag tag-expected">${renderSvgIcon('check', 'icon-inline')} <span>Đáp án chuẩn</span></span>`;
           } else if (isSelected) {
-            tagText = ' (✗ Học viên chọn sai)';
+            badgeHtml = `<span class="opt-tag tag-wrong">${renderSvgIcon('close', 'icon-inline')} <span>Học viên chọn sai</span></span>`;
           }
 
-          li.textContent = `${letter}. ${opt.label || opt.id}${tagText}`;
+          li.innerHTML = `<span class="opt-letter font-bold">${letter}.</span> <span class="opt-text">${escapeHtml(opt.label || opt.id)}</span> ${badgeHtml}`;
           ul.append(li);
         }
         optBlock.append(ul);

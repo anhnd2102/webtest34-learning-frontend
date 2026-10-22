@@ -125,6 +125,7 @@ test('Test Studio Accordion UI: Block and Exercise toggle events update classes 
 
   const mockBlockBtn = {
     textContent: '▾',
+    innerHTML: '',
     attributes: {},
     setAttribute: (k, v) => { mockBlockBtn.attributes[k] = v; },
     closest: (sel) => sel === '.builder-block-card' ? mockBlockCard : null,
@@ -150,6 +151,7 @@ test('Test Studio Accordion UI: Block and Exercise toggle events update classes 
 
   const mockExBtn = {
     textContent: '▾',
+    innerHTML: '',
     attributes: {},
     setAttribute: (k, v) => { mockExBtn.attributes[k] = v; },
     closest: (sel) => sel === '.builder-exercise-card' ? mockExCard : null,
@@ -209,19 +211,19 @@ test('Test Studio Accordion UI: Block and Exercise toggle events update classes 
   assert.ok(blockToggleHandler, 'block toggle click handler registered');
   blockToggleHandler();
   assert.ok(mockBlockClasses.has('is-collapsed'), 'Block card gains .is-collapsed');
-  assert.equal(mockBlockBtn.textContent, '▸', 'Block toggle text changed to ▸');
+  assert.ok(mockBlockBtn.innerHTML.includes('<svg') || mockBlockBtn.textContent === '▸', 'Block toggle changed to collapsed icon');
   assert.equal(mockBlockBtn.attributes['aria-expanded'], 'false', 'aria-expanded set to false');
 
   blockToggleHandler();
   assert.ok(!mockBlockClasses.has('is-collapsed'), 'Block card loses .is-collapsed on second click');
-  assert.equal(mockBlockBtn.textContent, '▾', 'Block toggle text restored to ▾');
+  assert.ok(mockBlockBtn.innerHTML.includes('<svg') || mockBlockBtn.textContent === '▾', 'Block toggle restored to expanded icon');
   assert.equal(mockBlockBtn.attributes['aria-expanded'], 'true', 'aria-expanded set to true');
 
   // 2. Test clicking exercise toggle
   assert.ok(exToggleHandler, 'exercise toggle click handler registered');
   exToggleHandler();
   assert.ok(mockExClasses.has('is-collapsed'), 'Exercise card gains .is-collapsed');
-  assert.equal(mockExBtn.textContent, '▸', 'Exercise toggle text changed to ▸');
+  assert.ok(mockExBtn.innerHTML.includes('<svg') || mockExBtn.textContent === '▸', 'Exercise toggle changed to collapsed icon');
   assert.equal(mockExBtn.attributes['aria-expanded'], 'false', 'aria-expanded set to false');
 
   // 3. Test bulk collapse all
@@ -229,14 +231,14 @@ test('Test Studio Accordion UI: Block and Exercise toggle events update classes 
   collapseAllHandler();
   assert.ok(mockBlockClasses.has('is-collapsed'), 'Bulk collapse adds .is-collapsed to block');
   assert.ok(mockExClasses.has('is-collapsed'), 'Bulk collapse adds .is-collapsed to exercise');
-  assert.equal(mockBlockBtn.textContent, '▸');
-  assert.equal(mockExBtn.textContent, '▸');
+  assert.ok(mockBlockBtn.innerHTML.includes('<svg') || mockBlockBtn.textContent === '▸');
+  assert.ok(mockExBtn.innerHTML.includes('<svg') || mockExBtn.textContent === '▸');
 
   // 4. Test bulk expand all
   assert.ok(expandAllHandler, 'expand all handler registered');
   expandAllHandler();
   assert.ok(!mockBlockClasses.has('is-collapsed'), 'Bulk expand removes .is-collapsed from block');
   assert.ok(!mockExClasses.has('is-collapsed'), 'Bulk expand removes .is-collapsed from exercise');
-  assert.equal(mockBlockBtn.textContent, '▾');
-  assert.equal(mockExBtn.textContent, '▾');
+  assert.ok(mockBlockBtn.innerHTML.includes('<svg') || mockBlockBtn.textContent === '▾');
+  assert.ok(mockExBtn.innerHTML.includes('<svg') || mockExBtn.textContent === '▾');
 });

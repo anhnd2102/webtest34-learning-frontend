@@ -48,10 +48,10 @@ test('Test Studio: Catalog view displays delete button ONLY for draft tests', ()
   );
 
   // Check that published test does not have delete button
-  const publishedRowMatch = html.match(/data-test-key="34-p1t1"[\s\S]*?<\/tr>/);
-  assert.ok(publishedRowMatch, 'Published row found in table');
+  const publishedCardMatch = html.match(/class="test-card"[^>]*data-test-key="34-p1t1"[\s\S]*?(?=<div class="test-card"|<\/div>\s*$)/);
+  assert.ok(publishedCardMatch, 'Published test card found in catalog');
   assert.equal(
-    publishedRowMatch[0].includes('btn-delete-test-draft'),
+    publishedCardMatch[0].includes('btn-delete-test-draft'),
     false,
     'Published tests must NOT have a delete button'
   );
