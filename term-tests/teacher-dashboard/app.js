@@ -11063,7 +11063,10 @@ async function startDashboard() {
           try {
             const courseNames = { 1: '03', 2: '34', 3: '45' };
             const courseCode = courseNames[currentStudioCourseId] || '03';
-            const defaultTitle = `IZONE · Khối ${courseCode} · Đề thi mới`;
+            const catalogList = Array.isArray(catalog) ? catalog : [];
+            const maxSession = catalogList.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
+            const nextSession = maxSession + 1;
+            const defaultTitle = `IZONE · Khối ${courseCode} · Test ${nextSession}`;
             container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang khởi tạo bản nháp bài thi mới...</p></div>';
 
             const postRes = await request(formDraftPath(), {
@@ -11071,7 +11074,7 @@ async function startDashboard() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 courseId: currentStudioCourseId,
-                sessionNumber: 1,
+                sessionNumber: nextSession,
                 title: defaultTitle,
                 durationMinutes: 60
               })
