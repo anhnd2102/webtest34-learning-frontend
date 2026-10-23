@@ -1,4 +1,5 @@
 import { parseSseChunk } from '../teacher-dashboard/exam-room-sse.js';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount } from './dynamic-exam-renderer.mjs';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -746,6 +747,18 @@ export async function mount(course) {
   }
 
   function buildResponsesPayload() {
+    if (learningState.definition?.blocks?.length) {
+      const responses = {};
+      const allItems = learningState.definition.blocks.flatMap(b => b.items || []);
+      for (const it of allItems) {
+        const val = state.answers[it.itemVersionId];
+        if (val !== undefined && val !== null && val !== '') {
+          responses[it.itemVersionId] = val;
+        }
+      }
+      return responses;
+    }
+
     const defBlocks = learningState.definition?.blocks || [];
     const responses = {};
 
@@ -788,6 +801,12 @@ export async function mount(course) {
 
   function applyServerDraft(serverDraft) {
     if (!serverDraft || typeof serverDraft !== 'object') return;
+    if (learningState.definition?.blocks?.length) {
+      for (const [itemVerId, val] of Object.entries(serverDraft)) {
+        state.answers[itemVerId] = val;
+      }
+      return;
+    }
     const defBlocks = learningState.definition?.blocks || [];
 
     for (let bIndex = 0; bIndex < defBlocks.length; bIndex++) {
@@ -963,6 +982,19 @@ export async function mount(course) {
           const brandSub = document.querySelector('.brand-sub');
           if (brandSub) brandSub.textContent = assignment.title;
           document.title = assignment.title;
+        }
+
+        if (assignment.definition?.blocks?.length) {
+          const dynTotal = getTotalItemCount(assignment.definition);
+          const dynMinutes = Number(assignment.definition.timing?.totalMinutes || assignment.definition.durationMinutes) || 120;
+          const introP = document.querySelector('main.demo-width p');
+          if (introP) {
+            introP.innerHTML = `Thời gian làm bài: <strong>${dynMinutes} phút</strong> · Tổng số câu hỏi: <strong>${dynTotal} câu</strong>.<br>Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.`;
+          }
+          const timerSpan = document.querySelector('.top-actions .timer');
+          if (timerSpan) {
+            timerSpan.textContent = `${dynMinutes}:00`;
+          }
         }
       } catch (err) {
         loadBtn.disabled = false;
@@ -1159,10 +1191,23 @@ export async function mount(course) {
   renderExamInterface();
 
   function renderExamInterface() {
-    document.title = `IZONE · ${isLearningMode ? 'Thi CBT' : 'Demo'} · ${title}`;
+    const isDynamic = Boolean(learningState.definition?.blocks?.length);
+    const examTitle = isDynamic ? (learningState.definition.title || learningState.assignment?.title || title) : title;
+    const examDuration = isDynamic
+      ? (Number(learningState.definition.timing?.totalMinutes || learningState.definition.durationMinutes) || 120)
+      : (Number(form.durationMinutes) || 120);
+
+    const examSections = isDynamic
+      ? learningState.definition.blocks.map((b, i) => b.title || `Phần ${i + 1}`)
+      : sections;
+    if (!examSections.includes(activeSection)) {
+      activeSection = examSections[0];
+    }
+
+    document.title = `IZONE · ${isLearningMode ? 'Thi CBT' : 'Demo'} · ${examTitle}`;
     const headerSub = isLearningMode
       ? `Thí sinh: <strong>${escape(learningState.studentName)}</strong> · Lớp: <strong>${escape(learningState.className)}</strong>`
-      : `Bài thi demo · ${form.durationMinutes} phút theo đề`;
+      : `Bài thi demo · ${examDuration} phút theo đề`;
 
     const noticeBanner = isLearningMode
       ? `<div class="demo-notice" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534">
@@ -1174,7 +1219,7 @@ export async function mount(course) {
         </div>`;
 
     document.body.innerHTML = `<div class="content-demo">
-      <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(title)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span class="tab-count" data-demo-tab-count="${section}"></span></button>`).join('')}</nav></header>
+      <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(examTitle)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span class="tab-count" data-demo-tab-count="${escape(sec)}"></span></button>`).join('')}</nav></header>
       <main class="demo-width">
         ${noticeBanner}
         <div class="demo-toolbar">
@@ -1184,16 +1229,27 @@ export async function mount(course) {
         </div>
         <div id="demo-result" class="demo-notice" hidden></div>
         <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
-        <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span data-demo-section-count="${section}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
-        <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
+        <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span data-demo-section-count="${escape(sec)}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
+        <div class="demo-main">${isDynamic ? '' : groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
       </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
     </div>`;
 
-    document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${form.durationMinutes}:00</span></div>`);
+    if (isDynamic) {
+      renderDynamicExam(learningState.definition, document.querySelector('.demo-main'), {
+        state,
+        activeSection,
+        onAnswerChange: () => {
+          persist();
+          update();
+        }
+      });
+    }
+
+    document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${examDuration}:00</span></div>`);
     document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
 
-    // Đếm ngược thời gian làm bài (120 phút)
-    const durationMinutes = Number(form.durationMinutes) || 120;
+    // Đếm ngược thời gian làm bài
+    const durationMinutes = Number(examDuration) || 120;
     const durationMs = durationMinutes * 60 * 1000;
     const timerStorageKey = `izone_timer_${isLearningMode ? (learningState.attemptToken || testToken) : course}`;
 
@@ -1243,9 +1299,11 @@ export async function mount(course) {
     tickExamTimer();
     examTimerInterval = setInterval(tickExamTimer, 1000);
 
-    for(const section of sections) {
-      const groups=form.groups.filter(group=>sectionKey(group)===section);
-      document.querySelector(`[data-demo-page="${section}"]`).insertAdjacentHTML('beforebegin',`<div class="section-hero" data-demo-page="${section}"><div class="section-kicker">${escape(title)}</div><h2>${sectionLabels[section]}</h2><p>${groups.length} nhóm bài · ${groups.reduce((count,group)=>count+group.items.length,0)} ô trả lời</p></div>`);
+    if (!isDynamic) {
+      for(const section of sections) {
+        const groups=form.groups.filter(group=>sectionKey(group)===section);
+        document.querySelector(`[data-demo-page="${section}"]`)?.insertAdjacentHTML('beforebegin',`<div class="section-hero" data-demo-page="${section}"><div class="section-kicker">${escape(title)}</div><h2>${sectionLabels[section]}</h2><p>${groups.length} nhóm bài · ${groups.reduce((count,group)=>count+group.items.length,0)} ô trả lời</p></div>`);
+      }
     }
 
     const style = document.createElement('style');
@@ -1458,6 +1516,33 @@ export async function mount(course) {
     }
 
     function update() {
+      if (isDynamic) {
+        const total = getTotalItemCount(learningState.definition);
+        const done = getAnsweredCount(learningState.definition, state.answers);
+        query('#demo-progress').textContent = `${done}/${total} câu đã trả lời`;
+        query('#demo-fill').style.width = `${total ? Math.round(done / total * 100) : 0}%`;
+
+        learningState.definition.blocks.forEach((block, bIdx) => {
+          const secName = block.title || `Phần ${bIdx + 1}`;
+          const bItems = block.items || [];
+          let bDone = 0;
+          for (const it of bItems) {
+            const val = state.answers[it.itemVersionId];
+            if (val !== undefined && val !== null) {
+              if (Array.isArray(val) && val.some(v => typeof v === 'string' && v.trim() !== '')) bDone++;
+              else if (typeof val === 'object' && Object.values(val).some(v => typeof v === 'string' && v.trim() !== '')) bDone++;
+              else if (typeof val === 'string' && val.trim() !== '') bDone++;
+            }
+          }
+          document.querySelectorAll(`[data-demo-section-count="${secName}"], [data-demo-tab-count="${secName}"]`).forEach(count => {
+            count.textContent = `${bDone}/${bItems.length}`;
+          });
+        });
+        query('#demo-submit').disabled = Boolean(state.submittedAt);
+        query('#demo-result').hidden = !state.submittedAt;
+        return;
+      }
+
       const done = items.filter(item=>String(state.answers[item.id]||'').trim()).length;
       query('#demo-progress').textContent=`${done}/${items.length} ô đã trả lời`;
       query('#demo-fill').style.width=`${Math.round(done/items.length*100)}%`;
@@ -1508,6 +1593,16 @@ export async function mount(course) {
     }));
 
     query('#demo-submit').addEventListener('click',()=>{
+      if (isDynamic) {
+        const total = getTotalItemCount(learningState.definition);
+        const done = getAnsweredCount(learningState.definition, state.answers);
+        const missing = total - done;
+        query('#demo-confirm-text').textContent = missing > 0
+          ? `Còn ${missing} câu chưa trả lời (đã làm ${done}/${total} câu). Bạn có chắc chắn muốn nộp bài?`
+          : `Bạn đã trả lời đầy đủ ${total}/${total} câu. Bạn có chắc chắn muốn nộp bài?`;
+        query('#demo-confirm').showModal();
+        return;
+      }
       const missing=items.filter(item=>!String(state.answers[item.id]||'').trim()).length;
       query('#demo-confirm-text').textContent=`Còn ${missing} ô chưa trả lời. Bạn có chắc chắn muốn nộp bài?`;
       query('#demo-confirm').showModal();
@@ -1656,22 +1751,25 @@ export async function mount(course) {
 
     function showSection(section) {
       activeSection=section;
-      document.querySelectorAll('[data-demo-page]').forEach(page=>page.hidden=page.dataset.demoPage!==section);
+      document.querySelectorAll('[data-demo-page]').forEach(page=>{
+        page.hidden = page.dataset.demoPage !== section;
+        page.classList.toggle('hidden', page.dataset.demoPage !== section);
+      });
       document.querySelectorAll('[data-demo-go]').forEach(button=>{
         button.classList.toggle('active',button.dataset.demoGo===section);
         if (button.dataset.demoGo===section) button.setAttribute('aria-current','page');
         else button.removeAttribute('aria-current');
       });
-      query('#demo-prev').disabled=sections.indexOf(section)===0;
-      query('#demo-next').textContent=sections.indexOf(section)===sections.length-1?(isLearningMode?'Nộp bài':'Nộp thử'):'Phần tiếp →';
+      query('#demo-prev').disabled=examSections.indexOf(section)===0;
+      query('#demo-next').textContent=examSections.indexOf(section)===examSections.length-1?(isLearningMode?'Nộp bài':'Nộp thử'):'Phần tiếp →';
       window.scrollTo({top:0,behavior:'smooth'});
     }
     document.querySelectorAll('[data-demo-go]').forEach(button=>button.addEventListener('click',()=>showSection(button.dataset.demoGo)));
     query('#demo-prev').addEventListener('click',()=>{
-      const previous=sections[sections.indexOf(activeSection)-1];if(previous)showSection(previous);
+      const previous=examSections[examSections.indexOf(activeSection)-1];if(previous)showSection(previous);
     });
     query('#demo-next').addEventListener('click',()=>{
-      const next=sections[sections.indexOf(activeSection)+1];if(next)showSection(next);else query('#demo-submit').click();
+      const next=examSections[examSections.indexOf(activeSection)+1];if(next)showSection(next);else query('#demo-submit').click();
     });
 
     update();
