@@ -10524,10 +10524,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <label class="publish-section-label">1. Mục tiêu công bố:</label>
                 <div class="purpose-options">
                   <label class="purpose-radio-card ${purpose === 'replace_existing' ? 'is-selected' : ''}">
-                    <input type="radio" name="publish_purpose" value="replace_existing" ${purpose === 'replace_existing' ? 'checked' : ''} id="radio-purpose-replace" />
-                    <div class="radio-card-content">
-                      <div class="card-title">${renderSvgIcon('book', 'icon-inline')} Cập nhật thay thế cho bài test có sẵn trong lộ trình</div>
-                      <div class="card-desc">Chỉ cập nhật đề thi cho bài test được chọn dưới đây. Các bài test khác trong lộ trình khối được giữ nguyên 100%.</div>
+                    <input type="radio" class="sr-only-radio" name="publish_purpose" value="replace_existing" ${purpose === 'replace_existing' ? 'checked' : ''} id="radio-purpose-replace" />
+                    <div class="tile-card-header">
+                      <div class="tile-card-icon">${renderSvgIcon('rotate', 'icon-tile')}</div>
+                      <div class="tile-card-body">
+                        <div class="card-title">Cập nhật thay thế cho bài test có sẵn trong lộ trình</div>
+                        <div class="card-desc">Chỉ cập nhật đề thi cho bài test được chọn dưới đây. Các bài test khác trong lộ trình khối được giữ nguyên 100%.</div>
+                      </div>
+                      <div class="tile-card-check">${renderSvgIcon('check', 'icon-check')}</div>
                     </div>
                   </label>
 
@@ -10539,10 +10543,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   </div>
 
                   <label class="purpose-radio-card ${purpose === 'add_new' ? 'is-selected' : ''}">
-                    <input type="radio" name="publish_purpose" value="add_new" ${purpose === 'add_new' ? 'checked' : ''} id="radio-purpose-add" />
-                    <div class="radio-card-content">
-                      <div class="card-title">${renderSvgIcon('publish', 'icon-inline')} Bổ sung thành một bài test mới trong lộ trình của khối</div>
-                      <div class="card-desc">Thêm bài test mới vào danh mục lộ trình của khối và tự động tạo bài tập cho học sinh các lớp được áp dụng.</div>
+                    <input type="radio" class="sr-only-radio" name="publish_purpose" value="add_new" ${purpose === 'add_new' ? 'checked' : ''} id="radio-purpose-add" />
+                    <div class="tile-card-header">
+                      <div class="tile-card-icon">${renderSvgIcon('plusCircle', 'icon-tile')}</div>
+                      <div class="tile-card-body">
+                        <div class="card-title">Bổ sung thành một bài test mới trong lộ trình của khối</div>
+                        <div class="card-desc">Thêm bài test mới vào danh mục lộ trình của khối và tự động tạo bài tập cho học sinh các lớp được áp dụng.</div>
+                      </div>
+                      <div class="tile-card-check">${renderSvgIcon('check', 'icon-check')}</div>
                     </div>
                   </label>
 
@@ -10577,18 +10585,26 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <label class="publish-section-label">2. Phạm vi công bố đề thi:</label>
                 <div class="scope-options">
                   <label class="scope-radio-card ${scope === 'whole_course' ? 'is-selected' : ''}">
-                    <input type="radio" name="publish_scope" value="whole_course" ${scope === 'whole_course' ? 'checked' : ''} id="radio-scope-whole" />
-                    <div class="radio-card-content">
-                      <div class="card-title">${renderSvgIcon('book', 'icon-inline')} Toàn bộ khối (Mặc định)</div>
-                      <div class="card-desc">Cập nhật đề thi chuẩn cho Danh mục bài test của khối và tự động áp dụng cho tất cả các lớp chưa có học sinh nộp bài.</div>
+                    <input type="radio" class="sr-only-radio" name="publish_scope" value="whole_course" ${scope === 'whole_course' ? 'checked' : ''} id="radio-scope-whole" />
+                    <div class="tile-card-header">
+                      <div class="tile-card-icon">${renderSvgIcon('layers', 'icon-tile')}</div>
+                      <div class="tile-card-body">
+                        <div class="card-title">Toàn bộ khối (Mặc định)</div>
+                        <div class="card-desc">Cập nhật đề thi chuẩn cho Danh mục bài test của khối và tự động áp dụng cho tất cả các lớp chưa có học sinh nộp bài.</div>
+                      </div>
+                      <div class="tile-card-check">${renderSvgIcon('check', 'icon-check')}</div>
                     </div>
                   </label>
 
                   <label class="scope-radio-card ${scope === 'specific_classes' ? 'is-selected' : ''}">
-                    <input type="radio" name="publish_scope" value="specific_classes" ${scope === 'specific_classes' ? 'checked' : ''} id="radio-scope-classes" />
-                    <div class="radio-card-content">
-                      <div class="card-title">${renderSvgIcon('classes', 'icon-inline')} Chỉ áp dụng cho các lớp được chọn</div>
-                      <div class="card-desc">Chỉ cập nhật đề thi cho các lớp được chỉ định dưới đây (bỏ qua nếu lớp đã thi).</div>
+                    <input type="radio" class="sr-only-radio" name="publish_scope" value="specific_classes" ${scope === 'specific_classes' ? 'checked' : ''} id="radio-scope-classes" />
+                    <div class="tile-card-header">
+                      <div class="tile-card-icon">${renderSvgIcon('clipboard', 'icon-tile')}</div>
+                      <div class="tile-card-body">
+                        <div class="card-title">Chỉ áp dụng cho các lớp được chọn</div>
+                        <div class="card-desc">Chỉ cập nhật đề thi cho các lớp được chỉ định dưới đây (bỏ qua nếu lớp đã thi).</div>
+                      </div>
+                      <div class="tile-card-check">${renderSvgIcon('check', 'icon-check')}</div>
                     </div>
                   </label>
                 </div>

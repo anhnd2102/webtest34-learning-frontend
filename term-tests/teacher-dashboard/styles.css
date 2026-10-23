@@ -5835,6 +5835,7 @@ body:not(.login-page) #auth-panel {
   cursor: pointer;
   background: #ffffff;
   transition: all 0.15s ease;
+  position: relative;
 }
 
 .purpose-radio-card:hover,
@@ -5846,37 +5847,123 @@ body:not(.login-page) #auth-panel {
 .purpose-radio-card.is-selected,
 .scope-radio-card.is-selected {
   border-color: var(--izone-primary, #db0829);
-  background: var(--izone-soft-red, #fff1f2);
+  background: #fffdfd;
+  box-shadow: 0 0 0 1px var(--izone-primary, #db0829), 0 2px 8px rgba(219, 8, 41, 0.08);
 }
 
-.purpose-radio-card input,
-.scope-radio-card input {
-  margin-top: 3px;
-  accent-color: var(--izone-primary, #db0829);
+.purpose-radio-card:focus-within,
+.scope-radio-card:focus-within {
+  outline: 2px solid var(--izone-primary, #db0829);
+  outline-offset: 2px;
+}
+
+/* Visually hidden radio inputs so they don't take layout space */
+.sr-only-radio,
+.purpose-radio-card input[type="radio"],
+.scope-radio-card input[type="radio"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Tile Card Header layout */
+.tile-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.tile-card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: #f1f5f9;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.15s ease;
+}
+
+.tile-card-icon svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.75;
+}
+
+.is-selected .tile-card-icon {
+  background: #fee2e2;
+  color: var(--izone-primary, #db0829);
+}
+
+.tile-card-body {
+  flex: 1;
+  min-width: 0;
 }
 
 .card-title {
   font-size: 0.9rem;
   font-weight: 700;
   color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  line-height: 1.35;
+  transition: color 0.15s ease;
+}
+
+.is-selected .card-title {
+  color: #991b1b;
 }
 
 .card-desc {
   font-size: 0.78rem;
   color: #64748b;
-  margin-top: 2px;
-  line-height: 1.4;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.tile-card-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: transparent;
+  transition: all 0.15s ease;
+  margin-top: 1px;
+}
+
+.is-selected .tile-card-check {
+  border-color: var(--izone-primary, #db0829);
+  background: var(--izone-primary, #db0829);
+  color: #ffffff;
+}
+
+.tile-card-check svg {
+  width: 11px;
+  height: 11px;
+  stroke-width: 2.5;
+  stroke: currentColor;
 }
 
 .purpose-subfields {
   margin-top: 4px;
-  margin-left: 12px;
+  margin-left: 0;
   padding: 14px 16px;
   background: #f8fafc;
-  border: 1px dashed #cbd5e1;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
 }
 
