@@ -2,7 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   renderTestBuilderView,
-  formPublishPath
+  formPublishPath,
+  formPublishPreviewPath,
+  getCourseCodeFromCourseId,
+  filterClassesForCourse
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('formPublishPath returns canonical endpoint', () => {
@@ -170,4 +173,253 @@ test('renderTestBuilderView supports multi-interaction types for candidate simul
   assert.ok(container.innerHTML.includes('short_text') || container.innerHTML.includes('short-text'), 'Renders short text item');
   assert.ok(container.innerHTML.includes('text_select_pair') || container.innerHTML.includes('vocabulary_pair'), 'Renders vocab pair item');
   assert.ok(container.innerHTML.includes('template-rubric-async'), 'Renders AI rubric item');
+});
+
+test('formPublishPreviewPath returns canonical pre-flight endpoint', () => {
+  assert.equal(formPublishPreviewPath(), '/api/teacher/forms/publish-preview');
+  assert.equal(formPublishPreviewPath('https://api.test'), 'https://api.test/api/teacher/forms/publish-preview');
+  assert.equal(formPublishPreviewPath('https://api.test/'), 'https://api.test/api/teacher/forms/publish-preview');
+});
+
+test('getCourseCodeFromCourseId converts numeric and string course IDs to 2-digit course codes', () => {
+  assert.equal(getCourseCodeFromCourseId(1), '03');
+  assert.equal(getCourseCodeFromCourseId(2), '34');
+  assert.equal(getCourseCodeFromCourseId(3), '45');
+  assert.equal(getCourseCodeFromCourseId('1'), '03');
+  assert.equal(getCourseCodeFromCourseId('2'), '34');
+  assert.equal(getCourseCodeFromCourseId('3'), '45');
+  assert.equal(getCourseCodeFromCourseId('course-03'), '03');
+  assert.equal(getCourseCodeFromCourseId('course-45'), '45');
+  assert.equal(getCourseCodeFromCourseId(null), '34');
+});
+
+test('filterClassesForCourse filters classes strictly by course code and course ID', () => {
+  const classes = [
+    { classId: '101', name: '03.01 - Sáng Thứ 2', courseCode: '03' },
+    { classId: '102', name: '03.02 - Chiều Thứ 3', course_code: 'course-03' },
+    { classId: '201', name: '34.01 - Tối Thứ 2-4', courseCode: '34' },
+    { classId: '202', name: '34.02 - Sáng Thứ 3-5', courseCode: 'course-34' },
+    { classId: '301', name: '45.01 - Chiều Thứ 7', courseCode: '45' },
+    { classId: '302', name: '45.02 - Tối Chủ Nhật', course_code: '45' },
+    { classId: '303', name: '45.03 - Chiều Chủ Nhật', courseId: 3 }
+  ];
+
+  const course03Classes = filterClassesForCourse(classes, 1);
+  assert.equal(course03Classes.length, 2);
+  assert.deepEqual(course03Classes.map(c => c.classId), ['101', '102']);
+
+  const course34Classes = filterClassesForCourse(classes, 2);
+  assert.equal(course34Classes.length, 2);
+  assert.deepEqual(course34Classes.map(c => c.classId), ['201', '202']);
+
+  const course45Classes = filterClassesForCourse(classes, 3);
+  assert.equal(course45Classes.length, 3);
+  assert.deepEqual(course45Classes.map(c => c.classId), ['301', '302', '303']);
+});
+
+test('Smart Publishing Modal: renders 2-step wizard, calculates impact, and enforces double-check matching before publishing', async () => {
+  // Setup minimal DOM mock
+  const domElements = new Map();
+  const originalDocument = globalThis.document;
+  const originalWindow = globalThis.window;
+
+  function createMockNode(tag = 'div') {
+    const nodeListeners = new Map();
+    const childrenMap = new Map();
+    const node = {
+      tagName: tag.toUpperCase(),
+      id: '',
+      className: '',
+      value: '',
+      textContent: '',
+      checked: false,
+      disabled: false,
+      style: {},
+      _innerHTML: '',
+      get innerHTML() { return this._innerHTML; },
+      set innerHTML(val) {
+        this._innerHTML = val;
+      },
+      querySelector(sel) {
+        if (!childrenMap.has(sel)) {
+          const child = createMockNode(sel.includes('btn') ? 'button' : 'input');
+          if (sel.startsWith('#')) child.id = sel.slice(1);
+          if (sel.startsWith('.')) child.className = sel.slice(1);
+          childrenMap.set(sel, child);
+        }
+        return childrenMap.get(sel);
+      },
+      querySelectorAll(sel) {
+        return [this.querySelector(sel)];
+      },
+      addEventListener(event, cb) {
+        if (!nodeListeners.has(event)) nodeListeners.set(event, []);
+        nodeListeners.get(event).push(cb);
+      },
+      dispatchEvent(event) {
+        const cbs = nodeListeners.get(event.type) || [];
+        for (const cb of cbs) cb(event);
+      },
+      click() {
+        this.dispatchEvent({ type: 'click', target: this, preventDefault() {} });
+      },
+      focus() {},
+      select() {},
+      closest(sel) {
+        return createMockNode('div');
+      },
+      classList: {
+        add() {},
+        remove() {},
+        toggle() {},
+        contains() { return false; }
+      }
+    };
+    return node;
+  }
+
+  const mockModal = createMockNode('div');
+  mockModal.id = 'smart-publishing-modal';
+
+  const publishBtn = createMockNode('button');
+  publishBtn.id = 'btn-publish-test';
+
+  const container = {
+    innerHTML: '',
+    querySelector(sel) {
+      if (sel === '#btn-publish-test') return publishBtn;
+      return null;
+    },
+    querySelectorAll() { return []; }
+  };
+
+  globalThis.document = {
+    querySelector(sel) {
+      if (sel === '#smart-publishing-modal') return mockModal;
+      return null;
+    },
+    querySelectorAll() { return []; },
+    createElement(tag) {
+      const el = createMockNode(tag);
+      return el;
+    },
+    body: {
+      appendChild() {},
+      removeChild() {}
+    }
+  };
+
+  const mockForm = {
+    id: '04050000-0000-4000-8000-000000000001',
+    formVersionId: '04050000-0000-4000-8000-000000000001',
+    version: 3,
+    status: 'draft',
+    title: 'IZONE · Khối 45 · Test 7',
+    submissionCount: 0,
+    testKey: '45-p2t7',
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '04050000-0000-4000-8000-000000000001',
+      title: 'IZONE · Khối 45 · Test 7',
+      durationMinutes: 60,
+      blocks: []
+    },
+    gradingKey: { items: {} }
+  };
+
+  const catalog = [
+    { testKey: '45-p1t1', sessionNumber: 1, title: 'IZONE · Khối 45 · Test 1' },
+    { testKey: '45-p2t7', sessionNumber: 7, title: 'IZONE · Khối 45 · Test 7' }
+  ];
+
+  const classes = [
+    { classId: '4501', name: '45.01 - Sáng Thứ 7', courseCode: '45', submissionCount: 15 },
+    { classId: '4502', name: '45.02 - Tối Chủ Nhật', courseCode: '45', submissionCount: 0 }
+  ];
+
+  let previewCalledWith = null;
+  let publishCalledWith = null;
+
+  renderTestBuilderView(container, mockForm, {
+    courseId: 3,
+    catalog,
+    classes,
+    onPublishPreview: async (payload) => {
+      previewCalledWith = payload;
+      return {
+        success: true,
+        willBeUpdated: 1,
+        willBeSkipped: 1,
+        updatedCount: 1,
+        skippedCount: 1,
+        totalChecked: 2,
+        purpose: payload.purpose,
+        targetTestTitle: 'IZONE · Khối 45 · Test 7'
+      };
+    },
+    onPublish: async (payload) => {
+      publishCalledWith = payload;
+      return {
+        success: true,
+        updatedCount: 1,
+        frozenCount: 1,
+        totalCount: 2,
+        formVersionId: payload.formVersionId,
+        purpose: payload.purpose,
+        courseCatalogUpdated: true,
+        assignmentsUpdated: [
+          { assignmentId: 'asg-4502', classId: '4502', status: 'updated' },
+          { assignmentId: 'asg-4501', classId: '4501', status: 'frozen_protected' }
+        ]
+      };
+    }
+  });
+
+  // 1. Trigger openPublishingModal via button click
+  publishBtn.click();
+
+  // Verify Step 1 is rendered into modal
+  assert.ok(mockModal.innerHTML.includes('Smart Publishing Engine'), 'Modal renders Smart Publishing Engine title');
+  assert.ok(mockModal.innerHTML.includes('Mục tiêu &amp; Phạm vi') || mockModal.innerHTML.includes('Mục tiêu & Phạm vi'), 'Step 1 indicator rendered');
+  assert.ok(mockModal.innerHTML.includes('Cập nhật thay thế cho bài test có sẵn trong lộ trình'), 'Contains replace existing option');
+  assert.ok(mockModal.innerHTML.includes('Bổ sung thành một bài test mới trong lộ trình'), 'Contains add new option');
+  assert.ok(mockModal.innerHTML.includes('Cơ chế Roster Freezing'), 'Contains Roster Freezing safety banner');
+  assert.ok(mockModal.innerHTML.includes('45.01 - Sáng Thứ 7'), 'Displays available Khối 45 classes');
+
+  // 2. Click Step 1 Next button to trigger preview pre-flight and advance to Step 2
+  const nextBtn = mockModal.querySelector('#btn-step1-next');
+  assert.ok(nextBtn, 'Step 1 next button exists');
+  await nextBtn.click();
+
+  assert.ok(previewCalledWith, 'onPublishPreview must be called with pre-flight payload');
+  assert.equal(previewCalledWith.purpose, 'replace_existing');
+  assert.equal(previewCalledWith.scope, 'whole_course');
+
+  // Verify Step 2 is rendered into modal
+  assert.ok(mockModal.innerHTML.includes('Bảng phân tích tác động'), 'Step 2 renders impact summary table');
+  assert.ok(mockModal.innerHTML.includes('XÁC NHẬN AN TOÀN (DOUBLE-CHECK)'), 'Step 2 renders double-check confirmation box');
+  assert.ok(mockModal.innerHTML.includes('btn-auto-fill-confirm'), 'Step 2 provides auto-fill button for usability');
+
+  // 3. Verify double-check safety: final publish button is initially disabled
+  const finalPublishBtn = mockModal.querySelector('#btn-final-publish');
+  const confirmInput = mockModal.querySelector('#input-confirm-title');
+  const autoFillBtn = mockModal.querySelector('#btn-auto-fill-confirm');
+
+  assert.equal(finalPublishBtn.disabled, true, 'Final publish button MUST be disabled before name confirmation');
+
+  // 4. Click auto-fill button to populate test title
+  autoFillBtn.click();
+  assert.equal(confirmInput.value, 'IZONE · Khối 45 · Test 7');
+  assert.equal(finalPublishBtn.disabled, false, 'Final publish button MUST be enabled once test title matches');
+
+  // 5. Click final publish
+  await finalPublishBtn.click();
+  assert.ok(publishCalledWith, 'onPublish must be invoked with complete payload');
+  assert.equal(publishCalledWith.purpose, 'replace_existing');
+  assert.equal(publishCalledWith.scope, 'whole_course');
+  assert.equal(publishCalledWith.formVersionId, '04050000-0000-4000-8000-000000000001');
+
+  // Cleanup globals
+  globalThis.document = originalDocument;
+  globalThis.window = originalWindow;
 });
