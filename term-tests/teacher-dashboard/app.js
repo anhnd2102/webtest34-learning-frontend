@@ -9142,6 +9142,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           }
         ];
 
+        const formatSimulationPrompt = (promptText) => {
+          if (!promptText || typeof promptText !== 'string') return '';
+          const containsHtml = /<[a-z][\s\S]*>/i.test(promptText);
+          if (containsHtml) {
+            return sanitizeRichContent(promptText);
+          }
+          return escapeHtml(promptText).replace(/\n/g, '<br/>');
+        };
+
         const renderSimQuestionCard = (item) => {
           const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
           const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
@@ -9533,6 +9542,28 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           `;
         };
 
+        const renderSimShortQaGroup = (shortItems) => {
+          if (!shortItems || !shortItems.length) return '';
+          return `
+            <div class="candidate-short-qa-container">
+              ${shortItems.map(item => {
+                const promptHtml = formatSimulationPrompt(item.prompt || '');
+                return `
+                <div class="candidate-short-qa-item" data-item-id="${item.itemVersionId}">
+                  <div class="candidate-short-prompt-row">
+                    <span class="candidate-short-qnum qnum">Câu ${item.position}</span>
+                    <div class="candidate-short-prompt-text">${promptHtml}</div>
+                  </div>
+                  <div class="candidate-short-input-wrap">
+                    <input type="text" class="form-control candidate-short-input" data-item-id="${item.itemVersionId}" placeholder="Nhập câu trả lời của bạn..." autocomplete="off" />
+                  </div>
+                </div>
+              `;
+              }).join('')}
+            </div>
+          `;
+        };
+
         const exercisesHtml = exercises.map((ex, exIdx) => {
           const exItems = items.filter(it => it.exerciseId === ex.exerciseId || (!it.exerciseId && exIdx === 0));
           const exItemsList = exItems.length ? exItems : (exercises.length === 1 ? items : []);
@@ -9542,11 +9573,16 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
           const itemGroups = [];
           exItemsList.forEach(item => {
-            const isVocab = item.interactionType === 'text_select_pair';
-            const isSentenceRewrite = item.pedagogicalTypeCode === 'sentence_transformation' || item.layoutType === 'sentence_rewrite';
-            const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.layoutType === 'ipa_card';
+            const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
+            const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.pedagogicalTypeCode === 'sentence_transformation' || item.layoutType === 'keyword_transformation' || item.layoutType === 'sentence_rewrite') && !isPronunciation;
             const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
+            const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+            const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || b.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+            const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
             const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+            const isInlineCloze = item.interactionType === 'short_text' && item.layoutType === 'inline_cloze' && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+            const isVocab = item.interactionType === 'text_select_pair';
+            const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
 
             const lastGroup = itemGroups[itemGroups.length - 1];
             if (isVocab) {
@@ -9561,6 +9597,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               } else {
                 itemGroups.push({ type: 'pictorial_group', items: [item] });
               }
+            } else if (isShortText) {
+              if (lastGroup && lastGroup.type === 'short_qa_group') {
+                lastGroup.items.push(item);
+              } else {
+                itemGroups.push({ type: 'short_qa_group', items: [item] });
+              }
             } else {
               itemGroups.push({ type: 'single', item });
             }
@@ -9572,6 +9614,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
             if (group.type === 'pictorial_group') {
               return renderSimPictorialGroup(group.items);
+            }
+            if (group.type === 'short_qa_group') {
+              return renderSimShortQaGroup(group.items);
             }
             return renderSimQuestionCard(group.item);
           }).join('');
@@ -9866,30 +9911,48 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         });
       });
 
+      const qnavBtns = modal.querySelectorAll('.btn-qnav');
+
+      const filterNavigatorBySection = (targetSectionId) => {
+        let visibleCount = 0;
+        qnavBtns.forEach(btn => {
+          const btnSection = btn.getAttribute ? btn.getAttribute('data-section-target') : null;
+          const isMatch = !targetSectionId || btnSection === targetSectionId;
+          if (btn.style) {
+            btn.style.display = isMatch ? 'inline-flex' : 'none';
+          }
+          if (isMatch) visibleCount++;
+        });
+        const summaryEl = modal.querySelector('#qnav-summary');
+        if (summaryEl) {
+          summaryEl.textContent = `${visibleCount} câu`;
+        }
+      };
+
       const allNavBtns = modal.querySelectorAll('.section-tab, .simulation-nav-pill, .side-section-btn');
       allNavBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener?.('click', () => {
           const targetId = btn.getAttribute('data-section-target');
           modal.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
-            b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
+            b.classList?.toggle('active', b.getAttribute('data-section-target') === targetId);
           });
           modal.querySelectorAll('.side-section-btn').forEach(b => {
-            b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
+            b.classList?.toggle('active', b.getAttribute('data-section-target') === targetId);
           });
           modal.querySelectorAll('.section-page, .simulation-section-card').forEach(sec => {
-            sec.classList.toggle('active', sec.id === targetId);
+            sec.classList?.toggle('active', sec.id === targetId);
           });
+          filterNavigatorBySection(targetId);
           const targetEl = modal.querySelector(`#${targetId}`);
-          if (targetEl) {
+          if (targetEl && typeof targetEl.scrollIntoView === 'function') {
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         });
       });
 
       // Question Navigator click-to-focus and section navigation
-      const qnavBtns = modal.querySelectorAll('.btn-qnav');
       qnavBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener?.('click', () => {
           const targetSectionId = btn.getAttribute('data-section-target');
           const pos = btn.getAttribute('data-pos');
           const blankPos = btn.getAttribute('data-blank-pos');
@@ -9899,27 +9962,29 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           // 1. Activate target section tab if needed
           if (targetSectionId) {
             modal.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
-              b.classList.toggle('active', b.getAttribute('data-section-target') === targetSectionId);
+              b.classList?.toggle('active', b.getAttribute('data-section-target') === targetSectionId);
             });
             modal.querySelectorAll('.side-section-btn').forEach(b => {
-              b.classList.toggle('active', b.getAttribute('data-section-target') === targetSectionId);
+              b.classList?.toggle('active', b.getAttribute('data-section-target') === targetSectionId);
             });
             modal.querySelectorAll('.section-page, .simulation-section-card').forEach(sec => {
-              sec.classList.toggle('active', sec.id === targetSectionId);
+              sec.classList?.toggle('active', sec.id === targetSectionId);
             });
+            filterNavigatorBySection(targetSectionId);
           }
 
           // 2. Find target element
           let targetEl = null;
-          if (blankPos || btn.hasAttribute('data-blank-pos')) {
+          if (blankPos || btn.hasAttribute?.('data-blank-pos')) {
             targetEl = modal.querySelector(`.inline-fill-input[data-position="${blankPos}"]`) ||
               modal.querySelector(`.inline-fill-input[data-position="${pos}"]`);
-          } else if (slotNum || btn.hasAttribute('data-slot-num')) {
+          } else if (slotNum || btn.hasAttribute?.('data-slot-num')) {
             targetEl = modal.querySelector(`.candidate-sequence-select[data-position="${pos}"]`) ||
               modal.querySelector(`[data-item-id="${itemId}"] .candidate-sequence-select[data-slot="${slotNum}"]`) ||
               modal.querySelector(`.candidate-sequence-select[data-slot="${slotNum}"]`);
           } else if (itemId) {
             const itemCard = modal.querySelector(`.candidate-question-card[data-item-id="${itemId}"]`) ||
+              modal.querySelector(`.candidate-short-qa-item[data-item-id="${itemId}"]`) ||
               modal.querySelector(`[data-item-id="${itemId}"]`);
             if (itemCard) {
               targetEl = itemCard.querySelector('input:not([type="hidden"]), select, textarea') || itemCard;
@@ -9933,13 +9998,16 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             if (typeof targetEl.focus === 'function') {
               targetEl.focus();
             }
-            targetEl.classList.add('nav-focus-pulse');
+            targetEl.classList?.add('nav-focus-pulse');
             setTimeout(() => {
-              targetEl.classList.remove('nav-focus-pulse');
+              targetEl.classList?.remove('nav-focus-pulse');
             }, 1200);
           }
         });
       });
+
+      // Filter navigator initially for the first section
+      filterNavigatorBySection('sim-block-0');
 
       // Update answered state on candidate input/change
       function updateAnsweredState() {
