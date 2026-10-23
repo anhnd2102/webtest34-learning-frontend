@@ -9276,7 +9276,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                   ${item.captionHint ? `<div class="pictorial-caption-hint">${escapeHtml(item.captionHint)}</div>` : ''}
                 </div>
                 <div class="candidate-pictorial-input-wrap">
-                  <input type="text" class="form-control candidate-pictorial-input" placeholder="Nhập từ hoàn chỉnh..." />
+                  <input type="text" class="form-control candidate-pictorial-input" data-item-id="${item.itemVersionId}" placeholder="Nhập từ hoàn chỉnh..." />
                 </div>
               </div>
             `;
@@ -9330,7 +9330,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           } else if (isShortText) {
             interactiveHtml = `
               <div class="candidate-short-wrap">
-                <input type="text" class="form-control candidate-short-input" placeholder="Gõ câu trả lời của bạn..." />
+                <input type="text" class="form-control candidate-short-input" data-item-id="${item.itemVersionId}" placeholder="Gõ câu trả lời của bạn..." />
               </div>
             `;
           } else if (isVocabPair) {
@@ -9338,11 +9338,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               <div class="candidate-vocab-pair-row">
                 <div class="candidate-vocab-input-col">
                   <label class="candidate-field-label">1. Từ tiếng Anh nghe được (50% điểm):</label>
-                  <input type="text" class="form-control candidate-vocab-text-input" placeholder="Nhập từ tiếng Anh nghe được..." />
+                  <input type="text" class="form-control candidate-vocab-text-input" data-item-id="${item.itemVersionId}" placeholder="Nhập từ tiếng Anh nghe được..." />
                 </div>
                 <div class="candidate-vocab-select-col">
                   <label class="candidate-field-label">2. Nghĩa tiếng Việt tương ứng (50% điểm):</label>
-                  <select class="form-select candidate-vocab-select">
+                  <select class="form-select candidate-vocab-select" data-item-id="${item.itemVersionId}">
                     <option value="">-- Chọn nghĩa tiếng Việt tương ứng --</option>
                     ${(item.options || []).map(opt => `
                       <option value="${opt.id}">${escapeHtml(opt.label || '')}</option>
@@ -9354,7 +9354,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           } else if (isRubricAsync) {
             interactiveHtml = `
               <div class="candidate-open-wrap">
-                <textarea class="form-control candidate-open-textarea" rows="4" placeholder="Nhập bài luận hoặc câu trả lời tại đây..."></textarea>
+                <textarea class="form-control candidate-open-textarea" data-item-id="${item.itemVersionId}" rows="4" placeholder="Nhập bài luận hoặc câu trả lời tại đây..."></textarea>
                 <div class="candidate-open-meta">
                   <span class="word-count-badge">Số từ: <strong>0</strong> từ</span>
                   <span class="scoring-info-badge">Điểm tối đa: ${item.maxScore || 4} điểm (Chấm AI)</span>
