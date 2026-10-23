@@ -604,8 +604,9 @@
     // Link chia sẻ qua chat hay dính ký tự thừa (vd. `\`) sau token; chỉ giữ đúng UUID.
     const hashToken = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('test') || '';
     const testToken = hashToken.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i)?.[0] || config.LEARNING_TEST_TOKEN;
+    const activeBase = window.__ACTIVE_LEARNING_API_BASE__ || config.LEARNING_API_BASE_URL || '';
     return {
-      baseUrl: String(config.LEARNING_API_BASE_URL || '').replace(/\/$/, ''),
+      baseUrl: String(activeBase).replace(/\/$/, ''),
       testToken: testToken || ''
     };
   }
@@ -1953,10 +1954,34 @@
       let className = code;
       let usedFallback = false;
       if(learningEnabled()){
-        const assignment = await learningRequest('/test-access/resolve', {
-          testToken: learningConfig().testToken,
-          courseCode: code
-        });
+        let assignment;
+        try {
+          assignment = await learningRequest('/test-access/resolve', {
+            testToken: learningConfig().testToken,
+            courseCode: code
+          });
+        } catch (err) {
+          const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(window.location.hostname);
+          if (isLocalHost && learningConfig().baseUrl.includes('webtest.ducanhn.autos')) {
+            try {
+              const localRes = await fetch('http://127.0.0.1:8788/api/learning/test-access/resolve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ testToken: learningConfig().testToken, courseCode: code })
+              });
+              if (localRes.ok) {
+                assignment = await localRes.json();
+                window.__ACTIVE_LEARNING_API_BASE__ = 'http://127.0.0.1:8788';
+              } else {
+                throw err;
+              }
+            } catch {
+              throw err;
+            }
+          } else {
+            throw err;
+          }
+        }
         if(!assignment.assignment?.roster?.length) throw new Error('Assignment chưa có roster local.');
         const asgCourse = String(assignment.assignment?.courseCode || '').toUpperCase();
         const asgClass = String(assignment.assignment?.class?.name || '').toUpperCase();

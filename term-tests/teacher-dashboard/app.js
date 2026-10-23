@@ -792,12 +792,20 @@ export function batchGenerateExerciseVocabVariants(block, targetExercise, draftS
 
 // Dashboard chạy local (run-local.sh) thì link học viên trỏ về static server local; production giữ nguyên link backend trả.
 // `prod=1`: run-local.sh không chạy backend, nên trang học viên local phải gọi API production như dashboard.
-export function localStudentUrl(studentUrl, location) {
+// Khi dashboard kết nối với backend local (127.0.0.1:8788), link học viên kết nối trực tiếp với backend local (không thêm prod=1).
+export function localStudentUrl(studentUrl, location, apiBase = '') {
   if (!studentUrl || !['localhost', '127.0.0.1', '[::1]', '::1'].includes(location?.hostname || '')) return studentUrl;
   const url = new URL(studentUrl);
   const index = url.pathname.indexOf('/term-tests/');
   if (index < 0) return studentUrl;
-  url.searchParams.set('prod', '1');
+  const isLocalApi = Boolean(apiBase && (apiBase.includes('127.0.0.1') || apiBase.includes('localhost')));
+  if (isLocalApi) {
+    url.searchParams.delete('prod');
+  } else if (!url.searchParams.has('prod') && !apiBase) {
+    url.searchParams.set('prod', '1');
+  } else if (apiBase && (apiBase.includes('webtest.ducanhn.autos') || apiBase.includes('production'))) {
+    url.searchParams.set('prod', '1');
+  }
   return `${location.origin}${url.pathname.slice(index)}${url.search}${url.hash}`;
 }
 
@@ -12584,7 +12592,8 @@ async function startDashboard() {
       showcaseWindowText.textContent = formatAssignmentWindow(assignment.opensAt, assignment.closesAt);
     }
 
-    const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation);
+    const currentApi = typeof apiBase === 'function' ? apiBase() : '';
+    const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation, currentApi);
     if (studentUrl) {
       if (showcaseStudentUrl) showcaseStudentUrl.value = studentUrl;
       if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = studentUrl;
@@ -12970,7 +12979,8 @@ async function startDashboard() {
     }
 
     if (assignmentLinkBar) {
-      const studentUrl = localStudentUrl(payload.assignment?.studentUrl, currentLocation);
+      const currentApi = typeof apiBase === 'function' ? apiBase() : '';
+      const studentUrl = localStudentUrl(payload.assignment?.studentUrl, currentLocation, currentApi);
       if (studentUrl) {
         assignmentLinkBar.hidden = false;
         if (assignmentStudentUrl) assignmentStudentUrl.value = studentUrl;
