@@ -5011,6 +5011,8 @@ body:not(.login-page) #auth-panel {
   font-weight: 600;
   color: #1e293b;
   line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .candidate-options-grid {
@@ -5208,6 +5210,8 @@ body:not(.login-page) #auth-panel {
   font-size: 0.92rem;
   line-height: 2.2;
   color: #1e293b;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .cloze-preview-content table,
@@ -5302,6 +5306,8 @@ body:not(.login-page) #auth-panel {
   border-radius: 8px;
   padding: 16px 20px;
   margin-top: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .candidate-inline-cloze-wrap .inline-fill-input {
@@ -7464,6 +7470,16 @@ button.btn-publish-test:hover:not(:disabled) {
   line-height: 1.55;
   color: #1e293b;
   margin-bottom: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.candidate-question-prompt p {
+  margin: 0 0 8px 0;
+}
+
+.candidate-question-prompt p:last-child {
+  margin-bottom: 0;
 }
 
 /* Stimulus Docks */
@@ -8332,6 +8348,7 @@ button.btn-publish-test:hover:not(:disabled) {
   overflow-wrap: anywhere;
   font-size: 14px;
   background: #ffffff;
+  white-space: pre-wrap;
 }
 
 .rich-editor__code,

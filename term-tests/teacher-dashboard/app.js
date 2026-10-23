@@ -7957,9 +7957,23 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     }
 
-    // Prompt change listener for inline cloze
+    // Prompt change listener for inline cloze and real-time counter
     const promptInputs = container.querySelectorAll('.item-prompt-input');
     promptInputs.forEach(promptEl => {
+      promptEl.addEventListener('input', () => {
+        const bIdx = Number(promptEl.getAttribute('data-block-idx'));
+        const iIdx = Number(promptEl.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+        item.prompt = promptEl.value;
+        const itemCard = (typeof promptEl.closest === 'function') ? promptEl.closest('.builder-item-card') : (promptEl.parentElement || null);
+        const charCountEl = itemCard?.querySelector ? itemCard.querySelector('.prompt-char-count') : null;
+        if (charCountEl) {
+          charCountEl.textContent = `${(promptEl.value || '').length} ký tự`;
+        }
+        markAsDirty();
+      });
+
       promptEl.addEventListener('change', () => {
         const bIdx = Number(promptEl.getAttribute('data-block-idx'));
         const iIdx = Number(promptEl.getAttribute('data-item-idx'));
@@ -9363,16 +9377,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             `;
           }
 
+          const formatSimulationPrompt = (promptText) => {
+            if (!promptText || typeof promptText !== 'string') return '';
+            const containsHtml = /<[a-z][\s\S]*>/i.test(promptText);
+            if (containsHtml) {
+              return sanitizeRichContent(promptText);
+            }
+            return escapeHtml(promptText).replace(/\n/g, '<br/>');
+          };
+
           const promptDisplay = isPronunciation
-            ? `${escapeHtml(item.prompt || `Chọn phiên âm / trọng âm đúng cho "${item.targetWord || 'từ'}"`)}`
+            ? `${formatSimulationPrompt(item.prompt || `Chọn phiên âm / trọng âm đúng cho "${item.targetWord || 'từ'}"`)}`
             : (isSentenceRewrite
-              ? `Hoàn thành câu thứ hai sao cho có nghĩa tương đương với câu gốc, sử dụng từ in hoa đã cho:<br/><blockquote class="transformation-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+              ? `Hoàn thành câu thứ hai sao cho có nghĩa tương đương với câu gốc, sử dụng từ in hoa đã cho:<br/><blockquote class="transformation-prompt-quote">“${formatSimulationPrompt(item.prompt || '')}”</blockquote>`
               : (isSentenceReorder
-                ? `Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:${item.prompt && item.prompt !== 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:' ? `<br/><blockquote class="reorder-prompt-quote">${escapeHtml(item.prompt)}</blockquote>` : ''}`
+                ? `Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:${item.prompt && item.prompt !== 'Sắp xếp các từ/cụm từ sau thành câu hoàn chỉnh:' ? `<br/><blockquote class="reorder-prompt-quote">${formatSimulationPrompt(item.prompt)}</blockquote>` : ''}`
                 : (isErrorCorrection
-                  ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${escapeHtml(item.prompt || '')}”</blockquote>`
+                  ? `Tìm lỗi sai trong câu sau và sửa lại cho đúng:<br/><blockquote class="correction-prompt-quote">“${formatSimulationPrompt(item.prompt || '')}”</blockquote>`
                   : (isReadingMatching
-                    ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${escapeHtml(item.prompt || 'Paragraph')}</strong>`
+                    ? `Nối đoạn văn với tiêu đề phù hợp: <strong>${formatSimulationPrompt(item.prompt || 'Paragraph')}</strong>`
                     : (isListeningOrder
                       ? 'Nghe đoạn ghi âm và sắp xếp các sự kiện sau theo đúng thứ tự thời gian:'
                       : (isVocabPair
@@ -9381,7 +9404,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                           ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
                           : (isPictorial
                             ? 'Nhìn hình và hoàn thành từ vựng:'
-                            : escapeHtml(item.prompt || '')))))))));
+                            : formatSimulationPrompt(item.prompt || '')))))))));
 
           if (isVocabPair) {
             return renderSimVocabPairTable([item]);
