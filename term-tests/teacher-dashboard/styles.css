@@ -5380,8 +5380,11 @@ body:not(.login-page) #auth-panel {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 16px 20px;
-  margin-top: 8px;
+  padding: 12px 18px;
+  margin-top: 6px;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: #1e293b;
   white-space: pre-wrap;
   word-break: break-word;
 }
@@ -5391,6 +5394,7 @@ body:not(.login-page) #auth-panel {
   height: 32px;
   font-size: 0.95rem;
 }
+
 
 /* ==========================================================================
    Pictorial Vocabulary Cards Styles (Issue 08)
@@ -7543,12 +7547,13 @@ button.btn-publish-test:hover:not(:disabled) {
 
 .candidate-question-prompt {
   font-size: 0.95rem;
-  line-height: 1.55;
+  line-height: 1.5;
   color: #1e293b;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   white-space: pre-wrap;
   word-break: break-word;
 }
+
 
 .candidate-question-prompt p {
   margin: 0 0 8px 0;

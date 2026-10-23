@@ -4059,9 +4059,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           <div class="template-section template-inline-cloze">
             <div class="cloze-live-preview-box" style="margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px;">
               <span class="preview-mini-label" style="font-size: 0.76rem; font-weight: 700; color: #475569; text-transform: uppercase;">Xem trước hiển thị nội tuyến:</span>
-              <div class="cloze-preview-content" style="margin-top: 6px; line-height: 1.8;">
-                ${livePreviewHtml || '<em>Chưa có nội dung văn bản chứa chỗ trống...</em>'}
-              </div>
+              <div class="cloze-preview-content" style="margin-top: 6px; line-height: 1.75;">${livePreviewHtml || '<em>Chưa có nội dung văn bản chứa chỗ trống...</em>'}</div>
             </div>
 
             <div class="cloze-answers-config" style="margin-top: 12px;">
@@ -9308,11 +9306,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               </div>
             `;
           } else if (isInlineCloze) {
-            interactiveHtml = `
-              <div class="candidate-inline-cloze-wrap" style="line-height: 2.2; font-size: 1.05rem;">
-                ${renderInlineClozeMarkup(item.prompt || '', [item])}
-              </div>
-            `;
+            interactiveHtml = `<div class="candidate-inline-cloze-wrap">${renderInlineClozeMarkup(item.prompt || '', [item])}</div>`;
           } else if (isSentenceReorder) {
             const tokens = item.tokens || tokenizeSentence(item.targetSentence || '');
             const distractors = item.distractors || [];
@@ -9429,9 +9423,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <span class="question-num-badge qnum">Câu ${item.position}</span>
                 <span class="question-type-badge">${isPronunciation ? 'Phát âm' : (isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : 'Tự luận chấm AI'))))))))))}</span>
               </div>
-              <div class="candidate-question-prompt">
-                ${promptDisplay}
-              </div>
+              ${promptDisplay ? `<div class="candidate-question-prompt">${promptDisplay}</div>` : ''}
               ${interactiveHtml}
             </div>
           `;
