@@ -4978,7 +4978,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             const ex = block.exercises?.[exIdx];
             if (!ex) return;
             const exTitleEl = exCard.querySelector('.exercise-title-input');
-            if (exTitleEl) ex.title = exTitleEl.value.trim();
+            if (exTitleEl) {
+              ex.title = exTitleEl.value.trim() || `Bài tập ${ex.exerciseNumber || exIdx + 1}`;
+            } else if (!ex.title || !ex.title.trim()) {
+              ex.title = `Bài tập ${ex.exerciseNumber || exIdx + 1}`;
+            }
             const exInstEl = exCard.querySelector('.exercise-instructions-input');
             if (exInstEl) ex.instructions = exInstEl.value;
           });
