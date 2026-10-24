@@ -24,6 +24,19 @@
  *     - short_text
  */
 
+export const ICONS = {
+  barChart: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>`,
+  compass: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
+  lightbulb: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/></svg>`,
+  volume: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`,
+  zap: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+  book: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+  clock: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  check: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  play: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+  pause: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+};
+
 function escape(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;')
@@ -304,7 +317,7 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
       <div class="panel-card cbt-panel-card cbt-progress-card">
         <div class="cbt-card-header">
           <div class="cbt-card-title-wrap">
-            <span class="cbt-card-icon">📊</span>
+            <span class="cbt-card-icon">${ICONS.barChart}</span>
             <strong class="cbt-card-title">Tiến độ làm bài</strong>
           </div>
           <span class="progress-ratio cbt-progress-badge" id="progressRatioDisplay">${answeredTotal}/${totalItems}</span>
@@ -335,7 +348,7 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
       <div class="panel-card cbt-panel-card question-navigator-card cbt-qnav-card">
         <div class="navigator-header cbt-qnav-header">
           <div class="cbt-card-title-wrap">
-            <span class="cbt-card-icon">🧭</span>
+            <span class="cbt-card-icon">${ICONS.compass}</span>
             <strong class="cbt-card-title">Bảng câu hỏi</strong>
           </div>
           <span class="navigator-summary cbt-qnav-chip" id="qnav-summary">${totalItems} câu</span>
@@ -352,7 +365,7 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
       <!-- Card 3: Hướng dẫn làm bài -->
       <div class="panel-card cbt-panel-card cbt-tips-card">
         <div class="cbt-card-title-wrap" style="margin-bottom:8px;">
-          <span class="cbt-card-icon">✨</span>
+          <span class="cbt-card-icon">${ICONS.lightbulb}</span>
           <strong class="cbt-card-title">Hướng dẫn</strong>
         </div>
         <ul class="sim-notice-text cbt-tips-list">
@@ -692,11 +705,11 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
   return `
     <div class="strict-audio-dock candidate-audio-dock" data-audio-src="${escape(convertedUrl)}" data-listens-count="0" data-max-listens="${maxListens}">
       <div class="strict-audio-header">
-        <span class="audio-badge">🔊 ${escape(label)}</span>
+        <span class="audio-badge">${ICONS.volume} ${escape(label)}</span>
         <div class="audio-meta-right">
           <span class="sim-audio-badge" data-listen-badge>Lượt: 0/${maxListens}</span>
           <div class="audio-volume-control">
-            <label class="volume-label" title="Âm lượng loa">🔊</label>
+            <label class="volume-label" title="Âm lượng loa">${ICONS.volume}</label>
             <input type="range" class="candidate-audio-volume" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng loa" />
             <output class="volume-output">100%</output>
           </div>
@@ -704,7 +717,7 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
       </div>
       <div class="strict-audio-body">
         <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">
-          ▶ Bắt đầu nghe
+          ${ICONS.play} Bắt đầu nghe
         </button>
         <div class="sim-audio-timeline">
           <div class="sim-audio-time-current">00:00</div>
@@ -802,13 +815,13 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
               <h2 class="cbt-hero-title">${escape(block.title || `Phần ${bIdx + 1}`)}</h2>
             </div>
             <div class="cbt-hero-meta-chips">
-              <span class="cbt-chip cbt-chip-count">⚡ ${bCount} câu hỏi</span>
-              ${exCount > 1 ? `<span class="cbt-chip cbt-chip-ex">📚 ${exCount} bài tập</span>` : ''}
+              <span class="cbt-chip cbt-chip-count">${ICONS.zap} ${bCount} câu hỏi</span>
+              ${exCount > 1 ? `<span class="cbt-chip cbt-chip-ex">${ICONS.book} ${exCount} bài tập</span>` : ''}
             </div>
           </div>
           ${block.instructions ? `
             <div class="cbt-instruction-banner">
-              <span class="cbt-instruction-icon">💡</span>
+              <span class="cbt-instruction-icon">${ICONS.lightbulb}</span>
               <div class="cbt-instruction-text">${renderFormattedContent(block.instructions)}</div>
             </div>
           ` : ''}
@@ -826,14 +839,14 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
           ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 2) : ''}
 
           <div class="split-pane-mobile-toggle">
-            <button type="button" class="btn btn-secondary btn-sm active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">📖 Xem bài đọc</button>
+            <button type="button" class="btn btn-secondary btn-sm active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">${ICONS.book} Xem bài đọc</button>
             <button type="button" class="btn btn-secondary btn-sm toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi (${items.length})</button>
           </div>
 
           <div class="split-pane-reading cbt-split-pane" id="split-pane-${bIdx}">
             <div class="reading-passage-column active-pane cbt-reading-col" data-pane-type="reading">
               <div class="reading-passage-sticky-header cbt-reading-header">
-                <span class="reading-title-badge">📖 Bài đọc hiểu (Reading Passage)</span>
+                <span class="reading-title-badge">${ICONS.book} Bài đọc hiểu (Reading Passage)</span>
                 <span class="reading-hint">Cuộn độc lập để tra cứu</span>
               </div>
               <div class="reading-passage-content cbt-reading-body">
@@ -859,13 +872,13 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
               <h2 class="cbt-hero-title">${escape(block.title || `Phần ${bIdx + 1}`)}</h2>
             </div>
             <div class="cbt-hero-meta-chips">
-              <span class="cbt-chip cbt-chip-count">⚡ ${bCount} câu hỏi</span>
-              ${exCount > 1 ? `<span class="cbt-chip cbt-chip-ex">📚 ${exCount} bài tập</span>` : ''}
+              <span class="cbt-chip cbt-chip-count">${ICONS.zap} ${bCount} câu hỏi</span>
+              ${exCount > 1 ? `<span class="cbt-chip cbt-chip-ex">${ICONS.book} ${exCount} bài tập</span>` : ''}
             </div>
           </div>
           ${block.instructions ? `
             <div class="cbt-instruction-banner">
-              <span class="cbt-instruction-icon">💡</span>
+              <span class="cbt-instruction-icon">${ICONS.lightbulb}</span>
               <div class="cbt-instruction-text">${renderFormattedContent(block.instructions)}</div>
             </div>
           ` : ''}
@@ -884,7 +897,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
 
           ${reading ? `
             <div class="sim-reading-dock cbt-reading-dock">
-              <div class="reading-header cbt-reading-dock-header">📖 Bài đọc tham khảo:</div>
+              <div class="reading-header cbt-reading-dock-header">${ICONS.book} Bài đọc tham khảo:</div>
               <div class="reading-content cbt-reading-dock-body">${renderFormattedContent(reading)}</div>
             </div>
           ` : ''}
@@ -1368,7 +1381,7 @@ export function initStrictAudioDocks(rootEl) {
 
         try {
           await audioEl.play();
-          playBtn.textContent = '⏸ Tạm dừng';
+          playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
           if (liveStatus) liveStatus.style.display = 'inline-flex';
           if (listenBadge) {
             listenBadge.textContent = `Lượt ${listensCount + 1}/${maxListens} (Đang phát)`;
@@ -1378,7 +1391,7 @@ export function initStrictAudioDocks(rootEl) {
         }
       } else {
         audioEl.pause();
-        playBtn.textContent = '▶ Tiếp tục nghe';
+        playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
         if (liveStatus) liveStatus.style.display = 'none';
       }
     });

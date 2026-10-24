@@ -348,7 +348,7 @@
   background: #ffffff;
   border: 1px solid var(--izone-border, #e2e8f0);
   border-left: 5px solid var(--izone-primary, #e11d48);
-  border-radius: 18px;
+  border-radius: 12px;
   padding: 22px 28px;
   margin-bottom: 24px;
   box-shadow: var(--izone-shadow-card);
@@ -448,7 +448,7 @@
 .cbt-question-card {
   background: #ffffff;
   border: 1px solid var(--izone-border, #e2e8f0);
-  border-radius: 18px;
+  border-radius: 12px;
   padding: 24px 28px;
   margin-bottom: 22px;
   box-shadow: var(--izone-shadow-card);
@@ -738,7 +738,7 @@
 .cbt-vocab-card {
   background: #ffffff;
   border: 1px solid var(--izone-border, #e2e8f0);
-  border-radius: 18px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: var(--izone-shadow-card);
   margin-bottom: 24px;
@@ -1148,7 +1148,7 @@
 .cbt-panel-card {
   background: #ffffff;
   border: 1px solid var(--izone-border, #e2e8f0);
-  border-radius: 18px;
+  border-radius: 12px;
   box-shadow: var(--izone-shadow-card);
   padding: 16px 18px;
 }
@@ -1169,6 +1169,43 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.cbt-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--izone-primary, #e11d48);
+}
+
+.cbt-card-icon .icon-inline {
+  width: 17px;
+  height: 17px;
+}
+
+.icon-inline {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.cbt-timer-icon .icon-inline {
+  width: 16px;
+  height: 16px;
+  color: #38bdf8;
+}
+
+.cbt-instruction-icon .icon-inline {
+  width: 18px;
+  height: 18px;
+  color: #d97706;
 }
 
 .cbt-card-title {
@@ -1368,7 +1405,7 @@
   padding: 20px 28px;
   background: #ffffff;
   border: 1px solid var(--izone-border, #e2e8f0);
-  border-radius: 18px;
+  border-radius: 12px;
   box-shadow: var(--izone-shadow-card);
   display: flex;
   align-items: center;
@@ -1406,7 +1443,7 @@
   background: #ffffff !important;
   color: #334155 !important;
   border: 1.5px solid #cbd5e1 !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   font-weight: 700 !important;
   padding: 10px 20px !important;
 }
@@ -1420,7 +1457,7 @@
   background: var(--izone-primary-gradient) !important;
   color: #ffffff !important;
   border: none !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   font-weight: 700 !important;
   padding: 10px 24px !important;
   box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35) !important;

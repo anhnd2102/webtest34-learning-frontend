@@ -5,7 +5,8 @@ import {
   getAnsweredCount,
   renderSectionNavPills,
   renderSidePanel,
-  initDynamicExamInteractions
+  initDynamicExamInteractions,
+  ICONS
 } from './dynamic-exam-renderer.mjs?rev=20261024-cbt-v6';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
@@ -893,15 +894,15 @@ export async function mount(course) {
 
             <div id="soundcheckSection" class="cbt-soundcheck-box">
               <div class="cbt-soundcheck-header">
-                <span>🔊 Kiểm tra âm thanh trước khi làm bài</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;">${ICONS.volume} Kiểm tra âm thanh trước khi làm bài</span>
                 <span id="soundcheckStatus" class="cbt-soundcheck-badge">Chưa kiểm tra</span>
               </div>
               <p class="cbt-soundcheck-body">
                 Bài thi có nội dung âm thanh. Hãy nhấn <strong>Nghe thử</strong> để kiểm tra loa hoặc tai nghe và điều chỉnh âm lượng phù hợp.
               </p>
               <div class="cbt-soundcheck-controls">
-                <button type="button" class="btn btn-secondary" id="soundcheckPlayBtn" style="min-width:130px;background:white;font-weight:700">
-                  🔊 Nghe thử
+                <button type="button" class="btn btn-secondary" id="soundcheckPlayBtn" style="min-width:130px;background:white;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+                  ${ICONS.volume} Nghe thử
                 </button>
                 <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#475569">
                   <label for="soundcheckVolume">Âm lượng:</label>
@@ -1090,15 +1091,15 @@ export async function mount(course) {
           soundcheckAudio = new Audio(soundcheckUrl);
           soundcheckAudio.volume = parseFloat(soundcheckVolume?.value || '1');
           soundcheckAudio.addEventListener('ended', () => {
-            soundcheckPlayBtn.textContent = '🔊 Nghe thử lại';
+            soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử lại`;
             if (soundcheckStatus) {
-              soundcheckStatus.textContent = '✓ Âm thanh hoạt động tốt';
+              soundcheckStatus.textContent = 'Âm thanh hoạt động tốt';
               soundcheckStatus.style.background = '#dcfce7';
               soundcheckStatus.style.color = '#15803d';
             }
           });
           soundcheckAudio.addEventListener('error', () => {
-            soundcheckPlayBtn.textContent = '🔊 Nghe thử';
+            soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử`;
             if (soundcheckStatus) {
               soundcheckStatus.textContent = 'Lỗi tải audio';
               soundcheckStatus.style.background = '#fee2e2';
@@ -1109,7 +1110,7 @@ export async function mount(course) {
         if (soundcheckAudio.paused) {
           soundcheckAudio.currentTime = 0;
           soundcheckAudio.play().then(() => {
-            soundcheckPlayBtn.textContent = '⏹ Dừng nghe thử';
+            soundcheckPlayBtn.innerHTML = 'Dừng nghe thử';
             if (soundcheckStatus) {
               soundcheckStatus.textContent = 'Đang phát âm thanh…';
               soundcheckStatus.style.background = '#dbeafe';
@@ -1117,14 +1118,14 @@ export async function mount(course) {
             }
           }).catch(err => {
             console.warn('Audio play error:', err);
-            soundcheckPlayBtn.textContent = '🔊 Nghe thử';
+            soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử`;
           });
         } else {
           soundcheckAudio.pause();
           soundcheckAudio.currentTime = 0;
-          soundcheckPlayBtn.textContent = '🔊 Nghe thử lại';
+          soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử lại`;
           if (soundcheckStatus) {
-            soundcheckStatus.textContent = '✓ Âm thanh hoạt động';
+            soundcheckStatus.textContent = 'Âm thanh hoạt động';
             soundcheckStatus.style.background = '#dcfce7';
             soundcheckStatus.style.color = '#15803d';
           }
@@ -1246,7 +1247,7 @@ export async function mount(course) {
                   <button type="button" class="icon-btn cbt-font-btn" id="demo-font-up" aria-label="Tăng cỡ chữ" title="Tăng cỡ chữ">A+</button>
                 </div>
                 <div class="cbt-timer-container">
-                  <span class="cbt-timer-icon">⏱</span>
+                  <span class="cbt-timer-icon">${ICONS.clock}</span>
                   <span class="cbt-timer" id="examTimerDisplay">${examDuration}:00</span>
                 </div>
                 <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${isLearningMode ? (state.submittedAt ? 'Đã nộp bài' : 'Nộp bài') : 'Nộp thử'}</button>
@@ -1450,7 +1451,7 @@ export async function mount(course) {
       let started = false;
       let lastGoodTime = 0;
       document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
-      if (status) status.textContent = '🔊 Đã mở khóa nội dung câu hỏi để kiểm tra đề.';
+      if (status) status.textContent = 'Đã mở khóa nội dung câu hỏi để kiểm tra đề.';
       audio.addEventListener('play', () => {
         started = true;
         document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
@@ -1835,8 +1836,8 @@ export async function mount(course) {
             <div>
               <strong>Đã hoàn tất chấm điểm!</strong> Tổng điểm đạt được: <strong>${summary.scoreEarned ?? 0}/${summary.maxScore ?? 0}đ</strong> (${scoreFinal ? 'Điểm chính thức' : 'Điểm tạm tính'}).
             </div>
-            <button type="button" class="btn btn-secondary btn-sm" id="btn-open-results-modal" style="font-weight:700;">
-              📊 Xem lại Bảng tổng hợp chấm điểm
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-open-results-modal" style="font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+              ${ICONS.barChart} Xem lại Bảng tổng hợp chấm điểm
             </button>
           </div>
         `;
@@ -1913,14 +1914,14 @@ export async function mount(course) {
           </div>
         ` : isManualReview ? `
           <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-            <span style="font-size:20px">📝</span>
+            <span class="cbt-card-icon" style="color:#c2410c">${ICONS.book}</span>
             <div style="font-size:13px;color:#9a3412;line-height:1.5">
               Hệ thống AI đã hoàn tất chấm. Một số câu tự luận được chuyển sang trạng thái <strong>Chờ giảng viên kiểm tra</strong> (manual review). Điểm chính thức sẽ được cập nhật sau khi giảng viên xác nhận.
             </div>
           </div>
         ` : `
           <div style="background:#eff6ff;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-            <span style="font-size:20px">⏳</span>
+            <span class="cbt-card-icon" style="color:#2563eb">${ICONS.clock}</span>
             <div style="font-size:13px;color:#1e40af;line-height:1.5">
               Hệ thống đang tiến hành chấm các câu tự luận bằng AI. Điểm chính thức sẽ tự động cập nhật ngay tại đây (còn lại ${vm.pendingItemCount} câu đang xử lý).
             </div>
