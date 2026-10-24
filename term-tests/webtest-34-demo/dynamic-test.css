@@ -30,6 +30,13 @@
   -webkit-font-smoothing: antialiased;
 }
 
+[hidden],
+.demo-notice:empty,
+#demo-result:empty,
+.cbt-result-box:empty {
+  display: none !important;
+}
+
 /* ==========================================================================
    1. CBT TOPBAR & HEADER ACTIONS
    ========================================================================== */
@@ -172,13 +179,15 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #0f172a;
-  color: #f8fafc;
-  padding: 6px 16px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  padding: 6px 14px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18) !important;
 }
 
+.cbt-timer,
+.cbt-timer-container .cbt-timer,
 .cbt-timer-container .timer,
 .cbt-timer-container #examTimerDisplay {
   background: transparent !important;
@@ -190,7 +199,19 @@
   font-family: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace !important;
   font-size: 1.05rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.05em !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+}
+
+.cbt-timer.is-submitted,
+.cbt-timer-container .cbt-timer.is-submitted,
+.cbt-timer-container:has(.is-submitted) .cbt-timer {
+  color: #38bdf8 !important;
+  font-family: var(--izone-font-sans, Geologica, sans-serif) !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
 }
 
 .cbt-timer-icon {
@@ -207,6 +228,7 @@
 }
 
 .cbt-timer-container.warn .timer,
+.cbt-timer-container.warn .cbt-timer,
 .cbt-timer-container.warn #examTimerDisplay {
   color: #e11d48 !important;
 }
@@ -1113,10 +1135,13 @@
 .side-panel,
 .cbt-side-panel {
   position: sticky;
-  top: 90px;
+  top: 125px;
+  max-height: calc(100vh - 145px);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  padding-bottom: 20px;
 }
 
 .side-panel .panel-card,
@@ -1125,7 +1150,11 @@
   border: 1px solid var(--izone-border, #e2e8f0);
   border-radius: 18px;
   box-shadow: var(--izone-shadow-card);
-  padding: 20px 22px;
+  padding: 16px 18px;
+}
+
+.cbt-progress-card {
+  padding: 14px 16px !important;
 }
 
 .cbt-card-header {
@@ -1133,7 +1162,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .cbt-card-title-wrap {
@@ -1143,24 +1172,24 @@
 }
 
 .cbt-card-title {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #0f172a;
 }
 
 .cbt-progress-badge {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 800;
   color: var(--izone-primary, #e11d48);
   font-variant-numeric: tabular-nums;
 }
 
 .cbt-progress-track {
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
   background: #f1f5f9;
   overflow: hidden;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 
 .cbt-progress-bar {
@@ -1173,7 +1202,7 @@
 
 .cbt-section-jump-list {
   display: grid;
-  gap: 6px;
+  gap: 3px;
 }
 
 .side-section-btn,
@@ -1181,18 +1210,19 @@
   width: 100%;
   border: 0;
   background: transparent;
-  border-radius: 10px;
-  padding: 9px 12px;
+  border-radius: 8px;
+  padding: 5px 8px;
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
   color: #475569;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
+  min-height: 28px;
 }
 
 .side-section-btn:hover,

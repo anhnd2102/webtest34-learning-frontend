@@ -489,7 +489,7 @@ export function renderInlineCloze(item, answers = {}) {
       const isFilled = typeof val === 'string' && val.trim().length > 0;
       html += `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
         `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
-        `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="${num}" value="${escape(val)}" autocomplete="off" />` +
+        `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" autocomplete="off" />` +
       `</span>`;
       last = match.index + match[0].length;
     }
@@ -507,7 +507,7 @@ export function renderInlineCloze(item, answers = {}) {
     const isFilled = typeof val === 'string' && val.trim().length > 0;
     html += `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
       `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
-      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="${num}" value="${escape(val)}" autocomplete="off" />` +
+      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" autocomplete="off" />` +
     `</span>`;
     last = match.index + match[0].length;
   }
