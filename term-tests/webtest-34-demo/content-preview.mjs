@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261024-cbt-v13';
+} from './dynamic-exam-renderer.mjs?rev=20261024-cbt-v14';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -1557,10 +1557,36 @@ export async function mount(course) {
     `;
     document.head.append(canonicalStyle);
 
-    let fontScale=1;
-    const resizeFont=delta=>{fontScale=Math.max(.85,Math.min(1.3,fontScale+delta));document.documentElement.style.setProperty('--font-scale',fontScale);};
-    document.querySelector('#demo-font-down').addEventListener('click',()=>resizeFont(-.05));
-    document.querySelector('#demo-font-up').addEventListener('click',()=>resizeFont(.05));
+    let fontScale = parseFloat(localStorage.getItem('izone_cbt_font_scale') || '1') || 1;
+    if (fontScale < 0.85 || fontScale > 1.35) fontScale = 1;
+
+    const applyFontScale = (scale) => {
+      fontScale = Math.max(0.85, Math.min(1.3, Math.round(scale * 100) / 100));
+      document.documentElement.style.setProperty('--font-scale', String(fontScale));
+      document.documentElement.style.fontSize = `${16 * fontScale}px`;
+      const btnDown = document.querySelector('#demo-font-down');
+      const btnUp = document.querySelector('#demo-font-up');
+      if (btnDown) {
+        btnDown.disabled = fontScale <= 0.85;
+        btnDown.title = `Thu nhỏ cỡ chữ (${Math.round(fontScale * 100)}%)`;
+      }
+      if (btnUp) {
+        btnUp.disabled = fontScale >= 1.3;
+        btnUp.title = `Phóng to cỡ chữ (${Math.round(fontScale * 100)}%)`;
+      }
+      try {
+        localStorage.setItem('izone_cbt_font_scale', String(fontScale));
+      } catch {}
+    };
+
+    const resizeFont = (delta) => applyFontScale(fontScale + delta);
+
+    applyFontScale(fontScale);
+
+    const btnFontDown = document.querySelector('#demo-font-down');
+    const btnFontUp = document.querySelector('#demo-font-up');
+    if (btnFontDown) btnFontDown.addEventListener('click', () => resizeFont(-0.06));
+    if (btnFontUp) btnFontUp.addEventListener('click', () => resizeFont(0.06));
     const query = selector => document.querySelector(selector);
     const fields = [...document.querySelectorAll('[data-demo-answer]')];
 

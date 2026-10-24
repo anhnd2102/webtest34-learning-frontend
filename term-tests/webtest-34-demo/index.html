@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="dynamic-test.css?rev=20261024-cbt-v13">
+  <link rel="stylesheet" href="dynamic-test.css?rev=20261024-cbt-v14">
   <style>
     :root{
       --color-primary:#db0829;
@@ -43,11 +43,14 @@
       --font-scale:1;
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    html{
+      scroll-behavior:smooth;
+      font-size:calc(16px * var(--font-scale, 1));
+    }
     body{
       margin:0;background:var(--color-bg-secondary);color:var(--color-text);
       font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      font-size:calc(16px * var(--font-scale));line-height:1.55;
+      font-size:1rem;line-height:1.55;
     }
     button,input,textarea,select{font:inherit}
     button{cursor:pointer}
@@ -484,7 +487,7 @@
   const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
   if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs?rev=20261024-cbt-sim-v13').then(module => module.mount(demoCourse)).catch((err) => {
+    import('./content-preview.mjs?rev=20261024-cbt-sim-v14').then(module => module.mount(demoCourse)).catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });
@@ -2320,8 +2323,18 @@
   });
   $('#mobilePrev').addEventListener('click',()=>step(-1));
   $('#mobileNext').addEventListener('click',()=>step(1));
-  $('#fontDown').addEventListener('click',()=>{fontScale=Math.max(.86,Math.round((fontScale-.06)*100)/100);document.documentElement.style.setProperty('--font-scale',fontScale);persist()});
-  $('#fontUp').addEventListener('click',()=>{fontScale=Math.min(1.2,Math.round((fontScale+.06)*100)/100);document.documentElement.style.setProperty('--font-scale',fontScale);persist()});
+  $('#fontDown').addEventListener('click',()=>{
+    fontScale=Math.max(.85,Math.round((fontScale-.06)*100)/100);
+    document.documentElement.style.setProperty('--font-scale',fontScale);
+    document.documentElement.style.fontSize=`${16*fontScale}px`;
+    persist();
+  });
+  $('#fontUp').addEventListener('click',()=>{
+    fontScale=Math.min(1.3,Math.round((fontScale+.06)*100)/100);
+    document.documentElement.style.setProperty('--font-scale',fontScale);
+    document.documentElement.style.fontSize=`${16*fontScale}px`;
+    persist();
+  });
   $('#cancelSubmit').addEventListener('click',()=>$('#submitModal').classList.add('hidden'));
   function acceptLearningSubmission(result){
     examStreamController?.abort();

@@ -154,4 +154,22 @@ test('Candidate UI: Audio Dock removes play count badge ("xoá lượt phát đi
   assert.ok(dockHtml.includes('preload="auto"'), 'Must include preload auto for seamless playback');
 });
 
+test('Candidate UI: Font scaling applies to root html so all exam content (questions, passages, cards) zooms proportionally', async () => {
+  const css = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/dynamic-test.css'), 'utf8');
+  const indexHtml = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/index.html'), 'utf8');
+  const previewJs = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/content-preview.mjs'), 'utf8');
+
+  // 1. Root HTML font-size must be bound to --font-scale in dynamic-test.css and index.html
+  assert.match(css, /html\s*\{[^}]*font-size:\s*calc\(16px\s*\*\s*var\(--font-scale/i, 'dynamic-test.css must bind html font-size to --font-scale');
+  assert.match(indexHtml, /html\s*\{[^}]*font-size:\s*calc\(16px\s*\*\s*var\(--font-scale/i, 'index.html must bind html font-size to --font-scale');
+
+  // 2. .demo-notice must have controlled rem font-size so it does not disproportionately balloon
+  assert.match(css, /\.demo-notice\s*\{[^}]*font-size:\s*0\.88rem\s*!important/i, 'dynamic-test.css must declare controlled font-size on .demo-notice');
+
+  // 3. content-preview.mjs must update documentElement fontSize and persist font scale
+  assert.ok(previewJs.includes('document.documentElement.style.fontSize'), 'preview must update documentElement.style.fontSize');
+  assert.ok(previewJs.includes('izone_cbt_font_scale'), 'preview must persist izone_cbt_font_scale in localStorage');
+});
+
+
 
