@@ -75,3 +75,16 @@ test('Candidate UI: Pictorial vocabulary cards and Intro screen are styled clean
   assert.match(css, /\.cbt-soundcheck-box\s*\{[^}]*background:\s*#f8fafc/i, 'Soundcheck box must have light background');
   assert.match(css, /\.btn-start-exam\s*\{[^}]*background:\s*var\(--izone-primary-gradient/i, 'Start button must use primary gradient');
 });
+
+test('Candidate UI: Side Panel increases vertical size without internal scrollbar', async () => {
+  const css = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/dynamic-test.css'), 'utf8');
+
+  // .side-panel must have max-height: none !important and overflow: visible !important
+  assert.match(css, /\.side-panel[^}]*max-height:\s*none\s*!important/i, 'side-panel must not be clamped by max-height');
+  assert.match(css, /\.side-panel[^}]*overflow:\s*visible\s*!important/i, 'side-panel must not have scrollbar');
+
+  // .question-navigator-grid must not have max-height: 280px overflow-y: auto
+  assert.match(css, /\.question-navigator-grid[^}]*max-height:\s*none\s*!important/i, 'grid must not have inner max-height');
+  assert.match(css, /\.question-navigator-grid[^}]*overflow:\s*visible\s*!important/i, 'grid must not have inner scrollbar');
+});
+
