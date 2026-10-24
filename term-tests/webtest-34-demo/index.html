@@ -197,7 +197,7 @@
     .answer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .q-row{display:flex;align-items:center;gap:10px;border:1px solid #e9ebee;border-radius:12px;padding:10px 12px;min-height:56px;background:white;transition:.15s ease}
     .q-row:focus-within{border-color:var(--color-primary);box-shadow:0 0 0 4px rgba(219,8,41,.06)}
-    .qnum{width:30px;height:30px;border-radius:9px;background:var(--color-bg-secondary);display:grid;place-items:center;font-family:Geologica,sans-serif;font-size:12px;font-weight:700;flex:0 0 auto;color:var(--color-slate)}
+    .qnum{min-width:30px;width:auto;height:auto;min-height:30px;padding:0 6px;border-radius:9px;background:var(--color-bg-secondary);display:inline-flex;align-items:center;justify-content:center;font-family:Geologica,sans-serif;font-size:12px;font-weight:700;flex:0 0 auto;color:var(--color-slate)}
     .q-row input[type="text"]{border:0;outline:0;min-width:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
     .q-row select{border:0;outline:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
     .vocab-pair-row{display:flex;align-items:center;gap:10px;border:1px solid #e9ebee;border-radius:12px;padding:10px 12px;min-height:56px;background:white;transition:.15s ease}

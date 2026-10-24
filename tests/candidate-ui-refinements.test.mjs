@@ -48,11 +48,17 @@ test('Candidate UI: Question badges and prompt row prevent line wrapping ("Các 
   // Badges must have white-space: nowrap !important and flex-shrink: 0 !important
   assert.match(css, /\.candidate-short-qnum[^}]*white-space:\s*nowrap\s*!important/i, 'candidate-short-qnum must not wrap');
   assert.match(css, /\.candidate-short-qnum[^}]*flex-shrink:\s*0\s*!important/i, 'candidate-short-qnum must not shrink');
+  assert.match(css, /\.question-num-badge[^}]*min-width:\s*max-content\s*!important/i, 'Badge must expand to fit text width');
+  assert.match(css, /\.question-num-badge[^}]*padding:\s*4px 14px\s*!important/i, 'Badge must have generous padding');
 
   // Short QA prompt row must be flex baseline
   assert.match(css, /\.candidate-short-prompt-row\s*\{[^}]*display:\s*flex\s*!important/i, 'candidate-short-prompt-row must be flex');
   assert.match(css, /\.candidate-short-prompt-row\s*\{[^}]*align-items:\s*baseline\s*!important/i, 'candidate-short-prompt-row must align baseline');
   assert.match(css, /\.candidate-short-prompt-text\s*\{[^}]*flex:\s*1\s*!important/i, 'candidate-short-prompt-text must have flex: 1');
+
+  // Verify legacy index.html style does not force fixed width:30px;height:30px on .qnum
+  const indexHtml = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/index.html'), 'utf8');
+  assert.equal(indexHtml.includes('.qnum{width:30px;height:30px;'), false, 'index.html must not force 30px square on .qnum');
 });
 
 test('Candidate UI: Pictorial vocabulary cards and Intro screen are styled cleanly', async () => {

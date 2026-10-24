@@ -501,41 +501,62 @@
   white-space: nowrap !important;
   flex-shrink: 0 !important;
   word-break: keep-all !important;
-  padding: 4px 14px;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #fff1f2, #ffe4e6);
-  border: 1.5px solid #fecdd3;
-  color: var(--izone-primary, #e11d48);
-  font-size: 0.88rem;
-  font-weight: 800;
-  font-family: inherit;
-  box-shadow: 0 1px 3px rgba(225, 29, 72, 0.08);
+  width: auto !important;
+  min-width: max-content !important;
+  height: auto !important;
+  min-height: 28px !important;
+  padding: 4px 14px !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important;
+  border: 1.5px solid #fecdd3 !important;
+  color: var(--izone-primary, #e11d48) !important;
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+  box-shadow: 0 1px 3px rgba(225, 29, 72, 0.08) !important;
+  box-sizing: border-box !important;
 }
 
 .cbt-qscore-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: 9999px;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  color: #475569;
-  font-size: 0.78rem;
-  font-weight: 600;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  min-width: max-content !important;
+  height: auto !important;
+  min-height: 26px !important;
+  padding: 3px 12px !important;
+  border-radius: 9999px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  box-sizing: border-box !important;
 }
 
 .question-type-badge,
 .cbt-type-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #1e40af;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  min-width: max-content !important;
+  height: auto !important;
+  min-height: 26px !important;
+  padding: 4px 12px !important;
+  border-radius: 9999px !important;
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  color: #1e40af !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  box-sizing: border-box !important;
 }
 
 .candidate-question-prompt,
