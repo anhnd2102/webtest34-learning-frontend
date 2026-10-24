@@ -490,6 +490,16 @@ export function renderInlineCloze(item, answers = {}) {
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
   const containsHtml = /<[a-z][\s\S]*>/i.test(text);
 
+  const renderBlank = (num) => {
+    const rawVal = answers[item.itemVersionId];
+    const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
+    const isFilled = typeof val === 'string' && val.trim().length > 0;
+    return `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
+      `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
+      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" autocomplete="off" />` +
+    `</span>`;
+  };
+
   if (containsHtml) {
     const cleanHtml = sanitizeRichContent(text);
     let html = '';
@@ -497,36 +507,43 @@ export function renderInlineCloze(item, answers = {}) {
     for (const match of cleanHtml.matchAll(pattern)) {
       const num = Number(match[1] || match[2]);
       html += cleanHtml.slice(last, match.index);
-      const rawVal = answers[item.itemVersionId];
-      const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
-      const isFilled = typeof val === 'string' && val.trim().length > 0;
-      html += `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
-        `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
-        `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" autocomplete="off" />` +
-      `</span>`;
+      html += renderBlank(num);
       last = match.index + match[0].length;
     }
     html += cleanHtml.slice(last);
     return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${html}</div>`;
   }
 
-  const cleanText = text.replace(/\r\n/g, '\n').replace(/[ \t]+\n/g, '\n').replace(/\u00a0/g, ' ');
+  const cleanText = text.replace(/\r\n/g, '\n').replace(/[ \t]+\n/g, '\n').replace(/\u00a0/g, ' ').trim();
+  const rawLines = cleanText.split('\n');
+
+  if (rawLines.length > 1) {
+    const linesHtml = rawLines.map(line => {
+      let lineHtml = '';
+      let last = 0;
+      for (const match of line.matchAll(pattern)) {
+        const num = Number(match[1] || match[2]);
+        lineHtml += escape(line.slice(last, match.index));
+        lineHtml += renderBlank(num);
+        last = match.index + match[0].length;
+      }
+      lineHtml += escape(line.slice(last));
+      return `<div class="cbt-cloze-line" style="display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;word-break:normal;margin-bottom:14px;line-height:2.2;">${lineHtml}</div>`;
+    }).join('');
+
+    return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${linesHtml}</div>`;
+  }
+
   let html = '';
   let last = 0;
   for (const match of cleanText.matchAll(pattern)) {
     const num = Number(match[1] || match[2]);
-    html += escape(cleanText.slice(last, match.index)).replace(/\n/g, '<br>');
-    const rawVal = answers[item.itemVersionId];
-    const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
-    const isFilled = typeof val === 'string' && val.trim().length > 0;
-    html += `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
-      `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
-      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" autocomplete="off" />` +
-    `</span>`;
+    html += escape(cleanText.slice(last, match.index));
+    html += renderBlank(num);
     last = match.index + match[0].length;
   }
-  html += escape(cleanText.slice(last)).replace(/\n/g, '<br>');
-  return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${html}</div>`;
+  html += escape(cleanText.slice(last));
+  return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;"><div class="cbt-cloze-line" style="display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;word-break:normal;line-height:2.2;">${html}</div></div>`;
 }
 
 export function renderQuestionCard(item, answers = {}, block = null) {
@@ -697,17 +714,21 @@ export function renderQuestionCard(item, answers = {}, block = null) {
 
 export function convertGoogleDriveAudioUrl(rawUrl) {
   if (!rawUrl || typeof rawUrl !== 'string') return '';
-  const match = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  const trimmed = rawUrl.trim();
+  const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (match) {
     const fileId = match[1];
     const isLocal = typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
     const apiBase = isLocal ? `${window.location.protocol}//${window.location.hostname}:8788` : '';
     return `${apiBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
   }
-  return rawUrl;
+  if (typeof window !== 'undefined' && window.location.pathname.includes('/term-tests/teacher-dashboard/') && trimmed.startsWith('assets/')) {
+    return `../webtest-34-demo/${trimmed}`;
+  }
+  return trimmed;
 }
 
-export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', maxListens = 2) {
+export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', maxListens = 1) {
   const convertedUrl = convertGoogleDriveAudioUrl(audioSrc);
   if (!convertedUrl) return '';
   return `
@@ -715,7 +736,6 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
       <div class="strict-audio-header">
         <span class="audio-badge">${ICONS.volume} ${escape(label)}</span>
         <div class="audio-meta-right">
-          <span class="sim-audio-badge" data-listen-badge>Lượt: 0/${maxListens}</span>
           <div class="audio-volume-control">
             <label class="volume-label" title="Âm lượng loa">${ICONS.volume}</label>
             <input type="range" class="candidate-audio-volume" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng loa" />
@@ -740,10 +760,10 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
         </div>
         <div class="audio-ended-notice" style="display:none;">
           <span class="dot dot-ended"></span>
-          <span class="audio-note">Đã nghe xong ${maxListens}/${maxListens} lượt · Bài nghe đã khóa</span>
+          <span class="audio-note">Đã nghe xong bài nghe · Bài nghe đã khóa</span>
         </div>
       </div>
-      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="metadata" style="display:none;"></audio>
+      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" style="display:none;"></audio>
     </div>
   `;
 }
@@ -844,7 +864,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             <span class="points">${items.length} câu hỏi</span>
           </div>
 
-          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 2) : ''}
+          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 1) : ''}
 
           <div class="split-pane-mobile-toggle">
             <button type="button" class="btn btn-secondary btn-sm active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">${ICONS.book} Xem bài đọc</button>
@@ -901,7 +921,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             <span class="points">${items.length} câu hỏi</span>
           </div>
 
-          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 2) : ''}
+          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 1) : ''}
 
           ${reading ? `
             <div class="sim-reading-dock cbt-reading-dock">
@@ -1293,7 +1313,6 @@ export function initStrictAudioDocks(rootEl) {
   docks.forEach(dock => {
     const audioEl = dock.querySelector('.audio-hidden-element');
     const playBtn = dock.querySelector('.btn-sim-audio-play');
-    const listenBadge = dock.querySelector('[data-listen-badge]');
     const volumeInput = dock.querySelector('.candidate-audio-volume');
     const volumeOutput = dock.querySelector('.volume-output');
     const liveStatus = dock.querySelector('.audio-live-status');
@@ -1304,7 +1323,7 @@ export function initStrictAudioDocks(rootEl) {
 
     if (!audioEl || !playBtn) return;
 
-    const maxListens = parseInt(dock.getAttribute('data-max-listens') || '2', 10);
+    const maxListens = parseInt(dock.getAttribute('data-max-listens') || '1', 10);
     let listensCount = parseInt(dock.getAttribute('data-listens-count') || '0', 10);
     let maxPlayedTime = 0;
 
@@ -1316,6 +1335,7 @@ export function initStrictAudioDocks(rootEl) {
     };
 
     if (volumeInput) {
+      audioEl.volume = Number(volumeInput.value) || 1;
       volumeInput.addEventListener('input', (e) => {
         const val = Number(e.target.value) || 0;
         audioEl.volume = val;
@@ -1348,7 +1368,7 @@ export function initStrictAudioDocks(rootEl) {
 
       audioEl.addEventListener('pause', () => {
         if (!audioEl.ended && listensCount < maxListens) {
-          playBtn.textContent = '▶ Tiếp tục nghe';
+          playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
           if (liveStatus) liveStatus.style.display = 'none';
         }
       });
@@ -1359,21 +1379,16 @@ export function initStrictAudioDocks(rootEl) {
         maxPlayedTime = 0;
         if (liveStatus) liveStatus.style.display = 'none';
 
-        if (listensCount < maxListens) {
-          if (listenBadge) {
-            listenBadge.textContent = `Đã nghe 1/${maxListens} lượt (Còn 1 lượt)`;
-          }
-          playBtn.textContent = '▶ Nghe lượt 2';
-          if (barFill) barFill.style.width = '0%';
-          if (timeCurrent) timeCurrent.textContent = '00:00';
-        } else {
-          if (listenBadge) {
-            listenBadge.textContent = `Đã nghe đủ ${maxListens}/${maxListens} lượt`;
-            listenBadge.classList.add('badge-exhausted');
-          }
-          playBtn.disabled = true;
-          playBtn.style.display = 'none';
-          if (endedNotice) endedNotice.style.display = 'inline-flex';
+        playBtn.disabled = true;
+        playBtn.style.display = 'none';
+        if (endedNotice) endedNotice.style.display = 'inline-flex';
+      });
+
+      audioEl.addEventListener('error', () => {
+        console.warn('Audio playback error:', audioEl.error);
+        if (liveStatus) {
+          liveStatus.innerHTML = `<span class="dot" style="background:#e11d48"></span><span class="status-text" style="color:#e11d48">Không thể phát file bài nghe</span>`;
+          liveStatus.style.display = 'inline-flex';
         }
       });
     }
@@ -1391,9 +1406,6 @@ export function initStrictAudioDocks(rootEl) {
           await audioEl.play();
           playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
           if (liveStatus) liveStatus.style.display = 'inline-flex';
-          if (listenBadge) {
-            listenBadge.textContent = `Lượt ${listensCount + 1}/${maxListens} (Đang phát)`;
-          }
         } catch (err) {
           console.warn('Cannot play audio:', err);
         }

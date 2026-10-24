@@ -174,13 +174,13 @@ test('dynamic-exam-renderer: convertGoogleDriveAudioUrl converts drive file link
   assert.equal(convertGoogleDriveAudioUrl(standardUrl), standardUrl);
 });
 
-test('dynamic-exam-renderer: renderAudioDockHtml produces strict dock with play button and listen badge', async () => {
+test('dynamic-exam-renderer: renderAudioDockHtml produces strict dock with play button (no play count badge, single listen)', async () => {
   const { renderAudioDockHtml } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
-  const html = renderAudioDockHtml('https://example.com/audio.mp3', 'Bài nghe Phần 1', 2);
+  const html = renderAudioDockHtml('https://example.com/audio.mp3', 'Bài nghe Phần 1', 1);
   assert.ok(html.includes('strict-audio-dock'), 'Should include strict-audio-dock class');
   assert.ok(html.includes('btn-sim-audio-play'), 'Should include red play button');
-  assert.ok(html.includes('data-listen-badge'), 'Should include listen count badge');
-  assert.ok(html.includes('Lượt: 0/2'), 'Should display initial listen ratio');
+  assert.equal(html.includes('data-listen-badge'), false, 'Should NOT include listen count badge');
+  assert.equal(html.includes('Lượt:'), false, 'Should NOT display listen count text');
   assert.ok(html.includes('sim-audio-timeline'), 'Should include audio duration timeline');
 });
 

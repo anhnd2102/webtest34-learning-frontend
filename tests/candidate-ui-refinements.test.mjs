@@ -92,11 +92,11 @@ test('Candidate UI: Inline cloze preserves question instructions ("không bị m
   const { renderQuestionCard, renderInlineCloze } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
   const css = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/dynamic-test.css'), 'utf8');
 
-  // 1. Question card must contain overflow and wrap words
-  assert.match(css, /\.cbt-question-card[^}]*overflow:\s*hidden\s*!important/i, 'Card must have overflow: hidden');
+  // 1. Question card must prevent clipping and wrap words
+  assert.match(css, /\.cbt-question-card[^}]*overflow:\s*visible\s*!important/i, 'Card must have overflow: visible to prevent clipping words');
   assert.match(css, /\.cbt-question-card[^}]*word-break:\s*break-word\s*!important/i, 'Card must have word-break: break-word');
   assert.match(css, /\.cbt-cloze-content[^}]*overflow-wrap:\s*break-word\s*!important/i, 'Cloze must have overflow-wrap: break-word');
-  assert.match(css, /\.cbt-blank-input[^}]*width:\s*110px\s*!important/i, 'Blank input must have compact width');
+  assert.match(css, /\.cbt-blank-input[^}]*width:\s*85px\s*!important/i, 'Blank input must have compact 85px width');
 
   // 2. Cloze item with item.instructions must render instructions prompt
   const clozeItemWithInstructions = {
@@ -131,10 +131,27 @@ test('Candidate UI: Inline cloze preserves question instructions ("không bị m
   const cardHtml3 = renderQuestionCard(clozeItemInheritingBlock, {});
   assert.ok(cardHtml3.includes('Điền từ thích hợp vào chỗ trống'), 'Should render fallback cloze prompt instead of empty prompt');
 
-  // 5. renderInlineCloze cleans non-breaking spaces and applies word-wrap styling
+  // 5. renderInlineCloze cleans non-breaking spaces and applies word-wrap styling in cbt-cloze-line
   const renderedCloze = renderInlineCloze(clozeItemWithInstructions);
-  assert.ok(renderedCloze.includes('word-break:break-word'), 'Rendered cloze markup must have word-break styling');
+  assert.ok(renderedCloze.includes('cbt-cloze-line'), 'Rendered cloze markup must have cbt-cloze-line');
   assert.ok(renderedCloze.includes('cbt-blank-pill'), 'Rendered cloze markup must have cbt-blank-pill');
+  assert.ok(renderedCloze.includes('white-space:normal'), 'Rendered cloze must have normal white-space to wrap lines naturally');
+});
+
+test('Candidate UI: Audio Dock removes play count badge ("xoá lượt phát đi") and enforces single listen', async () => {
+  const { renderAudioDockHtml } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+  const css = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/dynamic-test.css'), 'utf8');
+
+  // Badge must be hidden in CSS
+  assert.match(css, /\.sim-audio-badge\s*\{[^}]*display:\s*none\s*!important/i, 'sim-audio-badge must be hidden in CSS');
+
+  // Rendered audio dock must NOT render listen badge markup
+  const dockHtml = renderAudioDockHtml('assets/34/test-1/listening.mp3', 'Bài nghe: LISTENING', 1);
+  assert.equal(dockHtml.includes('data-listen-badge'), false, 'Should not render data-listen-badge in audio dock');
+  assert.equal(dockHtml.includes('Lượt'), false, 'Should not have "Lượt" play count badge');
+  assert.ok(dockHtml.includes('data-max-listens="1"'), 'Must configure data-max-listens to 1');
+  assert.ok(dockHtml.includes('btn-sim-audio-play'), 'Must include audio play button');
+  assert.ok(dockHtml.includes('preload="auto"'), 'Must include preload auto for seamless playback');
 });
 
 

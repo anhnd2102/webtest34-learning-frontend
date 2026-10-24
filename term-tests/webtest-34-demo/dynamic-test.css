@@ -465,7 +465,7 @@
   position: relative;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   word-break: break-word !important;
   overflow-wrap: break-word !important;
 }
@@ -616,12 +616,13 @@
 .candidate-inline-cloze-wrap p,
 .cbt-cloze-content p,
 .cbt-cloze-line {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   max-width: 100% !important;
   box-sizing: border-box !important;
   overflow-wrap: break-word !important;
-  word-break: break-word !important;
+  word-break: normal !important;
   white-space: normal !important;
+  line-height: 2.2 !important;
 }
 
 .inline-blank-wrapper,
@@ -652,14 +653,14 @@
 .inline-fill-input,
 .cbt-blank-input {
   display: inline-block !important;
-  min-width: 85px !important;
-  width: 110px !important;
-  max-width: 140px !important;
-  height: 34px !important;
+  min-width: 65px !important;
+  width: 85px !important;
+  max-width: 120px !important;
+  height: 32px !important;
   border: none !important;
   background: #ffffff !important;
   border-radius: 6px !important;
-  padding: 2px 8px !important;
+  padding: 2px 6px !important;
   font-size: 0.95rem !important;
   font-weight: 600 !important;
   color: #0f172a !important;
@@ -1111,13 +1112,7 @@
 }
 
 .sim-audio-badge {
-  font-size: 0.8rem;
-  font-weight: 700;
-  background: #fff1f2 !important;
-  border: 1px solid #fecdd3 !important;
-  padding: 3px 12px;
-  border-radius: 9999px;
-  color: #be123c !important;
+  display: none !important;
 }
 
 .audio-volume-control {

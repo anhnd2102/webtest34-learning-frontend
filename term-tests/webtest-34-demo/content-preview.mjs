@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261024-cbt-v12';
+} from './dynamic-exam-renderer.mjs?rev=20261024-cbt-v13';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
