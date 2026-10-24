@@ -184,3 +184,50 @@ test('dynamic-exam-renderer: renderAudioDockHtml produces strict dock with play 
   assert.ok(html.includes('sim-audio-timeline'), 'Should include audio duration timeline');
 });
 
+test('dynamic-exam-renderer: renderInlineCloze preserves rich HTML markup without raw escaping', async () => {
+  const { renderInlineCloze, renderQuestionCard, formatPedagogicalTypeLabel } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+
+  const richClozeItem = {
+    itemVersionId: 'cloze-1',
+    position: 1,
+    pedagogicalTypeCode: 'table_completion',
+    layoutType: 'table_completion',
+    interactionType: 'short_text',
+    prompt: `I'm busy right now.<br><br>John (1) ........ (not/study) very hard. <div>What (2) ........ (he/do)?</div> Animals (3) ........ oxygen and&nbsp; (4) ........ carbon dioxide.`
+  };
+
+  const clozeHtml = renderInlineCloze(richClozeItem, { 'cloze-1': { 1: 'is not studying' } });
+
+  // Must preserve real HTML tags, NOT turn into &lt;br&gt; or &lt;div&gt;
+  assert.ok(!clozeHtml.includes('&lt;br&gt;'), 'Must NOT escape <br> to &lt;br&gt;');
+  assert.ok(!clozeHtml.includes('&lt;div&gt;'), 'Must NOT escape <div> to &lt;div&gt;');
+  assert.ok(!clozeHtml.includes('&lt;/div&gt;'), 'Must NOT escape </div> to &lt;/div&gt;');
+  assert.ok(clozeHtml.includes('<br>'), 'Must retain literal <br> tag');
+  assert.ok(clozeHtml.includes('<div>What'), 'Must retain literal <div> tag');
+  assert.ok(clozeHtml.includes('and&nbsp;'), 'Must retain literal &nbsp;');
+  assert.ok(clozeHtml.includes('cbt-blank-pill'), 'Must render modern blank pill');
+  assert.ok(clozeHtml.includes('value="is not studying"'), 'Must render existing answer value');
+
+  // Test question card span and pedagogical label
+  const cardHtml = renderQuestionCard(richClozeItem, {});
+  assert.ok(cardHtml.includes('Câu 1 – 4'), 'Should display question span Câu 1 – 4 for 4 blanks');
+  assert.ok(cardHtml.includes('Điền từ vào đoạn văn'), 'Should format TABLE_COMPLETION to friendly Vietnamese');
+  assert.ok(!cardHtml.includes('TABLE_COMPLETION'), 'Must not display technical database enum TABLE_COMPLETION');
+});
+
+test('dynamic-exam-renderer: formatPedagogicalTypeLabel maps technical codes to friendly Vietnamese', async () => {
+  const { formatPedagogicalTypeLabel } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+
+  assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'table_completion' }), 'Điền từ vào đoạn văn');
+  assert.equal(formatPedagogicalTypeLabel({ interactionType: 'single_choice' }), 'Trắc nghiệm 1 đáp án');
+  assert.equal(formatPedagogicalTypeLabel({ interactionType: 'multi_choice_group' }), 'Trắc nghiệm chọn nhiều');
+  assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'sentence_rewrite' }), 'Viết lại câu');
+  assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'sentence_reorder' }), 'Sắp xếp câu');
+  assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'error_correction' }), 'Tìm & sửa lỗi sai');
+  assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'reading_matching' }), 'Ghép nối thông tin');
+  assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'listening_order' }), 'Sắp xếp thứ tự nghe');
+  assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'pictorial_vocabulary' }), 'Từ vựng qua ảnh');
+  assert.equal(formatPedagogicalTypeLabel({ interactionType: 'text_select_pair' }), 'Cặp từ vựng');
+  assert.equal(formatPedagogicalTypeLabel({ graderType: 'rubric_async' }), 'Tự luận (Chấm AI)');
+});
+

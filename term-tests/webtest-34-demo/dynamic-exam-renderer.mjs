@@ -33,10 +33,80 @@ function escape(str) {
     .replace(/'/g, '&#39;');
 }
 
+export function sanitizeRichContent(html) {
+  if (!html || typeof html !== 'string') return '';
+  let clean = html;
+  clean = clean.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  clean = clean.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+  clean = clean.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+  clean = clean.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, '');
+  clean = clean.replace(/<link\b[^>]*>/gi, '');
+  clean = clean.replace(/<meta\b[^>]*>/gi, '');
+  clean = clean.replace(/\s+on[a-zA-Z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+  clean = clean.replace(/(?:href|src)\s*=\s*["']\s*javascript:[^"']*["']/gi, '');
+  return clean;
+}
+
+export function renderFormattedContent(text) {
+  if (!text || typeof text !== 'string') return '';
+  if (/<[a-z][\s\S]*>/i.test(text)) {
+    return sanitizeRichContent(text);
+  }
+  return escape(text).replace(/\n/g, '<br>');
+}
+
+export function formatPedagogicalTypeLabel(item) {
+  if (!item) return 'Câu hỏi';
+  const rawCode = (item.pedagogicalTypeCode || item.layoutType || item.interactionType || item.graderType || '').toLowerCase();
+  
+  if (rawCode.includes('table_completion') || rawCode.includes('inline_cloze') || rawCode.includes('inline_dropdown')) {
+    return 'Điền từ vào đoạn văn';
+  }
+  if (rawCode.includes('pronunciation')) {
+    return 'Ngữ âm & Phát âm';
+  }
+  if (rawCode.includes('sentence_rewrite') || rawCode.includes('keyword_transformation')) {
+    return 'Viết lại câu';
+  }
+  if (rawCode.includes('sentence_reorder') || rawCode.includes('token_scramble')) {
+    return 'Sắp xếp câu';
+  }
+  if (rawCode.includes('correction') || rawCode.includes('error')) {
+    return 'Tìm & sửa lỗi sai';
+  }
+  if (rawCode.includes('reading_matching') || rawCode.includes('split_pane')) {
+    return 'Ghép nối thông tin';
+  }
+  if (rawCode.includes('listening_order') || rawCode.includes('timeline')) {
+    return 'Sắp xếp thứ tự nghe';
+  }
+  if (rawCode.includes('pictorial')) {
+    return 'Từ vựng qua ảnh';
+  }
+  if (rawCode.includes('vocab') || rawCode.includes('text_select_pair')) {
+    return 'Cặp từ vựng';
+  }
+  if (rawCode.includes('single_choice')) {
+    return 'Trắc nghiệm 1 đáp án';
+  }
+  if (rawCode.includes('multi_choice')) {
+    return 'Trắc nghiệm chọn nhiều';
+  }
+  if (rawCode.includes('rubric') || rawCode.includes('long_text') || rawCode.includes('essay')) {
+    return 'Tự luận (Chấm AI)';
+  }
+  if (rawCode.includes('short_text') || rawCode.includes('qa')) {
+    return 'Trả lời ngắn';
+  }
+  return 'Câu hỏi';
+}
+
 export function getItemSpanCount(item) {
   if (!item) return 1;
   const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
     item.layoutType === 'inline_cloze' ||
+    item.pedagogicalTypeCode === 'table_completion' ||
+    item.layoutType === 'table_completion' ||
     item.layoutType === 'inline_dropdown_table' ||
     (item.interactionType === 'short_text' && (
       (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
@@ -130,12 +200,12 @@ export function renderSectionNavPills(definition, activeBlockIdx = 0) {
   return definition.blocks.map((b, i) => {
     const bCount = (b.items || []).reduce((s, it) => s + getItemSpanCount(it), 0);
     const exCount = (b.exercises || []).length;
-    const badgeText = exCount > 1 ? `${exCount} bài tập · ${bCount} câu` : `${bCount} câu`;
+    const badgeText = exCount > 1 ? `${exCount} bài · ${bCount} câu` : `${bCount} câu`;
     const isActive = i === activeBlockIdx;
     return `
-      <button type="button" class="section-tab simulation-nav-pill ${isActive ? 'active' : ''}" data-section-target="sim-block-${i}" data-demo-go="${escape(b.title || `Phần ${i + 1}`)}">
-        <span>${escape(b.title || `Phần ${i + 1}`)}</span>
-        <span class="tab-count">${badgeText}</span>
+      <button type="button" class="section-tab simulation-nav-pill cbt-nav-pill ${isActive ? 'active' : ''}" data-section-target="sim-block-${i}" data-demo-go="${escape(b.title || `Phần ${i + 1}`)}">
+        <span class="cbt-pill-title">${escape(b.title || `Phần ${i + 1}`)}</span>
+        <span class="tab-count cbt-pill-badge">${badgeText}</span>
       </button>
     `;
   }).join('');
@@ -150,6 +220,8 @@ export function renderQuestionNavigator(definition, answers = {}) {
       const span = getItemSpanCount(item);
       const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
         item.layoutType === 'inline_cloze' ||
+        item.pedagogicalTypeCode === 'table_completion' ||
+        item.layoutType === 'table_completion' ||
         item.layoutType === 'inline_dropdown_table' ||
         (item.interactionType === 'short_text' && (
           (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
@@ -227,17 +299,20 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
   const navigatorButtonsHtml = renderQuestionNavigator(definition, state.answers || {});
 
   return `
-    <aside class="side-panel">
+    <aside class="side-panel cbt-side-panel">
       <!-- Card 1: Tiến độ làm bài -->
-      <div class="panel-card">
-        <div class="progress-row">
-          <strong>Tiến độ làm bài</strong>
-          <span class="progress-ratio" id="progressRatioDisplay">${answeredTotal}/${totalItems}</span>
+      <div class="panel-card cbt-panel-card cbt-progress-card">
+        <div class="cbt-card-header">
+          <div class="cbt-card-title-wrap">
+            <span class="cbt-card-icon">📊</span>
+            <strong class="cbt-card-title">Tiến độ làm bài</strong>
+          </div>
+          <span class="progress-ratio cbt-progress-badge" id="progressRatioDisplay">${answeredTotal}/${totalItems}</span>
         </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="progressFillBar" style="width: ${pct}%;"></div>
+        <div class="progress-track cbt-progress-track">
+          <div class="progress-fill cbt-progress-bar" id="progressFillBar" style="width: ${pct}%;"></div>
         </div>
-        <div class="section-list">
+        <div class="section-list cbt-section-jump-list">
           ${blocks.map((b, i) => {
             const bItems = b.items || [];
             const bTotal = bItems.reduce((s, it) => s + getItemSpanCount(it), 0);
@@ -247,9 +322,9 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
               if (isAnswerValueFilled(val)) bDone += getItemSpanCount(it);
             }
             return `
-              <button type="button" class="side-section-btn ${i === activeBlockIdx ? 'active' : ''}" data-section-target="sim-block-${i}" data-demo-go="${escape(b.title || `Phần ${i + 1}`)}">
-                <span>${escape(b.title || `Phần ${i + 1}`)}</span>
-                <span class="side-count" data-side-count="sim-block-${i}">${bDone}/${bTotal}</span>
+              <button type="button" class="side-section-btn cbt-jump-btn ${i === activeBlockIdx ? 'active' : ''}" data-section-target="sim-block-${i}" data-demo-go="${escape(b.title || `Phần ${i + 1}`)}">
+                <span class="cbt-jump-title">${escape(b.title || `Phần ${i + 1}`)}</span>
+                <span class="side-count cbt-jump-count" data-side-count="sim-block-${i}">${bDone}/${bTotal}</span>
               </button>
             `;
           }).join('')}
@@ -257,24 +332,34 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
       </div>
 
       <!-- Card 2: Bảng câu hỏi Question Navigator -->
-      <div class="panel-card question-navigator-card">
-        <div class="navigator-header">
-          <strong>Bảng câu hỏi</strong>
-          <span class="navigator-summary" id="qnav-summary">${totalItems} câu</span>
+      <div class="panel-card cbt-panel-card question-navigator-card cbt-qnav-card">
+        <div class="navigator-header cbt-qnav-header">
+          <div class="cbt-card-title-wrap">
+            <span class="cbt-card-icon">🧭</span>
+            <strong class="cbt-card-title">Bảng câu hỏi</strong>
+          </div>
+          <span class="navigator-summary cbt-qnav-chip" id="qnav-summary">${totalItems} câu</span>
         </div>
-        <div class="question-navigator-grid" id="questionNavigatorGrid">
+        <div class="cbt-qnav-legend">
+          <span class="cbt-legend-item"><span class="cbt-legend-dot dot-unanswered"></span> Chưa làm</span>
+          <span class="cbt-legend-item"><span class="cbt-legend-dot dot-answered"></span> Đã làm</span>
+        </div>
+        <div class="question-navigator-grid cbt-qnav-grid" id="questionNavigatorGrid">
           ${navigatorButtonsHtml}
         </div>
       </div>
 
-      <!-- Card 3: Lưu ý khi làm bài -->
-      <div class="panel-card">
-        <strong>Lưu ý khi làm bài</strong>
-        <p class="sim-notice-text">
-          • Câu trả lời được lưu tự động lên hệ thống.<br/>
-          • Có thể chuyển phần mà không mất đáp án.<br/>
-          • Nhấn vào số câu trên bảng câu hỏi để chuyển nhanh tới câu đó.
-        </p>
+      <!-- Card 3: Hướng dẫn làm bài -->
+      <div class="panel-card cbt-panel-card cbt-tips-card">
+        <div class="cbt-card-title-wrap" style="margin-bottom:8px;">
+          <span class="cbt-card-icon">✨</span>
+          <strong class="cbt-card-title">Hướng dẫn</strong>
+        </div>
+        <ul class="sim-notice-text cbt-tips-list">
+          <li>Đáp án được lưu tự động theo thời gian thực.</li>
+          <li>Bấm vào số câu trên bảng câu hỏi để chuyển nhanh.</li>
+          <li>Có thể chuyển phần tùy ý mà không mất bài làm.</li>
+        </ul>
       </div>
     </aside>
   `;
@@ -288,9 +373,9 @@ function renderSimVocabPairTable(vocabItems, answers = {}) {
     : 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:';
 
   return `
-    <div class="candidate-vocab-table-container">
+    <div class="candidate-vocab-table-container cbt-vocab-card">
       <div class="candidate-vocab-table-intro">
-        <div class="candidate-vocab-table-prompt">${escape(promptText)}</div>
+        <div class="candidate-vocab-table-prompt">${renderFormattedContent(promptText)}</div>
       </div>
       <div class="candidate-vocab-table">
         <div class="candidate-vocab-table-head">
@@ -331,7 +416,7 @@ function renderSimVocabPairTable(vocabItems, answers = {}) {
 function renderSimPictorialGroup(pictorialItems, answers = {}) {
   if (!pictorialItems || !pictorialItems.length) return '';
   return `
-    <div class="candidate-pictorial-group-container">
+    <div class="candidate-pictorial-group-container cbt-pictorial-wrap">
       <div class="candidate-pictorial-group-intro">
         <div class="candidate-pictorial-group-prompt">Dựa vào hình ảnh và gợi ý, hãy hoàn thành từ/cụm từ tương ứng:</div>
       </div>
@@ -340,10 +425,10 @@ function renderSimPictorialGroup(pictorialItems, answers = {}) {
           const imgSrc = item.image || item.stimulusImageUrl || '';
           const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
           return `
-            <div class="candidate-pictorial-card" data-item-id="${escape(item.itemVersionId)}">
+            <div class="candidate-pictorial-card cbt-pictorial-card" data-item-id="${escape(item.itemVersionId)}">
               <div class="candidate-pictorial-card-header">
                 <span class="question-num-badge qnum">Câu ${escape(item.position)}</span>
-                <span class="question-type-badge">Từ vựng qua ảnh</span>
+                <span class="question-type-badge cbt-type-badge">Từ vựng qua ảnh</span>
               </div>
               ${imgSrc ? `
                 <div class="candidate-pictorial-thumb">
@@ -368,14 +453,14 @@ function renderSimPictorialGroup(pictorialItems, answers = {}) {
 function renderSimShortQaGroup(shortItems, answers = {}) {
   if (!shortItems || !shortItems.length) return '';
   return `
-    <div class="candidate-short-qa-container">
+    <div class="candidate-short-qa-container cbt-short-qa-wrap">
       ${shortItems.map(item => {
         const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
         return `
-          <div class="candidate-short-qa-item" data-item-id="${escape(item.itemVersionId)}">
+          <div class="candidate-short-qa-item cbt-short-qa-card" data-item-id="${escape(item.itemVersionId)}">
             <div class="candidate-short-prompt-row">
               <span class="candidate-short-qnum qnum">Câu ${escape(item.position)}</span>
-              <div class="candidate-short-prompt-text">${escape(item.prompt || '')}</div>
+              <div class="candidate-short-prompt-text">${renderFormattedContent(item.prompt || '')}</div>
             </div>
             <div class="candidate-short-input-wrap">
               <input type="text" class="candidate-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập câu trả lời của bạn..." value="${escape(val)}" autocomplete="off" />
@@ -387,9 +472,31 @@ function renderSimShortQaGroup(shortItems, answers = {}) {
   `;
 }
 
-function renderInlineCloze(item, answers = {}) {
+export function renderInlineCloze(item, answers = {}) {
   const text = item.prompt || '';
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+  const containsHtml = /<[a-z][\s\S]*>/i.test(text);
+
+  if (containsHtml) {
+    const cleanHtml = sanitizeRichContent(text);
+    let html = '';
+    let last = 0;
+    for (const match of cleanHtml.matchAll(pattern)) {
+      const num = Number(match[1] || match[2]);
+      html += cleanHtml.slice(last, match.index);
+      const rawVal = answers[item.itemVersionId];
+      const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
+      const isFilled = typeof val === 'string' && val.trim().length > 0;
+      html += `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
+        `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
+        `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="${num}" value="${escape(val)}" autocomplete="off" />` +
+      `</span>`;
+      last = match.index + match[0].length;
+    }
+    html += cleanHtml.slice(last);
+    return `<div class="candidate-inline-cloze-wrap cbt-cloze-content">${html}</div>`;
+  }
+
   let html = '';
   let last = 0;
   for (const match of text.matchAll(pattern)) {
@@ -397,17 +504,18 @@ function renderInlineCloze(item, answers = {}) {
     html += escape(text.slice(last, match.index)).replace(/\n/g, '<br>');
     const rawVal = answers[item.itemVersionId];
     const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
-    html += `<span class="inline-blank-wrapper" data-item-id="${escape(item.itemVersionId)}">
-      <span class="inline-blank-number">(${num})</span>
-      <input type="text" class="inline-fill-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="${num}" value="${escape(val)}" autocomplete="off" />
-    </span>`;
+    const isFilled = typeof val === 'string' && val.trim().length > 0;
+    html += `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
+      `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
+      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="${num}" value="${escape(val)}" autocomplete="off" />` +
+    `</span>`;
     last = match.index + match[0].length;
   }
   html += escape(text.slice(last)).replace(/\n/g, '<br>');
-  return `<div class="candidate-inline-cloze-wrap">${html}</div>`;
+  return `<div class="candidate-inline-cloze-wrap cbt-cloze-content">${html}</div>`;
 }
 
-function renderQuestionCard(item, answers = {}) {
+export function renderQuestionCard(item, answers = {}) {
   const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
   const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
   const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
@@ -416,7 +524,15 @@ function renderQuestionCard(item, answers = {}) {
   const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence');
   const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
   const isMultiGroup = item.interactionType === 'multi_choice_group';
-  const isInlineCloze = item.interactionType === 'short_text' && (item.layoutType === 'inline_cloze' || (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))));
+  const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
+    item.layoutType === 'inline_cloze' ||
+    item.pedagogicalTypeCode === 'table_completion' ||
+    item.layoutType === 'table_completion' ||
+    item.layoutType === 'inline_dropdown_table' ||
+    (item.interactionType === 'short_text' && (
+      (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
+      (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
+    ));
   const isRubricAsync = item.graderType === 'rubric_async' || item.interactionType === 'long_text';
 
   const rawAns = answers[item.itemVersionId];
@@ -427,14 +543,14 @@ function renderQuestionCard(item, answers = {}) {
   } else if (isSingleChoice) {
     const cols = (item.options || []).length === 3 ? 'grid-cols-3' : ((item.options || []).length >= 4 ? 'grid-cols-4' : 'grid-cols-2');
     interactiveHtml = `
-      <div class="candidate-options-grid ${cols}">
+      <div class="candidate-options-grid cbt-options-grid ${cols}">
         ${(item.options || []).map((opt, optIdx) => {
           const checked = rawAns === opt.id ? 'checked' : '';
           return `
-            <label class="candidate-choice-label">
+            <label class="candidate-choice-label cbt-choice-tile ${checked ? 'selected' : ''}">
               <input type="radio" name="cand_${escape(item.itemVersionId)}" value="${escape(opt.id)}" data-item-id="${escape(item.itemVersionId)}" ${checked} />
-              <span class="choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
-              <span class="choice-text">${escape(opt.label || opt.id)}</span>
+              <span class="choice-key cbt-choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
+              <span class="choice-text cbt-choice-text">${escape(opt.label || opt.id)}</span>
             </label>
           `;
         }).join('')}
@@ -443,14 +559,14 @@ function renderQuestionCard(item, answers = {}) {
   } else if (isMultiGroup) {
     const selectedList = Array.isArray(rawAns) ? rawAns : [];
     interactiveHtml = `
-      <div class="candidate-options-grid grid-cols-2">
+      <div class="candidate-options-grid cbt-options-grid grid-cols-2">
         ${(item.options || []).map((opt, optIdx) => {
           const checked = selectedList.includes(opt.id) ? 'checked' : '';
           return `
-            <label class="candidate-choice-label">
+            <label class="candidate-choice-label cbt-choice-tile ${checked ? 'selected' : ''}">
               <input type="checkbox" name="cand_${escape(item.itemVersionId)}" value="${escape(opt.id)}" data-item-id="${escape(item.itemVersionId)}" ${checked} />
-              <span class="choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
-              <span class="choice-text">${escape(opt.label || opt.id)}</span>
+              <span class="choice-key cbt-choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
+              <span class="choice-text cbt-choice-text">${escape(opt.label || opt.id)}</span>
             </label>
           `;
         }).join('')}
@@ -459,15 +575,15 @@ function renderQuestionCard(item, answers = {}) {
   } else if (isSentenceRewrite) {
     const val = typeof rawAns === 'string' ? rawAns : '';
     interactiveHtml = `
-      <div class="candidate-transformation-wrap" data-item-id="${escape(item.itemVersionId)}">
-        <div class="transformation-keyword-row">
-          <span style="font-size:0.85rem;font-weight:600;color:#475569;">Từ khóa bắt buộc:</span>
-          <span class="keyword-badge-pill">${escape(item.keyword || '')}</span>
+      <div class="candidate-transformation-wrap cbt-transformation-wrap" data-item-id="${escape(item.itemVersionId)}">
+        <div class="transformation-keyword-row cbt-keyword-row">
+          <span class="cbt-keyword-label">Từ khóa bắt buộc:</span>
+          <span class="keyword-badge-pill cbt-keyword-pill">${escape(item.keyword || '')}</span>
         </div>
-        <div class="candidate-frame-box">
-          <span class="frame-prefix-text">${escape(item.framePrefix || '')}</span>
-          <input type="text" class="candidate-transformation-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập cụm từ khuyết..." value="${escape(val)}" autocomplete="off" />
-          <span class="frame-suffix-text">${escape(item.frameSuffix || '')}</span>
+        <div class="candidate-frame-box cbt-frame-box">
+          <span class="frame-prefix-text cbt-frame-text">${escape(item.framePrefix || '')}</span>
+          <input type="text" class="candidate-transformation-input cbt-transformation-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập cụm từ khuyết..." value="${escape(val)}" autocomplete="off" />
+          <span class="frame-suffix-text cbt-frame-text">${escape(item.frameSuffix || '')}</span>
         </div>
       </div>
     `;
@@ -475,15 +591,15 @@ function renderQuestionCard(item, answers = {}) {
     const val = typeof rawAns === 'string' ? rawAns : '';
     const tokens = item.tokens || (item.targetSentence ? item.targetSentence.split(' ') : []);
     interactiveHtml = `
-      <div class="candidate-sentence-reorder-wrap" data-item-id="${escape(item.itemVersionId)}">
-        <div class="candidate-token-bank">
+      <div class="candidate-sentence-reorder-wrap cbt-reorder-wrap" data-item-id="${escape(item.itemVersionId)}">
+        <div class="candidate-token-bank cbt-token-bank">
           ${tokens.map(tok => `
-            <button type="button" class="btn-token-chip" data-token="${escape(tok)}">${escape(tok)}</button>
+            <button type="button" class="btn-token-chip cbt-token-chip" data-token="${escape(tok)}">${escape(tok)}</button>
           `).join('')}
         </div>
-        <div class="assembly-input-wrap">
-          <input type="text" class="candidate-reorder-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Bấm thẻ từ hoặc gõ câu..." value="${escape(val)}" autocomplete="off" />
-          <button type="button" class="btn-clear-assembly" data-item-id="${escape(item.itemVersionId)}">Xóa</button>
+        <div class="assembly-input-wrap cbt-assembly-wrap">
+          <input type="text" class="candidate-reorder-input cbt-reorder-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Bấm thẻ từ hoặc gõ câu..." value="${escape(val)}" autocomplete="off" />
+          <button type="button" class="btn-clear-assembly cbt-btn-clear" data-item-id="${escape(item.itemVersionId)}">Xóa</button>
         </div>
       </div>
     `;
@@ -491,22 +607,22 @@ function renderQuestionCard(item, answers = {}) {
     const errVal = rawAns?.error || '';
     const corrVal = rawAns?.correction || '';
     interactiveHtml = `
-      <div class="candidate-error-correction-grid" data-item-id="${escape(item.itemVersionId)}">
-        <div class="candidate-dual-box">
-          <label style="font-size:0.82rem;font-weight:600;color:#b91c1c;">1. Từ/cụm từ sai:</label>
-          <input type="text" class="candidate-error-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Lỗi sai..." value="${escape(errVal)}" autocomplete="off" />
+      <div class="candidate-error-correction-grid cbt-correction-grid" data-item-id="${escape(item.itemVersionId)}">
+        <div class="candidate-dual-box cbt-dual-box">
+          <label class="cbt-error-label">1. Từ/cụm từ sai:</label>
+          <input type="text" class="candidate-error-input cbt-input-field" data-item-id="${escape(item.itemVersionId)}" placeholder="Lỗi sai..." value="${escape(errVal)}" autocomplete="off" />
         </div>
-        <div class="candidate-dual-box">
-          <label style="font-size:0.82rem;font-weight:600;color:#15803d;">2. Sửa lại thành:</label>
-          <input type="text" class="candidate-correction-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Sửa đúng..." value="${escape(corrVal)}" autocomplete="off" />
+        <div class="candidate-dual-box cbt-dual-box">
+          <label class="cbt-corr-label">2. Sửa lại thành:</label>
+          <input type="text" class="candidate-correction-input cbt-input-field" data-item-id="${escape(item.itemVersionId)}" placeholder="Sửa đúng..." value="${escape(corrVal)}" autocomplete="off" />
         </div>
       </div>
     `;
   } else if (isReadingMatching) {
     const val = typeof rawAns === 'string' ? rawAns : '';
     interactiveHtml = `
-      <div class="candidate-matching-wrap">
-        <select class="candidate-choice-select" data-item-id="${escape(item.itemVersionId)}">
+      <div class="candidate-matching-wrap cbt-matching-wrap">
+        <select class="candidate-choice-select cbt-select-field" data-item-id="${escape(item.itemVersionId)}">
           <option value="">-- Chọn Heading tương ứng --</option>
           ${(item.options || []).map(opt => `
             <option value="${escape(opt.id)}" ${val === opt.id ? 'selected' : ''}>${escape(opt.label || opt.id)}</option>
@@ -518,31 +634,42 @@ function renderQuestionCard(item, answers = {}) {
     const val = typeof rawAns === 'string' ? rawAns : '';
     const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
     interactiveHtml = `
-      <div class="candidate-open-wrap">
-        <textarea class="candidate-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
-        <div class="candidate-open-meta">
-          <span class="word-count-badge">Số từ: <strong>${wordCount}</strong></span>
-          <span class="scoring-info-badge">Điểm tối đa: ${item.maxScore || 4} điểm (Chấm AI)</span>
+      <div class="candidate-open-wrap cbt-open-wrap">
+        <textarea class="candidate-open-textarea cbt-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
+        <div class="candidate-open-meta cbt-open-meta">
+          <span class="word-count-badge cbt-chip">Số từ: <strong>${wordCount}</strong></span>
+          <span class="scoring-info-badge cbt-chip-score">Điểm tối đa: ${item.maxScore || 4} điểm (Chấm AI)</span>
         </div>
       </div>
     `;
   } else {
     const val = typeof rawAns === 'string' ? rawAns : '';
     interactiveHtml = `
-      <input type="text" class="candidate-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Gõ câu trả lời của bạn..." value="${escape(val)}" autocomplete="off" />
+      <input type="text" class="candidate-short-input cbt-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Gõ câu trả lời của bạn..." value="${escape(val)}" autocomplete="off" />
     `;
   }
 
   const promptText = isInlineCloze ? '' : (item.prompt || '');
+  const span = getItemSpanCount(item);
+  const qNumDisplay = span > 1 ? `Câu ${item.position} – ${item.position + span - 1}` : `Câu ${item.position}`;
+  const scoreDisplay = span > 1 ? `${span} câu · ${item.maxScore || span} điểm` : `${item.maxScore || 1} điểm`;
+  const typeLabel = formatPedagogicalTypeLabel(item);
 
   return `
-    <div class="candidate-question-card" data-item-id="${escape(item.itemVersionId)}">
-      <div class="candidate-question-header">
-        <span class="question-num-badge qnum">Câu ${escape(item.position)}</span>
-        <span class="question-type-badge">${escape(item.pedagogicalTypeCode || item.interactionType || 'Câu hỏi')}</span>
+    <div class="candidate-question-card cbt-question-card" data-item-id="${escape(item.itemVersionId)}">
+      <div class="candidate-question-header cbt-question-header">
+        <div class="cbt-qhead-left">
+          <span class="question-num-badge qnum cbt-qnum-badge">${escape(qNumDisplay)}</span>
+          <span class="cbt-qscore-badge">${escape(scoreDisplay)}</span>
+        </div>
+        <div class="cbt-qhead-right">
+          <span class="question-type-badge cbt-type-badge">${escape(typeLabel)}</span>
+        </div>
       </div>
-      ${promptText ? `<div class="candidate-question-prompt">${escape(promptText).replace(/\n/g, '<br>')}</div>` : ''}
-      ${interactiveHtml}
+      ${promptText ? `<div class="candidate-question-prompt cbt-question-prompt">${renderFormattedContent(promptText)}</div>` : ''}
+      <div class="cbt-question-interactive-body">
+        ${interactiveHtml}
+      </div>
     </div>
   `;
 }
@@ -662,11 +789,33 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
       return renderQuestionCard(group.item, state.answers);
     }).join('');
 
+    const bCount = items.reduce((s, it) => s + getItemSpanCount(it), 0);
+    const exCount = (block.exercises || []).length;
+
     let sectionContentHtml = '';
     if (hasSplitPane && reading) {
       sectionContentHtml = `
-        <div class="exercise simulation-split-pane-exercise">
-          <div class="exercise-head">
+        <div class="cbt-section-hero">
+          <div class="cbt-hero-top">
+            <div class="cbt-hero-title-group">
+              <span class="cbt-hero-pill-tag">Phần thi ${bIdx + 1}</span>
+              <h2 class="cbt-hero-title">${escape(block.title || `Phần ${bIdx + 1}`)}</h2>
+            </div>
+            <div class="cbt-hero-meta-chips">
+              <span class="cbt-chip cbt-chip-count">⚡ ${bCount} câu hỏi</span>
+              ${exCount > 1 ? `<span class="cbt-chip cbt-chip-ex">📚 ${exCount} bài tập</span>` : ''}
+            </div>
+          </div>
+          ${block.instructions ? `
+            <div class="cbt-instruction-banner">
+              <span class="cbt-instruction-icon">💡</span>
+              <div class="cbt-instruction-text">${renderFormattedContent(block.instructions)}</div>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="exercise simulation-split-pane-exercise cbt-exercise-wrap">
+          <div class="exercise-head" style="display:none;">
             <div>
               <h2>${escape(block.title || `Phần ${bIdx + 1}`)}</h2>
               ${block.instructions ? `<p class="demo-lines">${escape(block.instructions)}</p>` : ''}
@@ -681,20 +830,20 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             <button type="button" class="btn btn-secondary btn-sm toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi (${items.length})</button>
           </div>
 
-          <div class="split-pane-reading" id="split-pane-${bIdx}">
-            <div class="reading-passage-column active-pane" data-pane-type="reading">
-              <div class="reading-passage-sticky-header">
+          <div class="split-pane-reading cbt-split-pane" id="split-pane-${bIdx}">
+            <div class="reading-passage-column active-pane cbt-reading-col" data-pane-type="reading">
+              <div class="reading-passage-sticky-header cbt-reading-header">
                 <span class="reading-title-badge">📖 Bài đọc hiểu (Reading Passage)</span>
                 <span class="reading-hint">Cuộn độc lập để tra cứu</span>
               </div>
-              <div class="reading-passage-content">
-                ${escape(reading).replace(/\n/g, '<br/>')}
+              <div class="reading-passage-content cbt-reading-body">
+                ${renderFormattedContent(reading)}
               </div>
             </div>
 
-            <div class="matching-questions-column" data-pane-type="questions">
-              <div class="matching-column-header">Danh sách câu hỏi ghép nối</div>
-              <div class="demo-questions-wrap">
+            <div class="matching-questions-column cbt-matching-col" data-pane-type="questions">
+              <div class="matching-column-header cbt-matching-header">Danh sách câu hỏi ghép nối</div>
+              <div class="demo-questions-wrap cbt-questions-wrap">
                 ${renderedGroups}
               </div>
             </div>
@@ -703,8 +852,27 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
       `;
     } else {
       sectionContentHtml = `
-        <div class="exercise">
-          <div class="exercise-head">
+        <div class="cbt-section-hero">
+          <div class="cbt-hero-top">
+            <div class="cbt-hero-title-group">
+              <span class="cbt-hero-pill-tag">Phần thi ${bIdx + 1}</span>
+              <h2 class="cbt-hero-title">${escape(block.title || `Phần ${bIdx + 1}`)}</h2>
+            </div>
+            <div class="cbt-hero-meta-chips">
+              <span class="cbt-chip cbt-chip-count">⚡ ${bCount} câu hỏi</span>
+              ${exCount > 1 ? `<span class="cbt-chip cbt-chip-ex">📚 ${exCount} bài tập</span>` : ''}
+            </div>
+          </div>
+          ${block.instructions ? `
+            <div class="cbt-instruction-banner">
+              <span class="cbt-instruction-icon">💡</span>
+              <div class="cbt-instruction-text">${renderFormattedContent(block.instructions)}</div>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="exercise cbt-exercise-wrap">
+          <div class="exercise-head" style="display:none;">
             <div>
               <h2>${escape(block.title || `Phần ${bIdx + 1}`)}</h2>
               ${block.instructions ? `<p class="demo-lines">${escape(block.instructions)}</p>` : ''}
@@ -715,13 +883,13 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
           ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 2) : ''}
 
           ${reading ? `
-            <div class="sim-reading-dock">
-              <div class="reading-header">📖 Bài đọc tham khảo:</div>
-              <div class="reading-content">${escape(reading).replace(/\n/g, '<br>')}</div>
+            <div class="sim-reading-dock cbt-reading-dock">
+              <div class="reading-header cbt-reading-dock-header">📖 Bài đọc tham khảo:</div>
+              <div class="reading-content cbt-reading-dock-body">${renderFormattedContent(reading)}</div>
             </div>
           ` : ''}
 
-          <div class="demo-questions-wrap">
+          <div class="demo-questions-wrap cbt-questions-wrap">
             ${renderedGroups}
           </div>
         </div>
@@ -736,11 +904,14 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
   });
 
   html += `
-    <footer class="simulation-footer">
-      <div class="footer-note">Câu trả lời được tự động lưu. Hãy kiểm tra các câu hỏi chưa làm trong phần thi trước khi chuyển tiếp hoặc nộp bài.</div>
-      <div class="footer-actions">
-        <button class="btn btn-secondary" id="demo-prev">← Phần trước</button>
-        <button class="btn btn-primary" id="demo-next">Phần tiếp →</button>
+    <footer class="simulation-footer cbt-simulation-footer">
+      <div class="footer-note cbt-footer-note">
+        <span class="cbt-save-indicator-dot"></span>
+        <span>Câu trả lời được tự động lưu. Hãy kiểm tra các câu hỏi chưa làm trong phần thi trước khi chuyển tiếp hoặc nộp bài.</span>
+      </div>
+      <div class="footer-actions cbt-footer-actions">
+        <button class="btn btn-secondary cbt-btn-prev" id="demo-prev">← Phần trước</button>
+        <button class="btn btn-primary cbt-btn-next" id="demo-next">Phần tiếp →</button>
       </div>
     </footer>
   `;
@@ -975,6 +1146,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
         currentAnswers[pos] = target.value.trim();
         value = currentAnswers;
         state.answers[itemId] = value;
+        blankWrap.classList.toggle('is-filled', Boolean(target.value.trim()));
         updateAnsweredState();
         if (onAnswerChange) onAnswerChange(itemId, value);
         return;
@@ -986,6 +1158,13 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
       const checkedBoxes = rootEl.querySelectorAll(`input[type="checkbox"][data-item-id="${CSS.escape(itemId)}"]:checked`);
       value = Array.from(checkedBoxes).map(cb => cb.value);
       state.answers[itemId] = value;
+      const card = target.closest('.candidate-question-card') || target.closest('.cbt-question-card');
+      if (card) {
+        card.querySelectorAll('.candidate-choice-label').forEach(lbl => {
+          const cb = lbl.querySelector('input[type="checkbox"]');
+          lbl.classList.toggle('selected', cb && cb.checked);
+        });
+      }
       updateAnsweredState();
       if (onAnswerChange) onAnswerChange(itemId, value);
       return;
@@ -995,6 +1174,13 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     if (target.type === 'radio') {
       value = target.value;
       state.answers[itemId] = value;
+      const card = target.closest('.candidate-question-card') || target.closest('.cbt-question-card');
+      if (card) {
+        card.querySelectorAll('.candidate-choice-label').forEach(lbl => {
+          const r = lbl.querySelector('input[type="radio"]');
+          lbl.classList.toggle('selected', r && r.checked);
+        });
+      }
       updateAnsweredState();
       if (onAnswerChange) onAnswerChange(itemId, value);
       return;

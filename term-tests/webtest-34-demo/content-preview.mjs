@@ -1229,39 +1229,44 @@ export async function mount(course) {
 
     if (isDynamic) {
       document.body.innerHTML = `
-        <div class="candidate-simulation-shell content-demo">
-          <header class="topbar simulation-topbar">
-            <div class="topbar-inner demo-top">
-              <div class="brand">
-                <div class="brand-mark">IZ</div>
-                <div class="brand-copy">
-                  <div class="brand-title">IZONE · ${escape(examTitle)}</div>
-                  <div class="brand-sub">${headerSub}</div>
+        <div class="candidate-simulation-shell content-demo cbt-exam-shell">
+          <header class="topbar simulation-topbar cbt-topbar">
+            <div class="topbar-inner demo-top cbt-topbar-inner">
+              <div class="brand cbt-brand">
+                <div class="brand-mark cbt-brand-mark">IZ</div>
+                <div class="brand-copy cbt-brand-copy">
+                  <div class="brand-title cbt-brand-title">IZONE · ${escape(examTitle)}</div>
+                  <div class="brand-sub cbt-brand-sub">${headerSub}</div>
                 </div>
               </div>
-              <div class="top-actions">
-                <span id="demo-save" role="status" style="font-size:12px;color:var(--color-text-secondary);font-weight:600;">Đã lưu</span>
-                <button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button>
-                <button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button>
-                <span class="timer" id="examTimerDisplay">${examDuration}:00</span>
-                <button type="button" class="btn btn-primary btn-submit-top" id="demo-submit-top">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
+              <div class="top-actions cbt-top-actions">
+                <span id="demo-save" role="status" class="cbt-save-pill">Đã lưu</span>
+                <div class="cbt-font-toggles">
+                  <button type="button" class="icon-btn cbt-font-btn" id="demo-font-down" aria-label="Giảm cỡ chữ" title="Giảm cỡ chữ">A−</button>
+                  <button type="button" class="icon-btn cbt-font-btn" id="demo-font-up" aria-label="Tăng cỡ chữ" title="Tăng cỡ chữ">A+</button>
+                </div>
+                <div class="cbt-timer-container">
+                  <span class="cbt-timer-icon">⏱</span>
+                  <span class="timer cbt-timer" id="examTimerDisplay">${examDuration}:00</span>
+                </div>
+                <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
               </div>
             </div>
-            <div class="section-nav-wrap">
-              <nav class="section-nav simulation-nav-bar" id="sectionNavContainer" aria-label="Các phần bài thi">
+            <div class="section-nav-wrap cbt-section-nav-wrap">
+              <nav class="section-nav simulation-nav-bar cbt-section-nav-bar" id="sectionNavContainer" aria-label="Các phần bài thi">
                 ${renderSectionNavPills(learningState.definition, 0)}
               </nav>
             </div>
           </header>
 
-          <main class="demo-width" style="max-width:1360px;margin:0 auto;padding:16px 24px;">
+          <main class="demo-width cbt-main-content" style="max-width:1380px;margin:0 auto;padding:20px 24px;">
             ${noticeBanner}
             <div id="demo-result" class="demo-notice" hidden></div>
             <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
 
-            <div class="exam-layout">
-              <div class="main-column simulation-viewport" id="examMainViewport"></div>
-              <div id="examSidePanelContainer">
+            <div class="exam-layout cbt-exam-layout">
+              <div class="main-column simulation-viewport cbt-viewport" id="examMainViewport"></div>
+              <div id="examSidePanelContainer" class="cbt-side-container">
                 ${renderSidePanel(learningState.definition, state, 0)}
               </div>
             </div>
