@@ -163,3 +163,24 @@ test('dynamic-exam-renderer: renderDynamicExam outputs HTML containing question 
   assert.ok(container.innerHTML.includes('candidate-pictorial-card'), 'Should include pictorial card HTML');
   assert.ok(container.innerHTML.includes('F_ _ _ _ _ _ _'), 'Should render letter hint');
 });
+
+test('dynamic-exam-renderer: convertGoogleDriveAudioUrl converts drive file link to stream endpoint', async () => {
+  const { convertGoogleDriveAudioUrl } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+  const driveUrl = 'https://drive.google.com/file/d/1a2b3c4d5e6f/view?usp=sharing';
+  const converted = convertGoogleDriveAudioUrl(driveUrl);
+  assert.ok(converted.includes('drive-stream?id=1a2b3c4d5e6f'), 'Should contain stream endpoint and file id');
+
+  const standardUrl = 'https://example.com/audio.mp3';
+  assert.equal(convertGoogleDriveAudioUrl(standardUrl), standardUrl);
+});
+
+test('dynamic-exam-renderer: renderAudioDockHtml produces strict dock with play button and listen badge', async () => {
+  const { renderAudioDockHtml } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+  const html = renderAudioDockHtml('https://example.com/audio.mp3', 'Bài nghe Phần 1', 2);
+  assert.ok(html.includes('strict-audio-dock'), 'Should include strict-audio-dock class');
+  assert.ok(html.includes('btn-sim-audio-play'), 'Should include red play button');
+  assert.ok(html.includes('data-listen-badge'), 'Should include listen count badge');
+  assert.ok(html.includes('Lượt: 0/2'), 'Should display initial listen ratio');
+  assert.ok(html.includes('sim-audio-timeline'), 'Should include audio duration timeline');
+});
+

@@ -547,6 +547,59 @@ function renderQuestionCard(item, answers = {}) {
   `;
 }
 
+export function convertGoogleDriveAudioUrl(rawUrl) {
+  if (!rawUrl || typeof rawUrl !== 'string') return '';
+  const match = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (match) {
+    const fileId = match[1];
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
+    const apiBase = isLocal ? `${window.location.protocol}//${window.location.hostname}:8788` : '';
+    return `${apiBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
+  }
+  return rawUrl;
+}
+
+export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', maxListens = 2) {
+  const convertedUrl = convertGoogleDriveAudioUrl(audioSrc);
+  if (!convertedUrl) return '';
+  return `
+    <div class="strict-audio-dock candidate-audio-dock" data-audio-src="${escape(convertedUrl)}" data-listens-count="0" data-max-listens="${maxListens}">
+      <div class="strict-audio-header">
+        <span class="audio-badge">🔊 ${escape(label)}</span>
+        <div class="audio-meta-right">
+          <span class="sim-audio-badge" data-listen-badge>Lượt: 0/${maxListens}</span>
+          <div class="audio-volume-control">
+            <label class="volume-label" title="Âm lượng loa">🔊</label>
+            <input type="range" class="candidate-audio-volume" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng loa" />
+            <output class="volume-output">100%</output>
+          </div>
+        </div>
+      </div>
+      <div class="strict-audio-body">
+        <button type="button" class="btn btn-primary btn-sm btn-sim-audio-play">
+          ▶ Bắt đầu nghe
+        </button>
+        <div class="sim-audio-timeline">
+          <div class="sim-audio-time-current">00:00</div>
+          <div class="sim-audio-bar-track">
+            <div class="sim-audio-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="sim-audio-time-total">--:--</div>
+        </div>
+        <div class="audio-live-status" style="display:none;">
+          <span class="dot"></span>
+          <span class="status-text">Đang phát bài nghe…</span>
+        </div>
+        <div class="audio-ended-notice" style="display:none;">
+          <span class="dot dot-ended"></span>
+          <span class="audio-note">Đã nghe xong ${maxListens}/${maxListens} lượt · Bài nghe đã khóa</span>
+        </div>
+      </div>
+      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="metadata" style="display:none;"></audio>
+    </div>
+  `;
+}
+
 export function renderDynamicExam(definition, container, { state = { answers: {} }, onAnswerChange, activeSection }) {
   if (!container || !definition || !Array.isArray(definition.blocks)) return;
 
@@ -621,6 +674,8 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             <span class="points">${items.length} câu hỏi</span>
           </div>
 
+          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 2) : ''}
+
           <div class="split-pane-mobile-toggle">
             <button type="button" class="btn btn-secondary btn-sm active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">📖 Xem bài đọc</button>
             <button type="button" class="btn btn-secondary btn-sm toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi (${items.length})</button>
@@ -657,11 +712,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             <span class="points">${items.length} câu hỏi</span>
           </div>
 
-          ${audioSrc ? `
-            <div class="audio-dock sim-audio-dock">
-              <audio controls src="${escape(audioSrc)}" style="width:100%;max-width:540px;height:40px;"></audio>
-            </div>
-          ` : ''}
+          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 2) : ''}
 
           ${reading ? `
             <div class="sim-reading-dock">
@@ -1019,9 +1070,132 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     });
   });
 
+  // Initialize Strict Audio Docks (max 2 listens)
+  initStrictAudioDocks(rootEl);
+
   return {
     activateSection,
     filterNavigatorBySection,
     updateAnsweredState
   };
 }
+
+export function initStrictAudioDocks(rootEl) {
+  if (!rootEl) return;
+  const docks = rootEl.querySelectorAll('.strict-audio-dock');
+  docks.forEach(dock => {
+    const audioEl = dock.querySelector('.audio-hidden-element');
+    const playBtn = dock.querySelector('.btn-sim-audio-play');
+    const listenBadge = dock.querySelector('[data-listen-badge]');
+    const volumeInput = dock.querySelector('.candidate-audio-volume');
+    const volumeOutput = dock.querySelector('.volume-output');
+    const liveStatus = dock.querySelector('.audio-live-status');
+    const endedNotice = dock.querySelector('.audio-ended-notice');
+    const timeCurrent = dock.querySelector('.sim-audio-time-current');
+    const timeTotal = dock.querySelector('.sim-audio-time-total');
+    const barFill = dock.querySelector('.sim-audio-bar-fill');
+
+    if (!audioEl || !playBtn) return;
+
+    const maxListens = parseInt(dock.getAttribute('data-max-listens') || '2', 10);
+    let listensCount = parseInt(dock.getAttribute('data-listens-count') || '0', 10);
+    let maxPlayedTime = 0;
+
+    const formatSec = (secs) => {
+      if (isNaN(secs) || secs < 0) return '00:00';
+      const m = Math.floor(secs / 60);
+      const s = Math.floor(secs % 60);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
+    if (volumeInput) {
+      volumeInput.addEventListener('input', (e) => {
+        const val = Number(e.target.value) || 0;
+        audioEl.volume = val;
+        if (volumeOutput) volumeOutput.textContent = `${Math.round(val * 100)}%`;
+      });
+    }
+
+    if (typeof audioEl.addEventListener === 'function') {
+      audioEl.addEventListener('loadedmetadata', () => {
+        if (timeTotal && audioEl.duration) {
+          timeTotal.textContent = formatSec(audioEl.duration);
+        }
+      });
+
+      audioEl.addEventListener('timeupdate', () => {
+        if (timeCurrent) timeCurrent.textContent = formatSec(audioEl.currentTime);
+        if (barFill && audioEl.duration) {
+          const pct = Math.min(100, (audioEl.currentTime / audioEl.duration) * 100);
+          barFill.style.width = `${pct}%`;
+        }
+        maxPlayedTime = Math.max(maxPlayedTime, audioEl.currentTime);
+      });
+
+      // Seeking protection: prevent skipping forward past played time
+      audioEl.addEventListener('seeking', () => {
+        if (Math.abs(audioEl.currentTime - maxPlayedTime) > 1.5) {
+          audioEl.currentTime = maxPlayedTime;
+        }
+      });
+
+      audioEl.addEventListener('pause', () => {
+        if (!audioEl.ended && listensCount < maxListens) {
+          playBtn.textContent = '▶ Tiếp tục nghe';
+          if (liveStatus) liveStatus.style.display = 'none';
+        }
+      });
+
+      audioEl.addEventListener('ended', () => {
+        listensCount++;
+        dock.setAttribute('data-listens-count', String(listensCount));
+        maxPlayedTime = 0;
+        if (liveStatus) liveStatus.style.display = 'none';
+
+        if (listensCount < maxListens) {
+          if (listenBadge) {
+            listenBadge.textContent = `Đã nghe 1/${maxListens} lượt (Còn 1 lượt)`;
+          }
+          playBtn.textContent = '▶ Nghe lượt 2';
+          if (barFill) barFill.style.width = '0%';
+          if (timeCurrent) timeCurrent.textContent = '00:00';
+        } else {
+          if (listenBadge) {
+            listenBadge.textContent = `Đã nghe đủ ${maxListens}/${maxListens} lượt`;
+            listenBadge.classList.add('badge-exhausted');
+          }
+          playBtn.disabled = true;
+          playBtn.style.display = 'none';
+          if (endedNotice) endedNotice.style.display = 'inline-flex';
+        }
+      });
+    }
+
+    playBtn.addEventListener('click', async () => {
+      if (listensCount >= maxListens) return;
+
+      if (audioEl.paused) {
+        // Pause all other audios in rootEl
+        rootEl.querySelectorAll('.audio-hidden-element').forEach(other => {
+          if (other !== audioEl && !other.paused) other.pause();
+        });
+
+        try {
+          await audioEl.play();
+          playBtn.textContent = '⏸ Tạm dừng';
+          if (liveStatus) liveStatus.style.display = 'inline-flex';
+          if (listenBadge) {
+            listenBadge.textContent = `Lượt ${listensCount + 1}/${maxListens} (Đang phát)`;
+          }
+        } catch (err) {
+          console.warn('Cannot play audio:', err);
+        }
+      } else {
+        audioEl.pause();
+        playBtn.textContent = '▶ Tiếp tục nghe';
+        if (liveStatus) liveStatus.style.display = 'none';
+      }
+    });
+  });
+}
+

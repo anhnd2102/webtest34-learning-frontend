@@ -865,41 +865,41 @@ export async function mount(course) {
             </div>
           </div>
         </header>
-        <main class="demo-width" style="max-width:680px;margin:36px auto;padding:16px">
-          <div style="background:white;border:1px solid #e2e8f0;border-radius:16px;padding:32px;box-shadow:0 10px 25px rgba(0,0,0,0.04)">
-            <div style="font-size:12px;font-weight:700;color:#db0829;letter-spacing:1px;margin-bottom:8px">IZONE · COMPUTER-BASED TEST</div>
-            <h1 style="font-size:24px;color:#174266;margin:0 0 12px 0">${escape(title)}</h1>
-            <p style="color:#64748b;font-size:14px;line-height:1.5;margin-bottom:24px">
+        <main class="cbt-intro-wrap">
+          <div class="cbt-intro-card">
+            <span class="cbt-intro-badge">IZONE · COMPUTER-BASED TEST</span>
+            <h1 class="cbt-intro-title">${escape(title)}</h1>
+            <p class="cbt-intro-sub">
               Thời gian làm bài: <strong>${form.durationMinutes} phút</strong> · Tổng số câu hỏi: <strong>${items.length} câu</strong>.<br>
               Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.
             </p>
 
-            <div style="margin-bottom:20px">
-              <label for="classCodeInput" style="display:block;font-weight:600;margin-bottom:8px;color:#1e293b">Mã lớp</label>
-              <div style="display:flex;gap:10px">
-                <input id="classCodeInput" value="${escape(paramClassCode || `TEST-${course}`)}" placeholder="Ví dụ: ICxxxx" autocomplete="off" style="flex:1;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;font-weight:600">
+            <div class="cbt-intro-field">
+              <label for="classCodeInput">Mã lớp</label>
+              <div class="cbt-intro-input-row">
+                <input id="classCodeInput" class="cbt-intro-input" value="${escape(paramClassCode || `TEST-${course}`)}" placeholder="Ví dụ: ICxxxx" autocomplete="off" style="flex:1;font-weight:600">
                 <button type="button" class="btn btn-secondary" id="loadRosterBtn" style="min-width:140px;font-weight:600">Tải danh sách</button>
               </div>
-              <div id="classCodeStatus" style="font-size:13px;margin-top:6px;color:#64748b">Nhập đúng mã lớp do giáo viên cung cấp, sau đó bấm “Tải danh sách”.</div>
+              <div id="classCodeStatus" class="cbt-intro-hint">Nhập đúng mã lớp do giáo viên cung cấp, sau đó bấm “Tải danh sách”.</div>
             </div>
 
-            <div style="margin-bottom:28px">
-              <label for="studentSelectInput" style="display:block;font-weight:600;margin-bottom:8px;color:#1e293b">Họ và tên học viên</label>
-              <select id="studentSelectInput" disabled style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;background:#f8fafc">
+            <div class="cbt-intro-field">
+              <label for="studentSelectInput">Họ và tên học viên</label>
+              <select id="studentSelectInput" class="cbt-intro-input" disabled style="background:#f8fafc">
                 <option value="">— Hãy tải danh sách lớp trước —</option>
               </select>
-              <div id="studentSelectStatus" style="font-size:13px;margin-top:6px;color:#64748b">Chọn đúng tên của bạn trong danh sách lớp. Tên sẽ được khóa khi nộp bài.</div>
+              <div id="studentSelectStatus" class="cbt-intro-hint">Chọn đúng tên của bạn trong danh sách lớp. Tên sẽ được khóa khi nộp bài.</div>
             </div>
 
-            <div id="soundcheckSection" style="margin-bottom:24px;padding:16px 20px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px">
-              <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+            <div id="soundcheckSection" class="cbt-soundcheck-box">
+              <div class="cbt-soundcheck-header">
                 <span>🔊 Kiểm tra âm thanh trước khi làm bài</span>
-                <span id="soundcheckStatus" style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:12px;background:#e2e8f0;color:#475569">Chưa kiểm tra</span>
+                <span id="soundcheckStatus" class="cbt-soundcheck-badge">Chưa kiểm tra</span>
               </div>
-              <p style="font-size:13px;color:#64748b;margin:0 0 12px 0;line-height:1.5">
+              <p class="cbt-soundcheck-body">
                 Bài thi có nội dung âm thanh. Hãy nhấn <strong>Nghe thử</strong> để kiểm tra loa hoặc tai nghe và điều chỉnh âm lượng phù hợp.
               </p>
-              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+              <div class="cbt-soundcheck-controls">
                 <button type="button" class="btn btn-secondary" id="soundcheckPlayBtn" style="min-width:130px;background:white;font-weight:700">
                   🔊 Nghe thử
                 </button>
@@ -911,8 +911,8 @@ export async function mount(course) {
               </div>
             </div>
 
-            <div style="display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #f1f5f9;padding-top:20px">
-              <button type="button" class="btn btn-primary" id="startExamBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Bắt đầu làm bài →</button>
+            <div class="cbt-intro-footer">
+              <button type="button" class="btn-start-exam" id="startExamBtn" disabled>Bắt đầu làm bài →</button>
             </div>
           </div>
         </main>
@@ -994,7 +994,7 @@ export async function mount(course) {
         if (assignment.definition?.blocks?.length) {
           const dynTotal = getTotalItemCount(assignment.definition);
           const dynMinutes = Number(assignment.definition.timing?.totalMinutes || assignment.definition.durationMinutes) || 120;
-          const introP = document.querySelector('main.demo-width p');
+          const introP = document.querySelector('.cbt-intro-sub') || document.querySelector('main.demo-width p') || document.querySelector('main p');
           if (introP) {
             introP.innerHTML = `Thời gian làm bài: <strong>${dynMinutes} phút</strong> · Tổng số câu hỏi: <strong>${dynTotal} câu</strong>.<br>Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.`;
           }
@@ -1692,10 +1692,182 @@ export async function mount(course) {
     }
     query('#demo-cancel').addEventListener('click',()=>query('#demo-confirm').close());
 
+    function openDynamicResultsModal(result) {
+      const summary = result?.summary || {};
+      const scoreFinal = summary.scoreFinal === true && result.gradingStatus === 'complete';
+      const isManualReview = result.gradingStatus === 'manual_review';
+      const items = result?.items || [];
+      const definition = learningState.definition || {};
+
+      // Map definition items
+      const defItemsMap = new Map();
+      for (const block of (definition.blocks || [])) {
+        for (const it of (block.items || [])) {
+          defItemsMap.set(it.itemVersionId, it);
+        }
+      }
+
+      // Mark question navigator buttons with is-correct / is-incorrect
+      items.forEach(it => {
+        const qnavBtn = document.querySelector(`.btn-qnav[data-item-id="${it.itemVersionId}"]`);
+        if (qnavBtn) {
+          qnavBtn.classList.remove('is-correct', 'is-incorrect');
+          if (it.verdict === 'correct') {
+            qnavBtn.classList.add('is-correct');
+          } else if (it.verdict === 'incorrect' || it.verdict === 'partial') {
+            qnavBtn.classList.add('is-incorrect');
+          }
+        }
+      });
+
+      // Prepare breakdown rows
+      const rowsHtml = items.map(it => {
+        const defItem = defItemsMap.get(it.itemVersionId) || {};
+        const isCorrect = it.verdict === 'correct';
+        const isPartial = it.verdict === 'partial';
+        const typeLabel = defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm' :
+          (defItem.pedagogicalTypeCode === 'sentence_rewrite' ? 'Biến đổi câu' :
+          (defItem.pedagogicalTypeCode === 'sentence_reorder' ? 'Sắp xếp câu' :
+          (defItem.interactionType === 'correction_pair' ? 'Sửa lỗi sai' :
+          (defItem.interactionType === 'text_select_pair' ? 'Cặp từ vựng' :
+          (defItem.interactionType === 'single_choice' ? 'Trắc nghiệm' :
+          (defItem.interactionType === 'multi_choice_group' ? 'Chọn nhiều' :
+          (defItem.interactionType === 'short_text' ? 'Điền từ' : 'Tự luận')))))));
+
+        const candidateAnswer = (it.rawAnswer !== undefined && it.rawAnswer !== null && String(it.rawAnswer).trim() !== '')
+          ? String(it.rawAnswer)
+          : '(Chưa trả lời)';
+        const expectedAnswer = it.expectedAnswer !== undefined && it.expectedAnswer !== null
+          ? (Array.isArray(it.expectedAnswer) ? it.expectedAnswer.join(', ') : String(it.expectedAnswer))
+          : '—';
+
+        const rowClass = isCorrect ? 'row-correct' : (isPartial ? 'row-partial' : 'row-incorrect');
+        const verdictBadge = isCorrect
+          ? '<span class="status-correct">✓ Đúng</span>'
+          : (isPartial ? '<span class="status-partial">Đúng 50%</span>' : '<span class="status-incorrect">✕ Chưa đúng</span>');
+
+        return `
+          <tr class="${rowClass}">
+            <td><strong>Câu ${it.position}</strong></td>
+            <td><span class="type-badge">${escape(typeLabel)}</span></td>
+            <td>${escape(candidateAnswer)}</td>
+            <td><span class="correct-badge">${escape(expectedAnswer)}</span></td>
+            <td><strong>${it.scoreEarned ?? 0}/${it.maxScore ?? 1}đ</strong></td>
+            <td>${verdictBadge}</td>
+          </tr>
+        `;
+      }).join('');
+
+      let modal = document.querySelector('#simulation-results-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'simulation-results-modal';
+        modal.className = 'simulation-results-modal';
+        document.body.appendChild(modal);
+      }
+
+      modal.innerHTML = `
+        <div class="sim-results-dialog">
+          <header class="sim-results-header">
+            <div class="sim-results-title-wrap">
+              <span class="sim-results-badge">Kết quả bài thi</span>
+              <h3>Bảng tổng hợp chấm điểm</h3>
+            </div>
+            <button type="button" class="btn-close-sim-results" id="btn-close-sim-results" aria-label="Đóng">✕</button>
+          </header>
+          <div class="sim-results-body" id="sim-results-body">
+            <div class="sim-score-banner">
+              <div class="score-banner-title">Tổng điểm đạt được:</div>
+              <div class="score-banner-value">${summary.scoreEarned ?? 0}/${summary.maxScore ?? 0}đ</div>
+              <div class="score-banner-sub">
+                Thí sinh: <strong>${escape(learningState.studentName || '')}</strong> · Lớp: <strong>${escape(learningState.className || '')}</strong> · Trạng thái: <strong>${scoreFinal ? 'Hoàn tất chấm điểm' : (isManualReview ? 'Chờ giảng viên duyệt' : 'Đang xử lý')}</strong>
+              </div>
+            </div>
+            <div class="sim-breakdown-table-wrap">
+              <table class="sim-breakdown-table">
+                <thead>
+                  <tr>
+                    <th>Câu</th>
+                    <th>Dạng câu</th>
+                    <th>Bài làm của bạn</th>
+                    <th>Đáp án đúng</th>
+                    <th>Điểm</th>
+                    <th>Đánh giá</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml || '<tr><td colspan="6" style="text-align:center;padding:16px;">Đang cập nhật chi tiết...</td></tr>'}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <footer class="sim-results-footer">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-retest-simulation">Xem lại trên bài thi</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-done-simulation-results">Đóng kết quả</button>
+          </footer>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      const closeHandler = () => {
+        modal.style.display = 'none';
+      };
+      modal.querySelectorAll('#btn-close-sim-results, #btn-retest-simulation, #btn-done-simulation-results').forEach(b => {
+        b.addEventListener('click', closeHandler);
+      });
+
+      // Show persistent reopening card in #demo-result
+      const resBanner = query('#demo-result');
+      if (resBanner) {
+        resBanner.hidden = false;
+        resBanner.style.background = '#f0fdf4';
+        resBanner.style.borderColor = '#bbf7d0';
+        resBanner.style.color = '#166534';
+        resBanner.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+              <strong>Đã hoàn tất chấm điểm!</strong> Tổng điểm đạt được: <strong>${summary.scoreEarned ?? 0}/${summary.maxScore ?? 0}đ</strong> (${scoreFinal ? 'Điểm chính thức' : 'Điểm tạm tính'}).
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-open-results-modal" style="font-weight:700;">
+              📊 Xem lại Bảng tổng hợp chấm điểm
+            </button>
+          </div>
+        `;
+        const reOpenBtn = resBanner.querySelector('#btn-open-results-modal');
+        if (reOpenBtn) {
+          reOpenBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+          });
+        }
+      }
+    }
+
     function renderAiResultCard(result) {
       const isPublished = Boolean(result?.publication?.published);
       const card = query('#demo-ai-card');
       card.hidden = false;
+
+      if (isDynamic) {
+        if (!isPublished) {
+          card.innerHTML = `
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:24px;text-align:center;color:#166534">
+              <div style="font-size:32px;margin-bottom:6px">✓</div>
+              <h3 style="color:#15803d;margin:0 0 8px 0;font-size:19px;font-weight:700">Bài làm đã được nộp thành công!</h3>
+              <p style="margin:0;font-size:14px;color:#166534;line-height:1.6">
+                Hệ thống đã ghi nhận an toàn bài thi của bạn.<br>
+                Điểm số sẽ được giáo viên công bố sau khi hoàn tất chấm điểm. Bạn có thể xem lại bài làm bên dưới.
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        // isPublished is true -> Show Candidate Simulation Results Modal
+        openDynamicResultsModal(result);
+        return;
+      }
+
       if (!isPublished) {
         card.innerHTML = `
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:28px 24px;text-align:center;color:#166534">
