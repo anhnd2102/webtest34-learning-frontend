@@ -404,7 +404,7 @@ function renderSimVocabPairTable(vocabItems, answers = {}) {
             return `
               <div class="candidate-vocab-table-row" data-item-id="${escape(item.itemVersionId)}">
                 <div class="vocab-td vocab-td-num">
-                  <span class="vocab-row-num-badge qnum">Câu ${escape(item.position)}</span>
+                  <span class="vocab-row-num-badge qnum" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 14px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">Câu ${escape(item.position)}</span>
                 </div>
                 <div class="vocab-td vocab-td-en">
                   <input type="text" class="candidate-vocab-text-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập từ nghe được..." value="${escape(enVal)}" autocomplete="off" />
@@ -440,7 +440,7 @@ function renderSimPictorialGroup(pictorialItems, answers = {}) {
           return `
             <div class="candidate-pictorial-card cbt-pictorial-card" data-item-id="${escape(item.itemVersionId)}">
               <div class="candidate-pictorial-card-header">
-                <span class="question-num-badge qnum">Câu ${escape(item.position)}</span>
+                <span class="question-num-badge qnum" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 14px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">Câu ${escape(item.position)}</span>
                 <span class="question-type-badge cbt-type-badge">Từ vựng qua ảnh</span>
               </div>
               ${imgSrc ? `
@@ -472,7 +472,7 @@ function renderSimShortQaGroup(shortItems, answers = {}) {
         return `
           <div class="candidate-short-qa-item cbt-short-qa-card" data-item-id="${escape(item.itemVersionId)}">
             <div class="candidate-short-prompt-row">
-              <span class="candidate-short-qnum qnum">Câu ${escape(item.position)}</span>
+              <span class="candidate-short-qnum qnum" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 14px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">Câu ${escape(item.position)}</span>
               <div class="candidate-short-prompt-text">${renderFormattedContent(item.prompt || '')}</div>
             </div>
             <div class="candidate-short-input-wrap">
@@ -672,7 +672,7 @@ export function renderQuestionCard(item, answers = {}) {
     <div class="candidate-question-card cbt-question-card" data-item-id="${escape(item.itemVersionId)}">
       <div class="candidate-question-header cbt-question-header">
         <div class="cbt-qhead-left">
-          <span class="question-num-badge qnum cbt-qnum-badge">${escape(qNumDisplay)}</span>
+          <span class="question-num-badge qnum cbt-qnum-badge" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 16px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">${escape(qNumDisplay)}</span>
           <span class="cbt-qscore-badge">${escape(scoreDisplay)}</span>
         </div>
         <div class="cbt-qhead-right">

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="dynamic-test.css?rev=20261024-cbt-v6">
+  <link rel="stylesheet" href="dynamic-test.css?rev=20261024-cbt-v11">
   <style>
     :root{
       --color-primary:#db0829;
@@ -197,7 +197,7 @@
     .answer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .q-row{display:flex;align-items:center;gap:10px;border:1px solid #e9ebee;border-radius:12px;padding:10px 12px;min-height:56px;background:white;transition:.15s ease}
     .q-row:focus-within{border-color:var(--color-primary);box-shadow:0 0 0 4px rgba(219,8,41,.06)}
-    .qnum{min-width:30px;width:auto;height:auto;min-height:30px;padding:0 6px;border-radius:9px;background:var(--color-bg-secondary);display:inline-flex;align-items:center;justify-content:center;font-family:Geologica,sans-serif;font-size:12px;font-weight:700;flex:0 0 auto;color:var(--color-slate)}
+    .q-row .qnum{min-width:30px;width:auto;height:auto;min-height:30px;padding:0 6px;border-radius:9px;background:var(--color-bg-secondary);display:inline-flex;align-items:center;justify-content:center;font-family:Geologica,sans-serif;font-size:12px;font-weight:700;flex:0 0 auto;color:var(--color-slate)}
     .q-row input[type="text"]{border:0;outline:0;min-width:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
     .q-row select{border:0;outline:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
     .vocab-pair-row{display:flex;align-items:center;gap:10px;border:1px solid #e9ebee;border-radius:12px;padding:10px 12px;min-height:56px;background:white;transition:.15s ease}
@@ -205,7 +205,7 @@
     .vocab-pair-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;flex:1;min-width:0}
     .vocab-pair-controls input,.vocab-pair-controls select{border:1px solid #e3e6ea;border-radius:9px;outline:0;min-width:0;width:100%;min-height:38px;padding:0 10px;background:white;color:var(--color-text)}
     .vocab-pair-controls input:focus,.vocab-pair-controls select:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px rgba(219,8,41,.06)}
-    .done .qnum{background:#fff0f3;color:var(--color-primary)}
+    .q-row.done .qnum{background:#fff0f3;color:var(--color-primary)}
 
     .picture-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
     .picture-q{border:1px solid #e9ebee;border-radius:14px;padding:16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}
@@ -288,6 +288,31 @@
       .exam-layout{padding:0 14px;margin-top:14px}.section-hero{padding:20px}.exercise{padding:18px}.exercise-head{flex-direction:column}.points{align-self:flex-start}.answer-grid{grid-template-columns:1fr}.vocab-pair-controls{grid-template-columns:1fr}.picture-q{grid-template-columns:76px 1fr}.picture-box{width:76px}.mcq-options{grid-template-columns:1fr}.statement-actions{margin-left:0}.bottom-actions{display:none}
       .mobile-bottom{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid #eceef0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:35}
       .mobile-bottom .btn{padding:0 10px}
+    }
+    .question-num-badge,
+    .cbt-qnum-badge,
+    .candidate-short-qnum,
+    .vocab-row-num-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: auto !important;
+      max-width: none !important;
+      min-width: max-content !important;
+      height: auto !important;
+      min-height: 28px !important;
+      padding: 4px 16px !important;
+      border-radius: 9999px !important;
+      background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important;
+      border: 1.5px solid #fecdd3 !important;
+      color: #e11d48 !important;
+      font-size: 0.88rem !important;
+      font-weight: 800 !important;
+      font-family: inherit !important;
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 1px 3px rgba(225, 29, 72, 0.08) !important;
     }
   </style>
 </head>
@@ -459,7 +484,7 @@
   const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
   if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs?rev=20261024-cbt-sim-v6').then(module => module.mount(demoCourse)).catch((err) => {
+    import('./content-preview.mjs?rev=20261024-cbt-sim-v11').then(module => module.mount(demoCourse)).catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });
