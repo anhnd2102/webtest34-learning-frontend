@@ -106,7 +106,7 @@ export function formatPedagogicalTypeLabel(item) {
     return 'Trắc nghiệm chọn nhiều';
   }
   if (rawCode.includes('rubric') || rawCode.includes('long_text') || rawCode.includes('essay')) {
-    return 'Tự luận (Chấm AI)';
+    return 'Tự luận';
   }
   if (rawCode.includes('short_text') || rawCode.includes('qa')) {
     return 'Trả lời ngắn';
@@ -651,7 +651,7 @@ export function renderQuestionCard(item, answers = {}) {
         <textarea class="candidate-open-textarea cbt-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
         <div class="candidate-open-meta cbt-open-meta">
           <span class="word-count-badge cbt-chip">Số từ: <strong>${wordCount}</strong></span>
-          <span class="scoring-info-badge cbt-chip-score">Điểm tối đa: ${item.maxScore || 4} điểm (Chấm AI)</span>
+          <span class="scoring-info-badge cbt-chip-score">Điểm tối đa: ${item.maxScore || 4} điểm</span>
         </div>
       </div>
     `;

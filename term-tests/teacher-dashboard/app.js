@@ -9408,7 +9408,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <textarea class="form-control candidate-open-textarea" data-item-id="${item.itemVersionId}" rows="4" placeholder="Nhập bài luận hoặc câu trả lời tại đây..."></textarea>
                 <div class="candidate-open-meta">
                   <span class="word-count-badge">Số từ: <strong>0</strong> từ</span>
-                  <span class="scoring-info-badge">Điểm tối đa: ${item.maxScore || 4} điểm (Chấm AI)</span>
+                  <span class="scoring-info-badge">Điểm tối đa: ${item.maxScore || 4} điểm</span>
                 </div>
               </div>
             `;
@@ -9451,7 +9451,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="candidate-question-card ${isPictorial ? 'card-pictorial' : ''}" data-item-id="${item.itemVersionId}">
               <div class="candidate-question-header">
                 <span class="question-num-badge qnum">Câu ${item.position}</span>
-                <span class="question-type-badge">${isPronunciation ? 'Phát âm' : (isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : 'Tự luận chấm AI'))))))))))}</span>
+                <span class="question-type-badge">${isPronunciation ? 'Phát âm' : (isSentenceRewrite ? 'Biến đổi câu' : (isSentenceReorder ? 'Sắp xếp câu' : (isErrorCorrection ? 'Tìm và sửa lỗi' : (isReadingMatching ? 'Ghép nối (Matching)' : (isListeningOrder ? 'Sắp xếp thứ tự' : (isSingleChoice ? 'Trắc nghiệm' : (isMultiGroup ? 'Chọn nhiều' : (isPictorial ? 'Từ vựng qua ảnh' : (isInlineCloze ? 'Điền từ nội tuyến' : (isShortText ? 'Điền từ' : 'Tự luận'))))))))))}</span>
               </div>
               ${promptDisplay ? `<div class="candidate-question-prompt">${promptDisplay}</div>` : ''}
               ${interactiveHtml}

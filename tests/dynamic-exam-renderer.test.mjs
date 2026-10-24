@@ -228,6 +228,6 @@ test('dynamic-exam-renderer: formatPedagogicalTypeLabel maps technical codes to 
   assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'listening_order' }), 'Sắp xếp thứ tự nghe');
   assert.equal(formatPedagogicalTypeLabel({ pedagogicalTypeCode: 'pictorial_vocabulary' }), 'Từ vựng qua ảnh');
   assert.equal(formatPedagogicalTypeLabel({ interactionType: 'text_select_pair' }), 'Cặp từ vựng');
-  assert.equal(formatPedagogicalTypeLabel({ graderType: 'rubric_async' }), 'Tự luận (Chấm AI)');
+  assert.equal(formatPedagogicalTypeLabel({ graderType: 'rubric_async' }), 'Tự luận');
 });
 

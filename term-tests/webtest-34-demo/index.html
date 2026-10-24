@@ -471,7 +471,7 @@
     const scoreFinal=summary.scoreFinal===true&&status==='complete';
     return {
       tone:status==='manual_review'?'manual_review':scoreFinal?'complete':'pending',
-      title:status==='manual_review'?'Đang chờ giảng viên kiểm tra':scoreFinal?'Đã chấm xong':'AI đang chấm bài',
+      title:status==='manual_review'?'Đang chờ giảng viên kiểm tra':scoreFinal?'Đã chấm xong':'Đang chấm bài',
       scoreFinal,
       pendingItemCount:Number.isInteger(summary.pendingItemCount)?summary.pendingItemCount:0,
       scoreLabel:scoreFinal?'Điểm chính thức':'Điểm tạm tính',
@@ -1022,7 +1022,7 @@
         </article>`;
     }).join('');
     const waitingGroups = groups.filter(group => group.items.some(item => item.verdict === 'pending' || item.verdict === 'manual_review'));
-    const waitingHtml = waitingGroups.map(group => `<span class="chip">${esc(group.label)}: ${group.items.some(item => item.verdict === 'manual_review') ? 'Cần giảng viên' : 'Đang chờ chấm AI'}</span>`).join('');
+    const waitingHtml = waitingGroups.map(group => `<span class="chip">${esc(group.label)}: ${group.items.some(item => item.verdict === 'manual_review') ? 'Cần giảng viên' : 'Đang chấm điểm'}</span>`).join('');
     const pubNotice = (result.publication?.published || result.publishedAt)
       ? `<span class="chip chip-published">Đã công bố kết quả</span>`
       : '';

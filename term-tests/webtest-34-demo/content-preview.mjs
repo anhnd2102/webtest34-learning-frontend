@@ -1219,7 +1219,7 @@ export async function mount(course) {
 
     const noticeBanner = isLearningMode
       ? `<div class="demo-notice" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534">
-          <strong>Phiên thi chính thức:</strong> Câu trả lời được tự động lưu lên máy chủ. Sau khi hoàn thành, hãy bấm <strong>Nộp bài</strong> để hệ thống và AI chấm điểm.
+          <strong>Phiên thi chính thức:</strong> Câu trả lời được tự động lưu lên máy chủ. Sau khi hoàn thành, hãy bấm <strong>Nộp bài</strong> để hoàn tất bài thi.
         </div>`
       : `<div class="demo-notice">
           Bản xem thử để duyệt đề. Câu trả lời chỉ lưu trên trình duyệt này; nộp thử chưa chấm điểm hoặc gửi lên hệ thống.
@@ -1907,23 +1907,23 @@ export async function mount(course) {
         </div>
         ${isComplete ? `
           <div style="background:#f8fafc;border-radius:10px;padding:14px 18px;margin-bottom:16px">
-            <h4 style="margin:0 0 8px 0;font-size:14px;color:#334155">Tổng kết đánh giá của AI</h4>
+            <h4 style="margin:0 0 8px 0;font-size:14px;color:#334155">Tổng kết đánh giá bài làm</h4>
             <p style="margin:0;font-size:14px;line-height:1.6;color:#475569">
-              Bài thi đã hoàn tất chấm điểm toàn diện các phần trắc nghiệm, từ vựng và tự luận Speaking/Writing. Các câu trả lời bên dưới đã được lưu trữ vĩnh viễn trên hệ thống.
+              Bài thi đã hoàn tất chấm điểm toàn diện các phần thi. Các câu trả lời bên dưới đã được lưu trữ vĩnh viễn trên hệ thống.
             </p>
           </div>
         ` : isManualReview ? `
           <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
             <span class="cbt-card-icon" style="color:#c2410c">${ICONS.book}</span>
             <div style="font-size:13px;color:#9a3412;line-height:1.5">
-              Hệ thống AI đã hoàn tất chấm. Một số câu tự luận được chuyển sang trạng thái <strong>Chờ giảng viên kiểm tra</strong> (manual review). Điểm chính thức sẽ được cập nhật sau khi giảng viên xác nhận.
+              Hệ thống đã hoàn tất chấm điểm. Một số câu tự luận được chuyển sang trạng thái <strong>Chờ giảng viên kiểm tra</strong>. Điểm chính thức sẽ được cập nhật sau khi giảng viên xác nhận.
             </div>
           </div>
         ` : `
           <div style="background:#eff6ff;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
             <span class="cbt-card-icon" style="color:#2563eb">${ICONS.clock}</span>
             <div style="font-size:13px;color:#1e40af;line-height:1.5">
-              Hệ thống đang tiến hành chấm các câu tự luận bằng AI. Điểm chính thức sẽ tự động cập nhật ngay tại đây (còn lại ${vm.pendingItemCount} câu đang xử lý).
+              Hệ thống đang tiến hành chấm các câu tự luận. Điểm chính thức sẽ tự động cập nhật ngay tại đây (còn lại ${vm.pendingItemCount} câu đang xử lý).
             </div>
           </div>
         `}
