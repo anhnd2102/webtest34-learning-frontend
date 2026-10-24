@@ -1,10 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  getItemSpanCount,
   getTotalItemCount,
   getAnsweredCount,
   formatOptionDisplayLetter,
-  renderDynamicExam
+  renderSectionNavPills,
+  renderQuestionNavigator,
+  renderSidePanel,
+  renderDynamicExam,
+  initDynamicExamInteractions
 } from '../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs';
 
 test('dynamic-exam-renderer: computes total items and answered count accurately', () => {
@@ -40,11 +45,78 @@ test('dynamic-exam-renderer: computes total items and answered count accurately'
   assert.equal(getAnsweredCount(definition, answers), 2);
 });
 
+test('dynamic-exam-renderer: getItemSpanCount handles inline cloze multi-blanks and timeline events', () => {
+  const standardItem = { position: 1, interactionType: 'single_choice' };
+  assert.equal(getItemSpanCount(standardItem), 1);
+
+  const clozeItem = {
+    position: 2,
+    interactionType: 'short_text',
+    layoutType: 'inline_cloze',
+    prompt: 'Sentence with (1) _____ and (2) _____ and (3) _____ blanks.'
+  };
+  assert.equal(getItemSpanCount(clozeItem), 3);
+
+  const listeningOrderItem = {
+    position: 5,
+    pedagogicalTypeCode: 'listening_order',
+    events: ['Step A', 'Step B', 'Step C', 'Step D']
+  };
+  assert.equal(getItemSpanCount(listeningOrderItem), 4);
+});
+
 test('dynamic-exam-renderer: formatOptionDisplayLetter maps keys correctly', () => {
   assert.equal(formatOptionDisplayLetter('a', 0), 'A');
   assert.equal(formatOptionDisplayLetter('opt-b', 1), 'B');
   assert.equal(formatOptionDisplayLetter('', 2), 'C');
   assert.equal(formatOptionDisplayLetter('meaning-01', 0), 'A');
+});
+
+test('dynamic-exam-renderer: renderSectionNavPills outputs pill buttons with badges', () => {
+  const definition = {
+    blocks: [
+      { title: 'Listening', items: [{ position: 1 }, { position: 2 }] },
+      { title: 'Vocabulary', items: [{ position: 3 }] }
+    ]
+  };
+  const html = renderSectionNavPills(definition, 0);
+  assert.ok(html.includes('simulation-nav-pill'), 'Must include simulation-nav-pill');
+  assert.ok(html.includes('Listening'), 'Must include section title');
+  assert.ok(html.includes('2 câu'), 'Must include question count');
+});
+
+test('dynamic-exam-renderer: renderQuestionNavigator creates buttons with section target and answered state', () => {
+  const definition = {
+    blocks: [
+      {
+        title: 'Block 1',
+        items: [
+          { itemVersionId: 'q1', position: 1 },
+          { itemVersionId: 'q2', position: 2 }
+        ]
+      }
+    ]
+  };
+  const answers = { q1: 'done' };
+  const html = renderQuestionNavigator(definition, answers);
+  assert.ok(html.includes('btn-qnav answered'), 'q1 should have answered class');
+  assert.ok(html.includes('data-section-target="sim-block-0"'), 'Should target sim-block-0');
+  assert.ok(html.includes('data-pos="1"'), 'Should include data-pos');
+});
+
+test('dynamic-exam-renderer: renderSidePanel creates progress bar, section buttons, and navigator card', () => {
+  const definition = {
+    blocks: [
+      {
+        title: 'Phần 1',
+        items: [{ itemVersionId: 'q1', position: 1 }]
+      }
+    ]
+  };
+  const sideHtml = renderSidePanel(definition, { answers: { q1: 'ok' } }, 0);
+  assert.ok(sideHtml.includes('progress-ratio'), 'Must have progress ratio');
+  assert.ok(sideHtml.includes('question-navigator-card'), 'Must have question-navigator-card');
+  assert.ok(sideHtml.includes('question-navigator-grid'), 'Must have question-navigator-grid');
 });
 
 test('dynamic-exam-renderer: renderDynamicExam outputs HTML containing question cards and tables', () => {

@@ -1,5 +1,12 @@
 import { parseSseChunk } from '../teacher-dashboard/exam-room-sse.js';
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount } from './dynamic-exam-renderer.mjs';
+import {
+  renderDynamicExam,
+  getTotalItemCount,
+  getAnsweredCount,
+  renderSectionNavPills,
+  renderSidePanel,
+  initDynamicExamInteractions
+} from './dynamic-exam-renderer.mjs';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -1218,24 +1225,61 @@ export async function mount(course) {
           Dùng link thi có token do người phụ trách cung cấp để mở phiên chấm điểm.
         </div>`;
 
-    document.body.innerHTML = `<div class="content-demo">
-      <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(examTitle)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span class="tab-count" data-demo-tab-count="${escape(sec)}"></span></button>`).join('')}</nav></header>
-      <main class="demo-width">
-        ${noticeBanner}
-        <div class="demo-toolbar">
-          <span id="demo-progress" aria-live="polite"></span>
-          <span id="demo-save" role="status"></span>
-          <button type="button" class="btn btn-primary" id="demo-submit">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
-        </div>
-        <div id="demo-result" class="demo-notice" hidden></div>
-        <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
-        <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span data-demo-section-count="${escape(sec)}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
-        <div class="demo-main">${isDynamic ? '' : groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
-      </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
-    </div>`;
+    let dynamicExamControls = null;
 
     if (isDynamic) {
-      renderDynamicExam(learningState.definition, document.querySelector('.demo-main'), {
+      document.body.innerHTML = `
+        <div class="candidate-simulation-shell content-demo">
+          <header class="topbar simulation-topbar">
+            <div class="topbar-inner demo-top">
+              <div class="brand">
+                <div class="brand-mark">IZ</div>
+                <div class="brand-copy">
+                  <div class="brand-title">IZONE · ${escape(examTitle)}</div>
+                  <div class="brand-sub">${headerSub}</div>
+                </div>
+              </div>
+              <div class="top-actions">
+                <span id="demo-save" role="status" style="font-size:12px;color:var(--color-text-secondary);font-weight:600;">Đã lưu</span>
+                <button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button>
+                <button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button>
+                <span class="timer" id="examTimerDisplay">${examDuration}:00</span>
+                <button type="button" class="btn btn-primary btn-submit-top" id="demo-submit-top">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
+              </div>
+            </div>
+            <div class="section-nav-wrap">
+              <nav class="section-nav simulation-nav-bar" id="sectionNavContainer" aria-label="Các phần bài thi">
+                ${renderSectionNavPills(learningState.definition, 0)}
+              </nav>
+            </div>
+          </header>
+
+          <main class="demo-width" style="max-width:1360px;margin:0 auto;padding:16px 24px;">
+            ${noticeBanner}
+            <div id="demo-result" class="demo-notice" hidden></div>
+            <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
+
+            <div class="exam-layout">
+              <div class="main-column simulation-viewport" id="examMainViewport"></div>
+              <div id="examSidePanelContainer">
+                ${renderSidePanel(learningState.definition, state, 0)}
+              </div>
+            </div>
+          </main>
+
+          <dialog id="demo-confirm">
+            <h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2>
+            <p id="demo-confirm-text"></p>
+            <p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+              <button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button>
+              <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button>
+            </div>
+          </dialog>
+        </div>
+      `;
+
+      renderDynamicExam(learningState.definition, document.querySelector('#examMainViewport'), {
         state,
         activeSection,
         onAnswerChange: () => {
@@ -1243,10 +1287,38 @@ export async function mount(course) {
           update();
         }
       });
-    }
 
-    document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${examDuration}:00</span></div>`);
-    document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
+      dynamicExamControls = initDynamicExamInteractions(document.body, {
+        definition: learningState.definition,
+        state,
+        onAnswerChange: () => {
+          persist();
+          update();
+        },
+        onSectionChange: (secName) => {
+          activeSection = secName;
+        }
+      });
+    } else {
+      document.body.innerHTML = `<div class="content-demo">
+        <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(examTitle)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span class="tab-count" data-demo-tab-count="${escape(sec)}"></span></button>`).join('')}</nav></header>
+        <main class="demo-width">
+          ${noticeBanner}
+          <div class="demo-toolbar">
+            <span id="demo-progress" aria-live="polite"></span>
+            <span id="demo-save" role="status"></span>
+            <button type="button" class="btn btn-primary" id="demo-submit">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
+          </div>
+          <div id="demo-result" class="demo-notice" hidden></div>
+          <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
+          <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span data-demo-section-count="${escape(sec)}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
+          <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
+        </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
+      </div>`;
+
+      document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${examDuration}:00</span></div>`);
+      document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
+    }
 
     // Đếm ngược thời gian làm bài
     const durationMinutes = Number(examDuration) || 120;
@@ -1517,10 +1589,13 @@ export async function mount(course) {
 
     function update() {
       if (isDynamic) {
+        if (dynamicExamControls && typeof dynamicExamControls.updateAnsweredState === 'function') {
+          dynamicExamControls.updateAnsweredState();
+        }
         const total = getTotalItemCount(learningState.definition);
         const done = getAnsweredCount(learningState.definition, state.answers);
-        query('#demo-progress').textContent = `${done}/${total} câu đã trả lời`;
-        query('#demo-fill').style.width = `${total ? Math.round(done / total * 100) : 0}%`;
+        if (query('#demo-progress')) query('#demo-progress').textContent = `${done}/${total} câu đã trả lời`;
+        if (query('#demo-fill')) query('#demo-fill').style.width = `${total ? Math.round(done / total * 100) : 0}%`;
 
         learningState.definition.blocks.forEach((block, bIdx) => {
           const secName = block.title || `Phần ${bIdx + 1}`;
@@ -1538,8 +1613,9 @@ export async function mount(course) {
             count.textContent = `${bDone}/${bItems.length}`;
           });
         });
-        query('#demo-submit').disabled = Boolean(state.submittedAt);
-        query('#demo-result').hidden = !state.submittedAt;
+        if (query('#demo-submit')) query('#demo-submit').disabled = Boolean(state.submittedAt);
+        if (query('#demo-submit-top')) query('#demo-submit-top').disabled = Boolean(state.submittedAt);
+        if (query('#demo-result')) query('#demo-result').hidden = !state.submittedAt;
         return;
       }
 
@@ -1592,7 +1668,7 @@ export async function mount(course) {
       if (field) { field.value=''; field.dispatchEvent(new Event('input',{bubbles:true})); }
     }));
 
-    query('#demo-submit').addEventListener('click',()=>{
+    function handleOpenSubmitDialog() {
       if (isDynamic) {
         const total = getTotalItemCount(learningState.definition);
         const done = getAnsweredCount(learningState.definition, state.answers);
@@ -1606,7 +1682,14 @@ export async function mount(course) {
       const missing=items.filter(item=>!String(state.answers[item.id]||'').trim()).length;
       query('#demo-confirm-text').textContent=`Còn ${missing} ô chưa trả lời. Bạn có chắc chắn muốn nộp bài?`;
       query('#demo-confirm').showModal();
-    });
+    }
+
+    if (query('#demo-submit')) {
+      query('#demo-submit').addEventListener('click', handleOpenSubmitDialog);
+    }
+    if (query('#demo-submit-top')) {
+      query('#demo-submit-top').addEventListener('click', handleOpenSubmitDialog);
+    }
     query('#demo-cancel').addEventListener('click',()=>query('#demo-confirm').close());
 
     function renderAiResultCard(result) {
@@ -1726,6 +1809,19 @@ export async function mount(course) {
           query('#demo-result').style.borderColor = '#bbf7d0';
           query('#demo-result').style.color = '#166534';
           query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
+
+          if (isDynamic) {
+            document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
+              if (el.id !== 'demo-prev' && el.id !== 'demo-next') {
+                el.disabled = true;
+              }
+            });
+            const topSubmit = query('#demo-submit-top');
+            if (topSubmit) {
+              topSubmit.disabled = true;
+              topSubmit.textContent = 'Đã nộp bài';
+            }
+          }
 
           if (res.result) {
             renderAiResultCard(res.result);
