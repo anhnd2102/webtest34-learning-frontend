@@ -507,14 +507,15 @@ export function renderInlineCloze(item, answers = {}) {
       last = match.index + match[0].length;
     }
     html += cleanHtml.slice(last);
-    return `<div class="candidate-inline-cloze-wrap cbt-cloze-content">${html}</div>`;
+    return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${html}</div>`;
   }
 
+  const cleanText = text.replace(/\r\n/g, '\n').replace(/[ \t]+\n/g, '\n').replace(/\u00a0/g, ' ');
   let html = '';
   let last = 0;
-  for (const match of text.matchAll(pattern)) {
+  for (const match of cleanText.matchAll(pattern)) {
     const num = Number(match[1] || match[2]);
-    html += escape(text.slice(last, match.index)).replace(/\n/g, '<br>');
+    html += escape(cleanText.slice(last, match.index)).replace(/\n/g, '<br>');
     const rawVal = answers[item.itemVersionId];
     const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
     const isFilled = typeof val === 'string' && val.trim().length > 0;
@@ -524,11 +525,11 @@ export function renderInlineCloze(item, answers = {}) {
     `</span>`;
     last = match.index + match[0].length;
   }
-  html += escape(text.slice(last)).replace(/\n/g, '<br>');
-  return `<div class="candidate-inline-cloze-wrap cbt-cloze-content">${html}</div>`;
+  html += escape(cleanText.slice(last)).replace(/\n/g, '<br>');
+  return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${html}</div>`;
 }
 
-export function renderQuestionCard(item, answers = {}) {
+export function renderQuestionCard(item, answers = {}, block = null) {
   const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
   const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
   const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
@@ -662,7 +663,14 @@ export function renderQuestionCard(item, answers = {}) {
     `;
   }
 
-  const promptText = isInlineCloze ? '' : (item.prompt || '');
+  let promptText = '';
+  if (isInlineCloze) {
+    promptText = item.instructions || item.instruction || item.taskInstructions || item.helpText || block?.instructions || 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc câu bên dưới:';
+  } else if (item.instructions && item.instructions !== item.prompt && item.prompt) {
+    promptText = `${item.instructions}<br/>${item.prompt}`;
+  } else {
+    promptText = item.prompt || item.instructions || item.instruction || '';
+  }
   const span = getItemSpanCount(item);
   const qNumDisplay = span > 1 ? `Câu ${item.position} – ${item.position + span - 1}` : `Câu ${item.position}`;
   const scoreDisplay = span > 1 ? `${span} câu · ${item.maxScore || span} điểm` : `${item.maxScore || 1} điểm`;
@@ -799,7 +807,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
       if (group.type === 'short_qa_group') {
         return renderSimShortQaGroup(group.items, state.answers);
       }
-      return renderQuestionCard(group.item, state.answers);
+      return renderQuestionCard(group.item, state.answers, block);
     }).join('');
 
     const bCount = items.reduce((s, it) => s + getItemSpanCount(it), 0);

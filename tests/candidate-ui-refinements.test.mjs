@@ -88,3 +88,53 @@ test('Candidate UI: Side Panel increases vertical size without internal scrollba
   assert.match(css, /\.question-navigator-grid[^}]*overflow:\s*visible\s*!important/i, 'grid must not have inner scrollbar');
 });
 
+test('Candidate UI: Inline cloze preserves question instructions ("không bị mất đề bài") and wraps text inside card borders ("không bị tràn")', async () => {
+  const { renderQuestionCard, renderInlineCloze } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+  const css = await fs.readFile(resolve(FRONTEND_DIR, 'term-tests/webtest-34-demo/dynamic-test.css'), 'utf8');
+
+  // 1. Question card must contain overflow and wrap words
+  assert.match(css, /\.cbt-question-card[^}]*overflow:\s*hidden\s*!important/i, 'Card must have overflow: hidden');
+  assert.match(css, /\.cbt-question-card[^}]*word-break:\s*break-word\s*!important/i, 'Card must have word-break: break-word');
+  assert.match(css, /\.cbt-cloze-content[^}]*overflow-wrap:\s*break-word\s*!important/i, 'Cloze must have overflow-wrap: break-word');
+  assert.match(css, /\.cbt-blank-input[^}]*width:\s*110px\s*!important/i, 'Blank input must have compact width');
+
+  // 2. Cloze item with item.instructions must render instructions prompt
+  const clozeItemWithInstructions = {
+    itemVersionId: 'cloze-item-1',
+    position: 48,
+    layoutType: 'inline_cloze',
+    pedagogicalTypeCode: 'inline_cloze',
+    instructions: 'Complete each sentence below with ONE word.',
+    prompt: '11. The study lacks solid (48) __________ to support its conclusion that radiation caused the problem.'
+  };
+
+  const cardHtml1 = renderQuestionCard(clozeItemWithInstructions, {});
+  assert.ok(cardHtml1.includes('Complete each sentence below with ONE word.'), 'Should render item.instructions in question card prompt');
+  assert.ok(cardHtml1.includes('candidate-question-prompt'), 'Should render candidate-question-prompt container');
+
+  // 3. Cloze item inheriting block.instructions
+  const clozeItemInheritingBlock = {
+    itemVersionId: 'cloze-item-2',
+    position: 48,
+    layoutType: 'inline_cloze',
+    pedagogicalTypeCode: 'inline_cloze',
+    prompt: '11. The study lacks solid (48) __________ to support its conclusion that radiation caused the problem.'
+  };
+  const mockBlock = {
+    instructions: 'III. Complete the collocations in the sentences below. Write ONE WORD only for each blank.'
+  };
+
+  const cardHtml2 = renderQuestionCard(clozeItemInheritingBlock, {}, mockBlock);
+  assert.ok(cardHtml2.includes('III. Complete the collocations in the sentences below. Write ONE WORD only for each blank.'), 'Should inherit block.instructions when item has no instructions');
+
+  // 4. Cloze item without any instructions must render clear fallback prompt
+  const cardHtml3 = renderQuestionCard(clozeItemInheritingBlock, {});
+  assert.ok(cardHtml3.includes('Điền từ thích hợp vào chỗ trống'), 'Should render fallback cloze prompt instead of empty prompt');
+
+  // 5. renderInlineCloze cleans non-breaking spaces and applies word-wrap styling
+  const renderedCloze = renderInlineCloze(clozeItemWithInstructions);
+  assert.ok(renderedCloze.includes('word-break:break-word'), 'Rendered cloze markup must have word-break styling');
+  assert.ok(renderedCloze.includes('cbt-blank-pill'), 'Rendered cloze markup must have cbt-blank-pill');
+});
+
+

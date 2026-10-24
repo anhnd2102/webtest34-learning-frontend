@@ -9438,7 +9438,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                       : (isVocabPair
                         ? 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:'
                         : (isInlineCloze
-                          ? 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:'
+                          ? (item.instructions || item.instruction || b?.instructions || 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc bảng:')
                           : (isPictorial
                             ? 'Nhìn hình và hoàn thành từ vựng:'
                             : formatSimulationPrompt(item.prompt || '')))))))));
