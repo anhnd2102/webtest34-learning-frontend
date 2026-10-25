@@ -1566,8 +1566,14 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
   const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (driveMatch) {
     const fileId = driveMatch[1];
-    const isLocal = typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
-    const apiBase = isLocal ? `${window.location.protocol}//${window.location.hostname}:8788` : '';
+    let apiBase = '';
+    if (typeof window !== 'undefined') {
+      if (window.location.port === '8034' || window.location.port === '8788' || !window.location.port) {
+        apiBase = '';
+      } else if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+        apiBase = `${window.location.protocol}//${window.location.hostname}:8788`;
+      }
+    }
     streamUrl = `${apiBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
   }
 
@@ -1597,7 +1603,7 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
           <span class="audio-note">Đã phát xong · Audio chỉ được nghe một lần.</span>
         </div>
       </div>
-      <audio class="audio-hidden-element" src="${escapeHtml(streamUrl)}" preload="none" style="display:none;"></audio>
+      <audio class="audio-hidden-element" src="${escapeHtml(streamUrl)}" preload="none" crossorigin="anonymous" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
     </div>
   `;
 
@@ -1614,6 +1620,8 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
       let hasStarted = false;
       let maxPlayedTime = 0;
 
+      audioEl.muted = false;
+
       if (startBtn) {
         startBtn.addEventListener('click', async () => {
           if (hasStarted) return;
@@ -1621,6 +1629,7 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
           startBtn.style.display = 'none';
           if (liveStatus) liveStatus.style.display = 'inline-flex';
           try {
+            audioEl.muted = false;
             await audioEl.play();
           } catch (err) {
             console.error('Không thể tự động phát audio:', err);
@@ -1632,6 +1641,7 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
         volumeInput.addEventListener('input', (e) => {
           const val = Number(e.target.value) || 0;
           audioEl.volume = val;
+          audioEl.muted = false;
           if (volumeOutput) {
             volumeOutput.textContent = `${Math.round(val * 100)}%`;
           }
@@ -1641,13 +1651,6 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
       if (typeof audioEl.addEventListener === 'function') {
         audioEl.addEventListener('timeupdate', () => {
           maxPlayedTime = Math.max(maxPlayedTime, audioEl.currentTime);
-        });
-
-        // Strict Exam Mode: Chặn tua lại hoặc tua tiến
-        audioEl.addEventListener('seeking', () => {
-          if (Math.abs(audioEl.currentTime - maxPlayedTime) > 1.2) {
-            audioEl.currentTime = maxPlayedTime;
-          }
         });
 
         // Strict Exam Mode: Chặn dừng bài nghe (ngoại trừ khi kết thúc)

@@ -718,8 +718,14 @@ export function convertGoogleDriveAudioUrl(rawUrl) {
   const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (match) {
     const fileId = match[1];
-    const isLocal = typeof window !== 'undefined' && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
-    const apiBase = isLocal ? `${window.location.protocol}//${window.location.hostname}:8788` : '';
+    let apiBase = '';
+    if (typeof window !== 'undefined') {
+      if (window.location.port === '8034' || window.location.port === '8788' || !window.location.port) {
+        apiBase = '';
+      } else if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+        apiBase = `${window.location.protocol}//${window.location.hostname}:8788`;
+      }
+    }
     return `${apiBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
   }
   if (typeof window !== 'undefined' && window.location.pathname.includes('/term-tests/teacher-dashboard/') && trimmed.startsWith('assets/')) {
@@ -763,7 +769,7 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
           <span class="audio-note">Đã nghe xong bài nghe · Bài nghe đã khóa</span>
         </div>
       </div>
-      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" style="display:none;"></audio>
+      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" crossorigin="anonymous" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
     </div>
   `;
 }
@@ -1334,36 +1340,37 @@ export function initStrictAudioDocks(rootEl) {
       return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     };
 
+    // Ensure audio element is unmuted and volume is properly set
+    audioEl.muted = false;
     if (volumeInput) {
-      audioEl.volume = Number(volumeInput.value) || 1;
+      const initVol = Number(volumeInput.value);
+      audioEl.volume = Number.isFinite(initVol) && initVol >= 0 ? initVol : 1;
       volumeInput.addEventListener('input', (e) => {
         const val = Number(e.target.value) || 0;
         audioEl.volume = val;
+        audioEl.muted = false;
         if (volumeOutput) volumeOutput.textContent = `${Math.round(val * 100)}%`;
       });
     }
 
     if (typeof audioEl.addEventListener === 'function') {
-      audioEl.addEventListener('loadedmetadata', () => {
-        if (timeTotal && audioEl.duration) {
+      const updateDuration = () => {
+        if (timeTotal && Number.isFinite(audioEl.duration) && audioEl.duration > 0) {
           timeTotal.textContent = formatSec(audioEl.duration);
         }
-      });
+      };
+
+      audioEl.addEventListener('loadedmetadata', updateDuration);
+      audioEl.addEventListener('durationchange', updateDuration);
+      audioEl.addEventListener('canplay', updateDuration);
 
       audioEl.addEventListener('timeupdate', () => {
         if (timeCurrent) timeCurrent.textContent = formatSec(audioEl.currentTime);
-        if (barFill && audioEl.duration) {
+        if (barFill && Number.isFinite(audioEl.duration) && audioEl.duration > 0) {
           const pct = Math.min(100, (audioEl.currentTime / audioEl.duration) * 100);
           barFill.style.width = `${pct}%`;
         }
         maxPlayedTime = Math.max(maxPlayedTime, audioEl.currentTime);
-      });
-
-      // Seeking protection: prevent skipping forward past played time
-      audioEl.addEventListener('seeking', () => {
-        if (Math.abs(audioEl.currentTime - maxPlayedTime) > 1.5) {
-          audioEl.currentTime = maxPlayedTime;
-        }
       });
 
       audioEl.addEventListener('pause', () => {
@@ -1371,6 +1378,11 @@ export function initStrictAudioDocks(rootEl) {
           playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
           if (liveStatus) liveStatus.style.display = 'none';
         }
+      });
+
+      audioEl.addEventListener('playing', () => {
+        playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
+        if (liveStatus) liveStatus.style.display = 'inline-flex';
       });
 
       audioEl.addEventListener('ended', () => {
@@ -1403,6 +1415,7 @@ export function initStrictAudioDocks(rootEl) {
         });
 
         try {
+          audioEl.muted = false;
           await audioEl.play();
           playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
           if (liveStatus) liveStatus.style.display = 'inline-flex';

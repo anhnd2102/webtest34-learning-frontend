@@ -171,5 +171,15 @@ test('Candidate UI: Font scaling applies to root html so all exam content (quest
   assert.ok(previewJs.includes('izone_cbt_font_scale'), 'preview must persist izone_cbt_font_scale in localStorage');
 });
 
+test('Candidate UI: Audio Dock has crossorigin anonymous, layout presence (not display:none), and relative /api stream proxy', async () => {
+  const { renderAudioDockHtml, convertGoogleDriveAudioUrl } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+  
+  const driveUrl = 'https://docs.google.com/uc?export=download&id=1Ji8RO7VOje3btu4vXy9ugeW6r1_nazCr';
+  const converted = convertGoogleDriveAudioUrl(driveUrl);
+  assert.ok(converted.includes('/api/teacher/media/drive-stream?id=1Ji8RO7VOje3btu4vXy9ugeW6r1_nazCr'));
 
-
+  const html = renderAudioDockHtml(driveUrl, 'Bài nghe LISTENING', 1);
+  assert.ok(html.includes('crossorigin="anonymous"'), 'Must include crossorigin="anonymous" to avoid CORS media decode blocks');
+  assert.ok(!html.match(/<audio[^>]*display:\s*none/i), 'Audio tag must NOT have display:none which halts Chromium media clock');
+  assert.ok(html.includes('position:absolute'), 'Must use offscreen absolute positioning for active layout clock');
+});
