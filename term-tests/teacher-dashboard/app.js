@@ -1568,13 +1568,20 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
     const fileId = driveMatch[1];
     let apiBase = '';
     if (typeof window !== 'undefined') {
-      if (window.location.port === '8034' || window.location.port === '8788' || !window.location.port) {
+      const hostname = window.location.hostname;
+      const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
+      if (isLocal) {
+        apiBase = (window.location.port === '8034' || window.location.port === '8788')
+          ? ''
+          : `${window.location.protocol}//${hostname}:8788`;
+      } else if (hostname === 'webtest.ducanhn.autos') {
         apiBase = '';
-      } else if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-        apiBase = `${window.location.protocol}//${window.location.hostname}:8788`;
+      } else {
+        apiBase = defaultApiBase();
       }
     }
-    streamUrl = `${apiBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
+    const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';
+    streamUrl = `${cleanBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
   }
 
   const label = options.label || 'Bài nghe phần thi';
