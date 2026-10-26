@@ -398,17 +398,24 @@ export function resolveAudioUrl(path) {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
   const clean = path.replace(/^\.?\//, '');
-  if (clean.includes('soundcheck')) return `${CLOUDFLARE_R2_AUDIO_BASE}/soundcheck.mp3`;
-  let match = clean.match(/^assets\/03\/test-(\d+)\/(listening|vocabulary)\.mp3$/);
-  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-03/test-${match[1]}/${match[2]}.mp3`;
-  match = clean.match(/^assets\/34\/test-(\d+)\/(listening|vocabulary)\.mp3$/);
-  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-1/test-${match[1]}/${match[2]}.mp3`;
-  match = clean.match(/^assets\/34\/p2-test-(\d+)\/listening\.mp3$/);
-  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-2/test-${match[1]}/listening.mp3`;
-  match = clean.match(/^assets\/45\/test-(\d+)\/listening\.mp3$/);
-  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-45/phase-1/test-${match[1]}/listening.mp3`;
-  match = clean.match(/^assets\/45\/p2-test-(\d+)\/listening\.mp3$/);
-  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-45/phase-2/test-${match[1]}/listening.mp3`;
+  const [filePath, query] = clean.split('?');
+  const querySuffix = query ? `?${query}` : '';
+  if (filePath.includes('soundcheck')) return `${CLOUDFLARE_R2_AUDIO_BASE}/soundcheck.mp3${querySuffix}`;
+  let match = filePath.match(/^assets\/03\/test-(\d+)\/(listening|vocabulary)\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-03/test-${match[1]}/${match[2]}.mp3${querySuffix}`;
+  match = filePath.match(/^assets\/34\/test-(\d+)\/(listening|vocabulary(?:\s|%20)?)\.mp3$/);
+  if (match) {
+    if (match[1] === '4' && match[2].trim().startsWith('vocabulary')) {
+      return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-1/test-4/vocabulary%20.mp3${querySuffix}`;
+    }
+    return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-1/test-${match[1]}/${match[2]}.mp3${querySuffix}`;
+  }
+  match = filePath.match(/^assets\/34\/p2-test-(\d+)\/listening\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-2/test-${match[1]}/listening.mp3${querySuffix}`;
+  match = filePath.match(/^assets\/45\/test-(\d+)\/listening\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-45/phase-1/test-${match[1]}/listening.mp3${querySuffix}`;
+  match = filePath.match(/^assets\/45\/p2-test-(\d+)\/listening\.mp3$/);
+  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-45/phase-2/test-${match[1]}/listening.mp3${querySuffix}`;
   return `${CLOUDFLARE_R2_AUDIO_BASE}/${clean}`;
 }
 
