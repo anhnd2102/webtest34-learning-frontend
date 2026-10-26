@@ -3,7 +3,7 @@ name: Publish Webtest 34 Learning frontend
 on:
   workflow_dispatch:
   push:
-    branches: [main, feature/test-studio]
+    branches: [main]
     paths:
       - index.html
       - term-tests/**
