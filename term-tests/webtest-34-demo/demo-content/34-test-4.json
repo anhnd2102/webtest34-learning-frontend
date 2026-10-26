@@ -4,7 +4,7 @@
   "phase": 1,
   "testNumber": 4,
   "sourceHash": "b44816e54029d81c44001b507f3570b46453d129bad10e5a4d51ab68202c1837",
-  "durationMinutes": 90,
+  "durationMinutes": 120,
   "groups": [
     {
       "id": "vocabulary-listen",
