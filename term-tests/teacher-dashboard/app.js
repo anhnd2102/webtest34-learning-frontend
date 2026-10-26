@@ -14298,40 +14298,6 @@ async function startDashboard() {
       detailItems.replaceChildren();
     }
 
-    if (payload.manualGradingHistory && payload.manualGradingHistory.length > 0 && detailGradingHistory) {
-      const mgHeader = document.createElement('h4');
-      mgHeader.textContent = 'Lịch sử chấm của giảng viên';
-      mgHeader.style.margin = '16px 0 6px';
-      const mgTable = document.createElement('table');
-      mgTable.className = 'mini-table';
-      mgTable.innerHTML = `
-        <thead>
-          <tr>
-            <th>Hành động</th>
-            <th>Người thực hiện</th>
-            <th>Phiên bản</th>
-            <th>Thời gian</th>
-            <th>Ghi chú</th>
-          </tr>
-        </thead>
-      `;
-      const mgBody = document.createElement('tbody');
-      for (const log of payload.manualGradingHistory) {
-        const row = document.createElement('tr');
-        const actionLabel = log.action === 'complete' ? 'Hoàn tất chấm' : 'Lưu nháp';
-        row.innerHTML = `
-          <td><span class="result-status ${log.action === 'complete' ? 'complete' : 'grading'}">${actionLabel}</span></td>
-          <td>${log.actorEmail || '—'}</td>
-          <td>v${log.revision}</td>
-          <td>${log.createdAt ? formatAssignmentWindow(log.createdAt, null).split(' → ')[0] : '—'}</td>
-          <td>${log.note || '—'}</td>
-        `;
-        mgBody.append(row);
-      }
-      mgTable.append(mgBody);
-      detailGradingHistory.append(mgHeader, mgTable);
-    }
-
     if (publishResultBtn) {
       if (payload.attempt.status === 'active') {
         publishResultBtn.disabled = true;
