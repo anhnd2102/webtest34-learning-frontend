@@ -403,8 +403,13 @@ export function resolveAudioUrl(path) {
   if (filePath.includes('soundcheck')) return `${CLOUDFLARE_R2_AUDIO_BASE}/soundcheck.mp3${querySuffix}`;
   let match = filePath.match(/^assets\/03\/test-(\d+)\/(listening|vocabulary)\.mp3$/);
   if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-03/test-${match[1]}/${match[2]}.mp3${querySuffix}`;
-  match = filePath.match(/^assets\/34\/test-(\d+)\/(listening|vocabulary)\.mp3$/);
-  if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-1/test-${match[1]}/${match[2]}.mp3${querySuffix}`;
+  match = filePath.match(/^assets\/34\/test-(\d+)\/(listening|vocabulary(?:\s|%20)?)\.mp3$/);
+  if (match) {
+    if (match[1] === '4' && match[2].trim().startsWith('vocabulary')) {
+      return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-1/test-4/vocabulary%20.mp3${querySuffix}`;
+    }
+    return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-1/test-${match[1]}/${match[2]}.mp3${querySuffix}`;
+  }
   match = filePath.match(/^assets\/34\/p2-test-(\d+)\/listening\.mp3$/);
   if (match) return `${CLOUDFLARE_R2_AUDIO_BASE}/course-34/phase-2/test-${match[1]}/listening.mp3${querySuffix}`;
   match = filePath.match(/^assets\/45\/test-(\d+)\/listening\.mp3$/);
@@ -469,14 +474,14 @@ export async function mount(course) {
     }
   }
 
-  let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json?rev=20261020-c34t3-audio-v2`, import.meta.url);
+  let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
   let response = await fetch(formUrl);
   if (!response.ok && phaseParam === '2') {
-    formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json?rev=20261020-c34t3-audio-v2`, import.meta.url);
+    formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
     response = await fetch(formUrl);
   }
   if (!response.ok) {
-    formUrl = new URL(`./demo-content/${course}.json?rev=20261020-c34t3-audio-v2`, import.meta.url);
+    formUrl = new URL(`./demo-content/${course}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
     response = await fetch(formUrl);
   }
   if (!response.ok) throw new Error('Content unavailable');
