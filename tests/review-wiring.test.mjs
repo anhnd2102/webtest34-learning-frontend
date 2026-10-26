@@ -6,7 +6,7 @@ const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html
 
 test('Xem kết quả gọi /attempts/review, không qua kiểm tra âm thanh và không gọi /attempts/start', () => {
   assert.match(html, /id="viewResult"/);
-  const flow = html.match(/async function openReview\(\)\{[\s\S]*?\n  \}\n  \$\('#viewResult'\)/)?.[0] ?? '';
+  const flow = html.match(/async function openReview\(\)\{[\s\S]*?\r?\n  \}\r?\n  \$\('#viewResult'\)/)?.[0] ?? '';
   assert.match(flow, /learningRequest\('\/attempts\/review'/);
   assert.doesNotMatch(flow, /\/attempts\/start|audioCheckScreen'\)\.classList\.remove/);
   assert.match(html, /\$\('#viewResult'\)\.addEventListener\('click', openReview\)/);
@@ -42,7 +42,7 @@ test('bài chế độ thi đã nộp không vào phòng chờ', () => {
 });
 
 test('openReview chỉ coi published là có kết quả, trạng thái lạ vào lỗi có Thử lại, và giữ định nghĩa đề', () => {
-  const flow = html.match(/async function openReview\(\)\{[\s\S]*?\n  \}\n  \$\('#viewResult'\)/)?.[0] ?? '';
+  const flow = html.match(/async function openReview\(\)\{[\s\S]*?\r?\n  \}\r?\n  \$\('#viewResult'\)/)?.[0] ?? '';
   assert.match(flow, /status !== 'submitted_unpublished' && review\.status !== 'published'\) throw/);
   assert.match(flow, /state\.learning = \{definition: rosterData\.assignment\?\.definition\}/);
 });

@@ -11,7 +11,7 @@
       "title": "Vocabulary · Nghe từ và chọn nghĩa",
       "instructions": "EXERCISE 1 (25 words = 12.5 points): Listen and note down the words/phrases you hear from the recording",
       "context": "",
-      "audioPath": "assets/34/test-4/vocabulary.mp3",
+      "audioPath": "assets/34/test-4/vocabulary.mp3?v=20261026-c34t4-v1",
       "items": [
         {
           "id": "vocabulary-listen-1",
@@ -3269,17 +3269,17 @@
       "items": [
         {
           "id": "57f231a9-e24f-48e6-a774-151eb944f458",
-          "prompt": "1. What does Debra Garrel consider as an adventure?",
+          "prompt": "1. How important is it to choose the right career? (6 points)\nSuggested Vocab:\n●\tGắn bó với công việc: Stick to the job\n●\tPhù hợp: to be suitable",
           "long": true
         },
         {
           "id": "4d913500-90d6-4c38-9f31-9cba5a13d681",
-          "prompt": "2. Which is NOT the experience that Debra had during her childhood?",
+          "prompt": "2. What do you hope to do in the future if you have a lot of money? (6 points)\nSuggested Vocab:\n●\tMay mắn thay (Adv): luckily\n●\tDịp nghỉ Tết: Tet holiday",
           "long": true
         },
         {
           "id": "c33cb664-b4e0-4701-88ea-f31c3b02a6c2",
-          "prompt": "3. What happened when Debra left a place?",
+          "prompt": "3. Is it difficult to understand body language? (6 points)\n●\textremely/ incredibly/ remarkably hard\n●\tAt first/in the beginning\n●\tget the hang of it",
           "long": true
         }
       ]

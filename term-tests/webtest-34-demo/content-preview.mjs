@@ -467,14 +467,14 @@ export async function mount(course) {
     }
   }
 
-  let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json?rev=20261012-update-spk3-v1`, import.meta.url);
+  let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
   let response = await fetch(formUrl);
   if (!response.ok && phaseParam === '2') {
-    formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json?rev=20261012-update-spk3-v1`, import.meta.url);
+    formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
     response = await fetch(formUrl);
   }
   if (!response.ok) {
-    formUrl = new URL(`./demo-content/${course}.json?rev=20261012-update-spk3-v1`, import.meta.url);
+    formUrl = new URL(`./demo-content/${course}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
     response = await fetch(formUrl);
   }
   if (!response.ok) throw new Error('Content unavailable');
