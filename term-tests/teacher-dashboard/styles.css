@@ -3083,6 +3083,176 @@ body:not(.login-page) #auth-panel {
   display: inline-block !important;
 }
 
+/* Test Studio: Live Score Breakdown Bar */
+.builder-score-breakdown-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: #ffffff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  flex-wrap: wrap;
+}
+
+.score-bar-total-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-total-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: var(--izone-primary-crimson, #db0829);
+  flex-shrink: 0;
+}
+
+.score-total-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+.score-total-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.score-total-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.score-total-num-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.score-total-val {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.score-total-unit {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.score-total-questions-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-left: 4px;
+}
+
+.score-bar-divider {
+  width: 1px;
+  height: 34px;
+  background: #e2e8f0;
+}
+
+.score-bar-skills-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.score-skills-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.score-skills-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.score-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #334155;
+  transition: all 0.15s ease;
+}
+
+.score-skill-chip .skill-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.score-skill-chip.skill-listening .skill-chip-dot {
+  background: #2563eb;
+}
+
+.score-skill-chip.skill-reading .skill-chip-dot {
+  background: #059669;
+}
+
+.score-skill-chip.skill-writing .skill-chip-dot {
+  background: #d97706;
+}
+
+.score-skill-chip.skill-speaking .skill-chip-dot {
+  background: #7c3aed;
+}
+
+.score-skill-chip.skill-vocabulary .skill-chip-dot,
+.score-skill-chip.skill-grammar .skill-chip-dot {
+  background: #0284c7;
+}
+
+.score-skill-chip .skill-chip-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.score-skill-chip .skill-chip-score {
+  color: #0f172a;
+}
+
+.score-skill-chip .skill-chip-score strong {
+  font-weight: 700;
+}
+
+.score-skill-chip .skill-chip-count {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
 .alert-immutable {
   display: flex;
   gap: 12px;

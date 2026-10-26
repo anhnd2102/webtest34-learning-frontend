@@ -381,7 +381,9 @@ export const ICONS = {
   alignRight: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>',
   removeFormat: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M5 20h6"/><path d="M13 4 8 20"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="21" y1="15" x2="15" y2="21"/></svg>',
   plusCircle: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
-  layers: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
+  layers: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+  chart: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  award: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>'
 };
 
 export function renderSvgIcon(name, customClass = '') {
@@ -3446,6 +3448,102 @@ export function openCsvUploadModal(opts = {}) {
   });
 }
 
+export function computeTestBuilderScoreSummary(blocks = []) {
+  let totalScore = 0;
+  let totalQuestions = 0;
+  const canonicalSkills = {
+    listening: { code: 'listening', label: 'Listening', score: 0, count: 0 },
+    reading: { code: 'reading', label: 'Reading', score: 0, count: 0 },
+    writing: { code: 'writing', label: 'Writing', score: 0, count: 0 },
+    speaking: { code: 'speaking', label: 'Speaking', score: 0, count: 0 }
+  };
+  const extraSkills = {};
+
+  for (const block of (blocks || [])) {
+    const bTitle = block.title || '';
+    for (const item of (block.items || [])) {
+      const span = getItemSpanCount(item);
+      const score = Number(item.maxScore) || 0;
+      totalScore += score;
+      totalQuestions += span;
+
+      const rawSkill = (Array.isArray(item.skillCodes) && item.skillCodes[0]) || item.primarySkill || '';
+      const normSkill = normalizeSkillCode(rawSkill, bTitle);
+
+      if (canonicalSkills[normSkill]) {
+        canonicalSkills[normSkill].score += score;
+        canonicalSkills[normSkill].count += span;
+      } else {
+        if (!extraSkills[normSkill]) {
+          const lbl = CANONICAL_SKILL_LABELS[normSkill] || (normSkill.charAt(0).toUpperCase() + normSkill.slice(1));
+          extraSkills[normSkill] = { code: normSkill, label: lbl, score: 0, count: 0 };
+        }
+        extraSkills[normSkill].score += score;
+        extraSkills[normSkill].count += span;
+      }
+    }
+  }
+
+  totalScore = Math.round(totalScore * 10) / 10;
+  for (const k of Object.keys(canonicalSkills)) {
+    canonicalSkills[k].score = Math.round(canonicalSkills[k].score * 10) / 10;
+  }
+  for (const k of Object.keys(extraSkills)) {
+    extraSkills[k].score = Math.round(extraSkills[k].score * 10) / 10;
+  }
+
+  return {
+    totalScore,
+    totalQuestions,
+    skills: [
+      canonicalSkills.listening,
+      canonicalSkills.reading,
+      canonicalSkills.writing,
+      canonicalSkills.speaking,
+      ...Object.values(extraSkills).filter(s => s.count > 0 || s.score > 0)
+    ]
+  };
+}
+
+export function renderScoreSkillChipsHtml(skills = []) {
+  return skills.map(skill => {
+    return `
+      <div class="score-skill-chip skill-${escapeHtml(skill.code)}" title="${escapeHtml(skill.label)}: ${skill.score} điểm, ${skill.count} câu">
+        <span class="skill-chip-dot"></span>
+        <span class="skill-chip-name">${escapeHtml(skill.label)}</span>
+        <span class="skill-chip-score"><strong>${skill.score}</strong> đ</span>
+        <span class="skill-chip-count">(${skill.count} câu)</span>
+      </div>
+    `;
+  }).join('');
+}
+
+export function renderScoreBreakdownBarHtml(draftState) {
+  const summary = computeTestBuilderScoreSummary(draftState.blocks);
+  return `
+    <div class="builder-score-breakdown-bar" id="builder-score-breakdown-bar">
+      <div class="score-bar-total-tile">
+        <div class="score-total-icon">${renderSvgIcon('chart', 'icon-inline')}</div>
+        <div class="score-total-info">
+          <span class="score-total-label">Tổng điểm đề:</span>
+          <div class="score-total-num-wrap">
+            <span class="score-total-val">${summary.totalScore}</span>
+            <span class="score-total-unit">điểm</span>
+            <span class="score-total-questions-badge score-total-questions">${summary.totalQuestions} câu hỏi</span>
+          </div>
+        </div>
+      </div>
+      <div class="score-bar-divider"></div>
+      <div class="score-bar-skills-wrap">
+        <span class="score-skills-label">Phân bố kỹ năng:</span>
+        <div class="score-skills-chips">
+          ${renderScoreSkillChipsHtml(summary.skills)}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
   if (!container) return;
 
@@ -5235,6 +5333,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         </div>
 
+        ${renderScoreBreakdownBarHtml(draftState)}
+
         ${isImmutable ? `
           <div class="alert-notice alert-immutable">
             <div class="notice-icon">${renderSvgIcon('alert', 'icon-inline')}</div>
@@ -5313,6 +5413,24 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     if (container && typeof savedContainerScrollTop === 'number') {
       container.scrollTop = savedContainerScrollTop;
     }
+  }
+
+  function updateScoreBreakdownBar() {
+    const barEl = container.querySelector('#builder-score-breakdown-bar');
+    if (!barEl) return;
+    const summary = computeTestBuilderScoreSummary(draftState.blocks);
+    const scoreValEl = barEl.querySelector('.score-total-val');
+    if (scoreValEl) scoreValEl.textContent = summary.totalScore;
+    const qValEl = barEl.querySelector('.score-total-questions');
+    if (qValEl) qValEl.textContent = `${summary.totalQuestions} câu hỏi`;
+
+    const chipsWrap = barEl.querySelector('.score-skills-chips');
+    if (chipsWrap) {
+      chipsWrap.innerHTML = renderScoreSkillChipsHtml(summary.skills);
+    }
+
+    const totalQTag = container.querySelector('.total-questions-tag strong');
+    if (totalQTag) totalQTag.textContent = `${summary.totalQuestions} câu hỏi`;
   }
 
   function syncInputs() {
@@ -5537,8 +5655,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 primaryVariants = [item.targetWord];
               }
 
+              item.graderType = 'inline_cloze';
               draftState.gradingKey.items[item.itemVersionId] = {
-                graderType: 'accepted_text',
+                graderType: 'inline_cloze',
+                blanks: item.clozeAnswers,
                 accepted: primaryVariants.length ? primaryVariants : ['answer'],
                 normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
               };
@@ -5843,6 +5963,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
       });
     }
+
+    updateScoreBreakdownBar();
   }
 
   function getNextPosition() {
@@ -5861,6 +5983,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
   function bindEvents() {
     if (typeof container.querySelector !== 'function') return;
+
+    // Live update Score Breakdown Bar when question or rubric criterion score changes
+    if (typeof container.addEventListener === 'function') {
+      container.addEventListener('input', (e) => {
+        if (e.target && (e.target.classList.contains('item-max-score-input') || e.target.classList.contains('criterion-max-score-input'))) {
+          syncInputs();
+        }
+      });
+    }
 
     const backBtn = container.querySelector('#btn-back-to-catalog');
     if (backBtn && typeof options.onBack === 'function' && typeof backBtn.addEventListener === 'function') {
@@ -12182,17 +12313,53 @@ export function formatCompactPrompt(item) {
 }
 
 export function resolveStudentAnswerDisplay(item) {
-  if (item.studentAnswer === null || item.studentAnswer === undefined || item.studentAnswer === '') {
+  let ans = item.studentAnswer;
+  if (typeof ans === 'string' && (ans.startsWith('{') || ans.startsWith('['))) {
+    try { ans = JSON.parse(ans); } catch (_) {}
+  }
+  if (ans === null || ans === undefined || ans === '') {
     return '(Chưa trả lời)';
   }
   const options = Array.isArray(item.options) ? item.options : [];
   const optMap = new Map(options.map(o => [String(o.id), o.label]));
 
-  if (Array.isArray(item.studentAnswer)) {
-    return item.studentAnswer.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
+  if (Array.isArray(ans)) {
+    return ans.map(a => optMap.get(String(a)) || String(a)).join(', ');
   }
 
-  const raw = String(item.studentAnswer);
+  if (typeof ans === 'object') {
+    if ('error' in ans || 'correction' in ans) {
+      const err = ans.error || '—';
+      const corr = ans.correction || '—';
+      return `Lỗi: ${err} → Sửa: ${corr}`;
+    }
+
+    const keys = Object.keys(ans).sort((a, b) => {
+      const na = parseInt(a, 10);
+      const nb = parseInt(b, 10);
+      if (!isNaN(na) && !isNaN(nb)) return na - nb;
+      return a.localeCompare(b);
+    });
+
+    if (keys.length === 0) return '(Chưa trả lời)';
+
+    const sub = item.subResults || item.feedback?.subResults || {};
+    const parts = keys.map(k => {
+      const val = ans[k];
+      const text = (val === null || val === undefined || String(val).trim() === '') ? '—' : String(val).trim();
+      const blankSub = sub[k];
+      let statusMark = '';
+      if (blankSub) {
+        if (blankSub.verdict === 'correct') statusMark = ' [✓]';
+        else if (blankSub.verdict === 'incorrect') statusMark = ' [✗]';
+      }
+      return `(${k}) ${text}${statusMark}`;
+    });
+
+    return parts.join(' · ');
+  }
+
+  const raw = String(ans);
   if (optMap.has(raw)) {
     return `${optMap.get(raw)} (${raw})`;
   }
@@ -12200,17 +12367,59 @@ export function resolveStudentAnswerDisplay(item) {
 }
 
 export function resolveExpectedAnswerDisplay(item) {
-  if (item.expectedAnswer === null || item.expectedAnswer === undefined || item.expectedAnswer === '') {
+  let exp = item.expectedAnswer;
+  if (typeof exp === 'string' && (exp.startsWith('{') || exp.startsWith('['))) {
+    try { exp = JSON.parse(exp); } catch (_) {}
+  }
+  if (exp === null || exp === undefined || exp === '') {
+    if (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0) {
+      const keys = Object.keys(item.clozeAnswers).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+      return keys.map(k => {
+        const v = item.clozeAnswers[k];
+        const disp = Array.isArray(v?.accepted) ? v.accepted.join(' / ') : (Array.isArray(v) ? v.join(' / ') : String(v || ''));
+        return `(${k}) ${disp}`;
+      }).join(' · ');
+    }
     return item.graderType === 'rubric_async' ? '(Chấm theo rubric)' : '—';
   }
   const options = Array.isArray(item.options) ? item.options : [];
   const optMap = new Map(options.map(o => [String(o.id), o.label]));
 
-  if (Array.isArray(item.expectedAnswer)) {
-    return item.expectedAnswer.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
+  if (Array.isArray(exp)) {
+    return exp.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
   }
 
-  const raw = String(item.expectedAnswer);
+  if (typeof exp === 'object') {
+    if ('error' in exp || 'correction' in exp) {
+      return `Lỗi: ${exp.error || '—'} → Sửa: ${exp.correction || '—'}`;
+    }
+
+    const keys = Object.keys(exp).sort((a, b) => {
+      const na = parseInt(a, 10);
+      const nb = parseInt(b, 10);
+      if (!isNaN(na) && !isNaN(nb)) return na - nb;
+      return a.localeCompare(b);
+    });
+
+    if (keys.length === 0) return '—';
+
+    const parts = keys.map(k => {
+      const v = exp[k];
+      let disp = '';
+      if (Array.isArray(v)) {
+        disp = v.join(' / ');
+      } else if (v && typeof v === 'object' && Array.isArray(v.accepted)) {
+        disp = v.accepted.join(' / ');
+      } else {
+        disp = String(v ?? '');
+      }
+      return `(${k}) ${disp}`;
+    });
+
+    return parts.join(' · ');
+  }
+
+  const raw = String(exp);
   if (optMap.has(raw)) {
     return `${optMap.get(raw)} (${raw})`;
   }
