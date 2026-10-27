@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import test from 'node:test';
 
 const src = await fs.readFile(new URL('../term-tests/webtest-34-demo/content-preview.mjs', import.meta.url), 'utf8');
-const flow = src.match(/async function openReview\(\) \{[\s\S]*?\n    \}\n/)?.[0] ?? '';
+const flow = src.match(/async function openReview\(\) \{[\s\S]*?\r?\n    \}\r?\n/)?.[0] ?? '';
 
 test('intro có nút Xem kết quả, bật cùng nút Bắt đầu khi chọn tên', () => {
   assert.match(src, /id="viewResultBtn" disabled/);
