@@ -33,6 +33,31 @@ const mime = {
 };
 
 const server = http.createServer((req, res) => {
+  // Proxy API requests to backend API server
+  if (req.url.startsWith('/api/') || req.url.startsWith('/internal/') || req.url.startsWith('/health')) {
+    const proxyReq = http.request({
+      hostname: '127.0.0.1',
+      port: 8788,
+      path: req.url,
+      method: req.method,
+      headers: {
+        ...req.headers,
+        host: '127.0.0.1:8788'
+      }
+    }, (proxyRes) => {
+      res.writeHead(proxyRes.statusCode, proxyRes.headers);
+      proxyRes.pipe(res);
+    });
+
+    proxyReq.on('error', (err) => {
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: 'BACKEND_GATEWAY_ERROR', message: 'Không thể kết nối đến backend local: ' + err.message }));
+    });
+
+    req.pipe(proxyReq);
+    return;
+  }
+
   // Strip query string
   const urlPath = req.url.split('?')[0].split('#')[0];
   const decoded = decodeURIComponent(urlPath);
@@ -45,7 +70,16 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  fs.stat(filePath, (err, stat) => {
+  // Handle relative assets requested from teacher-dashboard
+  let targetPath = filePath;
+  if (!fs.existsSync(targetPath) && urlPath.startsWith('/term-tests/teacher-dashboard/assets/')) {
+    const fallbackPath = path.join(root, urlPath.replace('/term-tests/teacher-dashboard/assets/', '/term-tests/webtest-34-demo/assets/'));
+    if (fs.existsSync(fallbackPath)) {
+      targetPath = fallbackPath;
+    }
+  }
+
+  fs.stat(targetPath, (err, stat) => {
     if (err || !stat.isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end(`404 Not Found: ${urlPath}`);
@@ -53,16 +87,45 @@ const server = http.createServer((req, res) => {
       return;
     }
 
-    const ext = path.extname(filePath).toLowerCase();
+    const ext = path.extname(targetPath).toLowerCase();
     const contentType = mime[ext] || 'application/octet-stream';
+
+    // Support HTTP Range requests (RFC 7233) for seamless audio/video streaming and seeking
+    const range = req.headers.range;
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
+
+      if (start >= stat.size || (parts[1] && end >= stat.size)) {
+        res.writeHead(416, {
+          'Content-Range': `bytes */${stat.size}`,
+          'Accept-Ranges': 'bytes'
+        });
+        return res.end();
+      }
+
+      const chunksize = (end - start) + 1;
+      res.writeHead(206, {
+        'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': contentType,
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
+      });
+
+      fs.createReadStream(targetPath, { start, end }).pipe(res);
+      return;
+    }
 
     res.writeHead(200, {
       'Content-Type': contentType,
       'Content-Length': stat.size,
-      'Cache-Control': 'no-cache'
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
     });
 
-    fs.createReadStream(filePath).pipe(res);
+    fs.createReadStream(targetPath).pipe(res);
     console.log(`200  ${req.url}`);
   });
 });

@@ -1,4 +1,13 @@
 import { parseSseChunk } from '../teacher-dashboard/exam-room-sse.js';
+import {
+  renderDynamicExam,
+  getTotalItemCount,
+  getAnsweredCount,
+  renderSectionNavPills,
+  renderSidePanel,
+  initDynamicExamInteractions,
+  ICONS
+} from './dynamic-exam-renderer.mjs?rev=20261024-cbt-v14';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -52,7 +61,7 @@ export function resultViewModel(result) {
   const scoreFinal = summary.scoreFinal === true && gradingStatus === 'complete';
   return {
     tone: gradingStatus === 'manual_review' ? 'manual_review' : scoreFinal ? 'complete' : 'pending',
-    title: gradingStatus === 'manual_review' ? 'Đang chờ giảng viên kiểm tra' : scoreFinal ? 'Đã chấm xong' : 'AI đang chấm bài',
+    title: gradingStatus === 'manual_review' ? 'Đang chờ giảng viên kiểm tra' : scoreFinal ? 'Đã chấm xong' : 'Đang chấm bài',
     scoreFinal,
     pendingItemCount: Number.isInteger(summary.pendingItemCount) ? summary.pendingItemCount : 0,
     scoreLabel: scoreFinal ? 'Điểm chính thức' : 'Điểm tạm tính',
@@ -777,6 +786,18 @@ export async function mount(course) {
   }
 
   function buildResponsesPayload() {
+    if (learningState.definition?.blocks?.length) {
+      const responses = {};
+      const allItems = learningState.definition.blocks.flatMap(b => b.items || []);
+      for (const it of allItems) {
+        const val = state.answers[it.itemVersionId];
+        if (val !== undefined && val !== null && val !== '') {
+          responses[it.itemVersionId] = val;
+        }
+      }
+      return responses;
+    }
+
     const defBlocks = learningState.definition?.blocks || [];
     const responses = {};
 
@@ -819,6 +840,12 @@ export async function mount(course) {
 
   function applyServerDraft(serverDraft) {
     if (!serverDraft || typeof serverDraft !== 'object') return;
+    if (learningState.definition?.blocks?.length) {
+      for (const [itemVerId, val] of Object.entries(serverDraft)) {
+        state.answers[itemVerId] = val;
+      }
+      return;
+    }
     const defBlocks = learningState.definition?.blocks || [];
 
     for (let bIndex = 0; bIndex < defBlocks.length; bIndex++) {
@@ -870,43 +897,43 @@ export async function mount(course) {
             </div>
           </div>
         </header>
-        <main class="demo-width" style="max-width:680px;margin:36px auto;padding:16px">
-          <div style="background:white;border:1px solid #e2e8f0;border-radius:16px;padding:32px;box-shadow:0 10px 25px rgba(0,0,0,0.04)">
-            <div style="font-size:12px;font-weight:700;color:#db0829;letter-spacing:1px;margin-bottom:8px">IZONE · COMPUTER-BASED TEST</div>
-            <h1 style="font-size:24px;color:#174266;margin:0 0 12px 0">${escape(title)}</h1>
-            <p style="color:#64748b;font-size:14px;line-height:1.5;margin-bottom:24px">
+        <main class="cbt-intro-wrap">
+          <div class="cbt-intro-card">
+            <span class="cbt-intro-badge">IZONE · COMPUTER-BASED TEST</span>
+            <h1 class="cbt-intro-title">${escape(title)}</h1>
+            <p class="cbt-intro-sub">
               Thời gian làm bài: <strong>${form.durationMinutes} phút</strong> · Tổng số câu hỏi: <strong>${items.length} câu</strong>.<br>
               Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.
             </p>
 
-            <div style="margin-bottom:20px">
-              <label for="classCodeInput" style="display:block;font-weight:600;margin-bottom:8px;color:#1e293b">Mã lớp</label>
-              <div style="display:flex;gap:10px">
-                <input id="classCodeInput" value="${escape(paramClassCode || `TEST-${course}`)}" placeholder="Ví dụ: ICxxxx" autocomplete="off" style="flex:1;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;font-weight:600">
+            <div class="cbt-intro-field">
+              <label for="classCodeInput">Mã lớp</label>
+              <div class="cbt-intro-input-row">
+                <input id="classCodeInput" class="cbt-intro-input" value="${escape(paramClassCode || `TEST-${course}`)}" placeholder="Ví dụ: ICxxxx" autocomplete="off" style="flex:1;font-weight:600">
                 <button type="button" class="btn btn-secondary" id="loadRosterBtn" style="min-width:140px;font-weight:600">Tải danh sách</button>
               </div>
-              <div id="classCodeStatus" style="font-size:13px;margin-top:6px;color:#64748b">Nhập đúng mã lớp do giáo viên cung cấp, sau đó bấm “Tải danh sách”.</div>
+              <div id="classCodeStatus" class="cbt-intro-hint">Nhập đúng mã lớp do giáo viên cung cấp, sau đó bấm “Tải danh sách”.</div>
             </div>
 
-            <div style="margin-bottom:28px">
-              <label for="studentSelectInput" style="display:block;font-weight:600;margin-bottom:8px;color:#1e293b">Họ và tên học viên</label>
-              <select id="studentSelectInput" disabled style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;background:#f8fafc">
+            <div class="cbt-intro-field">
+              <label for="studentSelectInput">Họ và tên học viên</label>
+              <select id="studentSelectInput" class="cbt-intro-input" disabled style="background:#f8fafc">
                 <option value="">— Hãy tải danh sách lớp trước —</option>
               </select>
-              <div id="studentSelectStatus" style="font-size:13px;margin-top:6px;color:#64748b">Chọn đúng tên của bạn trong danh sách lớp. Tên sẽ được khóa khi nộp bài.</div>
+              <div id="studentSelectStatus" class="cbt-intro-hint">Chọn đúng tên của bạn trong danh sách lớp. Tên sẽ được khóa khi nộp bài.</div>
             </div>
 
-            <div id="soundcheckSection" style="margin-bottom:24px;padding:16px 20px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px">
-              <div style="font-weight:700;color:#1e293b;font-size:15px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
-                <span>🔊 Kiểm tra âm thanh trước khi làm bài</span>
-                <span id="soundcheckStatus" style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:12px;background:#e2e8f0;color:#475569">Chưa kiểm tra</span>
+            <div id="soundcheckSection" class="cbt-soundcheck-box">
+              <div class="cbt-soundcheck-header">
+                <span style="display:inline-flex;align-items:center;gap:6px;">${ICONS.volume} Kiểm tra âm thanh trước khi làm bài</span>
+                <span id="soundcheckStatus" class="cbt-soundcheck-badge">Chưa kiểm tra</span>
               </div>
-              <p style="font-size:13px;color:#64748b;margin:0 0 12px 0;line-height:1.5">
+              <p class="cbt-soundcheck-body">
                 Bài thi có nội dung âm thanh. Hãy nhấn <strong>Nghe thử</strong> để kiểm tra loa hoặc tai nghe và điều chỉnh âm lượng phù hợp.
               </p>
-              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-                <button type="button" class="btn btn-secondary" id="soundcheckPlayBtn" style="min-width:130px;background:white;font-weight:700">
-                  🔊 Nghe thử
+              <div class="cbt-soundcheck-controls">
+                <button type="button" class="btn btn-secondary" id="soundcheckPlayBtn" style="min-width:130px;background:white;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+                  ${ICONS.volume} Nghe thử
                 </button>
                 <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#475569">
                   <label for="soundcheckVolume">Âm lượng:</label>
@@ -916,9 +943,9 @@ export async function mount(course) {
               </div>
             </div>
 
-            <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px 0;border-top:1px solid #f1f5f9;padding-top:20px">
+            <div class="cbt-intro-footer">
               <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700;margin-right:12px">Xem kết quả</button>
-              <button type="button" class="btn btn-primary" id="startExamBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Bắt đầu làm bài →</button>
+              <button type="button" class="btn-start-exam" id="startExamBtn" disabled>Bắt đầu làm bài →</button>
             </div>
           </div>
         </main>
@@ -1018,6 +1045,19 @@ export async function mount(course) {
           if (brandSub) brandSub.textContent = assignment.title;
           document.title = assignment.title;
         }
+
+        if (assignment.definition?.blocks?.length) {
+          const dynTotal = getTotalItemCount(assignment.definition);
+          const dynMinutes = Number(assignment.definition.timing?.totalMinutes || assignment.definition.durationMinutes) || 120;
+          const introP = document.querySelector('.cbt-intro-sub') || document.querySelector('main.demo-width p') || document.querySelector('main p');
+          if (introP) {
+            introP.innerHTML = `Thời gian làm bài: <strong>${dynMinutes} phút</strong> · Tổng số câu hỏi: <strong>${dynTotal} câu</strong>.<br>Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.`;
+          }
+          const timerSpan = document.querySelector('.top-actions .timer');
+          if (timerSpan) {
+            timerSpan.textContent = `${dynMinutes}:00`;
+          }
+        }
       } catch (err) {
         loadBtn.disabled = false;
         loadBtn.textContent = 'Thử lại';
@@ -1105,15 +1145,15 @@ export async function mount(course) {
           soundcheckAudio = new Audio(soundcheckUrl);
           soundcheckAudio.volume = parseFloat(soundcheckVolume?.value || '1');
           soundcheckAudio.addEventListener('ended', () => {
-            soundcheckPlayBtn.textContent = '🔊 Nghe thử lại';
+            soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử lại`;
             if (soundcheckStatus) {
-              soundcheckStatus.textContent = '✓ Âm thanh hoạt động tốt';
+              soundcheckStatus.textContent = 'Âm thanh hoạt động tốt';
               soundcheckStatus.style.background = '#dcfce7';
               soundcheckStatus.style.color = '#15803d';
             }
           });
           soundcheckAudio.addEventListener('error', () => {
-            soundcheckPlayBtn.textContent = '🔊 Nghe thử';
+            soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử`;
             if (soundcheckStatus) {
               soundcheckStatus.textContent = 'Lỗi tải audio';
               soundcheckStatus.style.background = '#fee2e2';
@@ -1124,7 +1164,7 @@ export async function mount(course) {
         if (soundcheckAudio.paused) {
           soundcheckAudio.currentTime = 0;
           soundcheckAudio.play().then(() => {
-            soundcheckPlayBtn.textContent = '⏹ Dừng nghe thử';
+            soundcheckPlayBtn.innerHTML = 'Dừng nghe thử';
             if (soundcheckStatus) {
               soundcheckStatus.textContent = 'Đang phát âm thanh…';
               soundcheckStatus.style.background = '#dbeafe';
@@ -1132,14 +1172,14 @@ export async function mount(course) {
             }
           }).catch(err => {
             console.warn('Audio play error:', err);
-            soundcheckPlayBtn.textContent = '🔊 Nghe thử';
+            soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử`;
           });
         } else {
           soundcheckAudio.pause();
           soundcheckAudio.currentTime = 0;
-          soundcheckPlayBtn.textContent = '🔊 Nghe thử lại';
+          soundcheckPlayBtn.innerHTML = `${ICONS.volume} Nghe thử lại`;
           if (soundcheckStatus) {
-            soundcheckStatus.textContent = '✓ Âm thanh hoạt động';
+            soundcheckStatus.textContent = 'Âm thanh hoạt động';
             soundcheckStatus.style.background = '#dcfce7';
             soundcheckStatus.style.color = '#15803d';
           }
@@ -1345,10 +1385,23 @@ export async function mount(course) {
   renderExamInterface();
 
   function renderExamInterface() {
-    document.title = `IZONE · ${isLearningMode ? 'Thi CBT' : 'Demo'} · ${title}`;
+    const isDynamic = Boolean(learningState.definition?.blocks?.length);
+    const examTitle = isDynamic ? (learningState.definition.title || learningState.assignment?.title || title) : title;
+    const examDuration = isDynamic
+      ? (Number(learningState.definition.timing?.totalMinutes || learningState.definition.durationMinutes) || 120)
+      : (Number(form.durationMinutes) || 120);
+
+    const examSections = isDynamic
+      ? learningState.definition.blocks.map((b, i) => b.title || `Phần ${i + 1}`)
+      : sections;
+    if (!examSections.includes(activeSection)) {
+      activeSection = examSections[0];
+    }
+
+    document.title = `IZONE · ${isLearningMode ? 'Thi CBT' : 'Demo'} · ${examTitle}`;
     const headerSub = isLearningMode
       ? `Thí sinh: <strong>${escape(learningState.studentName)}</strong> · Lớp: <strong>${escape(learningState.className)}</strong>`
-      : `Bài thi demo · ${form.durationMinutes} phút theo đề`;
+      : `Bài thi demo · ${examDuration} phút theo đề`;
 
     const noticeBanner = isLearningMode
       ? selfProctoringBannerHtml(learningState.selfProctoring)
@@ -1357,27 +1410,108 @@ export async function mount(course) {
           Dùng link thi có token do người phụ trách cung cấp để mở phiên chấm điểm.
         </div>`;
 
-    document.body.innerHTML = `<div class="content-demo">
-      <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(title)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span class="tab-count" data-demo-tab-count="${section}"></span></button>`).join('')}</nav></header>
-      <main class="demo-width">
-        ${noticeBanner}
-        <div class="demo-toolbar">
-          <span id="demo-progress" aria-live="polite"></span>
-          <span id="demo-save" role="status"></span>
-          <button type="button" class="btn btn-primary" id="demo-submit">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
+    let dynamicExamControls = null;
+
+    if (isDynamic) {
+      document.body.innerHTML = `
+        <div class="candidate-simulation-shell content-demo cbt-exam-shell">
+          <header class="topbar simulation-topbar cbt-topbar">
+            <div class="topbar-inner demo-top cbt-topbar-inner">
+              <div class="brand cbt-brand">
+                <div class="brand-mark cbt-brand-mark">IZ</div>
+                <div class="brand-copy cbt-brand-copy">
+                  <div class="brand-title cbt-brand-title">IZONE · ${escape((examTitle || '').replace(/^(?:IZONE\s*[·•\-:]\s*)+/gi, ''))}</div>
+                  <div class="brand-sub cbt-brand-sub">${headerSub}</div>
+                </div>
+              </div>
+              <div class="top-actions cbt-top-actions">
+                <span id="demo-save" role="status" class="cbt-save-pill">Đã lưu</span>
+                <div class="cbt-font-toggles">
+                  <button type="button" class="icon-btn cbt-font-btn" id="demo-font-down" aria-label="Giảm cỡ chữ" title="Giảm cỡ chữ">A−</button>
+                  <button type="button" class="icon-btn cbt-font-btn" id="demo-font-up" aria-label="Tăng cỡ chữ" title="Tăng cỡ chữ">A+</button>
+                </div>
+                <div class="cbt-timer-container">
+                  <span class="cbt-timer-icon">${ICONS.clock}</span>
+                  <span class="cbt-timer" id="examTimerDisplay">${examDuration}:00</span>
+                </div>
+                <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${isLearningMode ? (state.submittedAt ? 'Đã nộp bài' : 'Nộp bài') : 'Nộp thử'}</button>
+              </div>
+            </div>
+            <div class="section-nav-wrap cbt-section-nav-wrap">
+              <nav class="section-nav simulation-nav-bar cbt-section-nav-bar" id="sectionNavContainer" aria-label="Các phần bài thi">
+                ${renderSectionNavPills(learningState.definition, 0)}
+              </nav>
+            </div>
+          </header>
+
+          <main class="demo-width cbt-main-content" style="max-width:1380px;margin:0 auto;padding:20px 24px;">
+            ${noticeBanner}
+            <div id="demo-result" class="cbt-result-box" style="display:none;" hidden></div>
+            <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
+
+            <div class="exam-layout cbt-exam-layout">
+              <div class="main-column simulation-viewport cbt-viewport" id="examMainViewport"></div>
+              <div id="examSidePanelContainer" class="cbt-side-container">
+                ${renderSidePanel(learningState.definition, state, 0)}
+              </div>
+            </div>
+          </main>
+
+          <dialog id="demo-confirm">
+            <h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2>
+            <p id="demo-confirm-text"></p>
+            <p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+              <button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button>
+              <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button>
+            </div>
+          </dialog>
         </div>
-        <div id="demo-result" class="demo-notice" hidden></div>
-        <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
-        <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${sections.map(section=>`<button class="section-tab" data-demo-go="${section}">${sectionLabels[section]} <span data-demo-section-count="${section}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
-        <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
-      </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
-    </div>`;
+      `;
 
-    document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${form.durationMinutes}:00</span></div>`);
-    document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
+      renderDynamicExam(learningState.definition, document.querySelector('#examMainViewport'), {
+        state,
+        activeSection,
+        onAnswerChange: () => {
+          persist();
+          update();
+        }
+      });
 
-    // Đếm ngược thời gian làm bài (120 phút)
-    const durationMinutes = Number(form.durationMinutes) || 120;
+      dynamicExamControls = initDynamicExamInteractions(document.body, {
+        definition: learningState.definition,
+        state,
+        onAnswerChange: () => {
+          persist();
+          update();
+        },
+        onSectionChange: (secName) => {
+          activeSection = secName;
+        }
+      });
+    } else {
+      document.body.innerHTML = `<div class="content-demo">
+        <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(examTitle)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span class="tab-count" data-demo-tab-count="${escape(sec)}"></span></button>`).join('')}</nav></header>
+        <main class="demo-width">
+          ${noticeBanner}
+          <div class="demo-toolbar">
+            <span id="demo-progress" aria-live="polite"></span>
+            <span id="demo-save" role="status"></span>
+            <button type="button" class="btn btn-primary" id="demo-submit">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
+          </div>
+          <div id="demo-result" class="demo-notice" hidden></div>
+          <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
+          <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span data-demo-section-count="${escape(sec)}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
+          <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
+        </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
+      </div>`;
+
+      document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${examDuration}:00</span></div>`);
+      document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
+    }
+
+    // Đếm ngược thời gian làm bài
+    const durationMinutes = Number(examDuration) || 120;
     const durationMs = durationMinutes * 60 * 1000;
     const timerStorageKey = `izone_timer_${isLearningMode ? (learningState.attemptToken || testToken) : course}`;
 
@@ -1399,6 +1533,7 @@ export async function mount(course) {
       if (state.submittedAt) {
         timerDisplay.textContent = 'Đã nộp';
         timerDisplay.classList.remove('warn');
+        timerDisplay.classList.add('is-submitted');
         if (examTimerInterval) clearInterval(examTimerInterval);
         return;
       }
@@ -1427,69 +1562,71 @@ export async function mount(course) {
     tickExamTimer();
     examTimerInterval = setInterval(tickExamTimer, 1000);
 
-    for(const section of sections) {
-      const groups=form.groups.filter(group=>sectionKey(group)===section);
-      document.querySelector(`[data-demo-page="${section}"]`).insertAdjacentHTML('beforebegin',`<div class="section-hero" data-demo-page="${section}"><div class="section-kicker">${escape(title)}</div><h2>${sectionLabels[section]}</h2><p>${groups.length} nhóm bài · ${groups.reduce((count,group)=>count+group.items.length,0)} ô trả lời</p></div>`);
+    if (!isDynamic) {
+      for(const section of sections) {
+        const groups=form.groups.filter(group=>sectionKey(group)===section);
+        document.querySelector(`[data-demo-page="${section}"]`)?.insertAdjacentHTML('beforebegin',`<div class="section-hero" data-demo-page="${section}"><div class="section-kicker">${escape(title)}</div><h2>${sectionLabels[section]}</h2><p>${groups.length} nhóm bài · ${groups.reduce((count,group)=>count+group.items.length,0)} ô trả lời</p></div>`);
+      }
+
+      const style = document.createElement('style');
+      style.textContent = `
+        .content-demo{color:#404040;background:#f3f4f6;min-height:100vh}.demo-width{max-width:1180px;margin:auto;padding:20px}.demo-top{display:flex;align-items:center;justify-content:space-between;gap:16px}.demo-top nav{display:flex;gap:12px}.content-demo a{color:#174266}.content-demo a[aria-current]{font-weight:700;color:#db0829}.demo-notice{background:#fff4df;border:1px solid #ecd8b1;padding:12px 16px;border-radius:10px;margin:12px 0}.demo-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.content-demo button{padding:10px 16px;border:1px solid #ddd;border-radius:8px;background:white}.content-demo #demo-submit,.content-demo #demo-confirm-submit{background:#db0829;color:white;border-color:#db0829}.demo-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}.demo-layout aside nav{position:sticky;top:100px;display:grid;gap:12px;background:white;padding:16px;border-radius:12px}.demo-section{background:white;border:1px solid #e5e7eb;border-radius:16px;padding:24px;margin-bottom:24px;scroll-margin-top:110px}.demo-section h2{margin-top:0;color:#174266;font-size:22px}.demo-lines{white-space:pre-wrap}.demo-context{background:#f3f4f6;padding:16px;border-radius:10px;margin:16px 0}.demo-question{padding:16px 0;border-top:1px solid #eee}.demo-question label{display:block;margin-bottom:10px;font-weight:500}.demo-question img{display:block;max-width:220px;max-height:180px;object-fit:contain;margin:12px 0}.demo-question input,.demo-question textarea,.demo-question select{display:block;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;color:#404040;background:white}.demo-question input:focus,.demo-question textarea:focus,.demo-question select:focus{outline:2px solid #174266;outline-offset:2px}.demo-question small{display:block;margin-top:6px;color:#62576a}.demo-question.done{border-left:3px solid #238563;padding-left:12px}.content-demo dialog{max-width:480px;border:0;border-radius:16px;padding:24px}.content-demo dialog::backdrop{background:#0006}@media(max-width:760px){.demo-layout{grid-template-columns:1fr}.demo-layout aside nav{position:static;display:flex;overflow:auto;white-space:nowrap}.demo-top{flex-direction:column;align-items:flex-start}.demo-section{padding:16px}.demo-width{padding:12px}}`;
+      document.head.append(style);
+
+      const layoutStyle = document.createElement('style');
+      layoutStyle.textContent = `
+        .content-demo .demo-tabs{display:flex;gap:8px;max-width:1180px;margin:auto;overflow-x:auto;padding:8px 24px}
+        .content-demo .demo-layout{grid-template-columns:minmax(0,1fr) 280px;gap:24px}
+        .content-demo .demo-main{grid-column:1;grid-row:1;min-width:0}
+        .content-demo .demo-layout aside{grid-column:2;grid-row:1;top:140px}
+        .content-demo .demo-layout aside nav{position:static;padding:0;margin-top:16px;background:transparent;gap:4px}
+        .content-demo .demo-layout aside .section-tab{justify-content:space-between;text-align:left}
+        .content-demo .demo-section{box-shadow:var(--shadow-1);border-color:var(--color-border);border-radius:var(--radius-lg)}
+        .content-demo .demo-audio-gate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px;margin:14px 0 18px;border:1px solid #f1c8cf;border-radius:12px;background:#fff3f5}
+        .content-demo .demo-audio-gate audio{display:none}
+        .content-demo .demo-audio-status{font-size:13px;font-weight:600;color:var(--color-text-secondary)}
+        .content-demo .demo-audio-linked{font-size:13px}
+        .content-demo .demo-section h2{font-family:Geologica,sans-serif;color:var(--color-text);font-size:19px;margin-bottom:0}
+        .content-demo .demo-section .points{white-space:nowrap}
+        .content-demo .demo-section[hidden]{display:none}
+        .content-demo .demo-context{background:#fafbfc;border:1px solid #e9ebee}
+        .content-demo .demo-question input:focus,.content-demo .demo-question select:focus,.content-demo .demo-question textarea:focus{outline:2px solid var(--color-primary)}
+        .content-demo .demo-cloze{line-height:3;white-space:pre-wrap;overflow-wrap:anywhere}
+        .content-demo .demo-sentence{padding:12px 0;border-bottom:1px solid var(--color-border)}
+        .content-demo .demo-inline{display:inline-flex;align-items:center;vertical-align:middle;gap:6px;padding:0 4px;border:0;white-space:normal}
+        .content-demo .demo-inline input{display:inline-block;width:clamp(110px,16vw,170px);padding:7px 10px;line-height:1.5}
+        .content-demo .demo-inline.done{border:0;padding-left:4px}
+        .content-demo .demo-inline.done input{border-color:#238563}
+        .content-demo .demo-blank-number{font-size:12px;color:var(--color-text-secondary)}
+        .content-demo .demo-vocab-grid,.content-demo .demo-picture-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+        .content-demo .demo-bottom{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
+        .content-demo button.section-tab{border:0;background:transparent;padding:10px 12px}
+        .content-demo button.section-tab.active{background:#fff3f5;color:var(--color-primary)}
+        .content-demo .progress-track{margin-top:12px}
+        .content-demo .demo-table-wrapper{margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+        .content-demo .demo-table-title{padding:14px 18px;font-family:Geologica,sans-serif;font-size:16px;font-weight:700;color:#1e293b;background:#f8fafc;border-bottom:2px solid #e2e8f0}
+        .content-demo .demo-cloze-table{width:100%;border-collapse:collapse}
+        .content-demo .demo-table-header{width:28%;min-width:160px;vertical-align:top;text-align:left;padding:14px 18px;background:#f8fafc;font-weight:600;font-size:14px;color:#334155;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0}
+        .content-demo .demo-table-cell{vertical-align:top;padding:14px 18px;line-height:2.6;color:#1e293b;border-bottom:1px solid #e2e8f0}
+        .content-demo .demo-table-cell br{line-height:1.8}
+        .content-demo .demo-cloze-table tr:last-child .demo-table-header,.content-demo .demo-cloze-table tr:last-child .demo-table-cell{border-bottom:0}
+
+        .content-demo .demo-order-container{margin:18px 0;display:grid;gap:18px}
+        .content-demo .demo-order-sentences{display:grid;gap:10px}
+        .content-demo .demo-order-sentence-card{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;line-height:1.5}
+        .content-demo .demo-order-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--color-primary);color:white;font-weight:700;font-size:13px;flex-shrink:0}
+        .content-demo .demo-order-text{flex:1;color:#334155;font-weight:500;padding-top:3px}
+        .content-demo .demo-order-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:16px;background:#f1f5f9;border-radius:12px}
+        .content-demo .demo-order-slot{display:flex;flex-direction:column;gap:6px}
+        .content-demo .demo-order-slot-label{font-size:12px;font-weight:700;color:#475569}
+        .content-demo .demo-order-slot select{width:100%;min-height:40px;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;background:white;font-weight:600}
+
+        .content-demo .demo-picture-grid .demo-prompt-row .demo-lines{font-weight:600;letter-spacing:0.5px}
+        @media(max-width:900px){.content-demo .demo-layout{grid-template-columns:1fr}.content-demo .demo-layout aside{display:none}.content-demo .demo-main{grid-column:1}}
+        @media(max-width:600px){.content-demo .demo-picture-grid{grid-template-columns:1fr}.content-demo .demo-vocab-grid{gap:0 10px}.content-demo .demo-question{min-width:0}.content-demo .demo-question input,.content-demo .demo-question select{min-width:0}.content-demo .demo-inline input{width:120px}.content-demo .demo-tabs{padding:8px 12px}.content-demo .exercise-head{gap:8px}.content-demo .demo-cloze{line-height:3.2}.content-demo .demo-top nav{flex-shrink:0}}
+      `;
+      document.head.append(layoutStyle);
     }
-
-    const style = document.createElement('style');
-    style.textContent = `
-      .content-demo{color:#404040;background:#f3f4f6;min-height:100vh}.demo-width{max-width:1180px;margin:auto;padding:20px}.demo-top{display:flex;align-items:center;justify-content:space-between;gap:16px}.demo-top nav{display:flex;gap:12px}.content-demo a{color:#174266}.content-demo a[aria-current]{font-weight:700;color:#db0829}.demo-notice{background:#fff4df;border:1px solid #ecd8b1;padding:12px 16px;border-radius:10px;margin:12px 0}.demo-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.content-demo button{padding:10px 16px;border:1px solid #ddd;border-radius:8px;background:white}.content-demo #demo-submit,.content-demo #demo-confirm-submit{background:#db0829;color:white;border-color:#db0829}.demo-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}.demo-layout aside nav{position:sticky;top:100px;display:grid;gap:12px;background:white;padding:16px;border-radius:12px}.demo-section{background:white;border:1px solid #e5e7eb;border-radius:16px;padding:24px;margin-bottom:24px;scroll-margin-top:110px}.demo-section h2{margin-top:0;color:#174266;font-size:22px}.demo-lines{white-space:pre-wrap}.demo-context{background:#f3f4f6;padding:16px;border-radius:10px;margin:16px 0}.demo-question{padding:16px 0;border-top:1px solid #eee}.demo-question label{display:block;margin-bottom:10px;font-weight:500}.demo-question img{display:block;max-width:220px;max-height:180px;object-fit:contain;margin:12px 0}.demo-question input,.demo-question textarea,.demo-question select{display:block;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;color:#404040;background:white}.demo-question input:focus,.demo-question textarea:focus,.demo-question select:focus{outline:2px solid #174266;outline-offset:2px}.demo-question small{display:block;margin-top:6px;color:#62576a}.demo-question.done{border-left:3px solid #238563;padding-left:12px}.content-demo dialog{max-width:480px;border:0;border-radius:16px;padding:24px}.content-demo dialog::backdrop{background:#0006}@media(max-width:760px){.demo-layout{grid-template-columns:1fr}.demo-layout aside nav{position:static;display:flex;overflow:auto;white-space:nowrap}.demo-top{flex-direction:column;align-items:flex-start}.demo-section{padding:16px}.demo-width{padding:12px}}`;
-    document.head.append(style);
-
-    const layoutStyle = document.createElement('style');
-    layoutStyle.textContent = `
-      .content-demo .demo-tabs{display:flex;gap:8px;max-width:1180px;margin:auto;overflow-x:auto;padding:8px 24px}
-      .content-demo .demo-layout{grid-template-columns:minmax(0,1fr) 280px;gap:24px}
-      .content-demo .demo-main{grid-column:1;grid-row:1;min-width:0}
-      .content-demo .demo-layout aside{grid-column:2;grid-row:1;top:140px}
-      .content-demo .demo-layout aside nav{position:static;padding:0;margin-top:16px;background:transparent;gap:4px}
-      .content-demo .demo-layout aside .section-tab{justify-content:space-between;text-align:left}
-      .content-demo .demo-section{box-shadow:var(--shadow-1);border-color:var(--color-border);border-radius:var(--radius-lg)}
-      .content-demo .demo-audio-gate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px;margin:14px 0 18px;border:1px solid #f1c8cf;border-radius:12px;background:#fff3f5}
-      .content-demo .demo-audio-gate audio{display:none}
-      .content-demo .demo-audio-status{font-size:13px;font-weight:600;color:var(--color-text-secondary)}
-      .content-demo .demo-audio-linked{font-size:13px}
-      .content-demo .demo-section h2{font-family:Geologica,sans-serif;color:var(--color-text);font-size:19px;margin-bottom:0}
-      .content-demo .demo-section .points{white-space:nowrap}
-      .content-demo .demo-section[hidden]{display:none}
-      .content-demo .demo-context{background:#fafbfc;border:1px solid #e9ebee}
-      .content-demo .demo-question input:focus,.content-demo .demo-question select:focus,.content-demo .demo-question textarea:focus{outline:2px solid var(--color-primary)}
-      .content-demo .demo-cloze{line-height:3;white-space:pre-wrap;overflow-wrap:anywhere}
-      .content-demo .demo-sentence{padding:12px 0;border-bottom:1px solid var(--color-border)}
-      .content-demo .demo-inline{display:inline-flex;align-items:center;vertical-align:middle;gap:6px;padding:0 4px;border:0;white-space:normal}
-      .content-demo .demo-inline input{display:inline-block;width:clamp(110px,16vw,170px);padding:7px 10px;line-height:1.5}
-      .content-demo .demo-inline.done{border:0;padding-left:4px}
-      .content-demo .demo-inline.done input{border-color:#238563}
-      .content-demo .demo-blank-number{font-size:12px;color:var(--color-text-secondary)}
-      .content-demo .demo-vocab-grid,.content-demo .demo-picture-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
-      .content-demo .demo-bottom{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
-      .content-demo button.section-tab{border:0;background:transparent;padding:10px 12px}
-      .content-demo button.section-tab.active{background:#fff3f5;color:var(--color-primary)}
-      .content-demo .progress-track{margin-top:12px}
-      .content-demo .demo-table-wrapper{margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-      .content-demo .demo-table-title{padding:14px 18px;font-family:Geologica,sans-serif;font-size:16px;font-weight:700;color:#1e293b;background:#f8fafc;border-bottom:2px solid #e2e8f0}
-      .content-demo .demo-cloze-table{width:100%;border-collapse:collapse}
-      .content-demo .demo-table-header{width:28%;min-width:160px;vertical-align:top;text-align:left;padding:14px 18px;background:#f8fafc;font-weight:600;font-size:14px;color:#334155;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0}
-      .content-demo .demo-table-cell{vertical-align:top;padding:14px 18px;line-height:2.6;color:#1e293b;border-bottom:1px solid #e2e8f0}
-      .content-demo .demo-table-cell br{line-height:1.8}
-      .content-demo .demo-cloze-table tr:last-child .demo-table-header,.content-demo .demo-cloze-table tr:last-child .demo-table-cell{border-bottom:0}
-
-      .content-demo .demo-order-container{margin:18px 0;display:grid;gap:18px}
-      .content-demo .demo-order-sentences{display:grid;gap:10px}
-      .content-demo .demo-order-sentence-card{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;line-height:1.5}
-      .content-demo .demo-order-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--color-primary);color:white;font-weight:700;font-size:13px;flex-shrink:0}
-      .content-demo .demo-order-text{flex:1;color:#334155;font-weight:500;padding-top:3px}
-      .content-demo .demo-order-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:16px;background:#f1f5f9;border-radius:12px}
-      .content-demo .demo-order-slot{display:flex;flex-direction:column;gap:6px}
-      .content-demo .demo-order-slot-label{font-size:12px;font-weight:700;color:#475569}
-      .content-demo .demo-order-slot select{width:100%;min-height:40px;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;background:white;font-weight:600}
-
-      .content-demo .demo-picture-grid .demo-prompt-row .demo-lines{font-weight:600;letter-spacing:0.5px}
-      @media(max-width:900px){.content-demo .demo-layout{grid-template-columns:1fr}.content-demo .demo-layout aside{display:none}.content-demo .demo-main{grid-column:1}}
-      @media(max-width:600px){.content-demo .demo-picture-grid{grid-template-columns:1fr}.content-demo .demo-vocab-grid{gap:0 10px}.content-demo .demo-question{min-width:0}.content-demo .demo-question input,.content-demo .demo-question select{min-width:0}.content-demo .demo-inline input{width:120px}.content-demo .demo-tabs{padding:8px 12px}.content-demo .exercise-head{gap:8px}.content-demo .demo-cloze{line-height:3.2}.content-demo .demo-top nav{flex-shrink:0}}
-    `;
-    document.head.append(layoutStyle);
 
     for (const button of document.querySelectorAll('[data-demo-audio-start]')) {
       const gateId = button.dataset.demoAudioStart;
@@ -1498,7 +1635,7 @@ export async function mount(course) {
       let started = false;
       let lastGoodTime = 0;
       document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
-      if (status) status.textContent = '🔊 Đã mở khóa nội dung câu hỏi để kiểm tra đề.';
+      if (status) status.textContent = 'Đã mở khóa nội dung câu hỏi để kiểm tra đề.';
       audio.addEventListener('play', () => {
         started = true;
         document.querySelectorAll(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
@@ -1604,10 +1741,36 @@ export async function mount(course) {
     `;
     document.head.append(canonicalStyle);
 
-    let fontScale=1;
-    const resizeFont=delta=>{fontScale=Math.max(.85,Math.min(1.3,fontScale+delta));document.documentElement.style.setProperty('--font-scale',fontScale);};
-    document.querySelector('#demo-font-down').addEventListener('click',()=>resizeFont(-.05));
-    document.querySelector('#demo-font-up').addEventListener('click',()=>resizeFont(.05));
+    let fontScale = parseFloat(localStorage.getItem('izone_cbt_font_scale') || '1') || 1;
+    if (fontScale < 0.85 || fontScale > 1.35) fontScale = 1;
+
+    const applyFontScale = (scale) => {
+      fontScale = Math.max(0.85, Math.min(1.3, Math.round(scale * 100) / 100));
+      document.documentElement.style.setProperty('--font-scale', String(fontScale));
+      document.documentElement.style.fontSize = `${16 * fontScale}px`;
+      const btnDown = document.querySelector('#demo-font-down');
+      const btnUp = document.querySelector('#demo-font-up');
+      if (btnDown) {
+        btnDown.disabled = fontScale <= 0.85;
+        btnDown.title = `Thu nhỏ cỡ chữ (${Math.round(fontScale * 100)}%)`;
+      }
+      if (btnUp) {
+        btnUp.disabled = fontScale >= 1.3;
+        btnUp.title = `Phóng to cỡ chữ (${Math.round(fontScale * 100)}%)`;
+      }
+      try {
+        localStorage.setItem('izone_cbt_font_scale', String(fontScale));
+      } catch {}
+    };
+
+    const resizeFont = (delta) => applyFontScale(fontScale + delta);
+
+    applyFontScale(fontScale);
+
+    const btnFontDown = document.querySelector('#demo-font-down');
+    const btnFontUp = document.querySelector('#demo-font-up');
+    if (btnFontDown) btnFontDown.addEventListener('click', () => resizeFont(-0.06));
+    if (btnFontUp) btnFontUp.addEventListener('click', () => resizeFont(0.06));
     const query = selector => document.querySelector(selector);
     const fields = [...document.querySelectorAll('[data-demo-answer]')];
 
@@ -1642,6 +1805,37 @@ export async function mount(course) {
     }
 
     function update() {
+      if (isDynamic) {
+        if (dynamicExamControls && typeof dynamicExamControls.updateAnsweredState === 'function') {
+          dynamicExamControls.updateAnsweredState();
+        }
+        const total = getTotalItemCount(learningState.definition);
+        const done = getAnsweredCount(learningState.definition, state.answers);
+        if (query('#demo-progress')) query('#demo-progress').textContent = `${done}/${total} câu đã trả lời`;
+        if (query('#demo-fill')) query('#demo-fill').style.width = `${total ? Math.round(done / total * 100) : 0}%`;
+
+        learningState.definition.blocks.forEach((block, bIdx) => {
+          const secName = block.title || `Phần ${bIdx + 1}`;
+          const bItems = block.items || [];
+          let bDone = 0;
+          for (const it of bItems) {
+            const val = state.answers[it.itemVersionId];
+            if (val !== undefined && val !== null) {
+              if (Array.isArray(val) && val.some(v => typeof v === 'string' && v.trim() !== '')) bDone++;
+              else if (typeof val === 'object' && Object.values(val).some(v => typeof v === 'string' && v.trim() !== '')) bDone++;
+              else if (typeof val === 'string' && val.trim() !== '') bDone++;
+            }
+          }
+          document.querySelectorAll(`[data-demo-section-count="${secName}"], [data-demo-tab-count="${secName}"]`).forEach(count => {
+            count.textContent = `${bDone}/${bItems.length}`;
+          });
+        });
+        if (query('#demo-submit')) query('#demo-submit').disabled = Boolean(state.submittedAt);
+        if (query('#demo-submit-top')) query('#demo-submit-top').disabled = Boolean(state.submittedAt);
+        if (query('#demo-result')) query('#demo-result').hidden = !state.submittedAt;
+        return;
+      }
+
       const done = items.filter(item=>String(state.answers[item.id]||'').trim()).length;
       query('#demo-progress').textContent=`${done}/${items.length} ô đã trả lời`;
       query('#demo-fill').style.width=`${Math.round(done/items.length*100)}%`;
@@ -1691,17 +1885,206 @@ export async function mount(course) {
       if (field) { field.value=''; field.dispatchEvent(new Event('input',{bubbles:true})); }
     }));
 
-    query('#demo-submit').addEventListener('click',()=>{
+    function handleOpenSubmitDialog() {
+      if (isDynamic) {
+        const total = getTotalItemCount(learningState.definition);
+        const done = getAnsweredCount(learningState.definition, state.answers);
+        const missing = total - done;
+        query('#demo-confirm-text').textContent = missing > 0
+          ? `Còn ${missing} câu chưa trả lời (đã làm ${done}/${total} câu). Bạn có chắc chắn muốn nộp bài?`
+          : `Bạn đã trả lời đầy đủ ${total}/${total} câu. Bạn có chắc chắn muốn nộp bài?`;
+        query('#demo-confirm').showModal();
+        return;
+      }
       const missing=items.filter(item=>!String(state.answers[item.id]||'').trim()).length;
       query('#demo-confirm-text').textContent=`Còn ${missing} ô chưa trả lời. Bạn có chắc chắn muốn nộp bài?`;
       query('#demo-confirm').showModal();
-    });
+    }
+
+    if (query('#demo-submit')) {
+      query('#demo-submit').addEventListener('click', handleOpenSubmitDialog);
+    }
+    if (query('#demo-submit-top')) {
+      query('#demo-submit-top').addEventListener('click', handleOpenSubmitDialog);
+    }
     query('#demo-cancel').addEventListener('click',()=>query('#demo-confirm').close());
+
+    function openDynamicResultsModal(result) {
+      const summary = result?.summary || {};
+      const scoreFinal = summary.scoreFinal === true && result.gradingStatus === 'complete';
+      const isManualReview = result.gradingStatus === 'manual_review';
+      const items = result?.items || [];
+      const definition = learningState.definition || {};
+
+      // Map definition items
+      const defItemsMap = new Map();
+      for (const block of (definition.blocks || [])) {
+        for (const it of (block.items || [])) {
+          defItemsMap.set(it.itemVersionId, it);
+        }
+      }
+
+      // Mark question navigator buttons with is-correct / is-incorrect
+      items.forEach(it => {
+        const qnavBtn = document.querySelector(`.btn-qnav[data-item-id="${it.itemVersionId}"]`);
+        if (qnavBtn) {
+          qnavBtn.classList.remove('is-correct', 'is-incorrect');
+          if (it.verdict === 'correct') {
+            qnavBtn.classList.add('is-correct');
+          } else if (it.verdict === 'incorrect' || it.verdict === 'partial') {
+            qnavBtn.classList.add('is-incorrect');
+          }
+        }
+      });
+
+      // Prepare breakdown rows
+      const rowsHtml = items.map(it => {
+        const defItem = defItemsMap.get(it.itemVersionId) || {};
+        const isCorrect = it.verdict === 'correct';
+        const isPartial = it.verdict === 'partial';
+        const typeLabel = defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm' :
+          (defItem.pedagogicalTypeCode === 'sentence_rewrite' ? 'Biến đổi câu' :
+          (defItem.pedagogicalTypeCode === 'sentence_reorder' ? 'Sắp xếp câu' :
+          (defItem.interactionType === 'correction_pair' ? 'Sửa lỗi sai' :
+          (defItem.interactionType === 'text_select_pair' ? 'Cặp từ vựng' :
+          (defItem.interactionType === 'single_choice' ? 'Trắc nghiệm' :
+          (defItem.interactionType === 'multi_choice_group' ? 'Chọn nhiều' :
+          (defItem.interactionType === 'short_text' ? 'Điền từ' : 'Tự luận')))))));
+
+        const candidateAnswer = (it.rawAnswer !== undefined && it.rawAnswer !== null && String(it.rawAnswer).trim() !== '')
+          ? String(it.rawAnswer)
+          : '(Chưa trả lời)';
+        const expectedAnswer = it.expectedAnswer !== undefined && it.expectedAnswer !== null
+          ? (Array.isArray(it.expectedAnswer) ? it.expectedAnswer.join(', ') : String(it.expectedAnswer))
+          : '—';
+
+        const rowClass = isCorrect ? 'row-correct' : (isPartial ? 'row-partial' : 'row-incorrect');
+        const verdictBadge = isCorrect
+          ? '<span class="status-correct">✓ Đúng</span>'
+          : (isPartial ? '<span class="status-partial">Đúng 50%</span>' : '<span class="status-incorrect">✕ Chưa đúng</span>');
+
+        return `
+          <tr class="${rowClass}">
+            <td><strong>Câu ${it.position}</strong></td>
+            <td><span class="type-badge">${escape(typeLabel)}</span></td>
+            <td>${escape(candidateAnswer)}</td>
+            <td><span class="correct-badge">${escape(expectedAnswer)}</span></td>
+            <td><strong>${it.scoreEarned ?? 0}/${it.maxScore ?? 1}đ</strong></td>
+            <td>${verdictBadge}</td>
+          </tr>
+        `;
+      }).join('');
+
+      let modal = document.querySelector('#simulation-results-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'simulation-results-modal';
+        modal.className = 'simulation-results-modal';
+        document.body.appendChild(modal);
+      }
+
+      modal.innerHTML = `
+        <div class="sim-results-dialog">
+          <header class="sim-results-header">
+            <div class="sim-results-title-wrap">
+              <span class="sim-results-badge">Kết quả bài thi</span>
+              <h3>Bảng tổng hợp chấm điểm</h3>
+            </div>
+            <button type="button" class="btn-close-sim-results" id="btn-close-sim-results" aria-label="Đóng">✕</button>
+          </header>
+          <div class="sim-results-body" id="sim-results-body">
+            <div class="sim-score-banner">
+              <div class="score-banner-title">Tổng điểm đạt được:</div>
+              <div class="score-banner-value">${summary.scoreEarned ?? 0}/${summary.maxScore ?? 0}đ</div>
+              <div class="score-banner-sub">
+                Thí sinh: <strong>${escape(learningState.studentName || '')}</strong> · Lớp: <strong>${escape(learningState.className || '')}</strong> · Trạng thái: <strong>${scoreFinal ? 'Hoàn tất chấm điểm' : (isManualReview ? 'Chờ giảng viên duyệt' : 'Đang xử lý')}</strong>
+              </div>
+            </div>
+            <div class="sim-breakdown-table-wrap">
+              <table class="sim-breakdown-table">
+                <thead>
+                  <tr>
+                    <th>Câu</th>
+                    <th>Dạng câu</th>
+                    <th>Bài làm của bạn</th>
+                    <th>Đáp án đúng</th>
+                    <th>Điểm</th>
+                    <th>Đánh giá</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml || '<tr><td colspan="6" style="text-align:center;padding:16px;">Đang cập nhật chi tiết...</td></tr>'}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <footer class="sim-results-footer">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-retest-simulation">Xem lại trên bài thi</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-done-simulation-results">Đóng kết quả</button>
+          </footer>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      const closeHandler = () => {
+        modal.style.display = 'none';
+      };
+      modal.querySelectorAll('#btn-close-sim-results, #btn-retest-simulation, #btn-done-simulation-results').forEach(b => {
+        b.addEventListener('click', closeHandler);
+      });
+
+      // Show persistent reopening card in #demo-result
+      const resBanner = query('#demo-result');
+      if (resBanner) {
+        resBanner.hidden = false;
+        resBanner.style.background = '#f0fdf4';
+        resBanner.style.borderColor = '#bbf7d0';
+        resBanner.style.color = '#166534';
+        resBanner.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+              <strong>Đã hoàn tất chấm điểm!</strong> Tổng điểm đạt được: <strong>${summary.scoreEarned ?? 0}/${summary.maxScore ?? 0}đ</strong> (${scoreFinal ? 'Điểm chính thức' : 'Điểm tạm tính'}).
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-open-results-modal" style="font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+              ${ICONS.barChart} Xem lại Bảng tổng hợp chấm điểm
+            </button>
+          </div>
+        `;
+        const reOpenBtn = resBanner.querySelector('#btn-open-results-modal');
+        if (reOpenBtn) {
+          reOpenBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+          });
+        }
+      }
+    }
 
     function renderAiResultCard(result) {
       const isPublished = Boolean(result?.publication?.published);
       const card = query('#demo-ai-card');
       card.hidden = false;
+
+      if (isDynamic) {
+        if (!isPublished) {
+          card.innerHTML = `
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:24px;text-align:center;color:#166534">
+              <div style="font-size:32px;margin-bottom:6px">✓</div>
+              <h3 style="color:#15803d;margin:0 0 8px 0;font-size:19px;font-weight:700">Bài làm đã được nộp thành công!</h3>
+              <p style="margin:0;font-size:14px;color:#166534;line-height:1.6">
+                Hệ thống đã ghi nhận an toàn bài thi của bạn.<br>
+                Điểm số sẽ được giáo viên công bố sau khi hoàn tất chấm điểm. Bạn có thể xem lại bài làm bên dưới.
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        // isPublished is true -> Show Candidate Simulation Results Modal
+        openDynamicResultsModal(result);
+        return;
+      }
+
       if (!isPublished) {
         card.innerHTML = `
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:28px 24px;text-align:center;color:#166534">
@@ -1734,23 +2117,23 @@ export async function mount(course) {
         </div>
         ${isComplete ? `
           <div style="background:#f8fafc;border-radius:10px;padding:14px 18px;margin-bottom:16px">
-            <h4 style="margin:0 0 8px 0;font-size:14px;color:#334155">Tổng kết đánh giá của AI</h4>
+            <h4 style="margin:0 0 8px 0;font-size:14px;color:#334155">Tổng kết đánh giá bài làm</h4>
             <p style="margin:0;font-size:14px;line-height:1.6;color:#475569">
-              Bài thi đã hoàn tất chấm điểm toàn diện các phần trắc nghiệm, từ vựng và tự luận Speaking/Writing. Các câu trả lời bên dưới đã được lưu trữ vĩnh viễn trên hệ thống.
+              Bài thi đã hoàn tất chấm điểm toàn diện các phần thi. Các câu trả lời bên dưới đã được lưu trữ vĩnh viễn trên hệ thống.
             </p>
           </div>
         ` : isManualReview ? `
           <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-            <span style="font-size:20px">📝</span>
+            <span class="cbt-card-icon" style="color:#c2410c">${ICONS.book}</span>
             <div style="font-size:13px;color:#9a3412;line-height:1.5">
-              Hệ thống AI đã hoàn tất chấm. Một số câu tự luận được chuyển sang trạng thái <strong>Chờ giảng viên kiểm tra</strong> (manual review). Điểm chính thức sẽ được cập nhật sau khi giảng viên xác nhận.
+              Hệ thống đã hoàn tất chấm điểm. Một số câu tự luận được chuyển sang trạng thái <strong>Chờ giảng viên kiểm tra</strong>. Điểm chính thức sẽ được cập nhật sau khi giảng viên xác nhận.
             </div>
           </div>
         ` : `
           <div style="background:#eff6ff;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-            <span style="font-size:20px">⏳</span>
+            <span class="cbt-card-icon" style="color:#2563eb">${ICONS.clock}</span>
             <div style="font-size:13px;color:#1e40af;line-height:1.5">
-              Hệ thống đang tiến hành chấm các câu tự luận bằng AI. Điểm chính thức sẽ tự động cập nhật ngay tại đây (còn lại ${vm.pendingItemCount} câu đang xử lý).
+              Hệ thống đang tiến hành chấm các câu tự luận. Điểm chính thức sẽ tự động cập nhật ngay tại đây (còn lại ${vm.pendingItemCount} câu đang xử lý).
             </div>
           </div>
         `}
@@ -1828,6 +2211,19 @@ export async function mount(course) {
           query('#demo-result').style.color = '#166534';
           query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
 
+          if (isDynamic) {
+            document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
+              if (el.id !== 'demo-prev' && el.id !== 'demo-next') {
+                el.disabled = true;
+              }
+            });
+            const topSubmit = query('#demo-submit-top');
+            if (topSubmit) {
+              topSubmit.disabled = true;
+              topSubmit.textContent = 'Đã nộp bài';
+            }
+          }
+
           if (res.result) {
             renderAiResultCard(res.result);
           }
@@ -1852,22 +2248,25 @@ export async function mount(course) {
 
     function showSection(section) {
       activeSection=section;
-      document.querySelectorAll('[data-demo-page]').forEach(page=>page.hidden=page.dataset.demoPage!==section);
+      document.querySelectorAll('[data-demo-page]').forEach(page=>{
+        page.hidden = page.dataset.demoPage !== section;
+        page.classList.toggle('hidden', page.dataset.demoPage !== section);
+      });
       document.querySelectorAll('[data-demo-go]').forEach(button=>{
         button.classList.toggle('active',button.dataset.demoGo===section);
         if (button.dataset.demoGo===section) button.setAttribute('aria-current','page');
         else button.removeAttribute('aria-current');
       });
-      query('#demo-prev').disabled=sections.indexOf(section)===0;
-      query('#demo-next').textContent=sections.indexOf(section)===sections.length-1?(isLearningMode?'Nộp bài':'Nộp thử'):'Phần tiếp →';
+      query('#demo-prev').disabled=examSections.indexOf(section)===0;
+      query('#demo-next').textContent=examSections.indexOf(section)===examSections.length-1?(isLearningMode?'Nộp bài':'Nộp thử'):'Phần tiếp →';
       window.scrollTo({top:0,behavior:'smooth'});
     }
     document.querySelectorAll('[data-demo-go]').forEach(button=>button.addEventListener('click',()=>showSection(button.dataset.demoGo)));
     query('#demo-prev').addEventListener('click',()=>{
-      const previous=sections[sections.indexOf(activeSection)-1];if(previous)showSection(previous);
+      const previous=examSections[examSections.indexOf(activeSection)-1];if(previous)showSection(previous);
     });
     query('#demo-next').addEventListener('click',()=>{
-      const next=sections[sections.indexOf(activeSection)+1];if(next)showSection(next);else query('#demo-submit').click();
+      const next=examSections[examSections.indexOf(activeSection)+1];if(next)showSection(next);else query('#demo-submit').click();
     });
 
     update();
