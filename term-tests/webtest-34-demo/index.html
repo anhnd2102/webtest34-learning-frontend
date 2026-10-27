@@ -31,6 +31,9 @@
     .cbt-mounting #introScreen, .cbt-mounting header.topbar:not(.simulation-topbar):not(.cbt-topbar) {
       display: none !important;
     }
+    .cbt-mounting #cbtMountingPlaceholder {
+      display: block !important;
+    }
     :root{
       --color-primary:#db0829;
       --color-secondary:#c53546;
@@ -377,6 +380,29 @@
   </header>
 
   <main>
+    <div id="cbtMountingPlaceholder" class="cbt-mounting-placeholder" style="display:none;">
+      <header class="topbar cbt-topbar simulation-topbar" style="background:#fff;border-bottom:1px solid #e5e7eb;">
+        <div class="topbar-inner demo-top" style="display:flex;align-items:center;justify-content:space-between;padding:12px 24px;">
+          <div class="brand" style="display:flex;align-items:center;gap:12px;">
+            <div class="brand-mark" style="width:36px;height:36px;background:#db0829;color:white;font-weight:900;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:16px;">IZ</div>
+            <div class="brand-copy">
+              <div class="brand-title" style="font-weight:700;font-size:15px;color:#174266;">IZONE · COMPUTER-BASED TEST</div>
+              <div class="brand-sub" style="font-size:12px;color:#64748b;">Đang chuẩn bị đề thi…</div>
+            </div>
+          </div>
+          <div class="top-actions">
+            <span class="timer" style="font-weight:700;font-size:16px;background:#fff1f2;color:#db0829;padding:6px 12px;border-radius:8px;border:1px solid #ffe4e6;">—</span>
+          </div>
+        </div>
+      </header>
+      <main class="cbt-intro-wrap" style="max-width:680px;margin:36px auto;padding:0 20px;">
+        <div class="cbt-intro-card" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:36px;box-shadow:0 4px 20px -2px rgba(15,23,42,.05);text-align:center;">
+          <span class="cbt-intro-badge" style="display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-transform:uppercase;color:#e11d48;background:#fff1f2;border:1px solid #fecdd3;padding:4px 12px;border-radius:9999px;margin-bottom:16px;">IZONE · COMPUTER-BASED TEST</span>
+          <h2 style="font-size:1.4rem;font-weight:700;color:#0f172a;margin:0 0 12px 0;">Đang tải thông tin đề thi…</h2>
+          <p style="color:#64748b;font-size:0.95rem;margin:0;">Vui lòng đợi giây lát trong khi hệ thống nạp đề thi.</p>
+        </div>
+      </main>
+    </div>
     <section class="intro" id="introScreen">
       <div class="intro-card">
         <div class="eyebrow">IZONE · COMPUTER-BASED TEST</div>
@@ -528,7 +554,7 @@
   const isCandidateCbt = ['03', '34', '45'].includes(demoCourse) || Boolean(hashToken);
   if (isCandidateCbt) {
     const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
-    import('./content-preview.mjs?rev=20261026-c34t4-audio-v3').then(module => module.mount(courseToMount)).catch((err) => {
+    import('./content-preview.mjs?rev=20261027-cbt-v21').then(module => module.mount(courseToMount)).catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });
