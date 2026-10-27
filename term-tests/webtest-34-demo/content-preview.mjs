@@ -889,7 +889,7 @@ export async function mount(course) {
 
   // --- RENDER MÀN HÌNH ĐỊNH DANH (IDENTITY SCREEN) KHI CÓ TEST TOKEN ---
   if (isLearningMode) {
-    const initialTitle = paramClassCode ? 'Đang tải thông tin đề thi…' : title;
+    const initialTitle = course === '34' ? 'Minh hoạ đề thi 34' : `IZONE · Khóa ${course}`;
     document.title = `IZONE · Thi CBT · ${initialTitle}`;
     document.body.innerHTML = `
       <div class="content-demo">
@@ -903,7 +903,7 @@ export async function mount(course) {
               </div>
             </div>
             <div class="top-actions">
-              <span class="timer">${paramClassCode ? '—' : `${form.durationMinutes}:00`}</span>
+              <span class="timer">60:00</span>
             </div>
           </div>
         </header>
@@ -912,7 +912,8 @@ export async function mount(course) {
             <span class="cbt-intro-badge">IZONE · COMPUTER-BASED TEST</span>
             <h1 class="cbt-intro-title">${escape(initialTitle)}</h1>
             <p class="cbt-intro-sub">
-              ${paramClassCode ? 'Đang nạp danh sách lớp và cấu trúc đề thi…' : `Thời gian làm bài: <strong>${form.durationMinutes} phút</strong> · Tổng số câu hỏi: <strong>${items.length} câu</strong>.<br>Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.`}
+              Thời gian làm bài: <strong>60 phút</strong> · Tổng số câu hỏi: <strong>96 câu</strong>.<br>
+              Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.
             </p>
 
             <div class="cbt-intro-field">
