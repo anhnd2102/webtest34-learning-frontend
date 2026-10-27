@@ -389,7 +389,9 @@ export function assignmentSelfProctoringPath(classId, assignmentId) {
 }
 
 // Lý do toggle bị khoá, để giáo viên không phải đoán vì sao không bấm được.
-export function examModeLockReason({ exitLimit } = {}) {
+export function examModeLockReason({ exitLimit, examMode, examSession } = {}) {
+  // Server từ chối đổi Exam Mode khi phiên không còn ở trạng thái chờ (EXAM_SESSION_ALREADY_STARTED).
+  if (examMode && examSession && examSession.status !== 'waiting') return 'Phiên thi đã bắt đầu nên không tắt được Exam Mode. Dùng "Chuyển sang Tự giám sát" sau khi hết hạn nộp.';
   return exitLimit === null || exitLimit === undefined ? '' : 'Bài đang bật Tự giám sát nên không bật được Exam Mode. Tắt Tự giám sát trước; nếu đã có học viên bắt đầu làm thì không tắt được nữa.';
 }
 
@@ -1754,8 +1756,8 @@ async function startDashboard() {
     if (selfProctoringToggle) { selfProctoringToggle.checked = enabled; selfProctoringToggle.disabled = Boolean(examMode) || lockedAfterExam; }
     if (selfProctoringLimit) { selfProctoringLimit.value = enabled ? String(exitLimit) : ''; selfProctoringLimit.disabled = !enabled || lockedAfterExam; }
     if (selfProctoringSave) selfProctoringSave.disabled = lockedAfterExam || (!enabled && !selfProctoringToggle?.checked);
-    if (examModeToggle) examModeToggle.disabled = enabled;
-    const examReason = examModeLockReason({ exitLimit });
+    const examReason = examModeLockReason({ exitLimit, examMode, examSession: currentSelectedAssignment?.examSession });
+    if (examModeToggle) examModeToggle.disabled = Boolean(examReason);
     const selfReason = selfProctoringLockReason({ examMode, examSession: currentSelectedAssignment?.examSession });
     if (examModeLockHint) { examModeLockHint.textContent = examReason; examModeLockHint.hidden = !examReason; }
     if (selfProctoringLockHint) { selfProctoringLockHint.textContent = selfReason; selfProctoringLockHint.hidden = !selfReason; }
@@ -1864,7 +1866,7 @@ async function startDashboard() {
       updateExamModeUI(currentSelectedAssignment.examMode);
       status.textContent = error.message;
     } finally {
-      examModeToggle.disabled = false;
+      examModeToggle.disabled = Boolean(examModeLockReason(currentSelectedAssignment));
     }
   });
   const setUrl = () => history.replaceState(null, '', assignmentUrl(location.href, state));

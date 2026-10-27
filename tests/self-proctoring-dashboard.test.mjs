@@ -35,6 +35,12 @@ test('Exam Mode bị khoá khi bài đang bật Tự giám sát: nêu lý do cho
   assert.match(examModeLockReason({ exitLimit: 0 }), /không bật được Exam Mode/);
 });
 
+test('Exam Mode bị khoá khi phiên thi đã bắt đầu: chỉ còn đường Chuyển sang Tự giám sát', () => {
+  assert.equal(examModeLockReason({ exitLimit: null, examMode: true, examSession: { status: 'waiting' } }), '');
+  assert.match(examModeLockReason({ exitLimit: null, examMode: true, examSession: { status: 'running' } }), /Chuyển sang Tự giám sát/);
+  assert.match(examModeLockReason({ exitLimit: null, examMode: true, examSession: { status: 'ended' } }), /Chuyển sang Tự giám sát/);
+});
+
 test('Tự giám sát bị khoá khi bài đang bật Exam Mode hoặc đã chuyển từ phiên thi: nêu lý do', () => {
   assert.equal(selfProctoringLockReason({ examMode: false }), '');
   assert.match(selfProctoringLockReason({ examMode: true }), /tắt Exam Mode/);
