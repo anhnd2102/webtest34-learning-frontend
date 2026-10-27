@@ -56,6 +56,7 @@ riêng; không báo đã xác minh nếu chưa thực sự smoke test boundary �
   `../docs/WEBTEST34_CONTENT_DRIFT.md`, không sửa JSON result để che lỗi.
 - Giữ thay đổi trong workspace này; không sửa `izone-ai-team-pages/` hoặc backend legacy
   chỉ để làm test mới chạy.
+- Bắt buộc tuân thủ tài liệu Design System [../DESIGN_SYSTEM.md](../DESIGN_SYSTEM.md): Cấm sử dụng Emoji màu (thay bằng Monochrome SVG Line Icons), bo góc học thuật "bớt AI" (Card 10-12px, Button 6-8px), 100% màu qua CSS token `--izone-*`, không hiển thị điểm %.
 
 ## Agent skills
 

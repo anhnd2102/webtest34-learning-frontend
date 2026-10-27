@@ -8,6 +8,7 @@
   <link rel="icon" href="data:,">
   <script src="config.js?rev=20260918-local-api-v1"></script>
   <script src="config.test2.js?rev=20260927-test2-audio-v1"></script>
+  <script src="config.test4.js?rev=20261026-test4-audio-v1"></script>
   <script src="test2-public.js?rev=20260927-test2-public-v1"></script>
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
@@ -16,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dynamic-test.css?rev=20261024-cbt-v14">
   <style>
     :root{
       --color-primary:#db0829;
@@ -42,11 +44,14 @@
       --font-scale:1;
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    html{
+      scroll-behavior:smooth;
+      font-size:calc(16px * var(--font-scale, 1));
+    }
     body{
       margin:0;background:var(--color-bg-secondary);color:var(--color-text);
       font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      font-size:calc(16px * var(--font-scale));line-height:1.55;
+      font-size:1rem;line-height:1.55;
     }
     button,input,textarea,select{font:inherit}
     button{cursor:pointer}
@@ -134,7 +139,7 @@
 
     .exam-layout{max-width:var(--content);margin:24px auto 96px;padding:0 24px;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:24px}
     .main-column{min-width:0}
-    .side-panel{align-self:start;position:sticky;top:128px}
+    .side-panel{align-self:start;position:sticky;top:76px;max-height:none;overflow:visible}
     .panel-card{background:white;border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-1);padding:20px}
     .panel-card + .panel-card{margin-top:16px}
     .progress-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px;font-size:14px}
@@ -199,7 +204,7 @@
     .answer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .q-row{display:flex;align-items:center;gap:10px;border:1px solid #e9ebee;border-radius:12px;padding:10px 12px;min-height:56px;background:white;transition:.15s ease}
     .q-row:focus-within{border-color:var(--color-primary);box-shadow:0 0 0 4px rgba(219,8,41,.06)}
-    .qnum{width:30px;height:30px;border-radius:9px;background:var(--color-bg-secondary);display:grid;place-items:center;font-family:Geologica,sans-serif;font-size:12px;font-weight:700;flex:0 0 auto;color:var(--color-slate)}
+    .q-row .qnum{min-width:30px;width:auto;height:auto;min-height:30px;padding:0 6px;border-radius:9px;background:var(--color-bg-secondary);display:inline-flex;align-items:center;justify-content:center;font-family:Geologica,sans-serif;font-size:12px;font-weight:700;flex:0 0 auto;color:var(--color-slate)}
     .q-row input[type="text"]{border:0;outline:0;min-width:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
     .q-row select{border:0;outline:0;width:100%;padding:6px 2px;background:transparent;color:var(--color-text)}
     .vocab-pair-row{display:flex;align-items:center;gap:10px;border:1px solid #e9ebee;border-radius:12px;padding:10px 12px;min-height:56px;background:white;transition:.15s ease}
@@ -207,7 +212,7 @@
     .vocab-pair-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;flex:1;min-width:0}
     .vocab-pair-controls input,.vocab-pair-controls select{border:1px solid #e3e6ea;border-radius:9px;outline:0;min-width:0;width:100%;min-height:38px;padding:0 10px;background:white;color:var(--color-text)}
     .vocab-pair-controls input:focus,.vocab-pair-controls select:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px rgba(219,8,41,.06)}
-    .done .qnum{background:#fff0f3;color:var(--color-primary)}
+    .q-row.done .qnum{background:#fff0f3;color:var(--color-primary)}
 
     .picture-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
     .picture-q{border:1px solid #e9ebee;border-radius:14px;padding:16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}
@@ -309,6 +314,31 @@
     .review-answer{color:var(--color-text-secondary);word-break:break-word}.review-expected{margin-top:4px}.review-expected.muted{color:var(--color-text-secondary);font-size:13px}
     .review-feedback{margin-top:8px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--color-border);font-size:13px}
     .review-inline-error{margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff0f2;border:1px solid #f5d8dd}.review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:var(--color-primary);color:#fff;font-weight:700;cursor:pointer}
+    .question-num-badge,
+    .cbt-qnum-badge,
+    .candidate-short-qnum,
+    .vocab-row-num-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: auto !important;
+      max-width: none !important;
+      min-width: max-content !important;
+      height: auto !important;
+      min-height: 28px !important;
+      padding: 4px 16px !important;
+      border-radius: 9999px !important;
+      background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important;
+      border: 1.5px solid #fecdd3 !important;
+      color: #e11d48 !important;
+      font-size: 0.88rem !important;
+      font-weight: 800 !important;
+      font-family: inherit !important;
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 1px 3px rgba(225, 29, 72, 0.08) !important;
+    }
   </style>
 </head>
 <body>
@@ -482,7 +512,7 @@
   const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
   if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs?rev=20261017-view-result-v2').then(module => module.mount(demoCourse)).catch((err) => {
+    import('./content-preview.mjs?rev=20261027-integration-v1').then(module => module.mount(demoCourse)).catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });
@@ -631,8 +661,9 @@
     // Link chia sẻ qua chat hay dính ký tự thừa (vd. `\`) sau token; chỉ giữ đúng UUID.
     const hashToken = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('test') || '';
     const testToken = hashToken.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i)?.[0] || config.LEARNING_TEST_TOKEN;
+    const activeBase = window.__ACTIVE_LEARNING_API_BASE__ || config.LEARNING_API_BASE_URL || '';
     return {
-      baseUrl: String(config.LEARNING_API_BASE_URL || '').replace(/\/$/, ''),
+      baseUrl: String(activeBase).replace(/\/$/, ''),
       testToken: testToken || ''
     };
   }
@@ -1065,7 +1096,7 @@
 
   function vocabularyPairRow(item, ordinal){
     const options = Array.isArray(item.options) ? item.options : [];
-    if(options.length !== 25 || options.some(option => !option || typeof option.id !== 'string' || typeof option.label !== 'string')) {
+    if(options.length < 2 || options.some(option => !option || typeof option.id !== 'string' || typeof option.label !== 'string')) {
       throw new Error('WEBTEST34_VOCAB_DEFINITION_OPTIONS_INVALID');
     }
     const key = `vocab1_${ordinal}`;
@@ -1973,10 +2004,34 @@
       let className = code;
       let usedFallback = false;
       if(learningEnabled()){
-        const assignment = await learningRequest('/test-access/resolve', {
-          testToken: learningConfig().testToken,
-          courseCode: code
-        });
+        let assignment;
+        try {
+          assignment = await learningRequest('/test-access/resolve', {
+            testToken: learningConfig().testToken,
+            courseCode: code
+          });
+        } catch (err) {
+          const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(window.location.hostname);
+          if (isLocalHost && learningConfig().baseUrl.includes('webtest.ducanhn.autos')) {
+            try {
+              const localRes = await fetch('http://127.0.0.1:8788/api/learning/test-access/resolve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ testToken: learningConfig().testToken, courseCode: code })
+              });
+              if (localRes.ok) {
+                assignment = await localRes.json();
+                window.__ACTIVE_LEARNING_API_BASE__ = 'http://127.0.0.1:8788';
+              } else {
+                throw err;
+              }
+            } catch {
+              throw err;
+            }
+          } else {
+            throw err;
+          }
+        }
         if(!assignment.assignment?.roster?.length) throw new Error('Assignment chưa có roster local.');
         const asgCourse = String(assignment.assignment?.courseCode || '').toUpperCase();
         const asgClass = String(assignment.assignment?.class?.name || '').toUpperCase();
@@ -2343,8 +2398,18 @@
   });
   $('#mobilePrev').addEventListener('click',()=>step(-1));
   $('#mobileNext').addEventListener('click',()=>step(1));
-  $('#fontDown').addEventListener('click',()=>{fontScale=Math.max(.86,Math.round((fontScale-.06)*100)/100);document.documentElement.style.setProperty('--font-scale',fontScale);persist()});
-  $('#fontUp').addEventListener('click',()=>{fontScale=Math.min(1.2,Math.round((fontScale+.06)*100)/100);document.documentElement.style.setProperty('--font-scale',fontScale);persist()});
+  $('#fontDown').addEventListener('click',()=>{
+    fontScale=Math.max(.85,Math.round((fontScale-.06)*100)/100);
+    document.documentElement.style.setProperty('--font-scale',fontScale);
+    document.documentElement.style.fontSize=`${16*fontScale}px`;
+    persist();
+  });
+  $('#fontUp').addEventListener('click',()=>{
+    fontScale=Math.min(1.3,Math.round((fontScale+.06)*100)/100);
+    document.documentElement.style.setProperty('--font-scale',fontScale);
+    document.documentElement.style.fontSize=`${16*fontScale}px`;
+    persist();
+  });
   $('#cancelSubmit').addEventListener('click',()=>$('#submitModal').classList.add('hidden'));
   function acceptLearningSubmission(result){
     examStreamController?.abort();

@@ -9,7 +9,7 @@ test('labels pending scores as provisional and reports remaining AI items', () =
     gradingStatus: 'pending',
     summary: { scoreEarned: 12, maxScore: 20, scoreFinal: false, pendingItemCount: 6 }
   }), {
-    tone: 'pending', title: 'AI đang chấm bài', scoreFinal: false, pendingItemCount: 6,
+    tone: 'pending', title: 'Đang chấm bài', scoreFinal: false, pendingItemCount: 6,
     scoreLabel: 'Điểm tạm tính', score: '12 / 20'
   });
 });
