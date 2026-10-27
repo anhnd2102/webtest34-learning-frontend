@@ -32,13 +32,22 @@ export function learningRequestMethod(path) {
 
 // Mọi request lượt làm gửi kèm mã thiết bị theo tab; Exam Mode dùng nó để chỉ cho một máy làm bài.
 export function learningRequestBody(path, body, deviceId) {
-  return path.startsWith('/attempts/') ? { ...body, deviceId } : body;
+  // /attempts/review và /attempts/result có schema strict, không nhận deviceId.
+  return path.startsWith('/attempts/') && !['/attempts/review', '/attempts/result'].includes(path) ? { ...body, deviceId } : body;
 }
 
 // 'waiting' → phòng chờ (chưa có đề); 'running' → vào đề và bật Exam Guard; 'off' → luồng thường.
 export function examPhase(attempt) {
   if (!attempt?.exam?.enabled || attempt.status !== 'active') return 'off';
   return ['waiting', 'running'].includes(attempt.exam.status) ? attempt.exam.status : 'off';
+}
+
+// Banner luật/bộ đếm của chế độ Tự giám sát; rỗng khi bài không bật chế độ này.
+export function selfProctoringBannerHtml(selfProctoring) {
+  if (!selfProctoring) return '';
+  const { level, text } = globalThis.selfProctoringNotice(selfProctoring);
+  const colors = { info: '#eff6ff;color:#1e3a8a;border-color:#bfdbfe', danger: '#fef2f2;color:#991b1b;border-color:#fecaca', submitted: '#fffbeb;color:#92400e;border-color:#fde68a' };
+  return `<div id="selfProctoringBanner" class="demo-notice ${level}" role="status" aria-live="polite" style="font-weight:600;background:${colors[level]}">${text}</div>`;
 }
 
 export function resetLocalAttemptState(state) {
@@ -515,6 +524,7 @@ export async function mount(course) {
     status: '',
     expiresAt: null,
     exam: null,
+    selfProctoring: null,
     result: null,
     pollTimer: null
   };
@@ -677,11 +687,27 @@ export async function mount(course) {
       .catch(() => (opening ? undefined : apiRequest('/attempts/exam/incidents/open', { ...body, type: 'left_exam' })))
       .then(() => apiRequest(opening ? '/attempts/exam/incidents/open' : '/attempts/exam/incidents/close', body));
     examIncidentOperations.set(command.incidentId, operation);
-    void operation.catch(err => {
+    void operation.then(data => {
+      if (data?.selfProctoring) applySelfProctoring(data.selfProctoring);
+    }).catch(err => {
       if (err.code === 'EXAM_DEVICE_SUPERSEDED') return;
       const message = document.querySelector('#examGuardMessage');
       if (message) message.textContent = 'Không thể lưu sự cố rời bài. Hãy giữ trang mở và thử quay lại bài thi.';
     });
+  }
+
+  // Server trả số lần thoát sau mỗi sự cố; vượt giới hạn thì server đã tự nộp bài.
+  function applySelfProctoring(next) {
+    learningState.selfProctoring = { ...learningState.selfProctoring, ...next };
+    const { text } = globalThis.selfProctoringNotice(learningState.selfProctoring);
+    const banner = document.querySelector('#selfProctoringBanner');
+    if (banner) banner.outerHTML = selfProctoringBannerHtml(learningState.selfProctoring);
+    const message = document.querySelector('#examGuardMessage');
+    if (message) message.textContent = text;
+    if (learningState.selfProctoring.autoSubmitted && learningState.status === 'active') {
+      learningState.status = 'submitted';
+      learningState.onAutoSubmitted?.(text);
+    }
   }
 
   function runExamGuardCommand(command) {
@@ -708,8 +734,8 @@ export async function mount(course) {
     mountExamGuard();
     examGuardState = {
       ...examGuardState,
-      running: learningState.exam?.status === 'running' && learningState.status === 'active',
-      fullscreenSupported: supportsFullscreen()
+      running: (learningState.exam?.status === 'running' || Boolean(learningState.selfProctoring)) && learningState.status === 'active',
+      fullscreenSupported: !learningState.selfProctoring && supportsFullscreen()
     };
     const result = globalThis.examGuardReducer(examGuardState, event);
     examGuardState = result.state;
@@ -743,7 +769,7 @@ export async function mount(course) {
           <button type="button" class="btn btn-primary" id="examGuardReturn">Quay lại bài thi</button></div>
         </div>`);
       document.querySelector('#examGuardReturn').addEventListener('click', () => {
-        document.querySelector('#examGuardMessage').textContent = 'Giáo viên sẽ được thông báo.';
+        document.querySelector('#examGuardMessage').textContent = learningState.selfProctoring ? globalThis.selfProctoringNotice(learningState.selfProctoring).text : 'Giáo viên sẽ được thông báo.';
         dispatchExamGuard({ type: 'return_click', at: Date.now() });
       });
     }
@@ -917,10 +943,16 @@ export async function mount(course) {
               </div>
             </div>
 
-            <div class="cbt-intro-footer">
+            <div class="cbt-intro-footer" style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;">
+              <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Xem kết quả</button>
               <button type="button" class="btn-start-exam" id="startExamBtn" disabled>Bắt đầu làm bài →</button>
             </div>
+            </div>
           </div>
+        </main>
+        <main id="reviewMain" class="demo-width" hidden style="max-width:672px;margin:20px auto;padding:0 16px">
+          <button type="button" class="btn btn-secondary" id="reviewBackBtn">← Chọn lại tên</button>
+          <div id="reviewBody" aria-live="polite"></div>
         </main>
       </div>
     `;
@@ -940,6 +972,24 @@ export async function mount(course) {
       button.btn-secondary{background:white;color:#334155;border-color:#cbd5e1}
       button.btn-secondary:not(:disabled):hover{background:#f8fafc;border-color:#94a3b8}
       button:disabled{opacity:.5;cursor:not-allowed}
+      .review-screen{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.04);margin-top:16px;line-height:1.5;color:#1e293b}
+      .review-header h1{font-size:22px;margin:0 0 4px;color:#174266}.review-header p{margin:0;color:#64748b;font-size:14px}
+      .review-total{margin:16px 0;padding:16px;border-radius:12px;background:#fff7f8;border:1px solid #f5d8dd;text-align:center}
+      .review-total strong{display:block;font-size:32px;color:#db0829}
+      .review-provisional{color:#8a5a00;font-weight:700}
+      .review-section{border:1px solid #e2e8f0;border-radius:12px;margin-top:12px;overflow:hidden}
+      .review-section-toggle{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;border:0;background:#fff;padding:12px 16px;text-align:left;font:inherit;cursor:pointer}
+      .review-section-toggle strong{font-size:17px}.review-section-toggle span{font-size:13px;color:#64748b}
+      .review-section-items{list-style:none;margin:0;padding:0 16px 8px}
+      .review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid #e2e8f0;font-size:14px}
+      .review-verdict{flex:0 0 auto;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700;background:#f1f5f9}
+      .review-verdict.correct{background:#e8f7f0;color:#12805c}.review-verdict.incorrect{background:#fff0f2;color:#db0829}
+      .review-verdict.partial,.review-verdict.pending,.review-verdict.manual_review{background:#fff7e8;color:#8a5a00}
+      .review-answer{color:#64748b;word-break:break-word}.review-expected{margin-top:4px}.review-expected.muted{color:#64748b;font-size:13px}
+      .review-feedback{margin-top:8px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;font-size:13px}
+      .review-inline-error{margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff0f2;border:1px solid #f5d8dd}
+      .review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:#db0829;color:#fff;font-weight:700;cursor:pointer}
+      @media(max-width:520px){.content-demo main.demo-width>div{padding:20px!important}.demo-top{padding:10px 12px}.timer{display:none}#viewResultBtn,#startExamBtn{width:100%;margin:0!important}#loadRosterBtn{min-width:0!important;padding:0 12px!important}}
     `;
     document.head.append(canonicalStyle);
 
@@ -1176,6 +1226,7 @@ export async function mount(course) {
           state.submittedAt = state.submittedAt || Date.now();
         }
         learningState.exam = startRes.attempt.exam || null;
+        learningState.selfProctoring = startRes.attempt.selfProctoring || null;
         if (startRes.attempt.definition) learningState.definition = startRes.attempt.definition;
         const phase = examPhase(startRes.attempt);
         if (phase === 'waiting') {
@@ -1185,6 +1236,7 @@ export async function mount(course) {
           return;
         }
         renderExamInterface();
+        if (learningState.selfProctoring && learningState.status === 'active') mountExamGuard();
         if (phase === 'running') {
           mountExamGuard();
           void connectExamEvents();
@@ -1193,6 +1245,136 @@ export async function mount(course) {
         startBtn.disabled = false;
         startBtn.textContent = 'Bắt đầu làm bài →';
         alert(`Không mở được phiên làm bài: ${err.message}`);
+      }
+    });
+
+    // --- XEM KẾT QUẢ: chỉ đọc qua /attempts/review + /attempts/result, không start, không âm thanh, không Exam Guard ---
+    const viewBtn = document.querySelector('#viewResultBtn');
+    const introMain = document.querySelector('main.demo-width:not(#reviewMain)');
+    const reviewMain = document.querySelector('#reviewMain');
+    const reviewBody = document.querySelector('#reviewBody');
+    const REVIEW_POLL_MAX_MS = 45 * 60 * 1000;
+    let reviewApi = null;
+    let reviewModulePromise = null;
+    let reviewModuleTries = 0;
+    let reviewRetry = null;
+    let reviewTimer = null;
+    let reviewRun = 0;
+    let reviewLastHtml = '';
+    let reviewSubmittedAt = '';
+    let reviewShown = false;
+
+    // Lỗi nạp module không được nuốt: mỗi lần thử lại dùng URL mới để tránh cache lỗi.
+    function loadReviewModule() {
+      reviewModulePromise ||= import(`../34-shared/review-module.mjs?rev=20261017-review-v1${reviewModuleTries++ ? `&retry=${Date.now()}` : ''}`)
+        .then(module => (reviewApi = module), error => { reviewModulePromise = null; throw error; });
+      return reviewModulePromise;
+    }
+    loadReviewModule().catch(() => {});
+    studentSelect.addEventListener('change', () => { viewBtn.disabled = !studentSelect.value; });
+
+    function stopReviewPolling() {
+      clearTimeout(reviewTimer);
+      reviewTimer = null;
+      reviewRun += 1;
+    }
+
+    // input: phần còn lại của reviewViewModel ({state, result, definition, error}).
+    function renderReview(input) {
+      if (!reviewApi) {
+        loadReviewModule().then(() => renderReview(input), () => {
+          reviewRetry = () => renderReview(input);
+          reviewBody.innerHTML = '<section class="review-screen review-error" style="padding:16px"><p role="alert">Không tải được màn hình kết quả. Kiểm tra kết nối mạng rồi thử lại.</p><button type="button" class="review-retry" data-review-retry>Thử lại</button></section>';
+          reviewLastHtml = '';
+        });
+        return;
+      }
+      const meta = {
+        testTitle: document.querySelector('.brand-sub')?.textContent || title,
+        studentName: learningState.studentName,
+        className: learningState.className,
+        submittedAt: reviewSubmittedAt
+      };
+      const html = reviewApi.reviewHtml(reviewApi.reviewViewModel({ meta, ...input }));
+      if (html === reviewLastHtml) return; // polling không dựng lại khi nội dung không đổi
+      const expanded = [...reviewBody.querySelectorAll('[data-review-section][aria-expanded="true"]')].map(btn => btn.dataset.reviewSection);
+      reviewBody.innerHTML = reviewLastHtml = html;
+      expanded.forEach(id => {
+        reviewBody.querySelector(`[data-review-section="${id}"]`)?.setAttribute('aria-expanded', 'true');
+        const list = document.getElementById(id);
+        if (list) list.hidden = false;
+      });
+    }
+
+    const reviewError = (error, retry) => { reviewRetry = retry; renderReview({ state: 'error', error }); };
+
+    async function openReview() {
+      if (!learningState.studentRef) return;
+      stopReviewPolling();
+      const run = reviewRun;
+      reviewLastHtml = '';
+      reviewSubmittedAt = '';
+      reviewShown = false;
+      introMain.hidden = true;
+      reviewMain.hidden = false;
+      renderReview({ state: 'loading' });
+      try {
+        const review = await apiRequest('/attempts/review', { testToken, courseCode: learningState.courseCode, studentRef: learningState.studentRef });
+        if (run !== reviewRun) return;
+        if (review.status === 'not_submitted') return renderReview({ state: 'no_submission' });
+        if (review.status !== 'submitted_unpublished' && review.status !== 'published') throw new Error(`Trạng thái không hợp lệ: ${review.status}`);
+        reviewSubmittedAt = review.submittedAt || '';
+        if (review.status === 'submitted_unpublished') renderReview({ state: 'not_released' });
+        pollReview(review.attemptToken, run, Date.now(), 0);
+      } catch (error) {
+        if (run === reviewRun) reviewError(error, openReview);
+      }
+    }
+
+    // Chưa công bố: hỏi chậm 15s để tự cập nhật khi giảng viên công bố; đã công bố nhưng còn câu chờ chấm: 2s.
+    async function pollReview(attemptToken, run, startedAt, delay) {
+      if (delay) await new Promise(resolve => { reviewTimer = setTimeout(resolve, delay); });
+      if (run !== reviewRun) return;
+      let next = 15_000;
+      try {
+        const res = await apiRequest('/attempts/result', { attemptToken });
+        if (run !== reviewRun) return;
+        const result = res.result;
+        if (result?.publication?.published && Array.isArray(result.items)) {
+          // Chế độ thi 'waiting' không trả definition lúc resolve; dùng definition từ /attempts/result trước.
+          const definition = res.definition || learningState.definition;
+          reviewShown = true;
+          renderReview({ state: 'ready', result, definition: { blocks: definition?.blocks, sections: definition?.sections } });
+          if (['complete', 'manual_review'].includes(result.gradingStatus) && !result.summary?.pendingItemCount) return;
+          next = 2000;
+        }
+      } catch (error) {
+        if (run !== reviewRun) return;
+        if (error.status === 429 && reviewShown) {
+          next = 30_000; // đã có kết quả trên màn hình: chỉ giãn nhịp hỏi
+        } else {
+          // Chưa có gì để hiện (hoặc lỗi bền): dừng polling và hiện Thử lại.
+          reviewError(error, () => { stopReviewPolling(); renderReview({ state: 'loading' }); pollReview(attemptToken, reviewRun, Date.now(), 0); });
+          return;
+        }
+      }
+      if (Date.now() - startedAt < REVIEW_POLL_MAX_MS) void pollReview(attemptToken, run, startedAt, next);
+    }
+
+    viewBtn.addEventListener('click', openReview);
+    document.querySelector('#reviewBackBtn').addEventListener('click', () => {
+      stopReviewPolling();
+      reviewMain.hidden = true;
+      introMain.hidden = false;
+    });
+    reviewMain.addEventListener('click', event => {
+      if (event.target.closest('[data-review-retry]')) reviewRetry?.();
+      const toggle = event.target.closest('[data-review-section]');
+      if (toggle) {
+        const list = document.getElementById(toggle.dataset.reviewSection);
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (list) list.hidden = expanded;
+        toggle.setAttribute('aria-expanded', String(!expanded));
       }
     });
 
@@ -1223,9 +1405,7 @@ export async function mount(course) {
       : `Bài thi demo · ${examDuration} phút theo đề`;
 
     const noticeBanner = isLearningMode
-      ? `<div class="demo-notice" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534">
-          <strong>Phiên thi chính thức:</strong> Câu trả lời được tự động lưu lên máy chủ. Sau khi hoàn thành, hãy bấm <strong>Nộp bài</strong> để hoàn tất bài thi.
-        </div>`
+      ? selfProctoringBannerHtml(learningState.selfProctoring)
       : `<div class="demo-notice">
           Bản xem thử để duyệt đề. Câu trả lời chỉ lưu trên trình duyệt này; nộp thử chưa chấm điểm hoặc gửi lên hệ thống.
           Dùng link thi có token do người phụ trách cung cấp để mở phiên chấm điểm.
@@ -1990,6 +2170,18 @@ export async function mount(course) {
         }
       } catch {}
     }
+
+    learningState.onAutoSubmitted = text => {
+      state.submittedAt = Date.now();
+      stopExamConnections();
+      persist();
+      update();
+      if (examTimerInterval) clearInterval(examTimerInterval);
+      if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
+      query('#demo-result').hidden = false;
+      query('#demo-result').textContent = text;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     query('#demo-confirm-submit').addEventListener('click', async () => {
       query('#demo-confirm-submit').disabled = true;

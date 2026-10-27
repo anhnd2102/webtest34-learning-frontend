@@ -243,18 +243,6 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shado
   flex-direction: column;
   gap: 12px;
 }
-.showcase-window {
-  font-size: 0.88rem;
-  color: #64748b;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.window-label {
-  font-weight: 600;
-  color: #475569;
-}
 
 /* Compact Assignment Chips & Active Test Focus */
 .assignment-chips {
@@ -2325,6 +2313,42 @@ body:not(.login-page) #auth-panel {
   background: #dcfce7;
   color: #15803d;
   border-color: #bbf7d0;
+}
+
+.exam-switch-panel {
+  flex: 1 1 100%;
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px dashed #94a3b8;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.exam-switch-hint,
+.exam-switch-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.exam-switch-message {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 0.86rem;
+  color: #1e293b;
+}
+
+.exam-switch-message:empty {
+  display: none;
+}
+
+.exam-switch-message[data-level="error"] {
+  color: #b91c1c;
+}
+
+.exam-switch-message[data-level="success"] {
+  color: #15803d;
 }
 
 .btn-exam-room {
@@ -9842,3 +9866,20 @@ button.btn-icon:disabled,
 }
 
 
+
+.proctoring-lock-hint {
+  flex-basis: 100%;
+  font-size: 0.82rem;
+  color: #b45309;
+}
+
+/* Đồng bộ điểm Portal */
+.portal-sync { display: grid; gap: 10px; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
+.portal-sync h3 { margin: 0; font-size: 1rem; }
+.portal-sync-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.portal-tone-ready { color: #1d4ed8; font-weight: 600; }
+.portal-tone-ok { color: #166534; font-weight: 600; }
+.portal-tone-warn { color: #b45309; font-weight: 600; }
+.portal-tone-blocked { color: #b91c1c; font-weight: 600; }
+.portal-sync input[type="checkbox"] { width: 18px; height: 18px; padding: 0; margin: 0; box-shadow: none; }
+.portal-sync .portal-sync-row button { width: auto; }

@@ -31,3 +31,11 @@ globalThis.examGuardReducer = (state, event) => {
 };
 
 globalThis.examDeviceRequestBody = (body, deviceId) => ({...body, deviceId});
+
+// Thông báo luật Tự giám sát cho học viên: luật, bộ đếm X/N, cảnh báo cuối và lý do tự nộp.
+globalThis.selfProctoringNotice = ({ exitLimit, exitCount = 0, autoSubmitted = false }) => {
+  if(autoSubmitted) return { level: 'submitted', text: `Bài đã được tự động nộp vì bạn thoát quá ${exitLimit} lần.` };
+  if(exitCount >= exitLimit) return { level: 'danger', text: `Bạn đã thoát ${exitCount}/${exitLimit} lần. Thoát thêm một lần nữa bài sẽ bị nộp tự động.` };
+  if(exitCount === 0) return { level: 'info', text: `Bài này tự giám sát: thoát quá ${exitLimit} lần, bài sẽ tự động nộp.` };
+  return { level: 'info', text: `Bạn đã thoát ${exitCount}/${exitLimit} lần, còn ${exitLimit - exitCount} lần.` };
+};

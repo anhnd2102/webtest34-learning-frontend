@@ -1,4 +1,9 @@
 import { parseSseChunk } from './exam-room-sse.js';
+import {
+  portalTestsPath, portalLinkPath, portalSyncPreviewPath, portalSyncPath, portalSyncStatusPath,
+  portalSyncErrorView, previewRowView, selectableRefs, syncRequestBody, syncConfirmMessage,
+  syncResultView, retryRefs, linkedPortalTest, syncSummaryText, scaleWarningText, selectAllState, shouldReloadPreviewAfterSyncError
+} from './portal-sync-view.js';
 
 export function defaultApiBase() {
   return 'https://webtest.ducanhn.autos';
@@ -1109,8 +1114,138 @@ export function assignmentResultsPath(classId, assignmentId, options = {}) {
   return query ? `${base}?${query}` : base;
 }
 
+export function assignmentResultsExportPath(classId, assignmentId) {
+  return `${assignmentResultsPath(classId, assignmentId)}/export`;
+}
+
+export function toggleExportXlsxButton(button, assignmentId) {
+  if (button) button.hidden = !assignmentId;
+}
+
+function saveBlob(blob, filename) {
+  const href = URL.createObjectURL(blob);
+  const link = Object.assign(document.createElement('a'), { href, download: filename });
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 0);
+}
+
+// Dashboard xác thực bằng Bearer nên không dùng link trực tiếp: fetch → blob → tải xuống.
+// Luôn xuất toàn bộ danh sách, không gửi tham số lọc/sắp xếp.
+// onUnauthorized: 401 kết thúc phiên giống request() của dashboard.
+export async function downloadResultsXlsx({ url, headers, button, status, fetchImpl = fetch, save = saveBlob, onUnauthorized = () => {} }) {
+  const label = button.querySelector('span');
+  const idleText = label.textContent;
+  button.disabled = true;
+  label.textContent = 'Đang xuất…';
+  try {
+    const response = await fetchImpl(url, { headers });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      if (response.status === 401) onUnauthorized();
+      throw new Error(payload.message || 'Không xuất được file xlsx.');
+    }
+    const filename = /filename="([^"]+)"/.exec(response.headers.get('Content-Disposition') || '')?.[1] || 'KetQua.xlsx';
+    save(await response.blob(), filename);
+    // Chỉ xoá lỗi xuất cũ, giữ nguyên thông báo khác trên dòng trạng thái.
+    if (status?.textContent.startsWith('Lỗi xuất xlsx')) status.textContent = '';
+  } catch (error) {
+    if (status) status.textContent = `Lỗi xuất xlsx: ${error.message}`;
+  } finally {
+    button.disabled = false;
+    label.textContent = idleText;
+  }
+}
+
 export function assignmentExamModePath(classId, assignmentId) {
   return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/exam-mode`;
+}
+
+export function assignmentSelfProctoringPath(classId, assignmentId) {
+  return `/api/teacher/classes/${encodeURIComponent(classId)}/assignments/${encodeURIComponent(assignmentId)}/self-proctoring`;
+}
+
+// Lý do toggle bị khoá, để giáo viên không phải đoán vì sao không bấm được.
+export function examModeLockReason({ exitLimit } = {}) {
+  return exitLimit === null || exitLimit === undefined ? '' : 'Bài đang bật Tự giám sát nên không bật được Exam Mode. Tắt Tự giám sát trước; nếu đã có học viên bắt đầu làm thì không tắt được nữa.';
+}
+
+export function selfProctoringLockReason({ examMode, examSession } = {}) {
+  if (examMode) return 'Bài đang bật Exam Mode: tắt Exam Mode trước khi bật Tự giám sát.';
+  if (examSession) return 'Bài đã chuyển từ Exam Mode sang Tự giám sát nên không đổi lại được; giới hạn thoát cố định.';
+  return '';
+}
+
+export function selfProctoringRequestBody(enabled, rawLimit) {
+  if (!enabled) return { exitLimit: null };
+  const text = String(rawLimit ?? '').trim();
+  if (!/^\d+$/.test(text)) throw new Error('Giới hạn thoát phải là số nguyên ≥ 0.');
+  return { exitLimit: Number(text) };
+}
+
+// Chuyển Exam Mode đã kết thúc → Tự giám sát: một request duy nhất, N bắt buộc nhập, không có giá trị mặc định.
+export function examSwitchRequestBody(rawLimit) {
+  const text = String(rawLimit ?? '').trim();
+  if (!/^\d+$/.test(text)) throw new Error('Giới hạn thoát phải là số nguyên ≥ 0.');
+  return { enabled: false, switchTo: 'self-proctoring', exitLimit: Number(text) };
+}
+
+export function formatExamDeadline(iso, locale = 'vi-VN', timeZone = 'Asia/Ho_Chi_Minh') {
+  const date = new Date(iso);
+  if (!iso || Number.isNaN(date.getTime())) return 'chưa xác định';
+  const text = new Intl.DateTimeFormat(locale, {
+    hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric', timeZone
+  }).format(date);
+  return `${text} (giờ Việt Nam, UTC+7)`;
+}
+
+// Khối chuyển chế độ chỉ dựa vào phiên thi do server trả về. Không so với Date.now() và không suy hạn 150 phút:
+// việc cho chuyển hay không do server quyết định khi bấm; ở đây chỉ giải thích deadline cho giáo viên.
+export function examSwitchView(assignment, { serverNow = null } = {}) {
+  const session = assignment?.examSession;
+  if (!assignment?.examMode || !session || !['running', 'ended'].includes(session.status)) return { visible: false };
+  const deadline = formatExamDeadline(session.deadlineAt);
+  const deadlineMs = Date.parse(session.deadlineAt);
+  const serverNowMs = Date.parse(serverNow);
+  let hint;
+  if (session.status === 'ended') hint = 'Phiên thi đã kết thúc. Có thể chuyển sang Tự giám sát.';
+  else if (!Number.isFinite(deadlineMs)) hint = 'Chưa xác định được hạn nộp của phiên thi; máy chủ sẽ từ chối chuyển cho đến khi có dữ liệu hợp lệ.';
+  else if (Number.isFinite(serverNowMs) && serverNowMs >= deadlineMs) hint = `Phiên thi đã quá hạn nộp (${deadline}) theo đồng hồ máy chủ. Bấm chuyển để máy chủ chốt các bài còn dở và đổi chế độ.`;
+  else hint = `Phiên thi đang diễn ra, hạn nộp ${deadline}. Chỉ chuyển được sau thời điểm này; máy chủ sẽ kiểm tra lại khi bạn bấm.`;
+  return { visible: true, status: session.status, deadline, hint };
+}
+
+export function examSwitchErrorView(error) {
+  const details = error?.details || {};
+  switch (error?.code) {
+    case 'EXAM_SESSION_STILL_RUNNING':
+      return { text: `Phiên thi chưa kết thúc. Hạn nộp: ${formatExamDeadline(details.deadlineAt)}. Hãy chuyển sau thời điểm này.`, retryable: false };
+    case 'EXAM_SETTLEMENT_PENDING':
+      return { text: 'Hệ thống chưa chốt xong bài của phiên thi cũ nên chưa đổi chế độ. Chưa có gì bị thay đổi, hãy bấm Thử lại sau ít phút.', retryable: true };
+    case 'INVALID_EXAM_DEADLINE':
+    case 'INVALID_EXAM_SESSION':
+      return { text: 'Không xác định được hạn nộp của phiên thi nên chưa thể chuyển. Hãy báo quản trị viên kiểm tra dữ liệu phiên thi.', retryable: false };
+    case 'EXAM_SESSION_NOT_STARTED':
+      return { text: 'Phiên thi chưa bắt đầu nên chưa thể chuyển sang Tự giám sát.', retryable: false };
+    case 'SELF_PROCTORING_LOCKED':
+      return { text: 'Bài đã chuyển sang Tự giám sát với giới hạn thoát khác, không thể đổi lại.', retryable: false };
+    default:
+      return { text: error?.message || 'Không chuyển được chế độ. Chưa có gì bị thay đổi, hãy thử lại.', retryable: true };
+  }
+}
+
+export function examSwitchSuccessText(payload) {
+  const limit = payload?.exitLimit;
+  const lead = payload?.switched === false ? 'Bài đã ở Tự giám sát' : 'Đã chuyển sang Tự giám sát';
+  return `${lead}: thoát quá ${limit} lần thì bài tự nộp. Chế độ mới chỉ áp dụng cho lượt làm bắt đầu từ bây giờ; điểm, lịch sử phiên thi và quyền làm lại được giữ nguyên, học viên đã nộp vẫn cần được cấp làm lại.`;
+}
+
+export function incidentCellText(student) {
+  if (!student.attemptId) return '—';
+  const count = student.incidentCount ?? 0;
+  if (student.exitLimit === null || student.exitLimit === undefined) return String(count);
+  return `${count}/${student.exitLimit}${student.autoSubmitted ? ' · Tự nộp do vượt giới hạn' : ''}`;
 }
 
 export function assignmentExamRoomPath(classId, assignmentId) {
@@ -12678,6 +12813,16 @@ async function startDashboard() {
   const showcaseStatusBadge = document.querySelector('#showcase-status-badge');
   const examModeToggle = document.querySelector('#exam-mode-toggle');
   const examModeStatusPill = document.querySelector('#exam-mode-status-pill');
+  const selfProctoringToggle = document.querySelector('#self-proctoring-toggle');
+  const examModeLockHint = document.querySelector('#exam-mode-lock-hint');
+  const selfProctoringLockHint = document.querySelector('#self-proctoring-lock-hint');
+  const selfProctoringLimit = document.querySelector('#self-proctoring-limit');
+  const selfProctoringSave = document.querySelector('#self-proctoring-save');
+  const examSwitchControls = document.querySelector('#exam-switch-controls');
+  const examSwitchHint = document.querySelector('#exam-switch-hint');
+  const examSwitchLimit = document.querySelector('#exam-switch-limit');
+  const examSwitchButton = document.querySelector('#exam-switch-btn');
+  const examSwitchMessage = document.querySelector('#exam-switch-message');
   const examRoomOpenButton = document.querySelector('#exam-room-open');
   const examRoom = document.querySelector('#exam-room');
   const examRoomSummary = document.querySelector('#exam-room-summary');
@@ -12688,7 +12833,6 @@ async function startDashboard() {
   const examRoomExtensionMinutes = document.querySelector('#exam-room-extension-minutes');
   const examRoomRefreshButton = document.querySelector('#exam-room-refresh');
   const examRoomCloseButton = document.querySelector('#exam-room-close');
-  const showcaseWindowText = document.querySelector('#showcase-window-text');
   const showcaseLinkBar = document.querySelector('#showcase-link-bar');
   const showcaseStudentUrl = document.querySelector('#showcase-student-url');
   const copyShowcaseLinkBtn = document.querySelector('#copy-showcase-link-btn');
@@ -12702,6 +12846,7 @@ async function startDashboard() {
   const lastUpdated = document.querySelector('#last-updated');
   const refreshBtn = document.querySelector('#refresh-btn');
   const publishAllBtn = document.querySelector('#publish-all-btn');
+  const exportXlsxBtn = document.querySelector('#export-xlsx-btn');
   const classSkillSummary = document.querySelector('#class-skill-summary');
   const viewDashboard = document.querySelector('#view-dashboard');
   const viewGrading = document.querySelector('#view-grading');
@@ -12713,6 +12858,7 @@ async function startDashboard() {
   const gradingBackToDashboardBtn = document.querySelector('#grading-back-to-dashboard-btn');
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
+  let currentServerNow = null;
   let isSwitchingAssignment = false;
   let currentSelectedAssignment = null;
   let examRoomReturnToResults = false;
@@ -13168,14 +13314,18 @@ async function startDashboard() {
       if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = '#';
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
       if (examRoomOpenButton) examRoomOpenButton.hidden = true;
+      if (examSwitchControls) examSwitchControls.hidden = true;
       return;
     }
 
     selectedAssignmentCard.hidden = false;
     currentSelectedAssignment = assignment;
     if (examRoom) examRoom.hidden = true;
-    if (examRoomOpenButton) examRoomOpenButton.hidden = !assignment.examMode;
+    // Phòng thi vẫn mở được sau khi đã chuyển chế độ để xem lại sự cố của phiên cũ.
+    if (examRoomOpenButton) examRoomOpenButton.hidden = !(assignment.examMode || assignment.examSession);
     updateExamModeUI(assignment.examMode);
+    updateSelfProctoringUI(assignment.exitLimit, assignment.examMode);
+    renderExamSwitch(assignment);
     const selectedClassOpt = classSelect?.selectedOptions?.[0];
     const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
 
@@ -13199,9 +13349,6 @@ async function startDashboard() {
     }
     if (showcaseStatusBadge) {
       showcaseStatusBadge.textContent = assignment.status === 'published' ? 'Đang phát hành' : assignment.status;
-    }
-    if (showcaseWindowText) {
-      showcaseWindowText.textContent = formatAssignmentWindow(assignment.opensAt, assignment.closesAt);
     }
 
     const currentApi = typeof apiBase === 'function' ? apiBase() : '';
@@ -13291,19 +13438,27 @@ async function startDashboard() {
   const apiBase = () => (loginApiBase?.value || form?.elements?.apiBase?.value || standardApiBase).replace(/\/$/, '');
   const authHeader = () => authHeaders({ token: sessionToken, actorId: form?.elements?.actorId?.value });
 
+  const endSession = () => {
+    handleLogout();
+    if (loginError) {
+      loginError.hidden = false;
+      loginError.textContent = 'Phiên làm việc đã kết thúc hoặc không hợp lệ. Vui lòng đăng nhập lại.';
+    }
+  };
+
   const request = async (path, options = {}) => {
     const headers = { ...authHeader(), ...(options.headers || {}) };
     const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
     const payload = await response.json().catch(() => ({}));
     if (response.status === 401 && sessionToken) {
-      handleLogout();
-      if (loginError) {
-        loginError.hidden = false;
-        loginError.textContent = 'Phiên làm việc đã kết thúc hoặc không hợp lệ. Vui lòng đăng nhập lại.';
-      }
+      endSession();
       throw new Error(payload.message || 'Yêu cầu đăng nhập.');
     }
-    if (!response.ok) throw new Error(payload.message || 'Không tải được dữ liệu.');
+    if (!response.ok) {
+      throw Object.assign(new Error(payload.message || 'Không tải được dữ liệu.'), {
+        code: payload.error, details: payload.details, status: response.status
+      });
+    }
     return payload;
   };
 
@@ -13507,6 +13662,104 @@ async function startDashboard() {
     }
   }
 
+  function updateSelfProctoringUI(exitLimit, examMode) {
+    const enabled = exitLimit !== null && exitLimit !== undefined;
+    // Bài đã chuyển từ Exam Mode sang Tự giám sát: server khoá đổi N, nên khoá luôn các ô để không hứa điều server từ chối.
+    const lockedAfterExam = !examMode && Boolean(currentSelectedAssignment?.examSession);
+    if (selfProctoringToggle) { selfProctoringToggle.checked = enabled; selfProctoringToggle.disabled = Boolean(examMode) || lockedAfterExam; }
+    if (selfProctoringLimit) { selfProctoringLimit.value = enabled ? String(exitLimit) : ''; selfProctoringLimit.disabled = !enabled || lockedAfterExam; }
+    if (selfProctoringSave) selfProctoringSave.disabled = lockedAfterExam || (!enabled && !selfProctoringToggle?.checked);
+    if (examModeToggle) examModeToggle.disabled = enabled;
+    const examReason = examModeLockReason({ exitLimit });
+    const selfReason = selfProctoringLockReason({ examMode, examSession: currentSelectedAssignment?.examSession });
+    if (examModeLockHint) { examModeLockHint.textContent = examReason; examModeLockHint.hidden = !examReason; }
+    if (selfProctoringLockHint) { selfProctoringLockHint.textContent = selfReason; selfProctoringLockHint.hidden = !selfReason; }
+  }
+
+  // Khối "Chuyển sang Tự giám sát": hiện khi phiên thi đã bắt đầu; kết quả cuối cùng luôn đọc lại từ server.
+  let examSwitchAssignmentId = '';
+  let examSwitchBusy = false;
+  function setExamSwitchMessage(text, level = 'info') {
+    if (!examSwitchMessage) return;
+    examSwitchMessage.textContent = text;
+    examSwitchMessage.dataset.level = level;
+  }
+  function renderExamSwitch(assignment) {
+    if (!examSwitchControls) return;
+    if (assignment?.assignmentId !== examSwitchAssignmentId) {
+      examSwitchAssignmentId = assignment?.assignmentId || '';
+      setExamSwitchMessage('');
+      if (examSwitchLimit) examSwitchLimit.value = '';
+    }
+    const view = examSwitchView(assignment, { serverNow: currentServerNow });
+    examSwitchControls.hidden = !view.visible;
+    if (!view.visible) return;
+    examSwitchHint.textContent = view.hint;
+    examSwitchButton.disabled = examSwitchBusy;
+  }
+  examSwitchButton?.addEventListener('click', async () => {
+    const target = currentSelectedAssignment;
+    if (!target || examSwitchBusy) return;
+    let body;
+    try { body = examSwitchRequestBody(examSwitchLimit.value); }
+    catch (error) { setExamSwitchMessage(error.message, 'error'); examSwitchLimit.focus(); return; }
+    examSwitchBusy = true;
+    examSwitchButton.disabled = true;
+    examSwitchLimit.disabled = true;
+    setExamSwitchMessage('Đang chuyển chế độ…');
+    let payload;
+    try {
+      payload = await request(assignmentExamModePath(state.classId, target.assignmentId), {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      });
+    } catch (error) {
+      const view = examSwitchErrorView(error);
+      setExamSwitchMessage(view.text, 'error');
+      examSwitchButton.textContent = view.retryable ? 'Thử lại' : 'Chuyển sang Tự giám sát';
+      examSwitchBusy = false;
+      examSwitchLimit.disabled = false;
+      examSwitchButton.disabled = false;
+      return;
+    }
+    // Chỉ báo thành công sau khi đọc lại trạng thái từ server; reload cũng thấy đúng như vậy.
+    examSwitchBusy = false;
+    examSwitchLimit.disabled = false;
+    examSwitchButton.textContent = 'Chuyển sang Tự giám sát';
+    try {
+      await loadAssignments(state.classId, target.assignmentId);
+      setExamSwitchMessage(examSwitchSuccessText(payload), 'success');
+      status.textContent = 'Đã chuyển sang Tự giám sát.';
+    } catch (error) {
+      setExamSwitchMessage(`Máy chủ đã nhận yêu cầu chuyển nhưng chưa tải lại được trạng thái mới: ${error.message}. Hãy tải lại trang để xác nhận.`, 'error');
+      examSwitchButton.disabled = false;
+    }
+  });
+
+  selfProctoringToggle?.addEventListener('change', () => {
+    selfProctoringLimit.disabled = !selfProctoringToggle.checked;
+    if (selfProctoringToggle.checked) selfProctoringLimit.focus();
+    selfProctoringSave.disabled = false;
+  });
+
+  selfProctoringSave?.addEventListener('click', async () => {
+    if (!currentSelectedAssignment) return;
+    selfProctoringSave.disabled = true;
+    try {
+      const body = selfProctoringRequestBody(selfProctoringToggle.checked, selfProctoringLimit.value);
+      const payload = await request(assignmentSelfProctoringPath(state.classId, currentSelectedAssignment.assignmentId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      currentSelectedAssignment.exitLimit = payload.exitLimit;
+      status.textContent = payload.exitLimit === null ? 'Đã tắt Tự giám sát.' : `Đã bật Tự giám sát: thoát quá ${payload.exitLimit} lần thì bài tự nộp.`;
+    } catch (error) {
+      status.textContent = error.message;
+    } finally {
+      updateSelfProctoringUI(currentSelectedAssignment.exitLimit, currentSelectedAssignment.examMode);
+    }
+  });
+
   examModeToggle?.addEventListener('change', async () => {
     if (!currentSelectedAssignment) return;
     examModeToggle.disabled = true;
@@ -13518,6 +13771,7 @@ async function startDashboard() {
       });
       currentSelectedAssignment.examMode = payload.examMode;
       updateExamModeUI(payload.examMode);
+      updateSelfProctoringUI(currentSelectedAssignment.exitLimit, payload.examMode);
       if (examRoomOpenButton) examRoomOpenButton.hidden = !payload.examMode;
       if (!payload.examMode && examRoom) examRoom.hidden = true;
       status.textContent = payload.examMode ? 'Exam Mode đã bật. Học viên sẽ chờ giáo viên bắt đầu.' : 'Exam Mode đã tắt.';
@@ -13568,13 +13822,265 @@ async function startDashboard() {
     }
   }
 
+  // ---- Đồng bộ điểm Portal: chỉ hiển thị dữ liệu backend trả về, không tính điểm hay luật ở trình duyệt.
+  const portalEl = id => document.querySelector(`#${id}`);
+  const portal = { key: '', tests: [], link: null, preview: null, sync: new Map(), names: new Map(), lastSync: null, busy: false };
+
+  function portalMessage(text) { portalEl('portal-sync-message').textContent = text || ''; }
+
+  function portalCell(row, text, tone) {
+    const cell = document.createElement('td');
+    cell.textContent = text;
+    if (tone) cell.className = `portal-tone-${tone}`;
+    row.append(cell);
+  }
+
+  function renderPortalPreview() {
+    const box = portalEl('portal-preview');
+    const body = portalEl('portal-preview-rows');
+    body.replaceChildren();
+    const preview = portal.preview;
+    box.hidden = !preview;
+    if (!preview) return;
+    for (const raw of preview.rows) {
+      const view = previewRowView(raw);
+      const result = portal.sync.has(raw.studentRef) ? syncResultView(portal.sync.get(raw.studentRef)) : null;
+      const tr = document.createElement('tr');
+      const pick = document.createElement('td');
+      const box2 = document.createElement('input');
+      box2.type = 'checkbox';
+      box2.className = 'portal-pick';
+      box2.value = raw.studentRef;
+      box2.disabled = !view.selectable;
+      box2.checked = view.selectable;
+      box2.setAttribute('aria-label', `Chọn ${view.name}`);
+      box2.addEventListener('change', updatePortalSyncButton);
+      pick.append(box2);
+      tr.append(pick);
+      portalCell(tr, view.name);
+      portalCell(tr, view.webtestText);
+      portalCell(tr, view.portalText);
+      portalCell(tr, view.reasonText ? `${view.statusLabel}: ${view.reasonText}` : view.statusLabel, view.tone);
+      portalCell(tr, result ? [result.statusLabel, result.errorText].filter(Boolean).join(': ') : '', result?.tone);
+      body.append(tr);
+    }
+    const writable = preview.mode === 'write';
+    portalEl('portal-sync-btn').disabled = !writable;
+    portalEl('portal-sync-btn').title = writable ? '' : 'Đang ở chế độ chỉ xem trước.';
+    portalEl('portal-retry-btn').hidden = !retryRefs([...portal.sync.values()]).length;
+    updatePortalSyncButton();
+  }
+
+  const pickedRefs = () => [...document.querySelectorAll('.portal-pick:checked')].map(i => i.value);
+
+  function updatePortalSyncButton() {
+    const count = pickedRefs().length;
+    const btn = portalEl('portal-sync-btn');
+    btn.textContent = count ? `Đồng bộ điểm Portal (${count})` : 'Đồng bộ điểm Portal';
+    if (portal.preview?.mode === 'write') btn.disabled = !count || portal.busy;
+    const all = portalEl('portal-select-all');
+    const state = selectAllState(document.querySelectorAll('.portal-pick:not(:disabled)').length, count);
+    Object.assign(all, state);
+  }
+
+  // Khóa nút thao tác trong lúc một thao tác Portal đang chạy.
+  function applyPortalBusy() {
+    for (const id of ['portal-unlink-btn', 'portal-preview-btn', 'portal-retry-btn', 'portal-reload-btn']) portalEl(id).disabled = portal.busy;
+    portalEl('portal-link-btn').disabled = portal.busy || !portal.tests.some(t => !t.linkedAssignmentId);
+    updatePortalSyncButton();
+  }
+
+  function resetPortal() {
+    Object.assign(portal, { key: '', tests: [], link: null, preview: null, sync: new Map(), lastSync: null, pending: null });
+    const section = portalEl('portal-sync');
+    if (section) section.hidden = true;
+  }
+
+  function renderPortalLastSync() {
+    const last = portal.lastSync;
+    portalEl('portal-last-sync').textContent = last
+      ? `Lần đồng bộ gần nhất: ${new Date(last.startedAt).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })} · ${last.actorEmail} · ${syncSummaryText(last.summary)}`
+      : '';
+  }
+
+  function renderPortalPanel() {
+    const linked = portal.link;
+    portalEl('portal-sync-link').hidden = !!linked;
+    portalEl('portal-sync-linked').hidden = !linked;
+    if (linked) portalEl('portal-linked-name').textContent = `${linked.name} (thang ${linked.maxScore})`;
+    else {
+      const select = portalEl('portal-test-select');
+      select.replaceChildren();
+      for (const t of portal.tests) {
+        const option = document.createElement('option');
+        option.value = String(t.portalClassTestId);
+        option.textContent = `${t.name} (thang ${t.maxScore})${t.linkedAssignmentId ? ' — đã gắn với đợt khác' : ''}`;
+        option.disabled = !!t.linkedAssignmentId;
+        select.append(option);
+      }
+      portalEl('portal-link-btn').disabled = !portal.tests.some(t => !t.linkedAssignmentId);
+    }
+    renderPortalLastSync();
+    renderPortalPreview();
+    const warning = portalEl('portal-scale-warning');
+    warning.textContent = scaleWarningText(portal.preview?.scaleWarning);
+    warning.hidden = !warning.textContent;
+    applyPortalBusy();
+  }
+
+  async function loadPortalLastSync(key) {
+    const { sync } = await request(portalSyncStatusPath(state.classId, state.assignmentId));
+    if (portal.key !== key) return;
+    portal.lastSync = null;
+    if (!sync) return;
+    // Backend không trả họ tên trong vết; tên chỉ lấy từ bản xem trước đang hiển thị.
+    const summary = {};
+    for (const r of sync.rows) summary[r.status] = (summary[r.status] || 0) + 1;
+    portal.lastSync = { ...sync, summary };
+    for (const r of sync.rows) if (!portal.sync.has(r.studentRef)) portal.sync.set(r.studentRef, r);
+  }
+
+  // keepResults: giữ kết quả từng dòng của lần ghi vừa xong khi tải lại bản xem trước (vân tay mới).
+  async function loadPortalPreview({ keepResults = false, message = '' } = {}) {
+    const key = portal.key;
+    portalMessage('Đang xem trước điểm Portal…');
+    if (!keepResults) portal.sync = new Map();
+    portal.preview = null;
+    try {
+      const { preview } = await request(portalSyncPreviewPath(state.classId, state.assignmentId));
+      if (portal.key !== key) return;
+      portal.preview = preview;
+      await loadPortalLastSync(key);
+      if (portal.key !== key) return;
+      portalMessage(message || (preview.mode === 'write' ? '' : 'Chế độ chỉ xem trước: chưa thể ghi điểm sang Portal.'));
+    } catch (error) {
+      if (portal.key !== key) return;
+      portalMessage(portalSyncErrorView(error).message);
+    }
+    renderPortalPanel();
+  }
+
+  async function loadPortalPanel() {
+    const section = portalEl('portal-sync');
+    if (!section) return;
+    const key = `${state.classId}/${state.assignmentId}`;
+    portal.key = key;
+    portal.link = null; portal.preview = null; portal.tests = []; portal.sync = new Map(); portal.lastSync = null;
+    portalEl('portal-sync-link').hidden = true;
+    portalEl('portal-sync-linked').hidden = true;
+    portalEl('portal-preview').hidden = true;
+    portalEl('portal-reload-btn').hidden = true;
+    portalEl('portal-last-sync').textContent = '';
+    section.hidden = false;
+    portalMessage('Đang tải bài test Portal…');
+    try {
+      const { portalTests } = await request(portalTestsPath(state.classId));
+      if (portal.key !== key) return;
+      portal.tests = Array.isArray(portalTests) ? portalTests : [];
+      const linked = linkedPortalTest(portal.tests, state.assignmentId);
+      portal.link = linked ? { name: linked.name, maxScore: linked.maxScore } : null;
+      portalMessage(linked ? '' : 'Chưa gắn bài test Portal cho đợt giao bài này.');
+      renderPortalPanel();
+      if (linked) await loadPortalPreview();
+    } catch (error) {
+      if (portal.key !== key) return;
+      const view = portalSyncErrorView(error);
+      portalMessage(view.message);
+      renderPortalPanel();
+      portalEl('portal-sync-link').hidden = true;
+      portalEl('portal-sync-linked').hidden = true;
+      // Chỉ chế độ tắt mới ẩn hết điều khiển; lỗi khác cho tải lại và chọn lại đợt sẽ tự tải lại.
+      if (!view.disabled) { portal.key = ''; portalEl('portal-reload-btn').hidden = false; }
+    }
+  }
+
+  function ensurePortalPanel() {
+    if (!state.classId || !state.assignmentId) { portalEl('portal-sync').hidden = true; portal.key = ''; return; }
+    if (portal.key !== `${state.classId}/${state.assignmentId}`) loadPortalPanel();
+  }
+
+  async function runPortalAction(action) {
+    if (portal.busy) return;
+    portal.busy = true;
+    applyPortalBusy();
+    try { await action(); } catch (error) { portalMessage(portalSyncErrorView(error).message); } finally { portal.busy = false; applyPortalBusy(); }
+  }
+
+  async function doPortalSync(refs) {
+    const preview = portal.preview;
+    const key = portal.key;
+    portalMessage('Đang ghi điểm sang Portal và đọc lại để xác nhận…');
+    let sync;
+    try {
+      ({ sync } = await request(portalSyncPath(state.classId, state.assignmentId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(syncRequestBody(preview.fingerprint, refs))
+      }));
+    } catch (error) {
+      if (!shouldReloadPreviewAfterSyncError(error)) throw error;
+      // Không giữ vân tay cũ: tải lại bản xem trước và kết quả lần đồng bộ gần nhất.
+      const suffix = error.code === 'PORTAL_PREVIEW_STALE' ? '' : ' Kết quả ghi chưa rõ, hãy kiểm tra lại bên dưới.';
+      await loadPortalPreview({ message: `${portalSyncErrorView(error).message}${suffix}` });
+      return;
+    }
+    if (portal.key !== key) return;
+    portal.sync = new Map(sync.rows.map(r => [r.studentRef, r]));
+    const text = syncSummaryText(sync.summary);
+    // Lần ghi vừa xong làm vân tay cũ hết hiệu lực: tải lại bản xem trước, giữ kết quả từng dòng.
+    await loadPortalPreview({ keepResults: true, message: sync.stopped ? `Đã dừng: ${portalSyncErrorView({ code: sync.stopped }).message} ${text}` : text });
+  }
+
+  function askPortalConfirm(refs) {
+    const dialog = portalEl('portal-sync-confirm');
+    portalEl('portal-sync-confirm-text').textContent = syncConfirmMessage(refs.length);
+    portal.pending = refs;
+    dialog.showModal();
+  }
+
+  portalEl('portal-link-btn')?.addEventListener('click', () => runPortalAction(async () => {
+    const id = Number(portalEl('portal-test-select').value);
+    if (!id) return;
+    await request(portalLinkPath(state.classId, state.assignmentId), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ portalClassTestId: id })
+    });
+    portal.key = '';
+    await loadPortalPanel();
+  }));
+  portalEl('portal-unlink-btn')?.addEventListener('click', () => runPortalAction(async () => {
+    if (!window.confirm('Gỡ gắn bài test Portal khỏi đợt giao bài này?')) return;
+    await request(portalLinkPath(state.classId, state.assignmentId), { method: 'DELETE' });
+    portal.key = '';
+    await loadPortalPanel();
+  }));
+  portalEl('portal-preview-btn')?.addEventListener('click', () => runPortalAction(loadPortalPreview));
+  portalEl('portal-reload-btn')?.addEventListener('click', () => runPortalAction(loadPortalPanel));
+  portalEl('portal-select-all')?.addEventListener('change', event => {
+    document.querySelectorAll('.portal-pick:not(:disabled)').forEach(i => { i.checked = event.target.checked; });
+    updatePortalSyncButton();
+  });
+  portalEl('portal-sync-btn')?.addEventListener('click', () => { const refs = pickedRefs(); if (refs.length) askPortalConfirm(refs); });
+  portalEl('portal-retry-btn')?.addEventListener('click', () => runPortalAction(async () => {
+    const wanted = new Set(retryRefs([...portal.sync.values()]));
+    await loadPortalPreview();   // vân tay mới; chỉ dòng còn "Điền được" mới thử lại được
+    const refs = selectableRefs(portal.preview?.rows || []).filter(r => wanted.has(r));
+    if (refs.length) askPortalConfirm(refs); else portalMessage('Không còn dòng nào có thể thử lại.');
+  }));
+  portalEl('portal-sync-cancel')?.addEventListener('click', () => portalEl('portal-sync-confirm').close());
+  portalEl('portal-sync-confirm-btn')?.addEventListener('click', event => {
+    event.preventDefault();
+    portalEl('portal-sync-confirm').close();
+    runPortalAction(() => doPortalSync(portal.pending || []));
+  });
+
   function renderResults(payload) {
+    toggleExportXlsxButton(exportXlsxBtn, payload?.assignment ? state.assignmentId : '');
     if (!payload || !payload.assignment) {
       if (results) results.hidden = true;
       if (resultsContent) resultsContent.replaceChildren();
       return;
     }
     currentResultsPayload = payload;
+    ensurePortalPanel();
     resultsContent.replaceChildren();
     if (assignmentHeading) assignmentHeading.textContent = payload.assignment.title;
     if (assignmentMeta) {
@@ -13746,7 +14252,7 @@ async function startDashboard() {
         }
 
         const incidentCell = document.createElement('td');
-        incidentCell.textContent = student.attemptId ? String(student.incidentCount ?? 0) : '—';
+        incidentCell.textContent = incidentCellText(student);
         row.append(incidentCell);
 
         // 5. Submitted At Cell: Two-line layout (Line 1: Time, Line 2: Date)
@@ -14366,6 +14872,7 @@ async function startDashboard() {
     status.textContent = 'Đang tải bài được giao…';
     const payload = await request(`/api/teacher/classes/${encodeURIComponent(classId)}/assignments`);
     currentAssignmentsList = payload.assignments || [];
+    currentServerNow = payload.serverNow || null;
     let selectedExists = false;
 
     if (assignmentSelect) {
@@ -14992,6 +15499,19 @@ async function startDashboard() {
     }
   }
 
+  if (exportXlsxBtn) {
+    exportXlsxBtn.addEventListener('click', () => {
+      if (!state.classId || !state.assignmentId) return;
+      downloadResultsXlsx({
+        url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
+        headers: authHeader(),
+        button: exportXlsxBtn,
+        status,
+        onUnauthorized: () => { if (sessionToken) endSession(); }
+      });
+    });
+  }
+
   if (publishAllBtn) {
     publishAllBtn.addEventListener('click', () => {
       publishAllResults().catch(err => {
@@ -15314,6 +15834,7 @@ async function startDashboard() {
 
   function handleLogout() {
     stopExamRoomEvents();
+    resetPortal();
     if (roleCapabilitiesPopover) roleCapabilitiesPopover.hidden = true;
     document.body.classList.add('login-page');
     sessionToken = '';
