@@ -18,7 +18,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="dynamic-test.css?rev=20261024-cbt-v14">
+  <script>
+    (() => {
+      const p = new URLSearchParams(location.search);
+      const h = location.hash.replace(/^#/, '');
+      if (['03', '34', '45'].includes(p.get('demoCourse') || p.get('course')) || h.includes('test=') || (h.includes('-') && !h.includes('&'))) {
+        document.documentElement.classList.add('cbt-mounting');
+      }
+    })();
+  </script>
   <style>
+    .cbt-mounting #introScreen, .cbt-mounting header.topbar:not(.simulation-topbar):not(.cbt-topbar) {
+      display: none !important;
+    }
     :root{
       --color-primary:#db0829;
       --color-secondary:#c53546;
@@ -511,8 +523,12 @@
   const demoCourse = search.get('demoCourse') || search.get('course');
   const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
-  if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs?rev=20261026-c34t4-audio-v3').then(module => module.mount(demoCourse)).catch((err) => {
+  const rawHash = window.location.hash.replace(/^#/, '');
+  const hashToken = rawHash.includes('=') ? (new URLSearchParams(rawHash).get('test') || new URLSearchParams(rawHash).get('token')) : (rawHash.includes('-') && !rawHash.includes('&') ? rawHash : '');
+  const isCandidateCbt = ['03', '34', '45'].includes(demoCourse) || Boolean(hashToken);
+  if (isCandidateCbt) {
+    const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
+    import('./content-preview.mjs?rev=20261026-c34t4-audio-v3').then(module => module.mount(courseToMount)).catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });

@@ -880,7 +880,8 @@ export async function mount(course) {
 
   // --- RENDER MÀN HÌNH ĐỊNH DANH (IDENTITY SCREEN) KHI CÓ TEST TOKEN ---
   if (isLearningMode) {
-    document.title = `IZONE · Thi CBT · ${title}`;
+    const initialTitle = paramClassCode ? 'Đang tải thông tin đề thi…' : title;
+    document.title = `IZONE · Thi CBT · ${initialTitle}`;
     document.body.innerHTML = `
       <div class="content-demo">
         <header class="topbar">
@@ -889,21 +890,20 @@ export async function mount(course) {
               <div class="brand-mark">IZ</div>
               <div class="brand-copy">
                 <div class="brand-title">IZONE · COMPUTER-BASED TEST</div>
-                <div class="brand-sub">${escape(title)}</div>
+                <div class="brand-sub">${escape(initialTitle)}</div>
               </div>
             </div>
             <div class="top-actions">
-              <span class="timer">${form.durationMinutes}:00</span>
+              <span class="timer">${paramClassCode ? '—' : `${form.durationMinutes}:00`}</span>
             </div>
           </div>
         </header>
         <main class="cbt-intro-wrap">
           <div class="cbt-intro-card">
             <span class="cbt-intro-badge">IZONE · COMPUTER-BASED TEST</span>
-            <h1 class="cbt-intro-title">${escape(title)}</h1>
+            <h1 class="cbt-intro-title">${escape(initialTitle)}</h1>
             <p class="cbt-intro-sub">
-              Thời gian làm bài: <strong>${form.durationMinutes} phút</strong> · Tổng số câu hỏi: <strong>${items.length} câu</strong>.<br>
-              Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.
+              ${paramClassCode ? 'Đang nạp danh sách lớp và cấu trúc đề thi…' : `Thời gian làm bài: <strong>${form.durationMinutes} phút</strong> · Tổng số câu hỏi: <strong>${items.length} câu</strong>.<br>Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.`}
             </p>
 
             <div class="cbt-intro-field">
