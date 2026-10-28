@@ -211,7 +211,7 @@ test('E2E: GV chuyển sau hết phiên, HV nhận Tự giám sát và bị tự
   // Chỉ đổi đích mạng của harness: trang vẫn gọi API production mặc định, fetch (kể cả SSE) được chuyển sang backend local.
   await teacherPage.addInitScript(local => {
     const realFetch = window.fetch.bind(window);
-    window.fetch = (input, init) => realFetch(typeof input === 'string' ? input.replace('https://webtest.ducanhn.autos', local) : input, init);
+    window.fetch = (input, init) => realFetch(typeof input === 'string' ? input.replace('https://webtest.ducanhdev.com', local) : input, init);
   }, `http://127.0.0.1:${API_PORT}`);
   teacherPage.on('pageerror', error => pageErrors.push(`[teacher] ${error.message}`));
   const openDashboard = async () => {

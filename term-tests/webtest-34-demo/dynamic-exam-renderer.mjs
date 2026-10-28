@@ -726,12 +726,12 @@ export function convertGoogleDriveAudioUrl(rawUrl) {
         apiBase = (window.location.port === '8034' || window.location.port === '8788')
           ? ''
           : `${window.location.protocol}//${hostname}:8788`;
-      } else if (hostname === 'webtest.ducanhn.autos') {
+      } else if (hostname === 'webtest.ducanhdev.com') {
         apiBase = '';
       } else {
         apiBase = window.WEBTEST_34_PREVIEW_CONFIG?.API_BASE_URL
           || window.WEBTEST_34_PREVIEW_CONFIG?.LEARNING_API_BASE_URL
-          || 'https://webtest.ducanhn.autos';
+          || 'https://webtest.ducanhdev.com';
       }
     }
     const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';

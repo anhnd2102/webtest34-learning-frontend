@@ -29,7 +29,7 @@
         document.addEventListener('DOMContentLoaded', function () {
           var els = document.querySelectorAll('#login-api-base, input[name="apiBase"]');
           els.forEach(function (el) {
-            if (!el.value || el.value.indexOf('webtest.ducanhn.autos') !== -1) {
+            if (!el.value || el.value.indexOf('webtest.ducanhdev.com') !== -1) {
               el.value = 'http://127.0.0.1:8788';
             }
           });
@@ -39,7 +39,7 @@
           var els = document.querySelectorAll('#login-api-base, input[name="apiBase"]');
           els.forEach(function (el) {
             if (!el.value || el.value.indexOf('localhost') !== -1) {
-              el.value = 'https://webtest.ducanhn.autos';
+              el.value = 'https://webtest.ducanhdev.com';
             }
           });
         });
@@ -148,7 +148,7 @@
         <p class="auth-desc">Đăng nhập để quản lý bài kiểm tra và kết quả học viên.</p>
         <div id="login-error" class="error-msg" hidden role="alert"></div>
         <div class="auth-grid">
-          <input id="login-api-base" name="apiBase" type="hidden" value="https://webtest.ducanhn.autos">
+          <input id="login-api-base" name="apiBase" type="hidden" value="https://webtest.ducanhdev.com">
           <label>Email <input id="login-email" name="email" type="email" autocomplete="username" placeholder="Nhập email đã đăng ký" required></label>
           <label>Mật khẩu
             <div class="password-input-wrap">
@@ -180,7 +180,7 @@
     <form id="identity-form" class="panel" hidden>
       <h2>Danh tính kiểm thử (Fixture)</h2>
       <p class="warning">Fixture chỉ dành cho kiểm thử cục bộ khi chưa cấu hình database auth.</p>
-      <label>API base URL <input name="apiBase" type="url" value="https://webtest.ducanhn.autos" required></label>
+      <label>API base URL <input name="apiBase" type="url" value="https://webtest.ducanhdev.com" required></label>
       <label>Email fixture <input name="actorId" type="email" value="admin@izone.test" required></label>
       <p>Vai trò và phạm vi lớp/khối được cấu hình ở backend; trình duyệt không thể tự khai báo quyền.</p>
       <button type="submit">Tải lớp được phép</button>

@@ -2012,7 +2012,7 @@
           });
         } catch (err) {
           const isLocalHost = ['localhost', '127.0.0.1', '[::1]', '::1'].includes(window.location.hostname);
-          if (isLocalHost && learningConfig().baseUrl.includes('webtest.ducanhn.autos')) {
+          if (isLocalHost && learningConfig().baseUrl.includes('webtest.ducanhdev.com')) {
             try {
               const localRes = await fetch('http://127.0.0.1:8788/api/learning/test-access/resolve', {
                 method: 'POST',

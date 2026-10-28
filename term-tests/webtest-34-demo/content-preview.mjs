@@ -506,7 +506,7 @@ export async function mount(course) {
   let activeSection = sections[0];
 
   const isProd = queryParams.get('prod') === '1' || queryParams.get('apiEnv') === 'production';
-  const apiBase = (isProd ? 'https://webtest.ducanhn.autos' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhn.autos')).replace(/\/$/, '');
+  const apiBase = (isProd ? 'https://webtest.ducanhdev.com' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhdev.com')).replace(/\/$/, '');
   const isLearningMode = Boolean(testToken);
 
   const paramClassCode = (queryParams.get('class') || queryParams.get('classCode') || '').trim().toUpperCase();
