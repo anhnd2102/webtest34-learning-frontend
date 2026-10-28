@@ -1207,26 +1207,40 @@ export function courseTestCatalogPath(apiBaseOrCourseId, courseIdOptional) {
 
 let activeUnsavedChangesGuard = null;
 
-export function registerUnsavedChangesGuard(fn) {
-  activeUnsavedChangesGuard = fn;
+export function registerUnsavedChangesGuard(fn, owner = fn) {
+  activeUnsavedChangesGuard = { fn, owner };
 }
 
-export function unregisterUnsavedChangesGuard(fn) {
-  if (activeUnsavedChangesGuard === fn) {
+export function unregisterUnsavedChangesGuard(fn, owner = null) {
+  if (!activeUnsavedChangesGuard) return;
+  if (owner != null) {
+    if (activeUnsavedChangesGuard.owner === owner) {
+      activeUnsavedChangesGuard = null;
+    }
+  } else if (activeUnsavedChangesGuard.fn === fn) {
     activeUnsavedChangesGuard = null;
   }
 }
 
-export function hasActiveUnsavedChanges() {
+export function hasActiveUnsavedChanges(owner = null) {
+  if (!activeUnsavedChangesGuard) return false;
+  if (owner != null && activeUnsavedChangesGuard.owner !== owner) return false;
   try {
-    return typeof activeUnsavedChangesGuard === 'function' ? Boolean(activeUnsavedChangesGuard()) : false;
+    return typeof activeUnsavedChangesGuard.fn === 'function' ? Boolean(activeUnsavedChangesGuard.fn()) : false;
   } catch (_) {
     return false;
   }
 }
 
-export function clearActiveUnsavedChanges() {
-  activeUnsavedChangesGuard = null;
+export function clearActiveUnsavedChanges(owner = null) {
+  if (!activeUnsavedChangesGuard) return;
+  if (owner != null) {
+    if (activeUnsavedChangesGuard.owner === owner) {
+      activeUnsavedChangesGuard = null;
+    }
+  } else {
+    activeUnsavedChangesGuard = null;
+  }
 }
 
 export function openUnsavedChangesModal({
@@ -1252,7 +1266,8 @@ export function openUnsavedChangesModal({
 
   let existing = document.querySelector('#modal-unsaved-changes');
   if (existing && existing.parentNode) {
-    existing.parentNode.removeChild(existing);
+    existing.querySelector('#btn-stay-editing')?.focus?.();
+    return;
   }
 
   const modal = document.createElement('div');
@@ -1605,6 +1620,10 @@ export function openCreateTestModal({ courseId, catalog = [], onSubmit, onCancel
 
 export function renderCourseTestCatalogView(container, catalog = [], options = {}) {
   if (!container) return;
+  const existingBuilder = mountedBuilders.get(container);
+  if (existingBuilder) {
+    existingBuilder.handle?.dispose();
+  }
   const teacherRole = options.teacherRole || 'teacher';
   const selectedCourseId = Number(options.courseId || 1);
 
@@ -3740,8 +3759,36 @@ export function renderScoreBreakdownBarHtml(draftState) {
   `;
 }
 
-export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
-  if (!container) return;
+const mountedBuilders = new WeakMap();
+
+export function mountBuilder(container, formVersionData = {}, options = {}) {
+  if (!container) return { dispose() {}, hasUnsavedChanges: () => false, getDraft: () => null };
+
+  const currentFormVersionId = formVersionData.id || formVersionData.formVersionId;
+  const currentSubCount = Number(formVersionData.submissionCount || 0);
+  const currentVersion = Number(formVersionData.version || 1);
+  const currentStatus = formVersionData.status || 'draft';
+
+  const existing = mountedBuilders.get(container);
+  if (existing && !existing.isDisposed) {
+    const isSameData = existing.formVersionData === formVersionData || (
+      existing.formVersionId === currentFormVersionId &&
+      existing.submissionCount === currentSubCount &&
+      existing.version === currentVersion &&
+      existing.status === currentStatus
+    );
+    if (isSameData) {
+      return existing.handle;
+    }
+    existing.handle.dispose();
+  }
+
+  let isDisposed = false;
+  let isDirty = false;
+  let dirtyVersion = 0;
+  const builderOwner = { id: generateUuid(), formVersionId: currentFormVersionId };
+  const timeouts = new Set();
+  let renderCycleCleanups = [];
 
   const matchedCatalogItem = Array.isArray(options.catalog)
     ? options.catalog.find(it => it.formVersionId === (formVersionData.id || formVersionData.formVersionId))
@@ -3860,8 +3907,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
   }
 
-  let isDirty = false;
   function markAsDirty() {
+    if (isDisposed) return;
+    dirtyVersion++;
     isDirty = true;
     if (typeof container?.querySelector === 'function') {
       const statusMsg = container.querySelector('#builder-status-msg');
@@ -3872,8 +3920,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
   }
 
-  const unsavedGuardChecker = () => isDirty;
-  registerUnsavedChangesGuard(unsavedGuardChecker);
+  const unsavedGuardChecker = () => !isDisposed && isDirty;
+  registerUnsavedChangesGuard(unsavedGuardChecker, builderOwner);
 
   const collapsedCardKeys = new Set();
 
@@ -5419,6 +5467,11 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
   }
 
   function render() {
+    if (isDisposed) return;
+    for (const cleanup of renderCycleCleanups) {
+      try { cleanup(); } catch (_) {}
+    }
+    renderCycleCleanups = [];
     const isImmutable = draftState.submissionCount > 0;
     const isPublished = draftState.status === 'published';
     const statusBadgeClass = isPublished ? 'badge-published' : 'badge-draft';
@@ -6268,7 +6321,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
     // Live update Score Breakdown Bar and mark dirty when question or rubric criterion score changes
     if (typeof container.addEventListener === 'function') {
-      container.addEventListener('input', (e) => {
+      const onContainerInput = (e) => {
+        if (isDisposed) return;
         markAsDirty();
         if (e?.target?.classList?.contains('item-max-score-input') || e?.target?.classList?.contains('criterion-max-score-input')) {
           syncInputs();
@@ -6282,10 +6336,16 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             warningEl.style.display = hasDrive ? 'block' : 'none';
           }
         }
-      });
-
-      container.addEventListener('change', () => {
+      };
+      const onContainerChange = () => {
+        if (isDisposed) return;
         markAsDirty();
+      };
+      container.addEventListener('input', onContainerInput);
+      container.addEventListener('change', onContainerChange);
+      renderCycleCleanups.push(() => {
+        container.removeEventListener?.('input', onContainerInput);
+        container.removeEventListener?.('change', onContainerChange);
       });
     }
 
@@ -6297,7 +6357,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           openUnsavedChangesModal({
             onDiscard: () => {
               isDirty = false;
-              unregisterUnsavedChangesGuard(unsavedGuardChecker);
+              handle?.dispose();
               if (typeof options.onBack === 'function') options.onBack();
             },
             onStay: () => {
@@ -6306,7 +6366,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           });
           return;
         }
-        unregisterUnsavedChangesGuard(unsavedGuardChecker);
+        handle?.dispose();
         if (typeof options.onBack === 'function') options.onBack();
       });
     }
@@ -9121,7 +9181,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
-      document.addEventListener('mouseup', () => {
+      const onDocMouseUp = () => {
+        if (isDisposed) return;
         if (isDragHandleActive && !draggedItemInfo) {
           isDragHandleActive = false;
           if (activeDragCard && typeof activeDragCard.setAttribute === 'function') {
@@ -9129,6 +9190,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           }
           activeDragCard = null;
         }
+      };
+      document.addEventListener('mouseup', onDocMouseUp);
+      renderCycleCleanups.push(() => {
+        document.removeEventListener?.('mouseup', onDocMouseUp);
       });
     }
 
@@ -10028,8 +10093,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           payload.gradingKey = cleanGradingKey;
           draftState.gradingKey = cleanGradingKey;
 
+          const saveDirtyVersion = dirtyVersion;
           const res = await options.onSaveDraft(payload);
-          isDirty = false;
+          if (isDisposed) return;
+          if (dirtyVersion === saveDirtyVersion) {
+            isDirty = false;
+          }
           const now = new Date();
           const timeStr = [now.getHours(), now.getMinutes(), now.getSeconds()].map(n => String(n).padStart(2, '0')).join(':');
 
@@ -10052,11 +10121,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
           }
         } catch (err) {
+          if (isDisposed) return;
           if (statusMsg) {
             statusMsg.className = 'builder-status-pill error';
             statusMsg.innerHTML = `${renderSvgIcon('alert', 'icon-inline')} <span>Lỗi khi lưu: ${escapeHtml(err.message || 'Không thể lưu bản nháp')}</span>`;
           }
         } finally {
+          if (isDisposed) return;
           const activeSaveBtn = container.querySelector('#btn-save-draft');
           if (activeSaveBtn) {
             activeSaveBtn.disabled = false;
@@ -12095,7 +12166,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             courseName: options.courseId === 1 ? 'Khối 03' : (options.courseId === 3 ? 'Khối 45' : 'Khối 34'),
             onConfirm: () => {
               isDirty = false;
-              unregisterUnsavedChangesGuard(unsavedGuardChecker);
+              handle?.dispose();
               if (typeof options.onDeleteDraft === 'function') {
                 options.onDeleteDraft({
                   formVersionId: draftState.formVersionId,
@@ -12111,7 +12182,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             : true;
           if (confirmed) {
             isDirty = false;
-            unregisterUnsavedChangesGuard(unsavedGuardChecker);
+            handle?.dispose();
             if (typeof options.onDeleteDraft === 'function') {
               options.onDeleteDraft({
                 formVersionId: draftState.formVersionId,
@@ -12487,7 +12558,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
-      document.addEventListener('click', (e) => {
+      const onDocClick = (e) => {
+        if (isDisposed) return;
         const openMenus = container.querySelectorAll ? container.querySelectorAll('.table-presets-menu, .image-insert-popup') : [];
         if (openMenus.forEach) {
           openMenus.forEach(m => {
@@ -12496,11 +12568,72 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
           });
         }
+      };
+      document.addEventListener('click', onDocClick);
+      renderCycleCleanups.push(() => {
+        document.removeEventListener?.('click', onDocClick);
       });
     }
   }
 
+  const handle = {
+    dispose() {
+      if (isDisposed) return;
+      isDisposed = true;
+      for (const cleanup of renderCycleCleanups) {
+        try { cleanup(); } catch (_) {}
+      }
+      renderCycleCleanups = [];
+      unregisterUnsavedChangesGuard(unsavedGuardChecker, builderOwner);
+      if (mountedBuilders.get(container)?.handle === handle) {
+        mountedBuilders.delete(container);
+      }
+      for (const t of timeouts) clearTimeout(t);
+      timeouts.clear();
+
+      if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
+        const modals = document.querySelectorAll('#candidate-simulation-modal, #modal-smart-publish, #modal-unsaved-changes, .batch-modal-overlay, .modal-batch-generate');
+        if (modals && modals.forEach) {
+          modals.forEach(m => {
+            try { if (m.parentNode) m.parentNode.removeChild(m); } catch (_) {}
+          });
+        }
+      }
+
+      if (typeof container?.querySelectorAll === 'function') {
+        const audios = container.querySelectorAll('audio');
+        if (audios && audios.forEach) {
+          audios.forEach(a => {
+            try { a.pause?.(); a.src = ''; } catch (_) {}
+          });
+        }
+      }
+    },
+    hasUnsavedChanges() {
+      return !isDisposed && isDirty;
+    },
+    getDraft() {
+      return draftState;
+    }
+  };
+
+  mountedBuilders.set(container, {
+    formVersionId: draftState.formVersionId,
+    formVersionData,
+    options,
+    submissionCount: Number(draftState.submissionCount || 0),
+    version: Number(draftState.version || 1),
+    status: draftState.status || 'draft',
+    handle,
+    isDisposed: false
+  });
+
   render();
+  return handle;
+}
+
+export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
+  return mountBuilder(container, formVersionData, options);
 }
 
 
