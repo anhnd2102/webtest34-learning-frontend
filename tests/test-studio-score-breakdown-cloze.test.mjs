@@ -4,6 +4,7 @@ import {
   computeTestBuilderScoreSummary,
   renderScoreBreakdownBarHtml,
   renderBlockJumpTagsHtml,
+  renderBlocksNavCardHtml,
   resolveStudentAnswerDisplay,
   resolveExpectedAnswerDisplay
 } from '../term-tests/teacher-dashboard/app.js';
@@ -123,16 +124,12 @@ test('renderScoreBreakdownBarHtml outputs structured HTML with icon, total score
   assert.ok(!html.includes('📊'));
   assert.ok(!html.includes('💡'));
   assert.ok(!html.includes('⏱'));
-  // Verify block jump tags row
-  assert.ok(html.includes('score-bar-blocks-row'));
-  assert.ok(html.includes('btn-block-jump-chip'));
-  assert.ok(html.includes('data-block-idx="0"'));
-  assert.ok(html.includes('Phần 1'));
-  assert.ok(html.includes('Listening Test'));
-  assert.ok(html.includes('1 câu · 25 đ'));
+  // Block navigation is now separate from the top score bar
+  assert.ok(!html.includes('score-bar-blocks-row'));
+  assert.ok(!html.includes('btn-block-jump-chip'));
 });
 
-test('renderBlockJumpTagsHtml renders interactive navigation chips with correct metadata', () => {
+test('renderBlockJumpTagsHtml renders interactive navigation chips without parentheses metadata', () => {
   const blocks = [
     {
       blockId: 'b1',
@@ -152,17 +149,36 @@ test('renderBlockJumpTagsHtml renders interactive navigation chips with correct 
   ];
 
   const html = renderBlockJumpTagsHtml(blocks);
-  assert.ok(html.includes('score-bar-blocks-row'));
-  assert.ok(html.includes('Danh sách phần thi:'));
   assert.ok(html.includes('data-block-idx="0"'));
   assert.ok(html.includes('data-block-idx="1"'));
+  assert.ok(html.includes('Phần 1'));
+  assert.ok(html.includes('Phần 2'));
   assert.ok(html.includes('Khởi động &amp; Nghe hiểu'));
-  assert.ok(html.includes('2 câu · 10 đ'));
   assert.ok(html.includes('Đọc hiểu &amp; Ghép nối'));
-  assert.ok(html.includes('1 câu · 10 đ'));
+  // User explicitly requested to remove parentheses count/points (e.g. 15 câu 15 điểm)
+  assert.ok(!html.includes('('));
+  assert.ok(!html.includes(')'));
+  assert.ok(!html.includes('câu ·'));
   // Design system: no emoji
   assert.ok(!html.includes('🔖'));
   assert.ok(!html.includes('🚩'));
+});
+
+test('renderBlocksNavCardHtml renders standalone navigation card with title and subtitle', () => {
+  const blocks = [
+    {
+      blockId: 'b1',
+      title: 'Listening Test',
+      items: [{ itemVersionId: 'i1', maxScore: 10 }]
+    }
+  ];
+
+  const html = renderBlocksNavCardHtml(blocks);
+  assert.ok(html.includes('builder-blocks-nav-card'));
+  assert.ok(html.includes('Điều hướng nhanh các phần thi'));
+  assert.ok(html.includes('Bấm vào phần thi để cuộn nhanh đến nội dung chỉnh sửa'));
+  assert.ok(html.includes('btn-block-jump-chip'));
+  assert.ok(html.includes('Listening Test'));
 });
 
 test('computeTestBuilderScoreSummary tracks firstBlockIdx for quick jump from skill chips', () => {

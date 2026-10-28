@@ -3296,57 +3296,68 @@ body:not(.login-page) #auth-panel {
   width: 100%;
 }
 
-.score-bar-blocks-row {
+/* Dedicated Standalone Block Navigation Card */
+.builder-blocks-nav-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.blocks-nav-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-top: 10px;
-  border-top: 1px dashed #e2e8f0;
-  flex-wrap: wrap;
-  width: 100%;
+  justify-content: space-between;
 }
 
-.score-blocks-label-wrap {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
+.blocks-nav-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.score-blocks-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.74rem;
+.blocks-nav-title {
+  margin: 0;
+  font-size: 0.95rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blocks-nav-title svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--izone-navy, #174266);
+}
+
+.blocks-nav-subtitle {
+  margin: 0;
+  font-size: 0.8rem;
   color: #64748b;
-  white-space: nowrap;
 }
 
-.score-blocks-label svg {
-  width: 14px;
-  height: 14px;
-  stroke: #64748b;
-}
-
-.score-blocks-chips {
+.blocks-nav-chips {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  flex: 1;
 }
 
 .btn-block-jump-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  gap: 8px;
+  padding: 6px 12px;
   background: #f8fafc;
   border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
   color: #1e293b;
   cursor: pointer;
   transition: all 0.18s ease;
@@ -3359,7 +3370,7 @@ body:not(.login-page) #auth-panel {
   border-color: var(--izone-soft-border, #fecdd3);
   color: var(--izone-primary-crimson, #db0829);
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(225, 29, 72, 0.08);
+  box-shadow: 0 2px 5px rgba(225, 29, 72, 0.08);
 }
 
 .btn-block-jump-chip:focus-visible {
@@ -3369,7 +3380,7 @@ body:not(.login-page) #auth-panel {
 
 .block-jump-badge {
   display: inline-block;
-  padding: 1px 6px;
+  padding: 2px 7px;
   background: #e2e8f0;
   color: #334155;
   border-radius: 4px;
@@ -3386,16 +3397,10 @@ body:not(.login-page) #auth-panel {
 
 .block-jump-title {
   font-weight: 600;
-  max-width: 200px;
+  max-width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.block-jump-meta {
-  font-size: 0.74rem;
-  color: #64748b;
-  font-weight: 500;
 }
 
 /* Target Block Jump Highlight Pulse */

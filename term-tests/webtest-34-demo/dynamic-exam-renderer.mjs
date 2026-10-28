@@ -800,8 +800,8 @@ export function convertGoogleDriveAudioUrl(rawUrl) {
     const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';
     return `${cleanBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
   }
-  if (typeof window !== 'undefined' && window.location.pathname.includes('/term-tests/teacher-dashboard/') && trimmed.startsWith('assets/')) {
-    return `../webtest-34-demo/${trimmed}`;
+  if (trimmed.startsWith('assets/')) {
+    return `https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/${trimmed}`;
   }
   return trimmed;
 }
@@ -841,7 +841,7 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
           <span class="audio-note">Đã nghe xong bài nghe · Bài nghe đã khóa</span>
         </div>
       </div>
-      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" crossorigin="anonymous" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
+      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
     </div>
   `;
 }

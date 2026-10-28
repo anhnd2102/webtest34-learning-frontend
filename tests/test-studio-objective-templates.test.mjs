@@ -22,8 +22,13 @@ test('expandSentenceVariants generates NFKC, contraction, punctuation and apostr
   assert.ok(donVariants.includes("don’t stop"));
 });
 
-test('expandSentenceVariants handles IELTS rules: optional articles, parentheses, hyphens, numbers, and UK/US spelling', () => {
-  // 1. Optional articles and parentheses
+test('expandSentenceVariants handles IELTS rules: pronouns, units, abbreviations, compounds, numbers, and no prefix addition', () => {
+  // 1. No automatic prefix added to bare word
+  const bareVariants = expandSentenceVariants(['hospital']);
+  assert.equal(bareVariants.includes('the hospital'), false);
+  assert.equal(bareVariants.includes('a hospital'), false);
+
+  // 2. Parentheses extraction still works
   const carVariants = expandSentenceVariants(['car(s)']);
   assert.ok(carVariants.includes('car'));
   assert.ok(carVariants.includes('cars'));
@@ -32,16 +37,38 @@ test('expandSentenceVariants handles IELTS rules: optional articles, parentheses
   assert.ok(hospitalVariants.includes('hospital'));
   assert.ok(hospitalVariants.includes('the hospital'));
 
-  // 2. Hyphenation vs space
+  // 3. Pronoun abbreviations (sb, sth, so, sw, sb's)
+  const sbVariants = expandSentenceVariants(['help sb with sth']);
+  assert.ok(sbVariants.some(v => v.includes('help somebody with something')));
+
+  const soVariants = expandSentenceVariants(['ask someone to go somewhere']);
+  assert.ok(soVariants.some(v => v.includes('ask so to go sw')));
+
+  // 4. Units & time
+  const unitVariants = expandSentenceVariants(['5 km and 2 hrs']);
+  assert.ok(unitVariants.some(v => v.includes('5 kilometres')));
+  assert.ok(unitVariants.some(v => v.includes('2 hours')));
+
+  // 5. Form abbreviations
+  const formVariants = expandSentenceVariants(['approx. 20 dept.']);
+  assert.ok(formVariants.some(v => v.includes('approximately')));
+  assert.ok(formVariants.some(v => v.includes('department')));
+
+  // 6. Compound words
+  const compoundVariants = expandSentenceVariants(['well-being and timetable']);
+  assert.ok(compoundVariants.some(v => v.includes('wellbeing')));
+  assert.ok(compoundVariants.some(v => v.includes('time table')));
+
+  // 7. Hyphenation vs space
   const jobVariants = expandSentenceVariants(['full-time job']);
   assert.ok(jobVariants.includes('full time job'));
 
-  // 3. Numbers & Ordinals
+  // 8. Numbers & Ordinals
   const numVariants = expandSentenceVariants(['1st floor, 3 books']);
   assert.ok(numVariants.some(v => v.includes('first floor')));
   assert.ok(numVariants.some(v => v.includes('three books')));
 
-  // 4. British vs American spelling
+  // 9. British vs American spelling
   const colourVariants = expandSentenceVariants(['colour and theatre']);
   assert.ok(colourVariants.some(v => v.includes('color')));
   assert.ok(colourVariants.some(v => v.includes('theater')));
@@ -221,7 +248,7 @@ test('btn-generate-variants preserves manually added variants through union merg
   let generateClickListener = null;
 
   const rawInputMock = {
-    value: 'hospital',
+    value: '(the) hospital',
     getAttribute: () => null
   };
 
@@ -295,7 +322,7 @@ test('btn-generate-variants preserves manually added variants through union merg
       items: {
         '03010000-0000-4000-8000-0000000000i4': {
           graderType: 'accepted_text',
-          accepted: ['custom_teacher_variant_123', 'hospital'],
+          accepted: ['custom_teacher_variant_123', '(the) hospital'],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         }
       }

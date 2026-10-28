@@ -118,7 +118,70 @@ export function expandSentenceVariants(sentences = []) {
     [/\bdialogue\b/gi, 'dialog'], [/\bdialog\b/gi, 'dialogue']
   ];
 
-  // Pass 1: Raw string cleaning & structural variants (parentheses, optional articles, hyphens)
+  // IELTS Pronoun / Context Abbreviations (sb -> somebody, sth -> something, so -> someone, sw -> somewhere)
+  const pronounAbbrevPairs = [
+    [/\bsb's\b/gi, "somebody's"], [/\bsomebody's\b/gi, "sb's"],
+    [/\bsb\b/gi, 'somebody'], [/\bsomebody\b/gi, 'sb'],
+    [/\bsth\b/gi, 'something'], [/\bsomething\b/gi, 'sth'],
+    [/\bso\b/gi, 'someone'], [/\bsomeone\b/gi, 'so'],
+    [/\bsw\b/gi, 'somewhere'], [/\bsomewhere\b/gi, 'sw']
+  ];
+
+  // IELTS Units of Measurement & Time
+  const unitPairs = [
+    [/\b(\d+)\s*kms?\b/gi, '$1 kilometres'],
+    [/\b(\d+)\s*kilometres?\b/gi, '$1 km'],
+    [/\b(\d+)\s*kilometers?\b/gi, '$1 km'],
+    [/\b(\d+)\s*m\b/gi, '$1 metres'],
+    [/\b(\d+)\s*metres?\b/gi, '$1 m'],
+    [/\b(\d+)\s*meters?\b/gi, '$1 m'],
+    [/\b(\d+)\s*cms?\b/gi, '$1 centimetres'],
+    [/\b(\d+)\s*centimetres?\b/gi, '$1 cm'],
+    [/\b(\d+)\s*centimeters?\b/gi, '$1 cm'],
+    [/\b(\d+)\s*kgs?\b/gi, '$1 kilograms'],
+    [/\b(\d+)\s*kilograms?\b/gi, '$1 kg'],
+    [/\b(\d+)\s*hrs?\b/gi, '$1 hours'],
+    [/\b(\d+)\s*hours?\b/gi, '$1 hr'],
+    [/\b(\d+)\s*mins?\b/gi, '$1 minutes'],
+    [/\b(\d+)\s*minutes?\b/gi, '$1 min'],
+    [/\b(\d+)\s*secs?\b/gi, '$1 seconds'],
+    [/\b(\d+)\s*seconds?\b/gi, '$1 sec'],
+    [/\b(\d+)\s*wks?\b/gi, '$1 weeks'],
+    [/\b(\d+)\s*weeks?\b/gi, '$1 wk'],
+    [/\b(\d+)\s*yrs?\b/gi, '$1 years'],
+    [/\b(\d+)\s*years?\b/gi, '$1 yr']
+  ];
+
+  // IELTS Form & Note Abbreviations
+  const formAbbrevPairs = [
+    [/\bapprox\.?\b/gi, 'approximately'], [/\bapproximately\b/gi, 'approx.'],
+    [/\binfo\.?\b/gi, 'information'], [/\binformation\b/gi, 'info.'],
+    [/\bdept\.?\b/gi, 'department'], [/\bdepartment\b/gi, 'dept.'],
+    [/\btel\.?\b/gi, 'telephone'], [/\btelephone\b/gi, 'tel.'],
+    [/\bno\.?\b/gi, 'number'], [/\bnumber\b/gi, 'no.'],
+    [/\be\.g\.?\b/gi, 'for example'], [/\bfor example\b/gi, 'e.g.'],
+    [/\bi\.e\.?\b/gi, 'that is'], [/\bthat is\b/gi, 'i.e.']
+  ];
+
+  // Compound Words (hyphen <-> space <-> solid)
+  const compoundPairs = [
+    [/\bwell-being\b/gi, 'wellbeing'], [/\bwellbeing\b/gi, 'well-being'],
+    [/\btimetable\b/gi, 'time table'], [/\btime table\b/gi, 'timetable'],
+    [/\bpostbox\b/gi, 'post box'], [/\bpost box\b/gi, 'postbox'],
+    [/\bcheck-in\b/gi, 'check in'], [/\bcheck in\b/gi, 'check-in']
+  ];
+
+  // Currency & Percentage Symbols
+  const symbolPairs = [
+    [/\$(\d+)\b/g, '$1 dollars'],
+    [/(\d+)\$/g, '$1 dollars'],
+    [/£(\d+)\b/g, '$1 pounds'],
+    [/(\d+)\s*%/g, '$1 percent'],
+    [/(\d+)\s*percent\b/gi, '$1%'],
+    [/(\d+)\s*per cent\b/gi, '$1%']
+  ];
+
+  // Pass 1: Raw string cleaning & structural variants (parentheses, hyphens)
   for (const s of list) {
     if (!s || typeof s !== 'string') continue;
     const clean = s.normalize('NFKC').trim().replace(/\s+/gu, ' ');
@@ -137,19 +200,8 @@ export function expandSentenceVariants(sentences = []) {
       result.add(clean.replace(/\(([^)]+)\)/g, '$1').replace(/\s+/gu, ' ').trim());
     }
 
-    // 1B. Leading optional article: "the hospital" -> "hospital", "a car" -> "car"
-    const articleMatch = clean.match(/^(?:the|a|an)\s+(.+)$/i);
-    if (articleMatch && articleMatch[1]) {
-      result.add(articleMatch[1].trim());
-    }
+    // 1B. Hyphenation vs space: "full-time" <-> "full time"
     const words = clean.split(' ');
-    if (words.length <= 2 && !/^(?:the|a|an|in|on|at|for|with|by|to|of)\b/i.test(clean)) {
-      result.add('the ' + clean);
-      const startsWithVowel = /^[aeiou]/i.test(clean);
-      result.add((startsWithVowel ? 'an ' : 'a ') + clean);
-    }
-
-    // 1C. Hyphenation vs space: "full-time" <-> "full time"
     if (/-/.test(clean)) {
       result.add(clean.replace(/(\w)-(\w)/g, '$1 $2'));
     } else if (clean.includes(' ') && words.length === 2) {
@@ -157,22 +209,27 @@ export function expandSentenceVariants(sentences = []) {
     }
   }
 
-  // Pass 2: Word substitutions (contractions, numbers, spelling)
-  const currentItems = Array.from(result);
-  for (const item of currentItems) {
-    for (const [pattern, replacement] of contractionPairs) {
-      if (pattern.test(item)) {
-        result.add(item.replace(pattern, replacement));
-      }
-    }
-    for (const [pattern, replacement] of numberPairs) {
-      if (pattern.test(item)) {
-        result.add(item.replace(pattern, replacement));
-      }
-    }
-    for (const [pattern, replacement] of spellingPairs) {
-      if (pattern.test(item)) {
-        result.add(item.replace(pattern, replacement));
+  // Pass 2: Word substitutions (contractions, numbers, spelling, pronouns, units, abbreviations, compounds, symbols)
+  const allSubPairs = [
+    ...contractionPairs,
+    ...numberPairs,
+    ...spellingPairs,
+    ...pronounAbbrevPairs,
+    ...unitPairs,
+    ...formAbbrevPairs,
+    ...compoundPairs,
+    ...symbolPairs
+  ];
+
+  for (let pass = 0; pass < 2; pass++) {
+    const currentItems = Array.from(result);
+    for (const item of currentItems) {
+      for (const [pattern, replacement] of allSubPairs) {
+        if (pattern.global) pattern.lastIndex = 0;
+        if (pattern.test(item)) {
+          if (pattern.global) pattern.lastIndex = 0;
+          result.add(item.replace(pattern, replacement));
+        }
       }
     }
   }
@@ -213,7 +270,7 @@ export function expandSentenceVariants(sentences = []) {
     }
   }
 
-  return Array.from(result).filter(Boolean).slice(0, 50);
+  return Array.from(result).filter(Boolean).slice(0, 60);
 }
 
 export function generateHangmanHint(targetText = '') {
@@ -2159,6 +2216,8 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
     }
     const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';
     streamUrl = `${cleanBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
+  } else if (streamUrl.startsWith('assets/')) {
+    streamUrl = `https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/${streamUrl}`;
   }
 
   const label = options.label || 'Bài nghe phần thi';
@@ -2187,7 +2246,7 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
           <span class="audio-note">Đã phát xong · Audio chỉ được nghe một lần.</span>
         </div>
       </div>
-      <audio class="audio-hidden-element" src="${escapeHtml(streamUrl)}" preload="none" crossorigin="anonymous" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
+      <audio class="audio-hidden-element" src="${escapeHtml(streamUrl)}" preload="none" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
     </div>
   `;
 
@@ -3765,27 +3824,29 @@ export function renderScoreSkillChipsHtml(skills = []) {
 
 export function renderBlockJumpTagsHtml(blocks = []) {
   if (!Array.isArray(blocks) || blocks.length === 0) return '';
-  const chipsHtml = blocks.map((block, idx) => {
-    const itemsCount = (block.items || []).reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
-    let bScore = (block.items || []).reduce((sum, itm) => sum + (Number(itm.maxScore) || 0), 0);
-    bScore = Math.round(bScore * 10) / 10;
+  return blocks.map((block, idx) => {
     const title = (block.title || `Phần ${idx + 1}`).trim();
     return `
       <button type="button" class="btn-block-jump-chip" data-block-idx="${idx}" title="Chuyển nhanh đến Phần ${idx + 1}: ${escapeHtml(title)}">
         <span class="block-jump-badge">Phần ${idx + 1}</span>
         <span class="block-jump-title">${escapeHtml(title)}</span>
-        <span class="block-jump-meta">(${itemsCount} câu · ${bScore} đ)</span>
       </button>
     `;
   }).join('');
+}
 
+export function renderBlocksNavCardHtml(blocks = []) {
+  if (!Array.isArray(blocks) || blocks.length === 0) return '';
   return `
-    <div class="score-bar-blocks-row" aria-label="Chuyển nhanh đến phần thi">
-      <div class="score-blocks-label-wrap">
-        <span class="score-blocks-label">${renderSvgIcon('layers', 'icon-inline')} Danh sách phần thi:</span>
+    <div class="builder-blocks-nav-card panel" id="builder-blocks-nav-card" aria-label="Điều hướng nhanh các phần thi">
+      <div class="blocks-nav-header">
+        <div class="blocks-nav-title-wrap">
+          <h4 class="blocks-nav-title">${renderSvgIcon('layers', 'icon-inline')} Điều hướng nhanh các phần thi</h4>
+          <p class="blocks-nav-subtitle">Bấm vào phần thi để cuộn nhanh đến nội dung chỉnh sửa</p>
+        </div>
       </div>
-      <div class="score-blocks-chips">
-        ${chipsHtml}
+      <div class="blocks-nav-chips">
+        ${renderBlockJumpTagsHtml(blocks)}
       </div>
     </div>
   `;
@@ -3816,7 +3877,6 @@ export function renderScoreBreakdownBarHtml(draftState) {
           </div>
         </div>
       </div>
-      ${renderBlockJumpTagsHtml(blocks)}
     </div>
   `;
 }
@@ -5538,11 +5598,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="form-group block-field">
               <label class="form-label">File âm thanh (Audio URL / Path):</label>
               <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
-                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="assets/34/test-1/listening.mp3 hoặc link Google Drive" style="flex:1;" />
+                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/... hoặc assets/34/test-1/listening.mp3" style="flex:1;" />
                 <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="block" data-index="${index}" title="Nghe thử file âm thanh">
                   ${renderSvgIcon('play', 'icon-inline')} Nghe thử
                 </button>
               </div>
+              <div class="form-hint audio-guide-hint" style="font-size:0.78rem; color:#64748b; margin-top:4px;">Chỉ sử dụng link âm thanh Cloudflare R2 (hoặc assets/). Không hỗ trợ link Google Drive cho bài nghe.</div>
+              <div class="audio-drive-warning text-danger" style="${(audioVal.includes('drive.google.com') || audioVal.includes('docs.google.com')) ? 'display:block;' : 'display:none;'} color:var(--izone-primary, #db0829); font-size:0.8rem; margin-top:4px;">Hệ thống không hỗ trợ link Google Drive cho bài nghe. Vui lòng sử dụng link Cloudflare R2 hoặc assets/.</div>
             </div>
             <div class="form-group block-field">
               <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
@@ -5655,6 +5717,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             </div>
           </div>
 
+          ${renderBlocksNavCardHtml(draftState.blocks)}
+
           <div class="builder-blocks-section">
             <div class="blocks-section-header">
               <div class="blocks-title-wrap">
@@ -5734,50 +5798,50 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
   function updateScoreBreakdownBar() {
     const barEl = container.querySelector('#builder-score-breakdown-bar');
-    if (!barEl) return;
     const summary = computeTestBuilderScoreSummary(draftState.blocks);
-    const scoreValEl = barEl.querySelector('.score-total-val');
-    if (scoreValEl) scoreValEl.textContent = summary.totalScore;
-    const qValEl = barEl.querySelector('.score-total-questions');
-    if (qValEl) qValEl.textContent = `${summary.totalQuestions} câu hỏi`;
+    if (barEl) {
+      const scoreValEl = barEl.querySelector('.score-total-val');
+      if (scoreValEl) scoreValEl.textContent = summary.totalScore;
+      const qValEl = barEl.querySelector('.score-total-questions');
+      if (qValEl) qValEl.textContent = `${summary.totalQuestions} câu hỏi`;
 
-    const chipsWrap = barEl.querySelector('.score-skills-chips');
-    if (chipsWrap) {
-      chipsWrap.innerHTML = renderScoreSkillChipsHtml(summary.skills);
+      const chipsWrap = barEl.querySelector('.score-skills-chips');
+      if (chipsWrap) {
+        chipsWrap.innerHTML = renderScoreSkillChipsHtml(summary.skills);
+      }
+
+      const newSkillChips = barEl.querySelectorAll('.score-skill-chip[data-first-block-idx]');
+      if (newSkillChips && typeof newSkillChips.forEach === 'function') {
+        newSkillChips.forEach(chip => {
+          if (typeof chip.addEventListener === 'function') {
+            chip.addEventListener('click', (e) => {
+              e.preventDefault();
+              const bIdx = Number(chip.getAttribute('data-first-block-idx'));
+              if (!isNaN(bIdx)) jumpToBlock(bIdx);
+            });
+          }
+        });
+      }
     }
 
-    const blocksRowEl = barEl.querySelector('.score-bar-blocks-row');
-    if (blocksRowEl) {
-      blocksRowEl.outerHTML = renderBlockJumpTagsHtml(draftState.blocks);
-    } else {
-      barEl.insertAdjacentHTML('beforeend', renderBlockJumpTagsHtml(draftState.blocks));
-    }
-
-    // Re-bind click handlers for the updated jump chips
-    const newJumpChips = barEl.querySelectorAll('.btn-block-jump-chip');
-    if (newJumpChips && typeof newJumpChips.forEach === 'function') {
-      newJumpChips.forEach(chip => {
-        if (typeof chip.addEventListener === 'function') {
-          chip.addEventListener('click', (e) => {
-            e.preventDefault();
-            const bIdx = Number(chip.getAttribute('data-block-idx'));
-            if (!isNaN(bIdx)) jumpToBlock(bIdx);
-          });
-        }
-      });
-    }
-
-    const newSkillChips = barEl.querySelectorAll('.score-skill-chip[data-first-block-idx]');
-    if (newSkillChips && typeof newSkillChips.forEach === 'function') {
-      newSkillChips.forEach(chip => {
-        if (typeof chip.addEventListener === 'function') {
-          chip.addEventListener('click', (e) => {
-            e.preventDefault();
-            const bIdx = Number(chip.getAttribute('data-first-block-idx'));
-            if (!isNaN(bIdx)) jumpToBlock(bIdx);
-          });
-        }
-      });
+    const navCardEl = container.querySelector('#builder-blocks-nav-card');
+    if (navCardEl) {
+      const chipsWrap = navCardEl.querySelector('.blocks-nav-chips');
+      if (chipsWrap) {
+        chipsWrap.innerHTML = renderBlockJumpTagsHtml(draftState.blocks);
+      }
+      const newJumpChips = navCardEl.querySelectorAll('.btn-block-jump-chip');
+      if (newJumpChips && typeof newJumpChips.forEach === 'function') {
+        newJumpChips.forEach(chip => {
+          if (typeof chip.addEventListener === 'function') {
+            chip.addEventListener('click', (e) => {
+              e.preventDefault();
+              const bIdx = Number(chip.getAttribute('data-block-idx'));
+              if (!isNaN(bIdx)) jumpToBlock(bIdx);
+            });
+          }
+        });
+      }
     }
 
     const totalQTag = container.querySelector('.total-questions-tag strong');
@@ -6340,6 +6404,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       container.addEventListener('input', (e) => {
         if (e.target && (e.target.classList.contains('item-max-score-input') || e.target.classList.contains('criterion-max-score-input'))) {
           syncInputs();
+        }
+        if (e.target && e.target.classList.contains('block-audio-input')) {
+          const val = e.target.value || '';
+          const parent = e.target.closest ? e.target.closest('.block-field') : null;
+          const warningEl = parent && parent.querySelector ? parent.querySelector('.audio-drive-warning') : null;
+          if (warningEl && warningEl.style) {
+            const hasDrive = val.includes('drive.google.com') || val.includes('docs.google.com');
+            warningEl.style.display = hasDrive ? 'block' : 'none';
+          }
         }
       });
     }
