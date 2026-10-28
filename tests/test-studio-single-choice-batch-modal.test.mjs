@@ -82,7 +82,8 @@ function createMockDomEnvironment() {
               const childEl = makeMockElement(cls.startsWith('input') ? 'input' : 'button');
               childEl.className = cls;
               if (cls.startsWith('input')) {
-                const valMatch = html.match(/value="([^"]+)"/);
+                const specificTag = html.match(new RegExp(`<input[^>]*class="[^"]*\\b${cls}\\b[^"]*"[^>]*>`));
+                const valMatch = specificTag ? specificTag[0].match(/value="([^"]+)"/) : html.match(/value="([^"]+)"/);
                 childEl.value = valMatch ? valMatch[1] : '5';
               }
               if (cls === 'btn-batch-confirm') {

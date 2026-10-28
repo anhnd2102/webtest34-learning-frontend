@@ -98,8 +98,8 @@ test('renderTestBuilderView provides button to add sentence transformation templ
 
   renderTestBuilderView(container, mockForm);
 
-  assert.ok(container.innerHTML.includes('btn-add-sentence-transformation'), 'Provides button to add sentence transformation template');
-  assert.ok(container.innerHTML.includes('template-sentence-transformation'), 'Renders template-sentence-transformation section');
+  assert.ok(!container.innerHTML.includes('btn-add-sentence-transformation'), 'Creation button for sentence transformation is deprecated and removed from toolbar');
+  assert.ok(container.innerHTML.includes('template-sentence-transformation'), 'Renders template-sentence-transformation section for legacy items');
   assert.ok(container.innerHTML.includes('input-transformation-keyword'), 'Renders mandatory keyword input field');
   assert.ok(container.innerHTML.includes('input-frame-prefix'), 'Renders frame prefix input');
   assert.ok(container.innerHTML.includes('input-frame-suffix'), 'Renders frame suffix input');

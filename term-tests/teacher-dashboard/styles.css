@@ -28,8 +28,9 @@ h2 { margin-top: 0; font-weight: 700; letter-spacing: -0.01em; color: #0f172a; }
 #exam-room-timeline { margin-top: 16px; }
 label { display: grid; gap: 6px; font-weight: 600; font-size: 0.9rem; color: #334155; }
 input, select, textarea, button, .form-control { box-sizing: border-box !important; font-family: inherit; }
-input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-input:focus, select:focus, textarea:focus { outline: none; border-color: #db0829; box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.12); }
+input:not([type="checkbox"]):not([type="radio"]), select, textarea { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+input[type="checkbox"], input[type="radio"] { width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important; cursor: pointer; accent-color: #db0829; }
+input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus { outline: none; border-color: #db0829; box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.12); }
 button { border-color: #db0829; background: #db0829; color: white; font-weight: 700; cursor: pointer; border-radius: 10px; box-shadow: 0 2px 8px rgba(219, 8, 41, 0.22); transition: all 0.15s ease; }
 button:hover:not(:disabled) { background: #b80521; border-color: #b80521; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(219, 8, 41, 0.28); }
 button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
@@ -4850,34 +4851,95 @@ body:not(.login-page) #auth-panel {
 }
 
 .batch-option-radios {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
   margin-top: 8px;
-  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .batch-option-radios {
+    grid-template-columns: 1fr;
+  }
 }
 
 .batch-radio-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
   cursor: pointer;
   font-size: 0.9rem;
-  padding: 8px 12px;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
   transition: all 0.15s ease-in-out;
   user-select: none;
+  box-sizing: border-box !important;
 }
 
 .batch-radio-label:hover {
-  background: #f1f5f9;
+  background: #f8fafc;
   border-color: #94a3b8;
 }
 
+.batch-radio-label:has(input[type="radio"]:checked) {
+  border-color: #db0829;
+  background: #fff1f2;
+  box-shadow: 0 0 0 1px #db0829;
+}
+
 .batch-radio-label input[type="radio"] {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
   cursor: pointer;
-  accent-color: #0f172a;
+  accent-color: #db0829;
+}
+
+.batch-radio-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.batch-radio-title {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.batch-radio-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.batch-checkbox-row {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 0.875rem !important;
+  color: #334155 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  margin: 0 !important;
+}
+
+.batch-checkbox-row input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  accent-color: #db0829;
 }
 
 
@@ -5544,6 +5606,35 @@ body:not(.login-page) #auth-panel {
   border: 1.5px solid #cbd5e1;
   border-radius: 8px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 2-Column Split Layout for Short Answer / FITB Questions */
+.candidate-short-qa-container.short-qa-2col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  padding: 18px 20px;
+}
+
+@media (max-width: 640px) {
+  .candidate-short-qa-container.short-qa-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.candidate-short-qa-container.short-qa-2col .candidate-short-qa-item {
+  padding: 14px 16px;
+  margin: 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.candidate-short-qa-container.short-qa-2col .candidate-short-input {
+  max-width: 100%;
 }
 
 .candidate-short-input:focus {

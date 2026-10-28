@@ -677,16 +677,16 @@ export function parseCsvRows(rawText = '') {
 
 export function generateSingleChoiceTemplateCsv() {
   const bom = '\uFEFF';
-  const header = 'Question_Prompt,Option_A,Option_B,Option_C,Option_D,Correct_Answer,Explanation';
+  const header = 'Question_Prompt,Option_A,Option_B,Option_C,Option_D,Correct_Answer,Explanation,Points';
   const rows = [
-    'The cruise departs ___ Miami every Monday.,at,from,on,in,B,Cụm từ "depart from somewhere"',
-    'She is interested ___ marine biology.,in,at,on,,A,Cấu trúc "interested in something"',
-    'The weather was ___ today.,good,bad,,,A,'
+    'The cruise departs ___ Miami every Monday.,at,from,on,in,B,Cụm từ "depart from somewhere",1',
+    'She is interested ___ marine biology.,in,at,on,,A,Cấu trúc "interested in something",1',
+    'The weather was ___ today.,good,bad,,,A,,1'
   ];
   return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
 }
 
-export function parseSingleChoiceCsv(rawText = '') {
+export function parseSingleChoiceCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
@@ -706,6 +706,8 @@ export function parseSingleChoiceCsv(rawText = '') {
     const optD = (row[4] || '').trim();
     const correctLetter = (row[5] || '').trim().toUpperCase();
     const explanation = (row[6] || '').trim();
+    const rawScore = parseFloat(row[7]);
+    const maxScore = !isNaN(rawScore) && rawScore > 0 ? rawScore : (defaultPoints || 1);
 
     if (!prompt || !optA || !optB || !correctLetter) {
       result.invalidRows.push({ line: i + 1, row, reason: 'Thiếu đề bài, lựa chọn A/B hoặc đáp án đúng' });
@@ -730,11 +732,68 @@ export function parseSingleChoiceCsv(rawText = '') {
       layoutType,
       options,
       expectedOptionId,
-      explanation
+      explanation,
+      maxScore
     });
   }
 
   return result;
+}
+
+export function generateFitbTemplateCsv() {
+  const bom = '\uFEFF';
+  const header = 'Prompt,Target_Answer,Points';
+  const rows = [
+    'The capital of France is ___.,Paris,1',
+    'Water freezes at ___ degrees Celsius.,0,1',
+    'The Sun rises in the ___.,east,1',
+    'She was born ___ 1995.,in,1',
+    'He has lived in London ___ ten years.,for,1'
+  ];
+  return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
+}
+
+export function parseFitbCsv(rawText = '', defaultPoints = 1) {
+  const rows = parseCsvRows(rawText);
+  const result = { items: [], invalidRows: [] };
+  if (!rows || rows.length === 0) return result;
+
+  let startIndex = 0;
+  const firstRow = rows[0].map(c => (c || '').toLowerCase());
+  if (firstRow[0]?.includes('prompt') || firstRow[0]?.includes('đề') || firstRow[0]?.includes('câu') || firstRow[1]?.includes('answer') || firstRow[1]?.includes('đáp')) {
+    startIndex = 1;
+  }
+
+  for (let i = startIndex; i < rows.length; i++) {
+    const row = rows[i];
+    const prompt = (row[0] || '').trim();
+    const targetAnswer = (row[1] || '').trim();
+    const rawScore = parseFloat(row[2]);
+    const maxScore = !isNaN(rawScore) && rawScore > 0 ? rawScore : (defaultPoints || 1);
+
+    if (!prompt || !targetAnswer) {
+      result.invalidRows.push({ line: i + 1, row, reason: 'Thiếu đề bài hoặc đáp án đúng' });
+      continue;
+    }
+
+    result.items.push({
+      prompt,
+      targetAnswer,
+      maxScore
+    });
+  }
+
+  return result;
+}
+
+export function isShortQaEligibleFor2Col(items) {
+  if (!Array.isArray(items) || items.length <= 1) return false;
+  return items.every(item => {
+    const prompt = (item.prompt || '').trim();
+    const clean = prompt.replace(/<[^>]+>/g, '').trim();
+    const hasComplexHtml = /<(?:table|tbody|tr|td|th|img|figure|video|audio|blockquote|hr)\b/i.test(prompt);
+    return clean.length > 0 && clean.length <= 100 && !hasComplexHtml;
+  });
 }
 
 export function generateErrorCorrectionTemplateCsv() {
@@ -3315,13 +3374,14 @@ export function openGenericBatchModal({
   defaultCount = 5,
   minCount = 1,
   maxCount = 50,
+  defaultPoints = 1.0,
   extraConfigHtml = '',
   csvConfig = null,
   onConfirm,
   onSingle
 } = {}) {
   if (typeof document === 'undefined') {
-    if (typeof onSingle === 'function') onSingle({ count: 1 });
+    if (typeof onSingle === 'function') onSingle({ count: 1, defaultPoints: defaultPoints || 1 });
     return null;
   }
 
@@ -3383,10 +3443,40 @@ export function openGenericBatchModal({
               <textarea class="form-control textarea-batch-csv" rows="7" placeholder="${escapeHtml(csvConfig.placeholder || 'Dán các dòng dữ liệu copy từ Excel hoặc file CSV...')}" style="font-family: monospace; font-size: 13px;"></textarea>
             </div>
 
+            <div class="form-group" style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <label class="form-label" style="margin: 0; font-size: 0.875rem;"><strong>Điểm mặc định mỗi câu:</strong></label>
+              <input type="number" class="form-control input-batch-csv-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 85px; text-align: center; font-weight: 700; padding: 6px 10px;" />
+              <span style="font-size: 0.8rem; color: #64748b;">(Tự động áp dụng nếu dòng dữ liệu CSV không có điểm riêng)</span>
+            </div>
+
             <div class="vocab-preview-summary csv-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
           </div>
 
           <div class="modal-batch-tab-panel" data-panel="stepper" style="display: none;">
+            <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
+              <div class="form-group batch-count-form-group">
+                <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
+                <div class="batch-count-stepper-wrap">
+                  <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
+                  <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                  <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+                </div>
+                <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
+              </div>
+
+              <div class="form-group batch-points-form-group">
+                <label class="form-label"><strong>Điểm số mỗi câu:</strong></label>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <input type="number" class="form-control input-batch-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                  <span style="font-size: 0.9rem; font-weight: 600; color: #475569;">điểm</span>
+                </div>
+                <span class="batch-points-hint" style="font-size: 0.8rem; color: #64748b;">(Mặc định cho các câu được tạo)</span>
+              </div>
+            </div>
+            ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
+          </div>
+        ` : `
+          <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
             <div class="form-group batch-count-form-group">
               <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
               <div class="batch-count-stepper-wrap">
@@ -3396,17 +3486,15 @@ export function openGenericBatchModal({
               </div>
               <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
             </div>
-            ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
-          </div>
-        ` : `
-          <div class="form-group batch-count-form-group">
-            <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
-            <div class="batch-count-stepper-wrap">
-              <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
-              <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
-              <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+
+            <div class="form-group batch-points-form-group">
+              <label class="form-label"><strong>Điểm số mỗi câu:</strong></label>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <input type="number" class="form-control input-batch-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                <span style="font-size: 0.9rem; font-weight: 600; color: #475569;">điểm</span>
+              </div>
+              <span class="batch-points-hint" style="font-size: 0.8rem; color: #64748b;">(Mặc định cho các câu được tạo)</span>
             </div>
-            <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
           </div>
           ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
         `}
@@ -3599,6 +3687,27 @@ export function openGenericBatchModal({
     }
   }
 
+  const pointsInput = modal.querySelector('.input-batch-points');
+  const csvPointsInput = modal.querySelector('.input-batch-csv-points');
+
+  if (pointsInput && csvPointsInput) {
+    pointsInput.addEventListener('input', () => {
+      csvPointsInput.value = pointsInput.value;
+    });
+    csvPointsInput.addEventListener('input', () => {
+      pointsInput.value = csvPointsInput.value;
+    });
+  }
+
+  const getSafePoints = () => {
+    const pInput = activeTab === 'csv'
+      ? (modal.querySelector('.input-batch-csv-points') || modal.querySelector('.input-batch-points'))
+      : (modal.querySelector('.input-batch-points') || modal.querySelector('.input-batch-csv-points'));
+    const raw = parseFloat(pInput?.value);
+    if (isNaN(raw) || raw <= 0) return defaultPoints || 1.0;
+    return Math.round(raw * 100) / 100;
+  };
+
   let cleanupKeydown = null;
 
   const closeModal = () => {
@@ -3613,13 +3722,14 @@ export function openGenericBatchModal({
 
   const doConfirm = () => {
     const finalCount = getSafeCount();
+    const finalPoints = getSafePoints();
     const textarea = modal.querySelector('.textarea-batch-csv');
     const csvVal = textarea ? textarea.value.trim() : '';
 
     if (hasCsv && activeTab === 'csv' && csvVal) {
       if (parsedItems.length > 0 && typeof csvConfig.onImport === 'function') {
         closeModal();
-        csvConfig.onImport(parsedItems);
+        csvConfig.onImport(parsedItems, { defaultPoints: finalPoints });
         return;
       } else if (parsedItems.length === 0) {
         if (typeof alert === 'function') {
@@ -3635,6 +3745,7 @@ export function openGenericBatchModal({
     if (typeof onConfirm === 'function') {
       const resultObj = {
         count: finalCount,
+        defaultPoints: finalPoints,
         modal,
         valueOf: () => finalCount,
         [Symbol.toPrimitive]: () => finalCount
@@ -3644,10 +3755,12 @@ export function openGenericBatchModal({
   };
 
   const doSingle = () => {
+    const finalPoints = getSafePoints();
     closeModal();
     if (typeof onSingle === 'function') {
       const resultObj = {
         count: 1,
+        defaultPoints: finalPoints,
         modal,
         valueOf: () => 1,
         [Symbol.toPrimitive]: () => 1
@@ -5507,9 +5620,6 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="exercise-add-item-bar block-add-item-bar">
               <span class="add-item-caption">+ Thêm câu hỏi vào Exercise ${ex.exerciseNumber || (exIdx + 1)}:</span>
               <div class="add-item-buttons">
-                <button type="button" class="btn btn-secondary btn-sm btn-add-reading-matching" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
-                  + Bài đọc chia đôi & Nối (Reading Split-Pane)
-                </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Sắp xếp thứ tự nghe (Listening Order)
                 </button>
@@ -5518,12 +5628,6 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-reorder" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Sắp xếp câu (Sentence Reorder)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
-                  + Biến đổi câu (Transformation)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice btn-add-pronunciation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
-                  + Phát âm & Ký hiệu IPA (Pronunciation)
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Trắc nghiệm (Single Choice)
@@ -6729,7 +6833,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     }
 
-    function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4) {
+    function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4, defaultPoints = 1) {
       const block = draftState.blocks[bIdx];
       if (!block) return;
       const startingPos = getNextPosition();
@@ -6754,7 +6858,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           layoutType: layout,
           graderType: 'exact_option',
           required: true,
-          maxScore: 1,
+          maxScore: defaultPoints || 1,
           options: Array.from({ length: safeOptCount }, (_, oIdx) => ({
             id: String.fromCharCode(65 + oIdx),
             label: ''
@@ -6791,23 +6895,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const block = draftState.blocks[bIdx];
       if (!block) return;
       openGenericBatchModal({
-        title: 'Trắc nghiệm',
+        title: 'Trắc nghiệm (Multiple Choice)',
         subtitle: `Nhập danh sách câu hỏi Trắc nghiệm cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ 2, 3 hoặc 4 phương án (A, B, C, D) và tự động ánh xạ đáp án đúng.`,
         defaultCount: 5,
         minCount: 1,
         maxCount: 50,
+        defaultPoints: 1.0,
         csvConfig: {
           templateFileName: 'mau_trac_nghiem_don.csv',
-          columnsHint: 'Cột: Đề bài | Phương án A | B | C | D | Đáp án đúng | Giải thích',
-          placeholder: 'The cruise departs ___ Miami.,at,from,on,in,B,Cụm từ depart from\nShe is interested ___ marine life.,in,at,on,,A,Interested in',
+          columnsHint: 'Cột: Đề bài | Phương án A | B | C | D | Đáp án đúng | Giải thích | Điểm',
+          placeholder: 'The cruise departs ___ Miami.,at,from,on,in,B,Cụm từ depart from,1\nShe is interested ___ marine life.,in,at,on,,A,Interested in,1',
           getTemplateCsv: generateSingleChoiceTemplateCsv,
           parseCsv: parseSingleChoiceCsv,
-          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId.toUpperCase().replace('OPT_', ''))}</em> (${itm.options.length} phương án)`,
-          onImport: (items) => {
+          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId.toUpperCase().replace('OPT_', ''))}</em> (${itm.options.length} phương án, ${itm.maxScore || 1} điểm)`,
+          onImport: (items, { defaultPoints = 1 } = {}) => {
             const startingPos = getNextPosition();
             const batchItems = [];
             items.forEach((parsed, idx) => {
               const newItemId = generateUuid();
+              const itemScore = parsed.maxScore != null && !isNaN(parsed.maxScore) && parsed.maxScore > 0 ? parsed.maxScore : defaultPoints;
               batchItems.push({
                 itemFamilyId: generateUuid(),
                 itemVersionId: newItemId,
@@ -6821,7 +6927,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 layoutType: parsed.layoutType || 'grid_4',
                 graderType: 'exact_option',
                 required: true,
-                maxScore: 1,
+                maxScore: itemScore,
                 options: parsed.options,
                 explanation: parsed.explanation || '',
                 skillCodes: [],
@@ -6844,20 +6950,29 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="batch-option-radios">
               <label class="batch-radio-label">
                 <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="2" />
-                <span><strong>2 phương án</strong> (A, B)</span>
+                <div class="batch-radio-text-wrap">
+                  <span class="batch-radio-title">2 phương án</span>
+                  <span class="batch-radio-sub">(A, B)</span>
+                </div>
               </label>
               <label class="batch-radio-label">
                 <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="3" />
-                <span><strong>3 phương án</strong> (A, B, C)</span>
+                <div class="batch-radio-text-wrap">
+                  <span class="batch-radio-title">3 phương án</span>
+                  <span class="batch-radio-sub">(A, B, C)</span>
+                </div>
               </label>
               <label class="batch-radio-label">
                 <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="4" checked />
-                <span><strong>4 phương án</strong> (A, B, C, D)</span>
+                <div class="batch-radio-text-wrap">
+                  <span class="batch-radio-title">4 phương án</span>
+                  <span class="batch-radio-sub">(A, B, C, D)</span>
+                </div>
               </label>
             </div>
           </div>
         `,
-        onConfirm: ({ count, modal }) => {
+        onConfirm: ({ count, defaultPoints = 1, modal }) => {
           let optCount = 4;
           if (modal) {
             const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
@@ -6865,9 +6980,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                             modal.querySelector('.select-batch-option-count');
             if (checked) optCount = parseInt(checked.value, 10) || 4;
           }
-          createBatchSingleChoice(bIdx, targetEx, count, optCount);
+          createBatchSingleChoice(bIdx, targetEx, count, optCount, defaultPoints);
         },
-        onSingle: ({ modal } = {}) => {
+        onSingle: ({ defaultPoints = 1, modal } = {}) => {
           let optCount = 4;
           if (modal) {
             const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
@@ -6875,7 +6990,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                             modal.querySelector('.select-batch-option-count');
             if (checked) optCount = parseInt(checked.value, 10) || 4;
           }
-          createBatchSingleChoice(bIdx, targetEx, 1, optCount);
+          createBatchSingleChoice(bIdx, targetEx, 1, optCount, defaultPoints);
         }
       });
     }
@@ -6952,7 +7067,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    function createBatchFitb(bIdx, targetEx, count = 1) {
+    function createBatchFitb(bIdx, targetEx, count = 1, defaultPoints = 1) {
       const block = draftState.blocks[bIdx];
       if (!block) return;
       const startingPos = getNextPosition();
@@ -6975,7 +7090,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           layoutType: 'default',
           graderType: 'accepted_text',
           required: true,
-          maxScore: 1,
+          maxScore: defaultPoints || 1,
           options: [],
           skillCodes: [],
           releasePolicy: 'inherit'
@@ -6993,7 +7108,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       render();
     }
 
-    // Add Fill In The Blank Question
+    // Add Fill In The Blank Question (Opens CSV / Excel import popup with batch & single creation)
     const addFitbBtns = container.querySelectorAll('.btn-add-fitb, .btn-add-short-text');
     addFitbBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -7002,21 +7117,71 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
-          title: 'Tạo hàng loạt câu hỏi Điền ô trống',
-          subtitle: `Tạo nhanh các câu hỏi Điền từ ngắn vào ô trống thuộc bài tập ${targetEx.title || 'bài tập'}.`,
-          defaultCount: 5,
-          minCount: 1,
-          maxCount: 50,
-          onConfirm: ({ count }) => {
-            createBatchFitb(bIdx, targetEx, count);
-          },
-          onSingle: () => {
-            createBatchFitb(bIdx, targetEx, 1);
-          }
-        });
+        triggerFitbBatchModal(bIdx, targetEx);
       });
     });
+
+    function triggerFitbBatchModal(bIdx, targetEx) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      openGenericBatchModal({
+        title: 'Điền ô trống (Short Text)',
+        subtitle: `Nhập danh sách câu hỏi Điền từ ngắn vào ô trống cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Tự động sinh biến thể ngữ pháp và đáp án chấp nhận.`,
+        defaultCount: 5,
+        minCount: 1,
+        maxCount: 50,
+        defaultPoints: 1.0,
+        csvConfig: {
+          templateFileName: 'mau_dien_o_trong.csv',
+          columnsHint: 'Cột: Đề bài | Đáp án đúng | Điểm',
+          placeholder: 'The capital of France is ___.,Paris,1\nWater freezes at ___ degrees Celsius.,0,1\nThe Sun rises in the ___.,east,1',
+          getTemplateCsv: generateFitbTemplateCsv,
+          parseCsv: parseFitbCsv,
+          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.targetAnswer)}</em> (${itm.maxScore || 1} điểm)`,
+          onImport: (items, { defaultPoints = 1 } = {}) => {
+            const startingPos = getNextPosition();
+            const batchItems = [];
+            items.forEach((parsed, idx) => {
+              const newItemId = generateUuid();
+              const itemScore = parsed.maxScore != null && !isNaN(parsed.maxScore) && parsed.maxScore > 0 ? parsed.maxScore : defaultPoints;
+              batchItems.push({
+                itemFamilyId: generateUuid(),
+                itemVersionId: newItemId,
+                position: startingPos + idx,
+                exerciseId: targetEx.exerciseId,
+                exerciseTitle: targetEx.title,
+                prompt: parsed.prompt,
+                helpText: '',
+                interactionType: 'short_text',
+                pedagogicalTypeCode: 'fill_in_the_blank',
+                layoutType: 'default',
+                graderType: 'accepted_text',
+                required: true,
+                maxScore: itemScore,
+                options: [],
+                skillCodes: [],
+                releasePolicy: 'inherit'
+              });
+              draftState.gradingKey.items[newItemId] = {
+                graderType: 'accepted_text',
+                accepted: expandSentenceVariants([parsed.targetAnswer]),
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+            });
+            insertItemsIntoBlockExercise(block, targetEx, batchItems);
+            resequenceItemPositions();
+            markAsDirty();
+            render();
+          }
+        },
+        onConfirm: ({ count, defaultPoints = 1 }) => {
+          createBatchFitb(bIdx, targetEx, count, defaultPoints);
+        },
+        onSingle: ({ defaultPoints = 1 } = {}) => {
+          createBatchFitb(bIdx, targetEx, 1, defaultPoints);
+        }
+      });
+    }
 
     // Add Inline Cloze Question
     const addInlineClozeBtns = container.querySelectorAll('.btn-add-inline-cloze');
@@ -8534,12 +8699,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             <div class="vocab-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
 
-            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;">
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem; cursor: pointer;">
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
+              <label class="batch-checkbox-row">
                 <input type="checkbox" class="chk-auto-variants" checked />
                 <span>Tự động sinh biến thể đáp án sau khi nhập (Apostrophe, contractions, NFKC)</span>
               </label>
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem; cursor: pointer;">
+              <label class="batch-checkbox-row">
                 <input type="checkbox" class="chk-replace-existing" />
                 <span>Xóa các câu từ vựng cũ trong bài tập này trước khi nhập (Mặc định: Thêm tiếp vào sau)</span>
               </label>
@@ -10545,8 +10710,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         const renderSimShortQaGroup = (shortItems) => {
           if (!shortItems || !shortItems.length) return '';
+          const is2Col = isShortQaEligibleFor2Col(shortItems);
           return `
-            <div class="candidate-short-qa-container">
+            <div class="candidate-short-qa-container ${is2Col ? 'short-qa-2col' : ''}">
               ${shortItems.map(item => {
                 const promptHtml = formatSimulationPrompt(item.prompt || '');
                 return `

@@ -1792,6 +1792,25 @@ body {
   margin-bottom: 24px;
 }
 
+.candidate-short-qa-container.short-qa-2col,
+.cbt-short-qa-wrap.short-qa-2col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .candidate-short-qa-container.short-qa-2col,
+  .cbt-short-qa-wrap.short-qa-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.candidate-short-qa-container.short-qa-2col .candidate-short-input,
+.cbt-short-qa-wrap.short-qa-2col .candidate-short-input {
+  max-width: 100%;
+}
+
 .candidate-short-qa-item,
 .cbt-short-qa-card {
   background: #ffffff;

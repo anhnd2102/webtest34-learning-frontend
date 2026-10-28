@@ -463,10 +463,21 @@ function renderSimPictorialGroup(pictorialItems, answers = {}) {
   `;
 }
 
+export function isShortQaEligibleFor2Col(items) {
+  if (!Array.isArray(items) || items.length <= 1) return false;
+  return items.every(item => {
+    const prompt = (item.prompt || '').trim();
+    const clean = prompt.replace(/<[^>]+>/g, '').trim();
+    const hasComplexHtml = /<(?:table|tbody|tr|td|th|img|figure|video|audio|blockquote|hr)\b/i.test(prompt);
+    return clean.length > 0 && clean.length <= 100 && !hasComplexHtml;
+  });
+}
+
 function renderSimShortQaGroup(shortItems, answers = {}) {
   if (!shortItems || !shortItems.length) return '';
+  const is2Col = isShortQaEligibleFor2Col(shortItems);
   return `
-    <div class="candidate-short-qa-container cbt-short-qa-wrap">
+    <div class="candidate-short-qa-container cbt-short-qa-wrap ${is2Col ? 'short-qa-2col' : ''}">
       ${shortItems.map(item => {
         const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
         return `
