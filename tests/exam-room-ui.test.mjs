@@ -31,7 +31,7 @@ test('teacher room markup offers a manual refresh, start, and extension control'
 });
 
 test('teacher room consumes the scoped Bearer SSE stream and reconnects with a fresh snapshot', async () => {
-  const source = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+  const source = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
   const styles = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
   assert.match(source, /fetch\(`\$\{apiBase\(\)\}\$\{path\}`,[\s\S]*?Authorization: `Bearer \$\{sessionToken\}`[\s\S]*?response\.body\.getReader\(\)/);
   assert.match(source, /parseSseChunk\(buffer/);

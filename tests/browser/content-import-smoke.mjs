@@ -67,7 +67,8 @@ try {
     await page.goto(`${origin}${prefix}term-tests/teacher-dashboard/index.html`);
     await page.evaluate(async () => {
       const script = document.querySelector('script[type="module"][src]');
-      const app = await import(script.src);
+      await import(script.src);
+      const app = await import(new URL('./app.js', script.src).href);
       window.pilotApp = app;
       window.savedDrafts = [];
       document.body.className = '';

@@ -31,7 +31,7 @@ test('timeline formatter includes localized timestamps and open incidents', () =
 });
 
 test('incident details stay in the teacher dashboard, outside the student renderer', async () => {
-  const teacherApp = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+  const teacherApp = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
   const teacherPage = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   const studentPage = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
   assert.match(teacherApp, /student\.incidentCount/);

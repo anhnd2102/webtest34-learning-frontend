@@ -1116,7 +1116,7 @@ test('teacher dashboard styles.css provides .sliding-drawer and .drawer-backdrop
 
 test('teacher dashboard app.js wires drawer backdrop, drawer-open class, and escape key handling', async () => {
   const fs = await import('node:fs/promises');
-  const code = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+  const code = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
 
   assert.match(code, /drawerBackdrop/);
   assert.match(code, /drawer-open/);
@@ -1358,7 +1358,7 @@ test('teacher dashboard provides role capabilities popover and tooltip trigger',
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
-  const code = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+  const code = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
 
   assert.match(html, /id="role-capabilities-popover"/);
   assert.match(html, /Kiểm tra toàn bộ các lớp/);
@@ -1382,7 +1382,7 @@ test('teacher dashboard lead-scope-filters provides 1-row nowrap layout and conc
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
-  const code = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+  const code = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
 
   assert.match(html, /Lớp tôi dạy/);
   assert.match(css, /#lead-scope-filters[^{]*\{[^}]*flex-wrap:\s*nowrap/);

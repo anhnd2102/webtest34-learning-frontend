@@ -71,7 +71,7 @@ test('lượt Exam Mode cũ không hiện N hay nhãn tự nộp của cấu hì
 });
 
 test('dashboard nối thao tác chuyển, đọc lại từ server, và vẫn mở được phòng thi sau khi chuyển', async () => {
-  const app = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+  const app = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   for (const id of ['exam-switch-controls', 'exam-switch-limit', 'exam-switch-btn', 'exam-switch-hint', 'exam-switch-message']) {
     assert.ok(html.includes(`id="${id}"`), id);
