@@ -1589,6 +1589,136 @@ export function courseTestCatalogPath(apiBaseOrCourseId, courseIdOptional) {
   return `${apiBase}/api/teacher/course-test-catalog?courseId=${encodeURIComponent(courseId)}`;
 }
 
+let activeUnsavedChangesGuard = null;
+
+export function registerUnsavedChangesGuard(fn) {
+  activeUnsavedChangesGuard = fn;
+}
+
+export function unregisterUnsavedChangesGuard(fn) {
+  if (activeUnsavedChangesGuard === fn) {
+    activeUnsavedChangesGuard = null;
+  }
+}
+
+export function hasActiveUnsavedChanges() {
+  try {
+    return typeof activeUnsavedChangesGuard === 'function' ? Boolean(activeUnsavedChangesGuard()) : false;
+  } catch (_) {
+    return false;
+  }
+}
+
+export function clearActiveUnsavedChanges() {
+  activeUnsavedChangesGuard = null;
+}
+
+export function openUnsavedChangesModal({
+  title = 'Các thay đổi chưa được lưu',
+  subtitle = 'Bạn có các chỉnh sửa chưa lưu trong bài thi này',
+  message = 'Nếu bạn thoát ra hoặc chuyển sang trang khác, tất cả các thay đổi vừa chỉnh sửa sẽ bị mất hoàn toàn.',
+  stayText = 'Ở lại chỉnh sửa',
+  discardText = 'Rời khỏi không lưu',
+  onDiscard,
+  onStay
+} = {}) {
+  if (typeof document === 'undefined') {
+    const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
+      ? window.confirm(`${title}\n\n${message}`)
+      : true;
+    if (confirmed) {
+      if (typeof onDiscard === 'function') onDiscard();
+    } else {
+      if (typeof onStay === 'function') onStay();
+    }
+    return;
+  }
+
+  let existing = document.querySelector('#modal-unsaved-changes');
+  if (existing && existing.parentNode) {
+    existing.parentNode.removeChild(existing);
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'modal-unsaved-changes';
+  modal.className = 'izone-modal-overlay';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-labelledby', 'modal-unsaved-title');
+
+  modal.innerHTML = `
+    <div class="izone-modal-dialog modal-warning-dialog">
+      <div class="izone-modal-header warning-header">
+        <div class="modal-header-icon-warning">
+          ${renderSvgIcon('alert', 'icon-lg')}
+        </div>
+        <div class="modal-title-wrap">
+          <h3 id="modal-unsaved-title">${escapeHtml(title)}</h3>
+          <p class="modal-subtitle">${escapeHtml(subtitle)}</p>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-unsaved-modal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div class="izone-modal-body">
+        <div class="alert-warning-box">
+          <div class="alert-warning-icon">${renderSvgIcon('alert', 'icon-inline')}</div>
+          <div class="alert-warning-text">
+            ${escapeHtml(message)}
+          </div>
+        </div>
+        <p class="unsaved-hint-text">
+          Hãy bấm <strong>"${escapeHtml(stayText)}"</strong> để tiếp tục lưu lại bài làm bằng nút <em>"Lưu bản nháp"</em> trước khi thoát.
+        </p>
+      </div>
+
+      <div class="izone-modal-footer">
+        <button type="button" class="btn btn-secondary" id="btn-stay-editing">
+          ${renderSvgIcon('check', 'icon-inline')} ${escapeHtml(stayText)}
+        </button>
+        <button type="button" class="btn btn-danger" id="btn-discard-and-leave">
+          ${renderSvgIcon('arrowRight', 'icon-inline')} ${escapeHtml(discardText)}
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const closeModal = () => {
+    if (modal && modal.parentNode) {
+      modal.parentNode.removeChild(modal);
+    }
+  };
+
+  const btnStay = modal.querySelector('#btn-stay-editing');
+  const btnDiscard = modal.querySelector('#btn-discard-and-leave');
+  const btnClose = modal.querySelector('#btn-close-unsaved-modal');
+
+  btnStay?.addEventListener('click', () => {
+    closeModal();
+    if (typeof onStay === 'function') onStay();
+  });
+
+  btnClose?.addEventListener('click', () => {
+    closeModal();
+    if (typeof onStay === 'function') onStay();
+  });
+
+  btnDiscard?.addEventListener('click', () => {
+    closeModal();
+    if (typeof onDiscard === 'function') onDiscard();
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+      if (typeof onStay === 'function') onStay();
+    }
+  });
+
+  btnStay?.focus();
+}
+
 export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sessionNumber, phase, courseName, onConfirm }) {
   if (typeof document === 'undefined') return;
   let modal = document.querySelector('#modal-confirm-delete-test');
@@ -4117,7 +4247,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
   let isDirty = false;
   function markAsDirty() {
     isDirty = true;
+    if (typeof container?.querySelector === 'function') {
+      const statusMsg = container.querySelector('#builder-status-msg');
+      if (statusMsg && !statusMsg.classList.contains('saving') && !statusMsg.classList.contains('forked')) {
+        statusMsg.className = 'builder-status-pill unsaved';
+        statusMsg.innerHTML = `${renderSvgIcon('edit', 'icon-inline')} <span>Có thay đổi chưa lưu</span>`;
+      }
+    }
   }
+
+  const unsavedGuardChecker = () => isDirty;
+  registerUnsavedChangesGuard(unsavedGuardChecker);
 
   const collapsedCardKeys = new Set();
 
@@ -6484,6 +6624,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
 
     updateScoreBreakdownBar();
+    if (isDirty && typeof container.querySelector === 'function') {
+      const statusMsg = container.querySelector('#builder-status-msg');
+      if (statusMsg && !statusMsg.classList.contains('saving') && !statusMsg.classList.contains('forked')) {
+        statusMsg.className = 'builder-status-pill unsaved';
+        statusMsg.innerHTML = `${renderSvgIcon('edit', 'icon-inline')} <span>Có thay đổi chưa lưu</span>`;
+      }
+    }
   }
 
   function getNextPosition() {
@@ -6503,13 +6650,14 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
   function bindEvents() {
     if (typeof container.querySelector !== 'function') return;
 
-    // Live update Score Breakdown Bar when question or rubric criterion score changes
+    // Live update Score Breakdown Bar and mark dirty when question or rubric criterion score changes
     if (typeof container.addEventListener === 'function') {
       container.addEventListener('input', (e) => {
-        if (e.target && (e.target.classList.contains('item-max-score-input') || e.target.classList.contains('criterion-max-score-input'))) {
+        markAsDirty();
+        if (e?.target?.classList?.contains('item-max-score-input') || e?.target?.classList?.contains('criterion-max-score-input')) {
           syncInputs();
         }
-        if (e.target && e.target.classList.contains('block-audio-input')) {
+        if (e?.target?.classList?.contains('block-audio-input')) {
           const val = e.target.value || '';
           const parent = e.target.closest ? e.target.closest('.block-field') : null;
           const warningEl = parent && parent.querySelector ? parent.querySelector('.audio-drive-warning') : null;
@@ -6519,11 +6667,32 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           }
         }
       });
+
+      container.addEventListener('change', () => {
+        markAsDirty();
+      });
     }
 
     const backBtn = container.querySelector('#btn-back-to-catalog');
-    if (backBtn && typeof options.onBack === 'function' && typeof backBtn.addEventListener === 'function') {
-      backBtn.addEventListener('click', options.onBack);
+    if (backBtn && typeof backBtn.addEventListener === 'function') {
+      backBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isDirty) {
+          openUnsavedChangesModal({
+            onDiscard: () => {
+              isDirty = false;
+              unregisterUnsavedChangesGuard(unsavedGuardChecker);
+              if (typeof options.onBack === 'function') options.onBack();
+            },
+            onStay: () => {
+              // User chooses to stay and continue editing
+            }
+          });
+          return;
+        }
+        unregisterUnsavedChangesGuard(unsavedGuardChecker);
+        if (typeof options.onBack === 'function') options.onBack();
+      });
     }
 
     // Quick jump to block via Block chips or Skill chips in Score Breakdown bar
@@ -10244,6 +10413,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           draftState.gradingKey = cleanGradingKey;
 
           const res = await options.onSaveDraft(payload);
+          isDirty = false;
           const now = new Date();
           const timeStr = [now.getHours(), now.getMinutes(), now.getSeconds()].map(n => String(n).padStart(2, '0')).join(':');
 
@@ -12168,6 +12338,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
 
             draftState.status = 'published';
+            isDirty = false;
             modal.style.display = 'none';
             render();
             openPublishReportDialog(result);
@@ -12307,6 +12478,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             phase: draftState.phase || '',
             courseName: options.courseId === 1 ? 'Khối 03' : (options.courseId === 3 ? 'Khối 45' : 'Khối 34'),
             onConfirm: () => {
+              isDirty = false;
+              unregisterUnsavedChangesGuard(unsavedGuardChecker);
               if (typeof options.onDeleteDraft === 'function') {
                 options.onDeleteDraft({
                   formVersionId: draftState.formVersionId,
@@ -12320,12 +12493,16 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
             ? window.confirm('Bạn có chắc chắn muốn xóa bài thi này không? Thao tác này không thể hoàn tác.')
             : true;
-          if (confirmed && typeof options.onDeleteDraft === 'function') {
-            options.onDeleteDraft({
-              formVersionId: draftState.formVersionId,
-              testKey: formVersionData.testKey || '',
-              title: draftState.title || formVersionData.title || ''
-            });
+          if (confirmed) {
+            isDirty = false;
+            unregisterUnsavedChangesGuard(unsavedGuardChecker);
+            if (typeof options.onDeleteDraft === 'function') {
+              options.onDeleteDraft({
+                formVersionId: draftState.formVersionId,
+                testKey: formVersionData.testKey || '',
+                title: draftState.title || formVersionData.title || ''
+              });
+            }
           }
         }
       });
@@ -13487,6 +13664,16 @@ async function startDashboard() {
                   catalog,
                   classes: relevantClasses,
                   onBack: () => {
+                    if (hasActiveUnsavedChanges()) {
+                      openUnsavedChangesModal({
+                        onDiscard: () => {
+                          clearActiveUnsavedChanges();
+                          loadAndRenderTestStudio(courseId);
+                        }
+                      });
+                      return;
+                    }
+                    clearActiveUnsavedChanges();
                     loadAndRenderTestStudio(courseId);
                   },
                   onDeleteDraft: handleDeleteDraft,
@@ -13547,6 +13734,16 @@ async function startDashboard() {
               catalog,
               classes: relevantClasses,
               onBack: () => {
+                if (hasActiveUnsavedChanges()) {
+                  openUnsavedChangesModal({
+                    onDiscard: () => {
+                      clearActiveUnsavedChanges();
+                      loadAndRenderTestStudio(currentStudioCourseId);
+                    }
+                  });
+                  return;
+                }
+                clearActiveUnsavedChanges();
                 loadAndRenderTestStudio(currentStudioCourseId);
               },
               onDeleteDraft: handleDeleteDraft,
@@ -13585,33 +13782,115 @@ async function startDashboard() {
     }
   }
 
+  let isNavigatingProgrammatically = false;
+  let previousHash = (typeof window !== 'undefined' ? window.location?.hash : '') || '#dashboard';
+
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const href = item.getAttribute('href') || '#dashboard';
       const cleanTab = readDashboardTab(href);
       const targetHash = '#' + cleanTab;
+
+      if (hasActiveUnsavedChanges()) {
+        openUnsavedChangesModal({
+          onDiscard: () => {
+            clearActiveUnsavedChanges();
+            isNavigatingProgrammatically = true;
+            if (window.location.hash !== targetHash) {
+              window.location.hash = targetHash;
+            }
+            previousHash = targetHash;
+            updateDashboardTab(cleanTab);
+          },
+          onStay: () => {
+            // User chooses to stay
+          }
+        });
+        return;
+      }
+
       if (window.location.hash !== targetHash) {
         window.location.hash = targetHash;
       }
+      previousHash = targetHash;
       updateDashboardTab(cleanTab);
     });
   });
 
   window.addEventListener('hashchange', () => {
-    updateDashboardTab(window.location.hash);
+    if (isNavigatingProgrammatically) {
+      isNavigatingProgrammatically = false;
+      previousHash = window.location.hash;
+      return;
+    }
+    const newHash = window.location.hash;
+    if (hasActiveUnsavedChanges()) {
+      openUnsavedChangesModal({
+        onDiscard: () => {
+          clearActiveUnsavedChanges();
+          previousHash = newHash;
+          updateDashboardTab(newHash);
+        },
+        onStay: () => {
+          isNavigatingProgrammatically = true;
+          window.location.hash = previousHash;
+        }
+      });
+      return;
+    }
+    previousHash = newHash;
+    updateDashboardTab(newHash);
   });
 
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('beforeunload', (e) => {
+      if (hasActiveUnsavedChanges()) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
+    });
+  }
+
   if (goToGradingBtn) {
-    goToGradingBtn.addEventListener('click', () => {
+    goToGradingBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (hasActiveUnsavedChanges()) {
+        openUnsavedChangesModal({
+          onDiscard: () => {
+            clearActiveUnsavedChanges();
+            isNavigatingProgrammatically = true;
+            window.location.hash = '#grading';
+            previousHash = '#grading';
+            updateDashboardTab('grading');
+          }
+        });
+        return;
+      }
       window.location.hash = '#grading';
+      previousHash = '#grading';
       updateDashboardTab('grading');
     });
   }
 
   if (gradingBackToDashboardBtn) {
-    gradingBackToDashboardBtn.addEventListener('click', () => {
+    gradingBackToDashboardBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (hasActiveUnsavedChanges()) {
+        openUnsavedChangesModal({
+          onDiscard: () => {
+            clearActiveUnsavedChanges();
+            isNavigatingProgrammatically = true;
+            window.location.hash = '#dashboard';
+            previousHash = '#dashboard';
+            updateDashboardTab('dashboard');
+          }
+        });
+        return;
+      }
       window.location.hash = '#dashboard';
+      previousHash = '#dashboard';
       updateDashboardTab('dashboard');
     });
   }
