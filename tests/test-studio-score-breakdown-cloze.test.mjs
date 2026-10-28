@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   computeTestBuilderScoreSummary,
   renderScoreBreakdownBarHtml,
+  renderBlockJumpTagsHtml,
   resolveStudentAnswerDisplay,
   resolveExpectedAnswerDisplay
 } from '../term-tests/teacher-dashboard/app.js';
@@ -122,6 +123,70 @@ test('renderScoreBreakdownBarHtml outputs structured HTML with icon, total score
   assert.ok(!html.includes('📊'));
   assert.ok(!html.includes('💡'));
   assert.ok(!html.includes('⏱'));
+  // Verify block jump tags row
+  assert.ok(html.includes('score-bar-blocks-row'));
+  assert.ok(html.includes('btn-block-jump-chip'));
+  assert.ok(html.includes('data-block-idx="0"'));
+  assert.ok(html.includes('Phần 1'));
+  assert.ok(html.includes('Listening Test'));
+  assert.ok(html.includes('1 câu · 25 đ'));
+});
+
+test('renderBlockJumpTagsHtml renders interactive navigation chips with correct metadata', () => {
+  const blocks = [
+    {
+      blockId: 'b1',
+      title: 'Khởi động & Nghe hiểu',
+      items: [
+        { itemVersionId: 'i1', maxScore: 5 },
+        { itemVersionId: 'i2', maxScore: 5 }
+      ]
+    },
+    {
+      blockId: 'b2',
+      title: 'Đọc hiểu & Ghép nối',
+      items: [
+        { itemVersionId: 'i3', maxScore: 10 }
+      ]
+    }
+  ];
+
+  const html = renderBlockJumpTagsHtml(blocks);
+  assert.ok(html.includes('score-bar-blocks-row'));
+  assert.ok(html.includes('Danh sách phần thi:'));
+  assert.ok(html.includes('data-block-idx="0"'));
+  assert.ok(html.includes('data-block-idx="1"'));
+  assert.ok(html.includes('Khởi động &amp; Nghe hiểu'));
+  assert.ok(html.includes('2 câu · 10 đ'));
+  assert.ok(html.includes('Đọc hiểu &amp; Ghép nối'));
+  assert.ok(html.includes('1 câu · 10 đ'));
+  // Design system: no emoji
+  assert.ok(!html.includes('🔖'));
+  assert.ok(!html.includes('🚩'));
+});
+
+test('computeTestBuilderScoreSummary tracks firstBlockIdx for quick jump from skill chips', () => {
+  const blocks = [
+    {
+      blockId: 'b1',
+      title: 'Phần 1: Nghe',
+      items: [{ itemVersionId: 'i1', maxScore: 10, skillCodes: ['listening'] }]
+    },
+    {
+      blockId: 'b2',
+      title: 'Phần 2: Đọc',
+      items: [{ itemVersionId: 'i2', maxScore: 10, skillCodes: ['reading'] }]
+    }
+  ];
+
+  const summary = computeTestBuilderScoreSummary(blocks);
+  const listening = summary.skills.find(s => s.code === 'listening');
+  const reading = summary.skills.find(s => s.code === 'reading');
+  const writing = summary.skills.find(s => s.code === 'writing');
+
+  assert.equal(listening.firstBlockIdx, 0);
+  assert.equal(reading.firstBlockIdx, 1);
+  assert.equal(writing.firstBlockIdx, null);
 });
 
 test('resolveStudentAnswerDisplay formats inline cloze object cleanly without [object Object]', () => {

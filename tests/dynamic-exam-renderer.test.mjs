@@ -231,3 +231,37 @@ test('dynamic-exam-renderer: formatPedagogicalTypeLabel maps technical codes to 
   assert.equal(formatPedagogicalTypeLabel({ graderType: 'rubric_async' }), 'Tự luận');
 });
 
+test('dynamic-exam-renderer: renderQuestionCard outputs structured listening_order layout with event pool and timeline slots', async () => {
+  const { renderQuestionCard } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+
+  const listeningOrderItem = {
+    itemVersionId: 'lo-item-1',
+    position: 51,
+    pedagogicalTypeCode: 'listening_order',
+    layoutType: 'timeline_sequence',
+    prompt: 'Nghe và sắp xếp thứ tự chuỗi hoạt động từ A đến E:',
+    events: [
+      { label: 'A', text: 'American families are changing from the way they used to be.' },
+      { label: 'B', text: 'Many US marriages end in divorce.' },
+      { label: 'C', text: 'The changing family types.' },
+      { label: 'D', text: 'An explanation for the decrease.' },
+      { label: 'E', text: 'The main difference is that families are smaller.' }
+    ],
+    audioUrl: 'https://example.com/audio.mp3'
+  };
+
+  const html = renderQuestionCard(listeningOrderItem, { 'lo-item-1': { 1: 'A', 2: 'E' } });
+
+  assert.ok(html.includes('cbt-listening-order-wrap'), 'Must contain listening order wrap');
+  assert.ok(html.includes('cbt-events-pool'), 'Must contain events pool');
+  assert.ok(html.includes('American families are changing'), 'Must contain event text');
+  assert.ok(html.includes('cbt-timeline-slots'), 'Must contain timeline slots');
+  assert.ok(html.includes('Câu 51'), 'Must render slot for position 51');
+  assert.ok(html.includes('Câu 55'), 'Must render slot for position 55');
+  assert.ok(html.includes('Thứ 1'), 'Must render label for step 1');
+  assert.ok(html.includes('Thứ 5'), 'Must render label for step 5');
+  assert.ok(html.includes('cbt-sequence-select'), 'Must render sequence select dropdown');
+  assert.ok(html.includes('is-selected-event'), 'Must mark selected events A and E as used in pool');
+  assert.ok(!html.includes('Gõ câu trả lời của bạn...'), 'Must NOT fall back to short text input!');
+});
+

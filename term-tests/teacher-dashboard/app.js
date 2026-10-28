@@ -62,22 +62,124 @@ export function expandSentenceVariants(sentences = []) {
     [/(\b)havent(\b)/gi, '$1have not$2']
   ];
 
+  // IELTS Number words <-> Digits (1..12 and ordinals)
+  const numberPairs = [
+    [/\b1st\b/gi, 'first'], [/\bfirst\b/gi, '1st'],
+    [/\b2nd\b/gi, 'second'], [/\bsecond\b/gi, '2nd'],
+    [/\b3rd\b/gi, 'third'], [/\bthird\b/gi, '3rd'],
+    [/\b4th\b/gi, 'fourth'], [/\bfourth\b/gi, '4th'],
+    [/\b5th\b/gi, 'fifth'], [/\bfifth\b/gi, '5th'],
+    [/\b6th\b/gi, 'sixth'], [/\bsixth\b/gi, '6th'],
+    [/\b7th\b/gi, 'seventh'], [/\bseventh\b/gi, '7th'],
+    [/\b8th\b/gi, 'eighth'], [/\beighth\b/gi, '8th'],
+    [/\b9th\b/gi, 'ninth'], [/\bninth\b/gi, '9th'],
+    [/\b10th\b/gi, 'tenth'], [/\btenth\b/gi, '10th'],
+    [/\b1\b/g, 'one'], [/\bone\b/gi, '1'],
+    [/\b2\b/g, 'two'], [/\btwo\b/gi, '2'],
+    [/\b3\b/g, 'three'], [/\bthree\b/gi, '3'],
+    [/\b4\b/g, 'four'], [/\bfour\b/gi, '4'],
+    [/\b5\b/g, 'five'], [/\bfive\b/gi, '5'],
+    [/\b6\b/g, 'six'], [/\bsix\b/gi, '6'],
+    [/\b7\b/g, 'seven'], [/\bseven\b/gi, '7'],
+    [/\b8\b/g, 'eight'], [/\beight\b/gi, '8'],
+    [/\b9\b/g, 'nine'], [/\bnine\b/gi, '9'],
+    [/\b10\b/g, 'ten'], [/\bten\b/gi, '10'],
+    [/\b11\b/g, 'eleven'], [/\beleven\b/gi, '11'],
+    [/\b12\b/g, 'twelve'], [/\btwelve\b/gi, '12']
+  ];
+
+  // British vs American Spelling Pairs in IELTS
+  const spellingPairs = [
+    [/\bcolour\b/gi, 'color'], [/\bcolor\b/gi, 'colour'],
+    [/\bfavourite\b/gi, 'favorite'], [/\bfavorite\b/gi, 'favourite'],
+    [/\bflavour\b/gi, 'flavor'], [/\bflavor\b/gi, 'flavour'],
+    [/\bhonour\b/gi, 'honor'], [/\bhonor\b/gi, 'honour'],
+    [/\bneighbour\b/gi, 'neighbor'], [/\bneighbor\b/gi, 'neighbour'],
+    [/\bhumour\b/gi, 'humor'], [/\bhumor\b/gi, 'humour'],
+    [/\btheatre\b/gi, 'theater'], [/\btheater\b/gi, 'theatre'],
+    [/\bcentre\b/gi, 'center'], [/\bcenter\b/gi, 'centre'],
+    [/\bmetre\b/gi, 'meter'], [/\bmeter\b/gi, 'metre'],
+    [/\blitre\b/gi, 'liter'], [/\bliter\b/gi, 'litre'],
+    [/\borganise\b/gi, 'organize'], [/\borganize\b/gi, 'organise'],
+    [/\borganised\b/gi, 'organized'], [/\borganized\b/gi, 'organised'],
+    [/\borganisation\b/gi, 'organization'], [/\borganization\b/gi, 'organisation'],
+    [/\brealise\b/gi, 'realize'], [/\brealize\b/gi, 'realise'],
+    [/\brealised\b/gi, 'realized'], [/\brealized\b/gi, 'realised'],
+    [/\brecognise\b/gi, 'recognize'], [/\brecognize\b/gi, 'recognise'],
+    [/\banalyse\b/gi, 'analyze'], [/\banalyze\b/gi, 'analyse'],
+    [/\bpractise\b/gi, 'practice'], [/\bpractice\b/gi, 'practise'],
+    [/\blicence\b/gi, 'license'], [/\blicense\b/gi, 'licence'],
+    [/\btravelling\b/gi, 'traveling'], [/\btraveling\b/gi, 'travelling'],
+    [/\btravelled\b/gi, 'traveled'], [/\btraveled\b/gi, 'travelled'],
+    [/\bcancelled\b/gi, 'canceled'], [/\bcanceled\b/gi, 'cancelled'],
+    [/\bmodelling\b/gi, 'modeling'], [/\bmodeling\b/gi, 'modelling'],
+    [/\bprogramme\b/gi, 'program'], [/\bprogram\b/gi, 'programme'],
+    [/\bcatalogue\b/gi, 'catalog'], [/\bcatalog\b/gi, 'catalogue'],
+    [/\bdialogue\b/gi, 'dialog'], [/\bdialog\b/gi, 'dialogue']
+  ];
+
+  // Pass 1: Raw string cleaning & structural variants (parentheses, optional articles, hyphens)
   for (const s of list) {
     if (!s || typeof s !== 'string') continue;
     const clean = s.normalize('NFKC').trim().replace(/\s+/gu, ' ');
     if (!clean) continue;
     result.add(clean);
 
+    // 1A. Parentheses handling:
+    // Plural marker: "student(s)" -> "student", "students"
+    if (/\(\s*s\s*\)/i.test(clean)) {
+      result.add(clean.replace(/\(\s*s\s*\)/gi, '').replace(/\s+/gu, ' ').trim());
+      result.add(clean.replace(/\(\s*s\s*\)/gi, 's').replace(/\s+/gu, ' ').trim());
+    }
+    // General optional brackets: "(the) hospital" -> "hospital", "the hospital"
+    if (/\([^)]+\)/.test(clean)) {
+      result.add(clean.replace(/\(([^)]+)\)/g, '').replace(/\s+/gu, ' ').trim());
+      result.add(clean.replace(/\(([^)]+)\)/g, '$1').replace(/\s+/gu, ' ').trim());
+    }
+
+    // 1B. Leading optional article: "the hospital" -> "hospital", "a car" -> "car"
+    const articleMatch = clean.match(/^(?:the|a|an)\s+(.+)$/i);
+    if (articleMatch && articleMatch[1]) {
+      result.add(articleMatch[1].trim());
+    }
+    const words = clean.split(' ');
+    if (words.length <= 2 && !/^(?:the|a|an|in|on|at|for|with|by|to|of)\b/i.test(clean)) {
+      result.add('the ' + clean);
+      const startsWithVowel = /^[aeiou]/i.test(clean);
+      result.add((startsWithVowel ? 'an ' : 'a ') + clean);
+    }
+
+    // 1C. Hyphenation vs space: "full-time" <-> "full time"
+    if (/-/.test(clean)) {
+      result.add(clean.replace(/(\w)-(\w)/g, '$1 $2'));
+    } else if (clean.includes(' ') && words.length === 2) {
+      result.add(clean.replace(/ /g, '-'));
+    }
+  }
+
+  // Pass 2: Word substitutions (contractions, numbers, spelling)
+  const currentItems = Array.from(result);
+  for (const item of currentItems) {
     for (const [pattern, replacement] of contractionPairs) {
-      if (pattern.test(clean)) {
-        const transformed = clean.replace(pattern, replacement);
-        result.add(transformed);
+      if (pattern.test(item)) {
+        result.add(item.replace(pattern, replacement));
+      }
+    }
+    for (const [pattern, replacement] of numberPairs) {
+      if (pattern.test(item)) {
+        result.add(item.replace(pattern, replacement));
+      }
+    }
+    for (const [pattern, replacement] of spellingPairs) {
+      if (pattern.test(item)) {
+        result.add(item.replace(pattern, replacement));
       }
     }
   }
 
-  const afterContractions = Array.from(result);
-  for (const item of afterContractions) {
+  // Pass 3: Periods and question marks
+  const afterSubstitutions = Array.from(result);
+  for (const item of afterSubstitutions) {
     const withoutPeriod = item.replace(/\.+$/gu, '').trim();
     if (withoutPeriod) {
       result.add(withoutPeriod);
@@ -92,13 +194,15 @@ export function expandSentenceVariants(sentences = []) {
     }
   }
 
-  const afterPunctuation = Array.from(result);
-  for (const item of afterPunctuation) {
+  // Pass 4: Commas
+  const afterPeriods = Array.from(result);
+  for (const item of afterPeriods) {
     if (item.includes(',')) {
       result.add(item.replace(/,/gu, '').replace(/\s+/gu, ' ').trim());
     }
   }
 
+  // Pass 5: Apostrophes (' <-> ’)
   const afterCommas = Array.from(result);
   for (const item of afterCommas) {
     if (item.includes("'")) {
@@ -109,7 +213,7 @@ export function expandSentenceVariants(sentences = []) {
     }
   }
 
-  return Array.from(result).filter(Boolean).slice(0, 40);
+  return Array.from(result).filter(Boolean).slice(0, 50);
 }
 
 export function generateHangmanHint(targetText = '') {
@@ -3587,14 +3691,16 @@ export function computeTestBuilderScoreSummary(blocks = []) {
   let totalScore = 0;
   let totalQuestions = 0;
   const canonicalSkills = {
-    listening: { code: 'listening', label: 'Listening', score: 0, count: 0 },
-    reading: { code: 'reading', label: 'Reading', score: 0, count: 0 },
-    writing: { code: 'writing', label: 'Writing', score: 0, count: 0 },
-    speaking: { code: 'speaking', label: 'Speaking', score: 0, count: 0 }
+    listening: { code: 'listening', label: 'Listening', score: 0, count: 0, firstBlockIdx: null },
+    reading: { code: 'reading', label: 'Reading', score: 0, count: 0, firstBlockIdx: null },
+    writing: { code: 'writing', label: 'Writing', score: 0, count: 0, firstBlockIdx: null },
+    speaking: { code: 'speaking', label: 'Speaking', score: 0, count: 0, firstBlockIdx: null }
   };
   const extraSkills = {};
 
-  for (const block of (blocks || [])) {
+  const safeBlocks = Array.isArray(blocks) ? blocks : [];
+  for (let bIdx = 0; bIdx < safeBlocks.length; bIdx++) {
+    const block = safeBlocks[bIdx];
     const bTitle = block.title || '';
     for (const item of (block.items || [])) {
       const span = getItemSpanCount(item);
@@ -3608,10 +3714,13 @@ export function computeTestBuilderScoreSummary(blocks = []) {
       if (canonicalSkills[normSkill]) {
         canonicalSkills[normSkill].score += score;
         canonicalSkills[normSkill].count += span;
+        if (canonicalSkills[normSkill].firstBlockIdx === null) {
+          canonicalSkills[normSkill].firstBlockIdx = bIdx;
+        }
       } else {
         if (!extraSkills[normSkill]) {
           const lbl = CANONICAL_SKILL_LABELS[normSkill] || (normSkill.charAt(0).toUpperCase() + normSkill.slice(1));
-          extraSkills[normSkill] = { code: normSkill, label: lbl, score: 0, count: 0 };
+          extraSkills[normSkill] = { code: normSkill, label: lbl, score: 0, count: 0, firstBlockIdx: bIdx };
         }
         extraSkills[normSkill].score += score;
         extraSkills[normSkill].count += span;
@@ -3642,8 +3751,9 @@ export function computeTestBuilderScoreSummary(blocks = []) {
 
 export function renderScoreSkillChipsHtml(skills = []) {
   return skills.map(skill => {
+    const hasJump = typeof skill.firstBlockIdx === 'number';
     return `
-      <div class="score-skill-chip skill-${escapeHtml(skill.code)}" title="${escapeHtml(skill.label)}: ${skill.score} điểm, ${skill.count} câu">
+      <div class="score-skill-chip skill-${escapeHtml(skill.code)}${hasJump ? ' has-jump' : ''}" ${hasJump ? `data-first-block-idx="${skill.firstBlockIdx}" role="button" tabindex="0"` : ''} title="${escapeHtml(skill.label)}: ${skill.score} điểm, ${skill.count} câu${hasJump ? ' (Bấm để nhảy đến phần này)' : ''}">
         <span class="skill-chip-dot"></span>
         <span class="skill-chip-name">${escapeHtml(skill.label)}</span>
         <span class="skill-chip-score"><strong>${skill.score}</strong> đ</span>
@@ -3653,28 +3763,60 @@ export function renderScoreSkillChipsHtml(skills = []) {
   }).join('');
 }
 
+export function renderBlockJumpTagsHtml(blocks = []) {
+  if (!Array.isArray(blocks) || blocks.length === 0) return '';
+  const chipsHtml = blocks.map((block, idx) => {
+    const itemsCount = (block.items || []).reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
+    let bScore = (block.items || []).reduce((sum, itm) => sum + (Number(itm.maxScore) || 0), 0);
+    bScore = Math.round(bScore * 10) / 10;
+    const title = (block.title || `Phần ${idx + 1}`).trim();
+    return `
+      <button type="button" class="btn-block-jump-chip" data-block-idx="${idx}" title="Chuyển nhanh đến Phần ${idx + 1}: ${escapeHtml(title)}">
+        <span class="block-jump-badge">Phần ${idx + 1}</span>
+        <span class="block-jump-title">${escapeHtml(title)}</span>
+        <span class="block-jump-meta">(${itemsCount} câu · ${bScore} đ)</span>
+      </button>
+    `;
+  }).join('');
+
+  return `
+    <div class="score-bar-blocks-row" aria-label="Chuyển nhanh đến phần thi">
+      <div class="score-blocks-label-wrap">
+        <span class="score-blocks-label">${renderSvgIcon('layers', 'icon-inline')} Danh sách phần thi:</span>
+      </div>
+      <div class="score-blocks-chips">
+        ${chipsHtml}
+      </div>
+    </div>
+  `;
+}
+
 export function renderScoreBreakdownBarHtml(draftState) {
-  const summary = computeTestBuilderScoreSummary(draftState.blocks);
+  const blocks = (draftState && draftState.blocks) || [];
+  const summary = computeTestBuilderScoreSummary(blocks);
   return `
     <div class="builder-score-breakdown-bar" id="builder-score-breakdown-bar">
-      <div class="score-bar-total-tile">
-        <div class="score-total-icon">${renderSvgIcon('chart', 'icon-inline')}</div>
-        <div class="score-total-info">
-          <span class="score-total-label">Tổng điểm đề:</span>
-          <div class="score-total-num-wrap">
-            <span class="score-total-val">${summary.totalScore}</span>
-            <span class="score-total-unit">điểm</span>
-            <span class="score-total-questions-badge score-total-questions">${summary.totalQuestions} câu hỏi</span>
+      <div class="score-bar-main-row">
+        <div class="score-bar-total-tile">
+          <div class="score-total-icon">${renderSvgIcon('chart', 'icon-inline')}</div>
+          <div class="score-total-info">
+            <span class="score-total-label">Tổng điểm đề:</span>
+            <div class="score-total-num-wrap">
+              <span class="score-total-val">${summary.totalScore}</span>
+              <span class="score-total-unit">điểm</span>
+              <span class="score-total-questions-badge score-total-questions">${summary.totalQuestions} câu hỏi</span>
+            </div>
+          </div>
+        </div>
+        <div class="score-bar-divider"></div>
+        <div class="score-bar-skills-wrap">
+          <span class="score-skills-label">Phân bố kỹ năng:</span>
+          <div class="score-skills-chips">
+            ${renderScoreSkillChipsHtml(summary.skills)}
           </div>
         </div>
       </div>
-      <div class="score-bar-divider"></div>
-      <div class="score-bar-skills-wrap">
-        <span class="score-skills-label">Phân bố kỹ năng:</span>
-        <div class="score-skills-chips">
-          ${renderScoreSkillChipsHtml(summary.skills)}
-        </div>
-      </div>
+      ${renderBlockJumpTagsHtml(blocks)}
     </div>
   `;
 }
@@ -5377,7 +5519,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const isBlockCollapsed = collapsedCardKeys.has(blockCardKey);
 
       return `
-        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}" data-block-id="${block.blockId}" data-index="${index}">
+        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}" id="builder-block-${index}" data-block-id="${block.blockId}" data-index="${index}">
           <div class="builder-block-header">
             <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
             <div class="block-checkpoint-pill">Phần ${index + 1}</div>
@@ -5550,6 +5692,46 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
   }
 
+  function jumpToBlock(bIdx) {
+    if (typeof container.querySelector !== 'function') return;
+    const card = container.querySelector(`#builder-block-${bIdx}`) ||
+                 container.querySelector(`.builder-block-card[data-index="${bIdx}"]`);
+    if (!card) return;
+
+    const block = draftState.blocks[bIdx];
+    const blockCardKey = (block && block.blockId) || (card.getAttribute && card.getAttribute('data-block-id')) || `b-${bIdx}`;
+
+    // 1. If block is collapsed, expand it so teacher can view/edit immediately
+    if (card.classList && card.classList.contains('is-collapsed')) {
+      card.classList.remove('is-collapsed');
+      collapsedCardKeys.delete(blockCardKey);
+      const toggleBtn = card.querySelector('.btn-toggle-block-collapse');
+      if (toggleBtn) {
+        toggleBtn.innerHTML = renderSvgIcon('chevronDown', 'icon-inline');
+        if (typeof toggleBtn.setAttribute === 'function') {
+          toggleBtn.setAttribute('aria-expanded', 'true');
+        }
+      }
+    }
+
+    // 2. Smoothly scroll into view
+    if (typeof card.scrollIntoView === 'function') {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 3. Highlight animation pulse
+    if (card.classList) {
+      card.classList.remove('block-target-highlight');
+      if (typeof card.offsetWidth === 'number') {
+        void card.offsetWidth;
+      }
+      card.classList.add('block-target-highlight');
+      setTimeout(() => {
+        if (card.classList) card.classList.remove('block-target-highlight');
+      }, 1600);
+    }
+  }
+
   function updateScoreBreakdownBar() {
     const barEl = container.querySelector('#builder-score-breakdown-bar');
     if (!barEl) return;
@@ -5562,6 +5744,40 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     const chipsWrap = barEl.querySelector('.score-skills-chips');
     if (chipsWrap) {
       chipsWrap.innerHTML = renderScoreSkillChipsHtml(summary.skills);
+    }
+
+    const blocksRowEl = barEl.querySelector('.score-bar-blocks-row');
+    if (blocksRowEl) {
+      blocksRowEl.outerHTML = renderBlockJumpTagsHtml(draftState.blocks);
+    } else {
+      barEl.insertAdjacentHTML('beforeend', renderBlockJumpTagsHtml(draftState.blocks));
+    }
+
+    // Re-bind click handlers for the updated jump chips
+    const newJumpChips = barEl.querySelectorAll('.btn-block-jump-chip');
+    if (newJumpChips && typeof newJumpChips.forEach === 'function') {
+      newJumpChips.forEach(chip => {
+        if (typeof chip.addEventListener === 'function') {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const bIdx = Number(chip.getAttribute('data-block-idx'));
+            if (!isNaN(bIdx)) jumpToBlock(bIdx);
+          });
+        }
+      });
+    }
+
+    const newSkillChips = barEl.querySelectorAll('.score-skill-chip[data-first-block-idx]');
+    if (newSkillChips && typeof newSkillChips.forEach === 'function') {
+      newSkillChips.forEach(chip => {
+        if (typeof chip.addEventListener === 'function') {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const bIdx = Number(chip.getAttribute('data-first-block-idx'));
+            if (!isNaN(bIdx)) jumpToBlock(bIdx);
+          });
+        }
+      });
     }
 
     const totalQTag = container.querySelector('.total-questions-tag strong');
@@ -6131,6 +6347,33 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     const backBtn = container.querySelector('#btn-back-to-catalog');
     if (backBtn && typeof options.onBack === 'function' && typeof backBtn.addEventListener === 'function') {
       backBtn.addEventListener('click', options.onBack);
+    }
+
+    // Quick jump to block via Block chips or Skill chips in Score Breakdown bar
+    const blockJumpChips = container.querySelectorAll('.btn-block-jump-chip');
+    if (blockJumpChips && typeof blockJumpChips.forEach === 'function') {
+      blockJumpChips.forEach(chip => {
+        if (typeof chip.addEventListener === 'function') {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const bIdx = Number(chip.getAttribute('data-block-idx'));
+            if (!isNaN(bIdx)) jumpToBlock(bIdx);
+          });
+        }
+      });
+    }
+
+    const skillChipsWithJump = container.querySelectorAll('.score-skill-chip[data-first-block-idx]');
+    if (skillChipsWithJump && typeof skillChipsWithJump.forEach === 'function') {
+      skillChipsWithJump.forEach(chip => {
+        if (typeof chip.addEventListener === 'function') {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const bIdx = Number(chip.getAttribute('data-first-block-idx'));
+            if (!isNaN(bIdx)) jumpToBlock(bIdx);
+          });
+        }
+      });
     }
 
     // Add Exercise to block
@@ -7167,7 +7410,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           expectedCorrections: [],
           scoringRule: 'split_points'
         };
-        currentKey.expectedErrors = expandSentenceVariants([raw]);
+        const generatedErrors = expandSentenceVariants([raw]);
+        const prevErrors = Array.isArray(currentKey.expectedErrors) ? currentKey.expectedErrors : [];
+        currentKey.expectedErrors = Array.from(new Set([...prevErrors, ...generatedErrors]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -7195,7 +7440,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           expectedCorrections: [],
           scoringRule: 'split_points'
         };
-        currentKey.expectedCorrections = expandSentenceVariants([raw]);
+        const generatedCorrections = expandSentenceVariants([raw]);
+        const prevCorrections = Array.isArray(currentKey.expectedCorrections) ? currentKey.expectedCorrections : [];
+        currentKey.expectedCorrections = Array.from(new Set([...prevCorrections, ...generatedCorrections]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -7821,7 +8068,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: [],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        currentKey.accepted = expandSentenceVariants([target]);
+        const generated = expandSentenceVariants([target]);
+        const prevAccepted = Array.isArray(currentKey.accepted) ? currentKey.accepted : [];
+        currentKey.accepted = Array.from(new Set([...prevAccepted, ...generated]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -8016,7 +8265,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: [],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        currentKey.accepted = expandSentenceVariants([targetVal]);
+        const generated = expandSentenceVariants([targetVal]);
+        const prevAccepted = Array.isArray(currentKey.accepted) ? currentKey.accepted : [];
+        currentKey.accepted = Array.from(new Set([...prevAccepted, ...generated]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -8973,23 +9224,29 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const generated = expandSentenceVariants([rawVal]);
         if (blankNum && item.layoutType === 'inline_cloze') {
           item.clozeAnswers = item.clozeAnswers || {};
+          const prevAccepted = Array.isArray(item.clozeAnswers[blankNum]?.accepted) ? item.clozeAnswers[blankNum].accepted : [];
+          const merged = Array.from(new Set([...prevAccepted, ...generated]));
           item.clozeAnswers[blankNum] = {
             targetWord: rawVal,
-            accepted: generated
+            accepted: merged
           };
           const detected = parseClozeBlanks(item.prompt || '');
           const firstNum = detected.length ? detected[0].number : (item.position || 1);
           if (Number(blankNum) === firstNum) {
             draftState.gradingKey.items[item.itemVersionId] = {
               graderType: 'accepted_text',
-              accepted: generated,
+              accepted: merged,
               normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
             };
           }
         } else {
+          const prevAccepted = Array.isArray(draftState.gradingKey.items[item.itemVersionId]?.accepted)
+            ? draftState.gradingKey.items[item.itemVersionId].accepted
+            : [];
+          const merged = Array.from(new Set([...prevAccepted, ...generated]));
           draftState.gradingKey.items[item.itemVersionId] = {
             graderType: 'accepted_text',
-            accepted: generated,
+            accepted: merged,
             normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
           };
         }
@@ -9051,9 +9308,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
         const generated = expandSentenceVariants([rawVal]);
         const currentExpected = draftState.gradingKey.items[item.itemVersionId]?.expectedOptionId || item.options?.[0]?.id || 'opt_1';
+        const prevAccepted = Array.isArray(draftState.gradingKey.items[item.itemVersionId]?.accepted)
+          ? draftState.gradingKey.items[item.itemVersionId].accepted
+          : [];
+        const merged = Array.from(new Set([...prevAccepted, ...generated]));
         draftState.gradingKey.items[item.itemVersionId] = {
           graderType: 'accepted_text_exact_option',
-          accepted: generated,
+          accepted: merged,
           expectedOptionId: currentExpected,
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
