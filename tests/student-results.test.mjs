@@ -65,6 +65,27 @@ test('câu sai và đúng một phần thuộc nhóm lọc "Chưa đúng"', () =
   assert.equal(html.match(/data-result-group="correct"/g).length, 1);
 });
 
+test('điểm từng phần: tổng theo phần, câu không thuộc phần nào rơi vào "Câu khác"', () => {
+  const two = { blocks: [
+    { title: 'Vocabulary', items: [{ itemVersionId: 'i1' }, { itemVersionId: 'i2' }] },
+    { title: 'Speaking', items: [{ itemVersionId: 'i3' }] }
+  ] };
+  const html = studentResultsHtml({
+    result: { items: [item('i1', 1, 'correct', { maxScore: 0.5, scoreEarned: 0.5 }), item('i2', 2, 'incorrect', { maxScore: 0.5 }), item('i3', 3, 'correct'), item('zz', 4, 'incorrect')] },
+    definition: two, studentName: 'An', className: 'L1'
+  });
+  assert.match(html, /data-result-jump="sim-sec-0"[\s\S]*?Vocabulary[\s\S]*?0\.5\/1đ[\s\S]*?1\/2 câu đúng/);
+  assert.match(html, /Speaking[\s\S]*?1\/1đ/);
+  assert.match(html, /Câu khác/);
+  assert.equal(html.match(/data-result-section/g).length, 3);
+});
+
+test('ghi chú đáp án theo answerRelease', () => {
+  assert.match(render([item('i2', 1, 'incorrect')], { answerRelease: 'hidden' }), /Bài này không hiển thị đáp án đúng\./);
+  assert.match(render([item('i2', 1, 'incorrect')], { answerRelease: 'partial' }), /Một số đáp án đúng chưa được/);
+  assert.doesNotMatch(render([item('i2', 1, 'incorrect')], { answerRelease: 'released' }), /sim-notice/);
+});
+
 test('không có câu nào thì báo đang cập nhật; dữ liệu được escape', () => {
   assert.match(render([]), /Đang cập nhật chi tiết/);
   const html = studentResultsHtml({ result: { items: [item('i2', 1, 'incorrect', { rawAnswer: '<img src=x>' })] }, definition, studentName: '<b>', className: '' });

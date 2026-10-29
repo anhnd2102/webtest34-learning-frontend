@@ -118,7 +118,7 @@ export function studentResultsHtml({ result, definition, studentName, className 
   const count = verdict => items.filter(it => it.verdict === verdict).length;
   const pendingCount = items.length - count('correct') - count('partial') - count('incorrect');
 
-  const cards = items.map(it => {
+  const cardHtml = it => {
     const def = defItems.get(it.itemVersionId) || {};
     const verdict = RESULT_VERDICTS[it.verdict] || { cls: 'pending', icon: '…', label: 'Chưa chấm' };
     const hasAnswer = it.rawAnswer !== undefined && it.rawAnswer !== null && String(it.rawAnswer).trim() !== '';
@@ -138,7 +138,39 @@ export function studentResultsHtml({ result, definition, studentName, className 
       ${expected ? `<div class="sim-card-row"><span class="sim-card-label">Đáp án đúng</span><span class="sim-card-expected">${escape(expected)}</span></div>` : ''}
       ${errors.length ? `<details class="sim-card-errors"${errors.length <= 3 ? ' open' : ''}><summary>Lỗi gặp phải (${errors.length})</summary><ul>${errors.map(error => `<li>${escape(error)}</li>`).join('')}</ul></details>` : ''}
     </li>`;
-  }).join('');
+  };
+
+  // Nhóm câu theo phần của đề; câu không ghép được vào phần nào rơi vào "Câu khác".
+  const itemsById = new Map(items.map(it => [it.itemVersionId, it]));
+  const used = new Set();
+  const sections = (definition?.blocks || []).map((block, index) => {
+    const own = (block.items || []).map(it => itemsById.get(it.itemVersionId)).filter(Boolean);
+    own.forEach(it => used.add(it.itemVersionId));
+    return { title: block.title || `Phần ${index + 1}`, items: own };
+  });
+  const leftover = items.filter(it => !used.has(it.itemVersionId));
+  if (leftover.length) sections.push({ title: 'Câu khác', items: leftover });
+  const sum = (list, key) => Number(list.reduce((total, it) => total + (Number(it[key]) || 0), 0).toFixed(2));
+  const shown = sections.filter(section => section.items.length).map((section, index) => ({
+    ...section,
+    id: `sim-sec-${index}`,
+    score: sum(section.items, 'scoreEarned'),
+    max: sum(section.items, 'maxScore'),
+    correct: section.items.filter(it => it.verdict === 'correct').length
+  }));
+
+  const sectionSummary = shown.length ? `<ul class="sim-section-list" aria-label="Điểm từng phần">${shown.map(section => `
+        <li><button type="button" class="sim-section-jump" data-result-jump="${section.id}">
+          <span class="sim-section-name">${escape(section.title)}</span>
+          <span class="sim-section-score">${section.score}/${section.max}đ</span>
+          <span class="sim-section-count">${section.correct}/${section.items.length} câu đúng</span>
+        </button></li>`).join('')}</ul>` : '';
+  const cards = shown.map(section => `<section class="sim-section" id="${section.id}" data-result-section>
+      <h4 class="sim-section-head"><span>${escape(section.title)}</span><span>${section.score}/${section.max}đ · ${section.correct}/${section.items.length} câu đúng</span></h4>
+      <ul class="sim-card-list">${section.items.map(cardHtml).join('')}</ul>
+    </section>`).join('');
+  const answerNote = result?.answerRelease === 'hidden' ? 'Bài này không hiển thị đáp án đúng.'
+    : (result?.answerRelease === 'partial' ? 'Một số đáp án đúng chưa được giảng viên mở.' : '');
 
   return `<div class="sim-results-dialog" role="dialog" aria-modal="true" aria-labelledby="sim-results-title">
     <header class="sim-results-header">
@@ -160,12 +192,14 @@ export function studentResultsHtml({ result, definition, studentName, className 
         </div>
         <div class="score-banner-sub">Thí sinh: <strong>${escape(studentName || '')}</strong> · Lớp: <strong>${escape(className || '')}</strong><br>Trạng thái: <strong>${statusText}</strong></div>
       </div>
+      ${sectionSummary}
+      ${answerNote ? `<p class="sim-notice" role="note">${answerNote}</p>` : ''}
       <div class="sim-filter" role="group" aria-label="Lọc câu">
         <button type="button" class="sim-filter-btn is-active" data-result-filter="all" aria-pressed="true">Tất cả</button>
         <button type="button" class="sim-filter-btn" data-result-filter="wrong" aria-pressed="false">Chưa đúng</button>
         <button type="button" class="sim-filter-btn" data-result-filter="correct" aria-pressed="false">Đúng</button>
       </div>
-      <ul class="sim-card-list">${cards || '<li class="sim-card-empty">Đang cập nhật chi tiết...</li>'}</ul>
+      ${cards || '<p class="sim-card-empty">Đang cập nhật chi tiết...</p>'}
     </div>
     <footer class="sim-results-footer">
       <button type="button" class="btn btn-secondary btn-sm" id="btn-retest-simulation">Xem lại trên bài thi</button>
@@ -187,6 +221,18 @@ export function bindResultFilters(root) {
       root.querySelectorAll('[data-result-group]').forEach(card => {
         card.hidden = filter !== 'all' && card.dataset.resultGroup !== filter;
       });
+      // Phần không còn câu nào sau khi lọc thì ẩn cả tiêu đề.
+      root.querySelectorAll('[data-result-section]').forEach(section => {
+        section.hidden = !section.querySelector('[data-result-group]:not([hidden])');
+      });
+    });
+  });
+  root.querySelectorAll('[data-result-jump]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = root.querySelector(`#${btn.dataset.resultJump}`);
+      // Đang lọc mà phần đích bị ẩn thì quay về "Tất cả" để cuộn tới được.
+      if (target?.hidden) root.querySelector('[data-result-filter="all"]')?.click();
+      target?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
   });
 }

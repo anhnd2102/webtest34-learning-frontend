@@ -2130,3 +2130,36 @@ body {
 .sim-card-errors summary { min-height: 28px; font-weight: 700; color: var(--sim-bad); cursor: pointer; }
 .sim-card-errors ul { margin: 6px 0 0; padding-left: 18px; }
 .sim-card-empty { padding: 16px; text-align: center; color: var(--izone-muted); }
+
+.sim-section-list { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.sim-section-jump {
+  display: grid; grid-template-columns: 1fr auto; gap: 0 12px; align-items: baseline;
+  width: 100%; min-height: 44px; padding: 8px 12px; text-align: left;
+  font: inherit; color: var(--izone-slate); background: var(--izone-card-bg);
+  border: 1px solid var(--izone-border); border-radius: 8px; cursor: pointer;
+}
+.sim-section-jump:hover { background: var(--izone-bg); }
+.sim-section-name { font-size: 0.9rem; font-weight: 600; overflow-wrap: anywhere; }
+.sim-section-score { font-size: 0.9rem; font-weight: 800; color: var(--izone-navy); }
+.sim-section-count { grid-column: 1 / -1; font-size: 0.76rem; color: var(--izone-muted); }
+.sim-notice { margin: 0; padding: 10px 12px; font-size: 0.86rem; color: var(--sim-part); background: var(--sim-part-bg); border-radius: 8px; }
+.sim-section { display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 8px; }
+.sim-section[hidden] { display: none; }
+.sim-section-head {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px;
+  margin: 6px 0 0; padding-bottom: 6px; font-size: 0.92rem; color: var(--izone-navy);
+  border-bottom: 2px solid var(--izone-border);
+}
+.sim-section-head span:last-child { font-size: 0.82rem; font-weight: 700; color: var(--izone-muted); }
+
+/* Xem lại trên bài thi: bảng câu hỏi tô đúng/sai (đè .answered, vốn là màu "đã làm") */
+.btn-qnav.is-correct {
+  background: #15803d !important; border-color: #166534 !important; color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(21, 128, 61, 0.3) !important;
+}
+.btn-qnav.is-incorrect {
+  background: #ffffff !important; border-color: #be123c !important; color: #be123c !important;
+  box-shadow: inset 0 0 0 1px #be123c !important;
+}
+.btn-qnav.is-correct::after { content: "✓"; margin-left: 2px; font-size: 0.75em; }
+.btn-qnav.is-incorrect::after { content: "✕"; margin-left: 2px; font-size: 0.75em; }
