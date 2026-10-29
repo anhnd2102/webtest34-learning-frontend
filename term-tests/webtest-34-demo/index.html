@@ -16,9 +16,34 @@
   <script src="exam-guard.js?rev=20261015-exam-guard-device-id-v3"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="dynamic-test.css?rev=20261029-results-v3">
+  <link rel="modulepreload" href="./content-preview.mjs?rev=20261029-results-v3">
+  <link rel="modulepreload" href="./dynamic-exam-renderer.mjs?rev=20261024-cbt-v14">
+  <link rel="modulepreload" href="../teacher-dashboard/exam-room-sse.js">
+  <script>
+    (() => {
+      const p = new URLSearchParams(location.search);
+      const h = location.hash.replace(/^#/, '');
+      const rawHash = h;
+      const hashToken = rawHash.includes('=') ? (new URLSearchParams(rawHash).get('test') || new URLSearchParams(rawHash).get('token')) : (rawHash.includes('-') && !rawHash.includes('&') ? rawHash : '');
+      const demoCourse = p.get('demoCourse') || p.get('course');
+      const isCandidateCbt = ['03', '34', '45'].includes(demoCourse) || Boolean(hashToken);
+      if (isCandidateCbt) {
+        document.documentElement.classList.add('cbt-mounting');
+        const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
+        window.__cbtMountPromise = import('./content-preview.mjs?rev=20261029-results-v3').then(m => m.mount(courseToMount));
+      }
+    })();
+  </script>
   <style>
+    .cbt-mounting #introScreen, .cbt-mounting header.topbar:not(.simulation-topbar):not(.cbt-topbar) {
+      display: none !important;
+    }
+    .cbt-mounting #cbtMountingPlaceholder {
+      display: block !important;
+    }
     :root{
       --color-primary:#db0829;
       --color-secondary:#c53546;
@@ -296,24 +321,6 @@
       .mobile-bottom{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid #eceef0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:35}
       .mobile-bottom .btn{padding:0 10px}
     }
-    .review-back{display:block;margin:16px auto 0;max-width:640px;width:calc(100% - 32px)}
-    .review-mode #timer,.review-mode #saveState,.review-mode .section-nav-wrap,.review-mode .top-actions .icon-btn,.review-mode #mobileBottom{display:none!important}
-    .review-screen{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-2);margin-top:16px;line-height:1.5}
-    .review-header h1{font-size:22px;margin:0 0 4px}.review-header p{margin:0;color:var(--color-text-secondary);font-size:14px}
-    .review-total{margin:16px 0;padding:16px;border-radius:12px;background:#fff7f8;border:1px solid #f5d8dd;text-align:center}
-    .review-total strong{display:block;font-family:Geologica,sans-serif;font-size:32px;color:var(--color-primary)}
-    .review-provisional{color:#8a5a00;font-weight:700}
-    .review-section{border:1px solid var(--color-border);border-radius:12px;margin-top:12px;overflow:hidden}
-    .review-section-toggle{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;border:0;background:#fff;padding:12px 16px;text-align:left;font:inherit;cursor:pointer}
-    .review-section h3{margin:0}.review-section-toggle strong{font-size:17px}.review-section-toggle span{font-size:13px;color:var(--color-text-secondary)}
-    .review-section-items{list-style:none;margin:0;padding:0 16px 8px}
-    .review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--color-border);font-size:14px}
-    .review-verdict{flex:0 0 auto;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700;background:#f1f5f9}
-    .review-verdict.correct{background:#e8f7f0;color:#12805c}.review-verdict.incorrect{background:#fff0f2;color:var(--color-primary)}
-    .review-verdict.partial,.review-verdict.pending,.review-verdict.manual_review{background:#fff7e8;color:#8a5a00}
-    .review-answer{color:var(--color-text-secondary);word-break:break-word}.review-expected{margin-top:4px}.review-expected.muted{color:var(--color-text-secondary);font-size:13px}
-    .review-feedback{margin-top:8px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--color-border);font-size:13px}
-    .review-inline-error{margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff0f2;border:1px solid #f5d8dd}.review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:var(--color-primary);color:#fff;font-weight:700;cursor:pointer}
     .question-num-badge,
     .cbt-qnum-badge,
     .candidate-short-qnum,
@@ -339,6 +346,24 @@
       box-sizing: border-box !important;
       box-shadow: 0 1px 3px rgba(225, 29, 72, 0.08) !important;
     }
+    .review-back{display:block;margin:16px auto 0;max-width:640px;width:calc(100% - 32px)}
+    .review-mode #timer,.review-mode #saveState,.review-mode .section-nav-wrap,.review-mode .top-actions .icon-btn,.review-mode #mobileBottom{display:none!important}
+    .review-screen{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-2);margin-top:16px;line-height:1.5}
+    .review-header h1{font-size:22px;margin:0 0 4px}.review-header p{margin:0;color:var(--color-text-secondary);font-size:14px}
+    .review-total{margin:16px 0;padding:16px;border-radius:12px;background:#fff7f8;border:1px solid #f5d8dd;text-align:center}
+    .review-total strong{display:block;font-family:Geologica,sans-serif;font-size:32px;color:var(--color-primary)}
+    .review-provisional{color:#8a5a00;font-weight:700}
+    .review-section{border:1px solid var(--color-border);border-radius:12px;margin-top:12px;overflow:hidden}
+    .review-section-toggle{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;border:0;background:#fff;padding:12px 16px;text-align:left;font:inherit;cursor:pointer}
+    .review-section h3{margin:0}.review-section-toggle strong{font-size:17px}.review-section-toggle span{font-size:13px;color:var(--color-text-secondary)}
+    .review-section-items{list-style:none;margin:0;padding:0 16px 8px}
+    .review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--color-border);font-size:14px}
+    .review-verdict{flex:0 0 auto;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700;background:#f1f5f9}
+    .review-verdict.correct{background:#e8f7f0;color:#12805c}.review-verdict.incorrect{background:#fff0f2;color:var(--color-primary)}
+    .review-verdict.partial,.review-verdict.pending,.review-verdict.manual_review{background:#fff7e8;color:#8a5a00}
+    .review-answer{color:var(--color-text-secondary);word-break:break-word}.review-expected{margin-top:4px}.review-expected.muted{color:var(--color-text-secondary);font-size:13px}
+    .review-feedback{margin-top:8px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--color-border);font-size:13px}
+    .review-inline-error{margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff0f2;border:1px solid #f5d8dd}.review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:var(--color-primary);color:#fff;font-weight:700;cursor:pointer}
   </style>
 </head>
 <body>
@@ -365,6 +390,72 @@
   </header>
 
   <main>
+    <div id="cbtMountingPlaceholder" class="cbt-mounting-placeholder" style="display:none;">
+      <header class="topbar cbt-topbar simulation-topbar" style="background:#fff;border-bottom:1px solid #e5e7eb;">
+        <div class="topbar-inner demo-top" style="display:flex;align-items:center;justify-content:space-between;padding:12px 24px;">
+          <div class="brand" style="display:flex;align-items:center;gap:12px;">
+            <div class="brand-mark" style="width:36px;height:36px;background:#db0829;color:white;font-weight:900;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:16px;">IZ</div>
+            <div class="brand-copy">
+              <div class="brand-title" style="font-weight:700;font-size:15px;color:#174266;">IZONE · COMPUTER-BASED TEST</div>
+              <div class="brand-sub" id="cbtPlaceholderHeaderSub" style="font-size:12px;color:#64748b;">Minh hoạ đề thi 34</div>
+            </div>
+          </div>
+          <div class="top-actions">
+            <span class="timer" style="font-weight:700;font-size:16px;background:#fff1f2;color:#db0829;padding:6px 12px;border-radius:8px;border:1px solid #ffe4e6;">60:00</span>
+          </div>
+        </div>
+      </header>
+      <main class="cbt-intro-wrap" style="max-width:680px;margin:36px auto;padding:0 20px;">
+        <div class="cbt-intro-card" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:36px;box-shadow:0 4px 20px -2px rgba(15,23,42,.05);">
+          <span class="cbt-intro-badge" style="display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-transform:uppercase;color:#e11d48;background:#fff1f2;border:1px solid #fecdd3;padding:4px 12px;border-radius:9999px;margin-bottom:12px;">IZONE · COMPUTER-BASED TEST</span>
+          <h1 class="cbt-intro-title" id="cbtPlaceholderTitle" style="font-size:1.6rem;font-weight:800;color:#0f172a;margin:0 0 10px 0;">Minh hoạ đề thi 34</h1>
+          <p class="cbt-intro-sub" id="cbtPlaceholderSub" style="font-size:0.95rem;line-height:1.65;color:#64748b;margin:0 0 28px 0;">
+            Thời gian làm bài: <strong>60 phút</strong> · Tổng số câu hỏi: <strong>96 câu</strong>.<br>
+            Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.
+          </p>
+
+          <div class="cbt-intro-field" style="margin-bottom:20px;">
+            <label style="display:block;font-size:0.88rem;font-weight:700;color:#0f172a;margin-bottom:8px;">Mã lớp</label>
+            <div class="cbt-intro-input-row" style="display:flex;gap:10px;">
+              <input id="cbtPlaceholderClassInput" class="cbt-intro-input" value="IC2201" style="flex:1;font-weight:600;min-height:46px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 14px;background:#f8fafc;" disabled>
+              <button type="button" class="btn btn-secondary" style="min-width:140px;font-weight:600;min-height:46px;border-radius:8px;background:white;color:#334155;border:1px solid #cbd5e1;" disabled>Đã tải</button>
+            </div>
+            <div style="font-size:0.82rem;color:#16a34a;margin-top:6px;font-weight:600;">Lớp IC2201 · 13 học viên.</div>
+          </div>
+
+          <div class="cbt-intro-field" style="margin-bottom:24px;">
+            <label style="display:block;font-size:0.88rem;font-weight:700;color:#0f172a;margin-bottom:8px;">Họ và tên học viên</label>
+            <select class="cbt-intro-input" disabled style="background:#f8fafc;width:100%;min-height:46px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 12px;">
+              <option value="">— Đang nạp danh sách học viên… —</option>
+            </select>
+            <div style="font-size:0.82rem;color:#64748b;margin-top:6px;">Hãy chọn tên của bạn trong danh sách trên.</div>
+          </div>
+
+          <div class="cbt-soundcheck-box" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;margin:28px 0;">
+            <div class="cbt-soundcheck-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:0.92rem;font-weight:700;color:#0f172a;">
+              <span>Kiểm tra âm thanh trước khi làm bài</span>
+              <span class="cbt-soundcheck-badge" style="font-size:0.78rem;font-weight:700;padding:3px 10px;border-radius:9999px;background:#e2e8f0;color:#475569;">Chưa kiểm tra</span>
+            </div>
+            <p class="cbt-soundcheck-body" style="font-size:0.88rem;line-height:1.5;color:#475569;margin:0 0 16px 0;">
+              Bài thi có nội dung âm thanh. Hãy nhấn <strong>Nghe thử</strong> để kiểm tra loa hoặc tai nghe và điều chỉnh âm lượng phù hợp.
+            </p>
+            <div class="cbt-soundcheck-controls" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
+              <button type="button" class="btn btn-secondary" style="min-width:130px;background:white;font-weight:700;min-height:40px;border-radius:8px;border:1px solid #cbd5e1;" disabled>Nghe thử</button>
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#475569;">
+                <span>Âm lượng:</span>
+                <input type="range" min="0" max="1" step="0.05" value="1" style="width:110px;" disabled>
+                <span style="font-weight:700;min-width:36px;">100%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cbt-intro-footer" style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;">
+            <button type="button" class="btn btn-secondary" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700;border-radius:8px;border:1px solid #cbd5e1;background:white;color:#334155;">Xem kết quả</button>
+            <button type="button" class="btn-start-exam" disabled style="min-height:46px;padding:0 28px;font-size:15px;font-weight:700;border-radius:8px;border:0;background:#e11d48;color:white;opacity:0.5;">Bắt đầu làm bài →</button>
+          </div>
+        </div>
+      </main>
+    </div>
     <section class="intro" id="introScreen">
       <div class="intro-card">
         <div class="eyebrow">IZONE · COMPUTER-BASED TEST</div>
@@ -511,8 +602,13 @@
   const demoCourse = search.get('demoCourse') || search.get('course');
   const testMode = search.get('test') === '2' ? 'test2' : 'test1';
   const test2Content = window.WEBTEST_34_TEST2_CONTENT || null;
-  if (['03', '34', '45'].includes(demoCourse)) {
-    import('./content-preview.mjs?rev=20261029-results-v3').then(module => module.mount(demoCourse)).catch((err) => {
+  const rawHash = window.location.hash.replace(/^#/, '');
+  const hashToken = rawHash.includes('=') ? (new URLSearchParams(rawHash).get('test') || new URLSearchParams(rawHash).get('token')) : (rawHash.includes('-') && !rawHash.includes('&') ? rawHash : '');
+  const isCandidateCbt = ['03', '34', '45'].includes(demoCourse) || Boolean(hashToken);
+  if (isCandidateCbt) {
+    const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
+    const mountPromise = window.__cbtMountPromise || import('./content-preview.mjs?rev=20261029-results-v3').then(module => module.mount(courseToMount));
+    mountPromise.catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
     });

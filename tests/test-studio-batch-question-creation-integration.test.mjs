@@ -77,7 +77,8 @@ function createMockDomEnvironment() {
               const childEl = makeMockElement(cls.startsWith('input') ? 'input' : 'button');
               childEl.className = cls;
               if (cls.startsWith('input')) {
-                const valMatch = html.match(/value="([^"]+)"/);
+                const specificTag = html.match(new RegExp(`<input[^>]*class="[^"]*\\b${cls}\\b[^"]*"[^>]*>`));
+                const valMatch = specificTag ? specificTag[0].match(/value="([^"]+)"/) : html.match(/value="([^"]+)"/);
                 childEl.value = valMatch ? valMatch[1] : '5';
               }
               if (cls === 'btn-batch-confirm') {
@@ -261,8 +262,8 @@ test('Issue 41: Template buttons render and include expected class selectors', (
 
   assert.ok(container.innerHTML.includes('btn-add-error-correction'), 'Renders .btn-add-error-correction');
   assert.ok(container.innerHTML.includes('btn-add-sentence-reorder'), 'Renders .btn-add-sentence-reorder');
-  assert.ok(container.innerHTML.includes('btn-add-sentence-transformation'), 'Renders .btn-add-sentence-transformation');
-  assert.ok(container.innerHTML.includes('btn-add-pronunciation'), 'Renders .btn-add-pronunciation');
+  assert.ok(!container.innerHTML.includes('btn-add-sentence-transformation'), 'Deprecated .btn-add-sentence-transformation removed from toolbar');
+  assert.ok(!container.innerHTML.includes('btn-add-pronunciation'), 'Deprecated .btn-add-pronunciation removed from toolbar');
   assert.ok(container.innerHTML.includes('btn-add-short-text') && container.innerHTML.includes('btn-add-fitb'), 'Renders .btn-add-fitb / .btn-add-short-text');
 });
 

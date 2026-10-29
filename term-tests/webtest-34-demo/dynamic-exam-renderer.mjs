@@ -463,10 +463,21 @@ function renderSimPictorialGroup(pictorialItems, answers = {}) {
   `;
 }
 
+export function isShortQaEligibleFor2Col(items) {
+  if (!Array.isArray(items) || items.length <= 1) return false;
+  return items.every(item => {
+    const prompt = (item.prompt || '').trim();
+    const clean = prompt.replace(/<[^>]+>/g, '').trim();
+    const hasComplexHtml = /<(?:table|tbody|tr|td|th|img|figure|video|audio|blockquote|hr)\b/i.test(prompt);
+    return clean.length > 0 && clean.length <= 100 && !hasComplexHtml;
+  });
+}
+
 function renderSimShortQaGroup(shortItems, answers = {}) {
   if (!shortItems || !shortItems.length) return '';
+  const is2Col = isShortQaEligibleFor2Col(shortItems);
   return `
-    <div class="candidate-short-qa-container cbt-short-qa-wrap">
+    <div class="candidate-short-qa-container cbt-short-qa-wrap ${is2Col ? 'short-qa-2col' : ''}">
       ${shortItems.map(item => {
         const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
         return `
@@ -552,7 +563,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
   const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
   const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair');
   const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching');
-  const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence');
+  const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0));
   const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
   const isMultiGroup = item.interactionType === 'multi_choice_group';
   const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
@@ -661,6 +672,69 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         </select>
       </div>
     `;
+  } else if (isListeningOrder) {
+    const events = item.events || [];
+    const audioSrc = item.audioUrl || block?.audioUrl || '';
+    const selectedObj = (typeof rawAns === 'object' && rawAns !== null && !Array.isArray(rawAns)) ? rawAns : {};
+    const usedLabels = new Set(Object.values(selectedObj).filter(Boolean));
+
+    interactiveHtml = `
+      <div class="candidate-listening-order-wrap cbt-listening-order-wrap" data-item-id="${escape(item.itemVersionId)}">
+        ${audioSrc ? `
+          <div class="candidate-audio-dock cbt-audio-dock">
+            ${renderAudioDockHtml(audioSrc, 'Đoạn ghi âm câu hỏi', 1)}
+          </div>
+        ` : ''}
+
+        <div class="candidate-events-pool cbt-events-pool">
+          <div class="events-pool-title cbt-pool-title">Các câu / sự kiện cần sắp xếp:</div>
+          <div class="events-pool-grid cbt-events-pool-grid">
+            ${events.map(ev => {
+              const isUsed = usedLabels.has(ev.label);
+              return `
+                <div class="event-pool-card cbt-event-card ${isUsed ? 'is-selected-event' : ''}" data-event-label="${escape(ev.label)}">
+                  <span class="event-pool-badge cbt-event-badge">${escape(ev.label)}</span>
+                  <span class="event-pool-text cbt-event-text">${escape(ev.text || '')}</span>
+                  ${isUsed ? `<span class="event-used-indicator cbt-event-used" title="Đã chọn">${ICONS.check} Đã chọn</span>` : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="candidate-timeline-slots cbt-timeline-slots">
+          <div class="timeline-slots-title cbt-slots-title">Trình tự diễn ra theo thời gian:</div>
+          <div class="timeline-slots-grid cbt-slots-grid">
+            ${events.map((_, idx) => {
+              const slotNum = idx + 1;
+              const qPos = (item.position || 1) + idx;
+              const currentVal = selectedObj[slotNum] || '';
+              return `
+                <div class="timeline-slot-card cbt-slot-card" data-slot-num="${slotNum}" data-position="${qPos}" data-item-id="${escape(item.itemVersionId)}">
+                  <div class="slot-badge cbt-slot-badge">
+                    <span class="slot-qnum">Câu ${qPos}</span>
+                    <span class="slot-divider">·</span>
+                    <span class="slot-order">Thứ ${slotNum}</span>
+                  </div>
+                  <select class="form-select form-select-sm candidate-sequence-select cbt-sequence-select" data-slot="${slotNum}" data-position="${qPos}" data-item-id="${escape(item.itemVersionId)}">
+                    <option value="">-- Chọn sự kiện cho Thứ ${slotNum} --</option>
+                    ${events.map(ev => {
+                      const isSelected = currentVal === ev.label;
+                      const previewText = ev.text ? (ev.text.length > 50 ? ev.text.substring(0, 50) + '...' : ev.text) : '';
+                      return `
+                        <option value="${escape(ev.label)}" ${isSelected ? 'selected' : ''}>
+                          ${escape(ev.label)}: ${escape(previewText)}
+                        </option>
+                      `;
+                    }).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
   } else if (isRubricAsync) {
     const val = typeof rawAns === 'string' ? rawAns : '';
     const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
@@ -737,8 +811,8 @@ export function convertGoogleDriveAudioUrl(rawUrl) {
     const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';
     return `${cleanBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
   }
-  if (typeof window !== 'undefined' && window.location.pathname.includes('/term-tests/teacher-dashboard/') && trimmed.startsWith('assets/')) {
-    return `../webtest-34-demo/${trimmed}`;
+  if (trimmed.startsWith('assets/')) {
+    return `https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/${trimmed}`;
   }
   return trimmed;
 }
@@ -778,7 +852,7 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
           <span class="audio-note">Đã nghe xong bài nghe · Bài nghe đã khóa</span>
         </div>
       </div>
-      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" crossorigin="anonymous" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
+      <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
     </div>
   `;
 }
@@ -804,9 +878,10 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
     // Group items into sub-clusters
     const itemGroups = [];
     items.forEach(item => {
+      const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0);
       const isVocab = item.interactionType === 'text_select_pair';
       const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
-      const isShortText = item.interactionType === 'short_text' && item.layoutType !== 'inline_cloze' && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching';
+      const isShortText = item.interactionType === 'short_text' && item.layoutType !== 'inline_cloze' && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching' && !isListeningOrder;
 
       const lastGroup = itemGroups[itemGroups.length - 1];
       if (isVocab) {
@@ -1121,8 +1196,14 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
         const input = rootEl.querySelector(`.inline-fill-input[data-position="${blankPos || pos}"]`);
         if (input && input.value && input.value.trim().length > 0) isAnswered = true;
       } else if (slotNum || btn.hasAttribute('data-slot-num')) {
-        const select = rootEl.querySelector(`.candidate-sequence-select[data-position="${pos}"]`);
-        if (select && select.value && select.value.trim().length > 0) isAnswered = true;
+        const slot = slotNum || btn.getAttribute('data-slot-num');
+        const valObj = state.answers[itemId];
+        if (valObj && typeof valObj === 'object' && valObj[slot] && String(valObj[slot]).trim().length > 0) {
+          isAnswered = true;
+        } else {
+          const select = rootEl.querySelector(`.candidate-sequence-select[data-position="${pos}"]`);
+          if (select && select.value && select.value.trim().length > 0) isAnswered = true;
+        }
       } else if (itemId) {
         const val = state.answers[itemId];
         isAnswered = isAnswerValueFilled(val);
@@ -1147,8 +1228,15 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
       const bTotal = bItems.reduce((s, it) => s + getItemSpanCount(it), 0);
       let bDone = 0;
       for (const it of bItems) {
+        const span = getItemSpanCount(it);
         const val = state.answers[it.itemVersionId];
-        if (isAnswerValueFilled(val)) bDone += getItemSpanCount(it);
+        if (span > 1 && typeof val === 'object' && val !== null && !Array.isArray(val)) {
+          for (const k of Object.keys(val)) {
+            if (typeof val[k] === 'string' && val[k].trim() !== '') bDone++;
+          }
+        } else if (isAnswerValueFilled(val)) {
+          bDone += span;
+        }
       }
       const sideBadge = rootEl.querySelector(`[data-side-count="sim-block-${i}"]`);
       if (sideBadge) sideBadge.textContent = `${bDone}/${bTotal}`;
@@ -1166,6 +1254,42 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     if (!itemId) return;
 
     let value = undefined;
+
+    // Listening Order sequence select
+    if (target.classList.contains('candidate-sequence-select') || target.classList.contains('cbt-sequence-select')) {
+      const slot = target.getAttribute('data-slot');
+      const currentAnswers = typeof state.answers[itemId] === 'object' && state.answers[itemId] !== null && !Array.isArray(state.answers[itemId])
+        ? state.answers[itemId]
+        : {};
+      currentAnswers[slot] = target.value;
+      value = currentAnswers;
+      state.answers[itemId] = value;
+
+      // Update is-selected-event highlighting in the pool
+      const wrap = target.closest('.candidate-listening-order-wrap') || target.closest('.cbt-listening-order-wrap');
+      if (wrap) {
+        const used = new Set(Object.values(currentAnswers).filter(Boolean));
+        wrap.querySelectorAll('.event-pool-card, .cbt-event-card').forEach(card => {
+          const lbl = card.getAttribute('data-event-label');
+          const isUsed = used.has(lbl);
+          card.classList.toggle('is-selected-event', isUsed);
+          let indicator = card.querySelector('.event-used-indicator');
+          if (isUsed && !indicator) {
+            indicator = document.createElement('span');
+            indicator.className = 'event-used-indicator cbt-event-used';
+            indicator.title = 'Đã chọn';
+            indicator.innerHTML = `${ICONS.check} Đã chọn`;
+            card.appendChild(indicator);
+          } else if (!isUsed && indicator) {
+            indicator.remove();
+          }
+        });
+      }
+
+      updateAnsweredState();
+      if (onAnswerChange) onAnswerChange(itemId, value);
+      return;
+    }
 
     // Vocab pair
     const row = target.closest('.candidate-vocab-table-row');

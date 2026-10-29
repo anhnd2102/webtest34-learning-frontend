@@ -62,22 +62,181 @@ export function expandSentenceVariants(sentences = []) {
     [/(\b)havent(\b)/gi, '$1have not$2']
   ];
 
+  // IELTS Number words <-> Digits (1..12 and ordinals)
+  const numberPairs = [
+    [/\b1st\b/gi, 'first'], [/\bfirst\b/gi, '1st'],
+    [/\b2nd\b/gi, 'second'], [/\bsecond\b/gi, '2nd'],
+    [/\b3rd\b/gi, 'third'], [/\bthird\b/gi, '3rd'],
+    [/\b4th\b/gi, 'fourth'], [/\bfourth\b/gi, '4th'],
+    [/\b5th\b/gi, 'fifth'], [/\bfifth\b/gi, '5th'],
+    [/\b6th\b/gi, 'sixth'], [/\bsixth\b/gi, '6th'],
+    [/\b7th\b/gi, 'seventh'], [/\bseventh\b/gi, '7th'],
+    [/\b8th\b/gi, 'eighth'], [/\beighth\b/gi, '8th'],
+    [/\b9th\b/gi, 'ninth'], [/\bninth\b/gi, '9th'],
+    [/\b10th\b/gi, 'tenth'], [/\btenth\b/gi, '10th'],
+    [/\b1\b/g, 'one'], [/\bone\b/gi, '1'],
+    [/\b2\b/g, 'two'], [/\btwo\b/gi, '2'],
+    [/\b3\b/g, 'three'], [/\bthree\b/gi, '3'],
+    [/\b4\b/g, 'four'], [/\bfour\b/gi, '4'],
+    [/\b5\b/g, 'five'], [/\bfive\b/gi, '5'],
+    [/\b6\b/g, 'six'], [/\bsix\b/gi, '6'],
+    [/\b7\b/g, 'seven'], [/\bseven\b/gi, '7'],
+    [/\b8\b/g, 'eight'], [/\beight\b/gi, '8'],
+    [/\b9\b/g, 'nine'], [/\bnine\b/gi, '9'],
+    [/\b10\b/g, 'ten'], [/\bten\b/gi, '10'],
+    [/\b11\b/g, 'eleven'], [/\beleven\b/gi, '11'],
+    [/\b12\b/g, 'twelve'], [/\btwelve\b/gi, '12']
+  ];
+
+  // British vs American Spelling Pairs in IELTS
+  const spellingPairs = [
+    [/\bcolour\b/gi, 'color'], [/\bcolor\b/gi, 'colour'],
+    [/\bfavourite\b/gi, 'favorite'], [/\bfavorite\b/gi, 'favourite'],
+    [/\bflavour\b/gi, 'flavor'], [/\bflavor\b/gi, 'flavour'],
+    [/\bhonour\b/gi, 'honor'], [/\bhonor\b/gi, 'honour'],
+    [/\bneighbour\b/gi, 'neighbor'], [/\bneighbor\b/gi, 'neighbour'],
+    [/\bhumour\b/gi, 'humor'], [/\bhumor\b/gi, 'humour'],
+    [/\btheatre\b/gi, 'theater'], [/\btheater\b/gi, 'theatre'],
+    [/\bcentre\b/gi, 'center'], [/\bcenter\b/gi, 'centre'],
+    [/\bmetre\b/gi, 'meter'], [/\bmeter\b/gi, 'metre'],
+    [/\blitre\b/gi, 'liter'], [/\bliter\b/gi, 'litre'],
+    [/\borganise\b/gi, 'organize'], [/\borganize\b/gi, 'organise'],
+    [/\borganised\b/gi, 'organized'], [/\borganized\b/gi, 'organised'],
+    [/\borganisation\b/gi, 'organization'], [/\borganization\b/gi, 'organisation'],
+    [/\brealise\b/gi, 'realize'], [/\brealize\b/gi, 'realise'],
+    [/\brealised\b/gi, 'realized'], [/\brealized\b/gi, 'realised'],
+    [/\brecognise\b/gi, 'recognize'], [/\brecognize\b/gi, 'recognise'],
+    [/\banalyse\b/gi, 'analyze'], [/\banalyze\b/gi, 'analyse'],
+    [/\bpractise\b/gi, 'practice'], [/\bpractice\b/gi, 'practise'],
+    [/\blicence\b/gi, 'license'], [/\blicense\b/gi, 'licence'],
+    [/\btravelling\b/gi, 'traveling'], [/\btraveling\b/gi, 'travelling'],
+    [/\btravelled\b/gi, 'traveled'], [/\btraveled\b/gi, 'travelled'],
+    [/\bcancelled\b/gi, 'canceled'], [/\bcanceled\b/gi, 'cancelled'],
+    [/\bmodelling\b/gi, 'modeling'], [/\bmodeling\b/gi, 'modelling'],
+    [/\bprogramme\b/gi, 'program'], [/\bprogram\b/gi, 'programme'],
+    [/\bcatalogue\b/gi, 'catalog'], [/\bcatalog\b/gi, 'catalogue'],
+    [/\bdialogue\b/gi, 'dialog'], [/\bdialog\b/gi, 'dialogue']
+  ];
+
+  // IELTS Pronoun / Context Abbreviations (sb -> somebody, sth -> something, so -> someone, sw -> somewhere)
+  const pronounAbbrevPairs = [
+    [/\bsb's\b/gi, "somebody's"], [/\bsomebody's\b/gi, "sb's"],
+    [/\bsb\b/gi, 'somebody'], [/\bsomebody\b/gi, 'sb'],
+    [/\bsth\b/gi, 'something'], [/\bsomething\b/gi, 'sth'],
+    [/\bso\b/gi, 'someone'], [/\bsomeone\b/gi, 'so'],
+    [/\bsw\b/gi, 'somewhere'], [/\bsomewhere\b/gi, 'sw']
+  ];
+
+  // IELTS Units of Measurement & Time
+  const unitPairs = [
+    [/\b(\d+)\s*kms?\b/gi, '$1 kilometres'],
+    [/\b(\d+)\s*kilometres?\b/gi, '$1 km'],
+    [/\b(\d+)\s*kilometers?\b/gi, '$1 km'],
+    [/\b(\d+)\s*m\b/gi, '$1 metres'],
+    [/\b(\d+)\s*metres?\b/gi, '$1 m'],
+    [/\b(\d+)\s*meters?\b/gi, '$1 m'],
+    [/\b(\d+)\s*cms?\b/gi, '$1 centimetres'],
+    [/\b(\d+)\s*centimetres?\b/gi, '$1 cm'],
+    [/\b(\d+)\s*centimeters?\b/gi, '$1 cm'],
+    [/\b(\d+)\s*kgs?\b/gi, '$1 kilograms'],
+    [/\b(\d+)\s*kilograms?\b/gi, '$1 kg'],
+    [/\b(\d+)\s*hrs?\b/gi, '$1 hours'],
+    [/\b(\d+)\s*hours?\b/gi, '$1 hr'],
+    [/\b(\d+)\s*mins?\b/gi, '$1 minutes'],
+    [/\b(\d+)\s*minutes?\b/gi, '$1 min'],
+    [/\b(\d+)\s*secs?\b/gi, '$1 seconds'],
+    [/\b(\d+)\s*seconds?\b/gi, '$1 sec'],
+    [/\b(\d+)\s*wks?\b/gi, '$1 weeks'],
+    [/\b(\d+)\s*weeks?\b/gi, '$1 wk'],
+    [/\b(\d+)\s*yrs?\b/gi, '$1 years'],
+    [/\b(\d+)\s*years?\b/gi, '$1 yr']
+  ];
+
+  // IELTS Form & Note Abbreviations
+  const formAbbrevPairs = [
+    [/\bapprox\.?\b/gi, 'approximately'], [/\bapproximately\b/gi, 'approx.'],
+    [/\binfo\.?\b/gi, 'information'], [/\binformation\b/gi, 'info.'],
+    [/\bdept\.?\b/gi, 'department'], [/\bdepartment\b/gi, 'dept.'],
+    [/\btel\.?\b/gi, 'telephone'], [/\btelephone\b/gi, 'tel.'],
+    [/\bno\.?\b/gi, 'number'], [/\bnumber\b/gi, 'no.'],
+    [/\be\.g\.?\b/gi, 'for example'], [/\bfor example\b/gi, 'e.g.'],
+    [/\bi\.e\.?\b/gi, 'that is'], [/\bthat is\b/gi, 'i.e.']
+  ];
+
+  // Compound Words (hyphen <-> space <-> solid)
+  const compoundPairs = [
+    [/\bwell-being\b/gi, 'wellbeing'], [/\bwellbeing\b/gi, 'well-being'],
+    [/\btimetable\b/gi, 'time table'], [/\btime table\b/gi, 'timetable'],
+    [/\bpostbox\b/gi, 'post box'], [/\bpost box\b/gi, 'postbox'],
+    [/\bcheck-in\b/gi, 'check in'], [/\bcheck in\b/gi, 'check-in']
+  ];
+
+  // Currency & Percentage Symbols
+  const symbolPairs = [
+    [/\$(\d+)\b/g, '$1 dollars'],
+    [/(\d+)\$/g, '$1 dollars'],
+    [/£(\d+)\b/g, '$1 pounds'],
+    [/(\d+)\s*%/g, '$1 percent'],
+    [/(\d+)\s*percent\b/gi, '$1%'],
+    [/(\d+)\s*per cent\b/gi, '$1%']
+  ];
+
+  // Pass 1: Raw string cleaning & structural variants (parentheses, hyphens)
   for (const s of list) {
     if (!s || typeof s !== 'string') continue;
     const clean = s.normalize('NFKC').trim().replace(/\s+/gu, ' ');
     if (!clean) continue;
     result.add(clean);
 
-    for (const [pattern, replacement] of contractionPairs) {
-      if (pattern.test(clean)) {
-        const transformed = clean.replace(pattern, replacement);
-        result.add(transformed);
+    // 1A. Parentheses handling:
+    // Plural marker: "student(s)" -> "student", "students"
+    if (/\(\s*s\s*\)/i.test(clean)) {
+      result.add(clean.replace(/\(\s*s\s*\)/gi, '').replace(/\s+/gu, ' ').trim());
+      result.add(clean.replace(/\(\s*s\s*\)/gi, 's').replace(/\s+/gu, ' ').trim());
+    }
+    // General optional brackets: "(the) hospital" -> "hospital", "the hospital"
+    if (/\([^)]+\)/.test(clean)) {
+      result.add(clean.replace(/\(([^)]+)\)/g, '').replace(/\s+/gu, ' ').trim());
+      result.add(clean.replace(/\(([^)]+)\)/g, '$1').replace(/\s+/gu, ' ').trim());
+    }
+
+    // 1B. Hyphenation vs space: "full-time" <-> "full time"
+    const words = clean.split(' ');
+    if (/-/.test(clean)) {
+      result.add(clean.replace(/(\w)-(\w)/g, '$1 $2'));
+    } else if (clean.includes(' ') && words.length === 2) {
+      result.add(clean.replace(/ /g, '-'));
+    }
+  }
+
+  // Pass 2: Word substitutions (contractions, numbers, spelling, pronouns, units, abbreviations, compounds, symbols)
+  const allSubPairs = [
+    ...contractionPairs,
+    ...numberPairs,
+    ...spellingPairs,
+    ...pronounAbbrevPairs,
+    ...unitPairs,
+    ...formAbbrevPairs,
+    ...compoundPairs,
+    ...symbolPairs
+  ];
+
+  for (let pass = 0; pass < 2; pass++) {
+    const currentItems = Array.from(result);
+    for (const item of currentItems) {
+      for (const [pattern, replacement] of allSubPairs) {
+        if (pattern.global) pattern.lastIndex = 0;
+        if (pattern.test(item)) {
+          if (pattern.global) pattern.lastIndex = 0;
+          result.add(item.replace(pattern, replacement));
+        }
       }
     }
   }
 
-  const afterContractions = Array.from(result);
-  for (const item of afterContractions) {
+  // Pass 3: Periods and question marks
+  const afterSubstitutions = Array.from(result);
+  for (const item of afterSubstitutions) {
     const withoutPeriod = item.replace(/\.+$/gu, '').trim();
     if (withoutPeriod) {
       result.add(withoutPeriod);
@@ -92,13 +251,15 @@ export function expandSentenceVariants(sentences = []) {
     }
   }
 
-  const afterPunctuation = Array.from(result);
-  for (const item of afterPunctuation) {
+  // Pass 4: Commas
+  const afterPeriods = Array.from(result);
+  for (const item of afterPeriods) {
     if (item.includes(',')) {
       result.add(item.replace(/,/gu, '').replace(/\s+/gu, ' ').trim());
     }
   }
 
+  // Pass 5: Apostrophes (' <-> ’)
   const afterCommas = Array.from(result);
   for (const item of afterCommas) {
     if (item.includes("'")) {
@@ -109,7 +270,7 @@ export function expandSentenceVariants(sentences = []) {
     }
   }
 
-  return Array.from(result).filter(Boolean).slice(0, 40);
+  return Array.from(result).filter(Boolean).slice(0, 60);
 }
 
 export function generateHangmanHint(targetText = '') {
@@ -386,7 +547,9 @@ export const ICONS = {
   alignRight: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>',
   removeFormat: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M5 20h6"/><path d="M13 4 8 20"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="21" y1="15" x2="15" y2="21"/></svg>',
   plusCircle: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
-  layers: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
+  layers: '<svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+  chart: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  award: '<svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>'
 };
 
 export function renderSvgIcon(name, customClass = '') {
@@ -514,16 +677,16 @@ export function parseCsvRows(rawText = '') {
 
 export function generateSingleChoiceTemplateCsv() {
   const bom = '\uFEFF';
-  const header = 'Question_Prompt,Option_A,Option_B,Option_C,Option_D,Correct_Answer,Explanation';
+  const header = 'Question_Prompt,Option_A,Option_B,Option_C,Option_D,Correct_Answer,Explanation,Points';
   const rows = [
-    'The cruise departs ___ Miami every Monday.,at,from,on,in,B,Cụm từ "depart from somewhere"',
-    'She is interested ___ marine biology.,in,at,on,,A,Cấu trúc "interested in something"',
-    'The weather was ___ today.,good,bad,,,A,'
+    'The cruise departs ___ Miami every Monday.,at,from,on,in,B,Cụm từ "depart from somewhere",1',
+    'She is interested ___ marine biology.,in,at,on,,A,Cấu trúc "interested in something",1',
+    'The weather was ___ today.,good,bad,,,A,,1'
   ];
   return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
 }
 
-export function parseSingleChoiceCsv(rawText = '') {
+export function parseSingleChoiceCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
@@ -543,6 +706,8 @@ export function parseSingleChoiceCsv(rawText = '') {
     const optD = (row[4] || '').trim();
     const correctLetter = (row[5] || '').trim().toUpperCase();
     const explanation = (row[6] || '').trim();
+    const rawScore = parseFloat(row[7]);
+    const maxScore = !isNaN(rawScore) && rawScore > 0 ? rawScore : (defaultPoints || 1);
 
     if (!prompt || !optA || !optB || !correctLetter) {
       result.invalidRows.push({ line: i + 1, row, reason: 'Thiếu đề bài, lựa chọn A/B hoặc đáp án đúng' });
@@ -567,11 +732,68 @@ export function parseSingleChoiceCsv(rawText = '') {
       layoutType,
       options,
       expectedOptionId,
-      explanation
+      explanation,
+      maxScore
     });
   }
 
   return result;
+}
+
+export function generateFitbTemplateCsv() {
+  const bom = '\uFEFF';
+  const header = 'Prompt,Target_Answer,Points';
+  const rows = [
+    'The capital of France is ___.,Paris,1',
+    'Water freezes at ___ degrees Celsius.,0,1',
+    'The Sun rises in the ___.,east,1',
+    'She was born ___ 1995.,in,1',
+    'He has lived in London ___ ten years.,for,1'
+  ];
+  return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
+}
+
+export function parseFitbCsv(rawText = '', defaultPoints = 1) {
+  const rows = parseCsvRows(rawText);
+  const result = { items: [], invalidRows: [] };
+  if (!rows || rows.length === 0) return result;
+
+  let startIndex = 0;
+  const firstRow = rows[0].map(c => (c || '').toLowerCase());
+  if (firstRow[0]?.includes('prompt') || firstRow[0]?.includes('đề') || firstRow[0]?.includes('câu') || firstRow[1]?.includes('answer') || firstRow[1]?.includes('đáp')) {
+    startIndex = 1;
+  }
+
+  for (let i = startIndex; i < rows.length; i++) {
+    const row = rows[i];
+    const prompt = (row[0] || '').trim();
+    const targetAnswer = (row[1] || '').trim();
+    const rawScore = parseFloat(row[2]);
+    const maxScore = !isNaN(rawScore) && rawScore > 0 ? rawScore : (defaultPoints || 1);
+
+    if (!prompt || !targetAnswer) {
+      result.invalidRows.push({ line: i + 1, row, reason: 'Thiếu đề bài hoặc đáp án đúng' });
+      continue;
+    }
+
+    result.items.push({
+      prompt,
+      targetAnswer,
+      maxScore
+    });
+  }
+
+  return result;
+}
+
+export function isShortQaEligibleFor2Col(items) {
+  if (!Array.isArray(items) || items.length <= 1) return false;
+  return items.every(item => {
+    const prompt = (item.prompt || '').trim();
+    const clean = prompt.replace(/<[^>]+>/g, '').trim();
+    const hasComplexHtml = /<(?:table|tbody|tr|td|th|img|figure|video|audio|blockquote|hr)\b/i.test(prompt);
+    return clean.length > 0 && clean.length <= 100 && !hasComplexHtml;
+  });
 }
 
 export function generateErrorCorrectionTemplateCsv() {
@@ -1369,6 +1591,404 @@ export function courseTestCatalogPath(apiBaseOrCourseId, courseIdOptional) {
   return `${apiBase}/api/teacher/course-test-catalog?courseId=${encodeURIComponent(courseId)}`;
 }
 
+let activeUnsavedChangesGuard = null;
+
+export function registerUnsavedChangesGuard(fn) {
+  activeUnsavedChangesGuard = fn;
+}
+
+export function unregisterUnsavedChangesGuard(fn) {
+  if (activeUnsavedChangesGuard === fn) {
+    activeUnsavedChangesGuard = null;
+  }
+}
+
+export function hasActiveUnsavedChanges() {
+  try {
+    return typeof activeUnsavedChangesGuard === 'function' ? Boolean(activeUnsavedChangesGuard()) : false;
+  } catch (_) {
+    return false;
+  }
+}
+
+export function clearActiveUnsavedChanges() {
+  activeUnsavedChangesGuard = null;
+}
+
+export function openUnsavedChangesModal({
+  title = 'Các thay đổi chưa được lưu',
+  subtitle = 'Bạn có các chỉnh sửa chưa lưu trong bài thi này',
+  message = 'Nếu bạn thoát ra hoặc chuyển sang trang khác, tất cả các thay đổi vừa chỉnh sửa sẽ bị mất hoàn toàn.',
+  stayText = 'Ở lại chỉnh sửa',
+  discardText = 'Rời khỏi không lưu',
+  onDiscard,
+  onStay
+} = {}) {
+  if (typeof document === 'undefined') {
+    const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
+      ? window.confirm(`${title}\n\n${message}`)
+      : true;
+    if (confirmed) {
+      if (typeof onDiscard === 'function') onDiscard();
+    } else {
+      if (typeof onStay === 'function') onStay();
+    }
+    return;
+  }
+
+  let existing = document.querySelector('#modal-unsaved-changes');
+  if (existing && existing.parentNode) {
+    existing.parentNode.removeChild(existing);
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'modal-unsaved-changes';
+  modal.className = 'izone-modal-overlay';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-labelledby', 'modal-unsaved-title');
+
+  modal.innerHTML = `
+    <div class="izone-modal-dialog modal-warning-dialog">
+      <div class="izone-modal-header warning-header">
+        <div class="modal-header-icon-warning">
+          ${renderSvgIcon('alert', 'icon-lg')}
+        </div>
+        <div class="modal-title-wrap">
+          <h3 id="modal-unsaved-title">${escapeHtml(title)}</h3>
+          <p class="modal-subtitle">${escapeHtml(subtitle)}</p>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-unsaved-modal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div class="izone-modal-body">
+        <div class="alert-warning-box">
+          <div class="alert-warning-icon">${renderSvgIcon('alert', 'icon-inline')}</div>
+          <div class="alert-warning-text">
+            ${escapeHtml(message)}
+          </div>
+        </div>
+        <p class="unsaved-hint-text">
+          Hãy bấm <strong>"${escapeHtml(stayText)}"</strong> để tiếp tục lưu lại bài làm bằng nút <em>"Lưu bản nháp"</em> trước khi thoát.
+        </p>
+      </div>
+
+      <div class="izone-modal-footer">
+        <button type="button" class="btn btn-secondary" id="btn-stay-editing">
+          ${renderSvgIcon('check', 'icon-inline')} ${escapeHtml(stayText)}
+        </button>
+        <button type="button" class="btn btn-danger" id="btn-discard-and-leave">
+          ${renderSvgIcon('arrowRight', 'icon-inline')} ${escapeHtml(discardText)}
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const closeModal = () => {
+    if (modal && modal.parentNode) {
+      modal.parentNode.removeChild(modal);
+    }
+  };
+
+  const btnStay = modal.querySelector('#btn-stay-editing');
+  const btnDiscard = modal.querySelector('#btn-discard-and-leave');
+  const btnClose = modal.querySelector('#btn-close-unsaved-modal');
+
+  btnStay?.addEventListener('click', () => {
+    closeModal();
+    if (typeof onStay === 'function') onStay();
+  });
+
+  btnClose?.addEventListener('click', () => {
+    closeModal();
+    if (typeof onStay === 'function') onStay();
+  });
+
+  btnDiscard?.addEventListener('click', () => {
+    closeModal();
+    if (typeof onDiscard === 'function') onDiscard();
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+      if (typeof onStay === 'function') onStay();
+    }
+  });
+
+  btnStay?.focus();
+}
+
+export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sessionNumber, phase, courseName, onConfirm }) {
+  if (typeof document === 'undefined') return;
+  let modal = document.querySelector('#modal-confirm-delete-test');
+  if (modal && modal.parentNode) {
+    modal.parentNode.removeChild(modal);
+  }
+
+  modal = document.createElement('div');
+  modal.id = 'modal-confirm-delete-test';
+  modal.className = 'izone-modal-overlay';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-labelledby', 'modal-delete-title');
+
+  const phaseText = phase ? `Phase ${phase}` : '—';
+  const sessionText = sessionNumber ? `Buổi ${sessionNumber}` : '—';
+
+  modal.innerHTML = `
+    <div class="izone-modal-dialog modal-danger-dialog">
+      <div class="izone-modal-header danger-header">
+        <div class="modal-header-icon-danger">
+          ${renderSvgIcon('trash', 'icon-lg')}
+        </div>
+        <div class="modal-title-wrap">
+          <h3 id="modal-delete-title">Xác nhận xóa bài thi</h3>
+          <p class="modal-subtitle">Thao tác này sẽ xóa vĩnh viễn đề thi khỏi hệ thống</p>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-delete-modal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div class="izone-modal-body">
+        <div class="target-test-card">
+          <div class="test-target-title">${escapeHtml(title || 'Bài thi')}</div>
+          <div class="test-target-meta">
+            <span class="meta-tag"><code>${escapeHtml(testKey || formVersionId || '—')}</code></span>
+            <span class="meta-tag">${sessionText}</span>
+            <span class="meta-tag">${phaseText}</span>
+            ${courseName ? `<span class="meta-tag">${escapeHtml(courseName)}</span>` : ''}
+          </div>
+        </div>
+
+        <div class="alert-danger-box">
+          <div class="alert-danger-icon">${renderSvgIcon('alert', 'icon-inline')}</div>
+          <div class="alert-danger-text">
+            <strong>Cảnh báo nguy hiểm:</strong> Thao tác này sẽ xóa vĩnh viễn cấu trúc bài thi, các câu hỏi và đáp án liên quan. Hành động này <strong>KHÔNG THỂ HOÀN TÁC</strong>.
+          </div>
+        </div>
+
+        <div class="confirmation-input-group">
+          <label class="form-label" for="input-confirm-keyword">
+            Vui lòng nhập chữ <strong class="danger-keyword">XÓA</strong> vào ô bên dưới để xác nhận:
+          </label>
+          <input type="text" id="input-confirm-keyword" class="form-control input-danger-confirm" placeholder="XÓA" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="izone-modal-footer">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-delete">Hủy bỏ</button>
+        <button type="button" class="btn btn-danger" id="btn-submit-delete" disabled>
+          ${renderSvgIcon('trash', 'icon-inline')} Xác nhận xóa vĩnh viễn
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const inputKw = modal.querySelector('#input-confirm-keyword');
+  const submitBtn = modal.querySelector('#btn-submit-delete');
+  const cancelBtn = modal.querySelector('#btn-cancel-delete');
+  const closeBtn = modal.querySelector('#btn-close-delete-modal');
+
+  const closeModal = () => {
+    if (modal && modal.parentNode) {
+      modal.parentNode.removeChild(modal);
+    }
+  };
+
+  if (inputKw && submitBtn) {
+    inputKw.addEventListener('input', () => {
+      const val = inputKw.value.trim().toUpperCase();
+      const isValid = (val === 'XÓA' || val === 'XOA');
+      submitBtn.disabled = !isValid;
+    });
+    inputKw.focus();
+  }
+
+  if (submitBtn) {
+    submitBtn.addEventListener('click', () => {
+      closeModal();
+      if (typeof onConfirm === 'function') {
+        onConfirm({ formVersionId, testKey, title });
+      }
+    });
+  }
+
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+}
+
+export function openCreateTestModal({ courseId, catalog = [], onSubmit, onCancel }) {
+  if (typeof document === 'undefined') return;
+  let modal = document.querySelector('#modal-create-test');
+  if (modal && modal.parentNode) {
+    modal.parentNode.removeChild(modal);
+  }
+
+  modal = document.createElement('div');
+  modal.id = 'modal-create-test';
+  modal.className = 'izone-modal-overlay';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-labelledby', 'modal-create-title');
+
+  const cid = Number(courseId || 1);
+  const courseNames = { 1: '03', 2: '34', 3: '45' };
+  const courseCode = courseNames[cid] || '34';
+
+  const computeSuggested = (targetPhase) => {
+    const list = Array.isArray(catalog) ? catalog : [];
+    let relevant = list;
+    if (targetPhase === 1) relevant = list.filter(it => Number(it.phase) === 1);
+    else if (targetPhase === 2) relevant = list.filter(it => Number(it.phase) === 2);
+
+    const maxSess = relevant.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
+    const overallMaxSess = list.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
+    const nextSess = maxSess > 0 ? (maxSess + 1) : (overallMaxSess + 1);
+    const nextTestNum = relevant.length + 1;
+    const phaseLabel = targetPhase ? ` (Phase ${targetPhase})` : '';
+    const suggestedTitle = `IZONE · Khối ${courseCode}${phaseLabel} · Test ${nextTestNum}`;
+    return { nextSess, suggestedTitle, nextTestNum };
+  };
+
+  const initialPhase = (cid === 2 || cid === 3) ? 1 : null;
+  const initialData = computeSuggested(initialPhase);
+
+  modal.innerHTML = `
+    <div class="izone-modal-dialog modal-create-dialog">
+      <div class="izone-modal-header">
+        <div class="modal-header-icon-primary">
+          ${renderSvgIcon('book', 'icon-lg')}
+        </div>
+        <div class="modal-title-wrap">
+          <h3 id="modal-create-title">Khởi tạo bài thi mới</h3>
+          <p class="modal-subtitle">Thiết lập lộ trình Buổi học và Giai đoạn (Phase) cho đề thi</p>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-create-modal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div class="izone-modal-body">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="create-course-select">Khối đào tạo:</label>
+            <select id="create-course-select" class="form-select" disabled>
+              <option value="1" ${cid === 1 ? 'selected' : ''}>Khối 03</option>
+              <option value="2" ${cid === 2 ? 'selected' : ''}>Khối 34</option>
+              <option value="3" ${cid === 3 ? 'selected' : ''}>Khối 45</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="create-phase-select">Giai đoạn (Phase):</label>
+            <select id="create-phase-select" class="form-select">
+              <option value="1" ${initialPhase === 1 ? 'selected' : ''}>Giai đoạn 1 (Phase 1)</option>
+              <option value="2" ${initialPhase === 2 ? 'selected' : ''}>Giai đoạn 2 (Phase 2)</option>
+              <option value="" ${initialPhase === null ? 'selected' : ''}>Không phân Phase (Đề tổng hợp)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="create-session-input">Buổi học (Session Number):</label>
+            <input type="number" id="create-session-input" class="form-control" min="1" max="100" value="${initialData.nextSess}" required />
+            <small class="form-hint">Số buổi học trong lộ trình đào tạo</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="create-duration-input">Thời lượng làm bài (phút):</label>
+            <input type="number" id="create-duration-input" class="form-control" min="5" max="300" value="60" required />
+            <small class="form-hint">Thời gian đếm ngược thi chuẩn</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="create-title-input">Tên bài thi:</label>
+          <input type="text" id="create-title-input" class="form-control" value="${escapeHtml(initialData.suggestedTitle)}" required placeholder="Ví dụ: IZONE · Khối 34 (Phase 1) · Test 5" />
+          <small class="form-hint">Hiển thị trong phòng thi và bảng điểm học viên</small>
+        </div>
+      </div>
+
+      <div class="izone-modal-footer">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-create">Hủy bỏ</button>
+        <button type="button" class="btn btn-primary" id="btn-submit-create">
+          + Khởi tạo bài thi
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const phaseSelect = modal.querySelector('#create-phase-select');
+  const sessionInput = modal.querySelector('#create-session-input');
+  const titleInput = modal.querySelector('#create-title-input');
+  const durationInput = modal.querySelector('#create-duration-input');
+  const submitBtn = modal.querySelector('#btn-submit-create');
+  const cancelBtn = modal.querySelector('#btn-cancel-create');
+  const closeBtn = modal.querySelector('#btn-close-create-modal');
+
+  const closeModal = () => {
+    if (modal && modal.parentNode) {
+      modal.parentNode.removeChild(modal);
+    }
+  };
+
+  if (phaseSelect) {
+    phaseSelect.addEventListener('change', () => {
+      const pVal = phaseSelect.value ? Number(phaseSelect.value) : null;
+      const data = computeSuggested(pVal);
+      if (sessionInput) sessionInput.value = data.nextSess;
+      if (titleInput) titleInput.value = data.suggestedTitle;
+    });
+  }
+
+  if (submitBtn) {
+    submitBtn.addEventListener('click', () => {
+      const title = (titleInput?.value || '').trim();
+      const sess = Number(sessionInput?.value);
+      const dur = Number(durationInput?.value) || 60;
+      const phase = phaseSelect?.value ? Number(phaseSelect.value) : null;
+
+      if (!title) {
+        alert('Vui lòng nhập tên bài thi.');
+        titleInput?.focus();
+        return;
+      }
+      if (!sess || sess <= 0) {
+        alert('Vui lòng nhập số buổi học hợp lệ.');
+        sessionInput?.focus();
+        return;
+      }
+
+      closeModal();
+      if (typeof onSubmit === 'function') {
+        onSubmit({
+          courseId: cid,
+          phase,
+          sessionNumber: sess,
+          title,
+          durationMinutes: dur
+        });
+      }
+    });
+  }
+
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+}
+
 export function renderCourseTestCatalogView(container, catalog = [], options = {}) {
   if (!container) return;
   const teacherRole = options.teacherRole || 'teacher';
@@ -1415,52 +2035,111 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
       </div>
     `;
   } else {
-    const cards = catalog.map(item => {
-      const isPublished = item.status === 'published';
-      const badgeClass = isPublished ? 'badge-published' : 'badge-draft';
-      const badgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
-      const sessionLabel = `Buổi ${item.sessionNumber}`;
-      const phaseBadge = item.phase ? `<span class="phase-pill">Phase ${item.phase}</span>` : '';
+    const renderTestRows = (items) => {
+      return items.map(item => {
+        const isPublished = item.status === 'published';
+        const badgeClass = isPublished ? 'badge-published' : 'badge-draft';
+        const badgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
+        const sessionLabel = `Buổi ${item.sessionNumber}`;
+        const phaseBadge = item.phase ? `<span class="phase-pill">Phase ${item.phase}</span>` : '<span class="text-muted">—</span>';
+        const subCount = Number(item.submissionCount || 0);
+        // Allow delete if 0 submissions (both drafts and published tests without submissions)
+        const canDelete = subCount === 0;
 
-      return `
-        <div class="test-card" data-test-key="${item.testKey || ''}" data-test-id="${item.id || ''}">
-          <div class="test-card-header">
-            <span class="session-badge">${sessionLabel}</span>
-            ${phaseBadge}
-            <span class="status-badge ${badgeClass}">${badgeText}</span>
-          </div>
-          <div class="test-card-body">
-            <h3 class="test-card-title">${escapeHtml(item.title || '—')}</h3>
-            <div class="test-card-meta">
-              <span class="meta-item test-key-tag">
-                ${renderSvgIcon('book', 'icon-inline')}
-                <code>${escapeHtml(item.testKey || '—')}</code>
-              </span>
-              <span class="meta-item version-tag" title="${item.formVersionId || ''}">
-                ${renderSvgIcon('lock', 'icon-inline')}
-                <span>${item.formVersionId ? item.formVersionId.slice(0, 8) + '...' : '—'}</span>
-              </span>
+        return `
+          <div class="test-card test-row" data-test-key="${item.testKey || ''}" data-test-id="${item.id || ''}">
+            <div class="col-session">
+              <span class="session-badge">${sessionLabel}</span>
+            </div>
+            <div class="col-phase">
+              ${phaseBadge}
+            </div>
+            <div class="col-title">
+              <span class="test-card-title">${escapeHtml(item.title || '—')}</span>
+            </div>
+            <div class="col-meta">
+              <div class="test-card-meta">
+                <span class="meta-item test-key-tag">
+                  ${renderSvgIcon('book', 'icon-inline')}
+                  <code>${escapeHtml(item.testKey || '—')}</code>
+                </span>
+                <span class="meta-item version-tag" title="${item.formVersionId || ''}">
+                  ${renderSvgIcon('lock', 'icon-inline')}
+                  <span>${item.formVersionId ? item.formVersionId.slice(0, 8) + '...' : '—'}</span>
+                </span>
+              </div>
+            </div>
+            <div class="col-status">
+              <span class="status-badge ${badgeClass}">${badgeText}</span>
+              ${subCount > 0 ? `<span class="submission-count-tag" title="${subCount} học viên đã nộp bài">${subCount} bài nộp</span>` : ''}
+            </div>
+            <div class="col-actions">
+              <div class="test-row-actions">
+                <button type="button" class="btn btn-secondary btn-sm btn-edit-test" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}">
+                  ${renderSvgIcon('edit', 'icon-inline')} Chỉnh sửa
+                </button>
+                ${canDelete ? `
+                  <button type="button" class="btn btn-outline-danger btn-sm btn-delete-test-draft btn-delete-test" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}" data-title="${escapeHtml(item.title || '')}" data-session="${item.sessionNumber || ''}" data-phase="${item.phase || ''}" title="Xóa bài thi này">
+                    ${renderSvgIcon('trash', 'icon-inline')} Xóa
+                  </button>
+                ` : `
+                  <span class="action-locked" title="Đã có bài nộp — Không thể xóa">${renderSvgIcon('lock', 'icon-inline')}</span>
+                `}
+              </div>
             </div>
           </div>
-          <div class="test-card-footer">
-            <button type="button" class="btn btn-secondary btn-sm btn-edit-test" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}">
-              ${renderSvgIcon('edit', 'icon-inline')} Chỉnh sửa
-            </button>
-            ${!isPublished ? `
-              <button type="button" class="btn btn-outline-danger btn-sm btn-delete-test-draft" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}" title="Xóa bản nháp này">
-                ${renderSvgIcon('trash', 'icon-inline')} Xóa
-              </button>
-            ` : ''}
+        `;
+      }).join('');
+    };
+
+    const phase1Items = catalog.filter(it => Number(it.phase) === 1);
+    const phase2Items = catalog.filter(it => Number(it.phase) === 2);
+    const otherItems = catalog.filter(it => !it.phase || (Number(it.phase) !== 1 && Number(it.phase) !== 2));
+    const hasPhases = phase1Items.length > 0 || phase2Items.length > 0;
+
+    const renderPhaseTableGroup = (groupTitle, phaseTag, items) => {
+      if (!items || items.length === 0) return '';
+      return `
+        <div class="test-phase-group">
+          <div class="test-phase-header">
+            <div class="phase-title-badge">
+              ${phaseTag ? `<span class="phase-pill-large">${phaseTag}</span>` : ''}
+              <h3 class="phase-group-heading">${groupTitle}</h3>
+            </div>
+            <span class="phase-count-pill">${items.length} bài thi</span>
+          </div>
+          <div class="test-table-wrapper">
+            <div class="test-table-header">
+              <div class="col-session">Buổi</div>
+              <div class="col-phase">Phase</div>
+              <div class="col-title">Tên bài thi</div>
+              <div class="col-meta">Mã đề & Định danh</div>
+              <div class="col-status">Trạng thái</div>
+              <div class="col-actions">Thao tác</div>
+            </div>
+            <div class="test-table-body">
+              ${renderTestRows(items)}
+            </div>
           </div>
         </div>
       `;
-    }).join('');
+    };
 
-    cardsHtml = `
-      <div class="test-catalog-grid">
-        ${cards}
-      </div>
-    `;
+    if (hasPhases) {
+      cardsHtml = `
+        <div class="test-catalog-tables">
+          ${renderPhaseTableGroup('Giai đoạn 1 · Nền tảng & Kỹ năng', 'Phase 1', phase1Items)}
+          ${renderPhaseTableGroup('Giai đoạn 2 · Tăng tốc & Luyện thi', 'Phase 2', phase2Items)}
+          ${renderPhaseTableGroup('Đề thi chung & Tổng hợp', (phase1Items.length > 0 || phase2Items.length > 0) ? 'Tổng hợp' : '', otherItems)}
+        </div>
+      `;
+    } else {
+      cardsHtml = `
+        <div class="test-catalog-tables">
+          ${renderPhaseTableGroup('Lộ trình các bài thi theo buổi', '', catalog)}
+        </div>
+      `;
+    }
   }
 
   container.innerHTML = `
@@ -1487,7 +2166,7 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
     </div>
   `;
 
-  if (typeof options.onCourseChange === 'function') {
+  if (typeof options.onCourseChange === 'function' && typeof container.querySelectorAll === 'function') {
     const courseBtns = container.querySelectorAll('.btn-course-tab');
     courseBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1497,14 +2176,14 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
     });
   }
 
-  if (typeof options.onAddTest === 'function') {
+  if (typeof options.onAddTest === 'function' && typeof container.querySelector === 'function') {
     const addBtn = container.querySelector('#btn-add-test');
     if (addBtn) {
       addBtn.addEventListener('click', options.onAddTest);
     }
   }
 
-  if (typeof options.onEditTest === 'function') {
+  if (typeof options.onEditTest === 'function' && typeof container.querySelectorAll === 'function') {
     const editBtns = container.querySelectorAll('.btn-edit-test');
     editBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1515,19 +2194,28 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
     });
   }
 
-  if (typeof options.onDeleteDraft === 'function') {
-    const delBtns = container.querySelectorAll('.btn-delete-test-draft');
+  if (typeof options.onDeleteDraft === 'function' && typeof container.querySelectorAll === 'function') {
+    const delBtns = container.querySelectorAll('.btn-delete-test-draft, .btn-delete-test');
     delBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const testKey = btn.getAttribute('data-test-key');
         const formVersionId = btn.getAttribute('data-form-version-id');
+        const title = btn.getAttribute('data-title');
+        const sessionNumber = btn.getAttribute('data-session');
+        const phase = btn.getAttribute('data-phase');
         if (!formVersionId) return;
-        const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
-          ? window.confirm('Bạn có chắc chắn muốn xóa bản nháp này không? Thao tác này không thể hoàn tác.')
-          : true;
-        if (confirmed) {
-          options.onDeleteDraft({ testKey, formVersionId });
-        }
+
+        openConfirmDeleteTestModal({
+          testKey,
+          formVersionId,
+          title,
+          sessionNumber,
+          phase,
+          courseName: selectedCourseId === 1 ? 'Khối 03' : (selectedCourseId === 3 ? 'Khối 45' : 'Khối 34'),
+          onConfirm: () => {
+            options.onDeleteDraft({ testKey, formVersionId, title });
+          }
+        });
       });
     });
   }
@@ -1719,6 +2407,8 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
     }
     const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';
     streamUrl = `${cleanBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
+  } else if (streamUrl.startsWith('assets/')) {
+    streamUrl = `https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/${streamUrl}`;
   }
 
   const label = options.label || 'Bài nghe phần thi';
@@ -1747,7 +2437,7 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
           <span class="audio-note">Đã phát xong · Audio chỉ được nghe một lần.</span>
         </div>
       </div>
-      <audio class="audio-hidden-element" src="${escapeHtml(streamUrl)}" preload="none" crossorigin="anonymous" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
+      <audio class="audio-hidden-element" src="${escapeHtml(streamUrl)}" preload="none" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
     </div>
   `;
 
@@ -2816,13 +3506,14 @@ export function openGenericBatchModal({
   defaultCount = 5,
   minCount = 1,
   maxCount = 50,
+  defaultPoints = 1.0,
   extraConfigHtml = '',
   csvConfig = null,
   onConfirm,
   onSingle
 } = {}) {
   if (typeof document === 'undefined') {
-    if (typeof onSingle === 'function') onSingle({ count: 1 });
+    if (typeof onSingle === 'function') onSingle({ count: 1, defaultPoints: defaultPoints || 1 });
     return null;
   }
 
@@ -2884,10 +3575,40 @@ export function openGenericBatchModal({
               <textarea class="form-control textarea-batch-csv" rows="7" placeholder="${escapeHtml(csvConfig.placeholder || 'Dán các dòng dữ liệu copy từ Excel hoặc file CSV...')}" style="font-family: monospace; font-size: 13px;"></textarea>
             </div>
 
+            <div class="form-group" style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <label class="form-label" style="margin: 0; font-size: 0.875rem;"><strong>Điểm mặc định mỗi câu:</strong></label>
+              <input type="number" class="form-control input-batch-csv-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 85px; text-align: center; font-weight: 700; padding: 6px 10px;" />
+              <span style="font-size: 0.8rem; color: #64748b;">(Tự động áp dụng nếu dòng dữ liệu CSV không có điểm riêng)</span>
+            </div>
+
             <div class="vocab-preview-summary csv-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
           </div>
 
           <div class="modal-batch-tab-panel" data-panel="stepper" style="display: none;">
+            <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
+              <div class="form-group batch-count-form-group">
+                <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
+                <div class="batch-count-stepper-wrap">
+                  <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
+                  <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                  <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+                </div>
+                <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
+              </div>
+
+              <div class="form-group batch-points-form-group">
+                <label class="form-label"><strong>Điểm số mỗi câu:</strong></label>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <input type="number" class="form-control input-batch-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                  <span style="font-size: 0.9rem; font-weight: 600; color: #475569;">điểm</span>
+                </div>
+                <span class="batch-points-hint" style="font-size: 0.8rem; color: #64748b;">(Mặc định cho các câu được tạo)</span>
+              </div>
+            </div>
+            ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
+          </div>
+        ` : `
+          <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
             <div class="form-group batch-count-form-group">
               <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
               <div class="batch-count-stepper-wrap">
@@ -2897,17 +3618,15 @@ export function openGenericBatchModal({
               </div>
               <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
             </div>
-            ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
-          </div>
-        ` : `
-          <div class="form-group batch-count-form-group">
-            <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
-            <div class="batch-count-stepper-wrap">
-              <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
-              <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
-              <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
+
+            <div class="form-group batch-points-form-group">
+              <label class="form-label"><strong>Điểm số mỗi câu:</strong></label>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <input type="number" class="form-control input-batch-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                <span style="font-size: 0.9rem; font-weight: 600; color: #475569;">điểm</span>
+              </div>
+              <span class="batch-points-hint" style="font-size: 0.8rem; color: #64748b;">(Mặc định cho các câu được tạo)</span>
             </div>
-            <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
           </div>
           ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
         `}
@@ -3100,6 +3819,27 @@ export function openGenericBatchModal({
     }
   }
 
+  const pointsInput = modal.querySelector('.input-batch-points');
+  const csvPointsInput = modal.querySelector('.input-batch-csv-points');
+
+  if (pointsInput && csvPointsInput) {
+    pointsInput.addEventListener('input', () => {
+      csvPointsInput.value = pointsInput.value;
+    });
+    csvPointsInput.addEventListener('input', () => {
+      pointsInput.value = csvPointsInput.value;
+    });
+  }
+
+  const getSafePoints = () => {
+    const pInput = activeTab === 'csv'
+      ? (modal.querySelector('.input-batch-csv-points') || modal.querySelector('.input-batch-points'))
+      : (modal.querySelector('.input-batch-points') || modal.querySelector('.input-batch-csv-points'));
+    const raw = parseFloat(pInput?.value);
+    if (isNaN(raw) || raw <= 0) return defaultPoints || 1.0;
+    return Math.round(raw * 100) / 100;
+  };
+
   let cleanupKeydown = null;
 
   const closeModal = () => {
@@ -3114,13 +3854,14 @@ export function openGenericBatchModal({
 
   const doConfirm = () => {
     const finalCount = getSafeCount();
+    const finalPoints = getSafePoints();
     const textarea = modal.querySelector('.textarea-batch-csv');
     const csvVal = textarea ? textarea.value.trim() : '';
 
     if (hasCsv && activeTab === 'csv' && csvVal) {
       if (parsedItems.length > 0 && typeof csvConfig.onImport === 'function') {
         closeModal();
-        csvConfig.onImport(parsedItems);
+        csvConfig.onImport(parsedItems, { defaultPoints: finalPoints });
         return;
       } else if (parsedItems.length === 0) {
         if (typeof alert === 'function') {
@@ -3136,6 +3877,7 @@ export function openGenericBatchModal({
     if (typeof onConfirm === 'function') {
       const resultObj = {
         count: finalCount,
+        defaultPoints: finalPoints,
         modal,
         valueOf: () => finalCount,
         [Symbol.toPrimitive]: () => finalCount
@@ -3145,10 +3887,12 @@ export function openGenericBatchModal({
   };
 
   const doSingle = () => {
+    const finalPoints = getSafePoints();
     closeModal();
     if (typeof onSingle === 'function') {
       const resultObj = {
         count: 1,
+        defaultPoints: finalPoints,
         modal,
         valueOf: () => 1,
         [Symbol.toPrimitive]: () => 1
@@ -3247,15 +3991,158 @@ export function openCsvUploadModal(opts = {}) {
   });
 }
 
+export function computeTestBuilderScoreSummary(blocks = []) {
+  let totalScore = 0;
+  let totalQuestions = 0;
+  const canonicalSkills = {
+    listening: { code: 'listening', label: 'Listening', score: 0, count: 0, firstBlockIdx: null },
+    reading: { code: 'reading', label: 'Reading', score: 0, count: 0, firstBlockIdx: null },
+    writing: { code: 'writing', label: 'Writing', score: 0, count: 0, firstBlockIdx: null },
+    speaking: { code: 'speaking', label: 'Speaking', score: 0, count: 0, firstBlockIdx: null }
+  };
+  const extraSkills = {};
+
+  const safeBlocks = Array.isArray(blocks) ? blocks : [];
+  for (let bIdx = 0; bIdx < safeBlocks.length; bIdx++) {
+    const block = safeBlocks[bIdx];
+    const bTitle = block.title || '';
+    for (const item of (block.items || [])) {
+      const span = getItemSpanCount(item);
+      const score = Number(item.maxScore) || 0;
+      totalScore += score;
+      totalQuestions += span;
+
+      const rawSkill = (Array.isArray(item.skillCodes) && item.skillCodes[0]) || item.primarySkill || '';
+      const normSkill = normalizeSkillCode(rawSkill, bTitle);
+
+      if (canonicalSkills[normSkill]) {
+        canonicalSkills[normSkill].score += score;
+        canonicalSkills[normSkill].count += span;
+        if (canonicalSkills[normSkill].firstBlockIdx === null) {
+          canonicalSkills[normSkill].firstBlockIdx = bIdx;
+        }
+      } else {
+        if (!extraSkills[normSkill]) {
+          const lbl = CANONICAL_SKILL_LABELS[normSkill] || (normSkill.charAt(0).toUpperCase() + normSkill.slice(1));
+          extraSkills[normSkill] = { code: normSkill, label: lbl, score: 0, count: 0, firstBlockIdx: bIdx };
+        }
+        extraSkills[normSkill].score += score;
+        extraSkills[normSkill].count += span;
+      }
+    }
+  }
+
+  totalScore = Math.round(totalScore * 10) / 10;
+  for (const k of Object.keys(canonicalSkills)) {
+    canonicalSkills[k].score = Math.round(canonicalSkills[k].score * 10) / 10;
+  }
+  for (const k of Object.keys(extraSkills)) {
+    extraSkills[k].score = Math.round(extraSkills[k].score * 10) / 10;
+  }
+
+  return {
+    totalScore,
+    totalQuestions,
+    skills: [
+      canonicalSkills.listening,
+      canonicalSkills.reading,
+      canonicalSkills.writing,
+      canonicalSkills.speaking,
+      ...Object.values(extraSkills).filter(s => s.count > 0 || s.score > 0)
+    ]
+  };
+}
+
+export function renderScoreSkillChipsHtml(skills = []) {
+  return skills.map(skill => {
+    const hasJump = typeof skill.firstBlockIdx === 'number';
+    return `
+      <div class="score-skill-chip skill-${escapeHtml(skill.code)}${hasJump ? ' has-jump' : ''}" ${hasJump ? `data-first-block-idx="${skill.firstBlockIdx}" role="button" tabindex="0"` : ''} title="${escapeHtml(skill.label)}: ${skill.score} điểm, ${skill.count} câu${hasJump ? ' (Bấm để nhảy đến phần này)' : ''}">
+        <span class="skill-chip-dot"></span>
+        <span class="skill-chip-name">${escapeHtml(skill.label)}</span>
+        <span class="skill-chip-score"><strong>${skill.score}</strong> đ</span>
+        <span class="skill-chip-count">(${skill.count} câu)</span>
+      </div>
+    `;
+  }).join('');
+}
+
+export function renderBlockJumpTagsHtml(blocks = []) {
+  if (!Array.isArray(blocks) || blocks.length === 0) return '';
+  return blocks.map((block, idx) => {
+    const title = (block.title || `Phần ${idx + 1}`).trim();
+    return `
+      <button type="button" class="btn-block-jump-chip" data-block-idx="${idx}" title="Chuyển nhanh đến Phần ${idx + 1}: ${escapeHtml(title)}">
+        <span class="block-jump-badge">Phần ${idx + 1}</span>
+        <span class="block-jump-title">${escapeHtml(title)}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+export function renderBlocksNavCardHtml(blocks = []) {
+  if (!Array.isArray(blocks) || blocks.length === 0) return '';
+  return `
+    <div class="builder-blocks-nav-card panel" id="builder-blocks-nav-card" aria-label="Điều hướng nhanh các phần thi">
+      <div class="blocks-nav-header">
+        <div class="blocks-nav-title-wrap">
+          <h4 class="blocks-nav-title">${renderSvgIcon('layers', 'icon-inline')} Điều hướng nhanh các phần thi</h4>
+          <p class="blocks-nav-subtitle">Bấm vào phần thi để cuộn nhanh đến nội dung chỉnh sửa</p>
+        </div>
+      </div>
+      <div class="blocks-nav-chips">
+        ${renderBlockJumpTagsHtml(blocks)}
+      </div>
+    </div>
+  `;
+}
+
+export function renderScoreBreakdownBarHtml(draftState) {
+  const blocks = (draftState && draftState.blocks) || [];
+  const summary = computeTestBuilderScoreSummary(blocks);
+  return `
+    <div class="builder-score-breakdown-bar" id="builder-score-breakdown-bar">
+      <div class="score-bar-main-row">
+        <div class="score-bar-total-tile">
+          <div class="score-total-icon">${renderSvgIcon('chart', 'icon-inline')}</div>
+          <div class="score-total-info">
+            <span class="score-total-label">Tổng điểm đề:</span>
+            <div class="score-total-num-wrap">
+              <span class="score-total-val">${summary.totalScore}</span>
+              <span class="score-total-unit">điểm</span>
+              <span class="score-total-questions-badge score-total-questions">${summary.totalQuestions} câu hỏi</span>
+            </div>
+          </div>
+        </div>
+        <div class="score-bar-divider"></div>
+        <div class="score-bar-skills-wrap">
+          <span class="score-skills-label">Phân bố kỹ năng:</span>
+          <div class="score-skills-chips">
+            ${renderScoreSkillChipsHtml(summary.skills)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
   if (!container) return;
+
+  const matchedCatalogItem = Array.isArray(options.catalog)
+    ? options.catalog.find(it => it.formVersionId === (formVersionData.id || formVersionData.formVersionId))
+    : null;
 
   const draftState = {
     formVersionId: formVersionData.id || formVersionData.formVersionId || generateUuid(),
     formTemplateId: formVersionData.formTemplateId || '',
     version: Number(formVersionData.version || 1),
     status: formVersionData.status || 'draft',
-    title: formVersionData.title || formVersionData.publicDefinition?.title || 'Đề thi mới',
+    title: formVersionData.title || formVersionData.publicDefinition?.title || matchedCatalogItem?.title || 'Đề thi mới',
+    phase: formVersionData.phase !== undefined
+      ? formVersionData.phase
+      : (formVersionData.publicDefinition?.phase !== undefined ? formVersionData.publicDefinition.phase : (matchedCatalogItem?.phase || null)),
+    sessionNumber: formVersionData.sessionNumber || formVersionData.publicDefinition?.sessionNumber || matchedCatalogItem?.sessionNumber || null,
     durationMinutes: Number(formVersionData.durationMinutes || formVersionData.publicDefinition?.durationMinutes || 60),
     answerReleasePolicy: formVersionData.answerReleasePolicy || formVersionData.publicDefinition?.answerReleasePolicy || 'teacher_release',
     submissionCount: Number(formVersionData.submissionCount || 0),
@@ -3362,7 +4249,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
   let isDirty = false;
   function markAsDirty() {
     isDirty = true;
+    if (typeof container?.querySelector === 'function') {
+      const statusMsg = container.querySelector('#builder-status-msg');
+      if (statusMsg && !statusMsg.classList.contains('saving') && !statusMsg.classList.contains('forked')) {
+        statusMsg.className = 'builder-status-pill unsaved';
+        statusMsg.innerHTML = `${renderSvgIcon('edit', 'icon-inline')} <span>Có thay đổi chưa lưu</span>`;
+      }
+    }
   }
+
+  const unsavedGuardChecker = () => isDirty;
+  registerUnsavedChangesGuard(unsavedGuardChecker);
 
   const collapsedCardKeys = new Set();
 
@@ -4865,9 +5762,6 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="exercise-add-item-bar block-add-item-bar">
               <span class="add-item-caption">+ Thêm câu hỏi vào Exercise ${ex.exerciseNumber || (exIdx + 1)}:</span>
               <div class="add-item-buttons">
-                <button type="button" class="btn btn-secondary btn-sm btn-add-reading-matching" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
-                  + Bài đọc chia đôi & Nối (Reading Split-Pane)
-                </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Sắp xếp thứ tự nghe (Listening Order)
                 </button>
@@ -4876,12 +5770,6 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-reorder" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Sắp xếp câu (Sentence Reorder)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-add-sentence-transformation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
-                  + Biến đổi câu (Transformation)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-choice btn-add-pronunciation" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
-                  + Phát âm & Ký hiệu IPA (Pronunciation)
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm btn-add-single-choice" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Trắc nghiệm (Single Choice)
@@ -4937,7 +5825,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const isBlockCollapsed = collapsedCardKeys.has(blockCardKey);
 
       return `
-        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}" data-block-id="${block.blockId}" data-index="${index}">
+        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}" id="builder-block-${index}" data-block-id="${block.blockId}" data-index="${index}">
           <div class="builder-block-header">
             <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
             <div class="block-checkpoint-pill">Phần ${index + 1}</div>
@@ -4956,11 +5844,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="form-group block-field">
               <label class="form-label">File âm thanh (Audio URL / Path):</label>
               <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
-                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="assets/34/test-1/listening.mp3 hoặc link Google Drive" style="flex:1;" />
+                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/... hoặc assets/34/test-1/listening.mp3" style="flex:1;" />
                 <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="block" data-index="${index}" title="Nghe thử file âm thanh">
                   ${renderSvgIcon('play', 'icon-inline')} Nghe thử
                 </button>
               </div>
+              <div class="form-hint audio-guide-hint" style="font-size:0.78rem; color:#64748b; margin-top:4px;">Chỉ sử dụng link âm thanh Cloudflare R2 (hoặc assets/). Không hỗ trợ link Google Drive cho bài nghe.</div>
+              <div class="audio-drive-warning text-danger" style="${(audioVal.includes('drive.google.com') || audioVal.includes('docs.google.com')) ? 'display:block;' : 'display:none;'} color:var(--izone-primary, #db0829); font-size:0.8rem; margin-top:4px;">Hệ thống không hỗ trợ link Google Drive cho bài nghe. Vui lòng sử dụng link Cloudflare R2 hoặc assets/.</div>
             </div>
             <div class="form-group block-field">
               <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
@@ -5028,6 +5918,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           </div>
         </div>
 
+        ${renderScoreBreakdownBarHtml(draftState)}
+
         ${isImmutable ? `
           <div class="alert-notice alert-immutable">
             <div class="notice-icon">${renderSvgIcon('alert', 'icon-inline')}</div>
@@ -5044,6 +5936,18 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 <label class="form-label" for="builder-test-title">Tên bài thi:</label>
                 <input type="text" id="builder-test-title" class="form-control" value="${escapeHtml(draftState.title)}" placeholder="Nhập tên bài thi..." />
               </div>
+              <div class="form-group setting-phase-group">
+                <label class="form-label" for="builder-test-phase">Giai đoạn (Phase):</label>
+                <select id="builder-test-phase" class="form-select">
+                  <option value="" ${!draftState.phase ? 'selected' : ''}>Không phân Phase (Tổng hợp)</option>
+                  <option value="1" ${Number(draftState.phase) === 1 ? 'selected' : ''}>Phase 1</option>
+                  <option value="2" ${Number(draftState.phase) === 2 ? 'selected' : ''}>Phase 2</option>
+                </select>
+              </div>
+              <div class="form-group setting-session-group">
+                <label class="form-label" for="builder-test-session">Buổi học (Session):</label>
+                <input type="number" id="builder-test-session" class="form-control" value="${draftState.sessionNumber || ''}" min="1" placeholder="Ví dụ: 1" />
+              </div>
               <div class="form-group setting-duration-group">
                 <label class="form-label" for="builder-test-duration">Thời lượng (phút):</label>
                 <input type="number" id="builder-test-duration" class="form-control" value="${draftState.durationMinutes}" min="5" max="300" />
@@ -5058,6 +5962,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
               </div>
             </div>
           </div>
+
+          ${renderBlocksNavCardHtml(draftState.blocks)}
 
           <div class="builder-blocks-section">
             <div class="blocks-section-header">
@@ -5096,6 +6002,98 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     }
   }
 
+  function jumpToBlock(bIdx) {
+    if (typeof container.querySelector !== 'function') return;
+    const card = container.querySelector(`#builder-block-${bIdx}`) ||
+                 container.querySelector(`.builder-block-card[data-index="${bIdx}"]`);
+    if (!card) return;
+
+    const block = draftState.blocks[bIdx];
+    const blockCardKey = (block && block.blockId) || (card.getAttribute && card.getAttribute('data-block-id')) || `b-${bIdx}`;
+
+    // 1. If block is collapsed, expand it so teacher can view/edit immediately
+    if (card.classList && card.classList.contains('is-collapsed')) {
+      card.classList.remove('is-collapsed');
+      collapsedCardKeys.delete(blockCardKey);
+      const toggleBtn = card.querySelector('.btn-toggle-block-collapse');
+      if (toggleBtn) {
+        toggleBtn.innerHTML = renderSvgIcon('chevronDown', 'icon-inline');
+        if (typeof toggleBtn.setAttribute === 'function') {
+          toggleBtn.setAttribute('aria-expanded', 'true');
+        }
+      }
+    }
+
+    // 2. Smoothly scroll into view
+    if (typeof card.scrollIntoView === 'function') {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 3. Highlight animation pulse
+    if (card.classList) {
+      card.classList.remove('block-target-highlight');
+      if (typeof card.offsetWidth === 'number') {
+        void card.offsetWidth;
+      }
+      card.classList.add('block-target-highlight');
+      setTimeout(() => {
+        if (card.classList) card.classList.remove('block-target-highlight');
+      }, 1600);
+    }
+  }
+
+  function updateScoreBreakdownBar() {
+    const barEl = container.querySelector('#builder-score-breakdown-bar');
+    const summary = computeTestBuilderScoreSummary(draftState.blocks);
+    if (barEl) {
+      const scoreValEl = barEl.querySelector('.score-total-val');
+      if (scoreValEl) scoreValEl.textContent = summary.totalScore;
+      const qValEl = barEl.querySelector('.score-total-questions');
+      if (qValEl) qValEl.textContent = `${summary.totalQuestions} câu hỏi`;
+
+      const chipsWrap = barEl.querySelector('.score-skills-chips');
+      if (chipsWrap) {
+        chipsWrap.innerHTML = renderScoreSkillChipsHtml(summary.skills);
+      }
+
+      const newSkillChips = barEl.querySelectorAll('.score-skill-chip[data-first-block-idx]');
+      if (newSkillChips && typeof newSkillChips.forEach === 'function') {
+        newSkillChips.forEach(chip => {
+          if (typeof chip.addEventListener === 'function') {
+            chip.addEventListener('click', (e) => {
+              e.preventDefault();
+              const bIdx = Number(chip.getAttribute('data-first-block-idx'));
+              if (!isNaN(bIdx)) jumpToBlock(bIdx);
+            });
+          }
+        });
+      }
+    }
+
+    const navCardEl = container.querySelector('#builder-blocks-nav-card');
+    if (navCardEl) {
+      const chipsWrap = navCardEl.querySelector('.blocks-nav-chips');
+      if (chipsWrap) {
+        chipsWrap.innerHTML = renderBlockJumpTagsHtml(draftState.blocks);
+      }
+      const newJumpChips = navCardEl.querySelectorAll('.btn-block-jump-chip');
+      if (newJumpChips && typeof newJumpChips.forEach === 'function') {
+        newJumpChips.forEach(chip => {
+          if (typeof chip.addEventListener === 'function') {
+            chip.addEventListener('click', (e) => {
+              e.preventDefault();
+              const bIdx = Number(chip.getAttribute('data-block-idx'));
+              if (!isNaN(bIdx)) jumpToBlock(bIdx);
+            });
+          }
+        });
+      }
+    }
+
+    const totalQTag = container.querySelector('.total-questions-tag strong');
+    if (totalQTag) totalQTag.textContent = `${summary.totalQuestions} câu hỏi`;
+  }
+
   function syncInputs() {
     if (typeof container.querySelector !== 'function') return;
 
@@ -5113,6 +6111,17 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
     const titleInput = container.querySelector('#builder-test-title');
     if (titleInput) draftState.title = titleInput.value.trim();
+
+    const phaseSelect = container.querySelector('#builder-test-phase');
+    if (phaseSelect) {
+      draftState.phase = phaseSelect.value ? Number(phaseSelect.value) : null;
+    }
+
+    const sessionInput = container.querySelector('#builder-test-session');
+    if (sessionInput) {
+      const sess = Number(sessionInput.value);
+      if (Number.isFinite(sess) && sess > 0) draftState.sessionNumber = sess;
+    }
 
     const durationInput = container.querySelector('#builder-test-duration');
     if (durationInput) {
@@ -5307,8 +6316,10 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 primaryVariants = [item.targetWord];
               }
 
+              item.graderType = 'inline_cloze';
               draftState.gradingKey.items[item.itemVersionId] = {
-                graderType: 'accepted_text',
+                graderType: 'inline_cloze',
+                blanks: item.clozeAnswers,
                 accepted: primaryVariants.length ? primaryVariants : ['answer'],
                 normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
               };
@@ -5613,6 +6624,15 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
       });
     }
+
+    updateScoreBreakdownBar();
+    if (isDirty && typeof container.querySelector === 'function') {
+      const statusMsg = container.querySelector('#builder-status-msg');
+      if (statusMsg && !statusMsg.classList.contains('saving') && !statusMsg.classList.contains('forked')) {
+        statusMsg.className = 'builder-status-pill unsaved';
+        statusMsg.innerHTML = `${renderSvgIcon('edit', 'icon-inline')} <span>Có thay đổi chưa lưu</span>`;
+      }
+    }
   }
 
   function getNextPosition() {
@@ -5632,9 +6652,76 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
   function bindEvents() {
     if (typeof container.querySelector !== 'function') return;
 
+    // Live update Score Breakdown Bar and mark dirty when question or rubric criterion score changes
+    if (typeof container.addEventListener === 'function') {
+      container.addEventListener('input', (e) => {
+        markAsDirty();
+        if (e?.target?.classList?.contains('item-max-score-input') || e?.target?.classList?.contains('criterion-max-score-input')) {
+          syncInputs();
+        }
+        if (e?.target?.classList?.contains('block-audio-input')) {
+          const val = e.target.value || '';
+          const parent = e.target.closest ? e.target.closest('.block-field') : null;
+          const warningEl = parent && parent.querySelector ? parent.querySelector('.audio-drive-warning') : null;
+          if (warningEl && warningEl.style) {
+            const hasDrive = val.includes('drive.google.com') || val.includes('docs.google.com');
+            warningEl.style.display = hasDrive ? 'block' : 'none';
+          }
+        }
+      });
+
+      container.addEventListener('change', () => {
+        markAsDirty();
+      });
+    }
+
     const backBtn = container.querySelector('#btn-back-to-catalog');
-    if (backBtn && typeof options.onBack === 'function' && typeof backBtn.addEventListener === 'function') {
-      backBtn.addEventListener('click', options.onBack);
+    if (backBtn && typeof backBtn.addEventListener === 'function') {
+      backBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isDirty) {
+          openUnsavedChangesModal({
+            onDiscard: () => {
+              isDirty = false;
+              unregisterUnsavedChangesGuard(unsavedGuardChecker);
+              if (typeof options.onBack === 'function') options.onBack();
+            },
+            onStay: () => {
+              // User chooses to stay and continue editing
+            }
+          });
+          return;
+        }
+        unregisterUnsavedChangesGuard(unsavedGuardChecker);
+        if (typeof options.onBack === 'function') options.onBack();
+      });
+    }
+
+    // Quick jump to block via Block chips or Skill chips in Score Breakdown bar
+    const blockJumpChips = container.querySelectorAll('.btn-block-jump-chip');
+    if (blockJumpChips && typeof blockJumpChips.forEach === 'function') {
+      blockJumpChips.forEach(chip => {
+        if (typeof chip.addEventListener === 'function') {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const bIdx = Number(chip.getAttribute('data-block-idx'));
+            if (!isNaN(bIdx)) jumpToBlock(bIdx);
+          });
+        }
+      });
+    }
+
+    const skillChipsWithJump = container.querySelectorAll('.score-skill-chip[data-first-block-idx]');
+    if (skillChipsWithJump && typeof skillChipsWithJump.forEach === 'function') {
+      skillChipsWithJump.forEach(chip => {
+        if (typeof chip.addEventListener === 'function') {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const bIdx = Number(chip.getAttribute('data-first-block-idx'));
+            if (!isNaN(bIdx)) jumpToBlock(bIdx);
+          });
+        }
+      });
     }
 
     // Add Exercise to block
@@ -5917,7 +7004,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     }
 
-    function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4) {
+    function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4, defaultPoints = 1) {
       const block = draftState.blocks[bIdx];
       if (!block) return;
       const startingPos = getNextPosition();
@@ -5942,7 +7029,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           layoutType: layout,
           graderType: 'exact_option',
           required: true,
-          maxScore: 1,
+          maxScore: defaultPoints || 1,
           options: Array.from({ length: safeOptCount }, (_, oIdx) => ({
             id: String.fromCharCode(65 + oIdx),
             label: ''
@@ -5979,23 +7066,25 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       const block = draftState.blocks[bIdx];
       if (!block) return;
       openGenericBatchModal({
-        title: 'Trắc nghiệm',
+        title: 'Trắc nghiệm (Multiple Choice)',
         subtitle: `Nhập danh sách câu hỏi Trắc nghiệm cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ 2, 3 hoặc 4 phương án (A, B, C, D) và tự động ánh xạ đáp án đúng.`,
         defaultCount: 5,
         minCount: 1,
         maxCount: 50,
+        defaultPoints: 1.0,
         csvConfig: {
           templateFileName: 'mau_trac_nghiem_don.csv',
-          columnsHint: 'Cột: Đề bài | Phương án A | B | C | D | Đáp án đúng | Giải thích',
-          placeholder: 'The cruise departs ___ Miami.,at,from,on,in,B,Cụm từ depart from\nShe is interested ___ marine life.,in,at,on,,A,Interested in',
+          columnsHint: 'Cột: Đề bài | Phương án A | B | C | D | Đáp án đúng | Giải thích | Điểm',
+          placeholder: 'The cruise departs ___ Miami.,at,from,on,in,B,Cụm từ depart from,1\nShe is interested ___ marine life.,in,at,on,,A,Interested in,1',
           getTemplateCsv: generateSingleChoiceTemplateCsv,
           parseCsv: parseSingleChoiceCsv,
-          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId.toUpperCase().replace('OPT_', ''))}</em> (${itm.options.length} phương án)`,
-          onImport: (items) => {
+          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId.toUpperCase().replace('OPT_', ''))}</em> (${itm.options.length} phương án, ${itm.maxScore || 1} điểm)`,
+          onImport: (items, { defaultPoints = 1 } = {}) => {
             const startingPos = getNextPosition();
             const batchItems = [];
             items.forEach((parsed, idx) => {
               const newItemId = generateUuid();
+              const itemScore = parsed.maxScore != null && !isNaN(parsed.maxScore) && parsed.maxScore > 0 ? parsed.maxScore : defaultPoints;
               batchItems.push({
                 itemFamilyId: generateUuid(),
                 itemVersionId: newItemId,
@@ -6009,7 +7098,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                 layoutType: parsed.layoutType || 'grid_4',
                 graderType: 'exact_option',
                 required: true,
-                maxScore: 1,
+                maxScore: itemScore,
                 options: parsed.options,
                 explanation: parsed.explanation || '',
                 skillCodes: [],
@@ -6032,20 +7121,29 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             <div class="batch-option-radios">
               <label class="batch-radio-label">
                 <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="2" />
-                <span><strong>2 phương án</strong> (A, B)</span>
+                <div class="batch-radio-text-wrap">
+                  <span class="batch-radio-title">2 phương án</span>
+                  <span class="batch-radio-sub">(A, B)</span>
+                </div>
               </label>
               <label class="batch-radio-label">
                 <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="3" />
-                <span><strong>3 phương án</strong> (A, B, C)</span>
+                <div class="batch-radio-text-wrap">
+                  <span class="batch-radio-title">3 phương án</span>
+                  <span class="batch-radio-sub">(A, B, C)</span>
+                </div>
               </label>
               <label class="batch-radio-label">
                 <input type="radio" name="batch-single-choice-options" class="radio-batch-options" value="4" checked />
-                <span><strong>4 phương án</strong> (A, B, C, D)</span>
+                <div class="batch-radio-text-wrap">
+                  <span class="batch-radio-title">4 phương án</span>
+                  <span class="batch-radio-sub">(A, B, C, D)</span>
+                </div>
               </label>
             </div>
           </div>
         `,
-        onConfirm: ({ count, modal }) => {
+        onConfirm: ({ count, defaultPoints = 1, modal }) => {
           let optCount = 4;
           if (modal) {
             const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
@@ -6053,9 +7151,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                             modal.querySelector('.select-batch-option-count');
             if (checked) optCount = parseInt(checked.value, 10) || 4;
           }
-          createBatchSingleChoice(bIdx, targetEx, count, optCount);
+          createBatchSingleChoice(bIdx, targetEx, count, optCount, defaultPoints);
         },
-        onSingle: ({ modal } = {}) => {
+        onSingle: ({ defaultPoints = 1, modal } = {}) => {
           let optCount = 4;
           if (modal) {
             const checked = modal.querySelector('input[name="batch-single-choice-options"]:checked') ||
@@ -6063,7 +7161,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
                             modal.querySelector('.select-batch-option-count');
             if (checked) optCount = parseInt(checked.value, 10) || 4;
           }
-          createBatchSingleChoice(bIdx, targetEx, 1, optCount);
+          createBatchSingleChoice(bIdx, targetEx, 1, optCount, defaultPoints);
         }
       });
     }
@@ -6140,7 +7238,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       });
     });
 
-    function createBatchFitb(bIdx, targetEx, count = 1) {
+    function createBatchFitb(bIdx, targetEx, count = 1, defaultPoints = 1) {
       const block = draftState.blocks[bIdx];
       if (!block) return;
       const startingPos = getNextPosition();
@@ -6163,7 +7261,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           layoutType: 'default',
           graderType: 'accepted_text',
           required: true,
-          maxScore: 1,
+          maxScore: defaultPoints || 1,
           options: [],
           skillCodes: [],
           releasePolicy: 'inherit'
@@ -6181,7 +7279,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
       render();
     }
 
-    // Add Fill In The Blank Question
+    // Add Fill In The Blank Question (Opens CSV / Excel import popup with batch & single creation)
     const addFitbBtns = container.querySelectorAll('.btn-add-fitb, .btn-add-short-text');
     addFitbBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -6190,21 +7288,71 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
-          title: 'Tạo hàng loạt câu hỏi Điền ô trống',
-          subtitle: `Tạo nhanh các câu hỏi Điền từ ngắn vào ô trống thuộc bài tập ${targetEx.title || 'bài tập'}.`,
-          defaultCount: 5,
-          minCount: 1,
-          maxCount: 50,
-          onConfirm: ({ count }) => {
-            createBatchFitb(bIdx, targetEx, count);
-          },
-          onSingle: () => {
-            createBatchFitb(bIdx, targetEx, 1);
-          }
-        });
+        triggerFitbBatchModal(bIdx, targetEx);
       });
     });
+
+    function triggerFitbBatchModal(bIdx, targetEx) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      openGenericBatchModal({
+        title: 'Điền ô trống (Short Text)',
+        subtitle: `Nhập danh sách câu hỏi Điền từ ngắn vào ô trống cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Tự động sinh biến thể ngữ pháp và đáp án chấp nhận.`,
+        defaultCount: 5,
+        minCount: 1,
+        maxCount: 50,
+        defaultPoints: 1.0,
+        csvConfig: {
+          templateFileName: 'mau_dien_o_trong.csv',
+          columnsHint: 'Cột: Đề bài | Đáp án đúng | Điểm',
+          placeholder: 'The capital of France is ___.,Paris,1\nWater freezes at ___ degrees Celsius.,0,1\nThe Sun rises in the ___.,east,1',
+          getTemplateCsv: generateFitbTemplateCsv,
+          parseCsv: parseFitbCsv,
+          renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.targetAnswer)}</em> (${itm.maxScore || 1} điểm)`,
+          onImport: (items, { defaultPoints = 1 } = {}) => {
+            const startingPos = getNextPosition();
+            const batchItems = [];
+            items.forEach((parsed, idx) => {
+              const newItemId = generateUuid();
+              const itemScore = parsed.maxScore != null && !isNaN(parsed.maxScore) && parsed.maxScore > 0 ? parsed.maxScore : defaultPoints;
+              batchItems.push({
+                itemFamilyId: generateUuid(),
+                itemVersionId: newItemId,
+                position: startingPos + idx,
+                exerciseId: targetEx.exerciseId,
+                exerciseTitle: targetEx.title,
+                prompt: parsed.prompt,
+                helpText: '',
+                interactionType: 'short_text',
+                pedagogicalTypeCode: 'fill_in_the_blank',
+                layoutType: 'default',
+                graderType: 'accepted_text',
+                required: true,
+                maxScore: itemScore,
+                options: [],
+                skillCodes: [],
+                releasePolicy: 'inherit'
+              });
+              draftState.gradingKey.items[newItemId] = {
+                graderType: 'accepted_text',
+                accepted: expandSentenceVariants([parsed.targetAnswer]),
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+            });
+            insertItemsIntoBlockExercise(block, targetEx, batchItems);
+            resequenceItemPositions();
+            markAsDirty();
+            render();
+          }
+        },
+        onConfirm: ({ count, defaultPoints = 1 }) => {
+          createBatchFitb(bIdx, targetEx, count, defaultPoints);
+        },
+        onSingle: ({ defaultPoints = 1 } = {}) => {
+          createBatchFitb(bIdx, targetEx, 1, defaultPoints);
+        }
+      });
+    }
 
     // Add Inline Cloze Question
     const addInlineClozeBtns = container.querySelectorAll('.btn-add-inline-cloze');
@@ -6671,7 +7819,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           expectedCorrections: [],
           scoringRule: 'split_points'
         };
-        currentKey.expectedErrors = expandSentenceVariants([raw]);
+        const generatedErrors = expandSentenceVariants([raw]);
+        const prevErrors = Array.isArray(currentKey.expectedErrors) ? currentKey.expectedErrors : [];
+        currentKey.expectedErrors = Array.from(new Set([...prevErrors, ...generatedErrors]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -6699,7 +7849,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           expectedCorrections: [],
           scoringRule: 'split_points'
         };
-        currentKey.expectedCorrections = expandSentenceVariants([raw]);
+        const generatedCorrections = expandSentenceVariants([raw]);
+        const prevCorrections = Array.isArray(currentKey.expectedCorrections) ? currentKey.expectedCorrections : [];
+        currentKey.expectedCorrections = Array.from(new Set([...prevCorrections, ...generatedCorrections]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -7325,7 +8477,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: [],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        currentKey.accepted = expandSentenceVariants([target]);
+        const generated = expandSentenceVariants([target]);
+        const prevAccepted = Array.isArray(currentKey.accepted) ? currentKey.accepted : [];
+        currentKey.accepted = Array.from(new Set([...prevAccepted, ...generated]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -7520,7 +8674,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           accepted: [],
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
-        currentKey.accepted = expandSentenceVariants([targetVal]);
+        const generated = expandSentenceVariants([targetVal]);
+        const prevAccepted = Array.isArray(currentKey.accepted) ? currentKey.accepted : [];
+        currentKey.accepted = Array.from(new Set([...prevAccepted, ...generated]));
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
         render();
       });
@@ -7714,12 +8870,12 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
             <div class="vocab-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
 
-            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;">
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem; cursor: pointer;">
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
+              <label class="batch-checkbox-row">
                 <input type="checkbox" class="chk-auto-variants" checked />
                 <span>Tự động sinh biến thể đáp án sau khi nhập (Apostrophe, contractions, NFKC)</span>
               </label>
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem; cursor: pointer;">
+              <label class="batch-checkbox-row">
                 <input type="checkbox" class="chk-replace-existing" />
                 <span>Xóa các câu từ vựng cũ trong bài tập này trước khi nhập (Mặc định: Thêm tiếp vào sau)</span>
               </label>
@@ -8477,23 +9633,29 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         const generated = expandSentenceVariants([rawVal]);
         if (blankNum && item.layoutType === 'inline_cloze') {
           item.clozeAnswers = item.clozeAnswers || {};
+          const prevAccepted = Array.isArray(item.clozeAnswers[blankNum]?.accepted) ? item.clozeAnswers[blankNum].accepted : [];
+          const merged = Array.from(new Set([...prevAccepted, ...generated]));
           item.clozeAnswers[blankNum] = {
             targetWord: rawVal,
-            accepted: generated
+            accepted: merged
           };
           const detected = parseClozeBlanks(item.prompt || '');
           const firstNum = detected.length ? detected[0].number : (item.position || 1);
           if (Number(blankNum) === firstNum) {
             draftState.gradingKey.items[item.itemVersionId] = {
               graderType: 'accepted_text',
-              accepted: generated,
+              accepted: merged,
               normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
             };
           }
         } else {
+          const prevAccepted = Array.isArray(draftState.gradingKey.items[item.itemVersionId]?.accepted)
+            ? draftState.gradingKey.items[item.itemVersionId].accepted
+            : [];
+          const merged = Array.from(new Set([...prevAccepted, ...generated]));
           draftState.gradingKey.items[item.itemVersionId] = {
             graderType: 'accepted_text',
-            accepted: generated,
+            accepted: merged,
             normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
           };
         }
@@ -8555,9 +9717,13 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
         }
         const generated = expandSentenceVariants([rawVal]);
         const currentExpected = draftState.gradingKey.items[item.itemVersionId]?.expectedOptionId || item.options?.[0]?.id || 'opt_1';
+        const prevAccepted = Array.isArray(draftState.gradingKey.items[item.itemVersionId]?.accepted)
+          ? draftState.gradingKey.items[item.itemVersionId].accepted
+          : [];
+        const merged = Array.from(new Set([...prevAccepted, ...generated]));
         draftState.gradingKey.items[item.itemVersionId] = {
           graderType: 'accepted_text_exact_option',
-          accepted: generated,
+          accepted: merged,
           expectedOptionId: currentExpected,
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
@@ -9189,6 +10355,8 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           const payload = {
             formVersionId: draftState.formVersionId,
             title: draftState.title,
+            phase: draftState.phase,
+            sessionNumber: draftState.sessionNumber,
             durationMinutes: draftState.durationMinutes,
             answerReleasePolicy: draftState.answerReleasePolicy,
             blocks: draftState.blocks.map((b, i) => ({
@@ -9247,6 +10415,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
           draftState.gradingKey = cleanGradingKey;
 
           const res = await options.onSaveDraft(payload);
+          isDirty = false;
           const now = new Date();
           const timeStr = [now.getHours(), now.getMinutes(), now.getSeconds()].map(n => String(n).padStart(2, '0')).join(':');
 
@@ -9713,8 +10882,9 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
 
         const renderSimShortQaGroup = (shortItems) => {
           if (!shortItems || !shortItems.length) return '';
+          const is2Col = isShortQaEligibleFor2Col(shortItems);
           return `
-            <div class="candidate-short-qa-container">
+            <div class="candidate-short-qa-container ${is2Col ? 'short-qa-2col' : ''}">
               ${shortItems.map(item => {
                 const promptHtml = formatSimulationPrompt(item.prompt || '');
                 return `
@@ -11170,6 +12340,7 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
             }
 
             draftState.status = 'published';
+            isDirty = false;
             modal.style.display = 'none';
             render();
             openPublishReportDialog(result);
@@ -11300,14 +12471,41 @@ export function renderTestBuilderView(container, formVersionData = {}, options =
     const deleteDraftBtn = container.querySelector('#btn-delete-draft-workspace');
     if (deleteDraftBtn) {
       deleteDraftBtn.addEventListener('click', () => {
-        const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
-          ? window.confirm('Bạn có chắc chắn muốn xóa bản nháp này không? Thao tác này không thể hoàn tác.')
-          : true;
-        if (confirmed && typeof options.onDeleteDraft === 'function') {
-          options.onDeleteDraft({
+        if (typeof openConfirmDeleteTestModal === 'function' && typeof document !== 'undefined') {
+          openConfirmDeleteTestModal({
             formVersionId: draftState.formVersionId,
-            testKey: formVersionData.testKey || ''
+            testKey: formVersionData.testKey || '',
+            title: draftState.title || formVersionData.title || '',
+            sessionNumber: draftState.sessionNumber || '',
+            phase: draftState.phase || '',
+            courseName: options.courseId === 1 ? 'Khối 03' : (options.courseId === 3 ? 'Khối 45' : 'Khối 34'),
+            onConfirm: () => {
+              isDirty = false;
+              unregisterUnsavedChangesGuard(unsavedGuardChecker);
+              if (typeof options.onDeleteDraft === 'function') {
+                options.onDeleteDraft({
+                  formVersionId: draftState.formVersionId,
+                  testKey: formVersionData.testKey || '',
+                  title: draftState.title || formVersionData.title || ''
+                });
+              }
+            }
           });
+        } else {
+          const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
+            ? window.confirm('Bạn có chắc chắn muốn xóa bài thi này không? Thao tác này không thể hoàn tác.')
+            : true;
+          if (confirmed) {
+            isDirty = false;
+            unregisterUnsavedChangesGuard(unsavedGuardChecker);
+            if (typeof options.onDeleteDraft === 'function') {
+              options.onDeleteDraft({
+                formVersionId: draftState.formVersionId,
+                testKey: formVersionData.testKey || '',
+                title: draftState.title || formVersionData.title || ''
+              });
+            }
+          }
         }
       });
     }
@@ -11929,17 +13127,53 @@ export function formatCompactPrompt(item) {
 }
 
 export function resolveStudentAnswerDisplay(item) {
-  if (item.studentAnswer === null || item.studentAnswer === undefined || item.studentAnswer === '') {
+  let ans = item.studentAnswer;
+  if (typeof ans === 'string' && (ans.startsWith('{') || ans.startsWith('['))) {
+    try { ans = JSON.parse(ans); } catch (_) {}
+  }
+  if (ans === null || ans === undefined || ans === '') {
     return '(Chưa trả lời)';
   }
   const options = Array.isArray(item.options) ? item.options : [];
   const optMap = new Map(options.map(o => [String(o.id), o.label]));
 
-  if (Array.isArray(item.studentAnswer)) {
-    return item.studentAnswer.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
+  if (Array.isArray(ans)) {
+    return ans.map(a => optMap.get(String(a)) || String(a)).join(', ');
   }
 
-  const raw = String(item.studentAnswer);
+  if (typeof ans === 'object') {
+    if ('error' in ans || 'correction' in ans) {
+      const err = ans.error || '—';
+      const corr = ans.correction || '—';
+      return `Lỗi: ${err} → Sửa: ${corr}`;
+    }
+
+    const keys = Object.keys(ans).sort((a, b) => {
+      const na = parseInt(a, 10);
+      const nb = parseInt(b, 10);
+      if (!isNaN(na) && !isNaN(nb)) return na - nb;
+      return a.localeCompare(b);
+    });
+
+    if (keys.length === 0) return '(Chưa trả lời)';
+
+    const sub = item.subResults || item.feedback?.subResults || {};
+    const parts = keys.map(k => {
+      const val = ans[k];
+      const text = (val === null || val === undefined || String(val).trim() === '') ? '—' : String(val).trim();
+      const blankSub = sub[k];
+      let statusMark = '';
+      if (blankSub) {
+        if (blankSub.verdict === 'correct') statusMark = ' [✓]';
+        else if (blankSub.verdict === 'incorrect') statusMark = ' [✗]';
+      }
+      return `(${k}) ${text}${statusMark}`;
+    });
+
+    return parts.join(' · ');
+  }
+
+  const raw = String(ans);
   if (optMap.has(raw)) {
     return `${optMap.get(raw)} (${raw})`;
   }
@@ -11947,17 +13181,59 @@ export function resolveStudentAnswerDisplay(item) {
 }
 
 export function resolveExpectedAnswerDisplay(item) {
-  if (item.expectedAnswer === null || item.expectedAnswer === undefined || item.expectedAnswer === '') {
+  let exp = item.expectedAnswer;
+  if (typeof exp === 'string' && (exp.startsWith('{') || exp.startsWith('['))) {
+    try { exp = JSON.parse(exp); } catch (_) {}
+  }
+  if (exp === null || exp === undefined || exp === '') {
+    if (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0) {
+      const keys = Object.keys(item.clozeAnswers).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+      return keys.map(k => {
+        const v = item.clozeAnswers[k];
+        const disp = Array.isArray(v?.accepted) ? v.accepted.join(' / ') : (Array.isArray(v) ? v.join(' / ') : String(v || ''));
+        return `(${k}) ${disp}`;
+      }).join(' · ');
+    }
     return item.graderType === 'rubric_async' ? '(Chấm theo rubric)' : '—';
   }
   const options = Array.isArray(item.options) ? item.options : [];
   const optMap = new Map(options.map(o => [String(o.id), o.label]));
 
-  if (Array.isArray(item.expectedAnswer)) {
-    return item.expectedAnswer.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
+  if (Array.isArray(exp)) {
+    return exp.map(ans => optMap.get(String(ans)) || String(ans)).join(', ');
   }
 
-  const raw = String(item.expectedAnswer);
+  if (typeof exp === 'object') {
+    if ('error' in exp || 'correction' in exp) {
+      return `Lỗi: ${exp.error || '—'} → Sửa: ${exp.correction || '—'}`;
+    }
+
+    const keys = Object.keys(exp).sort((a, b) => {
+      const na = parseInt(a, 10);
+      const nb = parseInt(b, 10);
+      if (!isNaN(na) && !isNaN(nb)) return na - nb;
+      return a.localeCompare(b);
+    });
+
+    if (keys.length === 0) return '—';
+
+    const parts = keys.map(k => {
+      const v = exp[k];
+      let disp = '';
+      if (Array.isArray(v)) {
+        disp = v.join(' / ');
+      } else if (v && typeof v === 'object' && Array.isArray(v.accepted)) {
+        disp = v.accepted.join(' / ');
+      } else {
+        disp = String(v ?? '');
+      }
+      return `(${k}) ${disp}`;
+    });
+
+    return parts.join(' · ');
+  }
+
+  const raw = String(exp);
   if (optMap.has(raw)) {
     return `${optMap.get(raw)} (${raw})`;
   }
@@ -12317,19 +13593,19 @@ async function startDashboard() {
       const endpoint = courseTestCatalogPath(currentStudioCourseId);
       const res = await request(endpoint);
       const catalog = res.catalog || [];
-      const handleDeleteDraft = async ({ formVersionId }) => {
+      const handleDeleteDraft = async ({ formVersionId, title }) => {
         if (!formVersionId) return;
         try {
-          container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang xóa bản nháp...</p></div>';
+          container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang xóa bài thi...</p></div>';
           const delRes = await request(formDraftPath(formVersionId), {
             method: 'DELETE'
           });
           if (delRes && delRes.success) {
-            alert('Đã xóa bản nháp bài thi thành công.');
+            alert(`Đã xóa bài thi ${title ? `"${title}" ` : ''}thành công.`);
           }
           await loadAndRenderTestStudio(currentStudioCourseId);
         } catch (err) {
-          alert('Lỗi xóa bản nháp: ' + (err.message || 'Lỗi kết nối'));
+          alert('Lỗi xóa bài thi: ' + (err.message || 'Lỗi kết nối'));
           await loadAndRenderTestStudio(currentStudioCourseId);
         }
       };
@@ -12349,77 +13625,90 @@ async function startDashboard() {
           loadAndRenderTestStudio(newCid);
         },
         onDeleteDraft: handleDeleteDraft,
-        onAddTest: async () => {
-          try {
-            const courseNames = { 1: '03', 2: '34', 3: '45' };
-            const courseCode = courseNames[currentStudioCourseId] || '03';
-            const catalogList = Array.isArray(catalog) ? catalog : [];
-            const maxSession = catalogList.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
-            const nextSession = maxSession + 1;
-            const defaultTitle = `IZONE · Khối ${courseCode} · Test ${nextSession}`;
-            container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang khởi tạo bản nháp bài thi mới...</p></div>';
+        onAddTest: () => {
+          openCreateTestModal({
+            courseId: currentStudioCourseId,
+            catalog,
+            onSubmit: async ({ courseId, sessionNumber, phase, title, durationMinutes }) => {
+              try {
+                container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang khởi tạo bản nháp bài thi mới...</p></div>';
 
-            const postRes = await request(formDraftPath(), {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                courseId: currentStudioCourseId,
-                sessionNumber: nextSession,
-                title: defaultTitle,
-                durationMinutes: 60
-              })
-            });
+                const postRes = await request(formDraftPath(), {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    courseId,
+                    sessionNumber,
+                    phase,
+                    title,
+                    durationMinutes
+                  })
+                });
 
-            if (!postRes || !postRes.formVersionId) {
-              throw new Error(postRes?.message || 'Không thể tạo bản nháp bài thi');
-            }
+                if (!postRes || !postRes.formVersionId) {
+                  throw new Error(postRes?.message || 'Không thể tạo bản nháp bài thi');
+                }
 
-            const detailRes = await request(formDetailPath(postRes.formVersionId));
+                const detailRes = await request(formDetailPath(postRes.formVersionId));
 
-            const formObj = detailRes?.formVersion || detailRes?.form || {};
-            renderTestBuilderView(container, {
-              ...formObj,
-              id: formObj.id || formObj.formVersionId || postRes.formVersionId,
-              formVersionId: formObj.formVersionId || formObj.id || postRes.formVersionId,
-              gradingKey: detailRes?.gradingKey || formObj.gradingKey,
-              submissionCount: detailRes?.submissionCount || 0
-            }, {
-              teacherRole,
-              courseId: currentStudioCourseId,
-              catalog,
-              classes: relevantClasses,
-              onBack: () => {
+                const formObj = detailRes?.formVersion || detailRes?.form || {};
+                renderTestBuilderView(container, {
+                  ...formObj,
+                  id: formObj.id || formObj.formVersionId || postRes.formVersionId,
+                  formVersionId: formObj.formVersionId || formObj.id || postRes.formVersionId,
+                  phase,
+                  sessionNumber,
+                  gradingKey: detailRes?.gradingKey || formObj.gradingKey,
+                  submissionCount: detailRes?.submissionCount || 0
+                }, {
+                  teacherRole,
+                  courseId,
+                  catalog,
+                  classes: relevantClasses,
+                  onBack: () => {
+                    if (hasActiveUnsavedChanges()) {
+                      openUnsavedChangesModal({
+                        onDiscard: () => {
+                          clearActiveUnsavedChanges();
+                          loadAndRenderTestStudio(courseId);
+                        }
+                      });
+                      return;
+                    }
+                    clearActiveUnsavedChanges();
+                    loadAndRenderTestStudio(courseId);
+                  },
+                  onDeleteDraft: handleDeleteDraft,
+                  onSaveDraft: async (updatedPayload) => {
+                    const putRes = await request(formDraftPath(updatedPayload.formVersionId), {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(updatedPayload)
+                    });
+                    return putRes;
+                  },
+                  onPublishPreview: async (previewPayload) => {
+                    return await request(formPublishPreviewPath(), {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(previewPayload)
+                    });
+                  },
+                  onPublish: async (publishPayload) => {
+                    const pubRes = await request(formPublishPath(), {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(publishPayload)
+                    });
+                    return pubRes;
+                  }
+                });
+              } catch (err) {
+                alert('Lỗi khởi tạo bài thi: ' + (err.message || 'Lỗi kết nối'));
                 loadAndRenderTestStudio(currentStudioCourseId);
-              },
-              onDeleteDraft: handleDeleteDraft,
-              onSaveDraft: async (updatedPayload) => {
-                const putRes = await request(formDraftPath(updatedPayload.formVersionId), {
-                  method: 'PUT',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(updatedPayload)
-                });
-                return putRes;
-              },
-              onPublishPreview: async (previewPayload) => {
-                return await request(formPublishPreviewPath(), {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(previewPayload)
-                });
-              },
-              onPublish: async (publishPayload) => {
-                const pubRes = await request(formPublishPath(), {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(publishPayload)
-                });
-                return pubRes;
               }
-            });
-          } catch (err) {
-            alert('Lỗi khởi tạo bài thi: ' + (err.message || 'Lỗi kết nối'));
-            loadAndRenderTestStudio(currentStudioCourseId);
-          }
+            }
+          });
         },
         onEditTest: async ({ testKey, formVersionId }) => {
           if (!formVersionId) {
@@ -12447,6 +13736,16 @@ async function startDashboard() {
               catalog,
               classes: relevantClasses,
               onBack: () => {
+                if (hasActiveUnsavedChanges()) {
+                  openUnsavedChangesModal({
+                    onDiscard: () => {
+                      clearActiveUnsavedChanges();
+                      loadAndRenderTestStudio(currentStudioCourseId);
+                    }
+                  });
+                  return;
+                }
+                clearActiveUnsavedChanges();
                 loadAndRenderTestStudio(currentStudioCourseId);
               },
               onDeleteDraft: handleDeleteDraft,
@@ -12485,33 +13784,115 @@ async function startDashboard() {
     }
   }
 
+  let isNavigatingProgrammatically = false;
+  let previousHash = (typeof window !== 'undefined' ? window.location?.hash : '') || '#dashboard';
+
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const href = item.getAttribute('href') || '#dashboard';
       const cleanTab = readDashboardTab(href);
       const targetHash = '#' + cleanTab;
+
+      if (hasActiveUnsavedChanges()) {
+        openUnsavedChangesModal({
+          onDiscard: () => {
+            clearActiveUnsavedChanges();
+            isNavigatingProgrammatically = true;
+            if (window.location.hash !== targetHash) {
+              window.location.hash = targetHash;
+            }
+            previousHash = targetHash;
+            updateDashboardTab(cleanTab);
+          },
+          onStay: () => {
+            // User chooses to stay
+          }
+        });
+        return;
+      }
+
       if (window.location.hash !== targetHash) {
         window.location.hash = targetHash;
       }
+      previousHash = targetHash;
       updateDashboardTab(cleanTab);
     });
   });
 
   window.addEventListener('hashchange', () => {
-    updateDashboardTab(window.location.hash);
+    if (isNavigatingProgrammatically) {
+      isNavigatingProgrammatically = false;
+      previousHash = window.location.hash;
+      return;
+    }
+    const newHash = window.location.hash;
+    if (hasActiveUnsavedChanges()) {
+      openUnsavedChangesModal({
+        onDiscard: () => {
+          clearActiveUnsavedChanges();
+          previousHash = newHash;
+          updateDashboardTab(newHash);
+        },
+        onStay: () => {
+          isNavigatingProgrammatically = true;
+          window.location.hash = previousHash;
+        }
+      });
+      return;
+    }
+    previousHash = newHash;
+    updateDashboardTab(newHash);
   });
 
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('beforeunload', (e) => {
+      if (hasActiveUnsavedChanges()) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
+    });
+  }
+
   if (goToGradingBtn) {
-    goToGradingBtn.addEventListener('click', () => {
+    goToGradingBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (hasActiveUnsavedChanges()) {
+        openUnsavedChangesModal({
+          onDiscard: () => {
+            clearActiveUnsavedChanges();
+            isNavigatingProgrammatically = true;
+            window.location.hash = '#grading';
+            previousHash = '#grading';
+            updateDashboardTab('grading');
+          }
+        });
+        return;
+      }
       window.location.hash = '#grading';
+      previousHash = '#grading';
       updateDashboardTab('grading');
     });
   }
 
   if (gradingBackToDashboardBtn) {
-    gradingBackToDashboardBtn.addEventListener('click', () => {
+    gradingBackToDashboardBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (hasActiveUnsavedChanges()) {
+        openUnsavedChangesModal({
+          onDiscard: () => {
+            clearActiveUnsavedChanges();
+            isNavigatingProgrammatically = true;
+            window.location.hash = '#dashboard';
+            previousHash = '#dashboard';
+            updateDashboardTab('dashboard');
+          }
+        });
+        return;
+      }
       window.location.hash = '#dashboard';
+      previousHash = '#dashboard';
       updateDashboardTab('dashboard');
     });
   }
@@ -14202,40 +15583,6 @@ async function startDashboard() {
     // Keep detailItems container synchronized for compatibility
     if (detailItems) {
       detailItems.replaceChildren();
-    }
-
-    if (payload.manualGradingHistory && payload.manualGradingHistory.length > 0 && detailGradingHistory) {
-      const mgHeader = document.createElement('h4');
-      mgHeader.textContent = 'Lịch sử chấm của giảng viên';
-      mgHeader.style.margin = '16px 0 6px';
-      const mgTable = document.createElement('table');
-      mgTable.className = 'mini-table';
-      mgTable.innerHTML = `
-        <thead>
-          <tr>
-            <th>Hành động</th>
-            <th>Người thực hiện</th>
-            <th>Phiên bản</th>
-            <th>Thời gian</th>
-            <th>Ghi chú</th>
-          </tr>
-        </thead>
-      `;
-      const mgBody = document.createElement('tbody');
-      for (const log of payload.manualGradingHistory) {
-        const row = document.createElement('tr');
-        const actionLabel = log.action === 'complete' ? 'Hoàn tất chấm' : 'Lưu nháp';
-        row.innerHTML = `
-          <td><span class="result-status ${log.action === 'complete' ? 'complete' : 'grading'}">${actionLabel}</span></td>
-          <td>${log.actorEmail || '—'}</td>
-          <td>v${log.revision}</td>
-          <td>${log.createdAt ? formatAssignmentWindow(log.createdAt, null).split(' → ')[0] : '—'}</td>
-          <td>${log.note || '—'}</td>
-        `;
-        mgBody.append(row);
-      }
-      mgTable.append(mgBody);
-      detailGradingHistory.append(mgHeader, mgTable);
     }
 
     if (publishResultBtn) {

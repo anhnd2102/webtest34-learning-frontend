@@ -80,8 +80,8 @@ test('renderTestBuilderView provides button to add pronunciation template and re
 
   renderTestBuilderView(container, mockForm);
 
-  assert.ok(container.innerHTML.includes('btn-add-pronunciation-choice'), 'Provides button to add pronunciation template');
-  assert.ok(container.innerHTML.includes('template-pronunciation-ipa'), 'Renders template-pronunciation-ipa section');
+  assert.ok(!container.innerHTML.includes('btn-add-pronunciation-choice'), 'Creation button for pronunciation is deprecated and removed from toolbar');
+  assert.ok(container.innerHTML.includes('template-pronunciation-ipa'), 'Renders template-pronunciation-ipa section for legacy items');
   assert.ok(container.innerHTML.includes('input-ipa-transcription'), 'Renders IPA phonetic transcription input');
   assert.ok(container.innerHTML.includes('ipa-symbol-keyboard'), 'Renders virtual IPA symbol keyboard');
   assert.ok(container.innerHTML.includes('btn-ipa-symbol'), 'Renders 1-click symbol buttons');

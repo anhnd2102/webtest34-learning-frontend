@@ -205,7 +205,8 @@ test('UI: openCsvUploadModal is exported, question type buttons exist in toolbar
   assert.ok(html.includes('btn-add-single-choice'), 'Renders Single Choice button in toolbar');
   assert.ok(html.includes('btn-add-listening-order'), 'Renders Listening Order button in toolbar');
   assert.ok(html.includes('btn-add-error-correction'), 'Renders Error Correction button in toolbar');
-  assert.ok(html.includes('btn-add-sentence-transformation'), 'Renders Sentence Transformation button in toolbar');
+  assert.ok(html.includes('btn-add-fitb'), 'Renders Fill-in-the-blank button in toolbar');
+  assert.ok(!html.includes('btn-add-sentence-transformation'), 'Deprecated Sentence Transformation button is removed from toolbar');
 
   // Cluttered outer CSV buttons are eliminated from toolbar
   assert.ok(!html.includes('btn-upload-sc-csv'), 'Does not clutter outer toolbar with btn-upload-sc-csv');

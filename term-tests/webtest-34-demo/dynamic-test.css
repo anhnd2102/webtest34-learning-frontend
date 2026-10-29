@@ -1792,6 +1792,25 @@ body {
   margin-bottom: 24px;
 }
 
+.candidate-short-qa-container.short-qa-2col,
+.cbt-short-qa-wrap.short-qa-2col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .candidate-short-qa-container.short-qa-2col,
+  .cbt-short-qa-wrap.short-qa-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.candidate-short-qa-container.short-qa-2col .candidate-short-input,
+.cbt-short-qa-wrap.short-qa-2col .candidate-short-input {
+  max-width: 100%;
+}
+
 .candidate-short-qa-item,
 .cbt-short-qa-card {
   background: #ffffff;
@@ -2163,3 +2182,176 @@ body {
 }
 .btn-qnav.is-correct::after { content: "✓"; margin-left: 2px; font-size: 0.75em; }
 .btn-qnav.is-incorrect::after { content: "✕"; margin-left: 2px; font-size: 0.75em; }
+/* ==========================================================================
+   Candidate Listening Order (Timeline Sequence) Styles
+   ========================================================================== */
+.candidate-listening-order-wrap,
+.cbt-listening-order-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.candidate-events-pool,
+.cbt-events-pool {
+  background: #f8fafc;
+  border: 1px solid var(--izone-border, #e2e8f0);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.events-pool-title,
+.cbt-pool-title,
+.timeline-slots-title,
+.cbt-slots-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--izone-navy-light, #475569);
+  margin-bottom: 12px;
+}
+
+.events-pool-grid,
+.cbt-events-pool-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-pool-card,
+.cbt-event-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid var(--izone-border, #e2e8f0);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  color: #1e293b;
+  transition: all 0.2s ease;
+}
+
+.event-pool-card.is-selected-event,
+.cbt-event-card.is-selected-event {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  opacity: 0.75;
+}
+
+.event-pool-badge,
+.cbt-event-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 800;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.event-pool-card.is-selected-event .event-pool-badge,
+.cbt-event-card.is-selected-event .cbt-event-badge {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.event-pool-text,
+.cbt-event-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.event-used-indicator,
+.cbt-event-used {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0284c7;
+  background: #e0f2fe;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.candidate-timeline-slots,
+.cbt-timeline-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timeline-slots-grid,
+.cbt-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.timeline-slot-card,
+.cbt-slot-card {
+  background: #ffffff;
+  border: 1.5px solid var(--izone-border, #e2e8f0);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.timeline-slot-card:hover,
+.cbt-slot-card:hover {
+  border-color: #cbd5e1;
+}
+
+.timeline-slot-card .slot-badge,
+.cbt-slot-card .cbt-slot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--izone-primary, #e11d48);
+  text-transform: uppercase;
+}
+
+.slot-divider {
+  color: #94a3b8;
+}
+
+.slot-order {
+  color: #0369a1;
+}
+
+.candidate-sequence-select,
+.cbt-sequence-select {
+  width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--izone-border, #e2e8f0);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.candidate-sequence-select:focus,
+.cbt-sequence-select:focus {
+  border-color: var(--izone-primary, #e11d48);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
+}

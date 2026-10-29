@@ -81,8 +81,8 @@ test('renderTestBuilderView provides button to add reading split-pane and matchi
 
   renderTestBuilderView(container, mockForm);
 
-  assert.ok(container.innerHTML.includes('btn-add-reading-matching'), 'Provides button to add reading matching template');
-  assert.ok(container.innerHTML.includes('template-reading-matching'), 'Renders template-reading-matching section');
+  assert.ok(!container.innerHTML.includes('btn-add-reading-matching'), 'Creation button for reading matching is deprecated and removed from toolbar');
+  assert.ok(container.innerHTML.includes('template-reading-matching'), 'Renders template-reading-matching section for legacy items');
   assert.ok(container.innerHTML.includes('input-reading-passage'), 'Renders rich reading passage textarea');
   assert.ok(container.innerHTML.includes('btn-extract-paragraphs'), 'Renders button to auto-detect paragraph labels');
   assert.ok(container.innerHTML.includes('matching-headings-pool'), 'Renders list of common matching headings/options');

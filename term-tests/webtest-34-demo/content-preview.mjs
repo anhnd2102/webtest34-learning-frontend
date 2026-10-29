@@ -628,31 +628,40 @@ export async function mount(course) {
     }
   }
 
-  let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
-  let response = await fetch(formUrl);
-  if (!response.ok && phaseParam === '2') {
-    formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
-    response = await fetch(formUrl);
-  }
-  if (!response.ok) {
-    formUrl = new URL(`./demo-content/${course}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
-    response = await fetch(formUrl);
-  }
-  if (!response.ok) throw new Error('Content unavailable');
-  const form = await response.json();
-  const key = draftKey(form);
-  let state;
-  try { state = sanitizeDraft(form, JSON.parse(localStorage.getItem(key))); }
-  catch { state = sanitizeDraft(form, null); }
-  const items = form.groups.flatMap(group => group.items);
-  const displayTestNum = form.phase === 2 && (form.testNumber > 4 || testNum > 4) ? (form.testNumber > 4 ? form.testNumber - 4 : testNum - 4) : (form.testNumber || testNum);
-  const title = `Khóa ${course}${form.phase ? ` · Phase ${form.phase}` : ''} · Test ${displayTestNum}`;
-  const sections = [...new Set(form.groups.map(sectionKey))];
-  let activeSection = sections[0];
-
   const isProd = queryParams.get('prod') === '1' || queryParams.get('apiEnv') === 'production';
   const apiBase = (isProd ? 'https://webtest.ducanhdev.com' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhdev.com')).replace(/\/$/, '');
   const isLearningMode = Boolean(testToken);
+
+  let form = { course, groups: [], durationMinutes: 60 };
+  let items = [];
+  let title = `Khóa ${course}`;
+  let sections = [];
+  let activeSection = '';
+  let key = `izone_learning_${testToken || course}`;
+  let state = { answers: {}, submittedAt: null };
+
+  if (!isLearningMode) {
+    let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
+    let response = await fetch(formUrl);
+    if (!response.ok && phaseParam === '2') {
+      formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
+      response = await fetch(formUrl);
+    }
+    if (!response.ok) {
+      formUrl = new URL(`./demo-content/${course}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
+      response = await fetch(formUrl);
+    }
+    if (!response.ok) throw new Error('Content unavailable');
+    form = await response.json();
+    key = draftKey(form);
+    try { state = sanitizeDraft(form, JSON.parse(localStorage.getItem(key))); }
+    catch { state = sanitizeDraft(form, null); }
+    items = form.groups.flatMap(group => group.items);
+    const displayTestNum = form.phase === 2 && (form.testNumber > 4 || testNum > 4) ? (form.testNumber > 4 ? form.testNumber - 4 : testNum - 4) : (form.testNumber || testNum);
+    title = `Khóa ${course}${form.phase ? ` · Phase ${form.phase}` : ''} · Test ${displayTestNum}`;
+    sections = [...new Set(form.groups.map(sectionKey))];
+    activeSection = sections[0];
+  }
 
   const paramClassCode = (queryParams.get('class') || queryParams.get('classCode') || '').trim().toUpperCase();
   let learningState = {
@@ -1025,29 +1034,30 @@ export async function mount(course) {
 
   // --- RENDER MÀN HÌNH ĐỊNH DANH (IDENTITY SCREEN) KHI CÓ TEST TOKEN ---
   if (isLearningMode) {
-    document.title = `IZONE · Thi CBT · ${title}`;
+    const initialTitle = course === '34' ? 'Minh hoạ đề thi 34' : `IZONE · Khóa ${course}`;
+    document.title = `IZONE · Thi CBT · ${initialTitle}`;
     document.body.innerHTML = `
       <div class="content-demo">
-        <header class="topbar">
+        <header class="topbar cbt-topbar simulation-topbar">
           <div class="topbar-inner demo-top">
             <div class="brand">
               <div class="brand-mark">IZ</div>
               <div class="brand-copy">
                 <div class="brand-title">IZONE · COMPUTER-BASED TEST</div>
-                <div class="brand-sub">${escape(title)}</div>
+                <div class="brand-sub">${escape(initialTitle)}</div>
               </div>
             </div>
             <div class="top-actions">
-              <span class="timer">${form.durationMinutes}:00</span>
+              <span class="timer">60:00</span>
             </div>
           </div>
         </header>
         <main class="cbt-intro-wrap">
           <div class="cbt-intro-card">
             <span class="cbt-intro-badge">IZONE · COMPUTER-BASED TEST</span>
-            <h1 class="cbt-intro-title">${escape(title)}</h1>
+            <h1 class="cbt-intro-title">${escape(initialTitle)}</h1>
             <p class="cbt-intro-sub">
-              Thời gian làm bài: <strong>${form.durationMinutes} phút</strong> · Tổng số câu hỏi: <strong>${items.length} câu</strong>.<br>
+              Thời gian làm bài: <strong>60 phút</strong> · Tổng số câu hỏi: <strong>96 câu</strong>.<br>
               Vui lòng nhập <strong>Mã lớp</strong> và chọn <strong>Họ tên của bạn</strong> để bắt đầu làm bài.
             </p>
 
@@ -1088,8 +1098,8 @@ export async function mount(course) {
               </div>
             </div>
 
-            <div class="cbt-intro-footer">
-              <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700;margin-right:12px">Xem kết quả</button>
+            <div class="cbt-intro-footer" style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;">
+              <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Xem kết quả</button>
               <button type="button" class="btn-start-exam" id="startExamBtn" disabled>Bắt đầu làm bài →</button>
             </div>
           </div>
@@ -1100,6 +1110,8 @@ export async function mount(course) {
         </main>
       </div>
     `;
+
+    document.documentElement.classList.remove('cbt-mounting');
 
     const canonicalStyle = document.createElement('style');
     canonicalStyle.textContent = `
