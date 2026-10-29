@@ -92,6 +92,105 @@ export function resultDetailsHtml(result, definition) {
   }).join('');
 }
 
+const resultTypeLabel = defItem => defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm'
+  : defItem.pedagogicalTypeCode === 'sentence_rewrite' ? 'Biến đổi câu'
+  : defItem.pedagogicalTypeCode === 'sentence_reorder' ? 'Sắp xếp câu'
+  : ({ correction_pair: 'Sửa lỗi sai', text_select_pair: 'Cặp từ vựng', single_choice: 'Trắc nghiệm', multi_choice_group: 'Chọn nhiều', short_text: 'Điền từ' }[defItem.interactionType] || 'Tự luận');
+
+// Câu cặp từ vựng lưu "<chữ>,<mã nghĩa>" (vd. "adapt to,meaning-21"); học viên chỉ cần phần chữ.
+const cleanPairAnswer = value => String(value).replace(/,\s*[\w-]*\d[\w-]*$/, '');
+
+const RESULT_VERDICTS = {
+  correct: { cls: 'correct', icon: '✓', label: 'Đúng' },
+  partial: { cls: 'partial', icon: '◐', label: 'Đúng một phần' },
+  incorrect: { cls: 'incorrect', icon: '✕', label: 'Chưa đúng' },
+  pending: { cls: 'pending', icon: '…', label: 'Đang chấm' },
+  manual_review: { cls: 'pending', icon: '…', label: 'Chờ giảng viên' }
+};
+
+// Dựng hộp thoại kết quả cho học viên: tổng điểm, tóm tắt, bộ lọc và thẻ từng câu.
+export function studentResultsHtml({ result, definition, studentName, className }) {
+  const summary = result?.summary || {};
+  const items = result?.items || [];
+  const scoreFinal = summary.scoreFinal === true && result?.gradingStatus === 'complete';
+  const statusText = scoreFinal ? 'Hoàn tất chấm điểm' : (result?.gradingStatus === 'manual_review' ? 'Chờ giảng viên duyệt' : 'Đang xử lý');
+  const defItems = new Map((definition?.blocks || []).flatMap(block => block.items || []).map(it => [it.itemVersionId, it]));
+  const count = verdict => items.filter(it => it.verdict === verdict).length;
+  const pendingCount = items.length - count('correct') - count('partial') - count('incorrect');
+
+  const cards = items.map(it => {
+    const def = defItems.get(it.itemVersionId) || {};
+    const verdict = RESULT_VERDICTS[it.verdict] || { cls: 'pending', icon: '…', label: 'Chưa chấm' };
+    const hasAnswer = it.rawAnswer !== undefined && it.rawAnswer !== null && String(it.rawAnswer).trim() !== '';
+    const answer = !hasAnswer ? 'Chưa trả lời' : (def.interactionType === 'text_select_pair' ? cleanPairAnswer(it.rawAnswer) : String(it.rawAnswer));
+    const expected = it.expectedAnswer === undefined || it.expectedAnswer === null ? ''
+      : (Array.isArray(it.expectedAnswer) ? it.expectedAnswer.join(', ') : String(it.expectedAnswer));
+    const errors = (it.feedback?.errors || []).map(error => error.message || error.code || '').filter(Boolean);
+    const group = it.verdict === 'correct' ? 'correct' : (it.verdict === 'incorrect' || it.verdict === 'partial' ? 'wrong' : 'other');
+    return `<li class="sim-card is-${verdict.cls}" data-result-group="${group}">
+      <div class="sim-card-head">
+        <strong>Câu ${escape(it.position)}</strong>
+        <span class="sim-card-type">${escape(resultTypeLabel(def))}</span>
+        <span class="sim-card-verdict ${verdict.cls}"><span aria-hidden="true">${verdict.icon}</span> ${escape(verdict.label)}</span>
+        <span class="sim-card-score">${escape(it.scoreEarned ?? 0)}/${escape(it.maxScore ?? 1)}đ</span>
+      </div>
+      <div class="sim-card-row"><span class="sim-card-label">Bài làm của bạn</span><span class="${hasAnswer ? '' : 'is-empty'}">${escape(answer)}</span></div>
+      ${expected ? `<div class="sim-card-row"><span class="sim-card-label">Đáp án đúng</span><span class="sim-card-expected">${escape(expected)}</span></div>` : ''}
+      ${errors.length ? `<details class="sim-card-errors"${errors.length <= 3 ? ' open' : ''}><summary>Lỗi gặp phải (${errors.length})</summary><ul>${errors.map(error => `<li>${escape(error)}</li>`).join('')}</ul></details>` : ''}
+    </li>`;
+  }).join('');
+
+  return `<div class="sim-results-dialog" role="dialog" aria-modal="true" aria-labelledby="sim-results-title">
+    <header class="sim-results-header">
+      <div class="sim-results-title-wrap">
+        <span class="sim-results-badge">Kết quả bài thi</span>
+        <h3 id="sim-results-title">Bảng tổng hợp chấm điểm</h3>
+      </div>
+      <button type="button" class="btn-close-sim-results" id="btn-close-sim-results" aria-label="Đóng">✕</button>
+    </header>
+    <div class="sim-results-body" id="sim-results-body">
+      <div class="sim-score-banner">
+        <div class="score-banner-title">Tổng điểm đạt được</div>
+        <div class="score-banner-value">${escape(summary.scoreEarned ?? 0)}/${escape(summary.maxScore ?? 0)}đ</div>
+        <div class="sim-score-counts">
+          <span class="correct">✓ ${count('correct')} đúng</span>
+          <span class="partial">◐ ${count('partial')} đúng một phần</span>
+          <span class="incorrect">✕ ${count('incorrect')} chưa đúng</span>
+          ${pendingCount ? `<span class="pending">… ${pendingCount} đang chấm</span>` : ''}
+        </div>
+        <div class="score-banner-sub">Thí sinh: <strong>${escape(studentName || '')}</strong> · Lớp: <strong>${escape(className || '')}</strong><br>Trạng thái: <strong>${statusText}</strong></div>
+      </div>
+      <div class="sim-filter" role="group" aria-label="Lọc câu">
+        <button type="button" class="sim-filter-btn is-active" data-result-filter="all" aria-pressed="true">Tất cả</button>
+        <button type="button" class="sim-filter-btn" data-result-filter="wrong" aria-pressed="false">Chưa đúng</button>
+        <button type="button" class="sim-filter-btn" data-result-filter="correct" aria-pressed="false">Đúng</button>
+      </div>
+      <ul class="sim-card-list">${cards || '<li class="sim-card-empty">Đang cập nhật chi tiết...</li>'}</ul>
+    </div>
+    <footer class="sim-results-footer">
+      <button type="button" class="btn btn-secondary btn-sm" id="btn-retest-simulation">Xem lại trên bài thi</button>
+      <button type="button" class="btn btn-primary btn-sm" id="btn-done-simulation-results">Đóng kết quả</button>
+    </footer>
+  </div>`;
+}
+
+// Gắn bộ lọc Tất cả / Chưa đúng / Đúng cho hộp thoại do studentResultsHtml dựng.
+export function bindResultFilters(root) {
+  root.querySelectorAll('[data-result-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.resultFilter;
+      root.querySelectorAll('[data-result-filter]').forEach(other => {
+        const active = other === btn;
+        other.classList.toggle('is-active', active);
+        other.setAttribute('aria-pressed', String(active));
+      });
+      root.querySelectorAll('[data-result-group]').forEach(card => {
+        card.hidden = filter !== 'all' && card.dataset.resultGroup !== filter;
+      });
+    });
+  });
+}
+
 export function withLocalGroupLabels(definition, form) {
   if (!definition || !Array.isArray(definition.blocks) || !Array.isArray(form?.groups)) return definition;
   return {
@@ -1912,17 +2011,8 @@ export async function mount(course) {
     function openDynamicResultsModal(result) {
       const summary = result?.summary || {};
       const scoreFinal = summary.scoreFinal === true && result.gradingStatus === 'complete';
-      const isManualReview = result.gradingStatus === 'manual_review';
       const items = result?.items || [];
       const definition = learningState.definition || {};
-
-      // Map definition items
-      const defItemsMap = new Map();
-      for (const block of (definition.blocks || [])) {
-        for (const it of (block.items || [])) {
-          defItemsMap.set(it.itemVersionId, it);
-        }
-      }
 
       // Mark question navigator buttons with is-correct / is-incorrect
       items.forEach(it => {
@@ -1937,44 +2027,6 @@ export async function mount(course) {
         }
       });
 
-      // Prepare breakdown rows
-      const rowsHtml = items.map(it => {
-        const defItem = defItemsMap.get(it.itemVersionId) || {};
-        const isCorrect = it.verdict === 'correct';
-        const isPartial = it.verdict === 'partial';
-        const typeLabel = defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm' :
-          (defItem.pedagogicalTypeCode === 'sentence_rewrite' ? 'Biến đổi câu' :
-          (defItem.pedagogicalTypeCode === 'sentence_reorder' ? 'Sắp xếp câu' :
-          (defItem.interactionType === 'correction_pair' ? 'Sửa lỗi sai' :
-          (defItem.interactionType === 'text_select_pair' ? 'Cặp từ vựng' :
-          (defItem.interactionType === 'single_choice' ? 'Trắc nghiệm' :
-          (defItem.interactionType === 'multi_choice_group' ? 'Chọn nhiều' :
-          (defItem.interactionType === 'short_text' ? 'Điền từ' : 'Tự luận')))))));
-
-        const candidateAnswer = (it.rawAnswer !== undefined && it.rawAnswer !== null && String(it.rawAnswer).trim() !== '')
-          ? String(it.rawAnswer)
-          : '(Chưa trả lời)';
-        const expectedAnswer = it.expectedAnswer !== undefined && it.expectedAnswer !== null
-          ? (Array.isArray(it.expectedAnswer) ? it.expectedAnswer.join(', ') : String(it.expectedAnswer))
-          : '—';
-
-        const rowClass = isCorrect ? 'row-correct' : (isPartial ? 'row-partial' : 'row-incorrect');
-        const verdictBadge = isCorrect
-          ? '<span class="status-correct">✓ Đúng</span>'
-          : (isPartial ? '<span class="status-partial">Đúng 50%</span>' : '<span class="status-incorrect">✕ Chưa đúng</span>');
-
-        return `
-          <tr class="${rowClass}">
-            <td><strong>Câu ${it.position}</strong></td>
-            <td><span class="type-badge">${escape(typeLabel)}</span></td>
-            <td>${escape(candidateAnswer)}</td>
-            <td><span class="correct-badge">${escape(expectedAnswer)}</span></td>
-            <td><strong>${it.scoreEarned ?? 0}/${it.maxScore ?? 1}đ</strong></td>
-            <td>${verdictBadge}</td>
-          </tr>
-        `;
-      }).join('');
-
       let modal = document.querySelector('#simulation-results-modal');
       if (!modal) {
         modal = document.createElement('div');
@@ -1983,49 +2035,11 @@ export async function mount(course) {
         document.body.appendChild(modal);
       }
 
-      modal.innerHTML = `
-        <div class="sim-results-dialog">
-          <header class="sim-results-header">
-            <div class="sim-results-title-wrap">
-              <span class="sim-results-badge">Kết quả bài thi</span>
-              <h3>Bảng tổng hợp chấm điểm</h3>
-            </div>
-            <button type="button" class="btn-close-sim-results" id="btn-close-sim-results" aria-label="Đóng">✕</button>
-          </header>
-          <div class="sim-results-body" id="sim-results-body">
-            <div class="sim-score-banner">
-              <div class="score-banner-title">Tổng điểm đạt được:</div>
-              <div class="score-banner-value">${summary.scoreEarned ?? 0}/${summary.maxScore ?? 0}đ</div>
-              <div class="score-banner-sub">
-                Thí sinh: <strong>${escape(learningState.studentName || '')}</strong> · Lớp: <strong>${escape(learningState.className || '')}</strong> · Trạng thái: <strong>${scoreFinal ? 'Hoàn tất chấm điểm' : (isManualReview ? 'Chờ giảng viên duyệt' : 'Đang xử lý')}</strong>
-              </div>
-            </div>
-            <div class="sim-breakdown-table-wrap">
-              <table class="sim-breakdown-table">
-                <thead>
-                  <tr>
-                    <th>Câu</th>
-                    <th>Dạng câu</th>
-                    <th>Bài làm của bạn</th>
-                    <th>Đáp án đúng</th>
-                    <th>Điểm</th>
-                    <th>Đánh giá</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${rowsHtml || '<tr><td colspan="6" style="text-align:center;padding:16px;">Đang cập nhật chi tiết...</td></tr>'}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <footer class="sim-results-footer">
-            <button type="button" class="btn btn-secondary btn-sm" id="btn-retest-simulation">Xem lại trên bài thi</button>
-            <button type="button" class="btn btn-primary btn-sm" id="btn-done-simulation-results">Đóng kết quả</button>
-          </footer>
-        </div>
-      `;
+      modal.innerHTML = studentResultsHtml({ result, definition, studentName: learningState.studentName, className: learningState.className });
 
       modal.style.display = 'flex';
+
+      bindResultFilters(modal);
 
       const closeHandler = () => {
         modal.style.display = 'none';

@@ -2019,3 +2019,114 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45);
 }
+
+/* =========================================================================
+   Hộp thoại kết quả của học viên (mobile-first, một cột)
+   ========================================================================= */
+.simulation-results-modal {
+  --sim-ok: #15803d; --sim-ok-bg: #f0fdf4;
+  --sim-part: #b45309; --sim-part-bg: #fffbeb;
+  --sim-bad: #be123c; --sim-bad-bg: #fff1f2;
+  --sim-wait: #475569; --sim-wait-bg: #f1f5f9;
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.6);
+}
+@media (min-width: 640px) {
+  .simulation-results-modal { align-items: center; padding: 20px; }
+}
+.sim-results-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+  max-height: 92vh;
+  background: var(--izone-card-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+@media (min-width: 640px) {
+  .sim-results-dialog { border-radius: 12px; max-height: 90vh; }
+}
+.sim-results-header,
+.sim-results-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--izone-bg);
+  flex-shrink: 0;
+}
+.sim-results-header { border-bottom: 1px solid var(--izone-border); }
+.sim-results-footer { border-top: 1px solid var(--izone-border); justify-content: flex-end; }
+.sim-results-title-wrap h3 { margin: 2px 0 0; font-size: 1.05rem; color: var(--izone-navy); }
+.sim-results-badge {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--izone-muted);
+}
+.btn-close-sim-results {
+  min-width: 44px; min-height: 44px;
+  border: 0; border-radius: 8px; background: transparent;
+  font-size: 1.1rem; color: var(--izone-muted); cursor: pointer;
+}
+.btn-close-sim-results:hover { background: var(--izone-border); color: var(--izone-navy); }
+.sim-results-body {
+  display: flex; flex-direction: column; gap: 14px;
+  flex: 1 1 auto; min-height: 0;
+  padding: 16px;
+  overflow-y: auto; overscroll-behavior: contain;
+}
+.sim-score-banner {
+  padding: 16px;
+  text-align: center;
+  background: var(--izone-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 10px;
+}
+.score-banner-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--izone-muted); }
+.score-banner-value { margin: 4px 0 8px; font-size: 2.4rem; font-weight: 800; line-height: 1.1; color: var(--izone-navy); }
+.sim-score-counts { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; margin-bottom: 10px; font-size: 0.88rem; font-weight: 700; }
+.sim-score-counts .correct { color: var(--sim-ok); }
+.sim-score-counts .partial { color: var(--sim-part); }
+.sim-score-counts .incorrect { color: var(--sim-bad); }
+.sim-score-counts .pending { color: var(--sim-wait); }
+.score-banner-sub { font-size: 0.82rem; line-height: 1.5; color: var(--izone-muted); }
+
+.sim-filter { display: flex; gap: 8px; }
+.sim-filter-btn {
+  flex: 1; min-height: 44px; padding: 0 12px;
+  font: inherit; font-size: 0.9rem; font-weight: 600;
+  color: var(--izone-slate); background: var(--izone-card-bg);
+  border: 1px solid var(--izone-border); border-radius: 8px; cursor: pointer;
+}
+.sim-filter-btn.is-active { color: #fff; background: var(--izone-primary); border-color: var(--izone-primary); }
+
+.sim-card-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.sim-card { padding: 12px; background: var(--izone-card-bg); border: 1px solid var(--izone-border); border-left-width: 4px; border-radius: 10px; }
+.sim-card[hidden] { display: none; }
+.sim-card.is-correct { border-left-color: var(--sim-ok); }
+.sim-card.is-partial { border-left-color: var(--sim-part); background: var(--sim-part-bg); }
+.sim-card.is-incorrect { border-left-color: var(--sim-bad); background: var(--sim-bad-bg); }
+.sim-card.is-pending { border-left-color: var(--sim-wait); }
+.sim-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 8px; }
+.sim-card-type { font-size: 0.75rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; color: var(--izone-muted); background: var(--izone-border-subtle); }
+.sim-card-verdict { font-size: 0.82rem; font-weight: 700; }
+.sim-card-verdict.correct { color: var(--sim-ok); }
+.sim-card-verdict.partial { color: var(--sim-part); }
+.sim-card-verdict.incorrect { color: var(--sim-bad); }
+.sim-card-verdict.pending { color: var(--sim-wait); }
+.sim-card-score { margin-left: auto; font-size: 0.85rem; font-weight: 700; color: var(--izone-navy); }
+.sim-card-row { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; font-size: 0.92rem; overflow-wrap: anywhere; }
+.sim-card-label { font-size: 0.74rem; font-weight: 700; color: var(--izone-muted); }
+.sim-card-row .is-empty { font-style: italic; color: var(--izone-muted); }
+.sim-card-expected { font-weight: 600; color: var(--sim-ok); }
+.sim-card-errors { margin-top: 8px; padding: 8px 10px; font-size: 0.88rem; background: var(--izone-card-bg); border: 1px solid var(--izone-border); border-radius: 8px; }
+.sim-card-errors summary { min-height: 28px; font-weight: 700; color: var(--sim-bad); cursor: pointer; }
+.sim-card-errors ul { margin: 6px 0 0; padding-left: 18px; }
+.sim-card-empty { padding: 16px; text-align: center; color: var(--izone-muted); }
