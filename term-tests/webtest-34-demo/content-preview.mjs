@@ -1406,7 +1406,7 @@ export async function mount(course) {
 
     // --- XEM KẾT QUẢ: chỉ đọc qua /attempts/review + /attempts/result, không start, không âm thanh, không Exam Guard ---
     const viewBtn = document.querySelector('#viewResultBtn');
-    const introMain = document.querySelector('main.demo-width:not(#reviewMain)');
+    const introMain = document.querySelector('main.cbt-intro-wrap');
     const reviewMain = document.querySelector('#reviewMain');
     const reviewBody = document.querySelector('#reviewBody');
     const REVIEW_POLL_MAX_MS = 45 * 60 * 1000;
