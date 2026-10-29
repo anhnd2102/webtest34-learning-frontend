@@ -108,8 +108,8 @@ const RESULT_VERDICTS = {
   manual_review: { cls: 'pending', icon: '…', label: 'Chờ giảng viên' }
 };
 
-// Dựng hộp thoại kết quả cho học viên: tổng điểm, tóm tắt, bộ lọc và thẻ từng câu.
-export function studentResultsHtml({ result, definition, studentName, className }) {
+// Phần thân kết quả cho học viên: tổng điểm, điểm từng phần, bộ lọc và thẻ từng câu.
+export function studentResultsBodyHtml({ result, definition, studentName, className }) {
   const summary = result?.summary || {};
   const items = result?.items || [];
   const scoreFinal = summary.scoreFinal === true && result?.gradingStatus === 'complete';
@@ -172,16 +172,7 @@ export function studentResultsHtml({ result, definition, studentName, className 
   const answerNote = result?.answerRelease === 'hidden' ? 'Bài này không hiển thị đáp án đúng.'
     : (result?.answerRelease === 'partial' ? 'Một số đáp án đúng chưa được giảng viên mở.' : '');
 
-  return `<div class="sim-results-dialog" role="dialog" aria-modal="true" aria-labelledby="sim-results-title">
-    <header class="sim-results-header">
-      <div class="sim-results-title-wrap">
-        <span class="sim-results-badge">Kết quả bài thi</span>
-        <h3 id="sim-results-title">Bảng tổng hợp chấm điểm</h3>
-      </div>
-      <button type="button" class="btn-close-sim-results" id="btn-close-sim-results" aria-label="Đóng">✕</button>
-    </header>
-    <div class="sim-results-body" id="sim-results-body">
-      <div class="sim-score-banner">
+  return `<div class="sim-score-banner">
         <div class="score-banner-title">Tổng điểm đạt được</div>
         <div class="score-banner-value">${escape(summary.scoreEarned ?? 0)}/${escape(summary.maxScore ?? 0)}đ</div>
         <div class="sim-score-counts">
@@ -199,13 +190,36 @@ export function studentResultsHtml({ result, definition, studentName, className 
         <button type="button" class="sim-filter-btn" data-result-filter="wrong" aria-pressed="false">Chưa đúng</button>
         <button type="button" class="sim-filter-btn" data-result-filter="correct" aria-pressed="false">Đúng</button>
       </div>
-      ${cards || '<p class="sim-card-empty">Đang cập nhật chi tiết...</p>'}
-    </div>
+      ${cards || '<p class="sim-card-empty">Đang cập nhật chi tiết...</p>'}`;
+}
+
+// Hộp thoại kết quả sau khi nộp bài: vỏ (tiêu đề, nút đóng) bọc phần thân dùng chung.
+export function studentResultsHtml(input) {
+  return `<div class="sim-results-dialog" role="dialog" aria-modal="true" aria-labelledby="sim-results-title">
+    <header class="sim-results-header">
+      <div class="sim-results-title-wrap">
+        <span class="sim-results-badge">Kết quả bài thi</span>
+        <h3 id="sim-results-title">Bảng tổng hợp chấm điểm</h3>
+      </div>
+      <button type="button" class="btn-close-sim-results" id="btn-close-sim-results" aria-label="Đóng">✕</button>
+    </header>
+    <div class="sim-results-body" id="sim-results-body">${studentResultsBodyHtml(input)}</div>
     <footer class="sim-results-footer">
       <button type="button" class="btn btn-secondary btn-sm" id="btn-retest-simulation">Xem lại trên bài thi</button>
       <button type="button" class="btn btn-primary btn-sm" id="btn-done-simulation-results">Đóng kết quả</button>
     </footer>
   </div>`;
+}
+
+// Màn "Xem kết quả" (mở lại từ màn nhập tên): cùng phần thân với hộp thoại sau khi nộp bài.
+export function studentReviewHtml({ header = {}, ...bodyInput }) {
+  return `<section class="sim-results-inline">
+    <header class="sim-results-inline-head">
+      <h2>${escape(header.testTitle)}</h2>
+      ${header.submittedAt ? `<p>Nộp lúc: ${escape(header.submittedAt)}</p>` : ''}
+    </header>
+    ${studentResultsBodyHtml(bodyInput)}
+  </section>`;
 }
 
 // Gắn bộ lọc Tất cả / Chưa đúng / Đúng cho hộp thoại do studentResultsHtml dựng.
@@ -1451,10 +1465,15 @@ export async function mount(course) {
         className: learningState.className,
         submittedAt: reviewSubmittedAt
       };
-      const html = reviewApi.reviewHtml(reviewApi.reviewViewModel({ meta, ...input }));
+      const vm = reviewApi.reviewViewModel({ meta, ...input });
+      // Trạng thái sẵn sàng dùng cùng giao diện với hộp thoại sau khi nộp; các trạng thái khác giữ module review.
+      const html = vm.kind === 'ready'
+        ? studentReviewHtml({ header: vm.header, result: input.result, definition: input.definition, studentName: meta.studentName, className: meta.className })
+        : reviewApi.reviewHtml(vm);
       if (html === reviewLastHtml) return; // polling không dựng lại khi nội dung không đổi
       const expanded = [...reviewBody.querySelectorAll('[data-review-section][aria-expanded="true"]')].map(btn => btn.dataset.reviewSection);
       reviewBody.innerHTML = reviewLastHtml = html;
+      bindResultFilters(reviewBody);
       expanded.forEach(id => {
         reviewBody.querySelector(`[data-review-section="${id}"]`)?.setAttribute('aria-expanded', 'true');
         const list = document.getElementById(id);

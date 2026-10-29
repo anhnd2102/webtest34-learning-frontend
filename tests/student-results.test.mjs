@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-const { studentResultsHtml } = await import('../term-tests/webtest-34-demo/content-preview.mjs');
+const { studentResultsHtml, studentResultsBodyHtml, studentReviewHtml } = await import('../term-tests/webtest-34-demo/content-preview.mjs');
 
 const definition = { blocks: [{ blockId: 'b1', items: [
   { itemVersionId: 'i1', interactionType: 'text_select_pair' },
@@ -84,6 +84,30 @@ test('ghi chú đáp án theo answerRelease', () => {
   assert.match(render([item('i2', 1, 'incorrect')], { answerRelease: 'hidden' }), /Bài này không hiển thị đáp án đúng\./);
   assert.match(render([item('i2', 1, 'incorrect')], { answerRelease: 'partial' }), /Một số đáp án đúng chưa được/);
   assert.doesNotMatch(render([item('i2', 1, 'incorrect')], { answerRelease: 'released' }), /sim-notice/);
+});
+
+test('phần thân dùng chung cho màn Xem kết quả: có điểm, phần, bộ lọc, thẻ câu nhưng không có khung hộp thoại', () => {
+  const html = studentResultsBodyHtml({
+    result: { gradingStatus: 'complete', summary: { scoreFinal: true, scoreEarned: 1, maxScore: 3 }, items: [item('i1', 1, 'correct'), item('i2', 2, 'incorrect')] },
+    definition, studentName: 'An', className: 'L1'
+  });
+  assert.match(html, /1\/3đ/);
+  assert.match(html, /data-result-filter="wrong"/);
+  assert.match(html, /data-result-group="correct"/);
+  assert.doesNotMatch(html, /sim-results-dialog|btn-close-sim-results|btn-retest-simulation/);
+  assert.match(render([item('i1', 1, 'correct')]), /sim-results-dialog[\s\S]*data-result-filter="all"[\s\S]*btn-retest-simulation/);
+});
+
+test('màn Xem kết quả: tiêu đề bài, giờ nộp và phần thân dùng chung, tiêu đề được escape', () => {
+  const html = studentReviewHtml({
+    header: { testTitle: 'Test <4>', submittedAt: '10:00:00 29/10/2026' },
+    result: { gradingStatus: 'complete', summary: { scoreFinal: true, scoreEarned: 1, maxScore: 2 }, items: [item('i1', 1, 'correct'), item('i2', 2, 'incorrect')] },
+    definition, studentName: 'An', className: 'L1'
+  });
+  assert.match(html, /Test &lt;4&gt;/);
+  assert.match(html, /Nộp lúc: 10:00:00 29\/10\/2026/);
+  assert.match(html, /data-result-filter="wrong"/);
+  assert.doesNotMatch(html, /sim-results-dialog|btn-close-sim-results/);
 });
 
 test('không có câu nào thì báo đang cập nhật; dữ liệu được escape', () => {

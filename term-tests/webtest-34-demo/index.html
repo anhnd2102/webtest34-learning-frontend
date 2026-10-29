@@ -18,8 +18,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="dynamic-test.css?rev=20261029-results-v4">
-  <link rel="modulepreload" href="./content-preview.mjs?rev=20261029-results-v4">
+  <link rel="stylesheet" href="dynamic-test.css?rev=20261029-results-v5">
+  <link rel="modulepreload" href="./content-preview.mjs?rev=20261029-results-v5">
   <link rel="modulepreload" href="./dynamic-exam-renderer.mjs?rev=20261024-cbt-v14">
   <link rel="modulepreload" href="../teacher-dashboard/exam-room-sse.js">
   <script>
@@ -33,7 +33,7 @@
       if (isCandidateCbt) {
         document.documentElement.classList.add('cbt-mounting');
         const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
-        window.__cbtMountPromise = import('./content-preview.mjs?rev=20261029-results-v4').then(m => m.mount(courseToMount));
+        window.__cbtMountPromise = import('./content-preview.mjs?rev=20261029-results-v5').then(m => m.mount(courseToMount));
       }
     })();
   </script>
@@ -607,7 +607,7 @@
   const isCandidateCbt = ['03', '34', '45'].includes(demoCourse) || Boolean(hashToken);
   if (isCandidateCbt) {
     const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
-    const mountPromise = window.__cbtMountPromise || import('./content-preview.mjs?rev=20261029-results-v4').then(module => module.mount(courseToMount));
+    const mountPromise = window.__cbtMountPromise || import('./content-preview.mjs?rev=20261029-results-v5').then(module => module.mount(courseToMount));
     mountPromise.catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);

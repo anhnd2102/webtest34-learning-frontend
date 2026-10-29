@@ -2042,11 +2042,23 @@ body {
 /* =========================================================================
    Hộp thoại kết quả của học viên (mobile-first, một cột)
    ========================================================================= */
-.simulation-results-modal {
+.sim-results-inline {
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 16px;
+  background: var(--izone-card-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 12px;
+}
+.sim-results-inline-head h2 { margin: 0; font-size: 1.15rem; color: var(--izone-navy); }
+.sim-results-inline-head p { margin: 4px 0 0; font-size: 0.85rem; color: var(--izone-muted); }
+.simulation-results-modal,
+.sim-results-inline {
   --sim-ok: #15803d; --sim-ok-bg: #f0fdf4;
   --sim-part: #b45309; --sim-part-bg: #fffbeb;
   --sim-bad: #be123c; --sim-bad-bg: #fff1f2;
   --sim-wait: #475569; --sim-wait-bg: #f1f5f9;
+}
+.simulation-results-modal {
   position: fixed;
   inset: 0;
   z-index: 1050;

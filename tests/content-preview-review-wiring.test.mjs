@@ -18,7 +18,9 @@ test('openReview gọi /attempts/review, không start, không kiểm tra âm tha
 
 test('review-module nạp động có rev, dùng reviewViewModel + reviewHtml, nhóm theo result.definition trước', () => {
   assert.match(src, /import\(`\.\.\/34-shared\/review-module\.mjs\?rev=/);
-  assert.match(src, /reviewApi\.reviewHtml\(reviewApi\.reviewViewModel\(/);
+  assert.match(src, /reviewApi\.reviewViewModel\(\{ meta, \.\.\.input \}\)/);
+  assert.match(src, /vm\.kind === 'ready'\s*\? studentReviewHtml\(/);
+  assert.match(src, /: reviewApi\.reviewHtml\(vm\)/);
   assert.match(src, /res\.definition \|\| learningState\.definition/);
   assert.match(src, /data-review-retry/);
   assert.match(src, /data-review-section/);
