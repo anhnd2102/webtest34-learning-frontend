@@ -1,4 +1,5 @@
 import { createLifecycle } from './lifecycle.js';
+import { createQueryCoordinator } from './query-coordinator.js';
 
 import {
   defaultApiBase,
@@ -107,15 +108,17 @@ export function mountDashboard(root = globalThis.document) {
   if (current) return current;
   const view = (root.ownerDocument || root).defaultView;
   const lifecycle = createLifecycle(view?.AbortController || globalThis.AbortController);
+  const queryCoordinator = createQueryCoordinator(lifecycle, view?.AbortController || globalThis.AbortController);
   const handle = {
     dispose() {
       lifecycle.dispose();
+      queryCoordinator.dispose();
       if (mountedDashboards.get(root) === handle) mountedDashboards.delete(root);
     }
   };
   mountedDashboards.set(root, handle);
   try {
-    initializeDashboard(root, lifecycle);
+    initializeDashboard(root, lifecycle, queryCoordinator);
   } catch (error) {
     handle.dispose();
     throw error;
@@ -123,7 +126,7 @@ export function mountDashboard(root = globalThis.document) {
   return handle;
 }
 
-function initializeDashboard(root, lifecycle) {
+function initializeDashboard(root, lifecycle, queryCoordinator) {
   const document = root.ownerDocument || root;
   const window = document.defaultView || globalThis.window;
   const location = window.location;
@@ -240,11 +243,14 @@ function initializeDashboard(root, lifecycle) {
       renderCourseTestCatalogView(container, [], { teacherRole, courseId: currentStudioCourseId });
       return;
     }
+    const query = queryCoordinator?.begin?.('testStudio');
+    if (queryCoordinator && !query) return;
 
     try {
       container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang tải danh mục bài thi...</p></div>';
       const endpoint = courseTestCatalogPath(currentStudioCourseId);
-      const res = await request(endpoint);
+      const res = await request(endpoint, { signal: query?.signal });
+      if (query && !query.isCurrent()) return;
       const catalog = res.catalog || [];
       const handleDeleteDraft = async ({ formVersionId, title }) => {
         if (!formVersionId) return;
@@ -368,9 +374,13 @@ function initializeDashboard(root, lifecycle) {
             alert('Bài thi này chưa liên kết với phiên bản form nào.');
             return;
           }
+          const editQuery = queryCoordinator?.begin?.('testStudioBuilder');
+          if (queryCoordinator && !editQuery) return;
+
           try {
             container.innerHTML = '<div class="panel showcase-placeholder"><p>Đang tải dữ liệu bài thi...</p></div>';
-            const detailRes = await request(formDetailPath(formVersionId));
+            const detailRes = await request(formDetailPath(formVersionId), { signal: editQuery?.signal });
+            if (editQuery && (!editQuery.isCurrent() || queryCoordinator?.isCurrent?.('testStudio', query?.id) === false)) return;
             const formObj = detailRes?.formVersion || detailRes?.form;
             if (!detailRes || !formObj) {
               throw new Error(detailRes?.message || 'Không tìm thấy dữ liệu bài thi');
@@ -427,12 +437,14 @@ function initializeDashboard(root, lifecycle) {
               }
             });
           } catch (err) {
+            if (editQuery && (!editQuery.isCurrent() || queryCoordinator?.isCurrent?.('testStudio', query?.id) === false || err.name === 'AbortError')) return;
             alert('Lỗi tải bài thi: ' + (err.message || 'Lỗi kết nối'));
             loadAndRenderTestStudio(currentStudioCourseId);
           }
         }
       });
     } catch (err) {
+      if (query && (!query.isCurrent() || err.name === 'AbortError')) return;
       container.innerHTML = `<div class="panel showcase-placeholder"><p class="alert-error">Không thể tải danh mục bài thi: ${err.message || 'Lỗi kết nối'}</p></div>`;
     }
   }
@@ -731,6 +743,10 @@ function initializeDashboard(root, lifecycle) {
 
   function renderSelectedAssignmentShowcase(assignment) {
     stopExamRoomEvents();
+    queryCoordinator?.cancel?.('examRoom');
+    queryCoordinator?.cancel?.('examRoomTimeline');
+    const timelinePanel = root.querySelector('#exam-room-timeline');
+    if (timelinePanel) timelinePanel.hidden = true;
     currentExamRoom = null;
     const showcaseProgressText = root.querySelector('#showcase-progress-text');
     const showcaseProgressBar = root.querySelector('#showcase-progress-bar');
@@ -923,14 +939,21 @@ function initializeDashboard(root, lifecycle) {
   async function showExamRoomTimeline(student) {
     const panel = root.querySelector('#exam-room-timeline');
     if (!panel || !student.attemptId || !currentSelectedAssignment) return;
+    const query = queryCoordinator?.begin?.('examRoomTimeline');
+    if (queryCoordinator && !query) return;
+
     panel.hidden = false;
     panel.querySelector('h3').textContent = `Timeline sự cố · ${student.name || 'Học viên'}`;
     const content = panel.querySelector('div');
     content.textContent = 'Đang tải timeline sự cố…';
     try {
-      const payload = await request(attemptDetailPath(state.classId, currentSelectedAssignment.assignmentId, student.attemptId));
+      const payload = await request(attemptDetailPath(state.classId, currentSelectedAssignment.assignmentId, student.attemptId), {
+        signal: query?.signal
+      });
+      if (query && !query.isCurrent()) return;
       fillIncidentTimeline(content, payload.incidents);
     } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
       content.textContent = `Không tải được timeline sự cố: ${error.message}`;
     }
   }
@@ -980,10 +1003,21 @@ function initializeDashboard(root, lifecycle) {
 
   async function loadExamRoom() {
     if (!currentSelectedAssignment || !state.classId) return;
+    const query = queryCoordinator?.begin?.('examRoom');
+    if (queryCoordinator && !query) return;
+
     if (examRoomMessage) examRoomMessage.textContent = 'Đang tải trạng thái Phòng thi…';
-    const payload = await request(assignmentExamRoomPath(state.classId, currentSelectedAssignment.assignmentId));
-    renderExamRoom(payload.room);
-    if (examRoomMessage) examRoomMessage.textContent = '';
+    try {
+      const payload = await request(assignmentExamRoomPath(state.classId, currentSelectedAssignment.assignmentId), {
+        signal: query?.signal
+      });
+      if (query && !query.isCurrent()) return;
+      renderExamRoom(payload.room);
+      if (examRoomMessage) examRoomMessage.textContent = '';
+    } catch (err) {
+      if (query && (!query.isCurrent() || err.name === 'AbortError')) return;
+      if (examRoomMessage) examRoomMessage.textContent = err.message || 'Lỗi tải trạng thái Phòng thi';
+    }
   }
 
   function stopExamRoomEvents() {
@@ -1053,6 +1087,10 @@ function initializeDashboard(root, lifecycle) {
   });
   lifecycle.listen(examRoomCloseButton, 'click', () => {
     stopExamRoomEvents();
+    queryCoordinator?.cancel?.('examRoom');
+    queryCoordinator?.cancel?.('examRoomTimeline');
+    const panel = root.querySelector('#exam-room-timeline');
+    if (panel) panel.hidden = true;
     if (examRoom) examRoom.hidden = true;
     if (examRoomReturnToResults && results) results.hidden = false;
   });
@@ -2257,6 +2295,7 @@ function initializeDashboard(root, lifecycle) {
 
   async function loadAttemptDetail(classId, assignmentId, attemptId) {
     if (!classId || !assignmentId || !attemptId) {
+      queryCoordinator?.cancel?.('attemptDetail');
       if (attemptDetail) {
         attemptDetail.classList.remove('drawer-open');
         attemptDetail.hidden = true;
@@ -2264,18 +2303,35 @@ function initializeDashboard(root, lifecycle) {
       if (drawerBackdrop) drawerBackdrop.hidden = true;
       return;
     }
+    const query = queryCoordinator?.begin?.('attemptDetail');
+    if (queryCoordinator && !query) return;
+
     status.textContent = 'Đang tải chi tiết bài làm…';
-    const payload = await request(attemptDetailPath(classId, assignmentId, attemptId));
-    renderAttemptDetail(payload);
-    status.textContent = 'Đã mở chi tiết bài làm';
+    try {
+      const payload = await request(attemptDetailPath(classId, assignmentId, attemptId), {
+        signal: query?.signal
+      });
+      if (query && !query.isCurrent()) return;
+      if (state.classId !== classId || state.assignmentId !== assignmentId || state.attemptId !== attemptId) return;
+
+      renderAttemptDetail(payload);
+      status.textContent = 'Đã mở chi tiết bài làm';
+    } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
+      status.textContent = error.message;
+    }
   }
 
   async function loadResults(classId, assignmentId) {
     if (!classId || !assignmentId) {
+      queryCoordinator?.cancel?.('results');
       results.hidden = true;
       resultsContent.replaceChildren();
       return;
     }
+    const query = queryCoordinator?.begin?.('results');
+    if (queryCoordinator && !query) return;
+
     status.textContent = 'Đang tải bảng kết quả…';
     const queryOptions = {
       q: state.q,
@@ -2287,12 +2343,25 @@ function initializeDashboard(root, lifecycle) {
       sortDir: state.sortDir,
       page: state.page
     };
-    const payload = await request(assignmentResultsPath(classId, assignmentId, queryOptions));
-    renderResults(payload);
-    status.textContent = 'Đã cập nhật bảng kết quả';
+    try {
+      const payload = await request(assignmentResultsPath(classId, assignmentId, queryOptions), {
+        signal: query?.signal
+      });
+      if (query && !query.isCurrent()) return;
+      if (state.classId !== classId || state.assignmentId !== assignmentId) return;
+
+      renderResults(payload);
+      status.textContent = 'Đã cập nhật bảng kết quả';
+    } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
+      status.textContent = error.message;
+    }
   }
 
   async function loadAssignments(classId, selectedAssignmentId = '') {
+    const query = queryCoordinator?.begin?.('assignments');
+    if (queryCoordinator && !query) return;
+
     assignments.replaceChildren();
     if (assignmentSelect) {
       assignmentSelect.replaceChildren(new Option('-- Chọn bài test --', ''));
@@ -2304,57 +2373,68 @@ function initializeDashboard(root, lifecycle) {
     if (!classId) return;
 
     status.textContent = 'Đang tải bài được giao…';
-    const payload = await request(`/api/teacher/classes/${encodeURIComponent(classId)}/assignments`);
-    currentAssignmentsList = payload.assignments || [];
-    currentServerNow = payload.serverNow || null;
-    let selectedExists = false;
+    try {
+      const payload = await request(`/api/teacher/classes/${encodeURIComponent(classId)}/assignments`, {
+        signal: query?.signal
+      });
+      if (query && !query.isCurrent()) return;
+      if (state.classId !== classId && classSelect?.value !== classId) return;
 
-    if (assignmentSelect) {
-      assignmentSelect.disabled = false;
-      for (const assignment of currentAssignmentsList) {
-        const phaseLabel = extractPhase(assignment.phase, assignment.title);
-        const optLabel = phaseLabel ? `${assignment.title} (${phaseLabel})` : assignment.title;
-        const opt = new Option(optLabel, assignment.assignmentId);
-        if (assignment.assignmentId === selectedAssignmentId) {
-          opt.selected = true;
-          selectedExists = true;
-        }
-        assignmentSelect.add(opt);
-      }
-    }
+      currentAssignmentsList = payload.assignments || [];
+      currentServerNow = payload.serverNow || null;
+      let selectedExists = false;
 
-    renderAssignmentChips(selectedAssignmentId);
-
-    status.textContent = `${currentAssignmentsList.length} bài được giao`;
-
-    const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === (selectedAssignmentId || state.assignmentId));
-    if (activeAssignment) {
-      renderSelectedAssignmentShowcase(activeAssignment);
-    } else {
-      renderSelectedAssignmentShowcase(null);
-    }
-
-    if (selectedExists) {
-      await loadResults(classId, selectedAssignmentId);
-      if (state.attemptId) {
-        try {
-          await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
-        } catch (err) {
-          console.warn('Attempt detail not found:', err.message);
-          state.attemptId = '';
-          setUrl();
-          const attemptContainer = root.querySelector('#attempt-detail');
-          if (attemptContainer) {
-            attemptContainer.classList.remove('drawer-open');
-            attemptContainer.hidden = true;
+      if (assignmentSelect) {
+        assignmentSelect.disabled = false;
+        for (const assignment of currentAssignmentsList) {
+          const phaseLabel = extractPhase(assignment.phase, assignment.title);
+          const optLabel = phaseLabel ? `${assignment.title} (${phaseLabel})` : assignment.title;
+          const opt = new Option(optLabel, assignment.assignmentId);
+          if (assignment.assignmentId === selectedAssignmentId) {
+            opt.selected = true;
+            selectedExists = true;
           }
-          if (drawerBackdrop) drawerBackdrop.hidden = true;
-          if (loginError && loginError.textContent.includes('Không tìm thấy bài làm')) {
-            loginError.hidden = true;
-            loginError.textContent = '';
-          }
+          assignmentSelect.add(opt);
         }
       }
+
+      renderAssignmentChips(selectedAssignmentId);
+
+      status.textContent = `${currentAssignmentsList.length} bài được giao`;
+
+      const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === (selectedAssignmentId || state.assignmentId));
+      if (activeAssignment) {
+        renderSelectedAssignmentShowcase(activeAssignment);
+      } else {
+        renderSelectedAssignmentShowcase(null);
+      }
+
+      if (selectedExists) {
+        await loadResults(classId, selectedAssignmentId);
+        if (query && !query.isCurrent()) return;
+        if (state.attemptId) {
+          try {
+            await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
+          } catch (err) {
+            console.warn('Attempt detail not found:', err.message);
+            state.attemptId = '';
+            setUrl();
+            const attemptContainer = root.querySelector('#attempt-detail');
+            if (attemptContainer) {
+              attemptContainer.classList.remove('drawer-open');
+              attemptContainer.hidden = true;
+            }
+            if (drawerBackdrop) drawerBackdrop.hidden = true;
+            if (loginError && loginError.textContent.includes('Không tìm thấy bài làm')) {
+              loginError.hidden = true;
+              loginError.textContent = '';
+            }
+          }
+        }
+      }
+    } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
+      status.textContent = error.message;
     }
   }
 
@@ -2491,18 +2571,28 @@ function initializeDashboard(root, lifecycle) {
   }
 
   async function loadClasses() {
+    const query = queryCoordinator?.begin?.('classes');
+    if (queryCoordinator && !query) return;
+
     status.textContent = 'Đang kiểm tra quyền…';
-    const payload = await request('/api/teacher/classes');
-    if (payload.actor) {
-      currentTeacher = { ...(currentTeacher || {}), ...payload.actor };
-      if (Array.isArray(payload.actor.classIds) && payload.actor.classIds.length > 0) {
-        currentTeacher.classIds = payload.actor.classIds;
+    try {
+      const payload = await request('/api/teacher/classes', { signal: query?.signal });
+      if (query && !query.isCurrent()) return;
+      if (payload.actor) {
+        currentTeacher = { ...(currentTeacher || {}), ...payload.actor };
+        if (Array.isArray(payload.actor.classIds) && payload.actor.classIds.length > 0) {
+          currentTeacher.classIds = payload.actor.classIds;
+        }
       }
+      rawClassesList = payload.classes || [];
+      setupClassFilterToolbar();
+      renderFilteredClasses();
+      if (query && !query.isCurrent()) return;
+      await loadAssignments(classSelect.value, state.assignmentId);
+    } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
+      status.textContent = error.message;
     }
-    rawClassesList = payload.classes || [];
-    setupClassFilterToolbar();
-    renderFilteredClasses();
-    await loadAssignments(classSelect.value, state.assignmentId);
   }
 
   // Filter and pagination event handlers

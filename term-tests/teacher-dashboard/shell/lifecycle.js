@@ -37,6 +37,9 @@ export function createLifecycle(AbortControllerImpl = globalThis.AbortController
       for (const id of intervals) clearInterval(id);
       timeouts.clear();
       intervals.clear();
+    },
+    isDisposed() {
+      return disposed;
     }
   };
 }
