@@ -6,7 +6,7 @@ import {
 } from './portal-sync-view.js';
 
 export function defaultApiBase() {
-  return 'https://webtest.ducanhn.autos';
+  return 'https://webtest.ducanhdev.com';
 }
 
 export function expandSentenceVariants(sentences = []) {
@@ -1030,7 +1030,7 @@ export function localStudentUrl(studentUrl, location, apiBase = '') {
     url.searchParams.delete('prod');
   } else if (!url.searchParams.has('prod') && !apiBase) {
     url.searchParams.set('prod', '1');
-  } else if (apiBase && (apiBase.includes('webtest.ducanhn.autos') || apiBase.includes('production'))) {
+  } else if (apiBase && (apiBase.includes('webtest.ducanhdev.com') || apiBase.includes('production'))) {
     url.searchParams.set('prod', '1');
   }
   return `${location.origin}${url.pathname.slice(index)}${url.search}${url.hash}`;
@@ -1387,7 +1387,9 @@ export function assignmentSelfProctoringPath(classId, assignmentId) {
 }
 
 // Lý do toggle bị khoá, để giáo viên không phải đoán vì sao không bấm được.
-export function examModeLockReason({ exitLimit } = {}) {
+export function examModeLockReason({ exitLimit, examMode, examSession } = {}) {
+  // Server từ chối đổi Exam Mode khi phiên không còn ở trạng thái chờ (EXAM_SESSION_ALREADY_STARTED).
+  if (examMode && examSession && examSession.status !== 'waiting') return 'Phiên thi đã bắt đầu nên không tắt được Exam Mode. Dùng "Chuyển sang Tự giám sát" sau khi hết hạn nộp.';
   return exitLimit === null || exitLimit === undefined ? '' : 'Bài đang bật Tự giám sát nên không bật được Exam Mode. Tắt Tự giám sát trước; nếu đã có học viên bắt đầu làm thì không tắt được nữa.';
 }
 
@@ -2397,7 +2399,7 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
         apiBase = (window.location.port === '8034' || window.location.port === '8788')
           ? ''
           : `${window.location.protocol}//${hostname}:8788`;
-      } else if (hostname === 'webtest.ducanhn.autos') {
+      } else if (hostname === 'webtest.ducanhdev.com') {
         apiBase = '';
       } else {
         apiBase = defaultApiBase();
@@ -14197,7 +14199,7 @@ async function startDashboard() {
   if (loginApiBase) {
     if (isTunnel) {
       loginApiBase.value = currentLocation.origin;
-    } else if (isLocalHost && (!loginApiBase.value || loginApiBase.value.includes('webtest.ducanhn.autos'))) {
+    } else if (isLocalHost && (!loginApiBase.value || loginApiBase.value.includes('webtest.ducanhdev.com'))) {
       loginApiBase.value = 'http://127.0.0.1:8788';
     } else if (!loginApiBase.value || (!isLocalHost && loginApiBase.value.includes('localhost'))) {
       loginApiBase.value = standardApiBase;
@@ -14206,7 +14208,7 @@ async function startDashboard() {
   if (form?.elements?.apiBase) {
     if (isTunnel) {
       form.elements.apiBase.value = currentLocation.origin;
-    } else if (isLocalHost && (!form.elements.apiBase.value || form.elements.apiBase.value.includes('webtest.ducanhn.autos'))) {
+    } else if (isLocalHost && (!form.elements.apiBase.value || form.elements.apiBase.value.includes('webtest.ducanhdev.com'))) {
       form.elements.apiBase.value = 'http://127.0.0.1:8788';
     } else if (!form.elements.apiBase.value || (!isLocalHost && form.elements.apiBase.value.includes('localhost'))) {
       form.elements.apiBase.value = standardApiBase;
@@ -14448,8 +14450,8 @@ async function startDashboard() {
     if (selfProctoringToggle) { selfProctoringToggle.checked = enabled; selfProctoringToggle.disabled = Boolean(examMode) || lockedAfterExam; }
     if (selfProctoringLimit) { selfProctoringLimit.value = enabled ? String(exitLimit) : ''; selfProctoringLimit.disabled = !enabled || lockedAfterExam; }
     if (selfProctoringSave) selfProctoringSave.disabled = lockedAfterExam || (!enabled && !selfProctoringToggle?.checked);
-    if (examModeToggle) examModeToggle.disabled = enabled;
-    const examReason = examModeLockReason({ exitLimit });
+    const examReason = examModeLockReason({ exitLimit, examMode, examSession: currentSelectedAssignment?.examSession });
+    if (examModeToggle) examModeToggle.disabled = Boolean(examReason);
     const selfReason = selfProctoringLockReason({ examMode, examSession: currentSelectedAssignment?.examSession });
     if (examModeLockHint) { examModeLockHint.textContent = examReason; examModeLockHint.hidden = !examReason; }
     if (selfProctoringLockHint) { selfProctoringLockHint.textContent = selfReason; selfProctoringLockHint.hidden = !selfReason; }
@@ -14558,7 +14560,7 @@ async function startDashboard() {
       updateExamModeUI(currentSelectedAssignment.examMode);
       status.textContent = error.message;
     } finally {
-      examModeToggle.disabled = false;
+      examModeToggle.disabled = Boolean(examModeLockReason(currentSelectedAssignment));
     }
   });
   const setUrl = () => history.replaceState(null, '', assignmentUrl(location.href, state));

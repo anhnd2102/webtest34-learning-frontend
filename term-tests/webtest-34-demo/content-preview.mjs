@@ -61,7 +61,7 @@ export function resultViewModel(result) {
   const scoreFinal = summary.scoreFinal === true && gradingStatus === 'complete';
   return {
     tone: gradingStatus === 'manual_review' ? 'manual_review' : scoreFinal ? 'complete' : 'pending',
-    title: gradingStatus === 'manual_review' ? 'Đang chờ giảng viên kiểm tra' : scoreFinal ? 'Đã chấm xong' : 'AI đang chấm bài',
+    title: gradingStatus === 'manual_review' ? 'Đang chờ giảng viên kiểm tra' : scoreFinal ? 'Đã chấm xong' : 'Đang chấm bài',
     scoreFinal,
     pendingItemCount: Number.isInteger(summary.pendingItemCount) ? summary.pendingItemCount : 0,
     scoreLabel: scoreFinal ? 'Điểm chính thức' : 'Điểm tạm tính',
@@ -484,7 +484,7 @@ export async function mount(course) {
   }
 
   const isProd = queryParams.get('prod') === '1' || queryParams.get('apiEnv') === 'production';
-  const apiBase = (isProd ? 'https://webtest.ducanhn.autos' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhn.autos')).replace(/\/$/, '');
+  const apiBase = (isProd ? 'https://webtest.ducanhdev.com' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhdev.com')).replace(/\/$/, '');
   const isLearningMode = Boolean(testToken);
 
   let form = { course, groups: [], durationMinutes: 60 };

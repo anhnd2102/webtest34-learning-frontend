@@ -5,7 +5,7 @@
   // Tách riêng khỏi HTML để dễ đổi endpoint/audio khi chuyển môi trường.
   // Local dùng backend riêng; token chỉ nhận từ URL fragment.
 
-  const productionApi = 'https://webtest.ducanhn.autos';
+  const productionApi = 'https://webtest.ducanhdev.com';
   const localApi = 'http://127.0.0.1:8788';
   const page = window.location || {};
   const query = typeof URLSearchParams !== 'undefined' ? new URLSearchParams(page.search || '') : { get: () => null };
