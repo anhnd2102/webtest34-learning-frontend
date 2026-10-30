@@ -90,7 +90,7 @@ import {
   escapeHtml,
   renderAssignmentChipsView
 } from '../app.js';
-import { parseSseChunk } from '../exam-room-sse.js';
+import { createExamRoomSession } from './exam-room-session.js';
 import {
   portalTestsPath, portalLinkPath, portalSyncPreviewPath, portalSyncPath, portalSyncStatusPath,
   portalSyncErrorView, previewRowView, selectableRefs, syncRequestBody, syncConfirmMessage,
@@ -249,7 +249,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       renderCourseTestCatalogView(container, [], { teacherRole, courseId: currentStudioCourseId });
       return;
     }
-    const query = queryCoordinator?.begin?.('testStudio');
+
+    const query = queryCoordinator?.begin?.('testStudio');
     if (queryCoordinator && !query) return;
 
     try {
@@ -750,8 +751,6 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   function renderSelectedAssignmentShowcase(assignment) {
     stopExamRoomEvents();
-    queryCoordinator?.cancel?.('examRoom');
-    queryCoordinator?.cancel?.('examRoomTimeline');
     const timelinePanel = root.querySelector('#exam-room-timeline');
     if (timelinePanel) timelinePanel.hidden = true;
     currentExamRoom = null;
@@ -863,7 +862,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const logoutBtn = root.querySelector('#logout-btn');
 
   let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
-  let examRoomEventsController = null;
+  let examRoomSession = null;
+  lifecycle.onDispose(stopExamRoomEvents);
   let currentExamRoom = null;
 
   const currentLocation = typeof window !== 'undefined' ? window.location : null;
@@ -1011,8 +1011,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     if (examRoomExtendButton) examRoomExtendButton.disabled = room.status !== 'running';
   }
 
-  async function loadExamRoom() {
-    if (!currentSelectedAssignment || !state.classId) return;
+  async function loadExamRoom(owner = examRoomSession) {
+    if (!currentSelectedAssignment || !state.classId || (owner && !owner.isCurrent())) return;
     const query = queryCoordinator?.begin?.('examRoom');
     if (queryCoordinator && !query) return;
 
@@ -1021,84 +1021,70 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       const payload = await request(assignmentExamRoomPath(state.classId, currentSelectedAssignment.assignmentId), {
         signal: query?.signal
       });
-      if (query && !query.isCurrent()) return;
+      if ((owner && !owner.isCurrent()) || (query && !query.isCurrent())) return;
       renderExamRoom(payload.room);
       if (examRoomMessage) examRoomMessage.textContent = '';
     } catch (err) {
-      if (query && (!query.isCurrent() || err.name === 'AbortError')) return;
+      if ((owner && !owner.isCurrent()) || (query && (!query.isCurrent() || err.name === 'AbortError'))) return;
       if (examRoomMessage) examRoomMessage.textContent = err.message || 'Lỗi tải trạng thái Phòng thi';
     }
   }
 
   function stopExamRoomEvents() {
-    examRoomEventsController?.abort();
-    examRoomEventsController = null;
+    const previous = examRoomSession;
+    examRoomSession = null;
+    previous?.dispose();
+    queryCoordinator.cancel('examRoom');
+    queryCoordinator.cancel('examRoomTimeline');
   }
 
-  async function startExamRoomEvents() {
+  function createCurrentRoomSession() {
     stopExamRoomEvents();
-    if (!sessionToken || !currentSelectedAssignment || !state.classId) return;
-    const controller = new AbortController();
-    examRoomEventsController = controller;
-    const path = assignmentExamEventsPath(state.classId, currentSelectedAssignment.assignmentId);
-    while (!controller.signal.aborted) {
-      try {
-        const response = await fetch(`${apiBase()}${path}`, {
-          headers: { Authorization: `Bearer ${sessionToken}`, Accept: 'text/event-stream' },
-          signal: controller.signal
-        });
-        if (response.status === 401) {
-          handleLogout();
-          break;
-        }
-        if (!response.ok || !response.body) throw new Error('Không kết nối được luồng Phòng thi.');
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        while (!controller.signal.aborted) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const parsed = parseSseChunk(buffer, decoder.decode(value, { stream: true }));
-          buffer = parsed.buffer;
-          for (const message of parsed.events) {
-            if (message.event === 'snapshot' && message.data.room) renderExamRoom(message.data.room);
-            else if (message.event === 'exam.incident.opened' || message.event === 'exam.incident.closed') {
-              currentExamRoom = applyExamIncident(currentExamRoom, message.data);
-              if (currentExamRoom) renderExamRoom(currentExamRoom);
-            } else if (message.event === 'exam.progress.updated') {
-              currentExamRoom = applyExamProgress(currentExamRoom, message.data);
-              if (currentExamRoom) renderExamRoom(currentExamRoom);
-            } else if (message.event === 'exam.connection.changed') {
-              currentExamRoom = applyExamConnection(currentExamRoom, message.data);
-              if (currentExamRoom) renderExamRoom(currentExamRoom);
-            } else if (message.event !== 'snapshot') await loadExamRoom();
-          }
-        }
-      } catch (error) {
-        if (controller.signal.aborted) break;
+    const classId = state.classId;
+    const assignmentId = currentSelectedAssignment.assignmentId;
+    const path = assignmentExamEventsPath(classId, assignmentId);
+    const origin = apiBase();
+    const token = sessionToken;
+    const session = createExamRoomSession({
+      isScopeCurrent: () => !lifecycle.isDisposed() && examRoomSession === session
+        && state.classId === classId && currentSelectedAssignment?.assignmentId === assignmentId,
+      fetchStream: signal => fetch(`${origin}${path}`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: 'text/event-stream' }, signal
+      }),
+      onUnauthorized: handleLogout,
+      refresh: () => loadExamRoom(session),
+      onMessage: async message => {
+        if (message.event === 'snapshot' && message.data.room) renderExamRoom(message.data.room);
+        else if (message.event === 'exam.incident.opened' || message.event === 'exam.incident.closed') {
+          currentExamRoom = applyExamIncident(currentExamRoom, message.data);
+          if (currentExamRoom) renderExamRoom(currentExamRoom);
+        } else if (message.event === 'exam.progress.updated') {
+          currentExamRoom = applyExamProgress(currentExamRoom, message.data);
+          if (currentExamRoom) renderExamRoom(currentExamRoom);
+        } else if (message.event === 'exam.connection.changed') {
+          currentExamRoom = applyExamConnection(currentExamRoom, message.data);
+          if (currentExamRoom) renderExamRoom(currentExamRoom);
+        } else if (message.event !== 'snapshot') await loadExamRoom(session);
       }
-      if (!controller.signal.aborted) {
-        try { await loadExamRoom(); } catch { /* reconnect below; REST may recover with the stream */ }
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-    }
+    });
+    examRoomSession = session;
+    return session;
   }
 
   lifecycle.listen(examRoomOpenButton, 'click', async () => {
     if (!currentSelectedAssignment) return;
+    const session = createCurrentRoomSession();
     examRoomReturnToResults = Boolean(results && !results.hidden);
     if (results) results.hidden = true;
     if (examRoom) examRoom.hidden = false;
-    try { await loadExamRoom(); startExamRoomEvents(); }
-    catch (error) { if (examRoomMessage) examRoomMessage.textContent = error.message; }
+    await loadExamRoom(session);
+    if (session.isCurrent() && sessionToken) session.start();
   });
   lifecycle.listen(examRoomRefreshButton, 'click', () => {
     loadExamRoom().catch(error => { if (examRoomMessage) examRoomMessage.textContent = error.message; });
   });
   lifecycle.listen(examRoomCloseButton, 'click', () => {
     stopExamRoomEvents();
-    queryCoordinator?.cancel?.('examRoom');
-    queryCoordinator?.cancel?.('examRoomTimeline');
     const panel = root.querySelector('#exam-room-timeline');
     if (panel) panel.hidden = true;
     if (examRoom) examRoom.hidden = true;
@@ -3498,6 +3484,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   if (logoutBtn) {
     lifecycle.listen(logoutBtn, 'click', async () => {
+      stopExamRoomEvents();
       try {
         if (sessionToken) {
           await fetch(`${apiBase()}${authLogoutPath()}`, {

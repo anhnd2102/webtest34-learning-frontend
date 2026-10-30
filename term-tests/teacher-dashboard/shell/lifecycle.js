@@ -3,8 +3,13 @@ export function createLifecycle(AbortControllerImpl = globalThis.AbortController
   const controller = new AbortControllerImpl();
   const timeouts = new Set();
   const intervals = new Set();
+  const cleanups = new Set();
   let disposed = false;
   return {
+    onDispose(callback) {
+      if (disposed) callback();
+      else cleanups.add(callback);
+    },
     listen(target, type, callback, options = {}) {
       if (disposed || !target) return;
       const settings = typeof options === 'boolean' ? { capture: options } : options;
@@ -33,6 +38,8 @@ export function createLifecycle(AbortControllerImpl = globalThis.AbortController
       if (disposed) return;
       disposed = true;
       controller.abort();
+      for (const cleanup of cleanups) cleanup();
+      cleanups.clear();
       for (const id of timeouts) clearTimeout(id);
       for (const id of intervals) clearInterval(id);
       timeouts.clear();

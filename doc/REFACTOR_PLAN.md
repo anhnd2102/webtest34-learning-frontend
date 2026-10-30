@@ -4,7 +4,8 @@
 
 - Nhánh `refactor/frontend-architecture-plan`: #18 và #20 đã đóng; #21 đã có implementation commit, issue vẫn mở.
 - #22 đã triển khai và kiểm chứng local: 521/521 frontend tests pass; browser smoke 3 viewport pass. Xem [báo cáo #22](ISSUE_22_READ_CONCURRENCY_VERIFICATION.md) để biết phạm vi, review và giới hạn kiểm chứng.
-- Tiếp theo: #23 (SSE/reconnect/REST fallback), rồi #24 (tích hợp lifecycle và rollback). Chưa merge vào main.
+- #23 đã triển khai local: owner cho SSE/reader/reconnect và REST fallback; 542/542 frontend tests pass, browser smoke 3 viewport pass. Xem [báo cáo #23](ISSUE_23_EXAM_ROOM_LIFECYCLE_VERIFICATION.md).
+- Tiếp theo: #24 (tích hợp lifecycle và rollback). Chưa merge vào main.
 - Nội dung khảo sát và checklist bên dưới là baseline ban đầu; không coi toàn bộ bước 0–2 hoàn tất trước khi nghiệm thu #24.
 
 Ngày khảo sát: 28/10/2026, Asia/Ho_Chi_Minh. Trạng thái: đề xuất để review, chưa triển khai.
