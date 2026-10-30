@@ -199,6 +199,19 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   let examRoomReturnToResults = false;
   let rawClassesList = [];
   let currentTeacher = null;
+  let activeBuilder = null;
+  lifecycle.onDispose(disposeOwnedBuilder);
+
+  function disposeOwnedBuilder() {
+    activeBuilder?.dispose();
+    activeBuilder = null;
+  }
+
+  function renderOwnedBuilder(...args) {
+    disposeOwnedBuilder();
+    activeBuilder = renderTestBuilderView(...args);
+    return activeBuilder;
+  }
 
   function updateDashboardTab(tabId) {
     const activeTab = switchDashboardTab(tabId, {
@@ -211,6 +224,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       navItems,
       onTabChange: (newTab) => {
         if (newTab !== 'test-studio' && newTab !== 'exams') {
+          disposeOwnedBuilder();
           queryCoordinator.cancel('testStudio');
           queryCoordinator.cancel('testStudioBuilder');
         }
@@ -233,6 +247,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   let currentStudioCourseId = 1;
   async function loadAndRenderTestStudio(targetCourseId = currentStudioCourseId) {
+    disposeOwnedBuilder();
     queryCoordinator.cancel('testStudio');
     queryCoordinator.cancel('testStudioBuilder');
     currentStudioCourseId = Number(targetCourseId || 1);
@@ -318,7 +333,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
                 const detailRes = await request(formDetailPath(postRes.formVersionId));
 
                 const formObj = detailRes?.formVersion || detailRes?.form || {};
-                renderTestBuilderView(container, {
+                renderOwnedBuilder(container, {
                   ...formObj,
                   id: formObj.id || formObj.formVersionId || postRes.formVersionId,
                   formVersionId: formObj.formVersionId || formObj.id || postRes.formVersionId,
@@ -393,7 +408,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
               throw new Error(detailRes?.message || 'Không tìm thấy dữ liệu bài thi');
             }
 
-            renderTestBuilderView(container, {
+            renderOwnedBuilder(container, {
               ...formObj,
               id: formObj.id || formObj.formVersionId || formVersionId,
               formVersionId: formObj.formVersionId || formObj.id || formVersionId,
@@ -3355,6 +3370,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   });
 
   function handleLogout() {
+    disposeOwnedBuilder();
     for (const scope of ['sessionRestore', 'classes', 'assignments', 'results', 'attemptDetail', 'testStudio', 'testStudioBuilder', 'examRoom', 'examRoomTimeline']) {
       queryCoordinator.cancel(scope);
     }

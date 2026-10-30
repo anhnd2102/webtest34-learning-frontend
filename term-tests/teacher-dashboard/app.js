@@ -1270,6 +1270,7 @@ export function openUnsavedChangesModal({
     return;
   }
 
+  const returnFocus = document.activeElement;
   const modal = document.createElement('div');
   modal.id = 'modal-unsaved-changes';
   modal.className = 'izone-modal-overlay';
@@ -1315,10 +1316,11 @@ export function openUnsavedChangesModal({
 
   document.body.appendChild(modal);
 
-  const closeModal = () => {
+  const closeModal = (restoreFocus = false) => {
     if (modal && modal.parentNode) {
       modal.parentNode.removeChild(modal);
     }
+    if (restoreFocus && returnFocus?.isConnected !== false) returnFocus?.focus?.({ preventScroll: true });
   };
 
   const btnStay = modal.querySelector('#btn-stay-editing');
@@ -1326,12 +1328,12 @@ export function openUnsavedChangesModal({
   const btnClose = modal.querySelector('#btn-close-unsaved-modal');
 
   btnStay?.addEventListener('click', () => {
-    closeModal();
+    closeModal(true);
     if (typeof onStay === 'function') onStay();
   });
 
   btnClose?.addEventListener('click', () => {
-    closeModal();
+    closeModal(true);
     if (typeof onStay === 'function') onStay();
   });
 
@@ -1342,7 +1344,15 @@ export function openUnsavedChangesModal({
 
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
-      closeModal();
+      closeModal(true);
+      if (typeof onStay === 'function') onStay();
+    }
+  });
+
+  modal.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeModal(true);
       if (typeof onStay === 'function') onStay();
     }
   });
