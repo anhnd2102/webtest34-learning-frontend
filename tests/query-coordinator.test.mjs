@@ -2,6 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createQueryCoordinator } from '../term-tests/teacher-dashboard/shell/query-coordinator.js';
 
+test('QueryCoordinator: cancel then restart never revives a stale query', () => {
+  const coordinator = createQueryCoordinator();
+  const stale = coordinator.begin('results');
+  coordinator.cancel('results');
+  const current = coordinator.begin('results');
+  assert.notEqual(current.id, stale.id);
+  assert.equal(stale.isCurrent(), false);
+  assert.equal(current.isCurrent(), true);
+});
+
 test('QueryCoordinator: generates increasing generations per scope', () => {
   const coordinator = createQueryCoordinator();
   const q1 = coordinator.begin('results');

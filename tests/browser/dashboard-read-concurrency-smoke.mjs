@@ -60,7 +60,7 @@ try {
         } else if (pathname.endsWith('/results')) {
           const q = url.searchParams.get('q') || '';
           if (q === 'slow-search') {
-            await new Promise(r => setTimeout(r, 250));
+            await new Promise(r => setTimeout(r, 800));
             payload = {
               assignment: { assignmentId: 'assign-102', classId: '102', title: 'Assignment 102 Current' },
               skills: [],
@@ -96,20 +96,21 @@ try {
 
     // 2. Rapid search query changes: slow query followed immediately by fast query
     const searchInput = page.locator('#search-input');
+    const slowRequest = page.waitForRequest(request => new URL(request.url()).searchParams.get('q') === 'slow-search');
     await searchInput.fill('slow-search');
-    await page.waitForTimeout(50);
+    await slowRequest;
     await searchInput.fill('fast-search');
 
     // Wait for latest status
-    await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'Đã cập nhật bảng kết quả');
+    await page.waitForFunction(() => document.querySelector('#results-content')?.textContent.includes('Fresh Fast Student') && new URL(location.href).searchParams.get('q') === 'fast-search');
     // Ensure table does NOT display old stale student
-    await page.waitForTimeout(300); // allow slow query to have arrived
+    await page.waitForTimeout(900); // allow slow query to have arrived
     const resultsText = await page.locator('#results-content').innerText();
     assert.ok(!resultsText.includes('Old Stale Student'), 'Stale slow search must not overwrite fresh result');
 
     // 3. Verify URL reflects latest query
     const currentUrl = page.url();
-    assert.ok(currentUrl.includes('q=fast-search') || currentUrl.includes('102'), 'URL reflects current state');
+    assert.equal(new URL(currentUrl).searchParams.get('q'), 'fast-search', 'URL reflects current query');
 
     // 4. Rapid class switching on dashboard view: switch to 101 then immediately back to 102
     await page.evaluate(() => { window.location.hash = '#dashboard'; });

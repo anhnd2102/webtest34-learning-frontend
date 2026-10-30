@@ -11,7 +11,7 @@ function deferred() {
   return { promise, resolve, reject };
 }
 
-function createDOMFixture() {
+function createDOMFixture(t) {
   class Element extends EventTarget {
     value = '';
     textContent = '';
@@ -69,11 +69,22 @@ function createDOMFixture() {
   document.defaultView.location = new URL('http://localhost/?classId=101&assignmentId=assign-1#dashboard');
   document.defaultView.history = { replaceState() {} };
 
+  const saved = ['document', 'Option'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]);
+  globalThis.document = document;
+  globalThis.Option = class extends Element {
+    constructor(text, value) { super(); this.textContent = text; this.value = value; }
+  };
+  t.after(() => {
+    for (const [key, descriptor] of saved) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+      else delete globalThis[key];
+    }
+  });
   return { document, get: selector => document.querySelector(selector) };
 }
 
 test('Read concurrency: A/B out-of-order queries only commit latest query', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const d1 = deferred();
   const d2 = deferred();
   let callCount = 0;
@@ -145,7 +156,7 @@ test('Read concurrency: A/B out-of-order queries only commit latest query', asyn
 });
 
 test('Read concurrency: late error after fresh result does not overwrite status or DOM', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const dFail = deferred();
   const dSuccess = deferred();
 
@@ -205,7 +216,7 @@ test('Read concurrency: late error after fresh result does not overwrite status 
 });
 
 test('Read concurrency: same scope different page/filter invalidates previous queries', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const dPage1 = deferred();
   const dPage2 = deferred();
 
@@ -264,7 +275,7 @@ test('Read concurrency: same scope different page/filter invalidates previous qu
 });
 
 test('Read concurrency: disposal silences in-flight query; remount starts fresh generation', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const dInFlight = deferred();
 
   const originalFetch = globalThis.fetch;
@@ -308,7 +319,7 @@ test('Read concurrency: disposal silences in-flight query; remount starts fresh 
 });
 
 test('Read concurrency: query generation protects state even when fetch ignores abort signal', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const dOld = deferred();
   const dNew = deferred();
 
@@ -374,7 +385,7 @@ test('Read concurrency: query generation protects state even when fetch ignores 
 });
 
 test('Read concurrency: Test Studio out-of-order course catalog loads discard stale responses', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const dCourse1 = deferred();
   const dCourse2 = deferred();
 
@@ -446,7 +457,7 @@ test('Read concurrency: Test Studio out-of-order course catalog loads discard st
 });
 
 test('Read concurrency: switching attempts rapidly only renders latest attempt detail', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const dAtt1 = deferred();
   const dAtt2 = deferred();
 
@@ -485,6 +496,7 @@ test('Read concurrency: switching attempts rapidly only renders latest attempt d
   const handle = mountDashboard(document);
   t.after(() => handle.dispose());
 
+  get('#status-filter').dispatchEvent(new Event('change'));
   // Wait for initial results load
   await new Promise(r => setTimeout(r, 30));
 
@@ -550,7 +562,7 @@ test('Read concurrency: switching attempts rapidly only renders latest attempt d
 });
 
 test('Read concurrency: out-of-order exam room timeline requests discard stale incident responses', async t => {
-  const { document, get } = createDOMFixture();
+  const { document, get } = createDOMFixture(t);
   const dStudent1 = deferred();
   const dStudent2 = deferred();
 
@@ -563,7 +575,7 @@ test('Read concurrency: out-of-order exam room timeline requests discard stale i
     if (urlStr.includes('/attempts/att-2')) {
       return dStudent2.promise;
     }
-    if (urlStr.includes('/assignments/assign-1/exam-room')) {
+    if (urlStr.includes('/assignments/assign-1/exam/room')) {
       return {
         ok: true,
         status: 200,
@@ -608,16 +620,17 @@ test('Read concurrency: out-of-order exam room timeline requests discard stale i
   const handle = mountDashboard(document);
   t.after(() => handle.dispose());
 
+  get('#identity-form').dispatchEvent(new Event('submit'));
   // Wait for initial mount to resolve classes and assignments
   await new Promise(r => setTimeout(r, 30));
 
   // Open exam room
-  get('#exam-room-open-button').dispatchEvent(new Event('click'));
+  get('#exam-room-open').dispatchEvent(new Event('click'));
   await new Promise(r => setTimeout(r, 30));
 
   // The room rendered 2 students in #exam-room-students
   const rows = get('#exam-room-students')._children || [];
-  assert.equal(rows.length, 2);
+  assert.equal(rows.length, 2, get('#exam-room-message').textContent);
 
   // Click student 1 then student 2 rapidly
   rows[0].dispatchEvent(new Event('click'));
