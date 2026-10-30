@@ -96,6 +96,10 @@ import {
   portalSyncErrorView, previewRowView, selectableRefs, syncRequestBody, syncConfirmMessage,
   syncResultView, retryRefs, linkedPortalTest, syncSummaryText, scaleWarningText, selectAllState, shouldReloadPreviewAfterSyncError
 } from '../portal-sync-view.js';
+import {
+  reportApiPath,
+  renderScoreDistributionView
+} from './analytics/score-distribution-view.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -228,6 +232,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           queryCoordinator.cancel('testStudio');
           queryCoordinator.cancel('testStudioBuilder');
         }
+        if (newTab !== 'reports') {
+          queryCoordinator.cancel('reports');
+        }
         if (newTab === 'grading') {
           if (state.assignmentId && state.classId) {
             if (results) results.hidden = false;
@@ -239,6 +246,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         }
         if (newTab === 'test-studio' || newTab === 'exams') {
           loadAndRenderTestStudio();
+        }
+        if (newTab === 'reports') {
+          loadScoreDistributionReport();
         }
       }
     });
@@ -618,6 +628,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         if (results) results.hidden = true;
         if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
       }
+    }
+    if (currentTab === 'reports') {
+      loadScoreDistributionReport();
     }
 
     if (assignmentId) {
@@ -2369,6 +2382,96 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
+  let reportState = {
+    reportData: null,
+    isLoading: false,
+    error: null,
+    activeSkill: 'overall',
+    includeProvisional: false,
+    activeBucketIndex: -1
+  };
+
+  async function loadScoreDistributionReport(classId = state.classId, assignmentId = state.assignmentId) {
+    if (!viewReports) return;
+    if (!classId || !assignmentId) {
+      queryCoordinator?.cancel?.('reports');
+      reportState = {
+        reportData: null,
+        isLoading: false,
+        error: null,
+        activeSkill: 'overall',
+        includeProvisional: reportState.includeProvisional,
+        activeBucketIndex: -1
+      };
+      renderReportsView();
+      return;
+    }
+
+    const query = queryCoordinator?.begin?.('reports');
+    if (queryCoordinator && !query) return;
+
+    reportState.isLoading = true;
+    reportState.error = null;
+    renderReportsView();
+
+    try {
+      const path = reportApiPath(classId, assignmentId, {
+        includeProvisional: reportState.includeProvisional
+      });
+      const payload = await request(path, { signal: query?.signal });
+      if (query && !query.isCurrent()) return;
+      if (state.classId !== classId || state.assignmentId !== assignmentId) return;
+
+      reportState.reportData = payload;
+      reportState.isLoading = false;
+      reportState.error = null;
+      renderReportsView();
+    } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
+      reportState.isLoading = false;
+      reportState.error = error;
+      renderReportsView();
+    }
+  }
+
+  function renderReportsView() {
+    if (!viewReports) return;
+    renderScoreDistributionView(viewReports, reportState, {
+      onProvisionalToggle: (checked) => {
+        reportState.includeProvisional = checked;
+        loadScoreDistributionReport();
+      },
+      onSkillChange: (skillCode) => {
+        reportState.activeSkill = skillCode;
+        reportState.activeBucketIndex = -1;
+        renderReportsView();
+      },
+      onBucketClick: ({ bucket, index, skillCode }) => {
+        reportState.activeBucketIndex = reportState.activeBucketIndex === index ? -1 : index;
+        renderReportsView();
+      },
+      onRetry: () => {
+        loadScoreDistributionReport();
+      },
+      onExportExcel: () => {
+        if (!state.classId || !state.assignmentId) return;
+        const exportBtn = viewReports.querySelector('.btn-export-excel');
+        downloadResultsXlsx({
+          url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
+          headers: authHeader(),
+          button: exportBtn,
+          status,
+          onUnauthorized: () => { if (sessionToken) endSession(); }
+        });
+      },
+      onPrint: () => {
+        if (typeof window !== 'undefined' && typeof window.print === 'function') {
+          window.print();
+        }
+      }
+    });
+  }
+
   async function loadAssignments(classId, selectedAssignmentId = '') {
     const query = queryCoordinator?.begin?.('assignments');
     if (queryCoordinator && !query) return;
@@ -2423,6 +2526,10 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       if (selectedExists) {
         await loadResults(classId, selectedAssignmentId);
         if (query && !query.isCurrent()) return;
+        const currentTab = readDashboardTab(window.location.hash);
+        if (currentTab === 'reports') {
+          await loadScoreDistributionReport(classId, selectedAssignmentId);
+        }
         if (state.attemptId) {
           try {
             await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
