@@ -10524,16 +10524,45 @@ button.btn-icon:disabled,
   text-align: center;
 }
 
+/* Interactive Histogram & Drilldown Side-by-Side Area */
+.histogram-drilldown-split-area {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+  transition: all 0.25s ease;
+}
+.histogram-drilldown-split-area.has-active-drilldown {
+  grid-template-columns: minmax(360px, 1fr) minmax(420px, 1.25fr);
+}
+.histogram-card-slot {
+  min-width: 0;
+  width: 100%;
+}
+.report-drilldown-slot {
+  min-width: 0;
+  width: 100%;
+}
+.report-drilldown-slot[hidden] {
+  display: none !important;
+}
+@media (max-width: 1100px) {
+  .histogram-drilldown-split-area.has-active-drilldown {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Drilldown Student Table */
 .report-drilldown-container {
   margin-top: 10px;
 }
 .drilldown-card {
-  padding: 20px 24px;
+  padding: 20px 22px;
   background: #ffffff;
   border: 1px solid var(--izone-border, #e2e8f0);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-sizing: border-box;
 }
 .drilldown-header {
   display: flex;

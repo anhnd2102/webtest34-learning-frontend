@@ -400,7 +400,6 @@ export function renderDrilldownTable(bucket, maxScore, skillCode = 'overall') {
               <tr>
                 <th style="width: 50px;">STT</th>
                 <th>Học viên</th>
-                <th>Mã học viên</th>
                 <th>Email</th>
                 <th style="text-align: right;">Điểm (${skillCode === 'overall' ? 'Toàn bài' : skillCode})</th>
               </tr>
@@ -410,7 +409,6 @@ export function renderDrilldownTable(bucket, maxScore, skillCode = 'overall') {
                 <tr>
                   <td>${idx + 1}</td>
                   <td class="student-name-cell"><strong>${s.name || '—'}</strong></td>
-                  <td class="student-ref-cell"><code>${s.studentRef || '—'}</code></td>
                   <td class="student-email-cell">${s.email || '—'}</td>
                   <td class="student-score-cell" style="text-align: right;">${formatScoreFraction(s.score, maxScore)}</td>
                 </tr>
@@ -539,15 +537,19 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
       <!-- Statistical Highlights for Active Skill -->
       ${renderStatisticsCards(currentTarget?.statistics || {}, currentMaxScore)}
 
-      <!-- SVG Histogram Chart -->
-      ${renderHistogramSvg(currentTarget?.histogram || {}, currentMaxScore, {
-        activeBucketIndex,
-        chartTitle: currentTitle
-      })}
+      <!-- Interactive Histogram & Drilldown Side-by-Side Area -->
+      <div class="histogram-drilldown-split-area ${activeBucket ? 'has-active-drilldown' : ''}">
+        <div class="histogram-card-slot">
+          ${renderHistogramSvg(currentTarget?.histogram || {}, currentMaxScore, {
+            activeBucketIndex,
+            chartTitle: currentTitle
+          })}
+        </div>
 
-      <!-- Drilldown Details Container -->
-      <div id="report-drilldown-container" class="report-drilldown-container" ${activeBucket ? '' : 'hidden'}>
-        ${drilldownHtml}
+        <!-- Drilldown Details Container (shows side-by-side when column clicked) -->
+        <div id="report-drilldown-container" class="report-drilldown-slot" ${activeBucket ? '' : 'hidden'}>
+          ${drilldownHtml}
+        </div>
       </div>
     </div>
   `;
