@@ -129,15 +129,15 @@ export function renderItemAnalysisControls({
  * Render 4-color horizontal distribution bar representing student outcomes on an item.
  */
 export function renderItemDistributionBar(item) {
-  const total = Number(item.totalAttempts) || 0;
+  const total = Number(item?.totalAttempts ?? item?.stats?.totalAttempts) || 0;
   if (total <= 0) {
     return `<div class="item-dist-bar empty-bar" title="Chưa có dữ liệu làm bài"><div class="bar-segment-empty"></div></div>`;
   }
 
-  const correct = Number(item.correctCount) || 0;
-  const partial = Number(item.partialCount) || 0;
-  const incorrect = Number(item.incorrectCount) || 0;
-  const unanswered = Number(item.unansweredCount) || 0;
+  const correct = Number(item?.correctCount ?? item?.stats?.correctCount) || 0;
+  const partial = Number(item?.partialCount ?? item?.stats?.partialCount) || 0;
+  const incorrect = Number(item?.incorrectCount ?? item?.stats?.incorrectCount) || 0;
+  const unanswered = Number(item?.unansweredCount ?? item?.stats?.unansweredCount) || 0;
 
   const pctCorrect = ((correct / total) * 100).toFixed(1);
   const pctPartial = ((partial / total) * 100).toFixed(1);
@@ -163,10 +163,10 @@ export function renderItemCard(item, { isExpanded = false, maxScore = 1 } = {}) 
   const promptSummary = formatItemPromptDisplay(item.prompt);
   const skill = item.skill || item.skillCode || 'Chung';
 
-  const total = Number(item.totalAttempts) || 0;
-  const incorrect = Number(item.incorrectCount) || 0;
-  const partial = Number(item.partialCount) || 0;
-  const unanswered = Number(item.unansweredCount) || 0;
+  const total = Number(item?.totalAttempts ?? item?.stats?.totalAttempts) || 0;
+  const incorrect = Number(item?.incorrectCount ?? item?.stats?.incorrectCount) || 0;
+  const partial = Number(item?.partialCount ?? item?.stats?.partialCount) || 0;
+  const unanswered = Number(item?.unansweredCount ?? item?.stats?.unansweredCount) || 0;
   const errorCount = incorrect + partial + unanswered;
   const errorRate = computeItemErrorRate(item);
   const errorPct = Math.round(errorRate * 100);
@@ -225,7 +225,7 @@ export function renderItemCard(item, { isExpanded = false, maxScore = 1 } = {}) 
               <td class="col-num">${idx + 1}</td>
               <td class="col-student">
                 <div class="student-name">${escapeHtml(st.name || 'Học viên')}</div>
-                <div class="student-meta">${escapeHtml(st.studentRef || '')}${st.email ? ` • ${escapeHtml(st.email)}` : ''}</div>
+                ${st.email ? `<div class="student-meta">${escapeHtml(st.email)}</div>` : ''}
               </td>
               <td class="col-answer">${rawDisplay}</td>
               <td class="col-score font-numeric">${scoreDisplay}</td>

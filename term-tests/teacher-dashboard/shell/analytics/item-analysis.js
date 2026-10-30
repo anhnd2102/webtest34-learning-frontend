@@ -16,14 +16,15 @@
  * @returns {number} Float value in range [0, 1]
  */
 export function computeItemErrorRate(item) {
-  if (!item || !item.totalAttempts || item.totalAttempts <= 0) {
+  const total = Number(item?.totalAttempts ?? item?.stats?.totalAttempts) || 0;
+  if (total <= 0) {
     return 0;
   }
-  const incorrect = Number(item.incorrectCount) || 0;
-  const partial = Number(item.partialCount) || 0;
-  const unanswered = Number(item.unansweredCount) || 0;
+  const incorrect = Number(item?.incorrectCount ?? item?.stats?.incorrectCount) || 0;
+  const partial = Number(item?.partialCount ?? item?.stats?.partialCount) || 0;
+  const unanswered = Number(item?.unansweredCount ?? item?.stats?.unansweredCount) || 0;
   const errorCount = incorrect + partial + unanswered;
-  const rate = errorCount / item.totalAttempts;
+  const rate = errorCount / total;
   return Math.min(Math.max(rate, 0), 1);
 }
 
@@ -52,7 +53,9 @@ export function sortItems(items, criteria = 'error_rate_desc') {
 
     case 'unanswered_desc':
       return cloned.sort((a, b) => {
-        const diff = (Number(b.unansweredCount) || 0) - (Number(a.unansweredCount) || 0);
+        const unA = Number(a?.unansweredCount ?? a?.stats?.unansweredCount) || 0;
+        const unB = Number(b?.unansweredCount ?? b?.stats?.unansweredCount) || 0;
+        const diff = unB - unA;
         if (diff !== 0) return diff;
         return (Number(a.position) || 0) - (Number(b.position) || 0);
       });
@@ -67,8 +70,12 @@ export function sortItems(items, criteria = 'error_rate_desc') {
           return rateDiff;
         }
         // If tied, prioritize item with higher absolute error count
-        const errA = (Number(a.incorrectCount) || 0) + (Number(a.partialCount) || 0) + (Number(a.unansweredCount) || 0);
-        const errB = (Number(b.incorrectCount) || 0) + (Number(b.partialCount) || 0) + (Number(b.unansweredCount) || 0);
+        const errA = (Number(a?.incorrectCount ?? a?.stats?.incorrectCount) || 0) +
+                     (Number(a?.partialCount ?? a?.stats?.partialCount) || 0) +
+                     (Number(a?.unansweredCount ?? a?.stats?.unansweredCount) || 0);
+        const errB = (Number(b?.incorrectCount ?? b?.stats?.incorrectCount) || 0) +
+                     (Number(b?.partialCount ?? b?.stats?.partialCount) || 0) +
+                     (Number(b?.unansweredCount ?? b?.stats?.unansweredCount) || 0);
         const errDiff = errB - errA;
         if (errDiff !== 0) return errDiff;
 

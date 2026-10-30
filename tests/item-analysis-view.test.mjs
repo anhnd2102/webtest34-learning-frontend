@@ -145,6 +145,11 @@ test('renderItemCard renders card summary and expanded details with student list
   assert.match(expandedHtml, /0\.5\/1/); // Score fraction
   assert.match(expandedHtml, /Chưa trả lời/);
 
+  // Invariant: Do not expose studentRef UUID
+  assert.doesNotMatch(expandedHtml, /stu-01/);
+  assert.doesNotMatch(expandedHtml, /stu-02/);
+  assert.doesNotMatch(expandedHtml, /stu-03/);
+
   // Design system invariant: No unicode emojis
   assert.doesNotMatch(expandedHtml, /[\u{1F300}-\u{1F9FF}]/u);
 });

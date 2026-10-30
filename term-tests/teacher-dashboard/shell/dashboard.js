@@ -2471,7 +2471,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
     try {
       const path = itemAnalysisApiPath(classId, assignmentId, {
-        includeProvisional: reportState.includeProvisional
+        includeProvisional: true
       });
       const payload = await request(path, { signal: query?.signal });
       if (query && !query.isCurrent()) return;
@@ -2539,16 +2539,21 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
       // Bind events for item-analysis view
       contentContainer.querySelectorAll('.item-filter-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          reportState.itemSelectedSkill = tab.getAttribute('data-skill');
+        tab.addEventListener('click', (e) => {
+          const targetTab = e.currentTarget || tab;
+          reportState.itemSelectedSkill = targetTab.getAttribute('data-skill');
           renderReportsView();
         });
       });
 
       contentContainer.querySelectorAll('.item-sort-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          reportState.itemSortCriteria = btn.getAttribute('data-sort');
-          renderReportsView();
+        btn.addEventListener('click', (e) => {
+          const targetBtn = e.currentTarget || btn;
+          const sortVal = targetBtn.getAttribute('data-sort');
+          if (sortVal) {
+            reportState.itemSortCriteria = sortVal;
+            renderReportsView();
+          }
         });
       });
 
