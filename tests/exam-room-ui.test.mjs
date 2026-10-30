@@ -31,9 +31,9 @@ test('teacher room markup offers a manual refresh, start, and extension control'
 });
 
 test('teacher room consumes the scoped Bearer SSE stream and reconnects with a fresh snapshot', async () => {
-  const source = await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8');
+  const source = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/exam-room-session.js', import.meta.url), 'utf8'));
   const styles = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
-  assert.match(source, /fetch\(`\$\{apiBase\(\)\}\$\{path\}`,[\s\S]*?Authorization: `Bearer \$\{sessionToken\}`[\s\S]*?response\.body\.getReader\(\)/);
+  assert.match(source, /fetch\(`\$\{origin\}\$\{path\}`,[\s\S]*?Authorization: `Bearer \$\{token\}`[\s\S]*?response\.body\.getReader\(\)/);
   assert.match(source, /parseSseChunk\(buffer/);
   assert.match(source, /message\.event === 'snapshot'[\s\S]*?message\.event === 'exam\.incident\.opened'/);
   assert.match(source, /message\.event === 'exam\.incident\.closed'/);
@@ -42,6 +42,7 @@ test('teacher room consumes the scoped Bearer SSE stream and reconnects with a f
   assert.match(source, /connection\.textContent = formatExamConnectionStatus\(student\.connectionStatus\)/);
   assert.match(source, /progress\.textContent = formatExamProgress\(student\.progress\)/);
   assert.match(source, /row\.append\(name, participation, progress, connection, incidents, device\)/);
-  assert.match(source, /await loadExamRoom\(\);[\s\S]*?setTimeout\(resolve, 1000\)/);
+  // Timing, fallback and cleanup are exercised through mountDashboard in exam-room-lifecycle.test.mjs.
+  assert.match(source, /refresh: \(\) => loadExamRoom\(session\)/);
   assert.match(styles, /\.exam-incident-active\s*\{[^}]*background:\s*#fee2e2/);
 });
