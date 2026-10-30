@@ -100,6 +100,11 @@ import {
   reportApiPath,
   renderScoreDistributionView
 } from './analytics/score-distribution-view.js';
+import {
+  itemAnalysisApiPath,
+  renderReportModeSwitch,
+  renderItemAnalysisView
+} from './analytics/item-analysis-view.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -234,6 +239,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         }
         if (newTab !== 'reports') {
           queryCoordinator.cancel('reports');
+          queryCoordinator.cancel('itemAnalysis');
         }
         if (newTab === 'grading') {
           if (state.assignmentId && state.classId) {
@@ -248,7 +254,11 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           loadAndRenderTestStudio();
         }
         if (newTab === 'reports') {
-          loadScoreDistributionReport();
+          if (reportState.mode === 'item_analysis') {
+            loadItemAnalysisReport();
+          } else {
+            loadScoreDistributionReport();
+          }
         }
       }
     });
@@ -2383,12 +2393,19 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   let reportState = {
+    mode: 'distribution', // 'distribution' | 'item_analysis'
     reportData: null,
     isLoading: false,
     error: null,
     activeSkill: 'overall',
     includeProvisional: false,
-    activeBucketIndex: -1
+    activeBucketIndex: -1,
+    itemAnalysisData: null,
+    itemAnalysisLoading: false,
+    itemAnalysisError: null,
+    itemSelectedSkill: 'ALL',
+    itemSortCriteria: 'error_rate_desc',
+    expandedItemIds: new Set()
   };
 
   async function loadScoreDistributionReport(classId = state.classId, assignmentId = state.assignmentId) {
@@ -2396,11 +2413,11 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     if (!classId || !assignmentId) {
       queryCoordinator?.cancel?.('reports');
       reportState = {
+        ...reportState,
         reportData: null,
         isLoading: false,
         error: null,
         activeSkill: 'overall',
-        includeProvisional: reportState.includeProvisional,
         activeBucketIndex: -1
       };
       renderReportsView();
@@ -2434,42 +2451,167 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
+  async function loadItemAnalysisReport(classId = state.classId, assignmentId = state.assignmentId) {
+    if (!viewReports) return;
+    if (!classId || !assignmentId) {
+      queryCoordinator?.cancel?.('itemAnalysis');
+      reportState.itemAnalysisData = null;
+      reportState.itemAnalysisLoading = false;
+      reportState.itemAnalysisError = null;
+      renderReportsView();
+      return;
+    }
+
+    const query = queryCoordinator?.begin?.('itemAnalysis');
+    if (queryCoordinator && !query) return;
+
+    reportState.itemAnalysisLoading = true;
+    reportState.itemAnalysisError = null;
+    renderReportsView();
+
+    try {
+      const path = itemAnalysisApiPath(classId, assignmentId, {
+        includeProvisional: reportState.includeProvisional
+      });
+      const payload = await request(path, { signal: query?.signal });
+      if (query && !query.isCurrent()) return;
+      if (state.classId !== classId || state.assignmentId !== assignmentId) return;
+
+      reportState.itemAnalysisData = payload;
+      reportState.itemAnalysisLoading = false;
+      reportState.itemAnalysisError = null;
+      renderReportsView();
+    } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
+      reportState.itemAnalysisLoading = false;
+      reportState.itemAnalysisError = error;
+      renderReportsView();
+    }
+  }
+
   function renderReportsView() {
     if (!viewReports) return;
-    renderScoreDistributionView(viewReports, reportState, {
-      onProvisionalToggle: (checked) => {
-        reportState.includeProvisional = checked;
-        loadScoreDistributionReport();
-      },
-      onSkillChange: (skillCode) => {
-        reportState.activeSkill = skillCode;
-        reportState.activeBucketIndex = -1;
-        renderReportsView();
-      },
-      onBucketClick: ({ bucket, index, skillCode }) => {
-        reportState.activeBucketIndex = reportState.activeBucketIndex === index ? -1 : index;
-        renderReportsView();
-      },
-      onRetry: () => {
-        loadScoreDistributionReport();
-      },
-      onExportExcel: () => {
-        if (!state.classId || !state.assignmentId) return;
-        const exportBtn = viewReports.querySelector('.btn-export-excel');
-        downloadResultsXlsx({
-          url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
-          headers: authHeader(),
-          button: exportBtn,
-          status,
-          onUnauthorized: () => { if (sessionToken) endSession(); }
-        });
-      },
-      onPrint: () => {
-        if (typeof window !== 'undefined' && typeof window.print === 'function') {
-          window.print();
+
+    viewReports.replaceChildren();
+
+    // Mode Switcher Header
+    const switchWrapper = document.createElement('div');
+    switchWrapper.className = 'report-mode-nav-wrapper';
+    switchWrapper.innerHTML = renderReportModeSwitch(reportState.mode);
+
+    const modeButtons = switchWrapper.querySelectorAll('.report-mode-btn');
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetMode = btn.getAttribute('data-report-mode');
+        if (targetMode && targetMode !== reportState.mode) {
+          reportState.mode = targetMode;
+          if (targetMode === 'item_analysis' && !reportState.itemAnalysisData && !reportState.itemAnalysisLoading) {
+            loadItemAnalysisReport();
+          } else if (targetMode === 'distribution' && !reportState.reportData && !reportState.isLoading) {
+            loadScoreDistributionReport();
+          } else {
+            renderReportsView();
+          }
         }
-      }
+      });
     });
+
+    viewReports.appendChild(switchWrapper);
+
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'report-mode-content-wrapper';
+    viewReports.appendChild(contentContainer);
+
+    if (reportState.mode === 'item_analysis') {
+      const itemsPayload = reportState.itemAnalysisData;
+      const items = itemsPayload?.items || [];
+      const error = reportState.itemAnalysisError;
+      const loading = reportState.itemAnalysisLoading;
+
+      contentContainer.innerHTML = renderItemAnalysisView({
+        items,
+        loading,
+        error,
+        selectedSkill: reportState.itemSelectedSkill,
+        sortCriteria: reportState.itemSortCriteria,
+        expandedItemIds: reportState.expandedItemIds
+      });
+
+      // Bind events for item-analysis view
+      contentContainer.querySelectorAll('.item-filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          reportState.itemSelectedSkill = tab.getAttribute('data-skill');
+          renderReportsView();
+        });
+      });
+
+      contentContainer.querySelectorAll('.item-sort-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          reportState.itemSortCriteria = btn.getAttribute('data-sort');
+          renderReportsView();
+        });
+      });
+
+      contentContainer.querySelectorAll('.btn-toggle-item').forEach(cardHeader => {
+        cardHeader.addEventListener('click', () => {
+          const itemId = cardHeader.getAttribute('data-item-id');
+          if (itemId) {
+            if (reportState.expandedItemIds.has(itemId)) {
+              reportState.expandedItemIds.delete(itemId);
+            } else {
+              reportState.expandedItemIds.add(itemId);
+            }
+            renderReportsView();
+          }
+        });
+      });
+
+      const retryBtn = contentContainer.querySelector('.btn-retry-report');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+          loadItemAnalysisReport();
+        });
+      }
+    } else {
+      // Distribution mode
+      renderScoreDistributionView(contentContainer, reportState, {
+        onProvisionalToggle: (checked) => {
+          reportState.includeProvisional = checked;
+          loadScoreDistributionReport();
+          if (reportState.itemAnalysisData) {
+            reportState.itemAnalysisData = null;
+          }
+        },
+        onSkillChange: (skillCode) => {
+          reportState.activeSkill = skillCode;
+          reportState.activeBucketIndex = -1;
+          renderReportsView();
+        },
+        onBucketClick: ({ bucket, index, skillCode }) => {
+          reportState.activeBucketIndex = reportState.activeBucketIndex === index ? -1 : index;
+          renderReportsView();
+        },
+        onRetry: () => {
+          loadScoreDistributionReport();
+        },
+        onExportExcel: () => {
+          if (!state.classId || !state.assignmentId) return;
+          const exportBtn = contentContainer.querySelector('.btn-export-excel');
+          downloadResultsXlsx({
+            url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
+            headers: authHeader(),
+            button: exportBtn,
+            status,
+            onUnauthorized: () => { if (sessionToken) endSession(); }
+          });
+        },
+        onPrint: () => {
+          if (typeof window !== 'undefined' && typeof window.print === 'function') {
+            window.print();
+          }
+        }
+      });
+    }
   }
 
   async function loadAssignments(classId, selectedAssignmentId = '') {
@@ -2528,7 +2670,11 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         if (query && !query.isCurrent()) return;
         const currentTab = readDashboardTab(window.location.hash);
         if (currentTab === 'reports') {
-          await loadScoreDistributionReport(classId, selectedAssignmentId);
+          if (reportState.mode === 'item_analysis') {
+            await loadItemAnalysisReport(classId, selectedAssignmentId);
+          } else {
+            await loadScoreDistributionReport(classId, selectedAssignmentId);
+          }
         }
         if (state.attemptId) {
           try {
@@ -3478,7 +3624,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   function handleLogout() {
     disposeOwnedBuilder();
-    for (const scope of ['sessionRestore', 'classes', 'assignments', 'results', 'attemptDetail', 'testStudio', 'testStudioBuilder', 'examRoom', 'examRoomTimeline']) {
+    for (const scope of ['sessionRestore', 'classes', 'assignments', 'results', 'attemptDetail', 'testStudio', 'testStudioBuilder', 'examRoom', 'examRoomTimeline', 'reports', 'itemAnalysis']) {
       queryCoordinator.cancel(scope);
     }
     stopExamRoomEvents();
@@ -3662,6 +3808,11 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   lifecycle.listen(classSelect, 'change', () => {
     queryCoordinator.cancel('classes');
     queryCoordinator.cancel('attemptDetail');
+    queryCoordinator.cancel('reports');
+    queryCoordinator.cancel('itemAnalysis');
+    reportState.reportData = null;
+    reportState.itemAnalysisData = null;
+    reportState.expandedItemIds.clear();
     state.classId = classSelect.value;
     state.assignmentId = '';
     state.attemptId = '';
