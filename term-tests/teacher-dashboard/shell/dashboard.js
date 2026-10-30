@@ -210,6 +210,10 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       },
       navItems,
       onTabChange: (newTab) => {
+        if (newTab !== 'test-studio' && newTab !== 'exams') {
+          queryCoordinator.cancel('testStudio');
+          queryCoordinator.cancel('testStudioBuilder');
+        }
         if (newTab === 'grading') {
           if (state.assignmentId && state.classId) {
             if (results) results.hidden = false;
@@ -229,6 +233,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   let currentStudioCourseId = 1;
   async function loadAndRenderTestStudio(targetCourseId = currentStudioCourseId) {
+    queryCoordinator.cancel('testStudio');
+    queryCoordinator.cancel('testStudioBuilder');
     currentStudioCourseId = Number(targetCourseId || 1);
     const container = root.querySelector('#test-studio-container') || viewExams;
     if (!container) return;
@@ -578,6 +584,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   function selectAssignment(assignmentId) {
+    queryCoordinator.cancel('attemptDetail');
     state.assignmentId = assignmentId || '';
     state.attemptId = '';
     state.page = 1;
@@ -900,6 +907,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     const headers = { ...authHeader(), ...(options.headers || {}) };
     const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
     const payload = await response.json().catch(() => ({}));
+    if (options.signal?.aborted || lifecycle.isDisposed()) {
+      throw Object.assign(new Error('Request is no longer current.'), { name: 'AbortError' });
+    }
     if (response.status === 401 && sessionToken) {
       endSession();
       throw new Error(payload.message || 'Yêu cầu đăng nhập.');
@@ -2605,6 +2615,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   let searchTimeout = null;
   if (searchInput) {
     lifecycle.listen(searchInput, 'input', () => {
+      queryCoordinator.cancel('results');
       state.q = searchInput.value.trim();
       lifecycle.clearTimeout(searchTimeout);
       searchTimeout = lifecycle.timeout(applyFilterChange, 300);
@@ -2926,6 +2937,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   function closeAttemptDetail() {
+    queryCoordinator.cancel('attemptDetail');
     if (attemptDetail) {
       attemptDetail.classList.remove('drawer-open');
       attemptDetail.hidden = true;
@@ -3357,6 +3369,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   });
 
   function handleLogout() {
+    for (const scope of ['sessionRestore', 'classes', 'assignments', 'results', 'attemptDetail', 'testStudio', 'testStudioBuilder', 'examRoom', 'examRoomTimeline']) {
+      queryCoordinator.cancel(scope);
+    }
     stopExamRoomEvents();
     resetPortal();
     if (roleCapabilitiesPopover) roleCapabilitiesPopover.hidden = true;
@@ -3512,10 +3527,13 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         // ignore
       }
     }
-    fetch(`${apiBase()}${authMePath()}`, { headers: { ...authHeader() } })
+    const restoreQuery = queryCoordinator.begin('sessionRestore');
+    fetch(`${apiBase()}${authMePath()}`, { headers: { ...authHeader() }, signal: restoreQuery.signal })
       .then(async res => {
+        if (!restoreQuery.isCurrent()) return;
         if (res.ok) {
           const data = await res.json();
+          if (!restoreQuery.isCurrent()) return;
           renderTeacherProfile(data.teacher);
           await loadClasses();
         } else {
@@ -3532,6 +3550,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   });
 
   lifecycle.listen(classSelect, 'change', () => {
+    queryCoordinator.cancel('classes');
+    queryCoordinator.cancel('attemptDetail');
     state.classId = classSelect.value;
     state.assignmentId = '';
     state.attemptId = '';

@@ -55,6 +55,11 @@ try {
         let payload = {};
         if (pathname.endsWith('/auth/me')) {
           payload = { teacher };
+        } else if (pathname.endsWith('/course-test-catalog')) {
+          payload = { catalog: [{ testKey: 'synthetic-draft', title: 'Synthetic draft', status: 'draft', formVersionId: 'synthetic-version' }] };
+        } else if (pathname.includes('/forms/synthetic-version')) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          payload = { formVersion: { id: 'synthetic-version', title: 'Stale builder', definition: { blocks: [] } } };
         } else if (pathname.endsWith('/classes')) {
           payload = { classes };
         } else if (pathname.endsWith('/results')) {
@@ -125,6 +130,20 @@ try {
     assert.equal(selectedClassVal, '102', 'Class select maintains current selection 102');
     const chipText = await page.locator('#assignment-chips').innerText();
     assert.ok(!chipText.includes('Assignment 101 Stale'), 'Stale assignments for 101 did not overwrite 102');
+
+    // A detail request must not mount a Builder after navigation leaves Studio.
+    await page.evaluate(() => { location.hash = '#exams'; });
+    const editButton = page.locator('.btn-edit-test').first();
+    await editButton.waitFor();
+    const detailRequested = page.waitForRequest(request => request.url().includes('/forms/synthetic-version'));
+    await editButton.click();
+    await detailRequested;
+    await page.evaluate(() => { location.hash = '#dashboard'; });
+    await page.waitForFunction(() => !document.querySelector('#view-dashboard')?.hidden);
+    const studioBefore = await page.locator('#test-studio-container').innerHTML();
+    await page.waitForTimeout(650);
+    assert.equal(await page.locator('#test-studio-container').innerHTML(), studioBefore, 'Late detail must not mount a stale Builder');
+    assert.equal(new URL(page.url()).hash, '#dashboard');
 
     assert.equal(errors.length, 0, `Page errors encountered in viewport ${vp.name}: ${errors.join('; ')}`);
     report.push({ viewport: vp.name, errorsCount: errors.length, status: 'verified' });

@@ -11,6 +11,151 @@ function deferred() {
   return { promise, resolve, reject };
 }
 
+const flushReads = () => new Promise(resolve => setImmediate(resolve));
+const jsonResponse = payload => ({ ok: true, status: 200, json: async () => payload });
+
+test('Read concurrency: closing the drawer silences a late detail error', async t => {
+  const { document, get } = createDOMFixture(t);
+  document.defaultView.location.search = '?classId=101&assignmentId=assign-1&attemptId=att-late';
+  const detail = deferred();
+  let detailRequests = 0;
+  t.mock.method(globalThis, 'fetch', async url => {
+    const path = new URL(String(url)).pathname;
+    if (path.includes('/attempts/att-late')) { detailRequests++; return detail.promise; }
+    if (path.endsWith('/classes')) return jsonResponse({ classes: [{ classId: '101', name: 'Synthetic class' }] });
+    if (path.endsWith('/assignments')) return jsonResponse({ assignments: [{ assignmentId: 'assign-1', title: 'Synthetic assignment' }] });
+    return jsonResponse({ assignment: { assignmentId: 'assign-1' }, students: [], skills: [] });
+  });
+  const handle = mountDashboard(document);
+  t.after(() => handle.dispose());
+  get('#identity-form').dispatchEvent(new Event('submit'));
+  await flushReads();
+  assert.equal(detailRequests, 1);
+  get('#close-attempt-detail-btn').dispatchEvent(new Event('click'));
+  await flushReads();
+  const currentStatus = get('#status').textContent;
+  detail.reject(new Error('stale drawer failure'));
+  await flushReads();
+  assert.equal(get('#status').textContent, currentStatus);
+  assert.equal(get('#attempt-detail').hidden, true);
+});
+
+test('Read concurrency: disposed session restoration cannot render a profile', async t => {
+  const { document, get } = createDOMFixture(t);
+  const savedStorage = Object.getOwnPropertyDescriptor(globalThis, 'sessionStorage');
+  globalThis.sessionStorage = { getItem: key => key === 'izone_teacher_token' ? 'synthetic-token' : null };
+  t.after(() => {
+    if (savedStorage) Object.defineProperty(globalThis, 'sessionStorage', savedStorage);
+    else delete globalThis.sessionStorage;
+  });
+  const profile = deferred();
+  let requests = 0;
+  t.mock.method(globalThis, 'fetch', async () => { requests++; return profile.promise; });
+  const handle = mountDashboard(document);
+  assert.equal(requests, 1);
+  const before = get('#teacher-profile-name').textContent;
+  handle.dispose();
+  profile.resolve(jsonResponse({ teacher: { name: 'Stale teacher', role: 'teacher' } }));
+  await flushReads();
+  assert.equal(get('#teacher-profile-name').textContent, before);
+  assert.equal(requests, 1);
+});
+
+test('Read concurrency: a superseded unauthorized response does not end the current session', async t => {
+  const { document, get } = createDOMFixture(t);
+  const savedStorage = Object.getOwnPropertyDescriptor(globalThis, 'sessionStorage');
+  let removed = 0;
+  globalThis.sessionStorage = { getItem: key => key === 'izone_teacher_token' ? 'synthetic-token' : null, removeItem: () => { removed++; } };
+  t.after(() => {
+    if (savedStorage) Object.defineProperty(globalThis, 'sessionStorage', savedStorage);
+    else delete globalThis.sessionStorage;
+  });
+  const expired = deferred();
+  let reads = 0;
+  t.mock.method(globalThis, 'fetch', async url => {
+    if (String(url).includes('/results')) { reads++; return expired.promise; }
+    if (String(url).includes('/auth/me')) return jsonResponse({ teacher: { name: 'Synthetic teacher', role: 'teacher' } });
+    return jsonResponse({ classes: [], assignments: [] });
+  });
+  const handle = mountDashboard(document);
+  t.after(() => handle.dispose());
+  await flushReads();
+  // Select a results scope explicitly after session restoration.
+  get('#class-select').value = '101';
+  get('#class-select').dispatchEvent(new Event('change'));
+  await flushReads();
+  get('#assignment-select').value = 'assign-1';
+  get('#assignment-select').dispatchEvent(new Event('change'));
+  assert.equal(reads, 1);
+  get('#search-input').value = 'fresh';
+  get('#search-input').dispatchEvent(new Event('input'));
+  expired.resolve({ ok: false, status: 401, json: async () => ({ message: 'expired old request' }) });
+  await flushReads();
+  assert.equal(removed, 0);
+});
+
+test('Read concurrency: changing class silences a late results error', async t => {
+  const { document, get } = createDOMFixture(t);
+  const oldResults = deferred();
+  let resultRequests = 0;
+  t.mock.method(globalThis, 'fetch', async url => {
+    if (String(url).includes('/results')) { resultRequests++; return oldResults.promise; }
+    return jsonResponse({ assignments: [] });
+  });
+  const handle = mountDashboard(document);
+  t.after(() => handle.dispose());
+  get('#status-filter').dispatchEvent(new Event('change'));
+  assert.equal(resultRequests, 1);
+  get('#class-select').value = '102';
+  get('#class-select').dispatchEvent(new Event('change'));
+  await flushReads();
+  const currentStatus = get('#status').textContent;
+  oldResults.reject(new Error('stale results failure'));
+  await flushReads();
+  assert.equal(get('#status').textContent, currentStatus);
+});
+
+test('Read concurrency: typing invalidates results before the search debounce fires', async t => {
+  const { document, get } = createDOMFixture(t);
+  const oldResults = deferred();
+  let resultRequests = 0;
+  t.mock.method(globalThis, 'fetch', async () => { resultRequests++; return oldResults.promise; });
+  const handle = mountDashboard(document);
+  t.after(() => handle.dispose());
+  get('#status-filter').dispatchEvent(new Event('change'));
+  assert.equal(resultRequests, 1);
+  get('#search-input').value = 'new query';
+  get('#search-input').dispatchEvent(new Event('input'));
+  const statusBeforeResponse = get('#status').textContent;
+  oldResults.reject(new Error('old search failure'));
+  await flushReads();
+  assert.equal(get('#status').textContent, statusBeforeResponse);
+});
+
+test('Read concurrency: leaving Studio invalidates an in-flight catalog error', async t => {
+  const { document, get } = createDOMFixture(t);
+  const catalog = deferred();
+  let catalogRequests = 0;
+  t.mock.method(globalThis, 'fetch', async url => {
+    if (String(url).includes('/course-test-catalog')) { catalogRequests++; return catalog.promise; }
+    if (String(url).endsWith('/classes')) return jsonResponse({ actor: { role: 'lead' }, classes: [] });
+    return jsonResponse({ assignments: [] });
+  });
+  const handle = mountDashboard(document);
+  t.after(() => handle.dispose());
+  get('#identity-form').dispatchEvent(new Event('submit'));
+  await flushReads();
+  document.defaultView.location.hash = '#exams';
+  document.defaultView.dispatchEvent(new Event('hashchange'));
+  assert.equal(catalogRequests, 1);
+  document.defaultView.location.hash = '#dashboard';
+  document.defaultView.dispatchEvent(new Event('hashchange'));
+  const content = get('#test-studio-container').innerHTML;
+  catalog.reject(new Error('stale catalog failure'));
+  await flushReads();
+  assert.equal(get('#test-studio-container').innerHTML, content);
+});
+
 function createDOMFixture(t) {
   class Element extends EventTarget {
     value = '';
@@ -215,63 +360,35 @@ test('Read concurrency: late error after fresh result does not overwrite status 
   assert.equal(statusEl.textContent, 'Đã cập nhật bảng kết quả');
 });
 
-test('Read concurrency: same scope different page/filter invalidates previous queries', async t => {
+test('Read concurrency: same assignment page changes discard the previous page', async t => {
   const { document, get } = createDOMFixture(t);
-  const dPage1 = deferred();
-  const dPage2 = deferred();
-
-  const originalFetch = globalThis.fetch;
-  t.mock.method(globalThis, 'fetch', async (url) => {
-    const urlStr = String(url);
-    if (urlStr.includes('page=1')) {
-      return dPage1.promise;
-    }
-    if (urlStr.includes('page=2')) {
-      return dPage2.promise;
-    }
-    return {
-      ok: true,
-      status: 200,
-      json: async () => ({ results: [], total: 20, page: 1, limit: 10 })
-    };
+  const first = deferred();
+  const second = deferred();
+  const pages = [];
+  t.mock.method(globalThis, 'fetch', async url => {
+    const page = new URL(String(url)).searchParams.get('page') || '1';
+    pages.push(page);
+    return page === '2' ? second.promise : first.promise;
   });
-  t.after(() => { globalThis.fetch = originalFetch; });
-
   const handle = mountDashboard(document);
   t.after(() => handle.dispose());
-
-  // Filter change resets to page 1
   get('#status-filter').dispatchEvent(new Event('change'));
-
-  // Change sort or dir which keeps page or triggers new query
-  get('#sort-dir').value = 'desc';
-  get('#sort-dir').dispatchEvent(new Event('change'));
-
-  dPage2.resolve({
-    ok: true,
-    status: 200,
-    json: async () => ({
-      results: [{ studentId: 'p2-s1', name: 'Page 2 Student', totalScore: 85, maxScore: 100 }],
-      total: 20,
-      page: 2,
-      limit: 10
-    })
+  get('#next-page-btn').dispatchEvent(new Event('click'));
+  assert.deepEqual(pages, ['1', '2']);
+  const payload = (name, page) => ({
+    assignment: { assignmentId: 'assign-1', title: 'Synthetic assignment' },
+    skills: [], students: [{ studentId: name, name }],
+    pagination: { page, totalPages: 2, totalItems: 2, pageSize: 1 }
   });
-  await new Promise(r => setTimeout(r, 20));
-
-  dPage1.resolve({
-    ok: true,
-    status: 200,
-    json: async () => ({
-      results: [{ studentId: 'p1-s1', name: 'Page 1 Student', totalScore: 70, maxScore: 100 }],
-      total: 20,
-      page: 1,
-      limit: 10
-    })
-  });
-  await new Promise(r => setTimeout(r, 20));
-
-  assert.equal(get('#status').textContent, 'Đã cập nhật bảng kết quả');
+  second.resolve(jsonResponse(payload('Current student', 2)));
+  await flushReads();
+  const currentRows = get('#results-content')._children;
+  const pagination = get('#pagination-info').textContent;
+  first.resolve(jsonResponse(payload('Stale student', 1)));
+  await flushReads();
+  assert.equal(get('#results-content')._children, currentRows);
+  assert.equal(get('#pagination-info').textContent, pagination);
+  assert.ok(pagination.includes('2 / 2'));
 });
 
 test('Read concurrency: disposal silences in-flight query; remount starts fresh generation', async t => {
@@ -384,76 +501,35 @@ test('Read concurrency: query generation protects state even when fetch ignores 
   assert.equal(get('#status').textContent, 'Đã cập nhật bảng kết quả');
 });
 
-test('Read concurrency: Test Studio out-of-order course catalog loads discard stale responses', async t => {
+test('Read concurrency: reloading Studio catalog discards the previous catalog', async t => {
   const { document, get } = createDOMFixture(t);
-  const dCourse1 = deferred();
-  const dCourse2 = deferred();
-
-  const originalFetch = globalThis.fetch;
-  t.mock.method(globalThis, 'fetch', async (url) => {
-    const urlStr = String(url);
-    if (urlStr.includes('/api/teacher/classes')) {
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({
-          actor: { role: 'lead', name: 'Lead User', classIds: ['101'] },
-          classes: [{ classId: '101', name: 'Class 101', courseId: 1 }]
-        })
-      };
+  const oldCatalog = deferred();
+  const newCatalog = deferred();
+  let catalogRequests = 0;
+  t.mock.method(globalThis, 'fetch', async url => {
+    if (String(url).includes('/course-test-catalog')) {
+      catalogRequests++;
+      return catalogRequests === 1 ? oldCatalog.promise : newCatalog.promise;
     }
-    if (urlStr.includes('/api/teacher/forms/catalog?courseId=1') || urlStr.includes('courseId=1')) {
-      return dCourse1.promise;
-    }
-    if (urlStr.includes('/api/teacher/forms/catalog?courseId=2') || urlStr.includes('courseId=2')) {
-      return dCourse2.promise;
-    }
-    return {
-      ok: true,
-      status: 200,
-      json: async () => ({ catalog: [] })
-    };
+    if (String(url).endsWith('/classes')) return jsonResponse({ actor: { role: 'lead' }, classes: [] });
+    return jsonResponse({ assignments: [] });
   });
-  t.after(() => { globalThis.fetch = originalFetch; });
-
   const handle = mountDashboard(document);
   t.after(() => handle.dispose());
-
-  // Switch to Test Studio tab
-  document.defaultView.location.hash = '#test-studio';
-  document.defaultView.dispatchEvent(new Event('hashchange'));
-
-  // Trigger course 2 tab load
+  get('#identity-form').dispatchEvent(new Event('submit'));
+  await flushReads();
   document.defaultView.location.hash = '#exams';
   document.defaultView.dispatchEvent(new Event('hashchange'));
-
-  // Resolve course 2 first
-  dCourse2.resolve({
-    ok: true,
-    status: 200,
-    json: async () => ({
-      catalog: [
-        { testKey: 'test-2', title: 'Course 2 Midterm Test', status: 'draft', formVersionId: 'fv-2' }
-      ]
-    })
-  });
-  await new Promise(r => setTimeout(r, 20));
-
-  // Resolve course 1 second
-  dCourse1.resolve({
-    ok: true,
-    status: 200,
-    json: async () => ({
-      catalog: [
-        { testKey: 'test-1', title: 'Course 1 Old Stale Test', status: 'draft', formVersionId: 'fv-1' }
-      ]
-    })
-  });
-  await new Promise(r => setTimeout(r, 20));
-
+  document.defaultView.dispatchEvent(new Event('hashchange'));
+  assert.equal(catalogRequests, 2);
+  newCatalog.resolve(jsonResponse({ catalog: [{ testKey: 'current', title: 'Current catalog', status: 'draft', formVersionId: 'fv-current' }] }));
+  await flushReads();
   const container = get('#test-studio-container');
-  // Stale course 1 must not overwrite
-  assert.ok(!container.innerHTML.includes('Course 1 Old Stale Test'));
+  assert.ok(container.innerHTML.includes('Current catalog'));
+  const currentContent = container.innerHTML;
+  oldCatalog.resolve(jsonResponse({ catalog: [{ testKey: 'stale', title: 'Stale catalog', status: 'draft', formVersionId: 'fv-stale' }] }));
+  await flushReads();
+  assert.equal(container.innerHTML, currentContent);
 });
 
 test('Read concurrency: switching attempts rapidly only renders latest attempt detail', async t => {
