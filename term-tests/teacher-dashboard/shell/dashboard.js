@@ -2083,6 +2083,77 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       `;
       modalItemContent.append(expBlock);
 
+      // 5. Manual Grade Override Block
+      const overrideBlock = document.createElement('div');
+      overrideBlock.className = 'modal-ctx-block modal-override-block';
+      const curScore = item.draftScore !== null && item.draftScore !== undefined
+        ? item.draftScore
+        : (item.manualReview ? item.scoreEarned : item.scoreEarned);
+      const curFeedback = typeof item.draftFeedback === 'string'
+        ? item.draftFeedback
+        : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
+
+      overrideBlock.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+          <h4 style="margin:0;">Chấm điểm / Điều chỉnh điểm</h4>
+          ${item.isOverridden ? '<span class="badge-manual-override">Đã sửa tay</span>' : ''}
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom: 10px;">
+          <label style="font-weight: 700; font-size: 0.88rem; color: #1e293b;">Điểm số:</label>
+          <input type="number" step="any" min="0" max="${item.maxScore}" class="modal-override-score-input table-grade-input" style="width: 75px;" value="${curScore !== null && curScore !== undefined ? curScore : ''}" placeholder="0-${item.maxScore}">
+          <span style="font-weight: 700; color: #475569;">/ ${item.maxScore} điểm</span>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="font-weight: 700; font-size: 0.88rem; color: #1e293b; display:block; margin-bottom: 4px;">Nhận xét của giáo viên:</label>
+          <textarea class="modal-override-feedback-input table-feedback-input" placeholder="Nhập nhận xét hoặc ghi chú sửa điểm...">${escapeHtml(curFeedback || '')}</textarea>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button type="button" class="btn btn-sm btn-primary btn-modal-save-grade">${renderSvgIcon('check', 'icon-inline')} <span>Lưu điểm</span></button>
+          ${item.isOverridden ? `<button type="button" class="btn btn-sm btn-outline-secondary btn-modal-reset-grade">${renderSvgIcon('rotate', 'icon-inline')} <span>Khôi phục điểm gốc (${item.originalScore !== null && item.originalScore !== undefined ? item.originalScore : item.scoreEarned}/${item.maxScore})</span></button>` : ''}
+        </div>
+      `;
+      modalItemContent.append(overrideBlock);
+
+      const modalScoreInp = overrideBlock.querySelector('.modal-override-score-input');
+      const modalFeedbackInp = overrideBlock.querySelector('.modal-override-feedback-input');
+      const modalSaveBtn = overrideBlock.querySelector('.btn-modal-save-grade');
+      const modalResetBtn = overrideBlock.querySelector('.btn-modal-reset-grade');
+
+      if (modalSaveBtn) {
+        lifecycle.listen(modalSaveBtn, 'click', async () => {
+          const rawScore = modalScoreInp.value.trim();
+          if (rawScore === '') return;
+          const num = Number(rawScore);
+          if (!Number.isFinite(num) || num < 0 || num > item.maxScore) {
+            alert(`Điểm số không hợp lệ (0 - ${item.maxScore})`);
+            return;
+          }
+          item.draftScore = num;
+          item.draftFeedback = modalFeedbackInp.value.trim();
+          item.isOverridden = true;
+          item.verdict = num >= item.maxScore ? 'correct' : (num > 0 ? 'partial' : 'incorrect');
+          await saveManualGradingDraft(true);
+          renderAttemptTableRows(currentSkillTab);
+          itemContextModal.close();
+        });
+      }
+
+      if (modalResetBtn) {
+        lifecycle.listen(modalResetBtn, 'click', async () => {
+          item._resetOverride = true;
+          item.draftScore = null;
+          item.draftFeedback = null;
+          item.isOverridden = false;
+          if (item.originalScore !== null && item.originalScore !== undefined) {
+            item.scoreEarned = item.originalScore;
+            item.verdict = item.scoreEarned >= item.maxScore ? 'correct' : (item.scoreEarned > 0 ? 'partial' : 'incorrect');
+          }
+          await saveManualGradingDraft(true);
+          renderAttemptTableRows(currentSkillTab);
+          itemContextModal.close();
+        });
+      }
+
       itemContextModal.showModal();
     }
 
@@ -2166,40 +2237,53 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
           // 6. Score Column
           const tdScore = document.createElement('td');
+          tdScore.className = 'col-score';
+          const isAutomated = item.graderType !== 'rubric_async';
+          const isInlineEditing = item._isEditingInline === true;
           const currentScoreVal = item.draftScore !== null && item.draftScore !== undefined
             ? item.draftScore
-            : (item.manualReview ? item.scoreEarned : (item.canGrade ? (item.draftScore ?? '') : item.scoreEarned));
+            : (item.manualReview ? item.scoreEarned : item.scoreEarned);
 
-          if (item.canGrade) {
+          if (!isAutomated || isInlineEditing) {
             tdScore.innerHTML = `
               <div class="table-grade-score-wrap">
-                <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input table-grade-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal !== undefined ? currentScoreVal : ''}" placeholder="0-${item.maxScore}">
+                <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input table-grade-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal !== undefined && currentScoreVal !== null ? currentScoreVal : ''}" placeholder="0-${item.maxScore}">
                 <span>/${item.maxScore}</span>
+                ${isAutomated ? `<button type="button" class="btn-cancel-edit-inline" data-item-id="${item.itemVersionId}" title="Đóng sửa inline">${ICONS.close}</button>` : ''}
               </div>
+              ${item.isOverridden ? '<div class="badge-manual-override">Đã sửa tay</div>' : ''}
             `;
           } else {
-            tdScore.innerHTML = `<div class="table-grade-score-wrap"><span>${item.scoreEarned}/${item.maxScore}</span></div>`;
+            tdScore.innerHTML = `
+              <div class="table-grade-score-wrap">
+                <span>${currentScoreVal !== undefined && currentScoreVal !== null ? currentScoreVal : item.scoreEarned}/${item.maxScore}</span>
+                <button type="button" class="btn-edit-score-inline" data-item-id="${item.itemVersionId}" title="Sửa điểm câu này">${ICONS.edit} <span>Sửa</span></button>
+              </div>
+              ${item.isOverridden ? '<div class="badge-manual-override">Đã sửa tay</div>' : ''}
+            `;
           }
           tr.append(tdScore);
 
           // 7. Feedback Column
           const tdFeedback = document.createElement('td');
+          tdFeedback.className = 'col-feedback';
           const currentFeedbackVal = typeof item.draftFeedback === 'string'
             ? item.draftFeedback
             : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
 
-          if (item.canGrade) {
+          if (!isAutomated || isInlineEditing) {
             tdFeedback.innerHTML = `
               <textarea class="grade-feedback-input table-feedback-input" data-item-id="${item.itemVersionId}" placeholder="Nhận xét...">${escapeHtml(currentFeedbackVal)}</textarea>
             `;
           } else {
-            const commentText = item.feedback?.comment || '';
+            const commentText = currentFeedbackVal || item.feedback?.comment || '';
             tdFeedback.innerHTML = `<span style="font-size:0.82rem; color:#64748b;">${escapeHtml(commentText) || '—'}</span>`;
           }
           tr.append(tdFeedback);
 
           // 8. Action Column
           const tdAction = document.createElement('td');
+          tdAction.className = 'col-action';
           tdAction.innerHTML = `<button type="button" class="btn-inspect-item" data-item-id="${item.itemVersionId}">${ICONS.view} <span>Xem</span></button>`;
           tr.append(tdAction);
 
@@ -2215,6 +2299,29 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         });
       });
 
+      // Attach click listeners for inline edit and cancel buttons
+      detailItemsBody.querySelectorAll('.btn-edit-score-inline').forEach(btn => {
+        lifecycle.listen(btn, 'click', () => {
+          const itm = items.find(i => i.itemVersionId === btn.dataset.itemId);
+          if (itm) {
+            itm._isEditingInline = true;
+            renderAttemptTableRows(currentSkillTab);
+            const inp = detailItemsBody.querySelector(`.grade-score-input[data-item-id="${itm.itemVersionId}"]`);
+            if (inp) inp.focus();
+          }
+        });
+      });
+
+      detailItemsBody.querySelectorAll('.btn-cancel-edit-inline').forEach(btn => {
+        lifecycle.listen(btn, 'click', () => {
+          const itm = items.find(i => i.itemVersionId === btn.dataset.itemId);
+          if (itm) {
+            itm._isEditingInline = false;
+            renderAttemptTableRows(currentSkillTab);
+          }
+        });
+      });
+
       // Attach auto-save listener on table score and feedback inputs
       const scoreInputs = detailItemsBody.querySelectorAll('.grade-score-input');
       const feedbackInputs = detailItemsBody.querySelectorAll('.grade-feedback-input');
@@ -2223,7 +2330,25 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           const itm = items.find(i => i.itemVersionId === inp.dataset.itemId);
           if (itm) {
             if (inp.classList.contains('grade-score-input')) {
-              itm.draftScore = inp.value.trim() !== '' ? Number(inp.value.trim()) : null;
+              const val = inp.value.trim();
+              if (val !== '') {
+                const num = Number(val);
+                itm.draftScore = num;
+                itm.isOverridden = true;
+                if (Number.isFinite(num)) {
+                  itm.verdict = num >= itm.maxScore ? 'correct' : (num > 0 ? 'partial' : 'incorrect');
+                  const row = inp.closest('tr');
+                  if (row) {
+                    const badge = row.querySelector('.verdict-badge');
+                    if (badge) {
+                      badge.className = `verdict-badge ${itm.verdict}`;
+                      badge.textContent = verdictLabel(itm.verdict);
+                    }
+                  }
+                }
+              } else {
+                itm.draftScore = null;
+              }
             } else if (inp.classList.contains('grade-feedback-input')) {
               itm.draftFeedback = inp.value;
             }
@@ -2973,6 +3098,15 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
     // 1. Populate from items in memory
     for (const itm of currentAttemptDetail.items) {
+      if (itm._resetOverride) {
+        itemsToSubmit.push({
+          itemVersionId: itm.itemVersionId,
+          scoreEarned: null,
+          reset: true
+        });
+        delete itm._resetOverride;
+        continue;
+      }
       if (itm.canGrade) {
         const scoreVal = itm.draftScore !== null && itm.draftScore !== undefined
           ? itm.draftScore

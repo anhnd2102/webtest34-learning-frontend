@@ -1374,6 +1374,7 @@ body:not(.login-page) #auth-panel {
 
 .grading-table {
   width: 100%;
+  min-width: 980px;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.9rem;
@@ -1381,7 +1382,7 @@ body:not(.login-page) #auth-panel {
 
 .grading-table th,
 .grading-table td {
-  padding: 12px 14px;
+  padding: 10px 12px;
   text-align: left;
   border-bottom: 1px solid #f1f5f9;
   vertical-align: top;
@@ -1391,14 +1392,38 @@ body:not(.login-page) #auth-panel {
   overflow-wrap: anywhere;
 }
 
+.grading-table th.col-pos,
+.grading-table td.col-pos,
 .grading-table th:first-child,
 .grading-table td:first-child,
 .col-pos-cell {
-  width: 55px;
+  width: 50px;
   min-width: 50px;
-  max-width: 60px;
+  max-width: 55px;
   text-align: center;
   white-space: nowrap;
+}
+
+.grading-table th.col-verdict,
+.grading-table td.col-verdict {
+  width: 90px;
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.grading-table th.col-score,
+.grading-table td.col-score {
+  width: 110px;
+  min-width: 110px;
+  white-space: nowrap;
+}
+
+.grading-table th.col-action,
+.grading-table td.col-action {
+  width: 85px;
+  min-width: 85px;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .grading-table th {
@@ -1599,6 +1624,11 @@ body:not(.login-page) #auth-panel {
 
 .btn-inspect-item {
   width: auto;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   padding: 5px 10px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -1606,6 +1636,56 @@ body:not(.login-page) #auth-panel {
   color: #334155;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
+  cursor: pointer;
+}
+
+.badge-manual-override {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #ffedd5;
+  font-weight: 600;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.btn-edit-score-inline {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #0284c7;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.btn-edit-score-inline:hover {
+  color: #0369a1;
+  background: #f0f9ff;
+}
+
+.btn-cancel-edit-inline {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.btn-cancel-edit-inline:hover {
+  color: #475569;
+  background: #f1f5f9;
 }
 
 .btn-inspect-item:hover {
