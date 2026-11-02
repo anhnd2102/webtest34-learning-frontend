@@ -5872,9 +5872,11 @@ body:not(.login-page) #auth-panel {
 
 /* Inline Blank Widget Embedded in Sentences / Tables */
 .inline-blank-wrapper {
-  display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
   margin: 0 4px;
   position: relative;
   background: #ffffff;
@@ -5892,6 +5894,13 @@ body:not(.login-page) #auth-panel {
 
 .inline-blank-number,
 .inline-blank-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  flex-shrink: 0 !important;
   font-size: 0.78rem;
   font-weight: 700;
   color: #0284c7;
@@ -5900,6 +5909,7 @@ body:not(.login-page) #auth-panel {
   border-radius: 4px;
   margin-right: 6px;
   user-select: none;
+  line-height: 1.2 !important;
 }
 
 .inline-fill-input {
@@ -9121,9 +9131,11 @@ button.btn-publish-test:hover:not(:disabled) {
 
 .cloze-table .inline-blank-wrapper,
 .inline-cloze-table .inline-blank-wrapper {
-  display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
   margin: 2px 4px;
 }
 

@@ -644,6 +644,8 @@ body {
 .cbt-blank-pill {
   display: inline-flex !important;
   align-items: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
   gap: 4px !important;
   margin: 0 4px !important;
   vertical-align: middle !important;
@@ -659,10 +661,18 @@ body {
 
 .inline-blank-number,
 .cbt-blank-idx {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  flex-shrink: 0 !important;
   font-weight: 800 !important;
   color: #475569 !important;
   font-size: 0.82rem !important;
   user-select: none !important;
+  line-height: 1.2 !important;
 }
 
 .inline-fill-input,

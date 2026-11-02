@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -277,3 +278,16 @@ test('Test Studio: Inline Cloze preserves clozeAnswers during onSaveDraft', asyn
 
 
 
+
+test('inline cloze badge styles enforce nowrap and prevent line breaks on brackets and index numbers', () => {
+  const stylesCss = fs.readFileSync('term-tests/teacher-dashboard/styles.css', 'utf8');
+  assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*white-space:\s*nowrap\s*!important;/i, 'Wrapper must have white-space: nowrap !important');
+  assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*flex-shrink:\s*0\s*!important;/i, 'Wrapper must have flex-shrink: 0 !important');
+  assert.match(stylesCss, /\.inline-blank-number,[^}]*white-space:\s*nowrap\s*!important;/i, 'Badge must have white-space: nowrap !important');
+  assert.match(stylesCss, /\.inline-blank-number,[^}]*word-break:\s*keep-all\s*!important;/i, 'Badge must have word-break: keep-all !important');
+  assert.match(stylesCss, /\.inline-blank-number,[^}]*flex-shrink:\s*0\s*!important;/i, 'Badge must have flex-shrink: 0 !important');
+
+  const dynamicCss = fs.readFileSync('term-tests/webtest-34-demo/dynamic-test.css', 'utf8');
+  assert.match(dynamicCss, /\.inline-blank-wrapper,[^}]*white-space:\s*nowrap\s*!important;/i, 'Dynamic wrapper must have white-space: nowrap !important');
+  assert.match(dynamicCss, /\.inline-blank-number,[^}]*white-space:\s*nowrap\s*!important;/i, 'Dynamic badge must have white-space: nowrap !important');
+});
