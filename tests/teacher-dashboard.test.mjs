@@ -1329,8 +1329,8 @@ test('teacher dashboard styles.css and index.html provide wide attempt-detail dr
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
 
-  // Drawer width should be min(1080px, 95vw)
-  assert.match(css, /width:\s*min\(1080px,\s*95vw\)/);
+  // Drawer width should be min(1560px, 98vw)
+  assert.match(css, /width:\s*min\(1560px,\s*98vw\)/);
 
   // Colgroup in index.html should allocate fixed 50-60px for question number
   assert.match(html, /<col style="width:\s*55px;">/);

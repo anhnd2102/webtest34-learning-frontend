@@ -9,7 +9,7 @@ test('detail items table header renders "Thao tác" and dedicated column classes
   assert.match(html, /<th class="col-score">Điểm số<\/th>/);
   assert.match(html, /<th class="col-verdict">Trạng thái<\/th>/);
   assert.match(html, /<col style="width:\s*85px;">/);
-  assert.match(html, /<col style="width:\s*110px;">/);
+  assert.match(html, /<col style="width:\s*140px;">/);
 });
 
 test('CSS enforces nowrap on table score, action, verdict, and badge-manual-override', async () => {
@@ -19,7 +19,7 @@ test('CSS enforces nowrap on table score, action, verdict, and badge-manual-over
   assert.match(css, /\.grading-table th\.col-score[^}]*white-space:\s*nowrap/);
   assert.match(css, /\.btn-inspect-item[^}]*white-space:\s*nowrap/);
   assert.match(css, /\.badge-manual-override[^}]*white-space:\s*nowrap/);
-  assert.match(css, /\.grading-table\s*\{[^}]*min-width:\s*980px/);
+  assert.match(css, /\.grading-table\s*\{[^}]*min-width:\s*1180px/);
 });
 
 test('dashboard logic supports inline editing, manual override badge, and modal score adjustment', async () => {
@@ -34,3 +34,4 @@ test('dashboard logic supports inline editing, manual override badge, and modal 
   assert.match(js, /btn-modal-reset-grade/);
   assert.match(js, /_resetOverride/);
 });
+

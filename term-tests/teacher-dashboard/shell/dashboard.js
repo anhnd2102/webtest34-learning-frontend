@@ -2191,7 +2191,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
           // 1. # Column (compact question number, no internal tech badges)
           const tdPos = document.createElement('td');
-          tdPos.className = 'col-pos-cell';
+          tdPos.className = 'col-pos-cell col-pos';
           tdPos.innerHTML = `<span class="q-pos-num">#${item.position}</span>`;
           tr.append(tdPos);
 
@@ -2232,6 +2232,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
           // 5. Verdict Column
           const tdVerdict = document.createElement('td');
+          tdVerdict.className = 'col-verdict';
           tdVerdict.innerHTML = `<span class="verdict-badge ${item.verdict}">${verdictLabel(item.verdict)}</span>`;
           tr.append(tdVerdict);
 
@@ -2246,20 +2247,24 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
           if (!isAutomated || isInlineEditing) {
             tdScore.innerHTML = `
-              <div class="table-grade-score-wrap">
-                <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input table-grade-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal !== undefined && currentScoreVal !== null ? currentScoreVal : ''}" placeholder="0-${item.maxScore}">
-                <span>/${item.maxScore}</span>
-                ${isAutomated ? `<button type="button" class="btn-cancel-edit-inline" data-item-id="${item.itemVersionId}" title="Đóng sửa inline">${ICONS.close}</button>` : ''}
+              <div class="col-score-cell">
+                <div class="table-grade-score-wrap is-editing">
+                  <input type="number" step="any" min="0" max="${item.maxScore}" class="grade-score-input table-grade-input" data-item-id="${item.itemVersionId}" value="${currentScoreVal !== undefined && currentScoreVal !== null ? currentScoreVal : ''}" placeholder="0-${item.maxScore}">
+                  <span class="score-denom">/${item.maxScore}</span>
+                  ${isAutomated ? `<button type="button" class="btn-cancel-edit-inline" data-item-id="${item.itemVersionId}" title="Đóng sửa inline">${ICONS.close}</button>` : ''}
+                </div>
+                ${item.isOverridden ? '<div class="badge-manual-override">Đã sửa tay</div>' : ''}
               </div>
-              ${item.isOverridden ? '<div class="badge-manual-override">Đã sửa tay</div>' : ''}
             `;
           } else {
             tdScore.innerHTML = `
-              <div class="table-grade-score-wrap">
-                <span>${currentScoreVal !== undefined && currentScoreVal !== null ? currentScoreVal : item.scoreEarned}/${item.maxScore}</span>
-                <button type="button" class="btn-edit-score-inline" data-item-id="${item.itemVersionId}" title="Sửa điểm câu này">${ICONS.edit} <span>Sửa</span></button>
+              <div class="col-score-cell">
+                <div class="table-grade-score-wrap">
+                  <span class="score-fraction">${currentScoreVal !== undefined && currentScoreVal !== null ? currentScoreVal : item.scoreEarned}/${item.maxScore}</span>
+                  <button type="button" class="btn-edit-score-inline" data-item-id="${item.itemVersionId}" title="Sửa điểm câu này">${ICONS.edit} <span>Sửa</span></button>
+                </div>
+                ${item.isOverridden ? '<div class="badge-manual-override">Đã sửa tay</div>' : ''}
               </div>
-              ${item.isOverridden ? '<div class="badge-manual-override">Đã sửa tay</div>' : ''}
             `;
           }
           tr.append(tdScore);
@@ -2277,7 +2282,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
             `;
           } else {
             const commentText = currentFeedbackVal || item.feedback?.comment || '';
-            tdFeedback.innerHTML = `<span style="font-size:0.82rem; color:#64748b;">${escapeHtml(commentText) || '—'}</span>`;
+            tdFeedback.innerHTML = `<span class="table-comment-text">${escapeHtml(commentText) || '—'}</span>`;
           }
           tr.append(tdFeedback);
 

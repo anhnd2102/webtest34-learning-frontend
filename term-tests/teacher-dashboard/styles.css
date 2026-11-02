@@ -504,7 +504,7 @@ tr:hover td { background: #fafbfc; }
 .q-score-wrap { display: flex; align-items: center; gap: 10px; }
 .q-points { font-weight: 700; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
 
-.verdict-badge { display: inline-block; padding: 3px 9px; border-radius: 99px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+.verdict-badge { display: inline-flex; align-items: center; justify-content: center; padding: 3px 8px; border-radius: 99px; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; letter-spacing: 0.02em; line-height: 1.2; }
 .verdict-badge.correct { background: #c6f6d5; color: #22543d; }
 .verdict-badge.incorrect { background: #fed7d7; color: #9b2c2c; }
 .verdict-badge.partial { background: #feebc8; color: #c05621; }
@@ -1087,7 +1087,7 @@ body:not(.login-page) #auth-panel {
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(1080px, 95vw);
+  width: min(1560px, 98vw);
   max-width: 100vw;
   height: 100vh;
   background: #ffffff;
@@ -1374,7 +1374,7 @@ body:not(.login-page) #auth-panel {
 
 .grading-table {
   width: 100%;
-  min-width: 980px;
+  min-width: 1180px;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.9rem;
@@ -1397,33 +1397,40 @@ body:not(.login-page) #auth-panel {
 .grading-table th:first-child,
 .grading-table td:first-child,
 .col-pos-cell {
-  width: 50px;
-  min-width: 50px;
+  width: 55px;
+  min-width: 55px;
   max-width: 55px;
   text-align: center;
   white-space: nowrap;
+  padding: 10px 4px;
 }
 
 .grading-table th.col-verdict,
 .grading-table td.col-verdict {
-  width: 90px;
-  min-width: 90px;
+  width: 140px;
+  min-width: 140px;
+  max-width: 145px;
   white-space: nowrap;
+  text-align: center;
+  padding: 10px 6px;
 }
 
 .grading-table th.col-score,
 .grading-table td.col-score {
-  width: 110px;
-  min-width: 110px;
+  width: 140px;
+  min-width: 140px;
   white-space: nowrap;
+  padding: 10px 8px;
 }
 
 .grading-table th.col-action,
 .grading-table td.col-action {
   width: 85px;
   min-width: 85px;
+  max-width: 90px;
   white-space: nowrap;
   text-align: center;
+  padding: 10px 4px;
 }
 
 .grading-table th {
@@ -1637,6 +1644,36 @@ body:not(.login-page) #auth-panel {
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   cursor: pointer;
+}
+
+
+.col-score-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  width: 100%;
+}
+
+.score-fraction {
+  font-size: 0.9rem;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.score-denom {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.table-comment-text {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.4;
+  word-break: break-word;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .badge-manual-override {
