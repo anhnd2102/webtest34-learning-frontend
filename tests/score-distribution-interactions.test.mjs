@@ -314,3 +314,23 @@ test('renderScoreDistributionView triggers export and print actions', () => {
   container._onPrint();
   assert.equal(printCalled, true);
 });
+
+
+test('renderScoreDistributionView displays full student list by default when no bucket is selected', () => {
+  const container = createMockContainer();
+
+  // Render with no bucket selected (activeBucketIndex: -1)
+  renderScoreDistributionView(container, {
+    reportData: fixtureReportData,
+    activeSkill: 'overall',
+    activeBucketIndex: -1
+  });
+
+  // Table is rendered on the right by default without hidden attribute
+  assert.match(container.innerHTML, /Danh sách học viên toàn bài/);
+  assert.match(container.innerHTML, /Toàn bộ danh sách/);
+  // All students from all buckets are rendered
+  assert.match(container.innerHTML, /Học viên A/);
+  assert.match(container.innerHTML, /Học viên B/);
+  assert.doesNotMatch(container.innerHTML, /class="report-drilldown-slot" hidden/);
+});

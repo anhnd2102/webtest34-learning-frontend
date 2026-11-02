@@ -375,24 +375,37 @@ export function renderErrorState(errorMessage, onRetry) {
 /**
  * Render Drilldown table of students in selected histogram bucket.
  */
-export function renderDrilldownTable(bucket, maxScore, skillCode = 'overall') {
-  if (!bucket) return '';
-  const students = Array.isArray(bucket.students) ? bucket.students : [];
+export function renderDrilldownTable(bucket, maxScore, skillCode = 'overall', allStudentsList = []) {
+  const isFiltered = Boolean(bucket && bucket.label);
+  const students = isFiltered
+    ? (Array.isArray(bucket.students) ? bucket.students : [])
+    : (Array.isArray(allStudentsList) ? allStudentsList : (Array.isArray(bucket?.students) ? bucket.students : []));
+
+  const titleText = isFiltered
+    ? `Danh sách học viên khoảng điểm ${bucket.label} pts`
+    : `Danh sách học viên ${skillCode === 'overall' ? 'toàn bài' : 'kỹ năng ' + (skillCode || '').toUpperCase()}`;
+
+  const countText = `${students.length} học viên`;
+
   return `
     <div class="drilldown-card">
       <div class="drilldown-header">
         <div class="drilldown-header-left">
           <h4 class="drilldown-title">
-            Danh sách học viên khoảng điểm ${bucket.label} pts
+            ${titleText}
           </h4>
-          <span class="drilldown-count">${students.length} học viên</span>
+          <span class="drilldown-count">${countText}</span>
         </div>
-        <button type="button" class="btn btn-secondary btn-sm btn-close-drilldown" title="Đóng danh sách">
-          Đóng
-        </button>
+        ${isFiltered ? `
+          <button type="button" class="btn btn-secondary btn-sm btn-close-drilldown" title="Xem toàn bộ danh sách">
+            Đóng
+          </button>
+        ` : `
+          <span class="drilldown-badge-all">Toàn bộ danh sách</span>
+        `}
       </div>
       ${students.length === 0 ? `
-        <div class="drilldown-empty"><p>Không có học viên nào trong dải điểm này.</p></div>
+        <div class="drilldown-empty"><p>Không có học viên nào trong danh sách.</p></div>
       ` : `
         <div class="drilldown-table-wrapper">
           <table class="drilldown-table">
@@ -486,8 +499,12 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
     }
   }
 
-  const activeBucket = activeBucketIndex >= 0 ? currentTarget?.histogram?.buckets?.[activeBucketIndex] : null;
-  const drilldownHtml = activeBucket ? renderDrilldownTable(activeBucket, currentMaxScore, activeSkill) : '';
+  const allBuckets = currentTarget?.histogram?.buckets || [];
+  const allStudents = allBuckets.flatMap(b => Array.isArray(b.students) ? b.students : []);
+  const sortedAllStudents = [...allStudents].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+
+  const activeBucket = activeBucketIndex >= 0 ? allBuckets[activeBucketIndex] : null;
+  const drilldownHtml = renderDrilldownTable(activeBucket, currentMaxScore, activeSkill, sortedAllStudents);
 
   const skillsTabs = [
     { code: 'overall', label: 'Toàn bài (Overall)' },
@@ -538,7 +555,7 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
       ${renderStatisticsCards(currentTarget?.statistics || {}, currentMaxScore)}
 
       <!-- Interactive Histogram & Drilldown Side-by-Side Area -->
-      <div class="histogram-drilldown-split-area ${activeBucket ? 'has-active-drilldown' : ''}">
+      <div class="histogram-drilldown-split-area has-active-drilldown">
         <div class="histogram-card-slot">
           ${renderHistogramSvg(currentTarget?.histogram || {}, currentMaxScore, {
             activeBucketIndex,
@@ -546,8 +563,8 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
           })}
         </div>
 
-        <!-- Drilldown Details Container (shows side-by-side when column clicked) -->
-        <div id="report-drilldown-container" class="report-drilldown-slot" ${activeBucket ? '' : 'hidden'}>
+        <!-- Drilldown Details Container (always side-by-side: shows all students or filtered bucket) -->
+        <div id="report-drilldown-container" class="report-drilldown-slot">
           ${drilldownHtml}
         </div>
       </div>

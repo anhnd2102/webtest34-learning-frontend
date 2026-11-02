@@ -10644,13 +10644,9 @@ button.btn-icon:disabled,
 /* Interactive Histogram & Drilldown Side-by-Side Area */
 .histogram-drilldown-split-area {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(360px, 1fr) minmax(420px, 1.25fr);
   gap: 20px;
   align-items: start;
-  transition: all 0.25s ease;
-}
-.histogram-drilldown-split-area.has-active-drilldown {
-  grid-template-columns: minmax(360px, 1fr) minmax(420px, 1.25fr);
 }
 .histogram-card-slot {
   min-width: 0;
@@ -10660,11 +10656,8 @@ button.btn-icon:disabled,
   min-width: 0;
   width: 100%;
 }
-.report-drilldown-slot[hidden] {
-  display: none !important;
-}
 @media (max-width: 1100px) {
-  .histogram-drilldown-split-area.has-active-drilldown {
+  .histogram-drilldown-split-area {
     grid-template-columns: 1fr;
   }
 }
@@ -10705,7 +10698,20 @@ button.btn-icon:disabled,
   text-align: center;
   color: #64748b;
 }
+.drilldown-badge-all {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
 .drilldown-table-wrapper {
+  max-height: 480px;
+  overflow-y: auto;
   overflow-x: auto;
 }
 .drilldown-table {
@@ -10714,6 +10720,9 @@ button.btn-icon:disabled,
   font-size: 0.88rem;
 }
 .drilldown-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   text-align: left;
   padding: 10px 14px;
   background: var(--izone-slate-bg, #f8fafc);
