@@ -5093,6 +5093,21 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
 
         specificHtml = `
           <div class="template-section template-rubric-async">
+            <div class="ai-reference-context-group" style="margin-bottom: 12px; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #334155;">
+                  ${renderSvgIcon('book', 'icon-inline')} Ngữ cảnh bài đọc / Script tham chiếu cho AI:
+                </label>
+                <button type="button" class="btn btn-secondary btn-sm btn-pull-cloze-script" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động lấy đoạn văn từ bài Điền từ nội tuyến hoặc bài nghe phía trước">
+                  ${renderSvgIcon('clipboard', 'icon-inline')} Lấy Script từ bài Điền từ phía trước
+                </button>
+              </div>
+              <textarea class="form-control form-control-sm item-reference-context-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe để AI hiểu ngữ cảnh (ví dụ: dòng thứ mấy, đại từ 'its' thay thế cho từ nào...). Ẩn hoàn toàn với học viên.">${escapeHtml(item.referenceContext || '')}</textarea>
+              <div class="form-hint" style="font-size: 0.74rem; color: #64748b; margin-top: 4px;">
+                🔒 <strong>Ẩn hoàn toàn với học viên:</strong> Văn bản này chỉ gửi ngầm kèm theo cho AI Gateway làm căn cứ đối chiếu khi chấm; giao diện thí sinh chỉ hiển thị câu hỏi và ô trả lời.
+              </div>
+            </div>
+
             <div class="rubric-preset-selector">
               <span class="preset-title">Mẫu Rubric gợi ý (Preset):</span>
               <select class="form-select form-select-sm select-rubric-preset" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
@@ -5871,6 +5886,11 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               item.prompt = promptEl.value.trim() || `Câu ${item.position || iIdx + 1}`;
             } else if (!item.prompt || !item.prompt.trim()) {
               item.prompt = `Câu ${item.position || iIdx + 1}`;
+            }
+
+            const refContextEl = iCard.querySelector('.item-reference-context-input');
+            if (refContextEl) {
+              item.referenceContext = refContextEl.value.trim() || null;
             }
 
             const scoreEl = iCard.querySelector('.item-max-score-input');
@@ -9877,6 +9897,49 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       });
     });
 
+    // Pull Cloze Script handler
+    const pullScriptBtns = container.querySelectorAll('.btn-pull-cloze-script');
+    pullScriptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const iIdx = Number(btn.getAttribute('data-item-idx'));
+        const item = draftState.blocks[bIdx]?.items?.[iIdx];
+        if (!item) return;
+
+        let extractedScript = '';
+        for (let b = bIdx; b >= 0; b--) {
+          const block = draftState.blocks[b];
+          if (!block) continue;
+          const clozeItem = (block.items || []).find(it =>
+            it.layoutType === 'inline_cloze' ||
+            it.pedagogicalTypeCode === 'inline_cloze' ||
+            it.pedagogicalTypeCode === 'table_completion' ||
+            /(?:\(\d+\)\s*[_\.\u2026]{2,})|(?:\{\{\d+\}\})/i.test(it.prompt || '')
+          );
+          if (clozeItem && clozeItem.prompt) {
+            extractedScript = clozeItem.prompt
+              .replace(/<[^>]+>/g, ' ')
+              .replace(/(?:\(\d+\)\s*[_\.\u2026]{2,})|(?:\{\{\d+\}\})/g, '...')
+              .replace(/\s+/g, ' ')
+              .trim();
+            break;
+          }
+          if (block.readingPassage || block.stimulusReadingPassage) {
+            extractedScript = (block.readingPassage || block.stimulusReadingPassage).trim();
+            break;
+          }
+        }
+
+        if (extractedScript) {
+          item.referenceContext = extractedScript;
+          render();
+        } else {
+          alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
+        }
+      });
+    });
+
     // Trigger AI Sandbox handler
     const triggerSandboxBtns = container.querySelectorAll('.btn-trigger-sandbox');
     triggerSandboxBtns.forEach(btn => {
@@ -9907,10 +9970,12 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         }
 
         try {
+          const referenceContext = item.referenceContext || draftState.blocks[bIdx]?.readingPassage || draftState.blocks[bIdx]?.stimulusReadingPassage || draftState.blocks[bIdx]?.referenceContext || '';
           let sandboxResult;
           if (typeof options.onPreviewSandbox === 'function') {
             sandboxResult = await options.onPreviewSandbox({
               prompt: item.prompt,
+              context: referenceContext,
               sampleAnswer,
               interactionType: item.interactionType,
               pedagogicalTypeCode: item.pedagogicalTypeCode,
@@ -9925,6 +9990,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               },
               body: JSON.stringify({
                 prompt: item.prompt,
+                context: referenceContext,
                 sampleAnswer,
                 interactionType: item.interactionType,
                 pedagogicalTypeCode: item.pedagogicalTypeCode,

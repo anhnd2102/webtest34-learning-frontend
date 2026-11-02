@@ -88,3 +88,137 @@ test('renderTestBuilderView renders AI Rubric Builder with presets, tabs, and sa
   assert.ok(container.innerHTML.includes('btn-trigger-sandbox'), 'provides trigger button for sandbox grading');
   assert.ok(container.innerHTML.includes('btn-add-rubric-async'), 'provides button to add AI rubric questions');
 });
+
+test('AI Rubric Builder renders hidden reference context textarea and pull script button', () => {
+  const container = { innerHTML: '' };
+  const mockForm = {
+    id: '05020000-0000-4000-8000-000000000001',
+    version: 1,
+    status: 'draft',
+    title: 'Reading Comprehension Test',
+    blocks: [
+      {
+        blockId: 'b-cloze',
+        checkpoint: 1,
+        title: 'Listening Cloze',
+        items: [
+          {
+            itemVersionId: 'i-cloze',
+            position: 1,
+            prompt: 'Central Park is in New York. (1) __________ trees are green.',
+            interactionType: 'short_text',
+            layoutType: 'inline_cloze',
+            pedagogicalTypeCode: 'inline_cloze',
+            maxScore: 1
+          }
+        ]
+      },
+      {
+        blockId: 'b-reading',
+        checkpoint: 2,
+        title: 'Reading Comprehension',
+        items: [
+          {
+            itemVersionId: 'i-reading',
+            position: 2,
+            prompt: 'Từ "its" ở dòng 2 có nghĩa là gì?',
+            referenceContext: 'Central Park is in New York. Its trees are green.',
+            interactionType: 'short_text',
+            layoutType: 'default',
+            pedagogicalTypeCode: 'writing',
+            graderType: 'rubric_async',
+            maxScore: 4
+          }
+        ]
+      }
+    ],
+    gradingKey: {
+      items: {
+        'i-reading': {
+          graderType: 'rubric_async',
+          rubricCode: 'rubric_comprehension_v1',
+          rubricVersion: 1,
+          rubric: {
+            scoringVersion: 'rubric-comprehension-v1',
+            maxScore: 4,
+            criteria: [
+              { id: 'comprehension', label: 'Comprehension', maxScore: 2.8, requiredConcepts: [] },
+              { id: 'keywords', label: 'Keywords', maxScore: 1.2, requiredConcepts: [] }
+            ]
+          }
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(container, mockForm);
+
+  assert.ok(container.innerHTML.includes('ai-reference-context-group'), 'renders AI reference context group');
+  assert.ok(container.innerHTML.includes('item-reference-context-input'), 'provides reference context textarea');
+  assert.ok(container.innerHTML.includes('btn-pull-cloze-script'), 'provides 1-click pull cloze script button');
+  assert.ok(container.innerHTML.includes('Central Park is in New York. Its trees are green.'), 'populates reference context value');
+  assert.ok(container.innerHTML.includes('Ẩn hoàn toàn với học viên'), 'informs teacher that context is hidden from students');
+});
+
+test('Interactive Sandbox sends reference context to previewSandbox handler', async () => {
+  let capturedPayload = null;
+  const container = { innerHTML: '' };
+  const mockForm = {
+    id: '05030000-0000-4000-8000-000000000001',
+    version: 1,
+    status: 'draft',
+    title: 'Sandbox Context Test',
+    blocks: [
+      {
+        blockId: 'b-sandbox',
+        checkpoint: 1,
+        title: 'Comprehension',
+        items: [
+          {
+            itemVersionId: 'i-test',
+            position: 1,
+            prompt: 'Từ "its" thay thế cho từ nào?',
+            referenceContext: 'Central Park is in New York. Its trees are green.',
+            interactionType: 'short_text',
+            layoutType: 'default',
+            pedagogicalTypeCode: 'writing',
+            graderType: 'rubric_async',
+            maxScore: 4
+          }
+        ]
+      }
+    ],
+    gradingKey: {
+      items: {
+        'i-test': {
+          graderType: 'rubric_async',
+          rubricCode: 'rubric_comprehension_v1',
+          rubricVersion: 1,
+          rubric: {
+            scoringVersion: 'rubric-comprehension-v1',
+            maxScore: 4,
+            criteria: [
+              { id: 'comprehension', label: 'Comprehension', maxScore: 4, requiredConcepts: [] }
+            ]
+          }
+        }
+      }
+    }
+  };
+
+  const options = {
+    onPreviewSandbox: async (payload) => {
+      capturedPayload = payload;
+      return {
+        ok: true,
+        scoreEarned: 4,
+        maxScore: 4,
+        criteria: [{ id: 'comprehension', score: 4 }]
+      };
+    }
+  };
+
+  renderTestBuilderView(container, mockForm, options);
+
+  assert.ok(capturedPayload === null, 'Sandbox not triggered initially');
+});
