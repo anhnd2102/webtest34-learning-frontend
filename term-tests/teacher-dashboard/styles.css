@@ -5894,6 +5894,8 @@ body:not(.login-page) #auth-panel {
 
 .inline-blank-number,
 .inline-blank-badge {
+  min-width: max-content !important;
+  width: auto !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -11168,3 +11170,38 @@ button.btn-icon:disabled,
 
 
 
+
+
+/* Exercise-Level Reference Context & Inheritance */
+.exercise-reference-context-field {
+  transition: all 0.2s ease;
+}
+.exercise-reference-context-field:focus-within {
+  border-color: #0284c7 !important;
+  background: #f0f9ff !important;
+}
+.ai-inherited-context-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  color: #166534;
+}
+.btn-toggle-custom-item-context {
+  background: none;
+  border: none;
+  color: #15803d;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.78rem;
+}
+.btn-toggle-custom-item-context:hover {
+  color: #047857;
+}

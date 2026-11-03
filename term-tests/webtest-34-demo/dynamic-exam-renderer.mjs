@@ -122,15 +122,19 @@ export function getItemSpanCount(item) {
     item.layoutType === 'table_completion' ||
     item.layoutType === 'inline_dropdown_table' ||
     (item.interactionType === 'short_text' && (
-      (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
+      (item.prompt && (/(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
       (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
     ));
   if (isInlineCloze) {
+    const numPattern = /(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+    const matches = Array.from((item.prompt || '').matchAll(numPattern));
+    if (matches && matches.length > 0) {
+      const uniqueNums = new Set(matches.map(m => Number(m[1] || m[2])));
+      return Math.max(1, uniqueNums.size);
+    }
     if (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0) {
       return Object.keys(item.clozeAnswers).length;
     }
-    const matches = (item.prompt || '').match(/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g);
-    if (matches && matches.length > 0) return matches.length;
   }
   const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
     item.layoutType === 'timeline_sequence' ||

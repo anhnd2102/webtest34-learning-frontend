@@ -661,6 +661,8 @@ body {
 
 .inline-blank-number,
 .cbt-blank-idx {
+  min-width: max-content !important;
+  width: auto !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;

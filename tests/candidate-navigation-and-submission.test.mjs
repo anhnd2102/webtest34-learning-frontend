@@ -1,10 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+function findFile(rel) {
+  const p1 = resolve(rel);
+  if (existsSync(p1)) return p1;
+  const p2 = resolve('webtest34-learning-frontend', rel);
+  if (existsSync(p2)) return p2;
+  const p3 = resolve(import.meta.dirname, '..', rel);
+  if (existsSync(p3)) return p3;
+  return p1;
+}
+
 test('Candidate Exam: prev/next navigation does not double-bind in dynamic exam mode', () => {
-  const file = resolve('webtest34-learning-frontend/term-tests/webtest-34-demo/content-preview.mjs');
+  const file = findFile('term-tests/webtest-34-demo/content-preview.mjs');
   const code = readFileSync(file, 'utf8');
 
   // Kiểm tra logic showSection và click listeners cho demo-prev / demo-next chỉ được gắn khi !isDynamic
@@ -16,7 +26,7 @@ test('Candidate Exam: prev/next navigation does not double-bind in dynamic exam 
 });
 
 test('Dynamic Renderer: section cards use data-block-id instead of conflicting legacy data-demo-page', () => {
-  const file = resolve('webtest34-learning-frontend/term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+  const file = findFile('term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
   const code = readFileSync(file, 'utf8');
 
   assert.ok(
@@ -30,7 +40,7 @@ test('Dynamic Renderer: section cards use data-block-id instead of conflicting l
 });
 
 test('Test Studio: error correction batch import initializes correct graderType correction_pair', () => {
-  const file = resolve('webtest34-learning-frontend/term-tests/teacher-dashboard/app.js');
+  const file = findFile('term-tests/teacher-dashboard/app.js');
   const code = readFileSync(file, 'utf8');
 
   assert.ok(
@@ -45,3 +55,4 @@ test('Test Studio: error correction batch import initializes correct graderType 
     'Error correction batch import must set graderType correction_pair in draft grading key'
   );
 });
+
