@@ -869,11 +869,18 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
 
   let html = '';
 
+  const unlockedSet = state?.unlockedAudioBlocks instanceof Set
+    ? state.unlockedAudioBlocks
+    : (Array.isArray(state?.unlockedAudioBlocks) ? new Set(state.unlockedAudioBlocks) : new Set());
+
   blocks.forEach((block, bIdx) => {
     const sectionName = block.title || `Phần ${bIdx + 1}`;
     const isVisible = sectionName === currentSection || (!activeSection && bIdx === 0);
     const items = block.items || [];
-    const audioSrc = block.audioUrl || block.stimulusAudioUrl || '';
+    const audioSrc = (block.audioUrl || block.stimulusAudioUrl || '').trim();
+    const hasAudio = Boolean(audioSrc);
+    const blockId = block.blockId || `block-${bIdx}`;
+    const isUnlocked = !hasAudio || unlockedSet.has(blockId);
     const reading = block.readingPassage || '';
 
     // Check if this block has split-pane reading matching
@@ -1031,8 +1038,23 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
       `;
     }
 
+    const audioGatePlaceholderHtml = hasAudio ? `
+      <div class="cbt-audio-gate-placeholder" role="status" aria-live="polite">
+        <div class="cbt-audio-gate-icon-wrap">
+          ${ICONS.volume || ICONS.zap}
+        </div>
+        <div class="cbt-audio-gate-content">
+          <h3 class="cbt-audio-gate-title">Phần thi có bài nghe — Đề bài đang được ẩn</h3>
+          <p class="cbt-audio-gate-desc">
+            Để đảm bảo tính khách quan của bài thi, toàn bộ câu hỏi và nội dung phần này sẽ tự động xuất hiện ngay khi bạn bấm nút <strong>"Bắt đầu nghe"</strong> ở thanh điều khiển phía trên.
+          </p>
+        </div>
+      </div>
+    ` : '';
+
     html += `
-      <section class="simulation-section-card section-page ${isVisible ? 'active' : ''}" id="sim-block-${bIdx}" data-block-id="${escape(block.blockId || 'block-' + bIdx)}">
+      <section class="simulation-section-card section-page ${isVisible ? 'active' : ''}" id="sim-block-${bIdx}" data-block-id="${escape(blockId)}" data-has-audio="${hasAudio}" data-audio-unlocked="${isUnlocked}">
+        ${audioGatePlaceholderHtml}
         ${sectionContentHtml}
       </section>
     `;
@@ -1446,7 +1468,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   });
 
   // Initialize Strict Audio Docks (max 2 listens)
-  initStrictAudioDocks(rootEl);
+  initStrictAudioDocks(rootEl, { state });
 
   return {
     activateSection,
@@ -1455,7 +1477,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   };
 }
 
-export function initStrictAudioDocks(rootEl) {
+export function initStrictAudioDocks(rootEl, { state } = {}) {
   if (!rootEl) return;
   const docks = rootEl.querySelectorAll('.strict-audio-dock');
   docks.forEach(dock => {
@@ -1525,6 +1547,19 @@ export function initStrictAudioDocks(rootEl) {
       audioEl.addEventListener('playing', () => {
         playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
         if (liveStatus) liveStatus.style.display = 'inline-flex';
+
+        // Mở khóa đề bài khi audio bắt đầu phát
+        const sectionCard = dock.closest('.simulation-section-card');
+        if (sectionCard && sectionCard.getAttribute('data-has-audio') === 'true') {
+          sectionCard.setAttribute('data-audio-unlocked', 'true');
+          const blockId = sectionCard.getAttribute('data-block-id');
+          if (state && blockId) {
+            if (!state.unlockedAudioBlocks) state.unlockedAudioBlocks = new Set();
+            if (typeof state.unlockedAudioBlocks.add === 'function') {
+              state.unlockedAudioBlocks.add(blockId);
+            }
+          }
+        }
       });
 
       audioEl.addEventListener('ended', () => {

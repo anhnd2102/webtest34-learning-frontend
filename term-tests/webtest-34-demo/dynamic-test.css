@@ -2379,3 +2379,68 @@ body {
   border-color: var(--izone-primary, #e11d48);
   box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
 }
+
+
+/* ==========================================================================
+   Candidate CBT Exam: Audio Gate Prompt Concealment
+   ========================================================================== */
+.simulation-section-card[data-has-audio="true"]:not([data-audio-unlocked="true"]) .cbt-questions-wrap,
+.simulation-section-card[data-has-audio="true"]:not([data-audio-unlocked="true"]) .cbt-reading-dock,
+.simulation-section-card[data-has-audio="true"]:not([data-audio-unlocked="true"]) .cbt-split-pane,
+.simulation-section-card[data-has-audio="true"]:not([data-audio-unlocked="true"]) .cbt-instruction-banner {
+  display: none !important;
+}
+
+.simulation-section-card[data-has-audio="true"][data-audio-unlocked="true"] .cbt-audio-gate-placeholder {
+  display: none !important;
+}
+
+.cbt-audio-gate-placeholder {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 24px 20px;
+  margin: 16px 0 24px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.cbt-audio-gate-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #db0829;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.cbt-audio-gate-content {
+  flex: 1;
+}
+
+.cbt-audio-gate-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.cbt-audio-gate-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.cbt-audio-gate-desc strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
