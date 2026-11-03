@@ -1210,6 +1210,7 @@ export async function mount(course) {
         studentSelect.innerHTML = '<option value="">— Chọn tên của bạn —</option>' + assignment.roster.map(s => {
           return `<option value="${escape(s.studentRef)}">${escape(formatCandidateOptionLabel(s))}</option>`;
         }).join('');
+        studentSelect.disabled = false;
         studentSelect.style.background = 'white';
         classInput.disabled = true;
         loadBtn.textContent = 'Đã tải';
