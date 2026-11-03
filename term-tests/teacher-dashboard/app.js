@@ -3240,6 +3240,44 @@ export function moveItemToExercise(draftState, sourceBlockIdx, sourceItemIdx, ta
   return movedItem;
 }
 
+
+export function parseUploadedFileToCsv(file, callback) {
+  if (!file || typeof callback !== 'function') return;
+  const fileName = (file.name || '').toLowerCase();
+  if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = new Uint8Array(evt.target.result);
+        if (typeof XLSX !== 'undefined') {
+          const workbook = XLSX.read(data, { type: 'array' });
+          // Luôn ưu tiên Sheet 1 (hoặc sheet có tên Nhap_De_Thi) để import
+          let targetSheetName = workbook.SheetNames[0];
+          if (workbook.SheetNames.includes('Nhap_De_Thi')) {
+            targetSheetName = 'Nhap_De_Thi';
+          }
+          const worksheet = workbook.Sheets[targetSheetName];
+          const csvText = XLSX.utils.sheet_to_csv(worksheet);
+          callback(null, csvText);
+        } else {
+          callback(new Error('Thư viện Excel (XLSX) chưa được tải trên trình duyệt. Vui lòng chuyển file sang định dạng CSV UTF-8.'));
+        }
+      } catch (err) {
+        callback(err);
+      }
+    };
+    reader.onerror = () => callback(new Error('Lỗi khi đọc file Excel từ thiết bị.'));
+    reader.readAsArrayBuffer(file);
+  } else {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      callback(null, evt.target.result || '');
+    };
+    reader.onerror = () => callback(new Error('Lỗi khi đọc file CSV từ thiết bị.'));
+    reader.readAsText(file, 'utf-8');
+  }
+}
+
 export function openGenericBatchModal({
   title = 'Tạo câu hỏi hàng loạt',
   subtitle = '',
@@ -3303,7 +3341,7 @@ export function openGenericBatchModal({
               <button type="button" class="btn btn-secondary btn-sm btn-trigger-csv-file">
                 ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file .CSV</span>
               </button>
-              <button type="button" class="btn btn-ghost-subtle btn-sm btn-view-csv-guide" title="Xem hướng dẫn chi tiết cách điền các cột mẫu">
+              <button type="button" class="btn btn-secondary btn-sm btn-view-csv-guide" title="Xem hướng dẫn chi tiết cách điền các cột mẫu">
                 ${renderSvgIcon('fileText', 'icon-inline')} <span>Xem hướng dẫn điền</span>
               </button>
               <input type="file" class="input-csv-file" accept=".csv,text/csv,text/plain,.tsv" style="display: none;" />
@@ -3553,14 +3591,18 @@ export function openGenericBatchModal({
       fileInput.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (evt) => {
+        parseUploadedFileToCsv(file, (err, csvText) => {
+          if (err) {
+            if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+              window.alert(err.message || 'Không thể đọc file.');
+            }
+            return;
+          }
           if (textarea) {
-            textarea.value = evt.target.result || '';
+            textarea.value = csvText || '';
             updatePreview();
           }
-        };
-        reader.readAsText(file, 'utf-8');
+        });
       });
     }
 
@@ -3715,8 +3757,16 @@ export function openCsvQuickGuideModal() {
 
   const modal = document.createElement('div');
   modal.id = 'modal-csv-quick-guide';
-  modal.className = 'candidate-sim-overlay';
-  modal.style.zIndex = '10000';
+  modal.className = 'candidate-sim-overlay quick-csv-guide-modal-overlay';
+  modal.style.position = 'fixed';
+  modal.style.inset = '0';
+  modal.style.backgroundColor = 'rgba(15, 23, 42, 0.65)';
+  modal.style.backdropFilter = 'blur(4px)';
+  modal.style.display = 'flex';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
+  modal.style.zIndex = '10050';
+  modal.style.padding = '20px';
 
   modal.innerHTML = `
     <div class="candidate-sim-modal" role="dialog" aria-modal="true" style="max-width: 760px; width: 95%; max-height: 85vh; display: flex; flex-direction: column;">
@@ -3849,8 +3899,16 @@ export function openBlockCsvUploadModal(opts = {}) {
 
   const modal = document.createElement('div');
   modal.id = 'modal-block-csv-upload';
-  modal.className = 'candidate-sim-overlay';
-  modal.style.zIndex = '9999';
+  modal.className = 'candidate-sim-overlay block-csv-modal-overlay';
+  modal.style.position = 'fixed';
+  modal.style.inset = '0';
+  modal.style.backgroundColor = 'rgba(15, 23, 42, 0.65)';
+  modal.style.backdropFilter = 'blur(4px)';
+  modal.style.display = 'flex';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
+  modal.style.zIndex = '10050';
+  modal.style.padding = '20px';
 
   const blockTitle = (block?.title || `Phần ${blockIdx + 1}`).trim();
 
@@ -3879,16 +3937,19 @@ export function openBlockCsvUploadModal(opts = {}) {
         </div>
 
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <a href="./assets/templates/mau_de_thi_test_studio.xlsx" download="mau_de_thi_test_studio.xlsx" class="btn btn-primary btn-sm btn-download-excel-template" style="text-decoration: none;">
+            ${renderSvgIcon('download', 'icon-inline')} <span>Tải mẫu Excel 2 Sheet (.xlsx)</span>
+          </a>
           <button type="button" class="btn btn-secondary btn-sm btn-download-block-template">
             ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV Phần</span>
           </button>
           <button type="button" class="btn btn-outline-secondary btn-sm btn-trigger-block-file">
             ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file CSV từ máy</span>
           </button>
-          <button type="button" class="btn btn-ghost-subtle btn-sm btn-view-csv-guide" title="Xem hướng dẫn chi tiết cách điền các cột mẫu">
+          <button type="button" class="btn btn-secondary btn-sm btn-view-csv-guide" title="Xem hướng dẫn chi tiết cách điền các cột mẫu">
             ${renderSvgIcon('fileText', 'icon-inline')} <span>Xem hướng dẫn điền</span>
           </button>
-          <input type="file" class="input-block-csv-file" accept=".csv,.tsv,.txt" style="display: none;" />
+          <input type="file" class="input-block-csv-file" accept=".csv,.tsv,.txt,.xlsx,.xls" style="display: none;" />
         </div>
 
         <div class="form-group" style="margin: 0;">
@@ -4002,14 +4063,18 @@ export function openBlockCsvUploadModal(opts = {}) {
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (evt) => {
+      parseUploadedFileToCsv(file, (err, csvText) => {
+        if (err) {
+          if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+            window.alert(err.message || 'Không thể đọc file.');
+          }
+          return;
+        }
         if (textarea) {
-          textarea.value = evt.target.result || '';
+          textarea.value = csvText || '';
           updatePreview();
         }
-      };
-      reader.readAsText(file, 'utf-8');
+      });
     });
   }
 
@@ -7008,6 +7073,10 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                 } else if (parsedItem.pedagogicalTypeCode === 'listening_order') {
                   itmObj.listeningEvents = parsedItem.listeningEvents || [];
                   itmObj.events = parsedItem.events || [];
+                } else if (parsedItem.pedagogicalTypeCode === 'vocabulary_pair' || parsedItem.interactionType === 'text_select_pair') {
+                  itmObj.targetWord = parsedItem.targetWord || parsedItem.prompt;
+                  itmObj.options = parsedItem.options || [];
+                  itmObj.captionHint = parsedItem.captionHint || parsedItem.vietnameseMeaning || '';
                 }
 
                 batchItems.push(itmObj);
@@ -7033,6 +7102,21 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                         { id: 'crit_2', label: 'Ngữ pháp & Diễn đạt', maxScore: itemScore / 2, requiredConcepts: [] }
                       ]
                     }
+                  };
+                } else if (parsedItem.graderType === 'accepted_text_exact_option' || parsedItem.interactionType === 'text_select_pair' || parsedItem.pedagogicalTypeCode === 'vocabulary_pair') {
+                  draftState.gradingKey.items[newItemId] = {
+                    graderType: 'accepted_text_exact_option',
+                    accepted: expandSentenceVariants([itmObj.targetWord || itmObj.prompt || '']),
+                    expectedOptionId: parsedItem.expectedOptionId || (itmObj.options?.[0]?.id || 'meaning-01'),
+                    normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                  };
+                } else if (parsedItem.graderType === 'inline_cloze' || parsedItem.layoutType === 'inline_cloze') {
+                  itmObj.clozeAnswers = parsedItem.clozeAnswers || {};
+                  draftState.gradingKey.items[newItemId] = {
+                    graderType: 'inline_cloze',
+                    blanks: itmObj.clozeAnswers,
+                    accepted: parsedItem.accepted || [itmObj.targetWord || ''],
+                    normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                   };
                 } else {
                   draftState.gradingKey.items[newItemId] = {
@@ -9603,15 +9687,18 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         fileInput.addEventListener('change', (e) => {
           const file = e.target.files?.[0];
           if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (evt) => {
-            const text = evt.target.result;
+          parseUploadedFileToCsv(file, (err, csvText) => {
+            if (err) {
+              if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+                window.alert(err.message || 'Không thể đọc file.');
+              }
+              return;
+            }
             if (textarea) {
-              textarea.value = text;
+              textarea.value = csvText || '';
               updatePreview();
             }
-          };
-          reader.readAsText(file, 'utf-8');
+          });
         });
       }
 

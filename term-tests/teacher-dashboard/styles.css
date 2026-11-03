@@ -11205,3 +11205,69 @@ button.btn-icon:disabled,
 .btn-toggle-custom-item-context:hover {
   color: #047857;
 }
+
+
+/* Candidate Simulation & Test Studio Overlay & Floating Modals */
+.candidate-sim-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(4px) !important;
+  z-index: 10050 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  animation: batchModalFadeIn 0.2s ease-out !important;
+}
+
+.candidate-sim-modal,
+.block-csv-modal,
+.quick-csv-guide-modal {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 10051 !important;
+}
+
+.block-csv-modal {
+  width: 100% !important;
+  max-width: 680px !important;
+}
+
+.quick-csv-guide-modal {
+  width: 100% !important;
+  max-width: 820px !important;
+}
+
+/* Button 'Xem hướng dẫn điền' reset overflow & compact styling */
+.btn.btn-view-csv-guide,
+.btn-ghost-subtle.btn-view-csv-guide {
+  width: auto !important;
+  height: auto !important;
+  min-height: 32px !important;
+  padding: 4px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #334155 !important;
+  transition: all 0.15s ease !important;
+}
+
+.btn.btn-view-csv-guide:hover,
+.btn-ghost-subtle.btn-view-csv-guide:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}

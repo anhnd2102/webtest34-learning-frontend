@@ -142,3 +142,4 @@ test('findPrecedingClozeScript: retrieves clean script text from prior inline cl
   assert.ok(script.includes('The cruise departs from Miami and visits ... Caribbean islands.'));
   assert.ok(!script.includes('<p>'), 'HTML tags must be stripped');
 });
+

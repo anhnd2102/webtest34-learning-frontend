@@ -937,13 +937,42 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
       currentEx.items.push({
         prompt: english,
         targetWord: english,
-        interactionType: 'short_text',
+        vietnameseMeaning: vietnamese,
+        captionHint: vietnamese,
+        interactionType: 'text_select_pair',
         pedagogicalTypeCode: 'vocabulary_pair',
         layoutType: 'vocab_pair',
-        graderType: 'accepted_text',
+        graderType: 'accepted_text_exact_option',
         accepted: [english],
-        captionHint: vietnamese,
+        options: [],
+        expectedOptionId: '',
         maxScore: score
+      });
+    } else if (qType === 'inline_cloze') {
+      const answersList = rawAnswer ? rawAnswer.split(/[|;]/).map(a => a.trim()) : [];
+      const blanks = parseClozeBlanks(rawPrompt || '');
+      const clozeAnswers = {};
+      const uniqueNums = [];
+      for (const b of blanks) {
+        if (!uniqueNums.includes(b.number)) uniqueNums.push(b.number);
+      }
+      uniqueNums.forEach((num, idx) => {
+        const ans = answersList[idx] || '';
+        clozeAnswers[num] = {
+          targetWord: ans,
+          accepted: ans ? [ans] : []
+        };
+      });
+      currentEx.items.push({
+        prompt: rawPrompt,
+        interactionType: 'short_text',
+        pedagogicalTypeCode: 'table_completion',
+        layoutType: 'inline_cloze',
+        graderType: 'inline_cloze',
+        clozeAnswers,
+        targetWord: answersList[0] || '',
+        accepted: answersList[0] ? [answersList[0]] : [],
+        maxScore: uniqueNums.length ? uniqueNums.length * score : score
       });
     } else if (qType === 'error_correction') {
       const errorPart = rawDetails || '';
@@ -1094,6 +1123,28 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
       });
     }
   }
+
+  // Finalize vocabulary_pair meaning options per exercise
+  exerciseMap.forEach((ex) => {
+    const vocabItems = ex.items.filter(it => it.pedagogicalTypeCode === 'vocabulary_pair' || it.interactionType === 'text_select_pair');
+    if (vocabItems.length > 0) {
+      const allMeanings = Array.from(new Set(vocabItems.map(it => it.vietnameseMeaning || it.captionHint).filter(Boolean)));
+      allMeanings.sort((a, b) => a.localeCompare(b, 'vi', { sensitivity: 'base' }));
+      const options = allMeanings.map((m, idx) => ({
+        id: `meaning-${String(idx + 1).padStart(2, '0')}`,
+        label: m
+      }));
+      vocabItems.forEach(it => {
+        it.options = options;
+        const matchingOpt = options.find(o => o.label === (it.vietnameseMeaning || it.captionHint));
+        if (matchingOpt) {
+          it.expectedOptionId = matchingOpt.id;
+        } else if (options.length > 0) {
+          it.expectedOptionId = options[0].id;
+        }
+      });
+    }
+  });
 
   // Finalize listening_order if any: group into single listening_order exercise card if multiple events exist
   exerciseMap.forEach((ex) => {

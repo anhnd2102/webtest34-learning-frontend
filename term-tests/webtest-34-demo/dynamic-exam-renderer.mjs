@@ -871,7 +871,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
 
   blocks.forEach((block, bIdx) => {
     const sectionName = block.title || `Phần ${bIdx + 1}`;
-    const isVisible = sectionName === currentSection || bIdx === 0;
+    const isVisible = sectionName === currentSection || (!activeSection && bIdx === 0);
     const items = block.items || [];
     const audioSrc = block.audioUrl || block.stimulusAudioUrl || '';
     const reading = block.readingPassage || '';
@@ -1075,8 +1075,13 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     }
   };
 
+  let currentActiveBlockIdx = 0;
+
   // Section switcher
   const activateSection = (targetId) => {
+    const blockIdx = parseInt((targetId || '').replace('sim-block-', ''), 10) || 0;
+    currentActiveBlockIdx = blockIdx;
+
     rootEl.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
       b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
     });
@@ -1089,7 +1094,6 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     filterNavigatorBySection(targetId);
 
     // Sync Prev/Next button labels & disabled states
-    const blockIdx = parseInt((targetId || '').replace('sim-block-', ''), 10) || 0;
     const prevBtn = rootEl.querySelector('#demo-prev');
     const nextBtn = rootEl.querySelector('#demo-next');
     if (prevBtn) prevBtn.disabled = blockIdx === 0;
@@ -1101,39 +1105,40 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
       const activeBlock = blocks[blockIdx];
       onSectionChange(activeBlock?.title || `Phần ${blockIdx + 1}`);
     }
+
+    // Luôn cuộn mượt lên đầu phần thi khi chuyển phần
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   // Bind Section Pills & Side section buttons
   rootEl.querySelectorAll('.section-tab, .simulation-nav-pill, .side-section-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.onclick = () => {
       const targetId = btn.getAttribute('data-section-target');
       if (targetId) activateSection(targetId);
-    });
+    };
   });
 
-  // Prev / Next button navigation
+  // Prev / Next button navigation with onclick (triệt tiêu 100% rủi ro double-binding)
   const prevBtn = rootEl.querySelector('#demo-prev');
   const nextBtn = rootEl.querySelector('#demo-next');
   if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      const activeCard = rootEl.querySelector('.simulation-section-card.section-page.active');
-      const currentId = activeCard?.id || 'sim-block-0';
-      const idx = parseInt(currentId.replace('sim-block-', ''), 10);
-      if (idx > 0) activateSection(`sim-block-${idx - 1}`);
-    });
+    prevBtn.onclick = () => {
+      if (currentActiveBlockIdx > 0) {
+        activateSection(`sim-block-${currentActiveBlockIdx - 1}`);
+      }
+    };
   }
   if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      const activeCard = rootEl.querySelector('.simulation-section-card.section-page.active');
-      const currentId = activeCard?.id || 'sim-block-0';
-      const idx = parseInt(currentId.replace('sim-block-', ''), 10);
-      if (idx < blocks.length - 1) {
-        activateSection(`sim-block-${idx + 1}`);
+    nextBtn.onclick = () => {
+      if (currentActiveBlockIdx < blocks.length - 1) {
+        activateSection(`sim-block-${currentActiveBlockIdx + 1}`);
       } else {
         const topSubmit = document.querySelector('#demo-submit-top') || document.querySelector('#demo-submit');
         if (topSubmit) topSubmit.click();
       }
-    });
+    };
   }
 
   // Question Navigator click-to-focus and section navigation
