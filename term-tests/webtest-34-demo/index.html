@@ -2170,8 +2170,14 @@
       persist();
       select.innerHTML = '<option value="">— Chọn tên của bạn —</option>'
         + students.map(s => {
-          const duplicate = students.filter(other => other.name === s.name).length > 1;
-          const suffix = duplicate ? ` · ${s.discriminator || s.ref.slice(0, 8)}` : '';
+          let email = (s.email || s.discriminator || '').trim();
+          if (/^HV(\d+)$/i.test(email)) {
+            email = `hocvien${email.replace(/^HV/i, '')}@izone.edu.vn`;
+          }
+          const suffix = email ? ` · ${email}` : (students.filter(other => other.name === s.name).length > 1 ? ` · ${s.ref.slice(0, 8)}` : '');
+          return `<option value="${esc(s.ref)}">${esc(s.name + suffix)}</option>`;
+        }).join('');
+          const suffix = email ? ` · ${email}` : (students.filter(other => other.name === s.name).length > 1 ? ` · ${s.ref.slice(0, 8)}` : '');
           return `<option value="${esc(s.ref)}">${esc(s.name + suffix)}</option>`;
         }).join('');
       select.disabled = false;

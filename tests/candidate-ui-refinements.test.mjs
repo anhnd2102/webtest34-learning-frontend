@@ -183,3 +183,24 @@ test('Candidate UI: Audio Dock streams direct media without crossorigin CORS blo
   assert.ok(!html.match(/<audio[^>]*display:\s*none/i), 'Audio tag must NOT have display:none which halts Chromium media clock');
   assert.ok(html.includes('position:absolute'), 'Must use offscreen absolute positioning for active layout clock');
 });
+
+test('Candidate UI: Student dropdown displays full name and email, converting or eliminating HVxx codes', async () => {
+  const { formatCandidateOptionLabel } = await import('../term-tests/webtest-34-demo/content-preview.mjs');
+
+  // Case 1: Student has email
+  const labelWithEmail = formatCandidateOptionLabel({ name: 'Thái Hương Giang', discriminator: 'huonggiang271107@gmail.com' });
+  assert.equal(labelWithEmail, 'Thái Hương Giang · huonggiang271107@gmail.com');
+
+  // Case 2: Student has explicit email property
+  const labelWithEmailProp = formatCandidateOptionLabel({ name: 'Hoàng Quỳnh Anh', email: 'quynhanhhoang110@gmail.com', discriminator: 'HV05' });
+  assert.equal(labelWithEmailProp, 'Hoàng Quỳnh Anh · quynhanhhoang110@gmail.com');
+
+  // Case 3: Student has legacy HVxx code -> transformed to institutional email format, NEVER leaks raw 'HVxx'
+  const labelLegacyHv = formatCandidateOptionLabel({ name: 'Bùi Hoàng Kim Thư', discriminator: 'HV16' });
+  assert.equal(labelLegacyHv, 'Bùi Hoàng Kim Thư · hocvien16@izone.edu.vn');
+  assert.equal(labelLegacyHv.includes('HV16'), false, 'Must not leak raw HV16');
+
+  // Case 4: No discriminator or email
+  const labelClean = formatCandidateOptionLabel({ name: 'Nguyễn Văn A' });
+  assert.equal(labelClean, 'Nguyễn Văn A');
+});

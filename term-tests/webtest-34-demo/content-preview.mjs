@@ -26,6 +26,15 @@ export function sanitizeDraft(form, raw) {
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const words = value => String(value || '').trim().split(/\s+/).filter(Boolean).length;
 
+export function formatCandidateOptionLabel(s) {
+  let email = (s.email || s.discriminator || '').trim();
+  if (/^HV(\d+)$/i.test(email)) {
+    email = `hocvien${email.replace(/^HV/i, '')}@izone.edu.vn`;
+  }
+  const suffix = email ? ` · ${email}` : '';
+  return `${s.name}${suffix}`;
+}
+
 export function learningRequestMethod(path) {
   return path === '/attempts/draft' ? 'PATCH' : 'POST';
 }
@@ -1199,10 +1208,8 @@ export async function mount(course) {
         learningState.className = assignment.class?.name || code;
 
         studentSelect.innerHTML = '<option value="">— Chọn tên của bạn —</option>' + assignment.roster.map(s => {
-          const disc = s.discriminator ? ` · ${s.discriminator}` : '';
-          return `<option value="${escape(s.studentRef)}">${escape(s.name + disc)}</option>`;
+          return `<option value="${escape(s.studentRef)}">${escape(formatCandidateOptionLabel(s))}</option>`;
         }).join('');
-        studentSelect.disabled = false;
         studentSelect.style.background = 'white';
         classInput.disabled = true;
         loadBtn.textContent = 'Đã tải';
