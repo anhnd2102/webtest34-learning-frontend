@@ -1028,7 +1028,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
     }
 
     html += `
-      <section class="simulation-section-card section-page ${isVisible ? 'active' : ''}" id="sim-block-${bIdx}" data-demo-page="${escape(sectionName)}">
+      <section class="simulation-section-card section-page ${isVisible ? 'active' : ''}" id="sim-block-${bIdx}" data-block-id="${escape(block.blockId || 'block-' + bIdx)}">
         ${sectionContentHtml}
       </section>
     `;

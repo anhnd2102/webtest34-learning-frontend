@@ -8063,7 +8063,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                   interactionType: 'error_correction',
                   pedagogicalTypeCode: 'error_correction',
                   layoutType: 'correction_inline',
-                  graderType: 'accepted_text',
+                  graderType: 'correction_pair',
                   required: true,
                   maxScore: 1,
                   targetWord: parsed.targetWord,
@@ -8072,8 +8072,10 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                   releasePolicy: 'inherit'
                 });
                 draftState.gradingKey.items[newItemId] = {
-                  graderType: 'accepted_text',
-                  accepted: parsed.accepted || [],
+                  graderType: 'correction_pair',
+                  expectedErrors: parsed.targetWord ? [parsed.targetWord] : ['error'],
+                  expectedCorrections: parsed.accepted && parsed.accepted.length ? parsed.accepted : ['correction'],
+                  scoringRule: 'split_points',
                   normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                 };
               });

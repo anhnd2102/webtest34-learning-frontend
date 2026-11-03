@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261024-cbt-v14';
+} from './dynamic-exam-renderer.mjs?rev=20261103-cbt-v15';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -2337,31 +2337,39 @@ export async function mount(course) {
       }
     });
 
-    function showSection(section) {
-      activeSection=section;
-      document.querySelectorAll('[data-demo-page]').forEach(page=>{
-        page.hidden = page.dataset.demoPage !== section;
-        page.classList.toggle('hidden', page.dataset.demoPage !== section);
+    if (!isDynamic) {
+      function showSection(section) {
+        activeSection=section;
+        document.querySelectorAll('[data-demo-page]').forEach(page=>{
+          page.hidden = page.dataset.demoPage !== section;
+          page.classList.toggle('hidden', page.dataset.demoPage !== section);
+        });
+        document.querySelectorAll('[data-demo-go]').forEach(button=>{
+          button.classList.toggle('active',button.dataset.demoGo===section);
+          if (button.dataset.demoGo===section) button.setAttribute('aria-current','page');
+          else button.removeAttribute('aria-current');
+        });
+        query('#demo-prev').disabled=examSections.indexOf(section)===0;
+        query('#demo-next').textContent=examSections.indexOf(section)===examSections.length-1?(isLearningMode?'Nộp bài':'Nộp thử'):'Phần tiếp →';
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+      document.querySelectorAll('[data-demo-go]').forEach(button=>button.addEventListener('click',()=>showSection(button.dataset.demoGo)));
+      query('#demo-prev').addEventListener('click',()=>{
+        const previous=examSections[examSections.indexOf(activeSection)-1];if(previous)showSection(previous);
       });
-      document.querySelectorAll('[data-demo-go]').forEach(button=>{
-        button.classList.toggle('active',button.dataset.demoGo===section);
-        if (button.dataset.demoGo===section) button.setAttribute('aria-current','page');
-        else button.removeAttribute('aria-current');
+      query('#demo-next').addEventListener('click',()=>{
+        const next=examSections[examSections.indexOf(activeSection)+1];if(next)showSection(next);else query('#demo-submit').click();
       });
-      query('#demo-prev').disabled=examSections.indexOf(section)===0;
-      query('#demo-next').textContent=examSections.indexOf(section)===examSections.length-1?(isLearningMode?'Nộp bài':'Nộp thử'):'Phần tiếp →';
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-    document.querySelectorAll('[data-demo-go]').forEach(button=>button.addEventListener('click',()=>showSection(button.dataset.demoGo)));
-    query('#demo-prev').addEventListener('click',()=>{
-      const previous=examSections[examSections.indexOf(activeSection)-1];if(previous)showSection(previous);
-    });
-    query('#demo-next').addEventListener('click',()=>{
-      const next=examSections[examSections.indexOf(activeSection)+1];if(next)showSection(next);else query('#demo-submit').click();
-    });
 
-    update();
-    showSection(activeSection);
+      update();
+      showSection(activeSection);
+    } else {
+      update();
+      const initialIdx = examSections.indexOf(activeSection);
+      if (initialIdx >= 0 && dynamicExamControls?.activateSection) {
+        dynamicExamControls.activateSection('sim-block-' + initialIdx);
+      }
+    }
 
     if (isLearningMode && state.submittedAt) {
       void pollLearningResult();
