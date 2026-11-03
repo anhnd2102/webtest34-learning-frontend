@@ -63,3 +63,29 @@ test('attempt request bodies carry the tab device id without dropping existing f
     attemptToken: 'attempt-1', revision: 3, deviceId: 'device-b'
   });
 });
+
+for (const reason of ['blur', 'fullscreen']) {
+  test(`on iOS/iPadOS a ${reason} signal is not treated as leaving the exam`, () => {
+    const result = reduce({ ...initial, ignoreFocusSignals: true }, { type: 'left_exam', reason, at: 1000, incidentId: 'incident-1' });
+
+    assert.deepEqual(result.commands, []);
+    assert.equal(result.state.prompt, undefined);
+    assert.equal(result.state.incidentId, undefined);
+  });
+}
+
+test('on iOS/iPadOS a hidden page still opens an incident', () => {
+  const result = reduce({ ...initial, ignoreFocusSignals: true }, { type: 'left_exam', reason: 'hidden', at: 1000, incidentId: 'incident-1' });
+
+  assert.ok(result.commands.some(command => command.type === 'open_incident' && command.incidentId === 'incident-1'));
+  assert.equal(result.state.prompt, true);
+});
+
+test('recognises iPhone and iPad, including iPadOS reporting itself as a Mac', () => {
+  const isIos = globalThis.isIosDevice;
+  assert.equal(isIos({ userAgent: 'Mozilla/5.0 (iPad; CPU OS 15_0 like Mac OS X)', maxTouchPoints: 5 }), true);
+  assert.equal(isIos({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', maxTouchPoints: 5 }), true);
+  assert.equal(isIos({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15', maxTouchPoints: 5 }), true);
+  assert.equal(isIos({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15', maxTouchPoints: 0 }), false);
+  assert.equal(isIos({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0', maxTouchPoints: 10 }), false);
+});

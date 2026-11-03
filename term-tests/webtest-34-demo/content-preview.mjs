@@ -721,6 +721,8 @@ export async function mount(course) {
       method: learningRequestMethod(path),
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
+      // iOS có thể hủy request ngay khi đổi app; thiếu dòng này lần rời bài có thể không được ghi.
+      keepalive: path.startsWith('/attempts/exam/incidents/'),
       body: JSON.stringify(learningRequestBody(path, body, deviceId))
     });
     const data = await res.json().catch(() => ({}));
@@ -740,9 +742,10 @@ export async function mount(course) {
   }
 
   // --- EXAM MODE: phòng chờ, SSE, tín hiệu kết nối và Exam Guard (reducer ở exam-guard.js) ---
-  const supportsFullscreen = () => typeof document.documentElement.requestFullscreen === 'function';
+  const ignoreFocusSignals = Boolean(globalThis.isIosDevice?.(navigator));
+  const supportsFullscreen = () => !ignoreFocusSignals && typeof document.documentElement.requestFullscreen === 'function';
   const requestFullscreen = () => (supportsFullscreen() ? document.documentElement.requestFullscreen() : Promise.reject(new Error('unsupported')));
-  let examGuardState = { running: false, fullscreenSupported: supportsFullscreen() };
+  let examGuardState = { running: false, fullscreenSupported: supportsFullscreen(), ignoreFocusSignals };
   let examStreamController = null;
   let examHeartbeatTimer = null;
   let examAudioHold = false;
@@ -898,7 +901,7 @@ export async function mount(course) {
       examPausedAudios = [];
     } else if (command.type === 'request_fullscreen') {
       requestFullscreen().catch(() => {
-        dispatchExamGuard({ type: 'left_exam', at: Date.now(), incidentId: createUuid() });
+        dispatchExamGuard({ type: 'left_exam', reason: 'fullscreen', at: Date.now(), incidentId: createUuid() });
         const message = document.querySelector('#examGuardMessage');
         if (message) message.textContent = 'Không thể bật toàn màn hình. Hãy bấm “Quay lại bài thi” để thử lại.';
       });
@@ -952,13 +955,20 @@ export async function mount(course) {
     }
     if (examGuardListening) return;
     examGuardListening = true;
-    const leave = () => dispatchExamGuard({ type: 'left_exam', at: Date.now(), incidentId: createUuid() });
-    window.addEventListener('blur', leave);
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') leave(); });
+    // Tải lại hoặc đóng tab cũng làm trang bị ẩn (sau pagehide), nhưng không tính là rời bài.
+    let pageUnloading = false;
+    window.addEventListener('pagehide', () => { pageUnloading = true; });
+    window.addEventListener('pageshow', () => { pageUnloading = false; });
+    const leave = reason => {
+      if (pageUnloading) return;
+      dispatchExamGuard({ type: 'left_exam', reason, at: Date.now(), incidentId: createUuid() });
+    };
+    window.addEventListener('blur', () => leave('blur'));
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') leave('hidden'); });
     document.addEventListener('fullscreenchange', () => {
       const reenter = document.querySelector('#examFullscreenReenter');
       if (reenter) reenter.hidden = !supportsFullscreen() || Boolean(document.fullscreenElement);
-      if (!document.fullscreenElement && supportsFullscreen()) leave();
+      if (!document.fullscreenElement && supportsFullscreen()) leave('fullscreen');
     });
   }
 

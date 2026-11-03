@@ -9,7 +9,7 @@ globalThis.examGuardReducer = (state, event) => {
     return { state: next, commands };
   }
   if(event.type === 'left_exam'){
-    if(!state.running) return { state: next, commands };
+    if(!state.running || (state.ignoreFocusSignals && event.reason !== 'hidden')) return { state: next, commands };
     const combined = state.incidentId && event.at - state.lastIncidentAt < 2000;
     if(!combined){
       if(state.incidentId) commands.push({ type: 'close_incident', incidentId: state.incidentId });
@@ -29,6 +29,11 @@ globalThis.examGuardReducer = (state, event) => {
   }
   return { state: next, commands };
 };
+
+// iPadOS Safari tự bắn blur và thoát toàn màn hình khi bàn phím ảo bật/tắt nên hai tín hiệu này không tin được.
+// iPadOS tự nhận là Macintosh trong userAgent, chỉ phân biệt được với Mac thật qua số điểm chạm.
+globalThis.isIosDevice = ({ userAgent = '', maxTouchPoints = 0 }) =>
+  /iPad|iPhone|iPod/.test(userAgent) || (/Macintosh/.test(userAgent) && maxTouchPoints > 1);
 
 globalThis.examDeviceRequestBody = (body, deviceId) => ({...body, deviceId});
 

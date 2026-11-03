@@ -1160,7 +1160,7 @@ export function applyExamIncident(room, { studentRef, incident, incidentCount } 
       return {
         ...student,
         incidentCount: Number.isInteger(incidentCount) ? incidentCount : student.incidentCount,
-        openIncidents: incident.endedAt ? others : [...others, incident]
+        openIncidents: incident.endedAt ? others : [incident]
       };
     })
   };
