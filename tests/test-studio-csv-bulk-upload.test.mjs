@@ -8,7 +8,20 @@ import {
   generateSentenceTransformationTemplateCsv,
   parseSentenceTransformationCsv,
   generateListeningOrderTemplateCsv,
-  parseListeningOrderCsv
+  parseListeningOrderCsv,
+  generateSentenceReorderTemplateCsv,
+  parseSentenceReorderCsv,
+  generatePronunciationTemplateCsv,
+  parsePronunciationCsv,
+  generatePictorialVocabTemplateCsv,
+  parsePictorialVocabCsv,
+  generateReadingMatchingTemplateCsv,
+  parseReadingMatchingCsv,
+  generateRubricAsyncTemplateCsv,
+  parseRubricAsyncCsv,
+  generateBlockExercisesTemplateCsv,
+  parseBlockExercisesCsv,
+  openBlockCsvUploadModal
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('Single Choice: generateSingleChoiceTemplateCsv outputs UTF-8 BOM and valid CSV columns', () => {
@@ -106,9 +119,30 @@ The cruise is too expensive for us.,ENOUGH,We do not have __________ the cruise.
 test('Listening Order: generateListeningOrderTemplateCsv and parseListeningOrderCsv group and rank events correctly', () => {
   const template = generateListeningOrderTemplateCsv();
   assert.ok(template.startsWith('\uFEFF'), 'Contains UTF-8 BOM');
-  assert.ok(template.includes('Section_Title'), 'Contains Section_Title header');
+  assert.ok(template.includes('Event_Text'), 'Contains Event_Text header');
   assert.ok(template.includes('Correct_Order'), 'Contains Correct_Order header');
+  assert.ok(template.includes('Score'), 'Contains Score header');
 
+  // 1. Test new 3-column single-exercise format
+  const newFormatCsv = `
+Event_Text,Correct_Order,Score
+Safety drill and lifeboat inspection,2,1
+Welcome aboard meeting at main lounge,1,1
+Captain's dinner in dining hall,3,1.5
+`;
+
+  const newResult = parseListeningOrderCsv(newFormatCsv);
+  assert.equal(newResult.items.length, 1, 'Creates 1 listening order card');
+  const newCard = newResult.items[0];
+  assert.equal(newCard.listeningEvents.length, 3);
+  assert.equal(newCard.maxScore, 3.5);
+  assert.equal(newCard.listeningEvents[0].correctRank, 2);
+  assert.equal(newCard.listeningEvents[0].text, 'Safety drill and lifeboat inspection');
+  assert.equal(newCard.listeningEvents[0].label, 'A');
+  assert.equal(newCard.listeningEvents[1].correctRank, 1);
+  assert.equal(newCard.listeningEvents[1].label, 'B');
+
+  // 2. Test backward compatibility with legacy Section_Title format
   const sampleCsv = `
 Section_Title,Event_Text,Correct_Order
 Day 1 Itinerary,Safety drill and lifeboat inspection,2
@@ -226,3 +260,233 @@ test('UI: openCsvUploadModal is exported, question type buttons exist in toolbar
   assert.equal(singleClicked, true, 'Headless invocation of openCsvUploadModal correctly invokes onSingle fallback');
 });
 
+
+
+test('Sentence Reorder: template and parser work accurately with slash-separated tokens', () => {
+  const template = generateSentenceReorderTemplateCsv();
+  assert.ok(template.startsWith('\uFEFF'), 'Contains UTF-8 BOM');
+  assert.ok(template.includes('Sentence_Text'), 'Contains Sentence_Text header');
+  assert.ok(template.includes('Score'), 'Contains Score header');
+
+  const sampleCsv = `
+Sentence_Text,Score,Help_Text
+"She / has worked / at the company / for five years",1.5,"Thì hiện tại hoàn thành"
+"They / will travel / to Japan / next summer",1,
+`;
+
+  const result = parseSentenceReorderCsv(sampleCsv);
+  assert.equal(result.items.length, 2);
+
+  const item1 = result.items[0];
+  assert.equal(item1.pedagogicalTypeCode, 'sentence_reorder');
+  assert.equal(item1.layoutType, 'token_scramble');
+  assert.equal(item1.maxScore, 1.5);
+  assert.deepEqual(item1.tokens, ['She', 'has worked', 'at the company', 'for five years']);
+  assert.equal(item1.targetSentence, 'She has worked at the company for five years');
+  assert.equal(item1.helpText, 'Thì hiện tại hoàn thành');
+
+  const item2 = result.items[1];
+  assert.equal(item2.maxScore, 1);
+  assert.deepEqual(item2.tokens, ['They', 'will travel', 'to Japan', 'next summer']);
+});
+
+test('Pronunciation Choice: template and parser correctly generate IPA card questions', () => {
+  const template = generatePronunciationTemplateCsv();
+  assert.ok(template.startsWith('\uFEFF'), 'Contains UTF-8 BOM');
+  assert.ok(template.includes('Prompt'), 'Contains Prompt header');
+  assert.ok(template.includes('Correct_Option'), 'Contains Correct_Option header');
+
+  const sampleCsv = `
+Prompt,Option_A,Option_B,Option_C,Option_D,Correct_Option,Score
+camera,/ˈkæm.ər.ə/,/kəˈmɪər.ə/,/ˈkæm.eɪ.rə/,,A,0.5
+Chọn từ có trọng âm khác,develop,remember,understand,consider,C,1
+`;
+
+  const result = parsePronunciationCsv(sampleCsv);
+  assert.equal(result.items.length, 2);
+
+  const q1 = result.items[0];
+  assert.equal(q1.pedagogicalTypeCode, 'pronunciation_choice');
+  assert.equal(q1.layoutType, 'ipa_card');
+  assert.equal(q1.targetWord, 'camera');
+  assert.equal(q1.expectedOptionId, 'A');
+  assert.equal(q1.maxScore, 0.5);
+  assert.equal(q1.options.length, 3);
+
+  const q2 = result.items[1];
+  assert.equal(q2.prompt, 'Chọn từ có trọng âm khác');
+  assert.equal(q2.expectedOptionId, 'C');
+  assert.equal(q2.options.length, 4);
+  assert.equal(q2.maxScore, 1);
+});
+
+test('Pictorial Vocabulary: template and parser support image URL, target word and variants', () => {
+  const template = generatePictorialVocabTemplateCsv();
+  assert.ok(template.startsWith('\uFEFF'), 'Contains UTF-8 BOM');
+  assert.ok(template.includes('Image_URL'), 'Contains Image_URL header');
+  assert.ok(template.includes('Target_Word'), 'Contains Target_Word header');
+
+  const sampleCsv = `
+Image_URL,Target_Word,Vietnamese_Meaning,Accepted_Variants,Score
+assets/test 1/vocabulary/image1.png,apple,quả táo,an apple|the apple,1
+https://r2.izone.edu.vn/camera.png,camera,máy ảnh,a camera,1
+`;
+
+  const result = parsePictorialVocabCsv(sampleCsv);
+  assert.equal(result.items.length, 2);
+
+  const itm1 = result.items[0];
+  assert.equal(itm1.pedagogicalTypeCode, 'pictorial_vocabulary');
+  assert.equal(itm1.image, 'assets/test 1/vocabulary/image1.png');
+  assert.equal(itm1.targetWord, 'apple');
+  assert.equal(itm1.captionHint, 'quả táo');
+  assert.ok(itm1.accepted.includes('apple'));
+  assert.ok(itm1.accepted.includes('an apple'));
+  assert.ok(itm1.accepted.includes('the apple'));
+
+  const itm2 = result.items[1];
+  assert.equal(itm2.image, 'https://r2.izone.edu.vn/camera.png');
+  assert.equal(itm2.targetWord, 'camera');
+});
+
+test('Reading Matching: template and parser group headings pool and assign correct option to paragraphs', () => {
+  const template = generateReadingMatchingTemplateCsv();
+  assert.ok(template.startsWith('\uFEFF'), 'Contains UTF-8 BOM');
+  assert.ok(template.includes('Paragraph_Label'), 'Contains Paragraph_Label header');
+
+  const sampleCsv = `
+Paragraph_Label,Heading_Code,Heading_Text,Is_Correct,Score
+Paragraph A,i,The spy in the sky,true,1
+Paragraph A,ii,The spread of technology,false,0
+Paragraph B,ii,The spread of technology,true,1
+Paragraph B,iii,The limitations of cameras,false,0
+`;
+
+  const result = parseReadingMatchingCsv(sampleCsv);
+  assert.equal(result.items.length, 2, 'Creates 2 questions (Paragraph A and Paragraph B)');
+
+  const qA = result.items[0];
+  assert.equal(qA.prompt, 'Paragraph A');
+  assert.equal(qA.expectedOptionId, 'i');
+  assert.equal(qA.options.length, 3, 'Headings pool contains i, ii, iii');
+
+  const qB = result.items[1];
+  assert.equal(qB.prompt, 'Paragraph B');
+  assert.equal(qB.expectedOptionId, 'ii');
+});
+
+test('Rubric Async: template and parser handle prompt, context and scoring criteria', () => {
+  const template = generateRubricAsyncTemplateCsv();
+  assert.ok(template.startsWith('\uFEFF'), 'Contains UTF-8 BOM');
+  assert.ok(template.includes('Prompt'), 'Contains Prompt header');
+  assert.ok(template.includes('Max_Score'), 'Contains Max_Score header');
+
+  const sampleCsv = `
+Prompt,Reference_Context,Max_Score,Preset_Type,Criterion_1,Criterion_2
+"Tóm tắt ý chính của đoạn văn trên trong 50 từ.","Đoạn trích thông tin bài đọc...",4,writing_summary,"Ý chính đầy đủ (2đ)","Ngữ pháp chuẩn (2đ)"
+`;
+
+  const result = parseRubricAsyncCsv(sampleCsv);
+  assert.equal(result.items.length, 1);
+
+  const itm = result.items[0];
+  assert.equal(itm.pedagogicalTypeCode, 'writing');
+  assert.equal(itm.graderType, 'rubric_async');
+  assert.equal(itm.maxScore, 4);
+  assert.equal(itm.rubric.criteria.length, 2);
+  assert.equal(itm.rubric.criteria[0].label, 'Ý chính đầy đủ (2đ)');
+  assert.equal(itm.rubric.criteria[0].maxScore, 2);
+  assert.equal(itm.rubric.criteria[1].maxScore, 2);
+});
+
+test('Block Exercises CSV: parseBlockExercisesCsv groups multi-exercise 7-column CSV across various types', () => {
+  const template = generateBlockExercisesTemplateCsv();
+  assert.ok(template.startsWith('\uFEFF'), 'Contains UTF-8 BOM');
+  assert.ok(template.includes('Exercise_Title'), 'Contains Exercise_Title header');
+  assert.ok(template.includes('Question_Type'), 'Contains Question_Type header');
+
+  const sampleBlockCsv = `
+Exercise_Title,Exercise_Instructions,Question_Type,Prompt,Correct_Answer,Options_Or_Details,Score
+Part 1: Grammar,Choose correct answer,single_choice,The ship departs ___ Miami.,B,at | from | on | in,1
+,,fitb,Water freezes at ___ degrees.,0,,1
+,,sentence_reorder,"She / has worked / here / for five years",She has worked here for five years.,,1
+Part 2: Listening,Listen and arrange events,listening_order,Welcome meeting,1,,1
+,,listening_order,Safety drill,2,,1
+Part 3: Vocab,Translate words,vocabulary_pair,destination,điểm đến,,1
+`;
+
+  const result = parseBlockExercisesCsv(sampleBlockCsv);
+  assert.equal(result.exercises.length, 3, 'Groups into 3 distinct exercises');
+
+  // Exercise 1: 3 items (single_choice, fitb, sentence_reorder)
+  const ex1 = result.exercises[0];
+  assert.equal(ex1.title, 'Part 1: Grammar');
+  assert.equal(ex1.instructions, 'Choose correct answer');
+  assert.equal(ex1.items.length, 3);
+  assert.equal(ex1.items[0].pedagogicalTypeCode, 'multiple_choice');
+  assert.equal(ex1.items[1].pedagogicalTypeCode, 'fitb');
+  assert.equal(ex1.items[2].pedagogicalTypeCode, 'sentence_reorder');
+
+  // Exercise 2: listening_order combined card
+  const ex2 = result.exercises[1];
+  assert.equal(ex2.title, 'Part 2: Listening');
+  assert.equal(ex2.items.length, 1, 'Combines listening_order events into 1 listening order card');
+  assert.equal(ex2.items[0].listeningEvents.length, 2);
+  assert.equal(ex2.items[0].maxScore, 2);
+
+  // Exercise 3: vocabulary_pair
+  const ex3 = result.exercises[2];
+  assert.equal(ex3.title, 'Part 3: Vocab');
+  assert.equal(ex3.items.length, 1);
+  assert.equal(ex3.items[0].pedagogicalTypeCode, 'vocabulary_pair');
+  assert.equal(ex3.items[0].targetWord, 'destination');
+});
+
+test('Block Exercises CSV: UI button renders in Block actions and openBlockCsvUploadModal is functional', async () => {
+  const { renderTestBuilderView } = await import('../term-tests/teacher-dashboard/app.js');
+
+  const mockContainer = {
+    innerHTML: '',
+    querySelector: () => null,
+    querySelectorAll: () => []
+  };
+
+  const mockForm = {
+    id: '49010000-0000-4000-8000-000000000002',
+    version: 1,
+    status: 'draft',
+    title: 'Block CSV Import Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '49010000-0000-4000-8000-000000000002',
+      title: 'Block CSV Import Test',
+      durationMinutes: 45,
+      blocks: [
+        {
+          blockId: 'b1',
+          checkpoint: 1,
+          title: 'Grammar Section',
+          exercises: [],
+          items: []
+        }
+      ]
+    },
+    gradingKey: { items: {} }
+  };
+
+  renderTestBuilderView(mockContainer, mockForm);
+
+  assert.ok(mockContainer.innerHTML.includes('btn-import-block-csv'), 'Renders Nhập CSV các bài tập button in block header actions');
+
+  let importInvoked = false;
+  openBlockCsvUploadModal({
+    block: mockForm.publicDefinition.blocks[0],
+    blockIdx: 0,
+    onImport: () => {
+      importInvoked = true;
+    }
+  });
+
+  assert.equal(importInvoked, true, 'Headless invocation of openBlockCsvUploadModal triggers fallback gracefully');
+});
