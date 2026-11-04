@@ -162,3 +162,42 @@ test('Teacher Dashboard Redesign: styles.css contains required design system sty
   assert.match(css, /\.btn-retake-renew/, 'Must define .btn-retake-renew');
   assert.match(css, /#view-grading\s+\.assignment-link-bar\s*\{\s*display:\s*none\s*!important;?\s*\}/, 'Must hide assignment-link-bar in view-grading');
 });
+
+
+test('Teacher Dashboard Assessment Tabs: hover and active styles use brand colors and items tab triggers item_analysis', () => {
+  const cssPath = path.join(__dirname, '../term-tests/teacher-dashboard/styles.css');
+  const css = fs.readFileSync(cssPath, 'utf-8');
+  const dashboardJsPath = path.join(__dirname, '../term-tests/teacher-dashboard/shell/dashboard.js');
+  const dashboardJs = fs.readFileSync(dashboardJsPath, 'utf-8');
+
+  // Verify active style uses brand color, not black
+  assert.match(
+    css,
+    /\.assessment-tab-btn\.active\s*\{[^}]*background:\s*var\(--izone-primary/,
+    '.assessment-tab-btn.active must use brand color var(--izone-primary)'
+  );
+  assert.doesNotMatch(
+    css,
+    /\.assessment-tab-btn\.active\s*\{[^}]*background:\s*#0f172a/,
+    '.assessment-tab-btn.active must not be black #0f172a'
+  );
+
+  // Verify hover style uses brand colors
+  assert.match(
+    css,
+    /\.assessment-tab-btn:hover\s*\{[^}]*var\(--izone-soft-red/,
+    '.assessment-tab-btn:hover must use soft brand tint'
+  );
+
+  // Verify dashboard.js renders assessmentTabItems and switches reportState.mode
+  assert.match(
+    dashboardJs,
+    /reportState\.mode = 'item_analysis';/,
+    'switchAssessmentTab must switch reportState.mode to item_analysis'
+  );
+  assert.match(
+    dashboardJs,
+    /assessmentTabItems\.innerHTML = renderItemAnalysisView/,
+    'renderReportsView must populate assessmentTabItems'
+  );
+});
