@@ -62,7 +62,6 @@
           <a href="#dashboard" class="nav-item active">Teacher Dashboard</a>
           <a href="#test-studio" class="nav-item">Quản lý bài thi</a>
           <a href="#grading" class="nav-item">Chấm điểm &amp; Đánh giá</a>
-          <a href="#reports" class="nav-item">Báo cáo phổ điểm</a>
         </nav>
       </div>
 
@@ -378,7 +377,7 @@
       <p id="exam-room-message" aria-live="polite"></p>
       <div class="results-scroll">
         <table>
-          <thead><tr><th>Học viên</th><th>Trạng thái</th><th>Tiến độ</th><th>Kết nối</th><th>Sự cố</th><th>Thiết bị</th></tr></thead>
+          <thead><tr><th>Học viên</th><th>Trạng thái</th><th>Tiến độ</th><th>Kết nối</th><th>Sự cố</th><th>Thiết bị</th><th>Làm lại</th></tr></thead>
           <tbody id="exam-room-students"></tbody>
         </table>
       </div>
@@ -399,6 +398,36 @@
   </div>
 
   <div id="view-grading" class="dashboard-view-container" hidden>
+    <div id="assessment-header" class="assessment-header" hidden>
+      <div class="assessment-header-top">
+        <button type="button" id="assessment-back-btn" class="btn-secondary btn-sm btn-back-dashboard">
+          <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          <span>Quay lại Teacher Dashboard</span>
+        </button>
+        <div id="assessment-breadcrumb" class="assessment-breadcrumb">
+          <span id="assessment-class-name" class="crumb-class">—</span>
+          <span class="crumb-separator">›</span>
+          <span id="assessment-test-title" class="crumb-test">—</span>
+          <span id="assessment-status-badge" class="crumb-badge">—</span>
+        </div>
+      </div>
+      <nav class="assessment-nav-tabs" role="tablist" aria-label="Điều hướng chấm điểm và đánh giá">
+        <button type="button" role="tab" class="assessment-tab-btn" data-assessment-tab="distribution" aria-selected="false">
+          <svg class="icon-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Phổ điểm</span>
+        </button>
+        <button type="button" role="tab" class="assessment-tab-btn active" data-assessment-tab="details" aria-selected="true">
+          <svg class="icon-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Chấm chi tiết</span>
+        </button>
+        <button type="button" role="tab" class="assessment-tab-btn" data-assessment-tab="items" aria-selected="false">
+          <svg class="icon-inline" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Phân tích câu hỏi</span>
+        </button>
+      </nav>
+    </div>
+
+    <div id="assessment-tab-distribution" class="assessment-tab-panel" hidden></div>
     <div id="grading-empty-placeholder" class="panel showcase-placeholder">
       <div class="placeholder-icon">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
@@ -413,21 +442,12 @@
         <div>
           <h2 id="assignment-heading">Bảng kết quả</h2>
           <p id="assignment-meta" class="meta-info"></p>
-          <div id="assignment-link-bar" class="assignment-link-bar" hidden>
-            <span class="link-label">
-              <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              <span>Link làm bài cho học viên:</span>
-            </span>
+          <div id="assignment-link-bar" class="assignment-link-bar" hidden style="display:none !important;">
             <input id="assignment-student-url" type="text" readonly class="student-url-input">
-            <button id="copy-student-link-btn" type="button" class="btn-secondary">
-              <svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              <span>Sao chép link</span>
-            </button>
-            <a id="open-student-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary link-btn">
-              <span>Mở trang thi</span>
-              <svg class="icon-inline" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
+            <button id="copy-student-link-btn" type="button" class="btn-secondary">Sao chép</button>
+            <a id="open-student-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary">Mở</a>
           </div>
+          
         </div>
         <div class="refresh-container">
           <span id="last-updated" class="last-updated" aria-live="polite"></span>
@@ -557,6 +577,10 @@
           <span>Trạng thái</span>
           <select id="status-filter">
             <option value="">Tất cả</option>
+            <option value="complete">Có điểm chính thức (Hoàn tất)</option>
+            <option value="review_required,grading">Chờ chấm / duyệt</option>
+            <option value="not_started,in_progress">Chưa nộp bài</option>
+            <option value="retake_granted,retaking">Đang làm lại</option>
             <option value="review_required">Cần duyệt</option>
             <option value="grading">Đang chấm</option>
             <option value="retake_granted">Được phép làm lại</option>
@@ -699,6 +723,7 @@
         </div>
       </div>
     </section>
+      <div id="assessment-tab-items" class="assessment-tab-panel" hidden></div>
   </div> <!-- #view-grading -->
 
   <div id="view-reports" class="dashboard-view-container" hidden>

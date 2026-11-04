@@ -200,6 +200,16 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const goToGradingBtn = root.querySelector('#go-to-grading-btn');
   const gradingEmptyPlaceholder = root.querySelector('#grading-empty-placeholder');
   const gradingBackToDashboardBtn = root.querySelector('#grading-back-to-dashboard-btn');
+  const pageTitleBar = root.querySelector('.page-title-bar');
+  const assessmentHeader = root.querySelector('#assessment-header');
+  const assessmentBackBtn = root.querySelector('#assessment-back-btn');
+  const assessmentClassName = root.querySelector('#assessment-class-name');
+  const assessmentTestTitle = root.querySelector('#assessment-test-title');
+  const assessmentStatusBadge = root.querySelector('#assessment-status-badge');
+  const assessmentTabDistribution = root.querySelector('#assessment-tab-distribution');
+  const assessmentTabItems = root.querySelector('#assessment-tab-items');
+  const assessmentTabBtns = Array.from(root.querySelectorAll('.assessment-tab-btn'));
+  let currentAssessmentTab = 'details';
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
   let currentServerNow = null;
@@ -222,6 +232,59 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     return activeBuilder;
   }
 
+  function syncAssessmentHeaderMeta() {
+    if (assessmentClassName) {
+      const cls = rawClassesList.find(c => String(c.classId) === String(state.classId));
+      assessmentClassName.textContent = cls?.name || currentSelectedAssignment?.className || (state.classId ? `Lớp ${state.classId}` : '—');
+    }
+    if (assessmentTestTitle) {
+      assessmentTestTitle.textContent = currentSelectedAssignment?.title || 'Bài kiểm tra';
+    }
+    if (assessmentStatusBadge) {
+      const st = currentSelectedAssignment?.status;
+      assessmentStatusBadge.textContent = st === 'published' ? 'Đang phát hành' : (st === 'closed' ? 'Đã đóng' : (st || 'Đang mở'));
+    }
+  }
+
+  function switchAssessmentTab(targetTab) {
+    currentAssessmentTab = targetTab || 'details';
+    assessmentTabBtns.forEach(btn => {
+      const isMatch = btn.getAttribute('data-assessment-tab') === currentAssessmentTab;
+      btn.classList.toggle('active', isMatch);
+      btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+    });
+
+    if (assessmentTabDistribution) {
+      assessmentTabDistribution.hidden = currentAssessmentTab !== 'distribution';
+    }
+    if (results) {
+      results.hidden = currentAssessmentTab !== 'details';
+    }
+    if (assessmentTabItems) {
+      assessmentTabItems.hidden = currentAssessmentTab !== 'items';
+    }
+
+    if (currentAssessmentTab === 'distribution') {
+      if (!reportState.reportData && !reportState.isLoading) {
+        loadScoreDistributionReport();
+      } else {
+        renderReportsView();
+      }
+    } else if (currentAssessmentTab === 'details') {
+      if (!currentResultsPayload && state.classId && state.assignmentId) {
+        loadResults(state.classId, state.assignmentId).catch(err => {
+          if (status) status.textContent = err.message;
+        });
+      }
+    } else if (currentAssessmentTab === 'items') {
+      if (!reportState.itemAnalysisData && !reportState.itemAnalysisLoading) {
+        loadItemAnalysisReport();
+      } else {
+        renderReportsView();
+      }
+    }
+  }
+
   function updateDashboardTab(tabId) {
     const activeTab = switchDashboardTab(tabId, {
       views: {
@@ -241,13 +304,21 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           queryCoordinator.cancel('reports');
           queryCoordinator.cancel('itemAnalysis');
         }
+        if (pageTitleBar) {
+          pageTitleBar.hidden = newTab !== 'dashboard';
+        }
         if (newTab === 'grading') {
           if (state.assignmentId && state.classId) {
-            if (results) results.hidden = false;
             if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = true;
+            if (assessmentHeader) assessmentHeader.hidden = false;
+            syncAssessmentHeaderMeta();
+            switchAssessmentTab(currentAssessmentTab || 'details');
           } else {
-            if (results) results.hidden = true;
             if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
+            if (assessmentHeader) assessmentHeader.hidden = true;
+            if (results) results.hidden = true;
+            if (assessmentTabDistribution) assessmentTabDistribution.hidden = true;
+            if (assessmentTabItems) assessmentTabItems.hidden = true;
           }
         }
         if (newTab === 'test-studio' || newTab === 'exams') {
@@ -582,6 +653,20 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       updateDashboardTab('grading');
     });
   }
+
+  if (assessmentBackBtn) {
+    lifecycle.listen(assessmentBackBtn, 'click', () => {
+      updateDashboardTab('dashboard');
+      if (typeof window !== 'undefined') window.location.hash = '#dashboard';
+    });
+  }
+
+  assessmentTabBtns.forEach(btn => {
+    lifecycle.listen(btn, 'click', () => {
+      const tab = btn.getAttribute('data-assessment-tab');
+      if (tab) switchAssessmentTab(tab);
+    });
+  });
 
   if (gradingBackToDashboardBtn) {
     lifecycle.listen(gradingBackToDashboardBtn, 'click', (e) => {
@@ -1029,12 +1114,57 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         const openIncident = (student.openIncidents || []).length > 0;
         incidents.textContent = student.status === 'not_entered' ? '—' : `${incidentCount}${openIncident ? ' · đang rời bài' : ''}`;
         device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
+
+        // 7. Retake Action column in Exam Room
+        const retake = document.createElement('td');
+        const hasActiveRetake = Boolean(student.retakeGrant?.status === 'granted' || student.status === 'retake_granted' || student.status === 'retaking');
+        if (hasActiveRetake) {
+          const retakeWrap = document.createElement('div');
+          retakeWrap.className = 'retake-action-wrap';
+
+          const badge = document.createElement('span');
+          badge.className = 'retake-badge active';
+          badge.textContent = 'Đã cấp lại';
+
+          const renewBtn = document.createElement('button');
+          renewBtn.type = 'button';
+          renewBtn.className = 'btn-secondary btn-sm btn-retake-renew';
+          renewBtn.title = 'Gia hạn hoặc điều chỉnh thời hạn làm lại';
+          renewBtn.innerHTML = `${ICONS.clock} <span>Gia hạn</span>`;
+          lifecycle.listen(renewBtn, 'click', (e) => {
+            e.stopPropagation();
+            openGrantRetakeModal({
+              studentRef: student.studentRef,
+              studentName: student.name,
+              discriminator: student.discriminator
+            });
+          });
+
+          retakeWrap.append(badge, renewBtn);
+          retake.append(retakeWrap);
+        } else {
+          const retakeBtn = document.createElement('button');
+          retakeBtn.type = 'button';
+          retakeBtn.className = 'btn-secondary btn-sm btn-retake';
+          retakeBtn.title = 'Cấp quyền làm lại bài thi';
+          retakeBtn.innerHTML = `${ICONS.rotate} <span>Làm lại</span>`;
+          lifecycle.listen(retakeBtn, 'click', (e) => {
+            e.stopPropagation();
+            openGrantRetakeModal({
+              studentRef: student.studentRef,
+              studentName: student.name,
+              discriminator: student.discriminator
+            });
+          });
+          retake.append(retakeBtn);
+        }
+
         // Tô đỏ mọi học viên đã có sự cố (không chỉ lúc đang rời bài) để giáo viên không bỏ sót.
         if (incidentCount > 0 || openIncident) {
           row.className = 'exam-incident-active';
           row.setAttribute('aria-label', `${student.name || 'Học viên'} có ${incidentCount} sự cố Exam Guard`);
         }
-        row.append(name, participation, progress, connection, incidents, device);
+        row.append(name, participation, progress, connection, incidents, device, retake);
         if (student.attemptId) {
           row.classList.add('exam-room-clickable');
           row.tabIndex = 0;
@@ -1795,19 +1925,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           });
           actionsGroup.append(detailBtn);
         }
-        const retakeBtn = document.createElement('button');
-        retakeBtn.type = 'button';
-        retakeBtn.className = 'btn-secondary btn-sm btn-retake';
-        retakeBtn.innerHTML = `${ICONS.rotate} <span>Làm lại</span>`;
-        retakeBtn.title = 'Cấp quyền làm lại bài thi';
-        lifecycle.listen(retakeBtn, 'click', () => {
-          openGrantRetakeModal({
-            studentRef: student.studentRef,
-            studentName: student.name,
-            discriminator: student.discriminator
-          });
-        });
-        actionsGroup.append(retakeBtn);
+
         actionCell.append(actionsGroup);
         row.append(actionCell);
 
@@ -2539,7 +2657,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   };
 
   async function loadScoreDistributionReport(classId = state.classId, assignmentId = state.assignmentId) {
-    if (!viewReports) return;
+    if (!viewReports && !assessmentTabDistribution) return;
     if (!classId || !assignmentId) {
       queryCoordinator?.cancel?.('reports');
       reportState = {
@@ -2582,7 +2700,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   async function loadItemAnalysisReport(classId = state.classId, assignmentId = state.assignmentId) {
-    if (!viewReports) return;
+    if (!viewReports && !assessmentTabItems) return;
     if (!classId || !assignmentId) {
       queryCoordinator?.cancel?.('itemAnalysis');
       reportState.itemAnalysisData = null;
@@ -2620,9 +2738,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   function renderReportsView() {
-    if (!viewReports) return;
+    if (!viewReports && !assessmentTabDistribution && !assessmentTabItems) return;
 
-    viewReports.replaceChildren();
+    if (viewReports) viewReports.replaceChildren();
 
     // Mode Switcher Header
     const switchWrapper = document.createElement('div');
@@ -2667,8 +2785,63 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         expandedItemIds: reportState.expandedItemIds
       });
 
-      // Bind events for item-analysis view
-      contentContainer.querySelectorAll('.item-filter-tab').forEach(tab => {
+      function bindItemAnalysisEvents(target) {
+        if (!target) return;
+        target.querySelectorAll('.item-filter-tab').forEach(tab => {
+          tab.addEventListener('click', (e) => {
+            const targetTab = e.currentTarget || tab;
+            reportState.itemSelectedSkill = targetTab.getAttribute('data-skill');
+            renderReportsView();
+          });
+        });
+
+        target.querySelectorAll('.item-sort-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const targetBtn = e.currentTarget || btn;
+            const sortVal = targetBtn.getAttribute('data-sort');
+            if (sortVal) {
+              reportState.itemSortCriteria = sortVal;
+              renderReportsView();
+            }
+          });
+        });
+
+        target.querySelectorAll('.btn-toggle-item').forEach(cardHeader => {
+          cardHeader.addEventListener('click', () => {
+            const itemId = cardHeader.getAttribute('data-item-id');
+            if (itemId) {
+              if (reportState.expandedItemIds.has(itemId)) {
+                reportState.expandedItemIds.delete(itemId);
+              } else {
+                reportState.expandedItemIds.add(itemId);
+              }
+              renderReportsView();
+            }
+          });
+        });
+
+        const retryBtn = target.querySelector('.btn-retry-report');
+        if (retryBtn) {
+          retryBtn.addEventListener('click', () => {
+            loadItemAnalysisReport();
+          });
+        }
+      }
+
+      if (assessmentTabItems) {
+        assessmentTabItems.innerHTML = renderItemAnalysisView({
+          items,
+          loading,
+          error,
+          selectedSkill: reportState.itemSelectedSkill,
+          sortCriteria: reportState.itemSortCriteria,
+          expandedItemIds: reportState.expandedItemIds
+        });
+        bindItemAnalysisEvents(assessmentTabItems);
+      }
+
+      bindItemAnalysisEvents(contentContainer);
+      if (false) contentContainer.querySelectorAll('.item-filter-tab').forEach(tab => {
         tab.addEventListener('click', (e) => {
           const targetTab = e.currentTarget || tab;
           reportState.itemSelectedSkill = targetTab.getAttribute('data-skill');
@@ -2709,7 +2882,15 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       }
     } else {
       // Distribution mode
-      renderScoreDistributionView(contentContainer, reportState, {
+      const renderDistroCallbacks = {
+        onCardFilter: (filterStatus) => {
+          switchAssessmentTab('details');
+          if (statusFilter) {
+            statusFilter.value = filterStatus;
+          }
+          state.status = filterStatus;
+          applyFilterChange();
+        },
         onProvisionalToggle: (checked) => {
           reportState.includeProvisional = checked;
           loadScoreDistributionReport();
@@ -2745,7 +2926,14 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
             window.print();
           }
         }
-      });
+      };
+
+      if (contentContainer) {
+        renderScoreDistributionView(contentContainer, reportState, renderDistroCallbacks);
+      }
+      if (assessmentTabDistribution) {
+        renderScoreDistributionView(assessmentTabDistribution, reportState, renderDistroCallbacks);
+      }
     }
   }
 

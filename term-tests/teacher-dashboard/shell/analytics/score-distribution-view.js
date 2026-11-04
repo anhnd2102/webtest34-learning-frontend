@@ -42,6 +42,105 @@ export function formatScoreFraction(score, maxScore) {
 /**
  * Render Roster Summary metrics grid.
  */
+export function renderScoreKpiCards(rosterSummary = {}, statistics = {}, maxScore = 100) {
+  const {
+    totalRoster = 0,
+    submitted = 0,
+    officialGraded = 0,
+    provisional = 0,
+    pendingReview = 0,
+    retaking = 0,
+    notSubmitted = 0
+  } = rosterSummary;
+
+  const {
+    mean = null
+  } = statistics;
+
+  const validMax = Number.isFinite(Number(maxScore)) && Number(maxScore) > 0 ? Number(maxScore) : 100;
+  const meanDisplay = mean !== null && mean !== undefined ? formatScoreFraction(mean, validMax) : '—';
+  const pendingCount = (Number(pendingReview) || 0) + (Number(provisional) || 0);
+
+  const cards = [
+    {
+      id: 'kpi-total',
+      label: 'Tổng số học viên',
+      value: `${totalRoster} học viên`,
+      icon: VIEW_ICONS.users,
+      badgeClass: 'metric-neutral',
+      tooltip: 'Tổng danh sách lớp trong đợt thi (Bấm để xem toàn bộ danh sách)',
+      filterStatus: '',
+      isClickable: true
+    },
+    {
+      id: 'kpi-mean',
+      label: 'Điểm trung bình',
+      value: meanDisplay,
+      icon: VIEW_ICONS.target,
+      badgeClass: 'metric-primary',
+      tooltip: 'Điểm trung bình đạt/tối đa theo kỹ năng đang chọn',
+      filterStatus: null,
+      isClickable: false
+    },
+    {
+      id: 'kpi-official',
+      label: 'Có điểm chính thức',
+      value: `${officialGraded} / ${totalRoster}`,
+      icon: VIEW_ICONS.award,
+      badgeClass: 'metric-success',
+      tooltip: 'Học viên đã có điểm chính thức/công bố (Bấm để lọc)',
+      filterStatus: 'complete',
+      isClickable: true
+    },
+    {
+      id: 'kpi-pending',
+      label: 'Chờ chấm / duyệt',
+      value: `${pendingCount} / ${totalRoster}`,
+      icon: VIEW_ICONS.clock,
+      badgeClass: 'metric-warning',
+      tooltip: 'Bài nộp cần GV chấm tự luận/nói hoặc đang nháp (Bấm để lọc)',
+      filterStatus: 'review_required,grading',
+      isClickable: true
+    },
+    {
+      id: 'kpi-not-submitted',
+      label: 'Chưa nộp bài',
+      value: `${notSubmitted} / ${totalRoster}`,
+      icon: VIEW_ICONS.alert,
+      badgeClass: 'metric-muted',
+      tooltip: 'Học viên chưa vào thi hoặc đang làm dở (Bấm để lọc)',
+      filterStatus: 'not_started,in_progress',
+      isClickable: true
+    },
+    {
+      id: 'kpi-retaking',
+      label: 'Đang làm lại',
+      value: `${retaking} / ${totalRoster}`,
+      icon: VIEW_ICONS.rotate,
+      badgeClass: 'metric-info',
+      tooltip: 'Học viên đã được cấp quyền làm lại hoặc đang thi lại (Bấm để lọc)',
+      filterStatus: 'retake_granted,retaking',
+      isClickable: true
+    }
+  ];
+
+  return `
+    <div class="report-roster-grid report-kpi-grid">
+      ${cards.map(c => `
+        <div class="report-metric-card ${c.badgeClass}${c.isClickable ? ' clickable-kpi-card' : ''}" 
+             ${c.isClickable ? `data-filter-status="${c.filterStatus}" role="button" tabindex="0"` : ''} 
+             title="${c.tooltip}">
+          <div class="metric-card-header">
+            <span class="metric-icon">${c.icon}</span>
+            <span class="metric-label">${c.label}</span>
+          </div>
+          <div class="metric-card-value">${c.value}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
 export function renderRosterSummaryCards(rosterSummary = {}) {
   const {
     totalRoster = 0,
@@ -459,7 +558,8 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
     onBucketClick = () => {},
     onRetry = () => {},
     onExportExcel = () => {},
-    onPrint = () => {}
+    onPrint = () => {},
+    onCardFilter = () => {}
   } = callbacks;
 
   if (isLoading) {
@@ -549,10 +649,10 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
       ` : ''}
 
       <!-- Roster Summary -->
-      ${renderRosterSummaryCards(rosterSummary)}
+      ${renderScoreKpiCards(rosterSummary, currentTarget?.statistics || {}, currentMaxScore)}
 
-      <!-- Statistical Highlights for Active Skill -->
-      ${renderStatisticsCards(currentTarget?.statistics || {}, currentMaxScore)}
+
+
 
       <!-- Interactive Histogram & Drilldown Side-by-Side Area -->
       <div class="histogram-drilldown-split-area has-active-drilldown">
@@ -617,4 +717,19 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
   if (printBtn) {
     printBtn.addEventListener('click', onPrint);
   }
+
+  const kpiCards = container.querySelectorAll('.clickable-kpi-card');
+  kpiCards.forEach(card => {
+    const handleFilter = () => {
+      const statusVal = card.getAttribute('data-filter-status');
+      onCardFilter(statusVal !== null ? statusVal : '');
+    };
+    card.addEventListener('click', handleFilter);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleFilter();
+      }
+    });
+  });
 }
