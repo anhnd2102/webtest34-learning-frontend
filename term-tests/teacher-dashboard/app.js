@@ -3070,6 +3070,19 @@ export function scaleRubricCriteriaScores(criteria, newTotalScore) {
   });
 }
 
+export function isComprehensionExercise(exercise, block, gradingKey) {
+  if (!exercise) return false;
+  if (exercise.exerciseType === 'comprehension') return true;
+  if (Boolean(exercise.referenceContext && exercise.referenceContext.trim())) return true;
+  const items = (block?.items || []).filter(it => it.exerciseId === exercise.exerciseId);
+  return items.some(it => {
+    if (it.graderType !== 'rubric_async') return false;
+    const key = gradingKey?.items?.[it.itemVersionId];
+    const scoringVer = String(key?.rubric?.scoringVersion || it.rubricCode || '');
+    return scoringVer.includes('comprehension') || it.rubricCode === 'rubric_comprehension_v1';
+  });
+}
+
 export function findPrecedingClozeScript(draftState, currentBlockIdx) {
   if (!draftState || !Array.isArray(draftState.blocks)) return '';
   for (let b = currentBlockIdx; b >= 0; b--) {
@@ -5610,8 +5623,8 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const parentEx = block?.exercises?.find(e => e.exerciseId === item.exerciseId);
         const hasExContext = Boolean(parentEx && parentEx.referenceContext && parentEx.referenceContext.trim());
         const hasItemCustomContext = Boolean(item.referenceContext && item.referenceContext.trim());
-        const isTranslation = scoringVer.includes('translation') || item.rubricCode === 'rubric_translation_v1';
-        const showItemContextInitially = hasItemCustomContext || (!hasExContext && isTranslation);
+        const isComprehension = scoringVer.includes('comprehension') || item.rubricCode === 'rubric_comprehension_v1';
+        const showItemContextInitially = hasItemCustomContext || (!hasExContext && isComprehension);
 
         specificHtml = `
           <div class="template-section template-rubric-async">
@@ -5639,7 +5652,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               </div>
             </div>
 
-            ${(!hasExContext && !isTranslation && !hasItemCustomContext) ? `
+            ${(!hasExContext && !isComprehension && !hasItemCustomContext) ? `
               <div style="margin-bottom: 10px;">
                 <button type="button" class="btn btn-ghost-subtle btn-sm btn-toggle-custom-item-context" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="font-size: 0.78rem;">
                   ${renderSvgIcon('plusCircle', 'icon-inline')} Thêm ngữ cảnh tham chiếu riêng cho câu này
@@ -5985,6 +5998,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               <label class="form-label"><strong>Hướng dẫn làm bài tập (Exercise Instructions):</strong></label>
               <textarea class="form-control exercise-instructions-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="2" placeholder="Ví dụ: Listen and note down the words/phrases you hear from the audio...">${escapeHtml(ex.instructions || '')}</textarea>
             </div>
+            ${isComprehensionExercise(ex, block, draftState.gradingKey) ? `
             <div class="form-group exercise-field exercise-reference-context-field" style="margin-top: 10px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
                 <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
@@ -5996,11 +6010,12 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                   ${renderSvgIcon('clipboard', 'icon-inline')} Lấy Script từ bài Điền từ phía trước
                 </button>
               </div>
-              <textarea class="form-control form-control-sm exercise-reference-context-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Tự luận AI trong phần này (ví dụ: bài đọc Khối 03, bài nghe...). AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con.">${escapeHtml(ex.referenceContext || '')}</textarea>
+              <textarea class="form-control form-control-sm exercise-reference-context-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Đọc hiểu Khối 03 trong bài này... AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con.">${escapeHtml(ex.referenceContext || '')}</textarea>
               <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
                 ${renderSvgIcon('lock', 'icon-inline')} <strong>Dùng chung toàn bài tập:</strong> Các câu hỏi Tự luận AI bên dưới sẽ tự động kế thừa ngữ cảnh này, không cần dán lặp lại ở từng câu hỏi.
               </div>
             </div>
+            ` : ''}
             <div class="exercise-items-list block-items-list" data-exercise-id="${ex.exerciseId}" data-block-idx="${blockIdx}">
               ${renderExerciseItems(block, blockIdx, ex, exIdx)}
             </div>
@@ -9411,6 +9426,38 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             render();
           }
         });
+
+        if (rubricBatchModal) {
+          const typeSel = rubricBatchModal.querySelector('.select-batch-rubric-type');
+          const ctxGroup = rubricBatchModal.querySelector('#batch-rubric-context-group');
+          const pullModalBtn = rubricBatchModal.querySelector('.btn-modal-pull-cloze-script');
+          const ctxInput = rubricBatchModal.querySelector('.batch-rubric-context-input');
+
+          const updateCtxVisibility = () => {
+            if (!typeSel || !ctxGroup) return;
+            if (typeSel.value === 'comprehension') {
+              ctxGroup.style.display = 'block';
+            } else {
+              ctxGroup.style.display = 'none';
+            }
+          };
+
+          if (typeSel) {
+            typeSel.addEventListener('change', updateCtxVisibility);
+            updateCtxVisibility();
+          }
+
+          if (pullModalBtn && ctxInput) {
+            pullModalBtn.addEventListener('click', () => {
+              const script = findPrecedingClozeScript(draftState, bIdx);
+              if (script) {
+                ctxInput.value = script;
+              } else {
+                alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
+              }
+            });
+          }
+        }
       });
     });
 
@@ -9896,7 +9943,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
+        const rubricBatchModal = openGenericBatchModal({
           title: 'Tạo câu hỏi Tự luận chấm AI (AI Rubric)',
           subtitle: `Tạo câu hỏi tự luận có tiêu chí chấm AI thuộc bài tập ${targetEx.title || 'bài tập'}.`,
           defaultCount: 2,
@@ -9907,12 +9954,28 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             <div class="form-group batch-rubric-type-form-group" style="margin-top: 14px;">
               <label class="form-label"><strong>Dạng câu hỏi tự luận (Question Type / Rubric Preset):</strong></label>
               <select class="form-control select-batch-rubric-type" style="font-weight: 600; padding: 8px 12px; border-radius: 6px;">
-                <option value="translation" selected>Dịch thuật (Translation) — Rubric 50% Ý nghĩa + 50% Ngữ pháp</option>
-                <option value="comprehension">Đọc hiểu Khối 03 (Reading Comprehension) — Rubric 70% Đọc hiểu + 30% Từ khóa</option>
+                <option value="comprehension" selected>Đọc hiểu Khối 03 (Reading Comprehension) — Rubric 70% Đọc hiểu + 30% Từ khóa</option>
+                <option value="translation">Dịch thuật (Translation) — Rubric 50% Ý nghĩa + 50% Ngữ pháp</option>
                 <option value="writing_summary">Tóm tắt bài đọc (Writing Summary) — Rubric 50% Ý chính + 50% Ngữ pháp</option>
                 <option value="custom">Tự luận mở chung (Custom Rubric) — Tự thiết lập tiêu chí</option>
               </select>
               <span style="font-size: 0.8rem; color: #64748b; margin-top: 4px; display: block;">(Hệ thống sẽ tự động cấu hình các tiêu chí chấm AI phù hợp theo dạng bài được chọn)</span>
+            </div>
+            <div class="form-group batch-rubric-context-group" id="batch-rubric-context-group" style="margin-top: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
+                  ${renderSvgIcon('book', 'icon-inline')}
+                  <span>Ngữ cảnh bài đọc / Script tham chiếu chung cho AI:</span>
+                  <span class="badge badge-info" style="font-size: 0.72rem; padding: 2px 6px;">Ẩn với học viên</span>
+                </label>
+                <button type="button" class="btn btn-secondary btn-sm btn-modal-pull-cloze-script" title="Tự động lấy đoạn văn từ bài Điền từ nội tuyến hoặc bài nghe phía trước">
+                  ${renderSvgIcon('clipboard', 'icon-inline')} Lấy Script từ bài Điền từ phía trước
+                </button>
+              </div>
+              <textarea class="form-control form-control-sm batch-rubric-context-input" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Đọc hiểu Khối 03 trong phần này...">${escapeHtml(targetEx.referenceContext || '')}</textarea>
+              <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+                ${renderSvgIcon('lock', 'icon-inline')} <strong>Ẩn với học viên:</strong> AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con trong bài tập.
+              </div>
             </div>
           `,
           csvConfig: {
@@ -9967,7 +10030,14 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             }
           },
           onConfirm: ({ count, defaultPoints = 4, modal }) => {
-            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'translation';
+            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
+            if (selectedType === 'comprehension') {
+              targetEx.exerciseType = 'comprehension';
+              const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
+              if (modalContextInput && modalContextInput.value.trim()) {
+                targetEx.referenceContext = modalContextInput.value.trim();
+              }
+            }
             const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
             const startingPos = getNextPosition();
             const batchItems = [];
@@ -10009,7 +10079,14 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             render();
           },
           onSingle: ({ modal, defaultPoints = 4 } = {}) => {
-            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'translation';
+            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
+            if (selectedType === 'comprehension') {
+              targetEx.exerciseType = 'comprehension';
+              const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
+              if (modalContextInput && modalContextInput.value.trim()) {
+                targetEx.referenceContext = modalContextInput.value.trim();
+              }
+            }
             const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
             const nextPos = getNextPosition();
             const newItemId = generateUuid();
@@ -11030,6 +11107,10 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             }
           };
         } else if (val === 'comprehension') {
+          const targetEx = draftState.blocks[bIdx]?.exercises?.find(e => e.exerciseId === item.exerciseId);
+          if (targetEx) {
+            targetEx.exerciseType = 'comprehension';
+          }
           const s1 = Math.round(currentScore * 0.7 * 10) / 10;
           const s2 = Math.round((currentScore - s1) * 10) / 10;
           draftState.gradingKey.items[item.itemVersionId] = {
@@ -11123,6 +11204,27 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       });
     });
 
+    // Pull Cloze Script for Exercise handler
+    const pullExScriptBtns = container.querySelectorAll('.btn-pull-exercise-cloze-script');
+    pullExScriptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const exIdx = Number(btn.getAttribute('data-exercise-idx'));
+        const ex = draftState.blocks[bIdx]?.exercises?.[exIdx];
+        if (!ex) return;
+
+        const script = findPrecedingClozeScript(draftState, bIdx);
+        if (script) {
+          ex.referenceContext = script;
+          markAsDirty();
+          render();
+        } else {
+          alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
+        }
+      });
+    });
+
     // Pull Cloze Script handler
     const pullScriptBtns = container.querySelectorAll('.btn-pull-cloze-script');
     pullScriptBtns.forEach(btn => {
@@ -11196,7 +11298,8 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         }
 
         try {
-          const referenceContext = item.referenceContext || draftState.blocks[bIdx]?.readingPassage || draftState.blocks[bIdx]?.stimulusReadingPassage || draftState.blocks[bIdx]?.referenceContext || '';
+          const parentEx = draftState.blocks[bIdx]?.exercises?.find(e => e.exerciseId === item.exerciseId);
+          const referenceContext = item.referenceContext || parentEx?.referenceContext || draftState.blocks[bIdx]?.readingPassage || draftState.blocks[bIdx]?.stimulusReadingPassage || draftState.blocks[bIdx]?.referenceContext || '';
           let sandboxResult;
           if (typeof options.onPreviewSandbox === 'function') {
             sandboxResult = await options.onPreviewSandbox({
