@@ -1271,6 +1271,13 @@ export function clearActiveUnsavedChanges(owner = null) {
   }
 }
 
+// Keep cleanup local to the Builder that opened each overlay, including shell navigation dialogs.
+const builderModalOwners = new WeakMap();
+const builderModalCleanups = new WeakMap();
+function trackBuilderModal(modal, owner) {
+  if (owner != null) builderModalOwners.set(modal, owner);
+}
+
 export function openUnsavedChangesModal({
   title = 'Các thay đổi chưa được lưu',
   subtitle = 'Bạn có các chỉnh sửa chưa lưu trong bài thi này',
@@ -1278,7 +1285,8 @@ export function openUnsavedChangesModal({
   stayText = 'Ở lại chỉnh sửa',
   discardText = 'Rời khỏi không lưu',
   onDiscard,
-  onStay
+  onStay,
+  owner = activeUnsavedChangesGuard?.owner
 } = {}) {
   if (typeof document === 'undefined') {
     const confirmed = typeof window !== 'undefined' && typeof window.confirm === 'function'
@@ -1342,6 +1350,7 @@ export function openUnsavedChangesModal({
     </div>
   `;
 
+  trackBuilderModal(modal, owner);
   document.body.appendChild(modal);
 
   const closeModal = (restoreFocus = false) => {
@@ -1388,7 +1397,7 @@ export function openUnsavedChangesModal({
   btnStay?.focus();
 }
 
-export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sessionNumber, phase, courseName, onConfirm }) {
+export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sessionNumber, phase, courseName, onConfirm, owner = activeUnsavedChangesGuard?.owner }) {
   if (typeof document === 'undefined') return;
   let modal = document.querySelector('#modal-confirm-delete-test');
   if (modal && modal.parentNode) {
@@ -1453,6 +1462,7 @@ export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sess
     </div>
   `;
 
+  trackBuilderModal(modal, owner);
   document.body.appendChild(modal);
 
   const inputKw = modal.querySelector('#input-confirm-keyword');
@@ -1492,7 +1502,7 @@ export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sess
   });
 }
 
-export function openCreateTestModal({ courseId, catalog = [], onSubmit, onCancel }) {
+export function openCreateTestModal({ courseId, catalog = [], onSubmit, onCancel, owner = activeUnsavedChangesGuard?.owner }) {
   if (typeof document === 'undefined') return;
   let modal = document.querySelector('#modal-create-test');
   if (modal && modal.parentNode) {
@@ -1592,6 +1602,7 @@ export function openCreateTestModal({ courseId, catalog = [], onSubmit, onCancel
     </div>
   `;
 
+  trackBuilderModal(modal, owner);
   document.body.appendChild(modal);
 
   const phaseSelect = modal.querySelector('#create-phase-select');
@@ -3287,6 +3298,7 @@ export function openGenericBatchModal({
   defaultPoints = 1.0,
   extraConfigHtml = '',
   csvConfig = null,
+  owner = activeUnsavedChangesGuard?.owner,
   onConfirm,
   onSingle
 } = {}) {
@@ -3298,12 +3310,15 @@ export function openGenericBatchModal({
   // Remove previous modal instance if already present to avoid dangling listeners
   let modal = document.querySelector('#generic-batch-modal');
   if (modal && modal.parentNode) {
+    builderModalCleanups.get(modal)?.();
+    builderModalOwners.delete(modal);
     modal.parentNode.removeChild(modal);
   }
 
   modal = document.createElement('div');
   modal.id = 'generic-batch-modal';
   modal.className = 'modal-generic-batch-overlay modal-batch-vocab-overlay';
+  trackBuilderModal(modal, owner);
   document.body.appendChild(modal);
 
   modal.style.display = 'flex';
@@ -3525,7 +3540,7 @@ export function openGenericBatchModal({
     const viewGuideBtn = modal.querySelector('.btn-view-csv-guide');
     if (viewGuideBtn) {
       viewGuideBtn.addEventListener('click', () => {
-        openCsvQuickGuideModal();
+        openCsvQuickGuideModal(owner);
       });
     }
 
@@ -3633,9 +3648,12 @@ export function openGenericBatchModal({
   };
 
   let cleanupKeydown = null;
+  let focusTimer = null;
 
   const closeModal = () => {
     modal.style.display = 'none';
+    clearTimeout(focusTimer);
+    focusTimer = null;
     if (cleanupKeydown) {
       if (typeof window !== 'undefined' && window.removeEventListener) {
         window.removeEventListener('keydown', cleanupKeydown);
@@ -3643,6 +3661,8 @@ export function openGenericBatchModal({
       cleanupKeydown = null;
     }
   };
+
+  builderModalCleanups.set(modal, closeModal);
 
   const doConfirm = () => {
     const finalCount = getSafeCount();
@@ -3738,7 +3758,7 @@ export function openGenericBatchModal({
   }
 
   if (countInput) {
-    setTimeout(() => {
+    focusTimer = setTimeout(() => {
       try {
         countInput.focus();
         countInput.select();
@@ -3749,7 +3769,7 @@ export function openGenericBatchModal({
   return modal;
 }
 
-export function openCsvQuickGuideModal() {
+export function openCsvQuickGuideModal(owner = activeUnsavedChangesGuard?.owner) {
   if (typeof document === 'undefined') return null;
 
   const existingModal = document.getElementById('modal-csv-quick-guide');
@@ -3867,6 +3887,7 @@ export function openCsvQuickGuideModal() {
     </div>
   `;
 
+  trackBuilderModal(modal, owner);
   document.body.appendChild(modal);
 
   const closeBtn = modal.querySelector('.btn-close-guide');
@@ -3886,6 +3907,7 @@ export function openBlockCsvUploadModal(opts = {}) {
   const {
     block,
     blockIdx,
+    owner = activeUnsavedChangesGuard?.owner,
     onImport = () => {}
   } = opts;
 
@@ -3984,6 +4006,7 @@ export function openBlockCsvUploadModal(opts = {}) {
     </div>
   `;
 
+  trackBuilderModal(modal, owner);
   document.body.appendChild(modal);
 
   const closeBtn = modal.querySelector('.btn-close-modal');
@@ -4008,7 +4031,7 @@ export function openBlockCsvUploadModal(opts = {}) {
 
   const viewGuideBtn = modal.querySelector('.btn-view-csv-guide');
   viewGuideBtn?.addEventListener('click', () => {
-    openCsvQuickGuideModal();
+    openCsvQuickGuideModal(owner);
   });
 
   downloadBtn?.addEventListener('click', () => {
@@ -4103,10 +4126,12 @@ export function openCsvUploadModal(opts = {}) {
     parseCsv = () => ({ items: [], invalidRows: [] }),
     renderPreviewRow = null,
     onImport = () => {},
+    owner = activeUnsavedChangesGuard?.owner,
     onSingle = null
   } = opts;
 
   return openGenericBatchModal({
+    owner,
     title,
     subtitle,
     defaultCount: 5,
@@ -6946,7 +6971,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       backBtn.addEventListener('click', (e) => {
         e.preventDefault();
         if (isDirty) {
-          openUnsavedChangesModal({
+          openUnsavedChangesModal({ owner: builderOwner,
             onDiscard: () => {
               isDirty = false;
               handle?.dispose();
@@ -6999,7 +7024,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
 
-        openBlockCsvUploadModal({
+        openBlockCsvUploadModal({ owner: builderOwner,
           block,
           blockIdx: bIdx,
           onImport: ({ mode, exercises }) => {
@@ -7487,7 +7512,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
     function triggerScCsvUpload(bIdx, targetEx) {
       const block = draftState.blocks[bIdx];
       if (!block) return;
-      openGenericBatchModal({
+      openGenericBatchModal({ owner: builderOwner,
         title: 'Trắc nghiệm (Multiple Choice)',
         subtitle: `Nhập danh sách câu hỏi Trắc nghiệm cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ 2, 3 hoặc 4 phương án (A, B, C, D) và tự động ánh xạ đáp án đúng.`,
         defaultCount: 5,
@@ -7717,7 +7742,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
     function triggerFitbBatchModal(bIdx, targetEx) {
       const block = draftState.blocks[bIdx];
       if (!block) return;
-      openGenericBatchModal({
+      openGenericBatchModal({ owner: builderOwner,
         title: 'Điền ô trống (Short Text)',
         subtitle: `Nhập danh sách câu hỏi Điền từ ngắn vào ô trống cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Tự động sinh biến thể ngữ pháp và đáp án chấp nhận.`,
         defaultCount: 5,
@@ -7851,7 +7876,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
+        openGenericBatchModal({ owner: builderOwner,
           title: 'Tạo câu hỏi Ghép nối đoạn văn (Reading Matching)',
           subtitle: `Tạo câu hỏi ghép Heading cho từng đoạn văn thuộc bài tập ${targetEx.title || 'bài tập'}.`,
           defaultCount: 4,
@@ -8086,7 +8111,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           render();
         };
 
-        openCsvUploadModal({
+        openCsvUploadModal({ owner: builderOwner,
           title: 'Nhập bài tập Sắp xếp thứ tự nghe vào Exercise (CSV / Excel)',
           subtitle: `Nhập danh sách các sự kiện bài nghe và thứ tự đúng cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}.`,
           templateFileName: 'mau_sap_xep_thu_tu_nghe.csv',
@@ -8254,7 +8279,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
 
-        openGenericBatchModal({
+        openGenericBatchModal({ owner: builderOwner,
           title: 'Nhập câu hỏi Tìm và sửa lỗi vào Exercise (CSV / Excel)',
           subtitle: `Nhập danh sách câu hỏi Tìm và sửa lỗi cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ nhập từ lỗi và các đáp án sửa đúng phân tách bằng dấu gạch đứng (|).`,
           defaultCount: 8,
@@ -8535,7 +8560,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
+        openGenericBatchModal({ owner: builderOwner,
           title: 'Tạo hàng loạt câu hỏi Sắp xếp câu',
           subtitle: `Tạo nhanh các câu hỏi Sắp xếp từ/cụm từ thuộc bài tập ${targetEx.title || 'bài tập'}.`,
           defaultCount: 5,
@@ -8662,7 +8687,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
 
-        openGenericBatchModal({
+        openGenericBatchModal({ owner: builderOwner,
           title: 'Nhập câu hỏi Biến đổi câu vào Exercise (CSV / Excel)',
           subtitle: `Nhập danh sách câu hỏi Biến đổi câu có từ gợi ý cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}. Hỗ trợ nhập từ khóa bắt buộc và các đáp án đúng phân tách bằng dấu gạch đứng (|).`,
           defaultCount: 5,
@@ -8787,7 +8812,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
+        openGenericBatchModal({ owner: builderOwner,
           title: 'Tạo hàng loạt câu hỏi Phát âm & Ký hiệu IPA',
           subtitle: `Tạo nhanh các câu hỏi Phát âm & Ký hiệu IPA thuộc bài tập ${targetEx.title || 'bài tập'}.`,
           defaultCount: 5,
@@ -9151,6 +9176,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         modal.className = 'modal-batch-vocab-overlay';
         document.body.appendChild(modal);
       }
+      trackBuilderModal(modal, builderOwner);
 
       modal.innerHTML = `
         <div class="modal-batch-vocab-card">
@@ -9261,7 +9287,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
+        openGenericBatchModal({ owner: builderOwner,
           title: 'Tạo câu hỏi Thẻ từ vựng qua ảnh (Pictorial Cards)',
           subtitle: `Tạo câu hỏi từ vựng qua ảnh cho bài tập ${targetEx.title || 'bài tập'}. Hỗ trợ dán hoặc tải file CSV có URL ảnh, từ khóa và nghĩa tiếng Việt.`,
           defaultCount: 10,
@@ -9567,6 +9593,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         modal.className = 'modal-batch-vocab-overlay';
         document.body.appendChild(modal);
       }
+      trackBuilderModal(modal, builderOwner);
 
       const defaultMeanings = inheritedOptions && inheritedOptions.length >= 2
         ? inheritedOptions.join('\n')
@@ -9871,7 +9898,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({
+        openGenericBatchModal({ owner: builderOwner,
           title: 'Tạo câu hỏi Tự luận chấm AI (AI Rubric)',
           subtitle: `Tạo câu hỏi tự luận có tiêu chí chấm AI thuộc bài tập ${targetEx.title || 'bài tập'}.`,
           defaultCount: 2,
@@ -11426,6 +11453,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         modal.className = 'candidate-simulation-overlay';
         document.body.appendChild(modal);
       }
+      trackBuilderModal(modal, builderOwner);
 
       const blocks = draftState.blocks || [];
       const sectionsNavHtml = blocks.map((b, i) => `
@@ -12703,6 +12731,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         modal.className = 'publishing-modal-overlay';
         document.body.appendChild(modal);
       }
+      trackBuilderModal(modal, builderOwner);
 
       let currentStep = 1;
       let purpose = 'replace_existing';
@@ -13333,6 +13362,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         modal.className = 'publish-report-overlay';
         document.body.appendChild(modal);
       }
+      trackBuilderModal(modal, builderOwner);
 
       const updated = result.updatedClasses || [];
       const skipped = result.skippedClasses || [];
@@ -13436,7 +13466,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
     if (deleteDraftBtn) {
       deleteDraftBtn.addEventListener('click', () => {
         if (typeof openConfirmDeleteTestModal === 'function' && typeof document !== 'undefined') {
-          openConfirmDeleteTestModal({
+          openConfirmDeleteTestModal({ owner: builderOwner,
             formVersionId: draftState.formVersionId,
             testKey: formVersionData.testKey || '',
             title: draftState.title || formVersionData.title || '',
@@ -13871,9 +13901,12 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       timeouts.clear();
 
       if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
-        const modals = document.querySelectorAll('#candidate-simulation-modal, #modal-smart-publish, #modal-unsaved-changes, .batch-modal-overlay, .modal-batch-generate');
+        const modals = document.querySelectorAll('body > div');
         if (modals && modals.forEach) {
           modals.forEach(m => {
+            if (builderModalOwners.get(m) !== builderOwner) return;
+            builderModalCleanups.get(m)?.();
+            builderModalOwners.delete(m);
             try { if (m.parentNode) m.parentNode.removeChild(m); } catch (_) {}
           });
         }

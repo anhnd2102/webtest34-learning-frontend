@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -9,7 +9,9 @@ const root = process.env.FRONTEND_ROOT || fileURLToPath(new URL('../../', import
 const port = Number(process.env.SMOKE_PORT || 18324);
 const captureOnly = process.env.CAPTURE_ONLY === '1';
 const label = process.env.ARTIFACT_LABEL || 'final';
-const artifacts = new URL(`../../.git/verification/issue-24/${label}/`, import.meta.url);
+const artifacts = pathToFileURL(execFileSync('git', [
+  'rev-parse', '--path-format=absolute', '--git-path', `verification/issue-24/${label}`
+], { cwd: fileURLToPath(new URL('../../', import.meta.url)), encoding: 'utf8' }).trim() + '/');
 const server = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
 const form = id => ({
   id, formVersionId: id, title: `Synthetic ${id}`, status: 'draft', version: 1, durationMinutes: 45,
@@ -280,6 +282,29 @@ try {
           if (!document.querySelector('#modal-unsaved-changes')) throw new Error('Cleanup removed another Builder dialog');
           foreign.dispose();
           foreignRoot.remove();
+          // The caller owns a shared dialog even when another root registered its guard last.
+          const firstRoot = document.createElement('section');
+          const secondRoot = document.createElement('section');
+          document.body.append(firstRoot, secondRoot);
+          let first = integrationApp.mountBuilder(firstRoot, data);
+          let second = integrationApp.mountBuilder(secondRoot, { ...data, id: 'second-form', formVersionId: 'second-form' });
+          firstRoot.querySelector('.btn-add-single-choice').click();
+          second.dispose();
+          if (!document.querySelector('#generic-batch-modal')) throw new Error('Foreign guard incorrectly claimed another root’s CSV modal');
+          first.dispose();
+          if (document.querySelector('#generic-batch-modal')) throw new Error('Own CSV modal was not cleaned');
+          // Ownership transfers when the next Builder reuses an existing preview element.
+          first = integrationApp.mountBuilder(firstRoot, data);
+          firstRoot.querySelector('#btn-preview-test').click();
+          document.querySelector('#btn-close-simulation').click();
+          second = integrationApp.mountBuilder(secondRoot, { ...data, id: 'second-form', formVersionId: 'second-form' });
+          secondRoot.querySelector('#btn-preview-test').click();
+          first.dispose();
+          if (!document.querySelector('#candidate-simulation-modal')) throw new Error('Previous owner removed a reused preview');
+          second.dispose();
+          if (document.querySelector('#candidate-simulation-modal')) throw new Error('New owner did not clean its reused preview');
+          firstRoot.remove();
+          secondRoot.remove();
         }, form('foreign-form'));
       }
       if (captureOnly) {

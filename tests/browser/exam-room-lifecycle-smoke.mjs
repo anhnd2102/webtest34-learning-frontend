@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { mkdir } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -23,7 +23,9 @@ try {
   });
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const report = [];
-  const artifacts = new URL('../../.git/verification/issue-23/', import.meta.url);
+  const artifacts = pathToFileURL(execFileSync('git', [
+    'rev-parse', '--path-format=absolute', '--git-path', 'verification/issue-23'
+  ], { cwd: root, encoding: 'utf8' }).trim() + '/');
   await mkdir(artifacts, { recursive: true });
   for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
     const page = await browser.newPage({ viewport });
