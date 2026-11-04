@@ -3245,29 +3245,47 @@ export function parseUploadedFileToCsv(file, callback) {
   if (!file || typeof callback !== 'function') return;
   const fileName = (file.name || '').toLowerCase();
   if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      try {
-        const data = new Uint8Array(evt.target.result);
-        if (typeof XLSX !== 'undefined') {
-          const workbook = XLSX.read(data, { type: 'array' });
-          // Luôn ưu tiên Sheet 1 (hoặc sheet có tên Nhap_De_Thi) để import
-          let targetSheetName = workbook.SheetNames[0];
-          if (workbook.SheetNames.includes('Nhap_De_Thi')) {
-            targetSheetName = 'Nhap_De_Thi';
+    const doParse = () => {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const data = new Uint8Array(evt.target.result);
+          if (typeof XLSX !== 'undefined') {
+            const workbook = XLSX.read(data, { type: 'array' });
+            // Luôn ưu tiên Sheet 1 (hoặc sheet có tên Nhap_De_Thi) để import
+            let targetSheetName = workbook.SheetNames[0];
+            if (workbook.SheetNames.includes('Nhap_De_Thi')) {
+              targetSheetName = 'Nhap_De_Thi';
+            }
+            const worksheet = workbook.Sheets[targetSheetName];
+            const csvText = XLSX.utils.sheet_to_csv(worksheet);
+            callback(null, csvText);
+          } else {
+            callback(new Error('Thư viện Excel (XLSX) chưa được tải trên trình duyệt. Vui lòng chuyển file sang định dạng CSV UTF-8.'));
           }
-          const worksheet = workbook.Sheets[targetSheetName];
-          const csvText = XLSX.utils.sheet_to_csv(worksheet);
-          callback(null, csvText);
-        } else {
-          callback(new Error('Thư viện Excel (XLSX) chưa được tải trên trình duyệt. Vui lòng chuyển file sang định dạng CSV UTF-8.'));
+        } catch (err) {
+          callback(err);
         }
-      } catch (err) {
-        callback(err);
-      }
+      };
+      reader.onerror = () => callback(new Error('Lỗi khi đọc file Excel từ thiết bị.'));
+      reader.readAsArrayBuffer(file);
     };
-    reader.onerror = () => callback(new Error('Lỗi khi đọc file Excel từ thiết bị.'));
-    reader.readAsArrayBuffer(file);
+
+    if (typeof XLSX !== 'undefined') {
+      doParse();
+    } else {
+      const script = document.createElement('script');
+      script.src = './vendor/xlsx.full.min.js';
+      script.onload = () => doParse();
+      script.onerror = () => {
+        const cdnScript = document.createElement('script');
+        cdnScript.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+        cdnScript.onload = () => doParse();
+        cdnScript.onerror = () => callback(new Error('Không thể tải thư viện đọc file Excel (XLSX). Vui lòng lưu file sang định dạng CSV UTF-8.'));
+        document.head.appendChild(cdnScript);
+      };
+      document.head.appendChild(script);
+    }
   } else {
     const reader = new FileReader();
     reader.onload = (evt) => {
@@ -3794,19 +3812,25 @@ export function openCsvQuickGuideModal() {
         </ul>
 
         <h4 style="margin: 0 0 6px; font-size: 14px; color: #0f172a; font-weight: 700;">2. Hướng dẫn các dạng bài riêng lẻ</h4>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 12px;">
+        <div style="border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; margin-bottom: 14px;">
+        <table class="quick-guide-table" style="width: 100%; border-collapse: collapse; font-size: 12px; margin: 0;">
           <thead>
             <tr style="background: #f1f5f9; text-align: left;">
-              <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Dạng bài</th>
-              <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Cấu trúc các cột</th>
-              <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Ví dụ mẫu</th>
+              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Dạng bài</th>
+              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Cấu trúc các cột</th>
+              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Ví dụ mẫu</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Trắc nghiệm đơn</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Prompt, Option_A, Option_B, Option_C, Option_D, Correct_Answer, Explanation, Points</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">The ship departs ___ Miami.,at,from,on,in,B,,1</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Trắc nghiệm đơn</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Prompt, Option_A, Option_B, Option_C, Option_D, Correct_Answer, Explanation, Points</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">The ship departs ___ Miami.,at,from,on,in,B,,1</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Điền từ nội tuyến (Đoạn văn)</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Prompt (chứa các ô (1) _____), Correct_Answer (ngăn cách bằng |), Score</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">1. I (41) _____ TV. 2. He (42) _____ up.,watch | gets,1</td>
             </tr>
             <tr>
               <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Điền ô trống ngắn</td>
@@ -3855,6 +3879,7 @@ export function openCsvQuickGuideModal() {
             </tr>
           </tbody>
         </table>
+        </div>
 
         <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #92400e;">
           <strong>Lưu ý quan trọng khi lưu file từ Excel:</strong> Nếu câu hỏi có dấu phẩy hoặc xuống dòng, hãy bọc câu trong dấu nháy kép <code>""</code>. Khi lưu từ Excel, hãy chọn <em>CSV UTF-8 (Comma delimited) (*.csv)</em> để đảm bảo tiếng Việt không bị lỗi font.
@@ -3936,15 +3961,15 @@ export function openBlockCsvUploadModal(opts = {}) {
           <div>Hỗ trợ: <em>single_choice, fitb, inline_cloze, vocabulary_pair, error_correction, sentence_transformation, sentence_reorder, listening_order, pictorial_vocabulary, pronunciation_choice, rubric_async</em>.</div>
         </div>
 
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px;">
           <a href="./assets/templates/mau_de_thi_test_studio.xlsx" download="mau_de_thi_test_studio.xlsx" class="btn btn-primary btn-sm btn-download-excel-template" style="text-decoration: none;">
             ${renderSvgIcon('download', 'icon-inline')} <span>Tải mẫu Excel 2 Sheet (.xlsx)</span>
           </a>
           <button type="button" class="btn btn-secondary btn-sm btn-download-block-template">
             ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV Phần</span>
           </button>
-          <button type="button" class="btn btn-outline-secondary btn-sm btn-trigger-block-file">
-            ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file CSV từ máy</span>
+          <button type="button" class="btn btn-secondary btn-sm btn-trigger-block-file">
+            ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file từ máy (.xlsx / .csv)</span>
           </button>
           <button type="button" class="btn btn-secondary btn-sm btn-view-csv-guide" title="Xem hướng dẫn chi tiết cách điền các cột mẫu">
             ${renderSvgIcon('fileText', 'icon-inline')} <span>Xem hướng dẫn điền</span>
