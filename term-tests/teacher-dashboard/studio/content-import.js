@@ -739,8 +739,8 @@ export function generateRubricAsyncTemplateCsv() {
   const bom = '\uFEFF';
   const header = 'Prompt,Reference_Context,Max_Score,Preset_Type,Criterion_1,Criterion_2';
   const rows = [
-    '"Tóm tắt ý chính của đoạn văn trên trong 50 từ.","Đoạn trích thông tin bài đọc...",4,writing_summary,"Ý chính đầy đủ (2đ)","Ngữ pháp và từ vựng (2đ)"',
-    '"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,rubric_translation_v1,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"'
+    '"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,translation,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"',
+    '"Từ ""innovative"" ở dòng 3 có nghĩa là gì?","Đoạn trích thông tin bài đọc...",4,comprehension,"Mức độ hiểu nội dung (2.8đ)","Từ khóa cốt lõi (1.2đ)"'
   ];
   return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
 }

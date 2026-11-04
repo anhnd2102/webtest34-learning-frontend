@@ -3888,7 +3888,7 @@ export function openCsvQuickGuideModal() {
             <tr>
               <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Tự luận chấm AI</td>
               <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Prompt, Reference_Context, Max_Score, Preset_Type, Criterion_1, Criterion_2</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Tóm tắt ý chính bài đọc...,Bài đọc...,4,writing_summary,Ý chính,Ngữ pháp</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Translate into English...,,4,translation,Ý nghĩa,Ngữ pháp</td>
             </tr>
           </tbody>
         </table>
@@ -5631,9 +5631,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             ${hasExContext ? `
               <div class="ai-inherited-context-notice" style="margin-bottom: 10px;">
                 <span>✓ <strong>Đã kế thừa ngữ cảnh chung từ Bài tập</strong> (${escapeHtml(parentEx.title || 'Exercise')}).</span>
-                <button type="button" class="btn-toggle-custom-item-context" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ${hasItemCustomContext ? 'Đang dùng ngữ cảnh riêng (nhấp để thu gọn)' : 'Chỉnh sửa riêng cho câu này'}
-                </button>
+
               </div>
             ` : ''}
 
@@ -5652,22 +5650,12 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               </div>
             </div>
 
-            ${(!hasExContext && !isComprehension && !hasItemCustomContext) ? `
-              <div style="margin-bottom: 10px;">
-                <button type="button" class="btn btn-ghost-subtle btn-sm btn-toggle-custom-item-context" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="font-size: 0.78rem;">
-                  ${renderSvgIcon('plusCircle', 'icon-inline')} Thêm ngữ cảnh tham chiếu riêng cho câu này
-                </button>
-              </div>
-            ` : ''}
-
             <div class="rubric-preset-selector">
               <span class="preset-title">Mẫu Rubric gợi ý (Preset):</span>
               <select class="form-select form-select-sm select-rubric-preset" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                 <option value="translation" ${scoringVer.includes('translation') ? 'selected' : ''}>Dịch thuật (Translation - 50% Meaning, 50% Grammar)</option>
-                <option value="speaking" ${scoringVer.includes('speaking') ? 'selected' : ''}>Speaking dạng văn bản (40% Ý tưởng, 30% Từ vựng, 30% Ngữ pháp)</option>
                 <option value="comprehension" ${scoringVer.includes('comprehension') ? 'selected' : ''}>Đọc hiểu Khối 03 (70% Comprehension, 30% Keywords)</option>
-                <option value="writing_summary" ${scoringVer.includes('summary') ? 'selected' : ''}>Tóm tắt bài đọc (Writing Summary - 50% Ý chính, 50% Ngữ pháp)</option>
-                <option value="custom" ${(!scoringVer.includes('translation') && !scoringVer.includes('speaking') && !scoringVer.includes('comprehension')) ? 'selected' : ''}>Tự thiết lập (Custom Rubric)</option>
+                <option value="speaking" ${scoringVer.includes('speaking') ? 'selected' : ''}>Speaking dạng văn bản (40% Ý tưởng, 30% Từ vựng, 30% Ngữ pháp)</option>
               </select>
             </div>
 
@@ -9427,37 +9415,6 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           }
         });
 
-        if (rubricBatchModal) {
-          const typeSel = rubricBatchModal.querySelector('.select-batch-rubric-type');
-          const ctxGroup = rubricBatchModal.querySelector('#batch-rubric-context-group');
-          const pullModalBtn = rubricBatchModal.querySelector('.btn-modal-pull-cloze-script');
-          const ctxInput = rubricBatchModal.querySelector('.batch-rubric-context-input');
-
-          const updateCtxVisibility = () => {
-            if (!typeSel || !ctxGroup) return;
-            if (typeSel.value === 'comprehension') {
-              ctxGroup.style.display = 'block';
-            } else {
-              ctxGroup.style.display = 'none';
-            }
-          };
-
-          if (typeSel) {
-            typeSel.addEventListener('change', updateCtxVisibility);
-            updateCtxVisibility();
-          }
-
-          if (pullModalBtn && ctxInput) {
-            pullModalBtn.addEventListener('click', () => {
-              const script = findPrecedingClozeScript(draftState, bIdx);
-              if (script) {
-                ctxInput.value = script;
-              } else {
-                alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
-              }
-            });
-          }
-        }
       });
     });
 
@@ -9896,29 +9853,18 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           ]
         };
       }
-      if (selectedType === 'writing_summary') {
-        const s1 = Math.round(p * 0.5 * 100) / 100;
-        const s2 = Math.round((p - s1) * 100) / 100;
+      if (selectedType === 'speaking') {
+        const s1 = Math.round(p * 0.4 * 100) / 100;
+        const s2 = Math.round(p * 0.3 * 100) / 100;
+        const s3 = Math.round((p - s1 - s2) * 100) / 100;
         return {
-          rubricCode: 'rubric_summary_v1',
-          scoringVersion: 'rubric-summary-v1',
-          defaultPrompt: 'Tóm tắt ý chính của đoạn văn trên trong khoảng 30-50 từ:',
+          rubricCode: 'rubric_speaking_v1',
+          scoringVersion: 'rubric-speaking-v1',
+          defaultPrompt: 'Answer the question in spoken or written format:',
           criteria: [
-            { id: 'main_ideas', label: 'Ý chính đầy đủ & Khái quát chuẩn xác', maxScore: s1, requiredConcepts: [] },
-            { id: 'grammar_vocab', label: 'Ngữ pháp và từ vựng phù hợp', maxScore: s2, requiredConcepts: [] }
-          ]
-        };
-      }
-      if (selectedType === 'custom') {
-        const s1 = Math.round(p * 0.5 * 100) / 100;
-        const s2 = Math.round((p - s1) * 100) / 100;
-        return {
-          rubricCode: 'rubric_custom_v1',
-          scoringVersion: 'rubric-custom-v1',
-          defaultPrompt: 'Viết câu trả lời tự luận cho câu hỏi sau:',
-          criteria: [
-            { id: 'content', label: 'Nội dung & Lập luận', maxScore: s1, requiredConcepts: [] },
-            { id: 'language', label: 'Ngôn ngữ & Ngữ pháp', maxScore: s2, requiredConcepts: [] }
+            { id: 'idea', label: 'Ý tưởng & Phát triển (Idea Development)', maxScore: s1, requiredConcepts: [] },
+            { id: 'vocabulary', label: 'Từ vựng & Diễn đạt (Vocabulary)', maxScore: s2, requiredConcepts: [] },
+            { id: 'coherence', label: 'Ngữ pháp & Mạch lạc (Grammar & Coherence)', maxScore: s3, requiredConcepts: [] }
           ]
         };
       }
@@ -9954,10 +9900,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             <div class="form-group batch-rubric-type-form-group" style="margin-top: 14px;">
               <label class="form-label"><strong>Dạng câu hỏi tự luận (Question Type / Rubric Preset):</strong></label>
               <select class="form-control select-batch-rubric-type" style="font-weight: 600; padding: 8px 12px; border-radius: 6px;">
-                <option value="comprehension" selected>Đọc hiểu Khối 03 (Reading Comprehension) — Rubric 70% Đọc hiểu + 30% Từ khóa</option>
                 <option value="translation">Dịch thuật (Translation) — Rubric 50% Ý nghĩa + 50% Ngữ pháp</option>
-                <option value="writing_summary">Tóm tắt bài đọc (Writing Summary) — Rubric 50% Ý chính + 50% Ngữ pháp</option>
-                <option value="custom">Tự luận mở chung (Custom Rubric) — Tự thiết lập tiêu chí</option>
+                <option value="comprehension" selected>Đọc hiểu Khối 03 (Reading Comprehension) — Rubric 70% Đọc hiểu + 30% Từ khóa</option>
+                <option value="speaking">Speaking dạng văn bản (Speaking Text Response) — Rubric 40% Ý tưởng + 30% Từ vựng + 30% Ngữ pháp</option>
               </select>
               <span style="font-size: 0.8rem; color: #64748b; margin-top: 4px; display: block;">(Hệ thống sẽ tự động cấu hình các tiêu chí chấm AI phù hợp theo dạng bài được chọn)</span>
             </div>
@@ -9981,7 +9926,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           csvConfig: {
             templateFileName: 'mau_tu_luan_cham_ai.csv',
             columnsHint: 'Cột: Đề bài câu hỏi | Ngữ cảnh tham chiếu (nếu có) | Điểm tối đa | Loại rubric | Tiêu chí 1 | Tiêu chí 2',
-            placeholder: '"Tóm tắt ý chính của đoạn văn trên trong 50 từ.","Đoạn trích thông tin bài đọc...",4,writing_summary,"Ý chính đầy đủ (2đ)","Ngữ pháp và từ vựng (2đ)"\n"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,rubric_translation_v1,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"',
+            placeholder: '"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,translation,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"\n"Từ \"innovative\" ở dòng 3 có nghĩa là gì?","Đoạn trích thông tin bài đọc...",4,comprehension,"Mức độ hiểu nội dung (2.8đ)","Từ khóa cốt lõi (1.2đ)"',
             getTemplateCsv: generateRubricAsyncTemplateCsv,
             parseCsv: parseRubricAsyncCsv,
             renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} (${itm.maxScore} điểm)`,
@@ -10124,6 +10069,38 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             render();
           }
         });
+
+        if (rubricBatchModal) {
+          const typeSel = rubricBatchModal.querySelector('.select-batch-rubric-type');
+          const ctxGroup = rubricBatchModal.querySelector('#batch-rubric-context-group');
+          const pullModalBtn = rubricBatchModal.querySelector('.btn-modal-pull-cloze-script');
+          const ctxInput = rubricBatchModal.querySelector('.batch-rubric-context-input');
+
+          const updateCtxVisibility = () => {
+            if (!typeSel || !ctxGroup) return;
+            if (typeSel.value === 'comprehension') {
+              ctxGroup.style.display = 'block';
+            } else {
+              ctxGroup.style.display = 'none';
+            }
+          };
+
+          if (typeSel) {
+            typeSel.addEventListener('change', updateCtxVisibility);
+            updateCtxVisibility();
+          }
+
+          if (pullModalBtn && ctxInput) {
+            pullModalBtn.addEventListener('click', () => {
+              const script = findPrecedingClozeScript(draftState, bIdx);
+              if (script) {
+                ctxInput.value = script;
+              } else {
+                alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
+              }
+            });
+          }
+        }
       });
     });
 
