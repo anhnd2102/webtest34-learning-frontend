@@ -144,6 +144,17 @@ export const checks = {
       assert.ok(b.width >= vp.width * 0.8, `${sel} chỉ rộng ${b.width}px ở ${vp.width}px`);
     }
   },
+  async phoneVocabPairFullRow(page, vp) {
+    if (vp.width >= 640) return;
+    await revealAllSections(page);
+    for (const sel of ['.candidate-vocab-text-input', '.candidate-vocab-select']) {
+      const b = await box(page, sel);
+      assert.ok(b.width >= vp.width * 0.8, `${sel} chỉ rộng ${b.width}px ở ${vp.width}px`);
+    }
+    // Ô nhập và ô chọn xếp chồng, không đứng cạnh nhau.
+    const [a, c] = await Promise.all([box(page, '.candidate-vocab-text-input'), box(page, '.candidate-vocab-select')]);
+    assert.ok(c.y >= a.y + a.height - 1, 'ô chọn nghĩa không nằm dưới ô nhập từ');
+  },
   async phoneMetaOneLine(page, vp) {
     if (vp.width >= 640) return;
     await revealAllSections(page);

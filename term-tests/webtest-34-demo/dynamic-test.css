@@ -2533,6 +2533,21 @@ body {
     max-width: none;
   }
 
+  /* Bảng từ vựng cặp: mỗi hàng xếp chồng (số câu, ô nhập từ, ô chọn nghĩa), mỗi ô rộng cả hàng; ẩn hàng tiêu đề cột. */
+  .cbt-exam-shell .candidate-vocab-table-head {
+    display: none;
+  }
+
+  .cbt-exam-shell .candidate-vocab-table-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 12px 10px;
+  }
+
+  .cbt-exam-shell .vocab-td-num {
+    justify-content: flex-start;
+  }
+
   /* Thẻ tiêu đề phần gọn hơn. */
   .cbt-exam-shell .cbt-section-hero {
     padding: 12px 14px;
