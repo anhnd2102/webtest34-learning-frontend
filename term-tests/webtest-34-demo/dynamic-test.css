@@ -1296,7 +1296,6 @@ body {
   .cbt-exam-shell .cbt-topbar-inner {
     padding: 8px 14px;
   }
-
   .cbt-exam-shell .cbt-section-nav-bar {
     padding: 6px 14px;
   }
@@ -2524,6 +2523,43 @@ body {
   .cbt-exam-shell .cbt-split-pane[data-active-pane="reading"] .cbt-matching-col,
   .cbt-exam-shell .cbt-split-pane[data-active-pane="questions"] .cbt-reading-col {
     display: none;
+  }
+}
+
+/* Trạng thái lưu (#28): điện thoại chỉ còn chấm nhỏ; lưu lỗi thì dải đỏ nằm trong thanh trên dính, đẩy nội dung xuống chứ không che. */
+.cbt-exam-shell .cbt-save-alert {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 8px 24px;
+  background: var(--izone-soft-red);
+  border-top: 1px solid var(--izone-primary);
+  color: var(--izone-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cbt-exam-shell .cbt-save-alert:empty {
+  display: none;
+}
+
+@media (max-width: 759.98px) {
+  .cbt-exam-shell.content-demo #demo-save {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    overflow: hidden;
+    font-size: 0;
+    border: 0;
+    background: #16a34a;
+  }
+
+  .cbt-exam-shell.content-demo #demo-save::before {
+    display: none;
+  }
+
+  .cbt-exam-shell .cbt-save-alert {
+    padding: 8px 14px;
   }
 }
 

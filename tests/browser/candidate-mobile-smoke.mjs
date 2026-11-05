@@ -58,6 +58,10 @@ function mockLearningApi(page) {
   return page.route(`**/api/learning/**`, route => {
     const path = new URL(route.request().url()).pathname;
     let body = {};
+    // Ticket #28: cờ page.draftFails làm /attempts/draft trả 500 để thử dải báo lỗi lưu.
+    if (path.endsWith('/attempts/draft') && page.draftFails) {
+      return route.fulfill({ status: 500, contentType: 'application/json', body: '{"error":"down"}' });
+    }
     if (path.endsWith('/test-access/resolve')) {
       body = { assignment: { title: definition.title, class: { name: 'Lớp Smoke' }, definition,
         roster: [{ studentRef: 's1', name: 'Học Viên Smoke' }] } };
@@ -136,13 +140,19 @@ export const checks = {
     await page.evaluate(() => { scrollTo(0, 0); document.querySelector('.simulation-nav-pill[data-section-target="sim-block-2"]').click(); });
     await page.waitForSelector('#sim-block-2.active .cbt-split-pane');
     await page.waitForFunction(() => scrollY === 0);
+    // Trả về Phần A để các check sau không phụ thuộc phần đang mở.
+    const backToFirstSection = async () => {
+      await page.evaluate(() => document.querySelector('.simulation-nav-pill[data-section-target="sim-block-0"]').click());
+      await page.waitForSelector('#sim-block-0.active');
+      await page.waitForFunction(() => scrollY === 0);
+    };
     const reading = '#sim-block-2 .cbt-reading-col', questions = '#sim-block-2 .cbt-matching-col';
 
     if (vp.width >= 1024) {
       assert.ok(!(await visible('#sim-block-2 .split-pane-mobile-toggle')), `tab còn hiện ở ${vp.width}px`);
       const [r, q] = [await box(page, reading), await box(page, questions)];
       assert.ok(r && q && r.x + r.width <= q.x + 1 && Math.abs(r.y - q.y) < 40, `hai cột không song song ở ${vp.width}px`);
-      return;
+      return backToFirstSection();
     }
     assert.ok(await visible('#sim-block-2 .split-pane-mobile-toggle'), `không thấy tab ở ${vp.width}px`);
     assert.ok((await visible(reading)) && !(await visible(questions)), 'mặc định phải chỉ hiện Bài đọc');
@@ -168,6 +178,31 @@ export const checks = {
     await page.evaluate(() => document.querySelector('.btn-qnav[data-item-id="it-6"]').click());
     assert.ok(await visible(questions), 'nhảy câu không chuyển sang tab Câu hỏi');
     assert.ok(await tab('questions').evaluate(el => el.classList.contains('active')), 'tab Câu hỏi không được đánh dấu active');
+    await backToFirstSection();
+  },
+  // Lưu lỗi: dải đỏ hiện khi cuộn/chuyển phần, chỉ mất khi lưu máy chủ thành công; chấm nhỏ hiện lúc bình thường.
+  async saveFailureBanner(page, vp) {
+    const alert = page.locator('.cbt-exam-shell [role="alert"]#demo-save-alert');
+    const dot = page.locator('#demo-save');
+    const type = async text => { await page.locator('input[type="text"][data-item-id="it-2"]').fill(text); };
+    assert.ok(await dot.isVisible(), `trạng thái lưu bị ẩn ở ${vp.width}px`);
+    assert.equal(await alert.isVisible(), false, 'dải lỗi hiện khi chưa có lỗi');
+    page.draftFails = true;
+    await type('x');
+    await alert.waitFor({ state: 'visible', timeout: 5000 });
+    assert.equal((await alert.textContent()).trim(), 'Chưa lưu được, kiểm tra mạng');
+    // Gõ tiếp (persist ghi "Đang lưu…") và chuyển phần vẫn không làm mất dải đỏ.
+    await type('xy');
+    await page.evaluate(() => scrollTo(0, 400));
+    await page.locator('#sectionNavContainer button, #sectionNavContainer [data-demo-go]').nth(1).click();
+    const b = await box(page, '#demo-save-alert');
+    assert.ok(await alert.isVisible() && b.y >= 0 && b.x >= 0 && b.x + b.width <= vp.width + 1, `dải lỗi không nằm trong màn hình ở ${vp.width}px`);
+    await page.locator('#sectionNavContainer button, #sectionNavContainer [data-demo-go]').nth(0).click();
+    page.draftFails = false;
+    await type('xyz');
+    await alert.waitFor({ state: 'hidden', timeout: 5000 });
+    assert.ok(await dot.isVisible(), 'chấm lưu biến mất sau khi phục hồi');
+    await page.evaluate(() => scrollTo(0, 0));
   },
   async noLegacyBreakpoints(page) {
     const found = await page.evaluate(() => [...document.styleSheets].flatMap(s => {
