@@ -55,6 +55,13 @@ export const definition = {
         prompt: `Câu ${position}?`, points: 1,
         options: [{ id: 'a', text: 'Đáp án A' }, { id: 'b', text: 'Đáp án B' }]
       }))
+    },
+    {
+      // Bảng dán từ trình soạn thảo trong đề điền từ, có ô trống và độ rộng cố định.
+      blockId: 'b5', title: 'Phần E', items: [{
+        itemVersionId: 'it-11', position: 11, interactionType: 'short_text', pedagogicalTypeCode: 'table_completion', layoutType: 'inline_cloze', points: 3,
+        prompt: `<p>Listen and complete.</p><table style="width:900px"><thead><tr><th></th><th>The right career</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td style="width:300px"><b>Factors for the right career</b></td><td style="width:600px"><b>There are some factors</b><br>The most important: A job suitable for your personality (1) ........ E.g: Outgoing people can be tour guides. Happiness at work changes (2) ........ and more.</td></tr><tr><td><b>Other factors</b></td><td>The money or the (3) ........ may not be the right factors</td></tr></tbody></table>`
+      }]
     }
   ]
 };
@@ -95,7 +102,7 @@ export async function openExamShell(browser, viewport, contextOptions = {}) {
   });
   await mockLearningApi(page);
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
-  await page.waitForFunction(() => !document.querySelector('#studentSelectInput').disabled);
+  await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
   await page.selectOption('#studentSelectInput', 's1');
   await page.click('#startExamBtn');
   await page.waitForSelector('.cbt-exam-shell');
@@ -276,6 +283,44 @@ export const checks = {
     assert.equal(await dot.evaluate(el => el.classList.contains('is-save-failed')), false, 'chấm lưu vẫn báo lỗi sau khi phục hồi');
     await page.evaluate(() => scrollTo(0, 0));
   },
+  async topbarNotClipped(page, vp) {
+    const clipped = await page.evaluate(() => [...document.querySelectorAll('.cbt-nav-pill')]
+      .filter(p => p.scrollWidth > p.clientWidth + 1).map(p => p.textContent.trim()));
+    assert.deepEqual(clipped, [], `chữ tràn khỏi nút chọn phần ở ${vp.width}px`);
+    if (vp.width < 640) {
+      // Sau khi nộp, nút này ẩn nên không có box.
+      const submit = await box(page, '#demo-submit-top');
+      assert.ok(!submit || submit.height <= 44, `nút Nộp bài xuống dòng ở ${vp.width}px`);
+      assert.ok((await box(page, '.cbt-timer-container')).height <= 40, `đồng hồ xuống dòng ở ${vp.width}px`);
+      const right = await page.locator('.cbt-top-actions').evaluate(el => Math.max(...[...el.children].map(c => c.getBoundingClientRect().right)));
+      assert.ok(right <= vp.width, `thanh trên tràn màn hình ở ${vp.width}px`);
+    }
+  },
+  async activePillAndMaxFontStayOnScreen(page, vp) {
+    const pills = page.locator('.cbt-nav-pill');
+    await pills.last().click();
+    await page.waitForTimeout(400);
+    const b = await pills.last().boundingBox();
+    assert.ok(b.x >= 0 && b.x + b.width <= vp.width + 1, `phần đang chọn nằm ngoài màn hình ở ${vp.width}px`);
+    await pills.first().click();
+    for (const id of ['#demo-font-up', '#demo-font-down']) {
+      for (let i = 0; i < 6 && await page.locator(id).isEnabled(); i++) await page.click(id);
+      const width = await page.evaluate(() => document.documentElement.scrollWidth);
+      assert.ok(width <= vp.width, `tràn ngang khi đổi cỡ chữ ở ${vp.width}px: ${width}`);
+    }
+    await page.click('#demo-font-up');
+  },
+  async richTableFitsCard(page, vp) {
+    await revealAllSections(page);
+    const out = await page.evaluate(() => {
+      const table = document.querySelector('.cbt-cloze-content table');
+      const card = table.closest('.cbt-cloze-content').getBoundingClientRect();
+      const inputs = [...table.querySelectorAll('input')].map(i => i.getBoundingClientRect().right);
+      return { doc: document.documentElement.scrollWidth, table: table.getBoundingClientRect().right, card: card.right, input: Math.max(...inputs) };
+    });
+    assert.ok(out.doc <= vp.width, `bảng làm tràn trang ở ${vp.width}px: ${out.doc}`);
+    assert.ok(out.table <= out.card + 1 && out.input <= out.card + 1, `bảng tràn khỏi thẻ câu hỏi ở ${vp.width}px: ${JSON.stringify(out)}`);
+  },
   async noLegacyBreakpoints(page) {
     const found = await page.evaluate(() => [...document.styleSheets].flatMap(s => {
       try { return [...s.cssRules]; } catch { return []; }
@@ -311,7 +356,7 @@ export const checks = {
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
   },
   // Nộp bài làm khóa màn hình nên check này phải đứng cuối.
-  async submitClearsSaveAlert(page) {
+  async submitClearsSaveAlert(page, vp) {
     const alert = page.locator('#demo-save-alert');
     page.draftFails = 500;
     await page.locator('input[type="text"][data-item-id="it-2"]').fill('submit');
@@ -322,6 +367,7 @@ export const checks = {
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
     await page.waitForTimeout(2000);
     assert.equal(page.draftCalls, calls, 'vẫn gửi nháp sau khi nộp');
+    await checks.topbarNotClipped(page, vp);
   }
 };
 

@@ -1105,7 +1105,8 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     currentActiveBlockIdx = blockIdx;
 
     rootEl.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
-      b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
+      // Hàng phần cuộn ngang trên màn hẹp: đưa phần đang chọn vào tầm nhìn.
+      if (b.classList.toggle('active', b.getAttribute('data-section-target') === targetId)) b.scrollIntoView?.({ block: 'nearest', inline: 'center' });
     });
     rootEl.querySelectorAll('.side-section-btn').forEach(b => {
       b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);

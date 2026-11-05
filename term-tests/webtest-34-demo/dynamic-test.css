@@ -326,6 +326,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
   white-space: nowrap;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -1289,6 +1290,41 @@ body {
   }
 }
 
+@media (max-width: 1023.98px) {
+  .cbt-exam-shell .cbt-save-pill,
+  .cbt-exam-shell .cbt-timer-container,
+  .cbt-exam-shell .cbt-btn-submit {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* Bảng trong đề đến từ trình soạn thảo: bỏ min-width 680px của luật table chung và độ rộng cố định dán kèm. */
+.cbt-exam-shell table {
+  min-width: 0;
+  width: 100% !important;
+}
+
+/* Điện thoại: xếp ô bảng điền từ thành hàng dọc, để ô trống và chữ không bị bóp hẹp. */
+@media (max-width: 639.98px) {
+  .cbt-exam-shell .cbt-cloze-content :is(table, thead, tbody, tr, th, td) {
+    display: block;
+    box-sizing: border-box;
+    width: 100% !important;
+  }
+  .cbt-exam-shell .cbt-cloze-content :is(th, td) {
+    padding: 6px 0;
+    border-bottom: 0;
+  }
+  .cbt-exam-shell .cbt-cloze-content :is(th, td):empty {
+    display: none;
+  }
+  .cbt-exam-shell .cbt-cloze-content tr {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--izone-border, #e2e8f0);
+  }
+}
+
 /* Điện thoại: bỏ hàng tên đề để thanh trên thấp hơn; đồng hồ, nút chọn phần, A-/A+ và Nộp bài giữ nguyên. */
 @media (max-width: 639.98px) {
   .cbt-exam-shell .cbt-brand {
@@ -1300,6 +1336,31 @@ body {
   }
   .cbt-exam-shell .cbt-section-nav-bar {
     padding: 6px 14px;
+  }
+  .cbt-exam-shell .cbt-top-actions {
+    gap: 6px;
+  }
+  .cbt-exam-shell .cbt-timer-container {
+    padding: 6px 10px !important;
+  }
+  /* A+ chỉ phóng nội dung đề; cỡ px giữ thanh trên không tràn ngang ở 360px. */
+  .cbt-exam-shell .cbt-timer-container #examTimerDisplay {
+    font-size: 16px !important;
+  }
+  .cbt-exam-shell .cbt-btn-submit {
+    padding: 9px 14px !important;
+    font-size: 14px !important;
+  }
+  /* Đồng hồ đã báo "Đã nộp"; nút nộp bị khóa chỉ chiếm chỗ. */
+  .cbt-exam-shell .cbt-btn-submit:disabled {
+    display: none !important;
+  }
+  /* Số câu của phần đã có trong trang; bỏ để thấy được nhiều tên phần hơn. */
+  .cbt-exam-shell .cbt-pill-badge {
+    display: none;
+  }
+  .cbt-exam-shell .cbt-nav-pill {
+    padding: 8px 14px;
   }
 }
 
