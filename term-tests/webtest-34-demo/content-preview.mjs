@@ -1971,7 +1971,11 @@ export async function mount(course) {
 
     let draftDebounceTimer = null;
     // Dải báo lỗi lưu (#28): chỉ đổi theo kết quả gọi /attempts/draft; rỗng thì CSS ẩn.
-    const setSaveAlert = text => { const el = query('#demo-save-alert'); if (el) el.textContent = text; };
+    const setSaveAlert = text => {
+      const el = query('#demo-save-alert');
+      if (el) el.textContent = text;
+      query('#demo-save')?.classList.toggle('is-save-failed', Boolean(text));
+    };
     function queueServerDraft() {
       if (!isLearningMode || !learningState.attemptToken || state.submittedAt) return;
       clearTimeout(draftDebounceTimer);

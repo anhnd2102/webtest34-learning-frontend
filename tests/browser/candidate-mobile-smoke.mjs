@@ -260,6 +260,7 @@ export const checks = {
     await type('x');
     await alert.waitFor({ state: 'visible', timeout: 5000 });
     assert.equal((await alert.textContent()).trim(), 'Chưa lưu được, kiểm tra mạng');
+    assert.ok(await dot.evaluate(el => el.classList.contains('is-save-failed')), 'chấm lưu không đổi trạng thái khi lỗi');
     // Gõ tiếp (persist ghi "Đang lưu…") và chuyển phần vẫn không làm mất dải đỏ.
     await type('xy');
     await page.evaluate(() => scrollTo(0, 400));
@@ -271,6 +272,7 @@ export const checks = {
     await type('xyz');
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
     assert.ok(await dot.isVisible(), 'chấm lưu biến mất sau khi phục hồi');
+    assert.equal(await dot.evaluate(el => el.classList.contains('is-save-failed')), false, 'chấm lưu vẫn báo lỗi sau khi phục hồi');
     await page.evaluate(() => scrollTo(0, 0));
   },
   async noLegacyBreakpoints(page) {
