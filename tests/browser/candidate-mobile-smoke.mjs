@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const port = 18322;
+const port = Number(process.env.SMOKE_PORT) || 18322;
 const origin = `http://127.0.0.1:${port}`;
 const TOKEN = '3401-smoke-test-token';
 
@@ -46,6 +46,15 @@ export const definition = {
         { itemVersionId: 'it-6', position: 6, interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary',
           layoutType: 'pictorial_card', letterHint: 'F_ _ _ _ _ _ _', points: 1 }
       ]
+    },
+    {
+      // Đề đọc ghép: có readingPassage + câu reading_matching nên renderer dựng split-pane.
+      blockId: 'b4', title: 'Phần D', readingPassage: Array.from({ length: 40 }, (_, i) => `<p>Đoạn ${i + 1}. Nội dung bài đọc dài để trang phải cuộn.</p>`).join(''),
+      items: [7, 8, 9, 10].map(position => ({
+        itemVersionId: `it-${position}`, position, interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching',
+        prompt: `Câu ${position}?`, points: 1,
+        options: [{ id: 'a', text: 'Đáp án A' }, { id: 'b', text: 'Đáp án B' }]
+      }))
     }
   ]
 };
@@ -135,6 +144,54 @@ export const checks = {
       return top;
     });
     assert.equal(Math.round(y), 0, `thanh trên không dính khi cuộn ở ${vp.width}px (top=${y})`);
+  },
+  async readingTabs(page, vp) {
+    const visible = sel => page.locator(sel).first().isVisible();
+    const tab = pane => page.locator(`.simulation-section-card.active .toggle-pane-btn[data-pane="${pane}"]`);
+    const scrollY = () => page.evaluate(() => Math.round(scrollY));
+    const scrollTo = async y => { await page.evaluate(v => scrollTo(0, v), y); await page.waitForFunction(v => Math.round(scrollY) === v, y); };
+    await page.evaluate(() => { scrollTo(0, 0); document.querySelector('.simulation-nav-pill[data-section-target="sim-block-3"]').click(); });
+    await page.waitForSelector('#sim-block-3.active .cbt-split-pane');
+    await page.waitForFunction(() => scrollY === 0);
+    // Trả về Phần A để các check sau không phụ thuộc phần đang mở.
+    const backToFirstSection = async () => {
+      await page.evaluate(() => document.querySelector('.simulation-nav-pill[data-section-target="sim-block-0"]').click());
+      await page.waitForSelector('#sim-block-0.active');
+      await page.waitForFunction(() => scrollY === 0);
+    };
+    const reading = '#sim-block-3 .cbt-reading-col', questions = '#sim-block-3 .cbt-matching-col';
+
+    if (vp.width >= 1024) {
+      assert.ok(!(await visible('#sim-block-3 .split-pane-mobile-toggle')), `tab còn hiện ở ${vp.width}px`);
+      const [r, q] = [await box(page, reading), await box(page, questions)];
+      assert.ok(r && q && r.x + r.width <= q.x + 1 && Math.abs(r.y - q.y) < 40, `hai cột không song song ở ${vp.width}px`);
+      return backToFirstSection();
+    }
+    assert.ok(await visible('#sim-block-3 .split-pane-mobile-toggle'), `không thấy tab ở ${vp.width}px`);
+    assert.ok((await visible(reading)) && !(await visible(questions)), 'mặc định phải chỉ hiện Bài đọc');
+
+    await scrollTo(300);
+    await tab('questions').click();
+    assert.ok(!(await visible(reading)) && (await visible(questions)), 'sang tab Câu hỏi nhưng cột chưa đổi');
+    await page.locator(`${questions} select.candidate-choice-select`).first().selectOption('a');
+    await scrollTo(150);
+    await tab('reading').click();
+    assert.equal(await scrollY(), 300, 'tab Bài đọc không nhớ vị trí cuộn');
+    await tab('questions').click();
+    assert.equal(await scrollY(), 150, 'tab Câu hỏi không nhớ vị trí cuộn');
+    assert.equal(await page.locator(`${questions} select.candidate-choice-select`).first().inputValue(), 'a', 'mất đáp án khi chuyển tab');
+
+    // Tab dính ngay dưới thanh trên khi cuộn.
+    await scrollTo(400);
+    const [bar, tabs] = [await box(page, '.cbt-topbar'), await box(page, '#sim-block-3 .split-pane-mobile-toggle')];
+    assert.ok(Math.abs(tabs.y - (bar.y + bar.height)) <= 1, `tab không dính dưới thanh trên (tab.y=${tabs.y}, bar=${bar.y + bar.height})`);
+
+    // Nhảy tới câu ở tab khác thì tự sang Câu hỏi.
+    await tab('reading').click();
+    await page.evaluate(() => document.querySelector('.btn-qnav[data-item-id="it-9"]').click());
+    assert.ok(await visible(questions), 'nhảy câu không chuyển sang tab Câu hỏi');
+    assert.ok(await tab('questions').evaluate(el => el.classList.contains('active')), 'tab Câu hỏi không được đánh dấu active');
+    await backToFirstSection();
   },
   async phoneAnswerWide(page, vp) {
     if (vp.width >= 640) return;
