@@ -1636,6 +1636,7 @@ export async function mount(course) {
                 ${renderSectionNavPills(learningState.definition, 0)}
               </nav>
             </div>
+            <div id="demo-save-alert" class="cbt-save-alert" role="alert"></div>
           </header>
 
           <main class="demo-width cbt-main-content" style="max-width:1380px;margin:0 auto;padding:20px 24px;">
@@ -1969,6 +1970,8 @@ export async function mount(course) {
     const fields = [...document.querySelectorAll('[data-demo-answer]')];
 
     let draftDebounceTimer = null;
+    // Dải báo lỗi lưu (#28): chỉ đổi theo kết quả gọi /attempts/draft; rỗng thì CSS ẩn.
+    const setSaveAlert = text => { const el = query('#demo-save-alert'); if (el) el.textContent = text; };
     function queueServerDraft() {
       if (!isLearningMode || !learningState.attemptToken || state.submittedAt) return;
       clearTimeout(draftDebounceTimer);
@@ -1982,8 +1985,10 @@ export async function mount(course) {
             responses: buildResponsesPayload()
           });
           query('#demo-save').textContent = 'Đã lưu máy chủ';
+          setSaveAlert('');
         } catch {
           query('#demo-save').textContent = 'Lưu máy chủ thất bại';
+          setSaveAlert('Chưa lưu được, kiểm tra mạng');
         }
       }, 1500);
     }
