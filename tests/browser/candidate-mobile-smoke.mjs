@@ -106,6 +106,19 @@ export const checks = {
     const cols = await page.evaluate(() => getComputedStyle(document.querySelector('.cbt-exam-layout')).gridTemplateColumns.split(' ').length);
     assert.equal(cols, vp.width < 1024 ? 1 : 2, `số cột sai ở ${vp.width}px`);
   },
+  async topbarStaysPinned(page, vp) {
+    const y = await page.evaluate(() => {
+      const spacer = document.createElement('div');
+      spacer.style.height = '3000px';
+      document.querySelector('#examMainViewport').append(spacer);
+      scrollTo(0, 1500);
+      const top = document.querySelector('.cbt-topbar').getBoundingClientRect().top;
+      spacer.remove();
+      scrollTo(0, 0);
+      return top;
+    });
+    assert.equal(Math.round(y), 0, `thanh trên không dính khi cuộn ở ${vp.width}px (top=${y})`);
+  },
   async noLegacyBreakpoints(page) {
     const found = await page.evaluate(() => [...document.styleSheets].flatMap(s => {
       try { return [...s.cssRules]; } catch { return []; }
