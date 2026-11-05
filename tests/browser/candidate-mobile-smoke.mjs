@@ -36,6 +36,16 @@ export const definition = {
       blockId: 'b2', title: 'Phần B', items: [
         { itemVersionId: 'it-3', position: 3, interactionType: 'long_text', prompt: 'Viết đoạn văn ngắn.', points: 5 }
       ]
+    },
+    {
+      blockId: 'b3', title: 'Phần C', items: [
+        { itemVersionId: 'it-4', position: 4, interactionType: 'text_select_pair', prompt: 'Nghe và chọn.', points: 1,
+          options: [{ id: 'opt-a', label: 'tháng hai' }, { id: 'opt-b', label: 'tháng ba' }] },
+        { itemVersionId: 'it-5', position: 5, interactionType: 'short_text', layoutType: 'inline_cloze', points: 3,
+          prompt: 'Một câu văn rất dài để kiểm tra dòng giãn ra (1) _____ và (2) _____ rồi tiếp tục (3) _____ cho đến hết dòng thật dài supercalifragilisticexpialidocious.' },
+        { itemVersionId: 'it-6', position: 6, interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary',
+          layoutType: 'pictorial_card', letterHint: 'F_ _ _ _ _ _ _', points: 1 }
+      ]
     }
   ]
 };
@@ -58,8 +68,8 @@ function mockLearningApi(page) {
 }
 
 // Mở shell thi thật và trả về page đã vào màn làm bài.
-export async function openExamShell(browser, viewport) {
-  const page = await browser.newPage({ viewport });
+export async function openExamShell(browser, viewport, contextOptions = {}) {
+  const page = await browser.newPage({ viewport, ...contextOptions });
   page.setDefaultTimeout(10000);
   page.errors = [];
   page.on('pageerror', e => page.errors.push(e.message));
@@ -79,6 +89,9 @@ export async function openExamShell(browser, viewport) {
 }
 
 const box = (page, selector) => page.locator(selector).first().boundingBox();
+const isCoarse = page => page.evaluate(() => matchMedia('(pointer: coarse)').matches);
+// Hiện mọi phần cùng lúc để đo bố cục; idempotent.
+const revealAllSections = page => page.addStyleTag({ content: '.cbt-exam-shell .section-page{display:block !important}' });
 
 // Mỗi check nhận (page, viewport); ném lỗi nếu sai. Ticket sau thêm vào đây.
 export const checks = {
@@ -119,6 +132,51 @@ export const checks = {
     });
     assert.equal(Math.round(y), 0, `thanh trên không dính khi cuộn ở ${vp.width}px (top=${y})`);
   },
+  async phoneAnswerWide(page, vp) {
+    if (vp.width >= 640) return;
+    await revealAllSections(page);
+    for (const sel of ['.candidate-short-input', '.candidate-pictorial-input']) {
+      const b = await box(page, sel);
+      assert.ok(b.width >= vp.width * 0.8, `${sel} chỉ rộng ${b.width}px ở ${vp.width}px`);
+    }
+  },
+  async phoneMetaOneLine(page, vp) {
+    if (vp.width >= 640) return;
+    await revealAllSections(page);
+    const tops = await page.evaluate(() => [...document.querySelectorAll('.cbt-question-header')].map(h =>
+      [...h.querySelectorAll('.cbt-qnum-badge,.cbt-qscore-badge,.cbt-type-badge')].map(e => Math.round(e.getBoundingClientRect().top))));
+    assert.ok(tops.length > 0, 'không có thẻ câu hỏi');
+    for (const t of tops) assert.ok(Math.max(...t) - Math.min(...t) <= 4, `thông tin câu xuống dòng ở ${vp.width}px: ${t}`);
+  },
+  async phoneSectionHeroCompact(page, vp) {
+    if (vp.width >= 640) return;
+    const hero = await box(page, '.cbt-section-hero');
+    assert.ok(hero.height <= 110, `thẻ tiêu đề phần cao ${hero.height}px ở ${vp.width}px`);
+  },
+  async coarseInputsNoZoomEvenWhenFontShrunk(page) {
+    if (!await isCoarse(page)) return;
+    await revealAllSections(page);
+    await page.click('#demo-font-down');
+    await page.click('#demo-font-down');
+    const small = await page.evaluate(() => [...document.querySelectorAll('.cbt-exam-shell input[type=text], .cbt-exam-shell select, .cbt-exam-shell textarea')]
+      .map(e => [e.className, parseFloat(getComputedStyle(e).fontSize)]).filter(([, f]) => f < 16));
+    assert.deepEqual(small, [], 'ô nhập cỡ chữ dưới 16px trên màn cảm ứng');
+  },
+  async coarseTouchTargets44(page) {
+    if (!await isCoarse(page)) return;
+    await revealAllSections(page);
+    const sel = '.cbt-exam-shell input[type=text], .cbt-exam-shell select, .cbt-exam-shell textarea, .cbt-exam-shell .candidate-choice-label, .cbt-exam-shell button';
+    const small = await page.evaluate(s => [...document.querySelectorAll(s)].map(e => [e.className || e.tagName, e.getBoundingClientRect()])
+      .filter(([, r]) => r.width > 0 && r.height > 0 && r.height < 43.5).map(([c, r]) => `${c}:${Math.round(r.height)}`), sel);
+    assert.deepEqual(small, [], 'vùng chạm dưới 44px');
+  },
+  async clozeStaysInsideCard(page, vp) {
+    await revealAllSections(page);
+    const bad = await page.evaluate(() => [...document.querySelectorAll('.cbt-cloze-content, .cbt-cloze-line')].filter(e => e.scrollWidth > e.clientWidth + 1).length);
+    assert.equal(bad, 0, `cloze tràn ngang ở ${vp.width}px`);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    assert.ok(vp.width === 1440 || overflow <= 0, `cuộn ngang ${overflow}px ở ${vp.width}px`);
+  },
   async noLegacyBreakpoints(page) {
     const found = await page.evaluate(() => [...document.styleSheets].flatMap(s => {
       try { return [...s.cssRules]; } catch { return []; }
@@ -147,6 +205,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       assert.deepEqual(page.errors, [], `lỗi trang ở ${vp.width}px`);
       report.push({ width: vp.width, topbar: parts['.cbt-topbar'] });
       await page.close();
+      if (vp.width < 1024) {
+        // Màn cảm ứng thật (pointer: coarse) cho các luật chỉ áp dụng trên điện thoại/máy tính bảng.
+        const touch = await openExamShell(browser, vp, { hasTouch: true, isMobile: true });
+        for (const check of Object.values(checks)) await check(touch, vp);
+        assert.deepEqual(touch.errors, [], `lỗi trang (cảm ứng) ở ${vp.width}px`);
+        await touch.close();
+      }
     }
     console.log(JSON.stringify(report));
     console.log('candidate-mobile-smoke: OK');

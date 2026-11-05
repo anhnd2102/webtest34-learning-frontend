@@ -2460,3 +2460,116 @@ body {
   font-weight: 600;
 }
 
+/* ==========================================================================
+   Ô trả lời trên điện thoại và màn cảm ứng (#27)
+   ========================================================================== */
+/* Dưới 640px: bớt đệm lồng nhau để ô trả lời rộng ~88-90% màn hình (trước đây 56% ở 390px). */
+@media (max-width: 639.98px) {
+  /* !important: main có style nội tuyến, và content-preview.mjs có luật `main.demo-width>div{padding:20px!important}`. */
+  .cbt-exam-shell .cbt-main-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .cbt-exam-shell .cbt-main-content > .cbt-exam-layout {
+    padding: 6px !important;
+  }
+
+  .cbt-exam-shell .cbt-exercise-wrap {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .cbt-exam-shell .cbt-question-card,
+  .cbt-exam-shell .cbt-short-qa-card {
+    padding: 14px 10px;
+  }
+
+  /* Thông tin câu (số câu, điểm, dạng bài) trên một dòng; nhãn dạng bài dài thì cắt bằng dấu ba chấm. */
+  .cbt-exam-shell .cbt-question-header {
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .cbt-exam-shell .cbt-qhead-left {
+    flex-wrap: nowrap;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .cbt-exam-shell .cbt-qhead-right {
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .cbt-exam-shell .cbt-type-badge {
+    min-width: 0 !important;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block !important;
+    padding: 4px 10px !important;
+  }
+
+  .cbt-exam-shell .cbt-qnum-badge,
+  .cbt-exam-shell .cbt-qscore-badge {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Nhóm từ vựng hình ảnh: một cột, bớt đệm để ô nhập rộng. */
+  .cbt-exam-shell .candidate-pictorial-grid {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 4px;
+  }
+
+  .cbt-exam-shell .cbt-pictorial-card {
+    padding: 10px;
+  }
+
+  .cbt-exam-shell .candidate-pictorial-input-wrap {
+    max-width: none;
+  }
+
+  /* Thẻ tiêu đề phần gọn hơn. */
+  .cbt-exam-shell .cbt-section-hero {
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+
+  .cbt-exam-shell .cbt-hero-top {
+    gap: 6px;
+  }
+}
+
+/* Màn cảm ứng: cỡ chữ tuyệt đối 16px (không theo cỡ chữ gốc, nên A- không kéo xuống dưới 16px
+   và iOS không tự phóng to khi chạm ô nhập); vùng chạm tối thiểu 44px. */
+@media (pointer: coarse) {
+  .cbt-exam-shell input[type="text"],
+  .cbt-exam-shell select,
+  .cbt-exam-shell textarea {
+    font-size: 16px !important;
+  }
+
+  .cbt-exam-shell input[type="text"],
+  .cbt-exam-shell select {
+    min-height: 44px !important;
+  }
+
+  .cbt-exam-shell .cbt-blank-input {
+    height: 44px !important;
+  }
+
+  .cbt-exam-shell .candidate-choice-label,
+  .cbt-exam-shell button {
+    min-height: 44px;
+  }
+
+  .cbt-exam-shell button {
+    min-width: 44px;
+  }
+}
+
