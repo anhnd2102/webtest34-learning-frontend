@@ -265,3 +265,22 @@ test('dynamic-exam-renderer: renderQuestionCard outputs structured listening_ord
   assert.ok(!html.includes('Gõ câu trả lời của bạn...'), 'Must NOT fall back to short text input!');
 });
 
+test('dynamic-exam-renderer: đề đọc ghép dựng hai tab Bài đọc/Câu hỏi, mặc định mở Bài đọc', () => {
+  const container = { innerHTML: '', addEventListener: () => {}, querySelectorAll: () => [] };
+  const definition = {
+    title: 'Reading',
+    blocks: [{
+      title: 'READING',
+      readingPassage: '<p>Đoạn văn</p>',
+      items: [{ itemVersionId: 'r1', position: 1, interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', options: [{ id: 'a', text: 'A' }] }]
+    }]
+  };
+  renderDynamicExam(definition, container, { state: { answers: {} }, activeSection: 'READING', onAnswerChange: () => {} });
+  const html = container.innerHTML;
+  assert.match(html, /class="split-pane-mobile-toggle" role="tablist"/);
+  assert.match(html, /role="tab"[^>]*data-pane="reading"[^>]*aria-selected="true"/);
+  assert.match(html, /role="tab"[^>]*data-pane="questions"[^>]*aria-selected="false"/);
+  assert.match(html, /id="split-pane-0"[^>]*data-active-pane="reading"/);
+  assert.ok(html.includes('Câu hỏi (1)'), 'tab Câu hỏi phải kèm số câu');
+});
+

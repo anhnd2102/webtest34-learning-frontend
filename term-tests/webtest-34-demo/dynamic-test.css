@@ -2460,3 +2460,70 @@ body {
   font-weight: 600;
 }
 
+/* ===== Đề đọc ghép (#29): hai cột từ 1024px, hai tab dính dưới 1024px =====
+   Chỉ áp dụng trong shell thi học viên; Teacher Dashboard có CSS riêng cho cùng tên class. */
+.cbt-exam-shell .split-pane-mobile-toggle {
+  display: none;
+}
+
+.cbt-exam-shell .cbt-split-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.cbt-exam-shell .cbt-reading-col {
+  position: sticky;
+  top: calc(var(--cbt-topbar-h, 0px) + 12px);
+  max-height: calc(100vh - var(--cbt-topbar-h, 0px) - 24px);
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.cbt-exam-shell .cbt-matching-col {
+  min-width: 0;
+}
+
+@media (max-width: 1023.98px) {
+  .cbt-exam-shell .split-pane-mobile-toggle {
+    display: flex;
+    gap: 8px;
+    position: sticky;
+    top: var(--cbt-topbar-h, 0px);
+    z-index: 30;
+    padding: 8px 0;
+    margin-bottom: 8px;
+    background: var(--izone-bg, #ffffff);
+    border-bottom: 1px solid var(--izone-border);
+  }
+
+  .cbt-exam-shell .split-pane-mobile-toggle .toggle-pane-btn {
+    flex: 1;
+    min-height: 44px;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  .cbt-exam-shell .split-pane-mobile-toggle .toggle-pane-btn.active {
+    background: var(--izone-primary);
+    border-color: var(--izone-primary);
+    color: #ffffff;
+  }
+
+  .cbt-exam-shell .cbt-split-pane {
+    display: block;
+  }
+
+  .cbt-exam-shell .cbt-reading-col {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .cbt-exam-shell .cbt-split-pane[data-active-pane="reading"] .cbt-matching-col,
+  .cbt-exam-shell .cbt-split-pane[data-active-pane="questions"] .cbt-reading-col {
+    display: none;
+  }
+}
+
