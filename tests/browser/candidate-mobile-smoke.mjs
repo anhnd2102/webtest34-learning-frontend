@@ -68,9 +68,10 @@ function mockLearningApi(page) {
   return page.route(`**/api/learning/**`, route => {
     const path = new URL(route.request().url()).pathname;
     let body = {};
-    // Ticket #28: cờ page.draftFails làm /attempts/draft trả 500 để thử dải báo lỗi lưu.
+    if (path.endsWith('/attempts/draft')) page.draftCalls = (page.draftCalls || 0) + 1;
+    // Ticket #28: page.draftFails = mã HTTP làm /attempts/draft thất bại, để thử dải báo lỗi lưu.
     if (path.endsWith('/attempts/draft') && page.draftFails) {
-      return route.fulfill({ status: 500, contentType: 'application/json', body: '{"error":"down"}' });
+      return route.fulfill({ status: page.draftFails, contentType: 'application/json', body: '{"error":"down"}' });
     }
     if (path.endsWith('/test-access/resolve')) {
       body = { assignment: { title: definition.title, class: { name: 'Lớp Smoke' }, definition,
@@ -256,7 +257,7 @@ export const checks = {
     const type = async text => { await page.locator('input[type="text"][data-item-id="it-2"]').fill(text); };
     assert.ok(await dot.isVisible(), `trạng thái lưu bị ẩn ở ${vp.width}px`);
     assert.equal(await alert.isVisible(), false, 'dải lỗi hiện khi chưa có lỗi');
-    page.draftFails = true;
+    page.draftFails = 500;
     await type('x');
     await alert.waitFor({ state: 'visible', timeout: 5000 });
     assert.equal((await alert.textContent()).trim(), 'Chưa lưu được, kiểm tra mạng');
@@ -280,6 +281,47 @@ export const checks = {
       try { return [...s.cssRules]; } catch { return []; }
     }).filter(r => r.media && /(960|1023)px/.test(r.media.mediaText)).map(r => r.media.mediaText));
     assert.deepEqual(found, [], 'còn mốc 960px/1023px');
+  },
+  async saveRetriesAutomatically(page, vp) {
+    const alert = page.locator('#demo-save-alert');
+    const type = text => page.locator('input[type="text"][data-item-id="it-2"]').fill(text);
+    page.draftFails = 500;
+    await type('retry-online');
+    await alert.waitFor({ state: 'visible', timeout: 5000 });
+    // Có mạng trở lại: tự lưu, học viên không phải gõ thêm.
+    page.draftFails = 0;
+    await page.evaluate(() => dispatchEvent(new Event('online')));
+    await alert.waitFor({ state: 'hidden', timeout: 5000 });
+    // Hai ca sau phải chờ qua chu kỳ 15 giây nên chỉ đo ở một khổ.
+    if (vp.width !== 390 || await isCoarse(page)) return;
+    page.draftFails = 500;
+    await type('retry-timer');
+    await alert.waitFor({ state: 'visible', timeout: 5000 });
+    page.draftFails = 0;
+    await alert.waitFor({ state: 'hidden', timeout: 20000 });
+    // Lỗi cố định (đã nộp, hết giờ, máy khác) không thử lại.
+    page.draftFails = 409;
+    await type('no-retry');
+    await alert.waitFor({ state: 'visible', timeout: 5000 });
+    const calls = page.draftCalls;
+    await page.waitForTimeout(17000);
+    assert.equal(page.draftCalls, calls, 'vẫn thử lại khi lỗi 409');
+    page.draftFails = 0;
+    await page.evaluate(() => dispatchEvent(new Event('online')));
+    await alert.waitFor({ state: 'hidden', timeout: 5000 });
+  },
+  // Nộp bài làm khóa màn hình nên check này phải đứng cuối.
+  async submitClearsSaveAlert(page) {
+    const alert = page.locator('#demo-save-alert');
+    page.draftFails = 500;
+    await page.locator('input[type="text"][data-item-id="it-2"]').fill('submit');
+    await alert.waitFor({ state: 'visible', timeout: 5000 });
+    const calls = page.draftCalls;
+    await page.click('#demo-submit-top');
+    await page.click('#demo-confirm-submit');
+    await alert.waitFor({ state: 'hidden', timeout: 5000 });
+    await page.waitForTimeout(2000);
+    assert.equal(page.draftCalls, calls, 'vẫn gửi nháp sau khi nộp');
   }
 };
 
