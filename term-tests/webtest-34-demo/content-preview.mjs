@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261103-audio-gate-v16';
+} from './dynamic-exam-renderer.mjs?rev=20261105-mobile-nav-v18';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -1636,6 +1636,7 @@ export async function mount(course) {
                 ${renderSectionNavPills(learningState.definition, 0)}
               </nav>
             </div>
+            <div id="demo-save-alert" class="cbt-save-alert" role="alert"></div>
           </header>
 
           <main class="demo-width cbt-main-content" style="max-width:1380px;margin:0 auto;padding:20px 24px;">
@@ -1969,7 +1970,14 @@ export async function mount(course) {
     const fields = [...document.querySelectorAll('[data-demo-answer]')];
 
     let draftDebounceTimer = null;
+    // Dải báo lỗi lưu (#28): chỉ đổi theo kết quả gọi /attempts/draft; rỗng thì CSS ẩn.
+    const setSaveAlert = text => {
+      const el = query('#demo-save-alert');
+      if (el) el.textContent = text;
+      query('#demo-save')?.classList.toggle('is-save-failed', Boolean(text));
+    };
     function queueServerDraft() {
+      if (state.submittedAt) setSaveAlert('');
       if (!isLearningMode || !learningState.attemptToken || state.submittedAt) return;
       clearTimeout(draftDebounceTimer);
       draftDebounceTimer = setTimeout(async () => {
@@ -1982,11 +1990,22 @@ export async function mount(course) {
             responses: buildResponsesPayload()
           });
           query('#demo-save').textContent = 'Đã lưu máy chủ';
-        } catch {
+          setSaveAlert('');
+        } catch (err) {
+          if (state.submittedAt) return;
           query('#demo-save').textContent = 'Lưu máy chủ thất bại';
+          setSaveAlert('Chưa lưu được, kiểm tra mạng');
+          // Chỉ thử lại lỗi tạm thời; 4xx khác (đã nộp, hết giờ, máy khác) thử lại cũng không qua.
+          if (!err.status || err.status >= 500 || err.status === 429) {
+            clearTimeout(draftDebounceTimer);
+            draftDebounceTimer = setTimeout(queueServerDraft, 15000);
+          }
         }
       }, 1500);
     }
+    window.addEventListener('online', () => {
+      if (query('#demo-save')?.classList.contains('is-save-failed')) queueServerDraft();
+    });
 
     function persist() {
       try {
@@ -2292,6 +2311,8 @@ export async function mount(course) {
     };
 
     query('#demo-confirm-submit').addEventListener('click', async () => {
+      // Lệnh nộp đã mang đủ câu trả lời; bản nháp gửi chen vào sẽ làm lệch revision của lệnh nộp.
+      clearTimeout(draftDebounceTimer);
       query('#demo-confirm-submit').disabled = true;
       query('#demo-confirm-submit').textContent = 'Đang gửi…';
       try {
@@ -2349,6 +2370,7 @@ export async function mount(course) {
         }
       } catch (err) {
         alert(`Nộp bài không thành công: ${err.message}`);
+        queueServerDraft();
       } finally {
         query('#demo-confirm-submit').disabled = false;
         query('#demo-confirm-submit').textContent = isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử';
