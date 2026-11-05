@@ -49,6 +49,10 @@ function mockLearningApi(page) {
   return page.route(`**/api/learning/**`, route => {
     const path = new URL(route.request().url()).pathname;
     let body = {};
+    // Ticket #28: cờ page.draftFails làm /attempts/draft trả 500 để thử dải báo lỗi lưu.
+    if (path.endsWith('/attempts/draft') && page.draftFails) {
+      return route.fulfill({ status: 500, contentType: 'application/json', body: '{"error":"down"}' });
+    }
     if (path.endsWith('/test-access/resolve')) {
       body = { assignment: { title: definition.title, class: { name: 'Lớp Smoke' }, definition,
         roster: [{ studentRef: 's1', name: 'Học Viên Smoke' }] } };
@@ -118,6 +122,30 @@ export const checks = {
       return top;
     });
     assert.equal(Math.round(y), 0, `thanh trên không dính khi cuộn ở ${vp.width}px (top=${y})`);
+  },
+  // Lưu lỗi: dải đỏ hiện khi cuộn/chuyển phần, chỉ mất khi lưu máy chủ thành công; chấm nhỏ hiện lúc bình thường.
+  async saveFailureBanner(page, vp) {
+    const alert = page.locator('.cbt-exam-shell [role="alert"]#demo-save-alert');
+    const dot = page.locator('#demo-save');
+    const type = async text => { await page.locator('input[type="text"][data-item-id="it-2"]').fill(text); };
+    assert.ok(await dot.isVisible(), `trạng thái lưu bị ẩn ở ${vp.width}px`);
+    assert.equal(await alert.isVisible(), false, 'dải lỗi hiện khi chưa có lỗi');
+    page.draftFails = true;
+    await type('x');
+    await alert.waitFor({ state: 'visible', timeout: 5000 });
+    assert.equal((await alert.textContent()).trim(), 'Chưa lưu được, kiểm tra mạng');
+    // Gõ tiếp (persist ghi "Đang lưu…") và chuyển phần vẫn không làm mất dải đỏ.
+    await type('xy');
+    await page.evaluate(() => scrollTo(0, 400));
+    await page.locator('#sectionNavContainer button, #sectionNavContainer [data-demo-go]').nth(1).click();
+    const b = await box(page, '#demo-save-alert');
+    assert.ok(await alert.isVisible() && b.y >= 0 && b.x >= 0 && b.x + b.width <= vp.width + 1, `dải lỗi không nằm trong màn hình ở ${vp.width}px`);
+    await page.locator('#sectionNavContainer button, #sectionNavContainer [data-demo-go]').nth(0).click();
+    page.draftFails = false;
+    await type('xyz');
+    await alert.waitFor({ state: 'hidden', timeout: 5000 });
+    assert.ok(await dot.isVisible(), 'chấm lưu biến mất sau khi phục hồi');
+    await page.evaluate(() => scrollTo(0, 0));
   },
   async noLegacyBreakpoints(page) {
     const found = await page.evaluate(() => [...document.styleSheets].flatMap(s => {
