@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
-  <link rel="stylesheet" href="./styles.css?rev=20261104-modal-border-and-table-v1">
+  <link rel="stylesheet" href="./styles.css?rev=20261105-retake-modal-v1">
   <script>
     (function () {
       var hostname = window.location.hostname;
@@ -461,65 +461,9 @@
         </div>
       </div>
 
-      <dialog id="add-student-modal" class="modal">
-        <form id="add-student-form" method="dialog" class="modal-form">
-          <h3>Bổ sung học viên vào bài được giao</h3>
-          <p class="modal-desc">Chọn học viên từ lớp hoặc nhập thông tin học viên để bổ sung vào danh sách làm bài.</p>
-          <div id="add-student-error" class="error-msg" hidden role="alert"></div>
-          <label>
-            <span>Chọn từ học viên trong lớp</span>
-            <select id="eligible-student-select">
-              <option value="">-- Chọn học viên --</option>
-            </select>
-          </label>
-          <div class="form-divider"><span>hoặc nhập thủ công</span></div>
-          <label>
-            <span>Mã định danh (UUID)</span>
-            <input id="add-student-ref-input" type="text" placeholder="UUID học viên">
-          </label>
-          <label>
-            <span>Họ và tên</span>
-            <input id="add-student-name-input" type="text" placeholder="Tên học viên">
-          </label>
-          <label>
-            <span>Phân biệt / Mã lớp (Discriminator)</span>
-            <input id="add-student-disc-input" type="text" placeholder="Ví dụ: A01">
-          </label>
-          <div class="modal-actions">
-            <button id="cancel-add-student-btn" type="button" class="btn-secondary">Hủy</button>
-            <button id="submit-add-student-btn" type="submit" class="btn-primary">Thêm vào bài</button>
-          </div>
-        </form>
-      </dialog>
+      
 
-      <dialog id="grant-retake-modal" class="modal">
-        <form id="grant-retake-form" method="dialog" class="modal-form">
-          <h3>Cấp quyền làm lại bài thi</h3>
-          <p class="modal-desc">Lưu ý: Cấp quyền làm lại sẽ vô hiệu hóa lần làm bài hiện tại sau khi học viên bắt đầu lần mới. Lịch sử các lần làm bài trước vẫn được lưu trữ đầy đủ.</p>
-          <div id="grant-retake-error" class="error-msg" hidden role="alert"></div>
-          <div class="modal-info">
-            <span>Học viên:</span>
-            <strong id="retake-student-name">—</strong>
-            <input id="retake-student-ref-input" type="hidden">
-          </div>
-          <label>
-            <span>Lý do cho phép làm lại (bắt buộc)</span>
-            <textarea id="retake-reason-input" required rows="3" placeholder="Nhập lý do cho phép làm lại (ví dụ: Sự cố mạng, sự cố kỹ thuật...)"></textarea>
-          </label>
-          <label>
-            <span>Thời điểm mở (tùy chọn)</span>
-            <input id="retake-available-from-input" type="datetime-local">
-          </label>
-          <label>
-            <span>Hạn chót làm lại (bắt buộc - gợi ý 24 giờ)</span>
-            <input id="retake-expires-at-input" type="datetime-local" required>
-          </label>
-          <div class="modal-actions">
-            <button id="cancel-grant-retake-btn" type="button" class="btn-secondary">Hủy</button>
-            <button id="submit-grant-retake-btn" type="submit" class="btn-primary">Xác nhận cấp quyền</button>
-          </div>
-        </form>
-      </dialog>
+      
 
       <section id="portal-sync" class="portal-sync" hidden aria-labelledby="portal-sync-title">
         <h3 id="portal-sync-title">Đồng bộ điểm Portal</h3>
@@ -554,16 +498,7 @@
             <button id="portal-retry-btn" type="button" class="btn-secondary" hidden>Thử lại dòng lỗi</button>
           </div>
         </div>
-        <dialog id="portal-sync-confirm" class="modal">
-          <form method="dialog" class="modal-form">
-            <h3>Xác nhận đồng bộ điểm Portal</h3>
-            <p id="portal-sync-confirm-text" class="modal-desc"></p>
-            <div class="modal-actions">
-              <button id="portal-sync-cancel" type="button" class="btn-secondary">Hủy</button>
-              <button id="portal-sync-confirm-btn" type="submit" class="btn-primary">Đồng bộ</button>
-            </div>
-          </form>
-        </dialog>
+        
       </section>
 
       <div id="class-skill-summary" class="class-skill-summary" aria-label="Thống kê năng lực kỹ năng toàn lớp"></div>
@@ -736,6 +671,77 @@
     </div>
   </div>
 
+  <dialog id="add-student-modal" class="modal">
+        <form id="add-student-form" method="dialog" class="modal-form">
+          <h3>Bổ sung học viên vào bài được giao</h3>
+          <p class="modal-desc">Chọn học viên từ lớp hoặc nhập thông tin học viên để bổ sung vào danh sách làm bài.</p>
+          <div id="add-student-error" class="error-msg" hidden role="alert"></div>
+          <label>
+            <span>Chọn từ học viên trong lớp</span>
+            <select id="eligible-student-select">
+              <option value="">-- Chọn học viên --</option>
+            </select>
+          </label>
+          <div class="form-divider"><span>hoặc nhập thủ công</span></div>
+          <label>
+            <span>Mã định danh (UUID)</span>
+            <input id="add-student-ref-input" type="text" placeholder="UUID học viên">
+          </label>
+          <label>
+            <span>Họ và tên</span>
+            <input id="add-student-name-input" type="text" placeholder="Tên học viên">
+          </label>
+          <label>
+            <span>Phân biệt / Mã lớp (Discriminator)</span>
+            <input id="add-student-disc-input" type="text" placeholder="Ví dụ: A01">
+          </label>
+          <div class="modal-actions">
+            <button id="cancel-add-student-btn" type="button" class="btn-secondary">Hủy</button>
+            <button id="submit-add-student-btn" type="submit" class="btn-primary">Thêm vào bài</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog id="grant-retake-modal" class="modal">
+        <form id="grant-retake-form" method="dialog" class="modal-form">
+          <h3>Cấp quyền làm lại bài thi</h3>
+          <p class="modal-desc">Lưu ý: Cấp quyền làm lại sẽ vô hiệu hóa lần làm bài hiện tại sau khi học viên bắt đầu lần mới. Lịch sử các lần làm bài trước vẫn được lưu trữ đầy đủ.</p>
+          <div id="grant-retake-error" class="error-msg" hidden role="alert"></div>
+          <div class="modal-info">
+            <span>Học viên:</span>
+            <strong id="retake-student-name">—</strong>
+            <input id="retake-student-ref-input" type="hidden">
+          </div>
+          <label>
+            <span>Lý do cho phép làm lại (bắt buộc)</span>
+            <textarea id="retake-reason-input" required rows="3" placeholder="Nhập lý do cho phép làm lại (ví dụ: Sự cố mạng, sự cố kỹ thuật...)"></textarea>
+          </label>
+          <label>
+            <span>Thời điểm mở (tùy chọn)</span>
+            <input id="retake-available-from-input" type="datetime-local">
+          </label>
+          <label>
+            <span>Hạn chót làm lại (bắt buộc - gợi ý 24 giờ)</span>
+            <input id="retake-expires-at-input" type="datetime-local" required>
+          </label>
+          <div class="modal-actions">
+            <button id="cancel-grant-retake-btn" type="button" class="btn-secondary">Hủy</button>
+            <button id="submit-grant-retake-btn" type="submit" class="btn-primary">Xác nhận cấp quyền</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog id="portal-sync-confirm" class="modal">
+          <form method="dialog" class="modal-form">
+            <h3>Xác nhận đồng bộ điểm Portal</h3>
+            <p id="portal-sync-confirm-text" class="modal-desc"></p>
+            <div class="modal-actions">
+              <button id="portal-sync-cancel" type="button" class="btn-secondary">Hủy</button>
+              <button id="portal-sync-confirm-btn" type="submit" class="btn-primary">Đồng bộ</button>
+            </div>
+          </form>
+        </dialog>
+
   <dialog id="item-context-modal" class="modal item-context-modal" aria-labelledby="modal-item-title">
       <div class="modal-form">
         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -751,6 +757,6 @@
   </main>
 
   <script src="./vendor/xlsx.full.min.js"></script>
-  <script type="module" src="./main.js?rev=20261104-xlsx-and-border-v1"></script>
+  <script type="module" src="./main.js?rev=20261105-retake-modal-v1"></script>
 </body>
 </html>

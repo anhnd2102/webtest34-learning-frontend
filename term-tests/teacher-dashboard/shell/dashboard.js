@@ -3724,7 +3724,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   function openGrantRetakeModal({ studentRef, studentName, discriminator }) {
-    if (!state.classId || !state.assignmentId || !studentRef) return;
+    const classId = state.classId || currentSelectedAssignment?.classId;
+    const assignmentId = state.assignmentId || currentSelectedAssignment?.id;
+    if (!classId || !assignmentId || !studentRef) return;
     if (grantRetakeError) {
       grantRetakeError.hidden = true;
       grantRetakeError.textContent = '';
@@ -3754,6 +3756,15 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
+  if (grantRetakeModal) {
+    lifecycle.listen(grantRetakeModal, 'click', (event) => {
+      if (event.target === grantRetakeModal) {
+        if (typeof grantRetakeModal.close === 'function') grantRetakeModal.close();
+        else grantRetakeModal.hidden = true;
+      }
+    });
+  }
+
   if (grantRetakeBtn) {
     lifecycle.listen(grantRetakeBtn, 'click', () => {
       if (!currentAttemptDetail) return;
@@ -3778,7 +3789,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   if (grantRetakeForm) {
     lifecycle.listen(grantRetakeForm, 'submit', async event => {
       event.preventDefault();
-      if (!state.classId || !state.assignmentId) return;
+      const classId = state.classId || currentSelectedAssignment?.classId;
+      const assignmentId = state.assignmentId || currentSelectedAssignment?.id;
+      if (!classId || !assignmentId) return;
       const studentRef = retakeStudentRefInput?.value.trim();
       const reason = retakeReasonInput?.value.trim();
       const availableFromVal = retakeAvailableFromInput?.value;
@@ -3796,7 +3809,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       const expiresAt = new Date(expiresAtVal).toISOString();
 
       try {
-        const response = await fetch(`${apiBase()}${grantRetakePath(state.classId, state.assignmentId, studentRef)}`, {
+        const response = await fetch(`${apiBase()}${grantRetakePath(classId, assignmentId, studentRef)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -3814,9 +3827,12 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           grantRetakeModal.hidden = true;
         }
         alert('Cấp quyền làm lại thành công!');
-        await loadResults(state.classId, state.assignmentId);
+        if (examRoom && !examRoom.hidden) {
+          await loadExamRoom();
+        }
+        await loadResults(classId, assignmentId);
         if (state.attemptId) {
-          await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);
+          await loadAttemptDetail(classId, assignmentId, state.attemptId);
         }
       } catch (err) {
         if (grantRetakeError) {
