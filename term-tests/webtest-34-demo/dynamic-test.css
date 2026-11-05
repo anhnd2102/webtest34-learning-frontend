@@ -1265,24 +1265,40 @@ body {
 /* ==========================================================================
    12. TRUE 2-COLUMN CBT LAYOUT & STICKY ASIDE
    ========================================================================== */
+/* Mốc duy nhất của shell thi: một cột dưới 1024px, hai cột từ 1024px. */
 .exam-layout,
 .cbt-exam-layout {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 16px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 18px;
   align-items: start;
   box-sizing: border-box;
 }
 
-@media (max-width: 960px) {
+@media (min-width: 1024px) {
   .exam-layout,
   .cbt-exam-layout {
-    grid-template-columns: 1fr;
-    padding: 16px;
-    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    padding: 24px;
+    gap: 24px;
+  }
+}
+
+/* Điện thoại: bỏ hàng tên đề để thanh trên thấp hơn; đồng hồ, nút chọn phần, A-/A+ và Nộp bài giữ nguyên. */
+@media (max-width: 639.98px) {
+  .cbt-exam-shell .cbt-brand {
+    display: none;
+  }
+
+  .cbt-exam-shell .cbt-topbar-inner {
+    padding: 8px 14px;
+  }
+
+  .cbt-exam-shell .cbt-section-nav-bar {
+    padding: 6px 14px;
   }
 }
 
