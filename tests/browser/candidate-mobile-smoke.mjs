@@ -67,8 +67,9 @@ export const definition = {
 };
 
 // Giả lập Learning API: resolve → start; mọi route khác trả {}.
-function mockLearningApi(page) {
+function mockLearningApi(page, attemptExtra = {}) {
   const attempt = {
+    ...attemptExtra,
     attemptToken: 'smoke-attempt', definitionHash: 'h', draftRevision: 0, status: 'active',
     expiresAt: new Date(Date.now() + 3600_000).toISOString(), definition
   };
@@ -89,7 +90,7 @@ function mockLearningApi(page) {
 }
 
 // Mở shell thi thật và trả về page đã vào màn làm bài.
-export async function openExamShell(browser, viewport, contextOptions = {}) {
+export async function openExamShell(browser, viewport, contextOptions = {}, attemptExtra = {}) {
   const page = await browser.newPage({ viewport, ...contextOptions });
   page.setDefaultTimeout(10000);
   page.errors = [];
@@ -100,7 +101,7 @@ export async function openExamShell(browser, viewport, contextOptions = {}) {
     // Chặn mạng ngoài (font, ...), chỉ cho static server cục bộ.
     return url.origin === origin ? route.continue() : route.abort();
   });
-  await mockLearningApi(page);
+  await mockLearningApi(page, attemptExtra);
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
   await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
   await page.selectOption('#studentSelectInput', 's1');
@@ -283,6 +284,61 @@ export const checks = {
     assert.equal(await dot.evaluate(el => el.classList.contains('is-save-failed')), false, 'chấm lưu vẫn báo lỗi sau khi phục hồi');
     await page.evaluate(() => scrollTo(0, 0));
   },
+  async bottomBar(page, vp) {
+    const bar = page.locator('.cbt-bottom-bar');
+    const prev = page.locator('#cbt-bar-prev');
+    const next = page.locator('#cbt-bar-next');
+    const active = () => page.locator('.simulation-section-card.active').getAttribute('id');
+    if (vp.width >= 1024) {
+      assert.equal(await bar.isVisible(), false, `thanh đáy hiện ở ${vp.width}px`);
+      assert.ok(await page.locator('#demo-next').isVisible(), `mất nút cuối trang ở ${vp.width}px`);
+      return;
+    }
+    assert.ok(await bar.isVisible(), `thiếu thanh đáy ở ${vp.width}px`);
+    assert.equal(await page.locator('#demo-next').isVisible(), false, `nút cuối trang còn hiện ở ${vp.width}px`);
+    const b = await bar.boundingBox();
+    assert.ok(Math.abs(b.y + b.height - vp.height) <= 1, `thanh đáy không sát đáy ở ${vp.width}px`);
+    await page.locator('.cbt-nav-pill').first().click();
+    assert.ok(await prev.isDisabled(), 'Trước vẫn bấm được ở phần đầu');
+    assert.equal((await next.textContent()).trim(), 'Sau');
+    // Gắn sự kiện hai lần sẽ nhảy quá một phần.
+    await next.click();
+    assert.equal(await active(), 'sim-block-1');
+    await prev.click();
+    assert.equal(await active(), 'sim-block-0');
+    // Số câu đổi ngay khi trả lời, không chờ lưu.
+    const count = page.locator('#cbt-bar-count');
+    const input = page.locator('input[type="text"][data-item-id="it-2"]');
+    const old = await input.inputValue();
+    await input.fill('');
+    const before = await count.textContent();
+    await input.fill('dem-so-cau');
+    const after = await count.textContent();
+    assert.equal(parseInt(after, 10), parseInt(before, 10) + 1, `số câu không đổi: ${before} -> ${after}`);
+    await input.fill(old);
+    // Thanh không che cuối trang.
+    await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(100);
+    const note = await page.locator('.cbt-footer-note').boundingBox();
+    assert.ok(note.y + note.height <= (await bar.boundingBox()).y + 1, `thanh đáy che cuối trang ở ${vp.width}px`);
+    // Bàn phím mở: visualViewport thấp đi rồi trở lại.
+    const setViewport = height => page.evaluate(h => {
+      Object.defineProperty(visualViewport, 'height', { configurable: true, get: () => h });
+      visualViewport.dispatchEvent(new Event('resize'));
+    }, height);
+    await setViewport(vp.height - 300);
+    assert.equal(await bar.isVisible(), false, 'thanh đáy không ẩn khi bàn phím mở');
+    await setViewport(vp.height);
+    assert.ok(await bar.isVisible(), 'thanh đáy không hiện lại khi bàn phím đóng');
+    // Phần cuối: Sau thành Nộp bài, mở đúng hộp xác nhận.
+    await page.locator('.cbt-nav-pill').last().click();
+    assert.equal((await next.textContent()).trim(), 'Nộp bài');
+    await next.click();
+    assert.ok(await page.locator('#demo-confirm').evaluate(d => d.open), 'Nộp bài không mở hộp xác nhận');
+    await page.locator('#demo-confirm #demo-cancel, #demo-confirm .btn-secondary').first().click();
+    await page.locator('.cbt-nav-pill').first().click();
+    await page.evaluate(() => scrollTo(0, 0));
+  },
   async topbarNotClipped(page, vp) {
     const clipped = await page.evaluate(() => [...document.querySelectorAll('.cbt-nav-pill')]
       .filter(p => p.scrollWidth > p.clientWidth + 1).map(p => p.textContent.trim()));
@@ -368,6 +424,7 @@ export const checks = {
     await page.waitForTimeout(2000);
     assert.equal(page.draftCalls, calls, 'vẫn gửi nháp sau khi nộp');
     await checks.topbarNotClipped(page, vp);
+    assert.equal(await page.locator('.cbt-bottom-bar').isVisible(), false, 'thanh đáy còn hiện sau khi nộp');
   }
 };
 
@@ -399,6 +456,20 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
         await touch.close();
       }
     }
+    // Cảnh báo thoát của Exam Mode khóa thanh đáy, trả lại khi học viên quay về bài.
+    const guarded = await openExamShell(browser, VIEWPORTS[1], {}, { exam: { enabled: true, status: 'running' } });
+    await guarded.evaluate(() => {
+      Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' });
+      document.dispatchEvent(new Event('visibilitychange'));
+      Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' });
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await guarded.locator('#examGuardOverlay').waitFor({ state: 'visible' });
+    assert.ok(await guarded.locator('.cbt-bottom-bar').evaluate(el => el.inert), 'thanh đáy vẫn dùng được khi có cảnh báo thoát');
+    await guarded.click('#examGuardReturn');
+    await guarded.locator('#examGuardOverlay').waitFor({ state: 'hidden' });
+    assert.equal(await guarded.locator('.cbt-bottom-bar').evaluate(el => el.inert), false, 'thanh đáy không mở lại sau cảnh báo');
+    await guarded.close();
     console.log(JSON.stringify(report));
     console.log('candidate-mobile-smoke: OK');
   } finally {

@@ -1071,9 +1071,19 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
         <button class="btn btn-primary cbt-btn-next" id="demo-next">Phần tiếp →</button>
       </div>
     </footer>
+    <nav class="cbt-bottom-bar" aria-label="Chuyển phần">
+      <button type="button" class="btn btn-secondary cbt-btn-prev" id="cbt-bar-prev">Trước</button>
+      <span class="cbt-bottom-bar-count" id="cbt-bar-count"></span>
+      <button type="button" class="btn btn-primary cbt-btn-next" id="cbt-bar-next">Sau</button>
+    </nav>
   `;
 
   container.innerHTML = html;
+}
+
+// iOS không đổi innerHeight khi bàn phím mở; nhân scale để phóng to bằng hai ngón không bị hiểu nhầm.
+export function isKeyboardOpen(viewport, layoutHeight) {
+  return layoutHeight - viewport.height * viewport.scale > 120;
 }
 
 export function initDynamicExamInteractions(rootEl, { definition, state = { answers: {} }, onAnswerChange, onSectionChange }) {
@@ -1098,6 +1108,24 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   };
 
   let currentActiveBlockIdx = 0;
+  let keyboardOpen = false;
+
+  const syncBottomBar = () => {
+    const bar = rootEl.querySelector('.cbt-bottom-bar');
+    if (!bar) return;
+    bar.hidden = Boolean(state.submittedAt) || keyboardOpen;
+    rootEl.querySelector('#cbt-bar-prev').disabled = currentActiveBlockIdx === 0;
+    rootEl.querySelector('#cbt-bar-next').textContent = currentActiveBlockIdx === blocks.length - 1 ? 'Nộp bài' : 'Sau';
+    rootEl.querySelector('#cbt-bar-count').textContent = `${getAnsweredCount(definition, state.answers)}/${getTotalItemCount(definition)} câu`;
+  };
+
+  const viewport = typeof window !== 'undefined' ? window.visualViewport : null;
+  if (viewport) {
+    viewport.onresize = () => {
+      keyboardOpen = isKeyboardOpen(viewport, window.innerHeight);
+      syncBottomBar();
+    };
+  }
 
   // Section switcher
   const activateSection = (targetId) => {
@@ -1123,6 +1151,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     if (nextBtn) {
       nextBtn.textContent = blockIdx === blocks.length - 1 ? 'Nộp bài' : 'Phần tiếp →';
     }
+    syncBottomBar();
 
     if (onSectionChange) {
       const activeBlock = blocks[blockIdx];
@@ -1146,23 +1175,25 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   // Prev / Next button navigation with onclick (triệt tiêu 100% rủi ro double-binding)
   const prevBtn = rootEl.querySelector('#demo-prev');
   const nextBtn = rootEl.querySelector('#demo-next');
-  if (prevBtn) {
-    prevBtn.onclick = () => {
-      if (currentActiveBlockIdx > 0) {
-        activateSection(`sim-block-${currentActiveBlockIdx - 1}`);
-      }
-    };
-  }
-  if (nextBtn) {
-    nextBtn.onclick = () => {
-      if (currentActiveBlockIdx < blocks.length - 1) {
-        activateSection(`sim-block-${currentActiveBlockIdx + 1}`);
-      } else {
-        const topSubmit = document.querySelector('#demo-submit-top') || document.querySelector('#demo-submit');
-        if (topSubmit) topSubmit.click();
-      }
-    };
-  }
+  const goPrev = () => {
+    if (currentActiveBlockIdx > 0) {
+      activateSection(`sim-block-${currentActiveBlockIdx - 1}`);
+    }
+  };
+  const goNext = () => {
+    if (currentActiveBlockIdx < blocks.length - 1) {
+      activateSection(`sim-block-${currentActiveBlockIdx + 1}`);
+    } else {
+      const topSubmit = document.querySelector('#demo-submit-top') || document.querySelector('#demo-submit');
+      if (topSubmit) topSubmit.click();
+    }
+  };
+  if (prevBtn) prevBtn.onclick = goPrev;
+  if (nextBtn) nextBtn.onclick = goNext;
+  const barPrev = rootEl.querySelector('#cbt-bar-prev');
+  const barNext = rootEl.querySelector('#cbt-bar-next');
+  if (barPrev) barPrev.onclick = goPrev;
+  if (barNext) barNext.onclick = goNext;
 
   // Question Navigator click-to-focus and section navigation
   qnavBtns.forEach(btn => {
@@ -1278,6 +1309,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
       const sideBadge = rootEl.querySelector(`[data-side-count="sim-block-${i}"]`);
       if (sideBadge) sideBadge.textContent = `${bDone}/${bTotal}`;
     });
+    syncBottomBar();
   };
 
   // Initial navigator filter

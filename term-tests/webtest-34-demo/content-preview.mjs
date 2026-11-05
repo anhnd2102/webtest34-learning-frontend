@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261105-mobile-nav-v18';
+} from './dynamic-exam-renderer.mjs?rev=20261105-bottom-bar-v19';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -921,6 +921,7 @@ export async function mount(course) {
     examGuardState = result.state;
     const overlay = document.querySelector('#examGuardOverlay');
     document.querySelector('.content-demo')?.classList.toggle('exam-guard-blurred', Boolean(examGuardState.prompt));
+    document.querySelector('.cbt-bottom-bar')?.toggleAttribute('inert', Boolean(examGuardState.prompt));
     if (overlay) overlay.hidden = !examGuardState.prompt;
     if (examGuardState.superseded) {
       learningState.status = 'superseded';
@@ -1664,6 +1665,8 @@ export async function mount(course) {
         </div>
       `;
 
+      // Cần để env(safe-area-inset-*) có giá trị; chỉ bật ở màn thi để không đổi các trang khác.
+      document.querySelector('meta[name="viewport"]')?.setAttribute('content', 'width=device-width,initial-scale=1,viewport-fit=cover');
       renderDynamicExam(learningState.definition, document.querySelector('#examMainViewport'), {
         state,
         activeSection,
