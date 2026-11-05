@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const port = 18322;
+const port = Number(process.env.SMOKE_PORT) || 18322;
 const origin = `http://127.0.0.1:${port}`;
 const TOKEN = '3401-smoke-test-token';
 
@@ -38,9 +38,19 @@ export const definition = {
       ]
     },
     {
+      blockId: 'b3', title: 'Phần C', items: [
+        { itemVersionId: 'it-4', position: 4, interactionType: 'text_select_pair', prompt: 'Nghe và chọn.', points: 1,
+          options: [{ id: 'opt-a', label: 'tháng hai' }, { id: 'opt-b', label: 'tháng ba' }] },
+        { itemVersionId: 'it-5', position: 5, interactionType: 'short_text', layoutType: 'inline_cloze', points: 3,
+          prompt: 'Một câu văn rất dài để kiểm tra dòng giãn ra (1) _____ và (2) _____ rồi tiếp tục (3) _____ cho đến hết dòng thật dài supercalifragilisticexpialidocious.' },
+        { itemVersionId: 'it-6', position: 6, interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary',
+          layoutType: 'pictorial_card', letterHint: 'F_ _ _ _ _ _ _', points: 1 }
+      ]
+    },
+    {
       // Đề đọc ghép: có readingPassage + câu reading_matching nên renderer dựng split-pane.
-      blockId: 'b3', title: 'Phần C', readingPassage: Array.from({ length: 40 }, (_, i) => `<p>Đoạn ${i + 1}. Nội dung bài đọc dài để trang phải cuộn.</p>`).join(''),
-      items: [4, 5, 6, 7].map(position => ({
+      blockId: 'b4', title: 'Phần D', readingPassage: Array.from({ length: 40 }, (_, i) => `<p>Đoạn ${i + 1}. Nội dung bài đọc dài để trang phải cuộn.</p>`).join(''),
+      items: [7, 8, 9, 10].map(position => ({
         itemVersionId: `it-${position}`, position, interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching',
         prompt: `Câu ${position}?`, points: 1,
         options: [{ id: 'a', text: 'Đáp án A' }, { id: 'b', text: 'Đáp án B' }]
@@ -71,8 +81,8 @@ function mockLearningApi(page) {
 }
 
 // Mở shell thi thật và trả về page đã vào màn làm bài.
-export async function openExamShell(browser, viewport) {
-  const page = await browser.newPage({ viewport });
+export async function openExamShell(browser, viewport, contextOptions = {}) {
+  const page = await browser.newPage({ viewport, ...contextOptions });
   page.setDefaultTimeout(10000);
   page.errors = [];
   page.on('pageerror', e => page.errors.push(e.message));
@@ -92,6 +102,9 @@ export async function openExamShell(browser, viewport) {
 }
 
 const box = (page, selector) => page.locator(selector).first().boundingBox();
+const isCoarse = page => page.evaluate(() => matchMedia('(pointer: coarse)').matches);
+// Hiện mọi phần cùng lúc để đo bố cục; idempotent.
+const revealAllSections = page => page.addStyleTag({ content: '.cbt-exam-shell .section-page{display:block !important}' });
 
 // Mỗi check nhận (page, viewport); ném lỗi nếu sai. Ticket sau thêm vào đây.
 export const checks = {
@@ -137,8 +150,8 @@ export const checks = {
     const tab = pane => page.locator(`.simulation-section-card.active .toggle-pane-btn[data-pane="${pane}"]`);
     const scrollY = () => page.evaluate(() => Math.round(scrollY));
     const scrollTo = async y => { await page.evaluate(v => scrollTo(0, v), y); await page.waitForFunction(v => Math.round(scrollY) === v, y); };
-    await page.evaluate(() => { scrollTo(0, 0); document.querySelector('.simulation-nav-pill[data-section-target="sim-block-2"]').click(); });
-    await page.waitForSelector('#sim-block-2.active .cbt-split-pane');
+    await page.evaluate(() => { scrollTo(0, 0); document.querySelector('.simulation-nav-pill[data-section-target="sim-block-3"]').click(); });
+    await page.waitForSelector('#sim-block-3.active .cbt-split-pane');
     await page.waitForFunction(() => scrollY === 0);
     // Trả về Phần A để các check sau không phụ thuộc phần đang mở.
     const backToFirstSection = async () => {
@@ -146,15 +159,15 @@ export const checks = {
       await page.waitForSelector('#sim-block-0.active');
       await page.waitForFunction(() => scrollY === 0);
     };
-    const reading = '#sim-block-2 .cbt-reading-col', questions = '#sim-block-2 .cbt-matching-col';
+    const reading = '#sim-block-3 .cbt-reading-col', questions = '#sim-block-3 .cbt-matching-col';
 
     if (vp.width >= 1024) {
-      assert.ok(!(await visible('#sim-block-2 .split-pane-mobile-toggle')), `tab còn hiện ở ${vp.width}px`);
+      assert.ok(!(await visible('#sim-block-3 .split-pane-mobile-toggle')), `tab còn hiện ở ${vp.width}px`);
       const [r, q] = [await box(page, reading), await box(page, questions)];
       assert.ok(r && q && r.x + r.width <= q.x + 1 && Math.abs(r.y - q.y) < 40, `hai cột không song song ở ${vp.width}px`);
       return backToFirstSection();
     }
-    assert.ok(await visible('#sim-block-2 .split-pane-mobile-toggle'), `không thấy tab ở ${vp.width}px`);
+    assert.ok(await visible('#sim-block-3 .split-pane-mobile-toggle'), `không thấy tab ở ${vp.width}px`);
     assert.ok((await visible(reading)) && !(await visible(questions)), 'mặc định phải chỉ hiện Bài đọc');
 
     await scrollTo(300);
@@ -170,15 +183,60 @@ export const checks = {
 
     // Tab dính ngay dưới thanh trên khi cuộn.
     await scrollTo(400);
-    const [bar, tabs] = [await box(page, '.cbt-topbar'), await box(page, '#sim-block-2 .split-pane-mobile-toggle')];
+    const [bar, tabs] = [await box(page, '.cbt-topbar'), await box(page, '#sim-block-3 .split-pane-mobile-toggle')];
     assert.ok(Math.abs(tabs.y - (bar.y + bar.height)) <= 1, `tab không dính dưới thanh trên (tab.y=${tabs.y}, bar=${bar.y + bar.height})`);
 
     // Nhảy tới câu ở tab khác thì tự sang Câu hỏi.
     await tab('reading').click();
-    await page.evaluate(() => document.querySelector('.btn-qnav[data-item-id="it-6"]').click());
+    await page.evaluate(() => document.querySelector('.btn-qnav[data-item-id="it-9"]').click());
     assert.ok(await visible(questions), 'nhảy câu không chuyển sang tab Câu hỏi');
     assert.ok(await tab('questions').evaluate(el => el.classList.contains('active')), 'tab Câu hỏi không được đánh dấu active');
     await backToFirstSection();
+  },
+  async phoneAnswerWide(page, vp) {
+    if (vp.width >= 640) return;
+    await revealAllSections(page);
+    for (const sel of ['.candidate-short-input', '.candidate-pictorial-input']) {
+      const b = await box(page, sel);
+      assert.ok(b.width >= vp.width * 0.8, `${sel} chỉ rộng ${b.width}px ở ${vp.width}px`);
+    }
+  },
+  async phoneMetaOneLine(page, vp) {
+    if (vp.width >= 640) return;
+    await revealAllSections(page);
+    const tops = await page.evaluate(() => [...document.querySelectorAll('.cbt-question-header')].map(h =>
+      [...h.querySelectorAll('.cbt-qnum-badge,.cbt-qscore-badge,.cbt-type-badge')].map(e => Math.round(e.getBoundingClientRect().top))));
+    assert.ok(tops.length > 0, 'không có thẻ câu hỏi');
+    for (const t of tops) assert.ok(Math.max(...t) - Math.min(...t) <= 4, `thông tin câu xuống dòng ở ${vp.width}px: ${t}`);
+  },
+  async phoneSectionHeroCompact(page, vp) {
+    if (vp.width >= 640) return;
+    const hero = await box(page, '.cbt-section-hero');
+    assert.ok(hero.height <= 110, `thẻ tiêu đề phần cao ${hero.height}px ở ${vp.width}px`);
+  },
+  async coarseInputsNoZoomEvenWhenFontShrunk(page) {
+    if (!await isCoarse(page)) return;
+    await revealAllSections(page);
+    await page.click('#demo-font-down');
+    await page.click('#demo-font-down');
+    const small = await page.evaluate(() => [...document.querySelectorAll('.cbt-exam-shell input[type=text], .cbt-exam-shell select, .cbt-exam-shell textarea')]
+      .map(e => [e.className, parseFloat(getComputedStyle(e).fontSize)]).filter(([, f]) => f < 16));
+    assert.deepEqual(small, [], 'ô nhập cỡ chữ dưới 16px trên màn cảm ứng');
+  },
+  async coarseTouchTargets44(page) {
+    if (!await isCoarse(page)) return;
+    await revealAllSections(page);
+    const sel = '.cbt-exam-shell input[type=text], .cbt-exam-shell select, .cbt-exam-shell textarea, .cbt-exam-shell .candidate-choice-label, .cbt-exam-shell button';
+    const small = await page.evaluate(s => [...document.querySelectorAll(s)].map(e => [e.className || e.tagName, e.getBoundingClientRect()])
+      .filter(([, r]) => r.width > 0 && r.height > 0 && r.height < 43.5).map(([c, r]) => `${c}:${Math.round(r.height)}`), sel);
+    assert.deepEqual(small, [], 'vùng chạm dưới 44px');
+  },
+  async clozeStaysInsideCard(page, vp) {
+    await revealAllSections(page);
+    const bad = await page.evaluate(() => [...document.querySelectorAll('.cbt-cloze-content, .cbt-cloze-line')].filter(e => e.scrollWidth > e.clientWidth + 1).length);
+    assert.equal(bad, 0, `cloze tràn ngang ở ${vp.width}px`);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    assert.ok(vp.width === 1440 || overflow <= 0, `cuộn ngang ${overflow}px ở ${vp.width}px`);
   },
   // Lưu lỗi: dải đỏ hiện khi cuộn/chuyển phần, chỉ mất khi lưu máy chủ thành công; chấm nhỏ hiện lúc bình thường.
   async saveFailureBanner(page, vp) {
@@ -232,6 +290,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       assert.deepEqual(page.errors, [], `lỗi trang ở ${vp.width}px`);
       report.push({ width: vp.width, topbar: parts['.cbt-topbar'] });
       await page.close();
+      if (vp.width < 1024) {
+        // Màn cảm ứng thật (pointer: coarse) cho các luật chỉ áp dụng trên điện thoại/máy tính bảng.
+        const touch = await openExamShell(browser, vp, { hasTouch: true, isMobile: true });
+        for (const check of Object.values(checks)) await check(touch, vp);
+        assert.deepEqual(touch.errors, [], `lỗi trang (cảm ứng) ở ${vp.width}px`);
+        await touch.close();
+      }
     }
     console.log(JSON.stringify(report));
     console.log('candidate-mobile-smoke: OK');
