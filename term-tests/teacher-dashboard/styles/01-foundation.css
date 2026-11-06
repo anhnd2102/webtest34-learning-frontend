@@ -14,6 +14,32 @@
   --izone-soft-border: #f8ced4;
   --izone-slate-bg: #f8fafc;
   --izone-border: #e2e8f0;
+
+  /* Context and assessment palette; retain existing rendered values. */
+  --izone-surface: #ffffff;
+  --izone-slate-100: #f1f5f9;
+  --izone-slate-300: #cbd5e1;
+  --izone-slate-400: #94a3b8;
+  --izone-slate-600: #475569;
+  --izone-text-body: #334155;
+  --izone-slate: #1e293b;
+  --izone-slate-900: #0f172a;
+  --izone-primary-ruby: #e11d48;
+  --izone-context-focus-border: #0284c7;
+  --izone-context-focus-bg: #f0f9ff;
+  --izone-context-inherited-bg: #f0fdf4;
+  --izone-context-inherited-border: #bbf7d0;
+  --izone-context-inherited-text: #166534;
+  --izone-context-action: #15803d;
+  --izone-context-action-hover: #047857;
+  --izone-retake-active-bg: #fef3c7;
+  --izone-retake-active-text: #92400e;
+  --izone-retake-active-border: #fde68a;
+  --izone-overlay-backdrop: rgba(15, 23, 42, 0.65);
+  --izone-shadow-modal-color: rgba(15, 23, 42, 0.25);
+  --izone-shadow-assessment-color: rgba(15, 23, 42, 0.04);
+  --izone-shadow-brand-tab-color: rgba(219, 8, 41, 0.22);
+  --izone-shadow-kpi-hover-color: rgba(15, 23, 42, 0.08);
 }
 * { box-sizing: border-box; }
 body { margin: 0; overflow-x: hidden; }

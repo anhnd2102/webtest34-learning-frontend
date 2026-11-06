@@ -3,25 +3,25 @@
   transition: all 0.2s ease;
 }
 .exercise-reference-context-field:focus-within {
-  border-color: #0284c7 !important;
-  background: #f0f9ff !important;
+  border-color: var(--izone-context-focus-border) !important;
+  background: var(--izone-context-focus-bg) !important;
 }
 .ai-inherited-context-notice {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: var(--izone-context-inherited-bg);
+  border: 1px solid var(--izone-context-inherited-border);
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 0.82rem;
-  color: #166534;
+  color: var(--izone-context-inherited-text);
 }
 .btn-toggle-custom-item-context {
   background: none;
   border: none;
-  color: #15803d;
+  color: var(--izone-context-action);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -29,7 +29,7 @@
   font-size: 0.78rem;
 }
 .btn-toggle-custom-item-context:hover {
-  color: #047857;
+  color: var(--izone-context-action-hover);
 }
 
 
@@ -37,7 +37,7 @@
 .candidate-sim-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(15, 23, 42, 0.65) !important;
+  background: var(--izone-overlay-backdrop) !important;
   backdrop-filter: blur(4px) !important;
   z-index: 10050 !important;
   display: flex !important;
@@ -50,10 +50,10 @@
 .candidate-sim-modal,
 .block-csv-modal,
 .quick-csv-guide-modal {
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
+  background: var(--izone-surface) !important;
+  border: 1px solid var(--izone-slate-300) !important;
   border-radius: 12px !important;
-  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+  box-shadow: 0 25px 50px -12px var(--izone-shadow-modal-color) !important;
   max-height: 90vh !important;
   display: flex !important;
   flex-direction: column !important;
@@ -86,17 +86,17 @@
   font-size: 0.82rem !important;
   font-weight: 500 !important;
   border-radius: 6px !important;
-  border: 1px solid #cbd5e1 !important;
-  background: #ffffff !important;
-  color: #334155 !important;
+  border: 1px solid var(--izone-slate-300) !important;
+  background: var(--izone-surface) !important;
+  color: var(--izone-text-body) !important;
   transition: all 0.15s ease !important;
 }
 
 .btn.btn-view-csv-guide:hover,
 .btn-ghost-subtle.btn-view-csv-guide:hover {
-  background: #f1f5f9 !important;
-  border-color: #94a3b8 !important;
-  color: #0f172a !important;
+  background: var(--izone-slate-100) !important;
+  border-color: var(--izone-slate-400) !important;
+  color: var(--izone-slate-900) !important;
 }
 
 
@@ -105,25 +105,25 @@
   width: 100% !important;
   border-collapse: collapse !important;
   font-size: 12px !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1px solid var(--izone-slate-300) !important;
 }
 
 .quick-guide-table th {
-  background: #f1f5f9 !important;
-  color: #0f172a !important;
+  background: var(--izone-slate-100) !important;
+  color: var(--izone-slate-900) !important;
   font-weight: 700 !important;
   padding: 8px 10px !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1px solid var(--izone-slate-300) !important;
 }
 
 .quick-guide-table td {
   padding: 8px 10px !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1px solid var(--izone-slate-300) !important;
   vertical-align: top !important;
 }
 
 .quick-guide-table tr:nth-child(even) td {
-  background: #f8fafc !important;
+  background: var(--izone-slate-bg) !important;
 }
 
 
@@ -143,12 +143,12 @@
 
 /* Compact Assessment Header */
 .assessment-header {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--izone-surface);
+  border: 1px solid var(--izone-border);
   border-radius: 12px;
   padding: 14px 20px;
   margin-bottom: 18px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px var(--izone-shadow-assessment-color);
 }
 
 .assessment-header-top {
@@ -158,7 +158,7 @@
   flex-wrap: wrap;
   gap: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--izone-slate-100);
 }
 
 .btn-back-dashboard {
@@ -167,9 +167,9 @@
   gap: 6px;
   font-size: 0.82rem;
   font-weight: 500;
-  color: #0f172a;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
+  color: var(--izone-slate-900);
+  background: var(--izone-slate-bg);
+  border: 1px solid var(--izone-slate-300);
   border-radius: 6px;
   padding: 6px 12px;
   cursor: pointer;
@@ -177,9 +177,9 @@
 }
 
 .btn-back-dashboard:hover {
-  background: #f1f5f9;
-  color: #e11d48;
-  border-color: #94a3b8;
+  background: var(--izone-slate-100);
+  color: var(--izone-primary-ruby);
+  border-color: var(--izone-slate-400);
 }
 
 .assessment-breadcrumb {
@@ -187,22 +187,22 @@
   align-items: center;
   gap: 8px;
   font-size: 0.88rem;
-  color: #475569;
+  color: var(--izone-slate-600);
 }
 
 .assessment-breadcrumb .crumb-class {
   font-weight: 700;
-  color: #0f172a;
+  color: var(--izone-slate-900);
 }
 
 .assessment-breadcrumb .crumb-separator {
-  color: #94a3b8;
+  color: var(--izone-slate-400);
   font-weight: 400;
 }
 
 .assessment-breadcrumb .crumb-test {
   font-weight: 600;
-  color: #1e293b;
+  color: var(--izone-slate);
 }
 
 .assessment-breadcrumb .crumb-badge {
@@ -210,9 +210,9 @@
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 9999px;
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background: var(--izone-slate-100);
+  color: var(--izone-slate-600);
+  border: 1px solid var(--izone-border);
 }
 
 /* Segmented Assessment Nav Tabs */
@@ -231,9 +231,9 @@
   padding: 7px 16px;
   font-size: 0.84rem;
   font-weight: 500;
-  color: #475569;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  color: var(--izone-slate-600);
+  background: var(--izone-slate-bg);
+  border: 1px solid var(--izone-border);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -241,14 +241,14 @@
 }
 
 .assessment-tab-btn:hover {
-  background: var(--izone-soft-red, #fff1f2);
-  color: var(--izone-primary, #db0829);
-  border-color: var(--izone-soft-border, #f8ced4);
+  background: var(--izone-soft-red);
+  color: var(--izone-primary);
+  border-color: var(--izone-soft-border);
   transform: translateY(-1px);
 }
 
 .assessment-tab-btn:hover svg {
-  stroke: var(--izone-primary, #db0829);
+  stroke: var(--izone-primary);
 }
 
 .assessment-tab-btn:active {
@@ -256,22 +256,22 @@
 }
 
 .assessment-tab-btn.active {
-  background: var(--izone-primary, #db0829);
-  color: #ffffff;
-  border-color: var(--izone-primary, #db0829);
+  background: var(--izone-primary);
+  color: var(--izone-surface);
+  border-color: var(--izone-primary);
   font-weight: 600;
-  box-shadow: 0 2px 6px rgba(219, 8, 41, 0.22);
+  box-shadow: 0 2px 6px var(--izone-shadow-brand-tab-color);
 }
 
 .assessment-tab-btn.active:hover {
-  background: var(--izone-primary-hover, #b90622);
-  border-color: var(--izone-primary-hover, #b90622);
-  color: #ffffff;
+  background: var(--izone-primary-hover);
+  border-color: var(--izone-primary-hover);
+  color: var(--izone-surface);
   transform: translateY(-1px);
 }
 
 .assessment-tab-btn.active svg {
-  stroke: #ffffff;
+  stroke: var(--izone-surface);
 }
 
 .assessment-tab-panel[hidden] {
@@ -294,12 +294,12 @@
 
 .clickable-kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-  border-color: #e11d48 !important;
+  box-shadow: 0 4px 12px var(--izone-shadow-kpi-hover-color);
+  border-color: var(--izone-primary-ruby) !important;
 }
 
 .clickable-kpi-card:focus-visible {
-  outline: 2px solid #e11d48;
+  outline: 2px solid var(--izone-primary-ruby);
   outline-offset: 2px;
 }
 
@@ -318,16 +318,16 @@
   font-size: 0.74rem;
   font-weight: 600;
   border-radius: 4px;
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background: var(--izone-slate-100);
+  color: var(--izone-slate-600);
+  border: 1px solid var(--izone-border);
   white-space: nowrap;
 }
 
 .retake-badge.active {
-  background: #fef3c7;
-  color: #92400e;
-  border-color: #fde68a;
+  background: var(--izone-retake-active-bg);
+  color: var(--izone-retake-active-text);
+  border-color: var(--izone-retake-active-border);
 }
 
 .btn-retake-renew {
@@ -338,16 +338,16 @@
   font-size: 0.74rem;
   font-weight: 500;
   border-radius: 4px;
-  background: #f8fafc;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background: var(--izone-slate-bg);
+  color: var(--izone-slate-900);
+  border: 1px solid var(--izone-slate-300);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 }
 
 .btn-retake-renew:hover {
-  background: #e2e8f0;
-  border-color: #94a3b8;
-  color: #e11d48;
+  background: var(--izone-border);
+  border-color: var(--izone-slate-400);
+  color: var(--izone-primary-ruby);
 }

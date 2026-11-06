@@ -7,7 +7,7 @@ import { readDashboardCss } from './helpers/dashboard-css.mjs';
 const root = new URL('../term-tests/teacher-dashboard/', import.meta.url);
 const hash = text => createHash('sha256').update(text.replaceAll('\r\n', '\n')).digest('hex');
 
-test('CSS fragments preserve the complete baseline source and cascade order', () => {
+test('CSS entry and fragments match the current stylesheet manifest and cascade order', () => {
   const manifest = JSON.parse(readFileSync(new URL('styles/manifest.json', root), 'utf8'));
   const entry = readFileSync(new URL('styles.css', root), 'utf8');
   assert.equal(hash(readDashboardCss()), manifest.sourceSha256);

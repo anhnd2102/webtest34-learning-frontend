@@ -131,13 +131,13 @@ try {
       assert.ok(cacheContract.type.includes('javascript') && cacheContract.cache.includes('no-store'));
       assert.ok(cacheContract.revision);
       assert.equal(reads.me, 1, 're-importing the actual entry does not bootstrap twice');
-      const screenshot = async state => {
+      const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
-        await page.mouse.move(-1, -1);
-        await page.evaluate(async () => { await document.fonts.ready; document.activeElement?.blur?.(); window.scrollTo(0, 0); });
+        if (!preserveHover) await page.mouse.move(-1, -1);
+        await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
         if (process.env.CAPTURE_COMPUTED === '1') {
           const styles = await page.evaluate(() => {
-            const properties = ['display', 'position', 'color', 'background-color', 'font-family', 'font-size', 'font-weight', 'line-height', 'width', 'height', 'padding', 'margin', 'border', 'border-radius', 'overflow', 'z-index', 'box-shadow', 'fill'];
+            const properties = ['display', 'position', 'color', 'background-color', 'font-family', 'font-size', 'font-weight', 'line-height', 'width', 'height', 'padding', 'margin', 'border', 'border-radius', 'overflow', 'z-index', 'box-shadow', 'fill', 'outline', 'outline-offset', 'transform', 'cursor', 'text-decoration'];
             return Array.from(document.body.querySelectorAll('*')).map(el => ({ tag: el.tagName, id: el.id, class: el.getAttribute('class'), styles: Object.fromEntries(properties.map(key => [key, getComputedStyle(el).getPropertyValue(key)])) }));
           });
           await writeFile(new URL(`${viewport.width}-${state}-computed.json`, artifacts), JSON.stringify(styles));
@@ -189,6 +189,23 @@ try {
         await screenshot('publishing');
         await page.locator('#btn-close-publish-modal').click();
         await page.evaluate(() => { cssParityBuilder.dispose(); document.querySelector('#css-parity-host').remove(); });
+        if (process.env.CSS_CONTEXT_PARITY === '1') {
+          await page.evaluate(() => {
+            const host = document.createElement('section'); host.id = 'css-context-fixture';
+            host.innerHTML = '<div class="assessment-header"><div class="assessment-header-top"><button class="btn-back-dashboard">Back</button><div class="assessment-breadcrumb"><span class="crumb-class">Synthetic class</span><span class="crumb-separator">/</span><span class="crumb-test">Synthetic test</span><span class="crumb-badge">Published</span></div></div><div class="assessment-nav-tabs"><button class="assessment-tab-btn active">Details</button><button class="assessment-tab-btn">Distribution</button></div></div><div class="exercise-reference-context-field"><input aria-label="Synthetic reference context" value="Synthetic context"></div><div class="ai-inherited-context-notice">Inherited context <button class="btn-toggle-custom-item-context">Edit</button></div><div class="report-kpi-grid"><button class="clickable-kpi-card">Synthetic KPI</button></div><div class="retake-action-wrap"><span class="retake-badge">Retake</span><span class="retake-badge active">Active retake</span><button class="btn-retake-renew">Renew</button></div>';
+            document.body.prepend(host);
+          });
+          await screenshot('context-default');
+          await page.locator('#css-context-fixture input').focus();
+          await screenshot('context-focus', { preserveFocus: true });
+          await page.locator('#css-context-fixture .assessment-tab-btn').last().hover();
+          await screenshot('context-hover', { preserveHover: true });
+          await page.locator('#css-context-fixture .btn-toggle-custom-item-context').focus();
+          await page.keyboard.press('Tab');
+          assert.equal(await page.locator('#css-context-fixture .clickable-kpi-card').evaluate(el => el === document.activeElement && el.matches(':focus-visible')), true);
+          await screenshot('context-keyboard', { preserveFocus: true });
+          await page.locator('#css-context-fixture').evaluate(el => el.remove());
+        }
         await page.evaluate(() => {
           const host = document.createElement('div'); host.id = 'css-gradient-probe';
           host.style.cssText = 'position:fixed;left:0;top:0;z-index:99999;background:white';
