@@ -239,3 +239,61 @@ test('renderTestBuilderView wires preview button and simulation modal can render
   assert.ok(createdModal.innerHTML.includes('Tìm và sửa lỗi'), 'Simulation renders badge for error correction');
 });
 
+test('Test Studio: Error correction item does NOT default to she/her when targetWord and accepted are provided', () => {
+  const domContainer = {
+    innerHTML: '',
+    querySelector: () => null,
+    querySelectorAll: () => []
+  };
+
+  const formWithKnifeItem = {
+    formId: 'form-knife-test',
+    title: 'Test Form Error Correction',
+    blocks: [
+      {
+        blockId: 'b1',
+        title: 'Phần 1',
+        exercises: [
+          {
+            exerciseId: 'ex1',
+            title: 'Tìm và sửa lỗi sai',
+            instructions: 'Tìm một từ viết sai trong câu và viết lại từ đúng'
+          }
+        ],
+        items: [
+          {
+            itemFamilyId: 'fam-knife',
+            itemVersionId: 'ver-knife',
+            position: 1,
+            exerciseId: 'ex1',
+            prompt: 'We have two knife in the kitchen.',
+            interactionType: 'correction_pair',
+            pedagogicalTypeCode: 'error_correction',
+            graderType: 'correction_pair',
+            targetWord: 'knife',
+            accepted: ['knives'],
+            scoringRule: 'split_points',
+            maxScore: 1
+          }
+        ]
+      }
+    ],
+    gradingKey: {
+      items: {
+        'ver-knife': {
+          graderType: 'correction_pair',
+          expectedErrors: ['knife'],
+          expectedCorrections: ['knives'],
+          scoringRule: 'split_points'
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(domContainer, formWithKnifeItem);
+  assert.ok(domContainer.innerHTML.includes('knife'), 'DOM must contain knife');
+  assert.ok(domContainer.innerHTML.includes('knives'), 'DOM must contain knives');
+  assert.ok(!domContainer.innerHTML.includes('value="she"'), 'DOM must NOT contain value="she"');
+  assert.ok(!domContainer.innerHTML.includes('value="her"'), 'DOM must NOT contain value="her"');
+});
+

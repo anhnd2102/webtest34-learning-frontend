@@ -8,7 +8,7 @@ import { defaultApiBase, authLoginPath, authLogoutPath, authMePath, authHeaders,
 
 import { ICONS } from '../ui/icons.js';
 import { localStudentUrl, readDashboardState, readDashboardTab, switchDashboardTab, assignmentUrl, resetDashboardState, filterClasses, formatClassFilterCountLabel, formatClassOptionLabel, extractPhase, formatAssignmentMeta, renderAssignmentChipsView } from './dashboard-state.js';
-import { teacherRoleLabel, formatIncidentTimeline } from '../results/presentation.js';
+import { teacherRoleLabel, getRoleCapabilities, formatIncidentTimeline } from '../results/presentation.js';
 import { downloadResultsXlsx } from '../results/export.js';
 import { examModeLockReason, selfProctoringLockReason, selfProctoringRequestBody, examSwitchRequestBody, examSwitchView, examSwitchErrorView, examSwitchSuccessText, applyExamProgress, applyExamIncident, applyExamConnection } from '../exam-room/presentation.js';
 import { hasActiveUnsavedChanges, clearActiveUnsavedChanges, openUnsavedChangesModal } from '../navigation/unsaved-changes.js';
@@ -2615,6 +2615,18 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       if (teacherRoleBadge) {
         teacherRoleBadge.textContent = teacherRoleLabel(currentTeacher.role, currentTeacher.courseCodes);
         teacherRoleBadge.className = `role-badge ${currentTeacher.role || 'teacher'}`;
+      }
+      const roleCapsList = root.querySelector('#role-caps-list');
+      if (roleCapsList) {
+        const caps = getRoleCapabilities(currentTeacher.role, currentTeacher.courseCodes);
+        roleCapsList.replaceChildren(...caps.map(cap => {
+          const li = document.createElement('li');
+          const strong = document.createElement('strong');
+          strong.textContent = `${cap.title}: `;
+          li.appendChild(strong);
+          li.appendChild(document.createTextNode(cap.description));
+          return li;
+        }));
       }
     }
   }

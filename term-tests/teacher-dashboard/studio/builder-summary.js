@@ -5,7 +5,8 @@ import {
   renderSvgIcon
 } from '../ui/icons.js';
 import {
-  computeTestBuilderScoreSummary
+  computeTestBuilderScoreSummary,
+  getItemSpanCount
 } from './draft-model.js';
 
 export function renderScoreSkillChipsHtml(skills = []) {
@@ -22,12 +23,13 @@ export function renderScoreSkillChipsHtml(skills = []) {
   }).join('');
 }
 
-export function renderBlockJumpTagsHtml(blocks = []) {
+export function renderBlockJumpTagsHtml(blocks = [], activeBlockIdx = 0) {
   if (!Array.isArray(blocks) || blocks.length === 0) return '';
   return blocks.map((block, idx) => {
     const title = (block.title || `Phần ${idx + 1}`).trim();
+    const isActive = idx === activeBlockIdx;
     return `
-      <button type="button" class="btn-block-jump-chip" data-block-idx="${idx}" title="Chuyển nhanh đến Phần ${idx + 1}: ${escapeHtml(title)}">
+      <button type="button" class="btn-block-jump-chip btn-block-tab${isActive ? ' active' : ''}" data-block-idx="${idx}" role="tab" aria-selected="${isActive ? 'true' : 'false'}" title="Chuyển nhanh đến Phần ${idx + 1}: ${escapeHtml(title)}">
         <span class="block-jump-badge">Phần ${idx + 1}</span>
         <span class="block-jump-title">${escapeHtml(title)}</span>
       </button>
@@ -35,7 +37,7 @@ export function renderBlockJumpTagsHtml(blocks = []) {
   }).join('');
 }
 
-export function renderBlocksNavCardHtml(blocks = []) {
+export function renderBlocksNavCardHtml(blocks = [], activeBlockIdx = 0) {
   if (!Array.isArray(blocks) || blocks.length === 0) return '';
   return `
     <div class="builder-blocks-nav-card panel" id="builder-blocks-nav-card" aria-label="Điều hướng nhanh các phần thi">
@@ -46,7 +48,7 @@ export function renderBlocksNavCardHtml(blocks = []) {
         </div>
       </div>
       <div class="blocks-nav-chips">
-        ${renderBlockJumpTagsHtml(blocks)}
+        ${renderBlockJumpTagsHtml(blocks, activeBlockIdx)}
       </div>
     </div>
   `;

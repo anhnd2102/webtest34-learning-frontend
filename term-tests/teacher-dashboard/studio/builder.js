@@ -17,13 +17,14 @@ import { mountedBuilders, registerUnsavedChangesGuard, openUnsavedChangesModal, 
 import { generateUuid } from './draft-model.js';
 import { previewSandboxPath } from '../api/teacher.js';
 import { renderSvgIcon } from '../ui/icons.js';
-import { updatePromptPosition, isComprehensionExercise, findPrecedingClozeScript, pruneOrphanClozeKeys, getItemSpanCount, parseClozeBlanks, computeTestBuilderScoreSummary, scaleRubricCriteriaScores, insertItemsIntoBlockExercise, reorderBlockItem, moveItemToExercise } from './draft-model.js';
+import { updatePromptPosition, isComprehensionExercise, findPrecedingClozeScript, pruneOrphanClozeKeys, getItemSpanCount, parseClozeBlanks, computeTestBuilderScoreSummary, scaleRubricCriteriaScores, insertItemsIntoBlockExercise, reorderBlockItem, moveItemToExercise, moveExerciseBetweenBlocks, resequenceItemPositions } from './draft-model.js';
 import { generateHangmanHint, expandSentenceVariants, batchGenerateExerciseVocabVariants } from './question-content.js';
 import { escapeHtml } from '../ui/presentation.js';
 import { sanitizeRichContent, renderInlineClozeMarkup, generateTableHtml } from '../ui/rich-content.js';
 import { renderScoreBreakdownBarHtml, renderBlocksNavCardHtml, renderScoreSkillChipsHtml, renderBlockJumpTagsHtml } from './builder-summary.js';
 import { convertGoogleDriveAudioUrl, convertGoogleDriveImageUrl, validateImageUrl } from './media.js';
 import { openBlockCsvUploadModal } from './batch-import.js';
+import { openMoveExerciseModal } from './move-exercise-modal.js';
 
 import { openConfirmDeleteTestModal } from './catalog.js';
 
@@ -193,6 +194,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
   const hasUnsavedChanges = () => !isDisposed && isDirty;
   const workflowLifecycle = { isDisposed: () => isDisposed, getDirtyVersion: () => dirtyVersion };
   const collapsedCardKeys = new Set();
+  let activeBlockIdx = 0;
 
   function resolveTargetExercise(block, btn) {
     if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
@@ -364,6 +366,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                   ${renderSvgIcon('zap', 'icon-inline')} <span>Sinh biến thể cả bài</span>
                 </button>
               ` : ''}
+              <button type="button" class="btn btn-secondary btn-sm btn-move-exercise-to-block" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}" title="Chuyển bài tập này sang Phần thi khác">
+                ${renderSvgIcon('move', 'icon-inline')} <span>Chuyển sang Phần khác</span>
+              </button>
               <button type="button" class="btn btn-icon btn-sm btn-move-exercise-up" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isFirst ? 'disabled' : ''} title="Di chuyển bài tập lên" aria-label="Di chuyển bài tập lên">${renderSvgIcon('arrowUp', 'icon-inline')}</button>
               <button type="button" class="btn btn-icon btn-sm btn-move-exercise-down" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isLast ? 'disabled' : ''} title="Di chuyển bài tập xuống" aria-label="Di chuyển bài tập xuống">${renderSvgIcon('arrowDown', 'icon-inline')}</button>
               <button type="button" class="btn btn-icon btn-sm btn-delete-exercise" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" ${isOnly ? 'disabled' : ''} title="Xóa bài tập này" aria-label="Xóa bài tập này">${renderSvgIcon('close', 'icon-inline')}</button>
@@ -455,6 +460,8 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       return sum + (b.items || []).reduce((s, itm) => s + getItemSpanCount(itm), 0);
     }, 0);
 
+    activeBlockIdx = Math.max(0, Math.min(activeBlockIdx, draftState.blocks.length - 1));
+
     const blocksHtml = draftState.blocks.map((block, index) => {
       const isFirst = index === 0;
       const isLast = index === draftState.blocks.length - 1;
@@ -464,9 +471,10 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       const itemsCount = (block.items || []).reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
       const blockCardKey = block.blockId || `b-${index}`;
       const isBlockCollapsed = collapsedCardKeys.has(blockCardKey);
+      const isActiveBlock = index === activeBlockIdx;
 
       return `
-        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}" id="builder-block-${index}" data-block-id="${block.blockId}" data-index="${index}">
+        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}${isActiveBlock ? ' active-block-tab' : ''}" id="builder-block-${index}" data-block-id="${block.blockId}" data-index="${index}" style="${isActiveBlock ? 'display: block;' : 'display: none;'}">
           <div class="builder-block-header">
             <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
             <div class="block-checkpoint-pill">Phần ${index + 1}</div>
@@ -512,6 +520,23 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                 <button type="button" class="btn btn-secondary btn-import-block-csv" data-block-idx="${index}" title="Nhập toàn bộ các bài tập trong Phần này từ file CSV">
                   ${renderSvgIcon('upload', 'icon-inline')} <span>Nhập CSV các bài tập (Block CSV)</span>
                 </button>
+              </div>
+            </div>
+
+            <div class="block-tab-footer-nav" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div>
+                ${index > 0 ? `
+                  <button type="button" class="btn btn-outline-secondary btn-sm btn-prev-block" data-target-idx="${index - 1}">
+                    ← Phần ${index}: ${escapeHtml(draftState.blocks[index - 1]?.title || `Phần ${index}`)}
+                  </button>
+                ` : '<span></span>'}
+              </div>
+              <div>
+                ${index < draftState.blocks.length - 1 ? `
+                  <button type="button" class="btn btn-outline-primary btn-sm btn-next-block" data-target-idx="${index + 1}">
+                    Phần ${index + 2}: ${escapeHtml(draftState.blocks[index + 1]?.title || `Phần ${index + 2}`)} →
+                  </button>
+                ` : '<span></span>'}
               </div>
             </div>
           </div>
@@ -607,20 +632,20 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             </div>
           </div>
 
-          ${renderBlocksNavCardHtml(draftState.blocks)}
+          ${renderBlocksNavCardHtml(draftState.blocks, activeBlockIdx)}
 
           <div class="builder-blocks-section">
             <div class="blocks-section-header">
               <div class="blocks-title-wrap">
-                <h3>Cấu trúc các phần thi (${draftState.blocks.length} phần · ${totalExamQuestions} câu hỏi)</h3>
+                <h3>Nội dung phần thi đang chọn (${draftState.blocks.length} phần · ${totalExamQuestions} câu hỏi)</h3>
                 <p class="subtitle">Mỗi phần thi (Block) đại diện cho một chặng bài làm với âm thanh, bài đọc hoặc hướng dẫn riêng.</p>
               </div>
               <div class="blocks-header-actions-group">
-                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-collapse-all" title="Thu gọn toàn bộ phần thi và bài tập">
-                  Thu gọn tất cả
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-collapse-all" title="Thu gọn toàn bộ bài tập trong phần thi này">
+                  Thu gọn bài tập
                 </button>
-                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-expand-all" title="Mở rộng toàn bộ phần thi và bài tập">
-                  Mở rộng tất cả
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-expand-all" title="Mở rộng toàn bộ bài tập trong phần thi này">
+                  Mở rộng bài tập
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm" id="btn-add-block">
                   + Thêm phần thi (Block)
@@ -647,13 +672,21 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
   }
 
   function jumpToBlock(bIdx) {
+    if (typeof bIdx !== 'number' || isNaN(bIdx)) return;
     if (typeof container.querySelector !== 'function') return;
-    const card = container.querySelector(`#builder-block-${bIdx}`) ||
-                 container.querySelector(`.builder-block-card[data-index="${bIdx}"]`);
+
+    if (activeBlockIdx !== bIdx) {
+      syncInputs();
+      activeBlockIdx = Math.max(0, Math.min(bIdx, Math.max(0, draftState.blocks.length - 1)));
+      render();
+    }
+
+    const card = container.querySelector(`#builder-block-${activeBlockIdx}`) ||
+                 container.querySelector(`.builder-block-card[data-index="${activeBlockIdx}"]`);
     if (!card) return;
 
-    const block = draftState.blocks[bIdx];
-    const blockCardKey = (block && block.blockId) || (card.getAttribute && card.getAttribute('data-block-id')) || `b-${bIdx}`;
+    const block = draftState.blocks[activeBlockIdx];
+    const blockCardKey = (block && block.blockId) || (card.getAttribute && card.getAttribute('data-block-id')) || `b-${activeBlockIdx}`;
 
     // 1. If block is collapsed, expand it so teacher can view/edit immediately
     if (card.classList && card.classList.contains('is-collapsed')) {
@@ -718,7 +751,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
     if (navCardEl) {
       const chipsWrap = navCardEl.querySelector('.blocks-nav-chips');
       if (chipsWrap) {
-        chipsWrap.innerHTML = renderBlockJumpTagsHtml(draftState.blocks);
+        chipsWrap.innerHTML = renderBlockJumpTagsHtml(draftState.blocks, activeBlockIdx);
       }
       const newJumpChips = navCardEl.querySelectorAll('.btn-block-jump-chip');
       if (newJumpChips && typeof newJumpChips.forEach === 'function') {
@@ -1149,6 +1182,57 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       });
     });
 
+    // Move Exercise to another Block
+    const moveExToBlockBtns = container.querySelectorAll('.btn-move-exercise-to-block');
+    if (moveExToBlockBtns && typeof moveExToBlockBtns.forEach === 'function') {
+      moveExToBlockBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            syncInputs();
+            const bIdx = Number(btn.getAttribute('data-block-idx'));
+            const exId = btn.getAttribute('data-exercise-id');
+            const block = draftState.blocks[bIdx];
+            if (!block || !exId) return;
+
+            openMoveExerciseModal({
+              draftState,
+              sourceBlockIdx: bIdx,
+              exerciseId: exId,
+              owner: builderOwner,
+              onConfirm: ({ targetBlockIdx, insertIndex }) => {
+                const moved = moveExerciseBetweenBlocks(draftState, {
+                  sourceBlockIdx: bIdx,
+                  exerciseId: exId,
+                  targetBlockIdx,
+                  insertIndex
+                });
+                if (moved) {
+                  activeBlockIdx = targetBlockIdx;
+                  resequenceItemPositions();
+                  markAsDirty();
+                  render();
+                  setTimeout(() => {
+                    const exCard = container.querySelector(`.builder-exercise-card[data-exercise-id="${exId}"]`);
+                    if (exCard) {
+                      if (typeof exCard.scrollIntoView === 'function') {
+                        exCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                      }
+                      if (exCard.classList) {
+                        exCard.classList.add('block-target-highlight');
+                        setTimeout(() => {
+                          if (exCard.classList) exCard.classList.remove('block-target-highlight');
+                        }, 2000);
+                      }
+                    }
+                  }, 50);
+                }
+              }
+            });
+          });
+        }
+      });
+    }
+
     let currentPreviewAudio = null;
     let currentPreviewBtn = null;
 
@@ -1274,7 +1358,46 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           graderType: 'exact_option',
           expectedOptionId: 'A'
         };
+        activeBlockIdx = draftState.blocks.length - 1;
+        markAsDirty();
         render();
+      });
+    }
+
+    const tabAddBlockBtn = container.querySelector('#btn-tab-add-block');
+    if (tabAddBlockBtn && typeof tabAddBlockBtn.addEventListener === 'function') {
+      tabAddBlockBtn.addEventListener('click', () => {
+        if (addBlockBtn && typeof addBlockBtn.click === 'function') {
+          addBlockBtn.click();
+        }
+      });
+    }
+
+    const prevBlockBtns = container.querySelectorAll('.btn-prev-block');
+    if (prevBlockBtns && typeof prevBlockBtns.forEach === 'function') {
+      prevBlockBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            const targetIdx = Number(btn.getAttribute('data-target-idx'));
+            if (!isNaN(targetIdx) && targetIdx >= 0) {
+              jumpToBlock(targetIdx);
+            }
+          });
+        }
+      });
+    }
+
+    const nextBlockBtns = container.querySelectorAll('.btn-next-block');
+    if (nextBlockBtns && typeof nextBlockBtns.forEach === 'function') {
+      nextBlockBtns.forEach(btn => {
+        if (typeof btn.addEventListener === 'function') {
+          btn.addEventListener('click', () => {
+            const targetIdx = Number(btn.getAttribute('data-target-idx'));
+            if (!isNaN(targetIdx) && targetIdx < draftState.blocks.length) {
+              jumpToBlock(targetIdx);
+            }
+          });
+        }
       });
     }
 
@@ -2552,6 +2675,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               draftState.blocks[idx] = draftState.blocks[idx - 1];
               draftState.blocks[idx - 1] = temp;
               draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
+              activeBlockIdx = idx - 1;
+              resequenceItemPositions();
+              markAsDirty();
               render();
             }
           });
@@ -2571,6 +2697,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               draftState.blocks[idx] = draftState.blocks[idx + 1];
               draftState.blocks[idx + 1] = temp;
               draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
+              activeBlockIdx = idx + 1;
+              resequenceItemPositions();
+              markAsDirty();
               render();
             }
           });
@@ -2588,7 +2717,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             if (draftState.blocks.length > 1) {
               draftState.blocks.splice(idx, 1);
               draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
+              activeBlockIdx = Math.max(0, Math.min(activeBlockIdx, draftState.blocks.length - 1));
               resequenceItemPositions();
+              markAsDirty();
               render();
             }
           });

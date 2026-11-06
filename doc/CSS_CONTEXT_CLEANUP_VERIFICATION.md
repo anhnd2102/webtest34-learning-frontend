@@ -34,3 +34,9 @@ Artifacts ở ổ C để tránh ổ D gần đầy: `C:/Users/OS/AppData/Local/
 - Spec: 1 thiếu sót về kiểm chứng keyboard modality; đã sửa và reviewer xác nhận đóng, không còn finding.
 
 Chưa chạy API/DB thật hoặc deploy; không sửa backend hay Pages workflow. Rollback bằng revert commit cleanup cùng manifest/revision. Bước tiếp theo: tiếp tục một fragment khác hoặc di chuyển một nhóm inline styles có cùng owner, kèm parity cho các trạng thái bị tác động; không gỡ hàng loạt `!important` hoặc đổi bảng màu trong cùng commit.
+
+## Đồng bộ thay đổi phát triển đồng thời
+
+Sau commit cleanup `a618c7f`, nhánh `feature/test-studio` đã có thêm `725ed9b`, `01b7d8a`, `3a424ec` về quyền giáo viên và điều hướng/chuyển bài tập giữa phần. Ghép các commit đã lưu vào nhánh cleanup trong worktree riêng trước khi đưa kết quả về nhánh phát triển. Xung đột duy nhất ở revision CSS của `index.html`: giữ HTML và revision JS mới của nhánh phát triển, chọn revision CSS cleanup. Không đưa các chỉnh sửa JS/test chưa commit ở checkout chính vào merge commit.
+
+Suite trên kết quả tích hợp: **656 tests, 654 pass, 2 skip, 0 fail** trong worktree. Bộ so ảnh 33/33 thuộc riêng cleanup so với `97517df`, không dùng nó để khẳng định giao diện mới từ các commit phát triển giống bản cũ. Các thay đổi chưa commit ở checkout chính được giữ nguyên; kết quả kiểm thử tại đó có thể bao gồm công việc đang diễn ra song song.

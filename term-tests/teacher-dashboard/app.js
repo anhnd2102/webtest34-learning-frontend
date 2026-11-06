@@ -25,12 +25,16 @@ export {
   parseRubricAsyncCsv,
   generateBlockExercisesTemplateCsv,
   parseBlockExercisesCsv,
-  normalizeQuestionType
+  normalizeQuestionType,
+  generateInlineClozeTemplateCsv,
+  parseInlineClozeCsv,
+  generateMultiGroupTemplateCsv,
+  parseMultiGroupCsv
 } from './studio/content-import.js';
 
 export { defaultApiBase, fixtureHeaders, authLoginPath, authLogoutPath, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, assignmentExamModePath, assignmentSelfProctoringPath, assignmentExamRoomPath, assignmentExamEventsPath, assignmentExamStartPath, assignmentExamExtendPath, attemptDetailPath, manualGradingDraftPath, manualGradingCompletePath, attemptPublishPath, assignmentPublishAllPath, assignmentRosterPath, eligibleStudentsPath, studentTransferPath, grantRetakePath, courseTestCatalogPath, formDraftPath, formDetailPath, previewSandboxPath, formPublishPath, formPublishPreviewPath } from './api/teacher.js';
 export { localStudentUrl, readDashboardState, SUPPORTED_DASHBOARD_TABS, DEFAULT_DASHBOARD_TAB, readDashboardTab, switchDashboardTab, assignmentUrl, resetDashboardState, filterClasses, formatClassFilterCountLabel, formatClassOptionLabel, extractPhase, formatAssignmentMeta, renderAssignmentChipsView } from './shell/dashboard-state.js';
-export { teacherRoleLabel, formatPublicationStatus, validateManualGradingScores, formatDashboardScore, resultStatusLabel, attemptStatusLabel, verdictLabel, formatAssignmentWindow, formatCurrentTime, incidentTypeLabel, formatIncidentDuration, formatIncidentTimeline, extractAttemptSkills, formatCompactPrompt, resolveStudentAnswerDisplay, resolveExpectedAnswerDisplay, getScoreTier, computeClassSkillSummary, formatCompactScore, formatSubmissionTimestamp, AVATAR_PALETTES, getStudentInitials, getAvatarColor } from './results/presentation.js';
+export { teacherRoleLabel, getRoleCapabilities, formatPublicationStatus, validateManualGradingScores, formatDashboardScore, resultStatusLabel, attemptStatusLabel, verdictLabel, formatAssignmentWindow, formatCurrentTime, incidentTypeLabel, formatIncidentDuration, formatIncidentTimeline, extractAttemptSkills, formatCompactPrompt, resolveStudentAnswerDisplay, resolveExpectedAnswerDisplay, getScoreTier, computeClassSkillSummary, formatCompactScore, formatSubmissionTimestamp, AVATAR_PALETTES, getStudentInitials, getAvatarColor } from './results/presentation.js';
 export { toggleExportXlsxButton, downloadResultsXlsx } from './results/export.js';
 export { examModeLockReason, selfProctoringLockReason, selfProctoringRequestBody, examSwitchRequestBody, formatExamDeadline, examSwitchView, examSwitchErrorView, examSwitchSuccessText, incidentCellText, formatExamRoomStatus, formatExamReadyCount, applyExamProgress, applyExamIncident, formatExamProgress, applyExamConnection, formatExamConnectionStatus } from './exam-room/presentation.js';
 export { getCourseCodeFromCourseId, filterClassesForCourse } from './studio/catalog.js';
@@ -107,7 +111,9 @@ export {
   openGenericBatchModal,
   openCsvQuickGuideModal,
   openBlockCsvUploadModal,
-  openCsvUploadModal
+  openCsvUploadModal,
+  openMultiGroupBatchModal,
+  openInlineClozeBatchModal
 } from './studio/batch-import.js';
 
 export {

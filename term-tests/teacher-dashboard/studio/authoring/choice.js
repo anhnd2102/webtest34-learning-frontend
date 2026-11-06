@@ -1,6 +1,6 @@
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
-import { openGenericBatchModal } from '.././batch-import.js';
+import { openGenericBatchModal, openMultiGroupBatchModal } from '.././batch-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { generateSingleChoiceTemplateCsv, parseSingleChoiceCsv } from '.././content-import.js';
 
@@ -169,6 +169,61 @@ function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4, def
     }
 
     // Add Multi-Select Group Question
+    function createBatchMultiGroup(bIdx, targetEx, slotCount = 2, defaultPoints = 1) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const startingPos = getNextPosition();
+      const groupId = `group_${bIdx + 1}_${Date.now().toString(36)}`;
+      const optionsList = [
+        { id: 'A', label: 'Phương án A' },
+        { id: 'B', label: 'Phương án B' },
+        { id: 'C', label: 'Phương án C' },
+        { id: 'D', label: 'Phương án D' },
+        { id: 'E', label: 'Phương án E' }
+      ];
+      const batchItems = [];
+      const safeSlotCount = Math.max(2, Math.min(10, parseInt(slotCount, 10) || 2));
+
+      draftState.gradingKey.groups = draftState.gradingKey.groups || {};
+      draftState.gradingKey.groups[groupId] = {
+        graderType: 'unordered_group_slot',
+        expectedOptionIds: optionsList.slice(0, safeSlotCount).map(o => o.id)
+      };
+
+      for (let sIdx = 0; sIdx < safeSlotCount; sIdx++) {
+        const newItemId = generateUuid();
+        batchItems.push({
+          itemFamilyId: generateUuid(),
+          itemVersionId: newItemId,
+          position: startingPos + sIdx,
+          exerciseId: targetEx.exerciseId,
+          exerciseTitle: targetEx.title,
+          prompt: sIdx === 0 ? `Chọn ${safeSlotCount} đáp án chính xác:` : `Chọn đáp án chính xác (Vị trí ${sIdx + 1}):`,
+          helpText: '',
+          interactionType: 'multi_choice_group',
+          pedagogicalTypeCode: 'multiple_choice_group',
+          layoutType: 'grid_3',
+          graderType: 'unordered_group_slot',
+          groupId,
+          required: true,
+          maxScore: defaultPoints || 1,
+          options: JSON.parse(JSON.stringify(optionsList)),
+          skillCodes: [],
+          releasePolicy: 'inherit'
+        });
+        draftState.gradingKey.items[newItemId] = {
+          graderType: 'unordered_group_slot',
+          groupId,
+          expectedOptionIds: optionsList.slice(0, safeSlotCount).map(o => o.id)
+        };
+      }
+
+      insertItemsIntoBlockExercise(block, targetEx, batchItems);
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
     const addMgBtns = container.querySelectorAll('.btn-add-multi-group');
     addMgBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -177,66 +232,62 @@ function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4, def
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
-        const groupId = `group_${bIdx + 1}_${Date.now().toString(36)}`;
-        const newItem1Id = generateUuid();
-        const newItem2Id = generateUuid();
-        block.items = block.items || [];
-        const optionsList = [
-          { id: 'A', label: 'Phương án A' },
-          { id: 'B', label: 'Phương án B' },
-          { id: 'C', label: 'Phương án C' },
-          { id: 'D', label: 'Phương án D' },
-          { id: 'E', label: 'Phương án E' }
-        ];
-        const newGroupItems = [
-          {
-            itemFamilyId: generateUuid(),
-            itemVersionId: newItem1Id,
-            position: nextPos,
-            exerciseId: targetEx.exerciseId,
-            exerciseTitle: targetEx.title,
-            prompt: `Chọn 2 đáp án chính xác (Vị trí 1):`,
-            helpText: '',
-            interactionType: 'multi_choice_group',
-            pedagogicalTypeCode: 'multiple_choice_group',
-            layoutType: 'grid_3',
-            graderType: 'unordered_group_slot',
-            groupId,
-            required: true,
-            maxScore: 1,
-            options: JSON.parse(JSON.stringify(optionsList)),
-            skillCodes: [],
-            releasePolicy: 'inherit'
+
+        openMultiGroupBatchModal({
+          owner: builderOwner,
+          blockIdx: bIdx,
+          targetExercise: targetEx,
+          onSingle: ({ defaultPoints = 1 } = {}) => {
+            createBatchMultiGroup(bIdx, targetEx, 2, defaultPoints);
           },
-          {
-            itemFamilyId: generateUuid(),
-            itemVersionId: newItem2Id,
-            position: nextPos + 1,
-            exerciseId: targetEx.exerciseId,
-            exerciseTitle: targetEx.title,
-            prompt: `Chọn 2 đáp án chính xác (Vị trí 2):`,
-            helpText: '',
-            interactionType: 'multi_choice_group',
-            pedagogicalTypeCode: 'multiple_choice_group',
-            layoutType: 'grid_3',
-            graderType: 'unordered_group_slot',
-            groupId,
-            required: true,
-            maxScore: 1,
-            options: JSON.parse(JSON.stringify(optionsList)),
-            skillCodes: [],
-            releasePolicy: 'inherit'
+          onConfirm: ({ count = 2, defaultPoints = 1 }) => {
+            createBatchMultiGroup(bIdx, targetEx, count, defaultPoints);
+          },
+          onImport: ({ items }) => {
+            if (!items || !items.length) return;
+            const startingPos = getNextPosition();
+            const batchItems = [];
+            draftState.gradingKey.groups = draftState.gradingKey.groups || {};
+            items.forEach((parsed, idx) => {
+              const newItemId = generateUuid();
+              const itmObj = {
+                itemFamilyId: generateUuid(),
+                itemVersionId: newItemId,
+                position: startingPos + idx,
+                exerciseId: targetEx.exerciseId,
+                exerciseTitle: targetEx.title,
+                prompt: parsed.prompt,
+                helpText: '',
+                interactionType: 'multi_choice_group',
+                pedagogicalTypeCode: 'multiple_choice_group',
+                layoutType: 'grid_3',
+                graderType: 'unordered_group_slot',
+                groupId: parsed.groupId,
+                required: true,
+                maxScore: parsed.maxScore || 1,
+                options: parsed.options || [],
+                skillCodes: [],
+                releasePolicy: 'inherit'
+              };
+              batchItems.push(itmObj);
+              if (parsed.groupId && !draftState.gradingKey.groups[parsed.groupId]) {
+                draftState.gradingKey.groups[parsed.groupId] = {
+                  graderType: 'unordered_group_slot',
+                  expectedOptionIds: parsed.expectedOptionIds || ['A', 'C']
+                };
+              }
+              draftState.gradingKey.items[newItemId] = {
+                graderType: 'unordered_group_slot',
+                groupId: parsed.groupId,
+                expectedOptionIds: parsed.expectedOptionIds || ['A', 'C']
+              };
+            });
+            insertItemsIntoBlockExercise(block, targetEx, batchItems);
+            resequenceItemPositions();
+            markAsDirty();
+            render();
           }
-        ];
-        insertItemsIntoBlockExercise(block, targetEx, newGroupItems);
-        draftState.gradingKey.groups[groupId] = {
-          graderType: 'unordered_group_slot',
-          expectedOptionIds: ['A', 'B']
-        };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+        });
       });
     });
 

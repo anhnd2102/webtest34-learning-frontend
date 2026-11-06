@@ -1,6 +1,6 @@
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise, parseClozeBlanks, getItemSpanCount } from '.././draft-model.js';
-import { openGenericBatchModal } from '.././batch-import.js';
+import { openGenericBatchModal, openInlineClozeBatchModal } from '.././batch-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { generateFitbTemplateCsv, parseFitbCsv } from '.././content-import.js';
 import { expandSentenceVariants } from '.././question-content.js';
@@ -124,6 +124,48 @@ function createBatchFitb(bIdx, targetEx, count = 1, defaultPoints = 1) {
     }
 
     // Add Inline Cloze Question
+    function createSingleInlineCloze(bIdx, targetEx, defaultPoints = 1) {
+      const block = draftState.blocks[bIdx];
+      if (!block) return;
+      const nextPos = getNextPosition();
+      const newItemId = generateUuid();
+      block.items = block.items || [];
+      const newItem = {
+        itemFamilyId: generateUuid(),
+        itemVersionId: newItemId,
+        position: nextPos,
+        exerciseId: targetEx.exerciseId,
+        exerciseTitle: targetEx.title,
+        prompt: `The cruise departs from Miami and visits (${nextPos}) __________ Caribbean islands.`,
+        helpText: '',
+        interactionType: 'short_text',
+        pedagogicalTypeCode: 'inline_cloze',
+        layoutType: 'inline_cloze',
+        graderType: 'inline_cloze',
+        clozeAnswers: {
+          [nextPos]: {
+            targetWord: 'six',
+            accepted: ['six']
+          }
+        },
+        required: true,
+        maxScore: defaultPoints || 1,
+        options: [],
+        skillCodes: ['listening'],
+        releasePolicy: 'inherit'
+      };
+      insertItemsIntoBlockExercise(block, targetEx, newItem);
+      draftState.gradingKey.items[newItemId] = {
+        graderType: 'inline_cloze',
+        blanks: newItem.clozeAnswers,
+        accepted: ['six'],
+        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+      };
+      resequenceItemPositions();
+      markAsDirty();
+      render();
+    }
+
     const addInlineClozeBtns = container.querySelectorAll('.btn-add-inline-cloze');
     addInlineClozeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -132,36 +174,58 @@ function createBatchFitb(bIdx, targetEx, count = 1, defaultPoints = 1) {
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        const nextPos = getNextPosition();
-        const newItemId = generateUuid();
-        block.items = block.items || [];
-        const newItem = {
-          itemFamilyId: generateUuid(),
-          itemVersionId: newItemId,
-          position: nextPos,
-          exerciseId: targetEx.exerciseId,
-          exerciseTitle: targetEx.title,
-          prompt: `The cruise departs from Miami and visits (${nextPos}) __________ Caribbean islands.`,
-          helpText: '',
-          interactionType: 'short_text',
-          pedagogicalTypeCode: 'table_completion',
-          layoutType: 'inline_cloze',
-          graderType: 'accepted_text',
-          required: true,
-          maxScore: 1,
-          options: [],
-          skillCodes: ['listening'],
-          releasePolicy: 'inherit'
-        };
-        insertItemsIntoBlockExercise(block, targetEx, newItem);
-        draftState.gradingKey.items[newItemId] = {
-          graderType: 'accepted_text',
-          accepted: ['six'],
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-        };
-        resequenceItemPositions();
-        markAsDirty();
-        render();
+
+        openInlineClozeBatchModal({
+          owner: builderOwner,
+          blockIdx: bIdx,
+          targetExercise: targetEx,
+          onSingle: ({ defaultPoints = 1 } = {}) => {
+            createSingleInlineCloze(bIdx, targetEx, defaultPoints);
+          },
+          onConfirm: ({ count = 1, defaultPoints = 1 }) => {
+            for (let c = 0; c < count; c++) {
+              createSingleInlineCloze(bIdx, targetEx, defaultPoints);
+            }
+          },
+          onImport: ({ items }) => {
+            if (!items || !items.length) return;
+            const startingPos = getNextPosition();
+            const batchItems = [];
+            items.forEach((parsed, idx) => {
+              const newItemId = generateUuid();
+              const itmObj = {
+                itemFamilyId: generateUuid(),
+                itemVersionId: newItemId,
+                position: startingPos + idx,
+                exerciseId: targetEx.exerciseId,
+                exerciseTitle: targetEx.title,
+                prompt: parsed.prompt,
+                helpText: '',
+                interactionType: 'short_text',
+                pedagogicalTypeCode: 'inline_cloze',
+                layoutType: 'inline_cloze',
+                graderType: 'inline_cloze',
+                clozeAnswers: parsed.clozeAnswers || {},
+                required: true,
+                maxScore: parsed.maxScore || 1,
+                options: [],
+                skillCodes: ['listening'],
+                releasePolicy: 'inherit'
+              };
+              batchItems.push(itmObj);
+              draftState.gradingKey.items[newItemId] = {
+                graderType: 'inline_cloze',
+                blanks: itmObj.clozeAnswers,
+                accepted: parsed.accepted || [itmObj.targetWord || ''],
+                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              };
+            });
+            insertItemsIntoBlockExercise(block, targetEx, batchItems);
+            resequenceItemPositions();
+            markAsDirty();
+            render();
+          }
+        });
       });
     });
 
