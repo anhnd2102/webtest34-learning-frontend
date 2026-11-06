@@ -94,6 +94,19 @@ export function scaleRubricCriteriaScores(criteria, newTotalScore) {
   });
 }
 
+export function isComprehensionExercise(exercise, block, gradingKey) {
+  if (!exercise) return false;
+  if (exercise.exerciseType === 'comprehension') return true;
+  if (Boolean(exercise.referenceContext && exercise.referenceContext.trim())) return true;
+  const items = (block?.items || []).filter(it => it.exerciseId === exercise.exerciseId);
+  return items.some(it => {
+    if (it.graderType !== 'rubric_async') return false;
+    const key = gradingKey?.items?.[it.itemVersionId];
+    const scoringVer = String(key?.rubric?.scoringVersion || it.rubricCode || '');
+    return scoringVer.includes('comprehension') || it.rubricCode === 'rubric_comprehension_v1';
+  });
+}
+
 export function findPrecedingClozeScript(draftState, currentBlockIdx) {
   if (!draftState || !Array.isArray(draftState.blocks)) return '';
   for (let b = currentBlockIdx; b >= 0; b--) {

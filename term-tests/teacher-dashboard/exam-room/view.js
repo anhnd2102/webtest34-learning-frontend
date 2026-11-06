@@ -1,3 +1,4 @@
+import { ICONS } from '../ui/icons.js';
 import { formatAssignmentWindow } from '../results/presentation.js';
 import { formatExamReadyCount, formatExamRoomStatus, formatExamProgress, formatExamConnectionStatus } from './presentation.js';
 
@@ -5,7 +6,7 @@ export function createExamRoomView({ root, lifecycle, viewState, actions }) {
   const document = root.ownerDocument || root;
   const window = document.defaultView || globalThis.window;
   const currentLocation = window?.location;
-  const { showExamRoomTimeline } = actions;
+  const { showExamRoomTimeline, openGrantRetakeModal } = actions;
   const examRoomSummary = root.querySelector('#exam-room-summary');
   const examRoomStudents = root.querySelector('#exam-room-students');
   const examRoomStartButton = root.querySelector('#exam-room-start');
@@ -34,12 +35,57 @@ function renderExamRoom(room) {
         const openIncident = (student.openIncidents || []).length > 0;
         incidents.textContent = student.status === 'not_entered' ? '—' : `${incidentCount}${openIncident ? ' · đang rời bài' : ''}`;
         device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
+
+        // 7. Retake Action column in Exam Room
+        const retake = document.createElement('td');
+        const hasActiveRetake = Boolean(student.retakeGrant?.status === 'granted' || student.status === 'retake_granted' || student.status === 'retaking');
+        if (hasActiveRetake) {
+          const retakeWrap = document.createElement('div');
+          retakeWrap.className = 'retake-action-wrap';
+
+          const badge = document.createElement('span');
+          badge.className = 'retake-badge active';
+          badge.textContent = 'Đã cấp lại';
+
+          const renewBtn = document.createElement('button');
+          renewBtn.type = 'button';
+          renewBtn.className = 'btn-secondary btn-sm btn-retake-renew';
+          renewBtn.title = 'Gia hạn hoặc điều chỉnh thời hạn làm lại';
+          renewBtn.innerHTML = `${ICONS.clock} <span>Gia hạn</span>`;
+          lifecycle.listen(renewBtn, 'click', (e) => {
+            e.stopPropagation();
+            openGrantRetakeModal({
+              studentRef: student.studentRef,
+              studentName: student.name,
+              discriminator: student.discriminator
+            });
+          });
+
+          retakeWrap.append(badge, renewBtn);
+          retake.append(retakeWrap);
+        } else {
+          const retakeBtn = document.createElement('button');
+          retakeBtn.type = 'button';
+          retakeBtn.className = 'btn-secondary btn-sm btn-retake';
+          retakeBtn.title = 'Cấp quyền làm lại bài thi';
+          retakeBtn.innerHTML = `${ICONS.rotate} <span>Làm lại</span>`;
+          lifecycle.listen(retakeBtn, 'click', (e) => {
+            e.stopPropagation();
+            openGrantRetakeModal({
+              studentRef: student.studentRef,
+              studentName: student.name,
+              discriminator: student.discriminator
+            });
+          });
+          retake.append(retakeBtn);
+        }
+
         // Tô đỏ mọi học viên đã có sự cố (không chỉ lúc đang rời bài) để giáo viên không bỏ sót.
         if (incidentCount > 0 || openIncident) {
           row.className = 'exam-incident-active';
           row.setAttribute('aria-label', `${student.name || 'Học viên'} có ${incidentCount} sự cố Exam Guard`);
         }
-        row.append(name, participation, progress, connection, incidents, device);
+        row.append(name, participation, progress, connection, incidents, device, retake);
         if (student.attemptId) {
           row.classList.add('exam-room-clickable');
           row.tabIndex = 0;

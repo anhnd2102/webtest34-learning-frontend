@@ -967,12 +967,12 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
 
           ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 1) : ''}
 
-          <div class="split-pane-mobile-toggle">
-            <button type="button" class="btn btn-secondary btn-sm active toggle-pane-btn" data-pane="reading" data-section="${bIdx}">${ICONS.book} Xem bài đọc</button>
-            <button type="button" class="btn btn-secondary btn-sm toggle-pane-btn" data-pane="questions" data-section="${bIdx}">Xem câu hỏi (${items.length})</button>
+          <div class="split-pane-mobile-toggle" role="tablist" aria-label="Bài đọc và câu hỏi">
+            <button type="button" role="tab" class="btn btn-secondary btn-sm active toggle-pane-btn" data-pane="reading" data-section="${bIdx}" aria-selected="true">${ICONS.book} Bài đọc</button>
+            <button type="button" role="tab" class="btn btn-secondary btn-sm toggle-pane-btn" data-pane="questions" data-section="${bIdx}" aria-selected="false">Câu hỏi (${items.length})</button>
           </div>
 
-          <div class="split-pane-reading cbt-split-pane" id="split-pane-${bIdx}">
+          <div class="split-pane-reading cbt-split-pane" id="split-pane-${bIdx}" data-active-pane="reading">
             <div class="reading-passage-column active-pane cbt-reading-col" data-pane-type="reading">
               <div class="reading-passage-sticky-header cbt-reading-header">
                 <span class="reading-title-badge">${ICONS.book} Bài đọc hiểu (Reading Passage)</span>
@@ -1105,7 +1105,8 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     currentActiveBlockIdx = blockIdx;
 
     rootEl.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
-      b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
+      // Hàng phần cuộn ngang trên màn hẹp: đưa phần đang chọn vào tầm nhìn.
+      if (b.classList.toggle('active', b.getAttribute('data-section-target') === targetId)) b.scrollIntoView?.({ block: 'nearest', inline: 'center' });
     });
     rootEl.querySelectorAll('.side-section-btn').forEach(b => {
       b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
@@ -1197,6 +1198,11 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
       }
 
       if (targetEl) {
+        // Đề đọc ghép: câu đang ở tab ẩn (dưới 1024px) thì mở tab chứa nó trước, nếu không scroll/focus không có tác dụng.
+        const splitPane = targetEl.closest('.cbt-split-pane');
+        if (splitPane) {
+          setPane(splitPane.id.replace('split-pane-', ''), targetEl.closest('[data-pane-type]')?.getAttribute('data-pane-type') || 'questions', { restoreScroll: false });
+        }
         if (typeof targetEl.scrollIntoView === 'function') {
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -1447,25 +1453,52 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   });
 
   // Split-pane mobile toggles
-  rootEl.querySelectorAll('.toggle-pane-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const pane = btn.getAttribute('data-pane');
-      const secIdx = btn.getAttribute('data-section');
-      const container = rootEl.querySelector(`#split-pane-${secIdx}`);
-      if (!container) return;
-      btn.parentElement.querySelectorAll('.toggle-pane-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const readingCol = container.querySelector('.reading-passage-column');
-      const qCol = container.querySelector('.matching-questions-column');
-      if (pane === 'reading') {
-        if (readingCol) readingCol.style.display = 'block';
-        if (qCol) qCol.style.display = 'none';
-      } else {
-        if (readingCol) readingCol.style.display = 'none';
-        if (qCol) qCol.style.display = 'flex';
-      }
+  // Tài liệu là phần tử cuộn, nên vị trí cuộn của mỗi tab được lưu riêng theo phần: paneScroll[secIdx][pane].
+  // Việc ẩn/hiện cột do CSS (data-active-pane) quyết định; từ 1024px cả hai cột luôn hiện.
+  const paneScroll = {};
+  // html đang đặt scroll-behavior:smooth, nên tắt tạm để khôi phục vị trí tức thì (không dùng {behavior:'instant'} vì Safari cũ ném lỗi).
+  const jumpScroll = (y) => {
+    const root = document.documentElement;
+    const prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, Math.max(0, y));
+    root.style.scrollBehavior = prev;
+  };
+  const setPane = (secIdx, pane, { restoreScroll = true } = {}) => {
+    const container = rootEl.querySelector(`#split-pane-${secIdx}`);
+    if (!container) return;
+    const prev = container.getAttribute('data-active-pane') || 'reading';
+    if (prev === pane) return;
+    (paneScroll[secIdx] ||= {})[prev] = window.scrollY;
+    container.setAttribute('data-active-pane', pane);
+    rootEl.querySelectorAll(`.toggle-pane-btn[data-section="${secIdx}"]`).forEach(b => {
+      const on = b.getAttribute('data-pane') === pane;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', String(on));
     });
+    if (!restoreScroll || typeof window.scrollTo !== 'function') return;
+    const saved = paneScroll[secIdx][pane];
+    if (saved !== undefined) {
+      jumpScroll(saved);
+    } else {
+      // Lần đầu mở tab: đưa đầu nội dung lên ngay dưới thanh tab dính, không giữ vị trí của tab kia.
+      const toggle = container.parentElement.querySelector('.split-pane-mobile-toggle');
+      const topbarH = parseFloat(rootEl.style.getPropertyValue('--cbt-topbar-h')) || 0;
+      const contentTop = container.getBoundingClientRect().top + window.scrollY;
+      jumpScroll(contentTop - (toggle ? toggle.offsetHeight : 0) - topbarH);
+    }
+  };
+  rootEl.querySelectorAll('.toggle-pane-btn').forEach(btn => {
+    btn.addEventListener('click', () => setPane(btn.getAttribute('data-section'), btn.getAttribute('data-pane')));
   });
+
+  // Chiều cao thanh trên thay đổi theo khổ màn hình; tab dính cần biết để nằm ngay dưới nó.
+  const topbarEl = typeof document !== 'undefined' ? document.querySelector('.cbt-topbar') : null;
+  if (topbarEl && typeof ResizeObserver === 'function') {
+    const syncTopbarHeight = () => rootEl.style.setProperty('--cbt-topbar-h', `${topbarEl.offsetHeight}px`);
+    new ResizeObserver(syncTopbarHeight).observe(topbarEl);
+    syncTopbarHeight();
+  }
 
   // Initialize Strict Audio Docks (max 2 listens)
   initStrictAudioDocks(rootEl, { state });

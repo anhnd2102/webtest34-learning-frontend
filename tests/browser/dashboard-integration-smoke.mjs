@@ -24,6 +24,11 @@ const form = id => ({
 });
 const room = { status: 'running', readyCount: 1, totalCount: 1, students: [{ studentRef: 's1', name: 'Synthetic student', status: 'in_progress', progress: { answered: 1, total: 2 }, connectionStatus: 'connected' }] };
 let browser;
+async function assertEventually(predicate, message) {
+  const deadline = Date.now() + 3000;
+  while (!predicate() && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 25));
+  assert.ok(predicate(), message);
+}
 try {
   await mkdir(artifacts, { recursive: true });
   await new Promise((resolve, reject) => {
@@ -249,7 +254,13 @@ try {
           await page.waitForFunction(count => integrationStreams.length === count, cycle + 1);
           await page.evaluate(snapshot => integrationStreams.at(-1).controller.enqueue(new TextEncoder().encode(`event: snapshot\ndata: ${JSON.stringify({ room: snapshot })}\n\n`)), room);
           await page.waitForFunction(() => document.querySelector('#exam-room-students')?.textContent.includes('Synthetic student'));
-          if (cycle === 0) await screenshot('room');
+          if (cycle === 0) {
+            await screenshot('room');
+            await page.locator('#exam-room-students .btn-retake').first().click();
+            assert.equal(await page.locator('#grant-retake-modal').evaluate(el => el.open), true);
+            await page.locator('#cancel-grant-retake-btn').click();
+            assert.equal(await page.locator('#grant-retake-modal').evaluate(el => el.open), false);
+          }
           await page.evaluate(() => {
             if (integrationMount(document) !== integrationHandle) throw new Error('Duplicate mount');
             const toggle = document.querySelector('#toggle-fixture-btn');
@@ -315,6 +326,60 @@ try {
         await page.locator('#exam-room-open').click();
         await page.locator('#exam-room-students tr').first().waitFor();
         await screenshot('room');
+      }
+      if (!captureOnly) {
+        // New main authoring behavior must survive the move into workflow modules.
+        await page.evaluate(data => {
+          const host = document.createElement('section');
+          host.id = 'integration-rubric-host';
+          document.body.append(host);
+          window.integrationRubric = integrationApp.mountBuilder(host, data);
+        }, form('rubric-integration'));
+        const host = page.locator('#integration-rubric-host');
+        assert.equal(await host.locator('.exercise-reference-context-input').count(), 0);
+        await host.locator('.btn-add-rubric-async').click();
+        const modal = page.locator('#generic-batch-modal');
+        await modal.locator('[data-tab="stepper"]').click();
+        const preset = modal.locator('.select-batch-rubric-type');
+        assert.deepEqual(await preset.locator('option').evaluateAll(options => options.map(option => option.value)), ['translation', 'comprehension', 'speaking']);
+        assert.equal(await preset.inputValue(), 'comprehension');
+        await preset.selectOption('translation');
+        assert.equal(await modal.locator('#batch-rubric-context-group').isVisible(), false);
+        await preset.selectOption('comprehension');
+        await modal.locator('.batch-rubric-context-input').fill('Synthetic shared reference context');
+        await modal.locator('.btn-batch-single').click();
+        const draft = await page.evaluate(() => integrationRubric.getDraft());
+        assert.equal(draft.blocks[0].exercises[0].exerciseType, 'comprehension');
+        assert.equal(draft.blocks[0].exercises[0].referenceContext, 'Synthetic shared reference context');
+        assert.equal(draft.blocks[0].items.at(-1).graderType, 'rubric_async');
+        assert.equal(await host.locator('.exercise-reference-context-input').inputValue(), 'Synthetic shared reference context');
+        await page.evaluate(() => { integrationRubric.dispose(); document.querySelector('#integration-rubric-host').remove(); });
+      }
+      if (!captureOnly && process.env.RUN_ASSESSMENT_RACE === '1') {
+        await page.evaluate(() => { location.hash = '#grading'; integrationHandle = integrationMount(document); });
+        await page.locator('#assessment-header').waitFor();
+        const pendingReports = [];
+        await page.route(/\/(report|items-analysis)(\?|$)/, route => { pendingReports.push(route); });
+        for (const tab of ['distribution', 'items']) {
+          let previous = pendingReports.length;
+          await page.locator(`[data-assessment-tab="${tab}"]`).click();
+          await assertEventually(() => pendingReports.length > previous, 'report request starts');
+          previous = pendingReports.length;
+          await page.locator('#assignment-select').evaluate(select => {
+            if (!Array.from(select.options).some(option => option.value === 'assign-2')) select.add(new Option('Synthetic second assignment', 'assign-2'));
+            select.value = select.value === 'assign-1' ? 'assign-2' : 'assign-1';
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+          });
+          await assertEventually(() => pendingReports.length > previous, 'assignment change restarts the canceled report');
+          assert.ok(pendingReports.at(-1).request().url().includes(`/assignments/${await page.locator('#assignment-select').inputValue()}/`));
+          previous = pendingReports.length;
+          await page.evaluate(() => { location.hash = '#dashboard'; });
+          await page.waitForFunction(() => !document.querySelector('#view-dashboard').hidden);
+          await page.evaluate(() => { location.hash = '#grading'; });
+          await assertEventually(() => pendingReports.length > previous, 'returning to grading restarts the canceled report');
+        }
+        await page.evaluate(() => integrationHandle.dispose());
+        for (const route of pendingReports) await route.abort().catch(() => {});
       }
       assert.deepEqual(errors, []);
       assert.ok(modules.every(module => module.status === 200 && module.type?.includes('javascript')));

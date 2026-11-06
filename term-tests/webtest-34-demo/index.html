@@ -13,14 +13,14 @@
   <script src="../34-shared/pedagogical-types.js?rev=20260906-type-contract-v1"></script>
   <script src="../34-shared/learning-key-map.js?rev=20260918-vocab-pair-v2"></script>
   <script src="../34-shared/learning-result.js?rev=20260906-block-result-v3"></script>
-  <script src="exam-guard.js?rev=20261015-exam-guard-device-id-v3"></script>
+  <script src="exam-guard.js?rev=20261103-exam-guard-ios-v4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="dynamic-test.css?rev=20261103-audio-gate-v1">
-  <link rel="modulepreload" href="./content-preview.mjs?rev=20261103-audio-gate-v7">
-  <link rel="modulepreload" href="./dynamic-exam-renderer.mjs?rev=20261103-audio-gate-v16">
+  <link rel="stylesheet" href="dynamic-test.css?rev=20261105-mobile-phase1-v3">
+  <link rel="modulepreload" href="./content-preview.mjs?rev=20261105-mobile-phase1-v3">
+  <link rel="modulepreload" href="./dynamic-exam-renderer.mjs?rev=20261105-mobile-nav-v18">
   <link rel="modulepreload" href="../teacher-dashboard/exam-room-sse.js">
   <script>
     (() => {
@@ -33,7 +33,7 @@
       if (isCandidateCbt) {
         document.documentElement.classList.add('cbt-mounting');
         const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
-        window.__cbtMountPromise = import('./content-preview.mjs?rev=20261103-audio-gate-v7').then(m => m.mount(courseToMount));
+        window.__cbtMountPromise = import('./content-preview.mjs?rev=20261105-mobile-phase1-v3').then(m => m.mount(courseToMount));
       }
     })();
   </script>
@@ -308,7 +308,7 @@
     .modal p{color:var(--color-text-secondary)}
     .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
 
-    @media (max-width:1023px){
+    @media (max-width:1023.98px){
       .exam-layout{grid-template-columns:1fr}.side-panel{display:none}.score-grid{grid-template-columns:repeat(3,1fr)}
       .picture-grid{grid-template-columns:1fr}.rank-grid{grid-template-columns:repeat(5,minmax(90px,1fr));overflow:auto;padding-bottom:4px}
     }
@@ -607,7 +607,7 @@
   const isCandidateCbt = ['03', '34', '45'].includes(demoCourse) || Boolean(hashToken);
   if (isCandidateCbt) {
     const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
-    const mountPromise = window.__cbtMountPromise || import('./content-preview.mjs?rev=20261029-results-v5').then(module => module.mount(courseToMount));
+    const mountPromise = window.__cbtMountPromise || import('./content-preview.mjs?rev=20261105-mobile-phase1-v3').then(module => module.mount(courseToMount));
     mountPromise.catch((err) => {
       console.error('Mount error:', err);
       document.body.textContent = 'Không tải được đề demo. Hãy mở trang qua máy chủ HTTP và thử lại. Lỗi: ' + (err?.message || err);
@@ -2340,12 +2340,14 @@
     });
   });
 
+  const ignoreExamFocusSignals = window.isIosDevice(navigator);
+  const examFullscreenAvailable = !ignoreExamFocusSignals && typeof document.documentElement.requestFullscreen === 'function';
   const examReadyButton = $('#exam-ready-button');
   const examFullscreenReenter = $('#exam-fullscreen-reenter');
   const examFullscreenStatus = $('#exam-fullscreen-status');
   const examWaitingError = $('#exam-waiting-error');
   examReadyButton?.addEventListener('click', async () => {
-    const fullscreenUnsupported = typeof document.documentElement.requestFullscreen !== 'function';
+    const fullscreenUnsupported = !examFullscreenAvailable;
     const fullscreenAttempt = fullscreenUnsupported
       ? Promise.resolve()
       : document.documentElement.requestFullscreen().catch(() => null);
@@ -2368,7 +2370,7 @@
     }
   });
   examFullscreenReenter?.addEventListener('click', () => {
-    if (typeof document.documentElement.requestFullscreen === 'function') {
+    if (examFullscreenAvailable) {
       document.documentElement.requestFullscreen().catch(() => {
         examFullscreenStatus.textContent = 'Không thể bật toàn màn hình. Hãy thử lại.';
       });
@@ -2376,11 +2378,10 @@
   });
   document.addEventListener('fullscreenchange', () => {
     const waiting = !$('#examWaitingRoom').classList.contains('hidden');
-    const supportsFullscreen = typeof document.documentElement.requestFullscreen === 'function';
-    examFullscreenReenter.hidden = !waiting || !supportsFullscreen || Boolean(document.fullscreenElement);
+    examFullscreenReenter.hidden = !waiting || !examFullscreenAvailable || Boolean(document.fullscreenElement);
   });
 
-  let examGuardState = { running: false, fullscreenSupported: typeof document.documentElement.requestFullscreen === 'function' };
+  let examGuardState = { running: false, fullscreenSupported: examFullscreenAvailable, ignoreFocusSignals: ignoreExamFocusSignals };
   const examGuardOverlay = $('#examGuardOverlay');
   const examGuardMessage = $('#examGuardMessage');
   const examIncidentOperations = new Map();
@@ -2434,7 +2435,7 @@
     examGuardState = {
       ...examGuardState,
       running: (state.learning?.exam?.status === 'running' || Boolean(state.learning?.selfProctoring)) && state.learning?.status === 'active',
-      fullscreenSupported: !state.learning?.selfProctoring && typeof document.documentElement.requestFullscreen === 'function'
+      fullscreenSupported: !state.learning?.selfProctoring && examFullscreenAvailable
     };
     const result = window.examGuardReducer(examGuardState, event);
     examGuardState = result.state;
@@ -2462,7 +2463,7 @@
     });
   });
   document.addEventListener('fullscreenchange', () => {
-    if(!document.fullscreenElement && typeof document.documentElement.requestFullscreen === 'function'){
+    if(!document.fullscreenElement && examFullscreenAvailable){
       dispatchExamGuard({ type: 'left_exam', reason: 'fullscreen', at: Date.now(), incidentId: createClientKey() });
     }
   });

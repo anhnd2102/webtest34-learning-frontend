@@ -72,6 +72,43 @@ test('expandSentenceVariants handles IELTS rules: pronouns, units, abbreviations
   const colourVariants = expandSentenceVariants(['colour and theatre']);
   assert.ok(colourVariants.some(v => v.includes('color')));
   assert.ok(colourVariants.some(v => v.includes('theater')));
+
+  // 10. Hyphen spacing variants (non-governmental, non - governmental, non -governmental, non- governmental)
+  const nonGovVariants = expandSentenceVariants(['non-governmental']);
+  assert.ok(nonGovVariants.includes('non-governmental'));
+  assert.ok(nonGovVariants.includes('non - governmental'));
+  assert.ok(nonGovVariants.includes('non -governmental'));
+  assert.ok(nonGovVariants.includes('non- governmental'));
+  assert.ok(nonGovVariants.includes('non governmental'));
+
+  const nonGovSpaced = expandSentenceVariants(['non - governmental']);
+  assert.ok(nonGovSpaced.includes('non-governmental'));
+  assert.ok(nonGovSpaced.includes('non - governmental'));
+  assert.ok(nonGovSpaced.includes('non -governmental'));
+  assert.ok(nonGovSpaced.includes('non- governmental'));
+  assert.ok(nonGovSpaced.includes('non governmental'));
+
+  // 11. Honorific titles and dot spacing variants (Mr.A, Mr. A, Mr .A, Mr . A, Mr A)
+  const mrVariants = expandSentenceVariants(['Mr.A']);
+  assert.ok(mrVariants.includes('Mr.A'));
+  assert.ok(mrVariants.includes('Mr. A'));
+  assert.ok(mrVariants.includes('Mr .A'));
+  assert.ok(mrVariants.includes('Mr . A'));
+  assert.ok(mrVariants.includes('Mr A'));
+
+  const mrSpacedVariants = expandSentenceVariants(['Mr. A']);
+  assert.ok(mrSpacedVariants.includes('Mr.A'));
+  assert.ok(mrSpacedVariants.includes('Mr. A'));
+  assert.ok(mrSpacedVariants.includes('Mr .A'));
+  assert.ok(mrSpacedVariants.includes('Mr . A'));
+  assert.ok(mrSpacedVariants.includes('Mr A'));
+
+  const mrDotSpacedVariants = expandSentenceVariants(['Mr .A']);
+  assert.ok(mrDotSpacedVariants.includes('Mr.A'));
+  assert.ok(mrDotSpacedVariants.includes('Mr. A'));
+  assert.ok(mrDotSpacedVariants.includes('Mr .A'));
+  assert.ok(mrDotSpacedVariants.includes('Mr . A'));
+  assert.ok(mrDotSpacedVariants.includes('Mr A'));
 });
 
 test('renderTestBuilderView renders single choice template with responsive grid and answer key selector', () => {

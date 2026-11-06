@@ -4,7 +4,9 @@ import {
   scaleRubricCriteriaScores,
   pruneOrphanClozeKeys,
   getItemSpanCount,
-  findPrecedingClozeScript
+  findPrecedingClozeScript,
+  isComprehensionExercise,
+  renderTestBuilderView
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('scaleRubricCriteriaScores: proportionally scales criteria when question total score changes', () => {
@@ -143,3 +145,109 @@ test('findPrecedingClozeScript: retrieves clean script text from prior inline cl
   assert.ok(!script.includes('<p>'), 'HTML tags must be stripped');
 });
 
+test('isComprehensionExercise: returns true ONLY for reading comprehension Khối 03 or exercises with reference context', () => {
+  // 1. Empty exercise (e.g. brand new Exercise 1 with 0 questions)
+  const emptyEx = { exerciseId: 'ex-1', title: 'Bài tập 1: Phần 10' };
+  const emptyBlock = { blockId: 'b-1', items: [], exercises: [emptyEx] };
+  assert.equal(isComprehensionExercise(emptyEx, emptyBlock, { items: {} }), false, 'Empty exercise must NOT show reference context');
+
+  // 2. Exercise with standard questions (Single choice, fitb, vocab pair)
+  const standardEx = { exerciseId: 'ex-2', title: 'Exercise 2' };
+  const standardBlock = {
+    blockId: 'b-2',
+    exercises: [standardEx],
+    items: [
+      { itemVersionId: 'i-1', exerciseId: 'ex-2', graderType: 'single_choice' },
+      { itemVersionId: 'i-2', exerciseId: 'ex-2', graderType: 'fitb' }
+    ]
+  };
+  assert.equal(isComprehensionExercise(standardEx, standardBlock, { items: {} }), false, 'Standard questions exercise must NOT show reference context');
+
+  // 3. Exercise explicitly marked as comprehension
+  const compEx = { exerciseId: 'ex-3', title: 'Exercise 3', exerciseType: 'comprehension' };
+  assert.equal(isComprehensionExercise(compEx, { items: [] }, { items: {} }), true, 'Explicit comprehension exercise must show reference context');
+
+  // 4. Exercise with existing referenceContext filled
+  const contextEx = { exerciseId: 'ex-4', title: 'Exercise 4', referenceContext: 'Reading passage script here...' };
+  assert.equal(isComprehensionExercise(contextEx, { items: [] }, { items: {} }), true, 'Exercise with referenceContext must show reference context');
+
+  // 5. Exercise containing a comprehension rubric item
+  const rubricEx = { exerciseId: 'ex-5', title: 'Exercise 5' };
+  const rubricBlock = {
+    blockId: 'b-5',
+    exercises: [rubricEx],
+    items: [
+      { itemVersionId: 'i-comp', exerciseId: 'ex-5', graderType: 'rubric_async', rubricCode: 'rubric_comprehension_v1' }
+    ]
+  };
+  const key = {
+    items: {
+      'i-comp': {
+        graderType: 'rubric_async',
+        rubric: { scoringVersion: 'rubric-comprehension-v1' }
+      }
+    }
+  };
+  assert.equal(isComprehensionExercise(rubricEx, rubricBlock, key), true, 'Exercise with comprehension rubric item must show reference context');
+});
+
+test('renderTestBuilderView: conceals exercise-reference-context-field on empty or standard exercises, reveals only for comprehension', () => {
+  const container = { innerHTML: '' };
+  const mockForm = {
+    id: '05050000-0000-4000-8000-000000000001',
+    version: 1,
+    status: 'draft',
+    title: 'Conditional Reference Context Test',
+    blocks: [
+      {
+        blockId: 'b-empty',
+        title: 'Phần 1: Ngữ pháp',
+        exercises: [
+          { exerciseId: 'ex-empty', title: 'Bài tập 1: Phần 1' }
+        ],
+        items: []
+      },
+      {
+        blockId: 'b-comp',
+        title: 'Phần 2: Đọc hiểu Khối 03',
+        exercises: [
+          {
+            exerciseId: 'ex-comp',
+            title: 'Bài tập 1: Đọc hiểu',
+            exerciseType: 'comprehension',
+            referenceContext: 'The park is located downtown. Its trees provide shade.'
+          }
+        ],
+        items: [
+          {
+            itemVersionId: 'i-c1',
+            exerciseId: 'ex-comp',
+            position: 1,
+            prompt: 'Từ "its" ở dòng thứ 2 có nghĩa là gì?',
+            interactionType: 'short_text',
+            graderType: 'rubric_async',
+            maxScore: 4
+          }
+        ]
+      }
+    ],
+    gradingKey: {
+      items: {
+        'i-c1': {
+          graderType: 'rubric_async',
+          rubricCode: 'rubric_comprehension_v1',
+          rubric: { scoringVersion: 'rubric-comprehension-v1', maxScore: 4 }
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(container, mockForm);
+
+  // Exercise 1 (empty) must NOT have reference context field
+  assert.ok(container.innerHTML.includes('Bài tập 1: Phần 1'));
+  // Exercise 2 (comprehension) MUST have reference context field with script text
+  assert.ok(container.innerHTML.includes('Ngữ cảnh bài đọc / Script tham chiếu chung cho AI:'));
+  assert.ok(container.innerHTML.includes('The park is located downtown. Its trees provide shade.'));
+  assert.ok(container.innerHTML.includes('Ẩn với học viên'));
+});

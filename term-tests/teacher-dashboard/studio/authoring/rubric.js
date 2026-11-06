@@ -1,3 +1,5 @@
+import { renderSvgIcon } from '../../ui/icons.js';
+import { findPrecedingClozeScript } from '../draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
 import { generateRubricAsyncTemplateCsv, parseRubricAsyncCsv } from '.././content-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
@@ -22,29 +24,18 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
           ]
         };
       }
-      if (selectedType === 'writing_summary') {
-        const s1 = Math.round(p * 0.5 * 100) / 100;
-        const s2 = Math.round((p - s1) * 100) / 100;
+      if (selectedType === 'speaking') {
+        const s1 = Math.round(p * 0.4 * 100) / 100;
+        const s2 = Math.round(p * 0.3 * 100) / 100;
+        const s3 = Math.round((p - s1 - s2) * 100) / 100;
         return {
-          rubricCode: 'rubric_summary_v1',
-          scoringVersion: 'rubric-summary-v1',
-          defaultPrompt: 'Tóm tắt ý chính của đoạn văn trên trong khoảng 30-50 từ:',
+          rubricCode: 'rubric_speaking_v1',
+          scoringVersion: 'rubric-speaking-v1',
+          defaultPrompt: 'Answer the question in spoken or written format:',
           criteria: [
-            { id: 'main_ideas', label: 'Ý chính đầy đủ & Khái quát chuẩn xác', maxScore: s1, requiredConcepts: [] },
-            { id: 'grammar_vocab', label: 'Ngữ pháp và từ vựng phù hợp', maxScore: s2, requiredConcepts: [] }
-          ]
-        };
-      }
-      if (selectedType === 'custom') {
-        const s1 = Math.round(p * 0.5 * 100) / 100;
-        const s2 = Math.round((p - s1) * 100) / 100;
-        return {
-          rubricCode: 'rubric_custom_v1',
-          scoringVersion: 'rubric-custom-v1',
-          defaultPrompt: 'Viết câu trả lời tự luận cho câu hỏi sau:',
-          criteria: [
-            { id: 'content', label: 'Nội dung & Lập luận', maxScore: s1, requiredConcepts: [] },
-            { id: 'language', label: 'Ngôn ngữ & Ngữ pháp', maxScore: s2, requiredConcepts: [] }
+            { id: 'idea', label: 'Ý tưởng & Phát triển (Idea Development)', maxScore: s1, requiredConcepts: [] },
+            { id: 'vocabulary', label: 'Từ vựng & Diễn đạt (Vocabulary)', maxScore: s2, requiredConcepts: [] },
+            { id: 'coherence', label: 'Ngữ pháp & Mạch lạc (Grammar & Coherence)', maxScore: s3, requiredConcepts: [] }
           ]
         };
       }
@@ -69,7 +60,7 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
-        openGenericBatchModal({ owner: builderOwner,
+        const rubricBatchModal = openGenericBatchModal({ owner: builderOwner,
           title: 'Tạo câu hỏi Tự luận chấm AI (AI Rubric)',
           subtitle: `Tạo câu hỏi tự luận có tiêu chí chấm AI thuộc bài tập ${targetEx.title || 'bài tập'}.`,
           defaultCount: 2,
@@ -80,18 +71,33 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             <div class="form-group batch-rubric-type-form-group" style="margin-top: 14px;">
               <label class="form-label"><strong>Dạng câu hỏi tự luận (Question Type / Rubric Preset):</strong></label>
               <select class="form-control select-batch-rubric-type" style="font-weight: 600; padding: 8px 12px; border-radius: 6px;">
-                <option value="translation" selected>Dịch thuật (Translation) — Rubric 50% Ý nghĩa + 50% Ngữ pháp</option>
-                <option value="comprehension">Đọc hiểu Khối 03 (Reading Comprehension) — Rubric 70% Đọc hiểu + 30% Từ khóa</option>
-                <option value="writing_summary">Tóm tắt bài đọc (Writing Summary) — Rubric 50% Ý chính + 50% Ngữ pháp</option>
-                <option value="custom">Tự luận mở chung (Custom Rubric) — Tự thiết lập tiêu chí</option>
+                <option value="translation">Dịch thuật (Translation) — Rubric 50% Ý nghĩa + 50% Ngữ pháp</option>
+                <option value="comprehension" selected>Đọc hiểu Khối 03 (Reading Comprehension) — Rubric 70% Đọc hiểu + 30% Từ khóa</option>
+                <option value="speaking">Speaking dạng văn bản (Speaking Text Response) — Rubric 40% Ý tưởng + 30% Từ vựng + 30% Ngữ pháp</option>
               </select>
               <span style="font-size: 0.8rem; color: #64748b; margin-top: 4px; display: block;">(Hệ thống sẽ tự động cấu hình các tiêu chí chấm AI phù hợp theo dạng bài được chọn)</span>
+            </div>
+            <div class="form-group batch-rubric-context-group" id="batch-rubric-context-group" style="margin-top: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
+                  ${renderSvgIcon('book', 'icon-inline')}
+                  <span>Ngữ cảnh bài đọc / Script tham chiếu chung cho AI:</span>
+                  <span class="badge badge-info" style="font-size: 0.72rem; padding: 2px 6px;">Ẩn với học viên</span>
+                </label>
+                <button type="button" class="btn btn-secondary btn-sm btn-modal-pull-cloze-script" title="Tự động lấy đoạn văn từ bài Điền từ nội tuyến hoặc bài nghe phía trước">
+                  ${renderSvgIcon('clipboard', 'icon-inline')} Lấy Script từ bài Điền từ phía trước
+                </button>
+              </div>
+              <textarea class="form-control form-control-sm batch-rubric-context-input" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Đọc hiểu Khối 03 trong phần này...">${escapeHtml(targetEx.referenceContext || '')}</textarea>
+              <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+                ${renderSvgIcon('lock', 'icon-inline')} <strong>Ẩn với học viên:</strong> AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con trong bài tập.
+              </div>
             </div>
           `,
           csvConfig: {
             templateFileName: 'mau_tu_luan_cham_ai.csv',
             columnsHint: 'Cột: Đề bài câu hỏi | Ngữ cảnh tham chiếu (nếu có) | Điểm tối đa | Loại rubric | Tiêu chí 1 | Tiêu chí 2',
-            placeholder: '"Tóm tắt ý chính của đoạn văn trên trong 50 từ.","Đoạn trích thông tin bài đọc...",4,writing_summary,"Ý chính đầy đủ (2đ)","Ngữ pháp và từ vựng (2đ)"\n"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,rubric_translation_v1,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"',
+            placeholder: '"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,translation,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"\n"Từ \"innovative\" ở dòng 3 có nghĩa là gì?","Đoạn trích thông tin bài đọc...",4,comprehension,"Mức độ hiểu nội dung (2.8đ)","Từ khóa cốt lõi (1.2đ)"',
             getTemplateCsv: generateRubricAsyncTemplateCsv,
             parseCsv: parseRubricAsyncCsv,
             renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} (${itm.maxScore} điểm)`,
@@ -140,7 +146,14 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             }
           },
           onConfirm: ({ count, defaultPoints = 4, modal }) => {
-            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'translation';
+            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
+            if (selectedType === 'comprehension') {
+              targetEx.exerciseType = 'comprehension';
+              const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
+              if (modalContextInput && modalContextInput.value.trim()) {
+                targetEx.referenceContext = modalContextInput.value.trim();
+              }
+            }
             const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
             const startingPos = getNextPosition();
             const batchItems = [];
@@ -182,7 +195,14 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             render();
           },
           onSingle: ({ modal, defaultPoints = 4 } = {}) => {
-            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'translation';
+            const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
+            if (selectedType === 'comprehension') {
+              targetEx.exerciseType = 'comprehension';
+              const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
+              if (modalContextInput && modalContextInput.value.trim()) {
+                targetEx.referenceContext = modalContextInput.value.trim();
+              }
+            }
             const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
             const nextPos = getNextPosition();
             const newItemId = generateUuid();
@@ -220,6 +240,38 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             render();
           }
         });
+
+        if (rubricBatchModal) {
+          const typeSel = rubricBatchModal.querySelector('.select-batch-rubric-type');
+          const ctxGroup = rubricBatchModal.querySelector('#batch-rubric-context-group');
+          const pullModalBtn = rubricBatchModal.querySelector('.btn-modal-pull-cloze-script');
+          const ctxInput = rubricBatchModal.querySelector('.batch-rubric-context-input');
+
+          const updateCtxVisibility = () => {
+            if (!typeSel || !ctxGroup) return;
+            if (typeSel.value === 'comprehension') {
+              ctxGroup.style.display = 'block';
+            } else {
+              ctxGroup.style.display = 'none';
+            }
+          };
+
+          if (typeSel) {
+            typeSel.addEventListener('change', updateCtxVisibility);
+            updateCtxVisibility();
+          }
+
+          if (pullModalBtn && ctxInput) {
+            pullModalBtn.addEventListener('click', () => {
+              const script = findPrecedingClozeScript(draftState, bIdx);
+              if (script) {
+                ctxInput.value = script;
+              } else {
+                alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
+              }
+            });
+          }
+        }
       });
     });
 

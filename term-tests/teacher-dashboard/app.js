@@ -127,3 +127,5 @@ export {
   normalizeSkillCode,
   escapeHtml
 } from './ui/presentation.js';
+
+export { isComprehensionExercise } from './studio/draft-model.js';

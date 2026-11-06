@@ -76,3 +76,11 @@ test('incident events keep the per-student incident count and open incidents up 
   assert.deepEqual(closed.students[0].openIncidents, []);
   assert.equal(applyExamIncident(room, { studentRef: 'zzz', incident, incidentCount: 1 }), room);
 });
+
+test('a newly opened incident replaces any stale open incident for that student', () => {
+  const stale = { incidentId: 'stale', type: 'left_exam', status: 'open', startedAt: '2026-10-15T01:00:00.000Z', endedAt: null };
+  const room = { status: 'running', students: [{ studentRef: 'a', incidentCount: 1, openIncidents: [stale] }] };
+  const fresh = { ...stale, incidentId: 'fresh', startedAt: '2026-10-15T01:05:00.000Z' };
+  const opened = applyExamIncident(room, { studentRef: 'a', incident: fresh, incidentCount: 2 });
+  assert.deepEqual(opened.students[0].openIncidents.map(item => item.incidentId), ['fresh']);
+});

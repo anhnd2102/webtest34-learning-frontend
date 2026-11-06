@@ -281,19 +281,7 @@ function renderResults(payload) {
           });
           actionsGroup.append(detailBtn);
         }
-        const retakeBtn = document.createElement('button');
-        retakeBtn.type = 'button';
-        retakeBtn.className = 'btn-secondary btn-sm btn-retake';
-        retakeBtn.innerHTML = `${ICONS.rotate} <span>Làm lại</span>`;
-        retakeBtn.title = 'Cấp quyền làm lại bài thi';
-        lifecycle.listen(retakeBtn, 'click', () => {
-          openGrantRetakeModal({
-            studentRef: student.studentRef,
-            studentName: student.name,
-            discriminator: student.discriminator
-          });
-        });
-        actionsGroup.append(retakeBtn);
+
         actionCell.append(actionsGroup);
         row.append(actionCell);
 

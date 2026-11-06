@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261103-audio-gate-v16';
+} from './dynamic-exam-renderer.mjs?rev=20261105-mobile-nav-v18';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -721,6 +721,8 @@ export async function mount(course) {
       method: learningRequestMethod(path),
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
+      // iOS có thể hủy request ngay khi đổi app; thiếu dòng này lần rời bài có thể không được ghi.
+      keepalive: path.startsWith('/attempts/exam/incidents/'),
       body: JSON.stringify(learningRequestBody(path, body, deviceId))
     });
     const data = await res.json().catch(() => ({}));
@@ -740,9 +742,10 @@ export async function mount(course) {
   }
 
   // --- EXAM MODE: phòng chờ, SSE, tín hiệu kết nối và Exam Guard (reducer ở exam-guard.js) ---
-  const supportsFullscreen = () => typeof document.documentElement.requestFullscreen === 'function';
+  const ignoreFocusSignals = Boolean(globalThis.isIosDevice?.(navigator));
+  const supportsFullscreen = () => !ignoreFocusSignals && typeof document.documentElement.requestFullscreen === 'function';
   const requestFullscreen = () => (supportsFullscreen() ? document.documentElement.requestFullscreen() : Promise.reject(new Error('unsupported')));
-  let examGuardState = { running: false, fullscreenSupported: supportsFullscreen() };
+  let examGuardState = { running: false, fullscreenSupported: supportsFullscreen(), ignoreFocusSignals };
   let examStreamController = null;
   let examHeartbeatTimer = null;
   let examAudioHold = false;
@@ -898,7 +901,7 @@ export async function mount(course) {
       examPausedAudios = [];
     } else if (command.type === 'request_fullscreen') {
       requestFullscreen().catch(() => {
-        dispatchExamGuard({ type: 'left_exam', at: Date.now(), incidentId: createUuid() });
+        dispatchExamGuard({ type: 'left_exam', reason: 'fullscreen', at: Date.now(), incidentId: createUuid() });
         const message = document.querySelector('#examGuardMessage');
         if (message) message.textContent = 'Không thể bật toàn màn hình. Hãy bấm “Quay lại bài thi” để thử lại.';
       });
@@ -952,13 +955,20 @@ export async function mount(course) {
     }
     if (examGuardListening) return;
     examGuardListening = true;
-    const leave = () => dispatchExamGuard({ type: 'left_exam', at: Date.now(), incidentId: createUuid() });
-    window.addEventListener('blur', leave);
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') leave(); });
+    // Tải lại hoặc đóng tab cũng làm trang bị ẩn (sau pagehide), nhưng không tính là rời bài.
+    let pageUnloading = false;
+    window.addEventListener('pagehide', () => { pageUnloading = true; });
+    window.addEventListener('pageshow', () => { pageUnloading = false; });
+    const leave = reason => {
+      if (pageUnloading) return;
+      dispatchExamGuard({ type: 'left_exam', reason, at: Date.now(), incidentId: createUuid() });
+    };
+    window.addEventListener('blur', () => leave('blur'));
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') leave('hidden'); });
     document.addEventListener('fullscreenchange', () => {
       const reenter = document.querySelector('#examFullscreenReenter');
       if (reenter) reenter.hidden = !supportsFullscreen() || Boolean(document.fullscreenElement);
-      if (!document.fullscreenElement && supportsFullscreen()) leave();
+      if (!document.fullscreenElement && supportsFullscreen()) leave('fullscreen');
     });
   }
 
@@ -1626,6 +1636,7 @@ export async function mount(course) {
                 ${renderSectionNavPills(learningState.definition, 0)}
               </nav>
             </div>
+            <div id="demo-save-alert" class="cbt-save-alert" role="alert"></div>
           </header>
 
           <main class="demo-width cbt-main-content" style="max-width:1380px;margin:0 auto;padding:20px 24px;">
@@ -1959,7 +1970,14 @@ export async function mount(course) {
     const fields = [...document.querySelectorAll('[data-demo-answer]')];
 
     let draftDebounceTimer = null;
+    // Dải báo lỗi lưu (#28): chỉ đổi theo kết quả gọi /attempts/draft; rỗng thì CSS ẩn.
+    const setSaveAlert = text => {
+      const el = query('#demo-save-alert');
+      if (el) el.textContent = text;
+      query('#demo-save')?.classList.toggle('is-save-failed', Boolean(text));
+    };
     function queueServerDraft() {
+      if (state.submittedAt) setSaveAlert('');
       if (!isLearningMode || !learningState.attemptToken || state.submittedAt) return;
       clearTimeout(draftDebounceTimer);
       draftDebounceTimer = setTimeout(async () => {
@@ -1972,11 +1990,22 @@ export async function mount(course) {
             responses: buildResponsesPayload()
           });
           query('#demo-save').textContent = 'Đã lưu máy chủ';
-        } catch {
+          setSaveAlert('');
+        } catch (err) {
+          if (state.submittedAt) return;
           query('#demo-save').textContent = 'Lưu máy chủ thất bại';
+          setSaveAlert('Chưa lưu được, kiểm tra mạng');
+          // Chỉ thử lại lỗi tạm thời; 4xx khác (đã nộp, hết giờ, máy khác) thử lại cũng không qua.
+          if (!err.status || err.status >= 500 || err.status === 429) {
+            clearTimeout(draftDebounceTimer);
+            draftDebounceTimer = setTimeout(queueServerDraft, 15000);
+          }
         }
       }, 1500);
     }
+    window.addEventListener('online', () => {
+      if (query('#demo-save')?.classList.contains('is-save-failed')) queueServerDraft();
+    });
 
     function persist() {
       try {
@@ -2282,6 +2311,8 @@ export async function mount(course) {
     };
 
     query('#demo-confirm-submit').addEventListener('click', async () => {
+      // Lệnh nộp đã mang đủ câu trả lời; bản nháp gửi chen vào sẽ làm lệch revision của lệnh nộp.
+      clearTimeout(draftDebounceTimer);
       query('#demo-confirm-submit').disabled = true;
       query('#demo-confirm-submit').textContent = 'Đang gửi…';
       try {
@@ -2339,6 +2370,7 @@ export async function mount(course) {
         }
       } catch (err) {
         alert(`Nộp bài không thành công: ${err.message}`);
+        queueServerDraft();
       } finally {
         query('#demo-confirm-submit').disabled = false;
         query('#demo-confirm-submit').textContent = isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử';

@@ -17,7 +17,7 @@ import { mountedBuilders, registerUnsavedChangesGuard, openUnsavedChangesModal, 
 import { generateUuid } from './draft-model.js';
 import { previewSandboxPath } from '../api/teacher.js';
 import { renderSvgIcon } from '../ui/icons.js';
-import { updatePromptPosition, pruneOrphanClozeKeys, getItemSpanCount, parseClozeBlanks, computeTestBuilderScoreSummary, scaleRubricCriteriaScores, insertItemsIntoBlockExercise, reorderBlockItem, moveItemToExercise } from './draft-model.js';
+import { updatePromptPosition, isComprehensionExercise, findPrecedingClozeScript, pruneOrphanClozeKeys, getItemSpanCount, parseClozeBlanks, computeTestBuilderScoreSummary, scaleRubricCriteriaScores, insertItemsIntoBlockExercise, reorderBlockItem, moveItemToExercise } from './draft-model.js';
 import { generateHangmanHint, expandSentenceVariants, batchGenerateExerciseVocabVariants } from './question-content.js';
 import { escapeHtml } from '../ui/presentation.js';
 import { sanitizeRichContent, renderInlineClozeMarkup, generateTableHtml } from '../ui/rich-content.js';
@@ -374,6 +374,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               <label class="form-label"><strong>Hướng dẫn làm bài tập (Exercise Instructions):</strong></label>
               <textarea class="form-control exercise-instructions-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="2" placeholder="Ví dụ: Listen and note down the words/phrases you hear from the audio...">${escapeHtml(ex.instructions || '')}</textarea>
             </div>
+            ${isComprehensionExercise(ex, block, draftState.gradingKey) ? `
             <div class="form-group exercise-field exercise-reference-context-field" style="margin-top: 10px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
                 <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
@@ -385,11 +386,12 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                   ${renderSvgIcon('clipboard', 'icon-inline')} Lấy Script từ bài Điền từ phía trước
                 </button>
               </div>
-              <textarea class="form-control form-control-sm exercise-reference-context-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Tự luận AI trong phần này (ví dụ: bài đọc Khối 03, bài nghe...). AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con.">${escapeHtml(ex.referenceContext || '')}</textarea>
+              <textarea class="form-control form-control-sm exercise-reference-context-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Đọc hiểu Khối 03 trong bài này... AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con.">${escapeHtml(ex.referenceContext || '')}</textarea>
               <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
                 ${renderSvgIcon('lock', 'icon-inline')} <strong>Dùng chung toàn bài tập:</strong> Các câu hỏi Tự luận AI bên dưới sẽ tự động kế thừa ngữ cảnh này, không cần dán lặp lại ở từng câu hỏi.
               </div>
             </div>
+            ` : ''}
             <div class="exercise-items-list block-items-list" data-exercise-id="${ex.exerciseId}" data-block-idx="${blockIdx}">
               ${renderExerciseItems(block, blockIdx, ex, exIdx)}
             </div>
@@ -2276,6 +2278,10 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             }
           };
         } else if (val === 'comprehension') {
+          const targetEx = draftState.blocks[bIdx]?.exercises?.find(e => e.exerciseId === item.exerciseId);
+          if (targetEx) {
+            targetEx.exerciseType = 'comprehension';
+          }
           const s1 = Math.round(currentScore * 0.7 * 10) / 10;
           const s2 = Math.round((currentScore - s1) * 10) / 10;
           draftState.gradingKey.items[item.itemVersionId] = {
@@ -2369,6 +2375,27 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       });
     });
 
+    // Pull Cloze Script for Exercise handler
+    const pullExScriptBtns = container.querySelectorAll('.btn-pull-exercise-cloze-script');
+    pullExScriptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        syncInputs();
+        const bIdx = Number(btn.getAttribute('data-block-idx'));
+        const exIdx = Number(btn.getAttribute('data-exercise-idx'));
+        const ex = draftState.blocks[bIdx]?.exercises?.[exIdx];
+        if (!ex) return;
+
+        const script = findPrecedingClozeScript(draftState, bIdx);
+        if (script) {
+          ex.referenceContext = script;
+          markAsDirty();
+          render();
+        } else {
+          alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
+        }
+      });
+    });
+
     // Pull Cloze Script handler
     const pullScriptBtns = container.querySelectorAll('.btn-pull-cloze-script');
     pullScriptBtns.forEach(btn => {
@@ -2442,7 +2469,8 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         }
 
         try {
-          const referenceContext = item.referenceContext || draftState.blocks[bIdx]?.readingPassage || draftState.blocks[bIdx]?.stimulusReadingPassage || draftState.blocks[bIdx]?.referenceContext || '';
+          const parentEx = draftState.blocks[bIdx]?.exercises?.find(e => e.exerciseId === item.exerciseId);
+          const referenceContext = item.referenceContext || parentEx?.referenceContext || draftState.blocks[bIdx]?.readingPassage || draftState.blocks[bIdx]?.stimulusReadingPassage || draftState.blocks[bIdx]?.referenceContext || '';
           let sandboxResult;
           if (typeof options.onPreviewSandbox === 'function') {
             sandboxResult = await options.onPreviewSandbox({

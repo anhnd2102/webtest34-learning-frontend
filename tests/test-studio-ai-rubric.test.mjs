@@ -222,3 +222,50 @@ test('Interactive Sandbox sends reference context to previewSandbox handler', as
 
   assert.ok(capturedPayload === null, 'Sandbox not triggered initially');
 });
+
+
+test('AI Rubric presets contain strictly 3 types (Translation, Comprehension, Speaking) and removes btn-toggle-custom-item-context', () => {
+  const container = { innerHTML: '' };
+  const mockForm = {
+    title: 'Rubric Presets Test',
+    blocks: [
+      {
+        blockId: 'b-1',
+        title: 'Phần 1',
+        exercises: [{ exerciseId: 'ex-1', title: 'Bài tập 1' }],
+        items: [
+          {
+            itemVersionId: 'i-1',
+            exerciseId: 'ex-1',
+            prompt: 'Translate sentence',
+            interactionType: 'long_text',
+            graderType: 'rubric_async',
+            maxScore: 4
+          }
+        ]
+      }
+    ],
+    gradingKey: {
+      items: {
+        'i-1': {
+          graderType: 'rubric_async',
+          rubricCode: 'rubric_translation_v1',
+          rubric: { scoringVersion: 'rubric-translation-v1', maxScore: 4, criteria: [] }
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(container, mockForm);
+
+  // 1. Check select-rubric-preset options in item card
+  assert.ok(container.innerHTML.includes('select-rubric-preset'), 'Preset dropdown must exist');
+  assert.ok(container.innerHTML.includes('value="translation"'), 'Must have translation');
+  assert.ok(container.innerHTML.includes('value="comprehension"'), 'Must have comprehension');
+  assert.ok(container.innerHTML.includes('value="speaking"'), 'Must have speaking');
+  assert.ok(!container.innerHTML.includes('value="writing_summary"'), 'Must NOT have writing_summary');
+  assert.ok(!container.innerHTML.includes('value="custom"'), 'Must NOT have custom');
+
+  // 2. btn-toggle-custom-item-context must be removed
+  assert.ok(!container.innerHTML.includes('btn-toggle-custom-item-context'), 'Must NOT contain btn-toggle-custom-item-context');
+});

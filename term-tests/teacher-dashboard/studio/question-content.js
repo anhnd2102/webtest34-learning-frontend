@@ -189,12 +189,35 @@ export function expandSentenceVariants(sentences = []) {
       result.add(clean.replace(/\(([^)]+)\)/g, '$1').replace(/\s+/gu, ' ').trim());
     }
 
-    // 1B. Hyphenation vs space: "full-time" <-> "full time"
+    // 1B. Hyphenation vs space variants: "non-governmental", "non - governmental", "non -governmental", "non- governmental"
+    const hyphenPattern = /(?<=[\p{L}\p{N}])\s*-\s*(?=[\p{L}\p{N}])/gu;
     const words = clean.split(' ');
-    if (/-/.test(clean)) {
-      result.add(clean.replace(/(\w)-(\w)/g, '$1 $2'));
-    } else if (clean.includes(' ') && words.length === 2) {
+    if (hyphenPattern.test(clean)) {
+      result.add(clean.replace(hyphenPattern, '-'));
+      result.add(clean.replace(hyphenPattern, ' - '));
+      result.add(clean.replace(hyphenPattern, ' -'));
+      result.add(clean.replace(hyphenPattern, '- '));
+      result.add(clean.replace(hyphenPattern, ' '));
+    } else if (clean.includes(' ') && words.length === 2 && !/\b(Mrs|Miss|Prof|Mr|Ms|Dr)\.?$/i.test(words[0])) {
       result.add(clean.replace(/ /g, '-'));
+      result.add(clean.replace(/ /g, ' - '));
+      result.add(clean.replace(/ /g, ' -'));
+      result.add(clean.replace(/ /g, '- '));
+    }
+
+    // 1C. Honorific titles & dot/spacing variations: "Mr. A", "Mr.A", "Mr .A", "Mr . A", "Mr A"
+    const titlePattern = /(?<!\d\s*)\b(Mrs|Miss|Prof|Mr|Ms|Dr)\s*\.?\s*([\p{L}\p{N}]+)\b/giu;
+    if (titlePattern.test(clean)) {
+      titlePattern.lastIndex = 0;
+      result.add(clean.replace(titlePattern, '$1. $2'));
+      titlePattern.lastIndex = 0;
+      result.add(clean.replace(titlePattern, '$1.$2'));
+      titlePattern.lastIndex = 0;
+      result.add(clean.replace(titlePattern, '$1 .$2'));
+      titlePattern.lastIndex = 0;
+      result.add(clean.replace(titlePattern, '$1 . $2'));
+      titlePattern.lastIndex = 0;
+      result.add(clean.replace(titlePattern, '$1 $2'));
     }
   }
 

@@ -122,6 +122,16 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const goToGradingBtn = root.querySelector('#go-to-grading-btn');
   const gradingEmptyPlaceholder = root.querySelector('#grading-empty-placeholder');
   const gradingBackToDashboardBtn = root.querySelector('#grading-back-to-dashboard-btn');
+  const pageTitleBar = root.querySelector('.page-title-bar');
+  const assessmentHeader = root.querySelector('#assessment-header');
+  const assessmentBackBtn = root.querySelector('#assessment-back-btn');
+  const assessmentClassName = root.querySelector('#assessment-class-name');
+  const assessmentTestTitle = root.querySelector('#assessment-test-title');
+  const assessmentStatusBadge = root.querySelector('#assessment-status-badge');
+  const assessmentTabDistribution = root.querySelector('#assessment-tab-distribution');
+  const assessmentTabItems = root.querySelector('#assessment-tab-items');
+  const assessmentTabBtns = Array.from(root.querySelectorAll('.assessment-tab-btn'));
+  let currentAssessmentTab = 'details';
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
   let currentServerNow = null;
@@ -144,6 +154,61 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     return activeBuilder;
   }
 
+  function syncAssessmentHeaderMeta() {
+    if (assessmentClassName) {
+      const cls = rawClassesList.find(c => String(c.classId) === String(state.classId));
+      assessmentClassName.textContent = cls?.name || currentSelectedAssignment?.className || (state.classId ? `Lớp ${state.classId}` : '—');
+    }
+    if (assessmentTestTitle) {
+      assessmentTestTitle.textContent = currentSelectedAssignment?.title || 'Bài kiểm tra';
+    }
+    if (assessmentStatusBadge) {
+      const st = currentSelectedAssignment?.status;
+      assessmentStatusBadge.textContent = st === 'published' ? 'Đang phát hành' : (st === 'closed' ? 'Đã đóng' : (st || 'Đang mở'));
+    }
+  }
+
+  function switchAssessmentTab(targetTab) {
+    currentAssessmentTab = targetTab || 'details';
+    assessmentTabBtns.forEach(btn => {
+      const isMatch = btn.getAttribute('data-assessment-tab') === currentAssessmentTab;
+      btn.classList.toggle('active', isMatch);
+      btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+    });
+
+    if (assessmentTabDistribution) {
+      assessmentTabDistribution.hidden = currentAssessmentTab !== 'distribution';
+    }
+    if (results) {
+      results.hidden = currentAssessmentTab !== 'details';
+    }
+    if (assessmentTabItems) {
+      assessmentTabItems.hidden = currentAssessmentTab !== 'items';
+    }
+
+    if (currentAssessmentTab === 'distribution') {
+      reportState.mode = 'distribution';
+      if (!reportState.reportData && !reportState.isLoading) {
+        loadScoreDistributionReport();
+      } else {
+        renderReportsView();
+      }
+    } else if (currentAssessmentTab === 'details') {
+      if (!currentResultsPayload && state.classId && state.assignmentId) {
+        loadResults(state.classId, state.assignmentId).catch(err => {
+          if (status) status.textContent = err.message;
+        });
+      }
+    } else if (currentAssessmentTab === 'items') {
+      reportState.mode = 'item_analysis';
+      if (!reportState.itemAnalysisData && !reportState.itemAnalysisLoading) {
+        loadItemAnalysisReport();
+      } else {
+        renderReportsView();
+      }
+    }
+  }
+
   function updateDashboardTab(tabId) {
     const activeTab = switchDashboardTab(tabId, {
       views: {
@@ -159,17 +224,24 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           queryCoordinator.cancel('testStudio');
           queryCoordinator.cancel('testStudioBuilder');
         }
-        if (newTab !== 'reports') {
-          queryCoordinator.cancel('reports');
-          queryCoordinator.cancel('itemAnalysis');
+        if (newTab !== 'reports' && newTab !== 'grading') {
+          cancelAssessmentQueries();
+        }
+        if (pageTitleBar) {
+          pageTitleBar.hidden = newTab !== 'dashboard';
         }
         if (newTab === 'grading') {
           if (state.assignmentId && state.classId) {
-            if (results) results.hidden = false;
             if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = true;
+            if (assessmentHeader) assessmentHeader.hidden = false;
+            syncAssessmentHeaderMeta();
+            switchAssessmentTab(currentAssessmentTab || 'details');
           } else {
-            if (results) results.hidden = true;
             if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
+            if (assessmentHeader) assessmentHeader.hidden = true;
+            if (results) results.hidden = true;
+            if (assessmentTabDistribution) assessmentTabDistribution.hidden = true;
+            if (assessmentTabItems) assessmentTabItems.hidden = true;
           }
         }
         if (newTab === 'test-studio' || newTab === 'exams') {
@@ -505,6 +577,20 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     });
   }
 
+  if (assessmentBackBtn) {
+    lifecycle.listen(assessmentBackBtn, 'click', () => {
+      updateDashboardTab('dashboard');
+      if (typeof window !== 'undefined') window.location.hash = '#dashboard';
+    });
+  }
+
+  assessmentTabBtns.forEach(btn => {
+    lifecycle.listen(btn, 'click', () => {
+      const tab = btn.getAttribute('data-assessment-tab');
+      if (tab) switchAssessmentTab(tab);
+    });
+  });
+
   if (gradingBackToDashboardBtn) {
     lifecycle.listen(gradingBackToDashboardBtn, 'click', (e) => {
       e.preventDefault();
@@ -543,6 +629,10 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   function selectAssignment(assignmentId) {
     queryCoordinator.cancel('attemptDetail');
+    cancelAssessmentQueries();
+    reportState.reportData = null;
+    reportState.itemAnalysisData = null;
+    reportState.expandedItemIds.clear();
     state.assignmentId = assignmentId || '';
     state.attemptId = '';
     state.page = 1;
@@ -554,15 +644,24 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     const currentTab = readDashboardTab(window.location.hash);
     if (currentTab === 'grading') {
       if (assignmentId && state.classId) {
-        if (results) results.hidden = false;
         if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = true;
+        if (assessmentHeader) assessmentHeader.hidden = false;
+        syncAssessmentHeaderMeta();
+        switchAssessmentTab(currentAssessmentTab || 'details');
       } else {
         if (results) results.hidden = true;
+        if (assessmentTabDistribution) assessmentTabDistribution.hidden = true;
+        if (assessmentTabItems) assessmentTabItems.hidden = true;
         if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
+        if (assessmentHeader) assessmentHeader.hidden = true;
       }
     }
     if (currentTab === 'reports') {
-      loadScoreDistributionReport();
+      if (reportState.mode === 'item_analysis') {
+        loadItemAnalysisReport();
+      } else {
+        loadScoreDistributionReport();
+      }
     }
 
     if (assignmentId) {
@@ -928,7 +1027,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
-  const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline } });
+  const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline, openGrantRetakeModal } });
 
   async function loadExamRoom(owner = examRoomSession) {
     if (!currentSelectedAssignment || !state.classId || (owner && !owner.isCurrent())) return;
@@ -1510,8 +1609,17 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     expandedItemIds: new Set()
   };
 
+  function cancelAssessmentQueries() {
+    queryCoordinator.cancel('reports');
+    queryCoordinator.cancel('itemAnalysis');
+    reportState.isLoading = false;
+    reportState.itemAnalysisLoading = false;
+    reportState.error = null;
+    reportState.itemAnalysisError = null;
+  }
+
   async function loadScoreDistributionReport(classId = state.classId, assignmentId = state.assignmentId) {
-    if (!viewReports) return;
+    if (!viewReports && !assessmentTabDistribution) return;
     if (!classId || !assignmentId) {
       queryCoordinator?.cancel?.('reports');
       reportState = {
@@ -1554,7 +1662,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   async function loadItemAnalysisReport(classId = state.classId, assignmentId = state.assignmentId) {
-    if (!viewReports) return;
+    if (!viewReports && !assessmentTabItems) return;
     if (!classId || !assignmentId) {
       queryCoordinator?.cancel?.('itemAnalysis');
       reportState.itemAnalysisData = null;
@@ -1592,55 +1700,57 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   function renderReportsView() {
-    if (!viewReports) return;
+    if (!viewReports && !assessmentTabDistribution && !assessmentTabItems) return;
 
-    viewReports.replaceChildren();
-
-    // Mode Switcher Header
-    const switchWrapper = document.createElement('div');
-    switchWrapper.className = 'report-mode-nav-wrapper';
-    switchWrapper.innerHTML = renderReportModeSwitch(reportState.mode);
-
-    const modeButtons = switchWrapper.querySelectorAll('.report-mode-btn');
-    modeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetMode = btn.getAttribute('data-report-mode');
-        if (targetMode && targetMode !== reportState.mode) {
-          reportState.mode = targetMode;
-          if (targetMode === 'item_analysis' && !reportState.itemAnalysisData && !reportState.itemAnalysisLoading) {
-            loadItemAnalysisReport();
-          } else if (targetMode === 'distribution' && !reportState.reportData && !reportState.isLoading) {
-            loadScoreDistributionReport();
-          } else {
-            renderReportsView();
-          }
+    const renderDistroCallbacks = {
+      onCardFilter: (filterStatus) => {
+        switchAssessmentTab('details');
+        if (statusFilter) {
+          statusFilter.value = filterStatus;
         }
-      });
-    });
+        state.status = filterStatus;
+        applyFilterChange();
+      },
+      onProvisionalToggle: (checked) => {
+        reportState.includeProvisional = checked;
+        loadScoreDistributionReport();
+        if (reportState.itemAnalysisData) {
+          reportState.itemAnalysisData = null;
+        }
+      },
+      onSkillChange: (skillCode) => {
+        reportState.activeSkill = skillCode;
+        reportState.activeBucketIndex = -1;
+        renderReportsView();
+      },
+      onBucketClick: ({ bucket, index, skillCode }) => {
+        reportState.activeBucketIndex = reportState.activeBucketIndex === index ? -1 : index;
+        renderReportsView();
+      },
+      onRetry: () => {
+        loadScoreDistributionReport();
+      },
+      onExportExcel: () => {
+        if (!state.classId || !state.assignmentId) return;
+        const exportBtn = root.querySelector('.btn-export-excel');
+        downloadResultsXlsx({
+          url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
+          headers: authHeader(),
+          button: exportBtn,
+          status,
+          onUnauthorized: () => { if (sessionToken) endSession(); }
+        });
+      },
+      onPrint: () => {
+        if (typeof window !== 'undefined' && typeof window.print === 'function') {
+          window.print();
+        }
+      }
+    };
 
-    viewReports.appendChild(switchWrapper);
-
-    const contentContainer = document.createElement('div');
-    contentContainer.className = 'report-mode-content-wrapper';
-    viewReports.appendChild(contentContainer);
-
-    if (reportState.mode === 'item_analysis') {
-      const itemsPayload = reportState.itemAnalysisData;
-      const items = itemsPayload?.items || [];
-      const error = reportState.itemAnalysisError;
-      const loading = reportState.itemAnalysisLoading;
-
-      contentContainer.innerHTML = renderItemAnalysisView({
-        items,
-        loading,
-        error,
-        selectedSkill: reportState.itemSelectedSkill,
-        sortCriteria: reportState.itemSortCriteria,
-        expandedItemIds: reportState.expandedItemIds
-      });
-
-      // Bind events for item-analysis view
-      contentContainer.querySelectorAll('.item-filter-tab').forEach(tab => {
+    function bindItemAnalysisEvents(target) {
+      if (!target) return;
+      target.querySelectorAll('.item-filter-tab').forEach(tab => {
         tab.addEventListener('click', (e) => {
           const targetTab = e.currentTarget || tab;
           reportState.itemSelectedSkill = targetTab.getAttribute('data-skill');
@@ -1648,7 +1758,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         });
       });
 
-      contentContainer.querySelectorAll('.item-sort-btn').forEach(btn => {
+      target.querySelectorAll('.item-sort-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const targetBtn = e.currentTarget || btn;
           const sortVal = targetBtn.getAttribute('data-sort');
@@ -1659,7 +1769,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         });
       });
 
-      contentContainer.querySelectorAll('.btn-toggle-item').forEach(cardHeader => {
+      target.querySelectorAll('.btn-toggle-item').forEach(cardHeader => {
         cardHeader.addEventListener('click', () => {
           const itemId = cardHeader.getAttribute('data-item-id');
           if (itemId) {
@@ -1673,51 +1783,86 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         });
       });
 
-      const retryBtn = contentContainer.querySelector('.btn-retry-report');
+      const retryBtn = target.querySelector('.btn-retry-report');
       if (retryBtn) {
         retryBtn.addEventListener('click', () => {
           loadItemAnalysisReport();
         });
       }
-    } else {
-      // Distribution mode
-      renderScoreDistributionView(contentContainer, reportState, {
-        onProvisionalToggle: (checked) => {
-          reportState.includeProvisional = checked;
-          loadScoreDistributionReport();
-          if (reportState.itemAnalysisData) {
-            reportState.itemAnalysisData = null;
-          }
-        },
-        onSkillChange: (skillCode) => {
-          reportState.activeSkill = skillCode;
-          reportState.activeBucketIndex = -1;
-          renderReportsView();
-        },
-        onBucketClick: ({ bucket, index, skillCode }) => {
-          reportState.activeBucketIndex = reportState.activeBucketIndex === index ? -1 : index;
-          renderReportsView();
-        },
-        onRetry: () => {
-          loadScoreDistributionReport();
-        },
-        onExportExcel: () => {
-          if (!state.classId || !state.assignmentId) return;
-          const exportBtn = contentContainer.querySelector('.btn-export-excel');
-          downloadResultsXlsx({
-            url: `${apiBase()}${assignmentResultsExportPath(state.classId, state.assignmentId)}`,
-            headers: authHeader(),
-            button: exportBtn,
-            status,
-            onUnauthorized: () => { if (sessionToken) endSession(); }
-          });
-        },
-        onPrint: () => {
-          if (typeof window !== 'undefined' && typeof window.print === 'function') {
-            window.print();
-          }
-        }
+    }
+
+    // 1. Render Assessment Tab: Score Distribution Panel
+    if (assessmentTabDistribution) {
+      renderScoreDistributionView(assessmentTabDistribution, reportState, renderDistroCallbacks);
+    }
+
+    // 2. Render Assessment Tab: Item Analysis Panel
+    if (assessmentTabItems) {
+      const itemsPayload = reportState.itemAnalysisData;
+      const items = itemsPayload?.items || [];
+      const error = reportState.itemAnalysisError;
+      const loading = reportState.itemAnalysisLoading;
+
+      assessmentTabItems.innerHTML = renderItemAnalysisView({
+        items,
+        loading,
+        error,
+        selectedSkill: reportState.itemSelectedSkill,
+        sortCriteria: reportState.itemSortCriteria,
+        expandedItemIds: reportState.expandedItemIds
       });
+      bindItemAnalysisEvents(assessmentTabItems);
+    }
+
+    // 3. Render legacy / standalone View Reports container if present
+    if (viewReports) {
+      viewReports.replaceChildren();
+
+      const switchWrapper = document.createElement('div');
+      switchWrapper.className = 'report-mode-nav-wrapper';
+      switchWrapper.innerHTML = renderReportModeSwitch(reportState.mode);
+
+      const modeButtons = switchWrapper.querySelectorAll('.report-mode-btn');
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetMode = btn.getAttribute('data-report-mode');
+          if (targetMode && targetMode !== reportState.mode) {
+            reportState.mode = targetMode;
+            if (targetMode === 'item_analysis' && !reportState.itemAnalysisData && !reportState.itemAnalysisLoading) {
+              loadItemAnalysisReport();
+            } else if (targetMode === 'distribution' && !reportState.reportData && !reportState.isLoading) {
+              loadScoreDistributionReport();
+            } else {
+              renderReportsView();
+            }
+          }
+        });
+      });
+
+      viewReports.appendChild(switchWrapper);
+
+      const contentContainer = document.createElement('div');
+      contentContainer.className = 'report-mode-content-wrapper';
+      viewReports.appendChild(contentContainer);
+
+      if (reportState.mode === 'item_analysis') {
+        const itemsPayload = reportState.itemAnalysisData;
+        const items = itemsPayload?.items || [];
+        const error = reportState.itemAnalysisError;
+        const loading = reportState.itemAnalysisLoading;
+
+        contentContainer.innerHTML = renderItemAnalysisView({
+          items,
+          loading,
+          error,
+          selectedSkill: reportState.itemSelectedSkill,
+          sortCriteria: reportState.itemSortCriteria,
+          expandedItemIds: reportState.expandedItemIds
+        });
+        bindItemAnalysisEvents(contentContainer);
+      } else {
+        renderScoreDistributionView(contentContainer, reportState, renderDistroCallbacks);
+      }
     }
   }
 
@@ -2285,7 +2430,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   }
 
   function openGrantRetakeModal({ studentRef, studentName, discriminator }) {
-    if (!state.classId || !state.assignmentId || !studentRef) return;
+    const classId = state.classId || currentSelectedAssignment?.classId;
+    const assignmentId = state.assignmentId || currentSelectedAssignment?.id;
+    if (!classId || !assignmentId || !studentRef) return;
     if (grantRetakeError) {
       grantRetakeError.hidden = true;
       grantRetakeError.textContent = '';
@@ -2315,6 +2462,15 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
+  if (grantRetakeModal) {
+    lifecycle.listen(grantRetakeModal, 'click', (event) => {
+      if (event.target === grantRetakeModal) {
+        if (typeof grantRetakeModal.close === 'function') grantRetakeModal.close();
+        else grantRetakeModal.hidden = true;
+      }
+    });
+  }
+
   if (grantRetakeBtn) {
     lifecycle.listen(grantRetakeBtn, 'click', () => {
       if (!currentAttemptDetail) return;
@@ -2339,7 +2495,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   if (grantRetakeForm) {
     lifecycle.listen(grantRetakeForm, 'submit', async event => {
       event.preventDefault();
-      if (!state.classId || !state.assignmentId) return;
+      const classId = state.classId || currentSelectedAssignment?.classId;
+      const assignmentId = state.assignmentId || currentSelectedAssignment?.id;
+      if (!classId || !assignmentId) return;
       const studentRef = retakeStudentRefInput?.value.trim();
       const reason = retakeReasonInput?.value.trim();
       const availableFromVal = retakeAvailableFromInput?.value;
@@ -2357,7 +2515,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       const expiresAt = new Date(expiresAtVal).toISOString();
 
       try {
-        const response = await fetch(`${apiBase()}${grantRetakePath(state.classId, state.assignmentId, studentRef)}`, {
+        const response = await fetch(`${apiBase()}${grantRetakePath(classId, assignmentId, studentRef)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -2375,9 +2533,12 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
           grantRetakeModal.hidden = true;
         }
         alert('Cấp quyền làm lại thành công!');
-        await loadResults(state.classId, state.assignmentId);
+        if (examRoom && !examRoom.hidden) {
+          await loadExamRoom();
+        }
+        await loadResults(classId, assignmentId);
         if (state.attemptId) {
-          await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);
+          await loadAttemptDetail(classId, assignmentId, state.attemptId);
         }
       } catch (err) {
         if (grantRetakeError) {

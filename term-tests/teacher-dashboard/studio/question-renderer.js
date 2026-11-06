@@ -1063,17 +1063,15 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
         const parentEx = block?.exercises?.find(e => e.exerciseId === item.exerciseId);
         const hasExContext = Boolean(parentEx && parentEx.referenceContext && parentEx.referenceContext.trim());
         const hasItemCustomContext = Boolean(item.referenceContext && item.referenceContext.trim());
-        const isTranslation = scoringVer.includes('translation') || item.rubricCode === 'rubric_translation_v1';
-        const showItemContextInitially = hasItemCustomContext || (!hasExContext && isTranslation);
+        const isComprehension = scoringVer.includes('comprehension') || item.rubricCode === 'rubric_comprehension_v1';
+        const showItemContextInitially = hasItemCustomContext || (!hasExContext && isComprehension);
 
         specificHtml = `
           <div class="template-section template-rubric-async">
             ${hasExContext ? `
               <div class="ai-inherited-context-notice" style="margin-bottom: 10px;">
                 <span>✓ <strong>Đã kế thừa ngữ cảnh chung từ Bài tập</strong> (${escapeHtml(parentEx.title || 'Exercise')}).</span>
-                <button type="button" class="btn-toggle-custom-item-context" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
-                  ${hasItemCustomContext ? 'Đang dùng ngữ cảnh riêng (nhấp để thu gọn)' : 'Chỉnh sửa riêng cho câu này'}
-                </button>
+
               </div>
             ` : ''}
 
@@ -1092,22 +1090,12 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            ${(!hasExContext && !isTranslation && !hasItemCustomContext) ? `
-              <div style="margin-bottom: 10px;">
-                <button type="button" class="btn btn-ghost-subtle btn-sm btn-toggle-custom-item-context" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="font-size: 0.78rem;">
-                  ${renderSvgIcon('plusCircle', 'icon-inline')} Thêm ngữ cảnh tham chiếu riêng cho câu này
-                </button>
-              </div>
-            ` : ''}
-
             <div class="rubric-preset-selector">
               <span class="preset-title">Mẫu Rubric gợi ý (Preset):</span>
               <select class="form-select form-select-sm select-rubric-preset" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                 <option value="translation" ${scoringVer.includes('translation') ? 'selected' : ''}>Dịch thuật (Translation - 50% Meaning, 50% Grammar)</option>
-                <option value="speaking" ${scoringVer.includes('speaking') ? 'selected' : ''}>Speaking dạng văn bản (40% Ý tưởng, 30% Từ vựng, 30% Ngữ pháp)</option>
                 <option value="comprehension" ${scoringVer.includes('comprehension') ? 'selected' : ''}>Đọc hiểu Khối 03 (70% Comprehension, 30% Keywords)</option>
-                <option value="writing_summary" ${scoringVer.includes('summary') ? 'selected' : ''}>Tóm tắt bài đọc (Writing Summary - 50% Ý chính, 50% Ngữ pháp)</option>
-                <option value="custom" ${(!scoringVer.includes('translation') && !scoringVer.includes('speaking') && !scoringVer.includes('comprehension')) ? 'selected' : ''}>Tự thiết lập (Custom Rubric)</option>
+                <option value="speaking" ${scoringVer.includes('speaking') ? 'selected' : ''}>Speaking dạng văn bản (40% Ý tưởng, 30% Từ vựng, 30% Ngữ pháp)</option>
               </select>
             </div>
 

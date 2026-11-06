@@ -357,6 +357,12 @@ test('teacher dashboard index.html provides grant retake modal and status filter
   assert.match(html, /value="retake_granted"/);
   assert.match(html, /value="retaking"/);
   assert.match(html, /value="retake_expired"/);
+
+  // Verify grant-retake-modal is top-level outside view-grading container to prevent modal freeze
+  const viewGradingIdx = html.indexOf('id="view-grading"');
+  const grantRetakeIdx = html.indexOf('id="grant-retake-modal"');
+  assert.ok(viewGradingIdx > 0 && grantRetakeIdx > 0);
+  assert.ok(grantRetakeIdx > viewGradingIdx, 'grant-retake-modal must be placed outside view-grading');
 });
 
 test('teacher dashboard styles.css and student runner provide retake expiry and preflight notices', async () => {
