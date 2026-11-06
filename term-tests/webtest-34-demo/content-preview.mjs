@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261105-bottom-bar-v19';
+} from './dynamic-exam-renderer.mjs?rev=20261105-question-sheet-v20';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -922,6 +922,8 @@ export async function mount(course) {
     const overlay = document.querySelector('#examGuardOverlay');
     document.querySelector('.content-demo')?.classList.toggle('exam-guard-blurred', Boolean(examGuardState.prompt));
     document.querySelector('.cbt-bottom-bar')?.toggleAttribute('inert', Boolean(examGuardState.prompt));
+    // Bảng trượt nằm trên top layer, sẽ che mất lớp cảnh báo nếu còn mở.
+    if (examGuardState.prompt) document.querySelector('#cbtSheet')?.close();
     if (overlay) overlay.hidden = !examGuardState.prompt;
     if (examGuardState.superseded) {
       learningState.status = 'superseded';
@@ -1619,6 +1621,7 @@ export async function mount(course) {
                   <div class="brand-sub cbt-brand-sub">${headerSub}</div>
                 </div>
               </div>
+              <div class="cbt-current-section" id="cbt-current-section"></div>
               <div class="top-actions cbt-top-actions">
                 <span id="demo-save" role="status" class="cbt-save-pill">Đã lưu</span>
                 <div class="cbt-font-toggles">

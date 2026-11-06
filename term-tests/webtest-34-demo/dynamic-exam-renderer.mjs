@@ -1073,9 +1073,18 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
     </footer>
     <nav class="cbt-bottom-bar" aria-label="Chuyển phần">
       <button type="button" class="btn btn-secondary cbt-btn-prev" id="cbt-bar-prev">Trước</button>
-      <span class="cbt-bottom-bar-count" id="cbt-bar-count"></span>
+      <button type="button" class="cbt-bottom-bar-count" id="cbt-bar-count" aria-haspopup="dialog"></button>
       <button type="button" class="btn btn-primary cbt-btn-next" id="cbt-bar-next">Sau</button>
     </nav>
+    <dialog class="cbt-sheet" id="cbtSheet" aria-labelledby="cbtSheetTitle">
+      <div class="cbt-sheet-inner">
+        <div class="cbt-sheet-head">
+          <h2 id="cbtSheetTitle">Bài làm</h2>
+          <button type="button" class="btn btn-secondary cbt-sheet-close">Đóng</button>
+        </div>
+        <div class="cbt-sheet-body"></div>
+      </div>
+    </dialog>
   `;
 
   container.innerHTML = html;
@@ -1114,6 +1123,10 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     const bar = rootEl.querySelector('.cbt-bottom-bar');
     if (!bar) return;
     bar.hidden = Boolean(state.submittedAt) || keyboardOpen;
+    rootEl.querySelector('.cbt-exam-shell')?.classList.toggle('is-submitted', Boolean(state.submittedAt));
+    if (state.submittedAt) rootEl.querySelector('#cbtSheet')?.close();
+    const currentSection = rootEl.querySelector('#cbt-current-section');
+    if (currentSection) currentSection.textContent = blocks[currentActiveBlockIdx]?.title || `Phần ${currentActiveBlockIdx + 1}`;
     rootEl.querySelector('#cbt-bar-prev').disabled = currentActiveBlockIdx === 0;
     rootEl.querySelector('#cbt-bar-next').textContent = currentActiveBlockIdx === blocks.length - 1 ? 'Nộp bài' : 'Sau';
     rootEl.querySelector('#cbt-bar-count').textContent = `${getAnsweredCount(definition, state.answers)}/${getTotalItemCount(definition)} câu`;
@@ -1195,6 +1208,27 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   if (barPrev) barPrev.onclick = goPrev;
   if (barNext) barNext.onclick = goNext;
 
+  const sheet = rootEl.querySelector('#cbtSheet');
+  if (sheet) {
+    // Mượn nguyên node đang có để giữ handler và trạng thái; đóng thì trả về chỗ cũ.
+    const borrowed = ['#examSidePanelContainer', '.cbt-font-toggles', '#demo-submit-top']
+      .map(selector => rootEl.querySelector(selector))
+      .filter(Boolean)
+      .map(el => ({ el, home: el.parentNode, next: el.nextSibling }));
+    rootEl.querySelector('#cbt-bar-count').onclick = () => {
+      sheet.querySelector('.cbt-sheet-body').append(...borrowed.map(({ el }) => el));
+      sheet.showModal();
+    };
+    sheet.onclose = () => borrowed.forEach(({ el, home, next }) => home.insertBefore(el, next));
+    // Pha capture: đóng bảng trước khi nút xử lý, để cuộn và hộp xác nhận chạy trên trang đã mở khóa.
+    sheet.addEventListener('click', event => {
+      if (event.target === sheet || event.target.closest('.cbt-sheet-close, .btn-qnav, .side-section-btn, #demo-submit-top')) sheet.close();
+    }, true);
+    window.matchMedia('(min-width: 1024px)').onchange = event => {
+      if (event.matches) sheet.close();
+    };
+  }
+
   // Question Navigator click-to-focus and section navigation
   qnavBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1237,7 +1271,8 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
         if (typeof targetEl.scrollIntoView === 'function') {
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        if (typeof targetEl.focus === 'function') {
+        // Trên cảm ứng, focus() bật bàn phím che mất câu vừa nhảy tới.
+        if (typeof targetEl.focus === 'function' && !window.matchMedia?.('(pointer: coarse)').matches) {
           targetEl.focus();
         }
         targetEl.classList.add('nav-focus-pulse');

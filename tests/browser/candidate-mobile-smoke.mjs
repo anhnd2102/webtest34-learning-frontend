@@ -110,6 +110,9 @@ export async function openExamShell(browser, viewport, contextOptions = {}, atte
   return page;
 }
 
+// Bấm qua DOM để dùng được cả khi nút đang ẩn trên khổ này (đã chuyển vào bảng trượt).
+const clickDom = (page, selector) => page.evaluate(s => document.querySelector(s).click(), selector);
+const goToSection = (page, index) => page.evaluate(i => document.querySelectorAll('.cbt-nav-pill')[i < 0 ? document.querySelectorAll('.cbt-nav-pill').length + i : i].click(), index);
 const box = (page, selector) => page.locator(selector).first().boundingBox();
 const isCoarse = page => page.evaluate(() => matchMedia('(pointer: coarse)').matches);
 // Hiện mọi phần cùng lúc để đo bố cục; idempotent.
@@ -125,17 +128,25 @@ export const checks = {
   async phoneTopbarCompact(page, vp) {
     if (vp.width >= 640) return;
     const bar = await box(page, '.cbt-topbar');
-    assert.ok(bar.height < 187, `thanh trên cao ${bar.height}px ở ${vp.width}px`);
+    assert.ok(bar.height <= 60, `thanh trên cao ${bar.height}px ở ${vp.width}px`);
+    assert.ok(await page.locator('#cbt-current-section').isVisible(), 'thiếu tên phần hiện tại');
     assert.ok(await page.locator('#examTimerDisplay').isVisible(), 'đồng hồ bị ẩn');
     const timer = await box(page, '#examTimerDisplay');
     assert.ok(timer.y + timer.height <= bar.y + bar.height, 'đồng hồ nằm ngoài thanh trên');
   },
   async phoneControlsStillUsable(page, vp) {
-    if (vp.width >= 640) return;
-    for (const sel of ['.cbt-nav-pill', '#demo-font-down', '#demo-font-up', '#demo-submit-top']) {
+    // Thanh trên từng khổ: nút chọn phần còn trên iPad, Nộp bài rời đi dưới 1024px.
+    assert.equal(await page.locator('.cbt-nav-pill').first().isVisible(), vp.width >= 640, `nút chọn phần sai ở ${vp.width}px`);
+    assert.equal(await page.locator('#demo-font-up').isVisible(), vp.width >= 640, `A+ sai ở ${vp.width}px`);
+    assert.equal(await page.locator('#demo-submit-top').isVisible(), vp.width >= 1024, `Nộp bài sai ở ${vp.width}px`);
+    assert.equal(await page.locator('#cbt-current-section').isVisible(), vp.width < 640, `tên phần sai ở ${vp.width}px`);
+    if (vp.width >= 1024) return;
+    await page.click('#cbt-bar-count');
+    for (const sel of ['#cbtSheet .side-section-btn', '#cbtSheet .btn-qnav', '#cbtSheet #demo-font-down', '#cbtSheet #demo-font-up', '#cbtSheet #demo-submit-top']) {
       const b = await box(page, sel);
       assert.ok(b && b.width > 0 && b.x >= 0 && b.x + b.width <= vp.width + 1, `${sel} không dùng được ở ${vp.width}px`);
     }
+    await page.click('.cbt-sheet-close');
   },
   async singleColumnBelow1024(page, vp) {
     const cols = await page.evaluate(() => getComputedStyle(document.querySelector('.cbt-exam-layout')).gridTemplateColumns.split(' ').length);
@@ -237,8 +248,8 @@ export const checks = {
   async coarseInputsNoZoomEvenWhenFontShrunk(page) {
     if (!await isCoarse(page)) return;
     await revealAllSections(page);
-    await page.click('#demo-font-down');
-    await page.click('#demo-font-down');
+    await clickDom(page, '#demo-font-down');
+    await clickDom(page, '#demo-font-down');
     const small = await page.evaluate(() => [...document.querySelectorAll('.cbt-exam-shell input[type=text], .cbt-exam-shell select, .cbt-exam-shell textarea')]
       .map(e => [e.className, parseFloat(getComputedStyle(e).fontSize)]).filter(([, f]) => f < 16));
     assert.deepEqual(small, [], 'ô nhập cỡ chữ dưới 16px trên màn cảm ứng');
@@ -273,10 +284,10 @@ export const checks = {
     // Gõ tiếp (persist ghi "Đang lưu…") và chuyển phần vẫn không làm mất dải đỏ.
     await type('xy');
     await page.evaluate(() => scrollTo(0, 400));
-    await page.locator('#sectionNavContainer button, #sectionNavContainer [data-demo-go]').nth(1).click();
+    await goToSection(page, 1);
     const b = await box(page, '#demo-save-alert');
     assert.ok(await alert.isVisible() && b.y >= 0 && b.x >= 0 && b.x + b.width <= vp.width + 1, `dải lỗi không nằm trong màn hình ở ${vp.width}px`);
-    await page.locator('#sectionNavContainer button, #sectionNavContainer [data-demo-go]').nth(0).click();
+    await goToSection(page, 0);
     page.draftFails = false;
     await type('xyz');
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
@@ -298,7 +309,7 @@ export const checks = {
     assert.equal(await page.locator('#demo-next').isVisible(), false, `nút cuối trang còn hiện ở ${vp.width}px`);
     const b = await bar.boundingBox();
     assert.ok(Math.abs(b.y + b.height - vp.height) <= 1, `thanh đáy không sát đáy ở ${vp.width}px`);
-    await page.locator('.cbt-nav-pill').first().click();
+    await goToSection(page, 0);
     assert.ok(await prev.isDisabled(), 'Trước vẫn bấm được ở phần đầu');
     assert.equal((await next.textContent()).trim(), 'Sau');
     // Gắn sự kiện hai lần sẽ nhảy quá một phần.
@@ -331,12 +342,90 @@ export const checks = {
     await setViewport(vp.height);
     assert.ok(await bar.isVisible(), 'thanh đáy không hiện lại khi bàn phím đóng');
     // Phần cuối: Sau thành Nộp bài, mở đúng hộp xác nhận.
-    await page.locator('.cbt-nav-pill').last().click();
+    await goToSection(page, -1);
     assert.equal((await next.textContent()).trim(), 'Nộp bài');
     await next.click();
     assert.ok(await page.locator('#demo-confirm').evaluate(d => d.open), 'Nộp bài không mở hộp xác nhận');
     await page.locator('#demo-confirm #demo-cancel, #demo-confirm .btn-secondary').first().click();
-    await page.locator('.cbt-nav-pill').first().click();
+    await goToSection(page, 0);
+    await page.evaluate(() => scrollTo(0, 0));
+  },
+  async questionSheet(page, vp) {
+    if (vp.width >= 1024) {
+      assert.ok(await page.locator('.cbt-exam-layout > .cbt-side-container .cbt-tips-card').isVisible(), `mất bảng bên ở ${vp.width}px`);
+      return;
+    }
+    const sheet = page.locator('#cbtSheet');
+    const isOpen = () => sheet.evaluate(d => d.open);
+    const count = page.locator('#cbt-bar-count');
+    await goToSection(page, 0);
+    await page.evaluate(() => scrollTo(0, 0));
+    assert.equal(await page.locator('.cbt-exam-layout > .cbt-side-container').isVisible(), false, 'bảng bên còn nằm trong trang');
+    // Đóng bằng nút, Esc và chạm nền; focus nằm trong bảng và trả về khi đóng.
+    await count.click();
+    assert.ok(await isOpen(), 'không mở được bảng');
+    assert.ok(await sheet.evaluate(d => d.contains(document.activeElement)), 'focus không vào bảng');
+    assert.equal(await page.locator('#cbtSheet .cbt-tips-card').isVisible(), false, 'còn thẻ Hướng dẫn');
+    await page.click('.cbt-sheet-close');
+    assert.equal(await isOpen(), false, 'nút Đóng không đóng bảng');
+    assert.equal(await page.evaluate(() => document.activeElement?.id), 'cbt-bar-count', 'focus không trả về');
+    await count.click();
+    await page.keyboard.press('Escape');
+    assert.equal(await isOpen(), false, 'Esc không đóng bảng');
+    await count.click();
+    await page.mouse.click(vp.width / 2, 2);
+    assert.equal(await isOpen(), false, 'chạm nền không đóng bảng');
+    // Đóng xong, các nút mượn về đúng chỗ cũ.
+    assert.equal(await page.evaluate(() => document.querySelector('#demo-submit-top').parentElement.className.includes('cbt-top-actions')), true, 'Nộp bài không về thanh trên');
+    // Lưới có cả đề và phân biệt đã làm, kể cả câu một ô nhiều số.
+    await goToSection(page, 2);
+    const blanks = page.locator('#sim-block-2 .cbt-blank-input');
+    const oldBlank = await blanks.first().inputValue();
+    await blanks.first().fill('x');
+    await count.click();
+    assert.equal(await page.locator('#cbtSheet .btn-qnav:visible').count(), await page.locator('#cbtSheet .btn-qnav').count(), 'lưới không hiện cả đề');
+    const firstBlank = await blanks.first().getAttribute('data-position');
+    assert.ok(await page.locator(`#cbtSheet .btn-qnav[data-item-id="it-5"][data-blank-pos="${firstBlank}"]`).evaluate(b => b.classList.contains('answered')), 'ô đã làm không được đánh dấu');
+    const unanswered = page.locator('#cbtSheet .btn-qnav[data-blank-pos]:not(.answered)').first();
+    assert.ok(await unanswered.count(), 'ô chưa làm bị đánh dấu nhầm');
+    await page.click('.cbt-sheet-close');
+    await blanks.first().fill(oldBlank);
+    // Nhảy sang câu ở phần khác: đóng bảng, đúng phần, cuộn tới câu, không bật bàn phím trên cảm ứng.
+    await count.click();
+    await page.click('#cbtSheet .btn-qnav[data-item-id="it-2"]');
+    await page.waitForTimeout(700);
+    assert.equal(await isOpen(), false, 'nhảy câu không đóng bảng');
+    assert.equal(await page.locator('.simulation-section-card.active').getAttribute('id'), 'sim-block-0', 'nhảy sai phần');
+    const target = await box(page, 'input[type="text"][data-item-id="it-2"]');
+    assert.ok(target.y >= 0 && target.y + target.height <= vp.height, `câu nhảy tới ngoài màn hình ở ${vp.width}px: ${target.y}`);
+    const focused = await page.evaluate(() => document.activeElement?.matches('input, textarea, select'));
+    assert.equal(focused, !await isCoarse(page), 'nhảy câu sai hành vi focus');
+    // Chọn phần trong bảng.
+    await count.click();
+    await page.locator('#cbtSheet .side-section-btn').nth(1).click();
+    assert.equal(await isOpen(), false, 'chọn phần không đóng bảng');
+    assert.equal(await page.locator('.simulation-section-card.active').getAttribute('id'), 'sim-block-1', 'chọn phần sai');
+    // A+ trong bảng dùng được và không đóng bảng.
+    await goToSection(page, 0);
+    await count.click();
+    const size = () => page.evaluate(() => parseFloat(document.documentElement.style.fontSize));
+    const fontBefore = await size();
+    await page.click('#cbtSheet #demo-font-down');
+    assert.ok(await size() < fontBefore, 'A− trong bảng không có tác dụng');
+    assert.ok(await isOpen(), 'A− làm đóng bảng');
+    await page.click('#cbtSheet #demo-font-up');
+    // Nộp bài trong bảng mở hộp xác nhận sẵn có, hủy thì quay lại bài.
+    await page.click('#cbtSheet #demo-submit-top');
+    assert.equal(await isOpen(), false, 'bảng còn mở phía sau hộp xác nhận');
+    assert.ok(await page.locator('#demo-confirm').evaluate(d => d.open), 'không mở hộp xác nhận');
+    await page.locator('#demo-confirm .btn-secondary').first().click();
+    // Xoay iPad qua 1024px khi bảng đang mở: bảng tự đóng, không kẹt nút ngoài chỗ cũ.
+    await count.click();
+    await page.setViewportSize({ width: 1100, height: vp.height });
+    await page.waitForTimeout(100);
+    assert.equal(await isOpen(), false, 'bảng còn mở từ 1024px');
+    assert.ok(await page.locator('.cbt-exam-layout > .cbt-side-container').isVisible(), 'bảng bên không về sau khi đóng');
+    await page.setViewportSize(vp);
     await page.evaluate(() => scrollTo(0, 0));
   },
   async topbarNotClipped(page, vp) {
@@ -354,17 +443,19 @@ export const checks = {
   },
   async activePillAndMaxFontStayOnScreen(page, vp) {
     const pills = page.locator('.cbt-nav-pill');
-    await pills.last().click();
+    await goToSection(page, -1);
     await page.waitForTimeout(400);
-    const b = await pills.last().boundingBox();
-    assert.ok(b.x >= 0 && b.x + b.width <= vp.width + 1, `phần đang chọn nằm ngoài màn hình ở ${vp.width}px`);
-    await pills.first().click();
+    if (vp.width >= 640) {
+      const b = await pills.last().boundingBox();
+      assert.ok(b.x >= 0 && b.x + b.width <= vp.width + 1, `phần đang chọn nằm ngoài màn hình ở ${vp.width}px`);
+    }
+    await goToSection(page, 0);
     for (const id of ['#demo-font-up', '#demo-font-down']) {
-      for (let i = 0; i < 6 && await page.locator(id).isEnabled(); i++) await page.click(id);
+      for (let i = 0; i < 6 && await page.locator(id).isEnabled(); i++) await clickDom(page, id);
       const width = await page.evaluate(() => document.documentElement.scrollWidth);
       assert.ok(width <= vp.width, `tràn ngang khi đổi cỡ chữ ở ${vp.width}px: ${width}`);
     }
-    await page.click('#demo-font-up');
+    await clickDom(page, '#demo-font-up');
   },
   async richTableFitsCard(page, vp) {
     await revealAllSections(page);
@@ -418,13 +509,15 @@ export const checks = {
     await page.locator('input[type="text"][data-item-id="it-2"]').fill('submit');
     await alert.waitFor({ state: 'visible', timeout: 5000 });
     const calls = page.draftCalls;
-    await page.click('#demo-submit-top');
+    await clickDom(page, '#demo-submit-top');
     await page.click('#demo-confirm-submit');
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
     await page.waitForTimeout(2000);
     assert.equal(page.draftCalls, calls, 'vẫn gửi nháp sau khi nộp');
     await checks.topbarNotClipped(page, vp);
     assert.equal(await page.locator('.cbt-bottom-bar').isVisible(), false, 'thanh đáy còn hiện sau khi nộp');
+    // Không còn thanh đáy và bảng trượt: vẫn phải chuyển được phần để xem lại bài.
+    assert.ok(await page.locator('.cbt-nav-pill').first().isVisible(), `không xem lại được bài sau khi nộp ở ${vp.width}px`);
   }
 };
 
@@ -458,6 +551,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
     // Cảnh báo thoát của Exam Mode khóa thanh đáy, trả lại khi học viên quay về bài.
     const guarded = await openExamShell(browser, VIEWPORTS[1], {}, { exam: { enabled: true, status: 'running' } });
+    await guarded.click('#cbt-bar-count');
     await guarded.evaluate(() => {
       Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' });
       document.dispatchEvent(new Event('visibilitychange'));
@@ -466,6 +560,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     });
     await guarded.locator('#examGuardOverlay').waitFor({ state: 'visible' });
     assert.ok(await guarded.locator('.cbt-bottom-bar').evaluate(el => el.inert), 'thanh đáy vẫn dùng được khi có cảnh báo thoát');
+    assert.equal(await guarded.locator('#cbtSheet').evaluate(d => d.open), false, 'bảng trượt che lớp cảnh báo thoát');
     await guarded.click('#examGuardReturn');
     await guarded.locator('#examGuardOverlay').waitFor({ state: 'hidden' });
     assert.equal(await guarded.locator('.cbt-bottom-bar').evaluate(el => el.inert), false, 'thanh đáy không mở lại sau cảnh báo');

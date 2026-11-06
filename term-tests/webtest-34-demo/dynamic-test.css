@@ -1299,7 +1299,8 @@ body {
   }
 }
 
-.cbt-bottom-bar {
+.cbt-bottom-bar,
+.cbt-current-section {
   display: none;
 }
 
@@ -1335,11 +1336,84 @@ body {
     min-height: 44px;
     padding: 8px 12px;
   }
-  .cbt-bottom-bar-count {
+  .cbt-exam-shell .cbt-bottom-bar-count {
+    min-height: 44px;
+    padding: 0 8px;
+    border: 0;
+    background: transparent;
     color: var(--izone-slate);
     font-size: 14px;
     font-weight: 700;
+    text-decoration: underline;
     white-space: nowrap;
+  }
+  .cbt-exam-shell .cbt-top-actions .cbt-btn-submit {
+    display: none;
+  }
+  .cbt-exam-shell .cbt-exam-layout > .cbt-side-container {
+    display: none;
+  }
+
+  /* Bảng trượt mở từ số câu trên thanh đáy. */
+  .cbt-exam-shell dialog.cbt-sheet {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 12px 12px 0 0;
+    background: var(--izone-card-bg);
+  }
+  .cbt-sheet-inner {
+    max-height: 85vh;
+    max-height: 85dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px 14px calc(16px + env(safe-area-inset-bottom));
+  }
+  .cbt-sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .cbt-sheet-head h2 {
+    margin: 0;
+    color: var(--izone-navy);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .cbt-sheet-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  /* A−/A+ và Nộp bài lên đầu để không phải cuộn trong bảng trên điện thoại. */
+  .cbt-sheet-body > .cbt-side-container {
+    order: 1;
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+  /* Luật chung ẩn .side-panel dưới 1024px; trong bảng trượt thì hiện lại. */
+  .cbt-sheet-body .cbt-side-panel {
+    display: flex;
+    position: static;
+    padding-bottom: 0;
+  }
+  .cbt-sheet-body .cbt-tips-card,
+  .cbt-sheet-body .cbt-qnav-chip {
+    display: none;
+  }
+  /* Bảng bên trên desktop chỉ lọc câu của phần đang mở; trong bảng trượt phải thấy cả đề. */
+  .cbt-sheet-body .btn-qnav {
+    display: inline-flex !important;
   }
 }
 
@@ -1376,7 +1450,25 @@ body {
   }
 
   .cbt-exam-shell .cbt-topbar-inner {
-    padding: 8px 14px;
+    min-height: 56px;
+    padding: 6px 14px;
+    box-sizing: border-box;
+  }
+  .cbt-exam-shell .cbt-current-section {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--izone-navy);
+    font-size: 15px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Bảng trượt đã có các nút này. Sau khi nộp không còn bảng trượt nên trả lại để xem lại bài. */
+  .cbt-exam-shell:not(.is-submitted) .cbt-section-nav-wrap,
+  .cbt-exam-shell:not(.is-submitted) .cbt-top-actions .cbt-font-toggles {
+    display: none;
   }
   .cbt-exam-shell .cbt-section-nav-bar {
     padding: 6px 14px;
