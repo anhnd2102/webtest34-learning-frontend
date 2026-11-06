@@ -1071,9 +1071,28 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
         <button class="btn btn-primary cbt-btn-next" id="demo-next">Phần tiếp →</button>
       </div>
     </footer>
+    <nav class="cbt-bottom-bar" aria-label="Chuyển phần">
+      <button type="button" class="btn btn-secondary cbt-btn-prev" id="cbt-bar-prev">Trước</button>
+      <button type="button" class="cbt-bottom-bar-count" id="cbt-bar-count" aria-haspopup="dialog"></button>
+      <button type="button" class="btn btn-primary cbt-btn-next" id="cbt-bar-next">Sau</button>
+    </nav>
+    <dialog class="cbt-sheet" id="cbtSheet" aria-labelledby="cbtSheetTitle">
+      <div class="cbt-sheet-inner">
+        <div class="cbt-sheet-head">
+          <h2 id="cbtSheetTitle">Bài làm</h2>
+          <button type="button" class="btn btn-secondary cbt-sheet-close">Đóng</button>
+        </div>
+        <div class="cbt-sheet-body"></div>
+      </div>
+    </dialog>
   `;
 
   container.innerHTML = html;
+}
+
+// iOS không đổi innerHeight khi bàn phím mở; nhân scale để phóng to bằng hai ngón không bị hiểu nhầm.
+export function isKeyboardOpen(viewport, layoutHeight) {
+  return layoutHeight - viewport.height * viewport.scale > 120;
 }
 
 export function initDynamicExamInteractions(rootEl, { definition, state = { answers: {} }, onAnswerChange, onSectionChange }) {
@@ -1098,6 +1117,28 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   };
 
   let currentActiveBlockIdx = 0;
+  let keyboardOpen = false;
+
+  const syncBottomBar = () => {
+    const bar = rootEl.querySelector('.cbt-bottom-bar');
+    if (!bar) return;
+    bar.hidden = Boolean(state.submittedAt) || keyboardOpen;
+    rootEl.querySelector('.cbt-exam-shell')?.classList.toggle('is-submitted', Boolean(state.submittedAt));
+    if (state.submittedAt) rootEl.querySelector('#cbtSheet')?.close();
+    const currentSection = rootEl.querySelector('#cbt-current-section');
+    if (currentSection) currentSection.textContent = blocks[currentActiveBlockIdx]?.title || `Phần ${currentActiveBlockIdx + 1}`;
+    rootEl.querySelector('#cbt-bar-prev').disabled = currentActiveBlockIdx === 0;
+    rootEl.querySelector('#cbt-bar-next').textContent = currentActiveBlockIdx === blocks.length - 1 ? 'Nộp bài' : 'Sau';
+    rootEl.querySelector('#cbt-bar-count').textContent = `${getAnsweredCount(definition, state.answers)}/${getTotalItemCount(definition)} câu`;
+  };
+
+  const viewport = typeof window !== 'undefined' ? window.visualViewport : null;
+  if (viewport) {
+    viewport.onresize = () => {
+      keyboardOpen = isKeyboardOpen(viewport, window.innerHeight);
+      syncBottomBar();
+    };
+  }
 
   // Section switcher
   const activateSection = (targetId) => {
@@ -1123,6 +1164,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     if (nextBtn) {
       nextBtn.textContent = blockIdx === blocks.length - 1 ? 'Nộp bài' : 'Phần tiếp →';
     }
+    syncBottomBar();
 
     if (onSectionChange) {
       const activeBlock = blocks[blockIdx];
@@ -1146,21 +1188,44 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   // Prev / Next button navigation with onclick (triệt tiêu 100% rủi ro double-binding)
   const prevBtn = rootEl.querySelector('#demo-prev');
   const nextBtn = rootEl.querySelector('#demo-next');
-  if (prevBtn) {
-    prevBtn.onclick = () => {
-      if (currentActiveBlockIdx > 0) {
-        activateSection(`sim-block-${currentActiveBlockIdx - 1}`);
-      }
+  const goPrev = () => {
+    if (currentActiveBlockIdx > 0) {
+      activateSection(`sim-block-${currentActiveBlockIdx - 1}`);
+    }
+  };
+  const goNext = () => {
+    if (currentActiveBlockIdx < blocks.length - 1) {
+      activateSection(`sim-block-${currentActiveBlockIdx + 1}`);
+    } else {
+      const topSubmit = document.querySelector('#demo-submit-top') || document.querySelector('#demo-submit');
+      if (topSubmit) topSubmit.click();
+    }
+  };
+  if (prevBtn) prevBtn.onclick = goPrev;
+  if (nextBtn) nextBtn.onclick = goNext;
+  const barPrev = rootEl.querySelector('#cbt-bar-prev');
+  const barNext = rootEl.querySelector('#cbt-bar-next');
+  if (barPrev) barPrev.onclick = goPrev;
+  if (barNext) barNext.onclick = goNext;
+
+  const sheet = rootEl.querySelector('#cbtSheet');
+  if (sheet) {
+    // Mượn nguyên node đang có để giữ handler và trạng thái; đóng thì trả về chỗ cũ.
+    const borrowed = ['#examSidePanelContainer', '.cbt-font-toggles', '#demo-submit-top']
+      .map(selector => rootEl.querySelector(selector))
+      .filter(Boolean)
+      .map(el => ({ el, home: el.parentNode, next: el.nextSibling }));
+    rootEl.querySelector('#cbt-bar-count').onclick = () => {
+      sheet.querySelector('.cbt-sheet-body').append(...borrowed.map(({ el }) => el));
+      sheet.showModal();
     };
-  }
-  if (nextBtn) {
-    nextBtn.onclick = () => {
-      if (currentActiveBlockIdx < blocks.length - 1) {
-        activateSection(`sim-block-${currentActiveBlockIdx + 1}`);
-      } else {
-        const topSubmit = document.querySelector('#demo-submit-top') || document.querySelector('#demo-submit');
-        if (topSubmit) topSubmit.click();
-      }
+    sheet.onclose = () => borrowed.forEach(({ el, home, next }) => home.insertBefore(el, next));
+    // Pha capture: đóng bảng trước khi nút xử lý, để cuộn và hộp xác nhận chạy trên trang đã mở khóa.
+    sheet.addEventListener('click', event => {
+      if (event.target === sheet || event.target.closest('.cbt-sheet-close, .btn-qnav, .side-section-btn, #demo-submit-top')) sheet.close();
+    }, true);
+    window.matchMedia('(min-width: 1024px)').onchange = event => {
+      if (event.matches) sheet.close();
     };
   }
 
@@ -1206,7 +1271,8 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
         if (typeof targetEl.scrollIntoView === 'function') {
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        if (typeof targetEl.focus === 'function') {
+        // Trên cảm ứng, focus() bật bàn phím che mất câu vừa nhảy tới.
+        if (typeof targetEl.focus === 'function' && !window.matchMedia?.('(pointer: coarse)').matches) {
           targetEl.focus();
         }
         targetEl.classList.add('nav-focus-pulse');
@@ -1278,6 +1344,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
       const sideBadge = rootEl.querySelector(`[data-side-count="sim-block-${i}"]`);
       if (sideBadge) sideBadge.textContent = `${bDone}/${bTotal}`;
     });
+    syncBottomBar();
   };
 
   // Initial navigator filter
