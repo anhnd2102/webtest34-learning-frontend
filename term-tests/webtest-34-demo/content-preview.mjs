@@ -25,6 +25,15 @@ export function sanitizeDraft(form, raw) {
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const words = value => String(value || '').trim().split(/\s+/).filter(Boolean).length;
+// Lý do cho học viên khi /attempts/draft trả lỗi 409 (mã lấy từ learning-service.saveDraft của backend).
+const DRAFT_REJECTED_REASON = {
+  ATTEMPT_ALREADY_SUBMITTED: 'Bài đã được nộp. ',
+  ATTEMPT_EXPIRED: 'Đã hết giờ làm bài. ',
+  FORM_VERSION_MISMATCH: 'Đề vừa được cập nhật. ',
+  STALE_DRAFT: 'Bài đang được mở ở một trang khác. ',
+  EXAM_DEVICE_SUPERSEDED: 'Bài đang được mở ở máy khác. ',
+  EXAM_NOT_RUNNING: 'Phiên thi chưa bắt đầu hoặc đã kết thúc. '
+};
 
 export function formatCandidateOptionLabel(s) {
   let email = (s.email || s.discriminator || '').trim();
@@ -2030,9 +2039,10 @@ export async function mount(course) {
         } catch (err) {
           if (state.submittedAt) return;
           query('#demo-save').textContent = 'Lưu máy chủ thất bại';
-          setSaveAlert('Chưa lưu được, kiểm tra mạng');
-          // Chỉ thử lại lỗi tạm thời; 4xx khác (đã nộp, hết giờ, máy khác) thử lại cũng không qua.
-          if (!err.status || err.status >= 500 || err.status === 429) {
+          // Chỉ thử lại lỗi tạm thời; 4xx khác (đã nộp, hết giờ, máy khác) không do mạng, thử lại cũng không qua.
+          const retryable = !err.status || err.status >= 500 || err.status === 429;
+          setSaveAlert(retryable ? 'Chưa lưu được, kiểm tra mạng' : `Chưa lưu được. ${DRAFT_REJECTED_REASON[err.code] || ''}Hãy tải lại trang hoặc báo giáo viên.`);
+          if (retryable) {
             clearTimeout(draftDebounceTimer);
             draftDebounceTimer = setTimeout(queueServerDraft, 15000);
           }
