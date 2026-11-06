@@ -59,10 +59,6 @@ export function getRoleCapabilities(role, courseCodes = []) {
   // Giáo viên phụ trách lớp ('teacher' or fallback)
   return [
     {
-      title: 'Quản lý & Xuất bản đề thi',
-      description: 'Soạn thảo, hiệu chỉnh cấu trúc đề thi trong Test Studio, cấu hình phiên bản đề, xuất bản đợt thi cho các lớp được phân công và giám sát phòng thi tập trung (Exam Mode).'
-    },
-    {
       title: 'Quản lý lớp phụ trách',
       description: 'Xem danh sách học viên, bài làm, phổ điểm và theo dõi tiến độ nộp bài của các lớp được phân công giảng dạy.'
     },

@@ -1396,20 +1396,16 @@ test('teacher dashboard provides role capabilities popover and tooltip trigger',
 });
 
 test('getRoleCapabilities returns role-appropriate capabilities and scopes', () => {
-  // 1. Teacher role: includes "Quản lý & Xuất bản đề thi", class-scoped management (no course-wide claims)
+  // 1. Teacher role: class-scoped management, manual grading, retake grants, but NO exam editing & publishing
   const teacherCaps = getRoleCapabilities('teacher');
-  assert.equal(teacherCaps.length, 4);
-  assert.equal(teacherCaps[0].title, 'Quản lý & Xuất bản đề thi');
-  assert.match(teacherCaps[0].description, /Test Studio/);
-  assert.match(teacherCaps[0].description, /xuất bản đợt thi/i);
-  assert.match(teacherCaps[0].description, /Exam Mode/);
-
-  assert.equal(teacherCaps[1].title, 'Quản lý lớp phụ trách');
-  assert.match(teacherCaps[1].description, /phân công giảng dạy/);
+  assert.equal(teacherCaps.length, 3);
+  assert.equal(teacherCaps[0].title, 'Quản lý lớp phụ trách');
+  assert.match(teacherCaps[0].description, /phân công giảng dạy/);
+  assert.ok(!teacherCaps.some(cap => cap.title.includes('đề thi') || cap.description.includes('Test Studio')));
   assert.ok(!teacherCaps.some(cap => cap.title.includes('toàn bộ khối') || cap.description.includes('toàn bộ các lớp trong khối')));
 
-  assert.equal(teacherCaps[2].title, 'Chấm thi & Phê duyệt điểm');
-  assert.equal(teacherCaps[3].title, 'Quản trị quyền làm bài');
+  assert.equal(teacherCaps[1].title, 'Chấm thi & Phê duyệt điểm');
+  assert.equal(teacherCaps[2].title, 'Quản trị quyền làm bài');
 
   // 2. Lead role: includes "Quản lý & Xuất bản đề thi", course-wide supervision with course codes
   const leadCaps34 = getRoleCapabilities('lead', ['34']);
@@ -1429,15 +1425,15 @@ test('getRoleCapabilities returns role-appropriate capabilities and scopes', () 
   assert.match(adminCaps[1].description, /toàn hệ thống IZONE/);
 });
 
-test('teacher dashboard role-capabilities-popover houses teacher-role-badge inside popover and lists exam editing & publication capabilities', async () => {
+test('teacher dashboard role-capabilities-popover houses teacher-role-badge inside popover and lists lead/admin exam editing & publication capabilities', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
   const css = await readDashboardCss();
+  const code = readDashboardSource();
 
   // Verify role badge is inside the popover, not exposed directly outside on the navbar
   assert.match(html, /<div id="role-capabilities-popover"[^>]*>[\s\S]*id="teacher-role-badge"/);
-  assert.match(html, /Quản lý (&amp;|&) Xuất bản đề thi/);
-  assert.match(html, /xuất bản/i);
+  assert.match(code, /Quản lý & Xuất bản đề thi/);
   assert.match(css, /\.popover-user-summary/);
 });
 
