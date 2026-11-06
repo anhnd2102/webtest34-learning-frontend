@@ -963,8 +963,22 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                 } else if (parsedItem.pedagogicalTypeCode === 'sentence_rewrite') {
                   itmObj.mandatoryKeyword = parsedItem.mandatoryKeyword;
                   itmObj.targetSentence = parsedItem.targetSentence;
-                } else if (parsedItem.pedagogicalTypeCode === 'error_correction') {
-                  itmObj.targetWord = parsedItem.targetWord;
+                } else if (parsedItem.pedagogicalTypeCode === 'error_correction' || parsedItem.interactionType === 'correction_pair' || parsedItem.graderType === 'correction_pair') {
+                  const errs = (parsedItem.expectedErrors && parsedItem.expectedErrors.length)
+                    ? parsedItem.expectedErrors
+                    : (parsedItem.targetWord ? [parsedItem.targetWord] : ['error']);
+                  const corrs = (parsedItem.expectedCorrections && parsedItem.expectedCorrections.length)
+                    ? parsedItem.expectedCorrections
+                    : (parsedItem.accepted && parsedItem.accepted.length ? parsedItem.accepted : ['correction']);
+                  itmObj.targetWord = parsedItem.targetWord || errs[0];
+                  itmObj.expectedErrors = errs;
+                  itmObj.expectedCorrections = corrs;
+                  itmObj.accepted = corrs;
+                  itmObj.scoringRule = parsedItem.scoringRule || 'split_points';
+                  itmObj.interactionType = 'correction_pair';
+                  itmObj.pedagogicalTypeCode = 'error_correction';
+                  itmObj.graderType = 'correction_pair';
+                  itmObj.layoutType = 'correction_inline';
                 } else if (parsedItem.pedagogicalTypeCode === 'pictorial_vocabulary') {
                   itmObj.image = parsedItem.image;
                   itmObj.targetWord = parsedItem.targetWord;
@@ -1018,6 +1032,17 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                     graderType: 'inline_cloze',
                     blanks: itmObj.clozeAnswers,
                     accepted: parsedItem.accepted || [itmObj.targetWord || ''],
+                    normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                  };
+                } else if (parsedItem.graderType === 'correction_pair' || parsedItem.pedagogicalTypeCode === 'error_correction' || parsedItem.interactionType === 'correction_pair') {
+                  const errs = itmObj.expectedErrors || (parsedItem.targetWord ? [parsedItem.targetWord] : ['error']);
+                  const corrs = itmObj.expectedCorrections || (parsedItem.accepted && parsedItem.accepted.length ? parsedItem.accepted : ['correction']);
+                  draftState.gradingKey.items[newItemId] = {
+                    graderType: 'correction_pair',
+                    expectedErrors: errs,
+                    expectedCorrections: corrs,
+                    accepted: corrs,
+                    scoringRule: parsedItem.scoringRule || 'split_points',
                     normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                   };
                 } else {

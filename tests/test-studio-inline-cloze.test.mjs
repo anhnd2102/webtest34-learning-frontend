@@ -292,3 +292,23 @@ test('inline cloze badge styles enforce nowrap and prevent line breaks on bracke
   assert.match(dynamicCss, /\.inline-blank-wrapper,[^}]*white-space:\s*nowrap\s*!important;/i, 'Dynamic wrapper must have white-space: nowrap !important');
   assert.match(dynamicCss, /\.inline-blank-number,[^}]*white-space:\s*nowrap\s*!important;/i, 'Dynamic badge must have white-space: nowrap !important');
 });
+
+test('parseInlineClozeCsv supports both 3-column and 7-column CSV formats', async () => {
+  const { parseInlineClozeCsv } = await import('../term-tests/teacher-dashboard/studio/content-import.js');
+
+  // 3-column format
+  const csv3 = `Prompt,Answers,Points
+"The cruise visits (1) __________ islands and leaves at (2) __________.",six | 5 PM,1`;
+  const res3 = parseInlineClozeCsv(csv3);
+  assert.equal(res3.items.length, 1);
+  assert.equal(res3.items[0].clozeAnswers[1].targetWord, 'six');
+  assert.equal(res3.items[0].clozeAnswers[2].targetWord, '5 PM');
+
+  // 7-column format (copied from master sheet)
+  const csv7 = `Exercise_Title,Exercise_Instructions,Question_Type,Prompt,Correct_Answer,Options_Or_Details,Score
+Part 1,Listen and fill,inline_cloze,"The cruise visits (1) __________ islands and leaves at (2) __________.",six | 5 PM,,1`;
+  const res7 = parseInlineClozeCsv(csv7);
+  assert.equal(res7.items.length, 1);
+  assert.equal(res7.items[0].clozeAnswers[1].targetWord, 'six');
+  assert.equal(res7.items[0].clozeAnswers[2].targetWord, '5 PM');
+});

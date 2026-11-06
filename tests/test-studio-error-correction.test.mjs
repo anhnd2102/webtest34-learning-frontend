@@ -297,3 +297,62 @@ test('Test Studio: Error correction item does NOT default to she/her when target
   assert.ok(!domContainer.innerHTML.includes('value="her"'), 'DOM must NOT contain value="her"');
 });
 
+test('Test Studio: Error correction displays correction even if only item.accepted or itemKey.accepted was present', () => {
+  const domContainer = {
+    innerHTML: '',
+    querySelector: () => null,
+    querySelectorAll: () => []
+  };
+
+  const formWithEggItem = {
+    id: '11010000-0000-4000-8000-000000000099',
+    version: 1,
+    status: 'draft',
+    title: 'Egg Error Test',
+    submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1',
+      formVersionId: '11010000-0000-4000-8000-000000000099',
+      title: 'Egg Error Test',
+      blocks: [
+        {
+          blockId: 'b-egg',
+          title: 'Grammar',
+          exercises: [{ exerciseId: 'ex-egg', title: 'Error Correction' }],
+          items: [
+            {
+              itemFamilyId: 'fam-egg',
+              itemVersionId: 'ver-egg',
+              position: 1,
+              exerciseId: 'ex-egg',
+              prompt: 'We gave them lots of egg to cook breakfast',
+              interactionType: 'correction_pair',
+              pedagogicalTypeCode: 'error_correction',
+              graderType: 'correction_pair',
+              targetWord: 'egg',
+              accepted: ['eggs'],
+              scoringRule: 'split_points',
+              maxScore: 1
+            }
+          ]
+        }
+      ]
+    },
+    gradingKey: {
+      items: {
+        'ver-egg': {
+          graderType: 'correction_pair',
+          targetWord: 'egg',
+          accepted: ['eggs'],
+          scoringRule: 'split_points'
+        }
+      }
+    }
+  };
+
+  renderTestBuilderView(domContainer, formWithEggItem);
+  assert.ok(domContainer.innerHTML.includes('value="egg"'), 'Error input must contain egg');
+  assert.ok(domContainer.innerHTML.includes('value="eggs"'), 'Correction input must contain eggs');
+  assert.ok(domContainer.innerHTML.includes('data-variant="eggs"'), 'Chips must contain eggs');
+});
+

@@ -372,6 +372,7 @@ function syncInputs() {
                 scoringRule: item.scoringRule || 'split_points',
                 normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
               };
+              currentKey.graderType = 'correction_pair';
 
               if (scoringRuleSelect) {
                 currentKey.scoringRule = scoringRuleSelect.value;
@@ -385,7 +386,11 @@ function syncInputs() {
               } else if (errorTokenInput && errorTokenInput.value.trim()) {
                 currentKey.expectedErrors = [errorTokenInput.value.trim()];
               } else if (!currentKey.expectedErrors || !currentKey.expectedErrors.length) {
-                currentKey.expectedErrors = fallbackErrors;
+                if (currentKey.targetWord) {
+                  currentKey.expectedErrors = [currentKey.targetWord];
+                } else {
+                  currentKey.expectedErrors = fallbackErrors;
+                }
               }
 
               const corrChips = iCard.querySelectorAll('.btn-remove-correction-chip');
@@ -395,11 +400,20 @@ function syncInputs() {
               } else if (correctionTokenInput && correctionTokenInput.value.trim()) {
                 currentKey.expectedCorrections = [correctionTokenInput.value.trim()];
               } else if (!currentKey.expectedCorrections || !currentKey.expectedCorrections.length) {
-                currentKey.expectedCorrections = fallbackCorrections;
+                if (currentKey.accepted && currentKey.accepted.length) {
+                  currentKey.expectedCorrections = currentKey.accepted;
+                } else {
+                  currentKey.expectedCorrections = fallbackCorrections;
+                }
               }
 
               item.targetWord = (currentKey.expectedErrors && currentKey.expectedErrors[0]) || item.targetWord || '';
+              item.expectedErrors = currentKey.expectedErrors || fallbackErrors;
+              item.expectedCorrections = currentKey.expectedCorrections || fallbackCorrections;
               item.accepted = currentKey.expectedCorrections || item.accepted || [];
+              item.scoringRule = currentKey.scoringRule || item.scoringRule || 'split_points';
+              item.interactionType = 'correction_pair';
+              item.graderType = 'correction_pair';
               draftState.gradingKey.items[item.itemVersionId] = currentKey;
             }
 

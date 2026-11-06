@@ -243,7 +243,8 @@ function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4, def
           onConfirm: ({ count = 2, defaultPoints = 1 }) => {
             createBatchMultiGroup(bIdx, targetEx, count, defaultPoints);
           },
-          onImport: ({ items }) => {
+          onImport: (rawItems, meta = {}) => {
+            const items = Array.isArray(rawItems) ? rawItems : (rawItems?.items || []);
             if (!items || !items.length) return;
             const startingPos = getNextPosition();
             const batchItems = [];

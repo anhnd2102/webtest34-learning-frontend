@@ -316,16 +316,18 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
           ? itemKey.expectedErrors
           : (item.expectedErrors && item.expectedErrors.length)
             ? item.expectedErrors
-            : (item.targetWord ? [item.targetWord] : []);
+            : (itemKey.targetWord ? [itemKey.targetWord] : (item.targetWord ? [item.targetWord] : []));
         const expectedErrors = rawErrors.filter(v => v != null && String(v).trim().length > 0);
 
         const rawCorrections = (itemKey.expectedCorrections && itemKey.expectedCorrections.length)
           ? itemKey.expectedCorrections
-          : (item.expectedCorrections && item.expectedCorrections.length)
-            ? item.expectedCorrections
-            : (item.accepted && item.accepted.length)
-              ? item.accepted
-              : [];
+          : (itemKey.accepted && itemKey.accepted.length)
+            ? itemKey.accepted
+            : (item.expectedCorrections && item.expectedCorrections.length)
+              ? item.expectedCorrections
+              : (item.accepted && item.accepted.length)
+                ? item.accepted
+                : [];
         const expectedCorrections = rawCorrections.filter(v => v != null && String(v).trim().length > 0);
         const scoringRule = itemKey.scoringRule || item.scoringRule || 'split_points';
 

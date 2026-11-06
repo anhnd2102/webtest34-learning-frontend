@@ -187,7 +187,8 @@ function createBatchFitb(bIdx, targetEx, count = 1, defaultPoints = 1) {
               createSingleInlineCloze(bIdx, targetEx, defaultPoints);
             }
           },
-          onImport: ({ items }) => {
+          onImport: (rawItems, meta = {}) => {
+            const items = Array.isArray(rawItems) ? rawItems : (rawItems?.items || []);
             if (!items || !items.length) return;
             const startingPos = getNextPosition();
             const batchItems = [];

@@ -457,7 +457,7 @@ export function openGenericBatchModal({
     if (hasCsv && activeTab === 'csv' && csvVal) {
       if (parsedItems.length > 0 && typeof csvConfig.onImport === 'function') {
         closeModal();
-        csvConfig.onImport(parsedItems, { defaultPoints: finalPoints });
+        csvConfig.onImport(parsedItems, { defaultPoints: finalPoints, items: parsedItems });
         return;
       } else if (parsedItems.length === 0) {
         if (typeof alert === 'function') {

@@ -225,3 +225,4 @@ export function openMoveExerciseModal(opts = {}) {
 
   return modal;
 }
+

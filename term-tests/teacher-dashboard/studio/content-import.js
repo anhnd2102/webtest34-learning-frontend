@@ -832,26 +832,38 @@ export function parseInlineClozeCsv(rawText = '', defaultPoints = 1) {
 
   let startIndex = 0;
   const firstRow = rows[0].map(c => (c || '').toLowerCase().trim());
-  if (firstRow[0]?.includes('prompt') || firstRow[0]?.includes('câu hỏi') || firstRow[0]?.includes('đoạn văn') || firstRow[1]?.includes('answer') || firstRow[1]?.includes('đáp án')) {
+  if (firstRow[0]?.includes('prompt') || firstRow[0]?.includes('câu hỏi') || firstRow[0]?.includes('đoạn văn') || firstRow[1]?.includes('answer') || firstRow[1]?.includes('đáp án') || firstRow[0]?.includes('exercise_title') || firstRow[2]?.includes('question_type')) {
     startIndex = 1;
   }
 
   for (let i = startIndex; i < rows.length; i++) {
     const row = rows[i];
     if (!row || row.length === 0 || (row.length === 1 && !row[0].trim())) continue;
-    const prompt = (row[0] || '').trim();
-    const rawAnswer = (row[1] || '').trim();
-    const rawScore = parseFloat(row[2]);
+
+    let prompt = '';
+    let rawAnswer = '';
+    let rawScore = NaN;
+
+    if (row.length >= 5 && (row[2]?.toLowerCase().includes('cloze') || firstRow[2]?.includes('type') || firstRow[0]?.includes('exercise_title'))) {
+      prompt = (row[3] || '').trim();
+      rawAnswer = (row[4] || '').trim();
+      rawScore = parseFloat(row[6] || row[5]);
+    } else {
+      prompt = (row[0] || '').trim();
+      rawAnswer = (row[1] || '').trim();
+      rawScore = parseFloat(row[2]);
+    }
+
     const score = !isNaN(rawScore) && rawScore > 0 ? rawScore : defaultPoints;
 
     if (!prompt) {
-      result.invalidRows.push({ rowIndex: i + 1, reason: 'Thiếu đoạn văn / Prompt chứa ô trống' });
+      result.invalidRows.push({ line: i + 1, rowIndex: i + 1, reason: 'Thiếu đoạn văn / Prompt chứa ô trống' });
       continue;
     }
 
     const blanks = parseClozeBlanks(prompt);
     if (blanks.length === 0) {
-      result.invalidRows.push({ rowIndex: i + 1, reason: 'Không tìm thấy ký hiệu ô trống (1) _____ hoặc [1] trong Prompt' });
+      result.invalidRows.push({ line: i + 1, rowIndex: i + 1, reason: 'Không tìm thấy ký hiệu ô trống (1) _____ hoặc [1] trong Prompt' });
       continue;
     }
 
@@ -1217,22 +1229,32 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
     } else if (qType === 'error_correction') {
       let errorPart = rawAnswer;
       let correction = rawDetails;
+
+      if (!correction && (rawAnswer.includes('->') || rawAnswer.includes('=>') || rawAnswer.includes('→'))) {
+        const arrowParts = rawAnswer.split(/->|=>|→/).map(p => p.trim());
+        errorPart = arrowParts[0] || '';
+        correction = arrowParts[1] || '';
+      } else if (!errorPart && (rawDetails.includes('->') || rawDetails.includes('=>') || rawDetails.includes('→'))) {
+        const arrowParts = rawDetails.split(/->|=>|→/).map(p => p.trim());
+        errorPart = arrowParts[0] || '';
+        correction = arrowParts[1] || '';
+      }
+
       const promptLower = (rawPrompt || '').toLowerCase();
-      const ansLower = (rawAnswer || '').toLowerCase();
-      const detLower = (rawDetails || '').toLowerCase();
+      const ansLower = (errorPart || '').toLowerCase();
+      const detLower = (correction || '').toLowerCase();
 
       // Smart Auto-Detect:
       if (detLower && promptLower.includes(detLower) && !promptLower.includes(ansLower)) {
-        errorPart = rawDetails;
-        correction = rawAnswer;
-      } else if (ansLower && promptLower.includes(ansLower)) {
-        errorPart = rawAnswer;
-        correction = rawDetails;
+        const tmp = errorPart;
+        errorPart = correction;
+        correction = tmp;
       }
 
       const correctionVariants = correction ? correction.split(/[|/]/).map(c => c.trim()).filter(Boolean) : [];
-      const mainCorrection = correctionVariants[0] || '';
-      const errorVariants = errorPart ? [errorPart] : [];
+      const mainCorrection = correctionVariants[0] || (correction ? correction.trim() : '');
+      const finalCorrections = correctionVariants.length ? correctionVariants : (mainCorrection ? [mainCorrection] : []);
+      const errorVariants = errorPart ? [errorPart.trim()] : [];
 
       currentEx.items.push({
         prompt: rawPrompt,
@@ -1240,10 +1262,10 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
         pedagogicalTypeCode: 'error_correction',
         layoutType: 'correction_inline',
         graderType: 'correction_pair',
-        targetWord: errorPart,
+        targetWord: errorPart.trim(),
         expectedErrors: errorVariants,
-        expectedCorrections: correctionVariants.length ? correctionVariants : (mainCorrection ? [mainCorrection] : []),
-        accepted: correctionVariants.length ? correctionVariants : (mainCorrection ? [mainCorrection] : []),
+        expectedCorrections: finalCorrections,
+        accepted: finalCorrections,
         scoringRule: 'split_points',
         maxScore: score
       });

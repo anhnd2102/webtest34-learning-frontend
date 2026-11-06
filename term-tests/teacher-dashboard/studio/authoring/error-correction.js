@@ -79,6 +79,8 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
               const batchItems = [];
               items.forEach((parsed, idx) => {
                 const newItemId = generateUuid();
+                const corrs = (parsed.accepted && parsed.accepted.length) ? parsed.accepted : (parsed.expectedCorrections || ['correction']);
+                const errs = parsed.targetWord ? [parsed.targetWord] : (parsed.expectedErrors || ['error']);
                 batchItems.push({
                   itemFamilyId: generateUuid(),
                   itemVersionId: newItemId,
@@ -87,21 +89,26 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
                   exerciseTitle: targetEx.title,
                   prompt: parsed.prompt,
                   helpText: '',
-                  interactionType: 'error_correction',
+                  interactionType: 'correction_pair',
                   pedagogicalTypeCode: 'error_correction',
                   layoutType: 'correction_inline',
                   graderType: 'correction_pair',
                   required: true,
                   maxScore: 1,
-                  targetWord: parsed.targetWord,
+                  targetWord: parsed.targetWord || errs[0],
+                  expectedErrors: errs,
+                  expectedCorrections: corrs,
+                  accepted: corrs,
+                  scoringRule: 'split_points',
                   explanation: parsed.explanation || '',
                   skillCodes: ['grammar'],
                   releasePolicy: 'inherit'
                 });
                 draftState.gradingKey.items[newItemId] = {
                   graderType: 'correction_pair',
-                  expectedErrors: parsed.targetWord ? [parsed.targetWord] : ['error'],
-                  expectedCorrections: parsed.accepted && parsed.accepted.length ? parsed.accepted : ['correction'],
+                  expectedErrors: errs,
+                  expectedCorrections: corrs,
+                  accepted: corrs,
                   scoringRule: 'split_points',
                   normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                 };
@@ -147,7 +154,10 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
         const generatedErrors = expandSentenceVariants([raw]);
         const prevErrors = Array.isArray(currentKey.expectedErrors) ? currentKey.expectedErrors : [];
         currentKey.expectedErrors = Array.from(new Set([...prevErrors, ...generatedErrors]));
+        item.expectedErrors = currentKey.expectedErrors;
+        item.targetWord = currentKey.expectedErrors[0] || item.targetWord;
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
+        markAsDirty();
         render();
       });
     });
@@ -177,7 +187,10 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
         const generatedCorrections = expandSentenceVariants([raw]);
         const prevCorrections = Array.isArray(currentKey.expectedCorrections) ? currentKey.expectedCorrections : [];
         currentKey.expectedCorrections = Array.from(new Set([...prevCorrections, ...generatedCorrections]));
+        item.expectedCorrections = currentKey.expectedCorrections;
+        item.accepted = currentKey.expectedCorrections;
         draftState.gradingKey.items[item.itemVersionId] = currentKey;
+        markAsDirty();
         render();
       });
     });
@@ -204,7 +217,10 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
           if (!currentKey.expectedErrors.includes(val)) {
             currentKey.expectedErrors.push(val);
           }
+          item.expectedErrors = currentKey.expectedErrors;
+          item.targetWord = currentKey.expectedErrors[0] || item.targetWord;
           draftState.gradingKey.items[item.itemVersionId] = currentKey;
+          markAsDirty();
           render();
         }
       });
@@ -232,7 +248,10 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
           if (!currentKey.expectedCorrections.includes(val)) {
             currentKey.expectedCorrections.push(val);
           }
+          item.expectedCorrections = currentKey.expectedCorrections;
+          item.accepted = currentKey.expectedCorrections;
           draftState.gradingKey.items[item.itemVersionId] = currentKey;
+          markAsDirty();
           render();
         }
       });
@@ -253,6 +272,9 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
           currentKey.expectedErrors = currentKey.expectedErrors.filter(v => v !== variantToRemove);
           if (!currentKey.expectedErrors.length) currentKey.expectedErrors = [''];
         }
+        item.expectedErrors = currentKey ? currentKey.expectedErrors : [];
+        item.targetWord = (item.expectedErrors && item.expectedErrors[0]) || '';
+        markAsDirty();
         render();
       });
     });
@@ -272,6 +294,9 @@ function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
           currentKey.expectedCorrections = currentKey.expectedCorrections.filter(v => v !== variantToRemove);
           if (!currentKey.expectedCorrections.length) currentKey.expectedCorrections = [''];
         }
+        item.expectedCorrections = currentKey ? currentKey.expectedCorrections : [];
+        item.accepted = item.expectedCorrections;
+        markAsDirty();
         render();
       });
     });
