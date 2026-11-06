@@ -96,7 +96,7 @@ function mockLearningApi(page, attemptExtra = {}) {
     if (path.endsWith('/attempts/draft')) page.draftCalls = (page.draftCalls || 0) + 1;
     // Ticket #28: page.draftFails = mã HTTP làm /attempts/draft thất bại, để thử dải báo lỗi lưu.
     if (path.endsWith('/attempts/draft') && page.draftFails) {
-      return route.fulfill({ status: page.draftFails, contentType: 'application/json', body: '{"error":"down"}' });
+      return route.fulfill({ status: page.draftFails, contentType: 'application/json', body: JSON.stringify({ error: page.draftFailCode || 'down' }) });
     }
     if (path.endsWith('/test-access/resolve')) {
       body = { assignment: { title: definition.title, class: { name: 'Lớp Smoke' }, definition,
@@ -523,6 +523,17 @@ export const checks = {
     await alert.waitFor({ state: 'visible', timeout: 5000 });
     // Có mạng trở lại: tự lưu, học viên không phải gõ thêm.
     page.draftFails = 0;
+    await page.evaluate(() => dispatchEvent(new Event('online')));
+    await alert.waitFor({ state: 'hidden', timeout: 5000 });
+    // #38: lỗi 4xx (hết giờ, đã nộp, đề đổi...) không phải do mạng nên không nhắc kiểm tra mạng.
+    page.draftFails = 409;
+    page.draftFailCode = 'ATTEMPT_EXPIRED';
+    await type('conflict');
+    await alert.waitFor({ state: 'visible', timeout: 5000 });
+    const conflictText = await alert.textContent();
+    assert.ok(!conflictText.includes('kiểm tra mạng') && conflictText.includes('tải lại trang'), `thông báo lỗi 409 sai: ${conflictText}`);
+    page.draftFails = 0;
+    page.draftFailCode = undefined;
     await page.evaluate(() => dispatchEvent(new Event('online')));
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
     // Hai ca sau phải chờ qua chu kỳ 15 giây nên chỉ đo ở một khổ.
