@@ -12,7 +12,11 @@ import {
 } from '../ui/presentation.js';
 import {
   generateBlockExercisesTemplateCsv,
-  parseBlockExercisesCsv
+  parseBlockExercisesCsv,
+  generateInlineClozeTemplateCsv,
+  parseInlineClozeCsv,
+  generateMultiGroupTemplateCsv,
+  parseMultiGroupCsv
 } from './content-import.js';
 
 export function parseUploadedFileToCsv(file, callback) {
@@ -566,15 +570,16 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
   modal.style.alignItems = 'center';
   modal.style.justifyContent = 'center';
   modal.style.zIndex = '10050';
-  modal.style.padding = '20px';
+  modal.style.padding = '24px 16px';
+  modal.style.boxSizing = 'border-box';
 
   modal.innerHTML = `
-    <div class="candidate-sim-modal" role="dialog" aria-modal="true" style="max-width: 760px; width: 95%; max-height: 85vh; display: flex; flex-direction: column;">
-      <div class="candidate-sim-header" style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 14px;">
+    <div class="candidate-sim-modal quick-csv-guide-modal" role="dialog" aria-modal="true" style="max-width: 820px; width: 95%; max-height: calc(100vh - 48px); display: flex; flex-direction: column; overflow: hidden; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);">
+      <div class="candidate-sim-header" style="flex-shrink: 0; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 16px 20px 12px; margin-bottom: 0;">
         <div>
           <h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
             ${renderSvgIcon('fileText', 'icon-inline')}
-            <span>Hướng dẫn điền file CSV tạo đề thi (Test Studio)</span>
+            <span>Hướng dẫn điền file CSV / Excel tạo đề thi (Test Studio)</span>
           </h3>
           <p style="margin: 0; font-size: 13px; color: #64748b;">
             Hệ thống hỗ trợ tiếng Việt có dấu (UTF-8 BOM), phân tách bằng dấu phẩy hoặc tab Excel.
@@ -583,81 +588,108 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-guide" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
 
-      <div class="modal-body" style="overflow-y: auto; flex: 1; padding-right: 6px; font-size: 13px; color: #334155; line-height: 1.5;">
-        <h4 style="margin: 0 0 6px; font-size: 14px; color: #0f172a; font-weight: 700;">1. CSV gộp cả Phần thi (Block CSV - 7 cột đa năng)</h4>
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-family: monospace; font-size: 12px;">
+      <div class="modal-body" style="flex: 1 1 auto; overflow-y: auto; min-height: 0; padding: 16px 20px; font-size: 13px; color: #334155; line-height: 1.5;">
+        <h4 style="margin: 0 0 6px; font-size: 14px; color: #0f172a; font-weight: 700;">1. Cấu trúc 7 cột chuẩn hóa gộp cả Phần thi (Block CSV / Excel Sheet 1)</h4>
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-family: monospace; font-size: 12px; word-break: break-all;">
           Exercise_Title, Exercise_Instructions, Question_Type, Prompt, Correct_Answer, Options_Or_Details, Score
         </div>
         <ul style="margin: 0 0 14px; padding-left: 20px;">
-          <li><strong>Exercise_Title</strong>: Tiêu đề bài tập. Các dòng tiếp theo cùng bài tập có thể để trống.</li>
-          <li><strong>Question_Type</strong>: Nhận diện cả tiếng Anh và tiếng Việt: <code>single_choice</code> (trắc nghiệm), <code>fitb</code> (điền từ), <code>vocabulary_pair</code> (từ vựng), <code>sentence_reorder</code> (sắp xếp câu), <code>listening_order</code> (sắp xếp nghe), <code>error_correction</code> (sửa lỗi), <code>sentence_transformation</code> (viết lại câu), <code>pictorial_vocabulary</code> (từ vựng qua ảnh), <code>pronunciation_choice</code> (phát âm), <code>reading_matching</code> (ghép nối), <code>rubric_async</code> (tự luận).</li>
+          <li><strong>Exercise_Title</strong>: Tiêu đề bài tập. Các câu tiếp theo cùng bài tập có thể để trống cột này.</li>
+          <li><strong>Exercise_Instructions</strong>: Hướng dẫn làm bài tập (chỉ cần điền ở dòng đầu tiên của bài tập).</li>
+          <li><strong>Question_Type</strong>: Loại câu hỏi (tiếng Anh hoặc tiếng Việt chuẩn hóa bên dưới).</li>
         </ul>
 
-        <h4 style="margin: 0 0 6px; font-size: 14px; color: #0f172a; font-weight: 700;">2. Hướng dẫn các dạng bài riêng lẻ</h4>
+        <h4 style="margin: 0 0 8px; font-size: 14px; color: #0f172a; font-weight: 700;">2. Chi tiết cách điền từng dạng câu hỏi (Bấm "Chép mẫu" để dán ngay)</h4>
         <div style="border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; margin-bottom: 14px;">
         <table class="quick-guide-table" style="width: 100%; border-collapse: collapse; font-size: 12px; margin: 0;">
           <thead>
             <tr style="background: #f1f5f9; text-align: left;">
-              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Dạng bài</th>
-              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Cấu trúc các cột</th>
-              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Ví dụ mẫu</th>
+              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a; width: 150px;">Dạng bài</th>
+              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Quy ước các cột (Prompt, Đáp án, Chi tiết)</th>
+              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Dòng ví dụ mẫu</th>
+              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a; text-align: center; width: 85px;">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Trắc nghiệm đơn</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Prompt, Option_A, Option_B, Option_C, Option_D, Correct_Answer, Explanation, Points</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">The ship departs ___ Miami.,at,from,on,in,B,,1</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Trắc nghiệm đơn<br><code style="font-size: 11px;">single_choice</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 5: Chữ cái đáp án đúng (A/B/C/D). Cột 6: Các lựa chọn cách nhau bởi <code>|</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">The cruise departs ___ Miami.,B,at | from | on | in,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 1: Grammar,Choose correct answer,single_choice,The cruise departs ___ Miami.,B,at | from | on | in,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Điền từ nội tuyến (Đoạn văn)</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Prompt (chứa các ô (1) _____), Correct_Answer (ngăn cách bằng |), Score</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">1. I (41) _____ TV. 2. He (42) _____ up.,watch | gets,1</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Trắc nghiệm nhóm<br><code style="font-size: 11px;">multi_select_group</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 5: Các đáp án đúng (VD: <code>A, C</code> hoặc <code>A|C</code>). Cột 6: Danh sách lựa chọn cách nhau bởi <code>|</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Which TWO activities are free?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga,2</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 2: Group Choice,Select correct options,multi_select_group,Which TWO activities are free of charge?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga class,2" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Điền ô trống ngắn</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Prompt, Target_Answer, Points</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Water freezes at ___ degrees.,0,1</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Điền từ nội tuyến (Đoạn văn)<br><code style="font-size: 11px;">inline_cloze</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Đoạn văn chứa <code>(1) _____</code> hoặc <code>[1]</code>. Cột 5: Đáp án theo thứ tự cách nhau bởi <code>|</code> (nhiều biến thể cách nhau bởi <code>/</code>)</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">"She visits (1) _____ islands and arrives in (2) _____.",six | Nassau,,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample='Part 3: Cloze Passage,Fill in the blanks,inline_cloze,"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,,1' style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Cặp từ vựng</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">English, Vietnamese</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">destination,điểm đến</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Tìm và sửa lỗi sai<br><code style="font-size: 11px;">error_correction</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Câu gốc chứa lỗi. Cột 5: Từ viết sai (Error). Cột 6: Từ sửa lại đúng (Correction) kèm biến thể cách nhau bởi <code>|</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">We have two knife in the kitchen.,knife,knives,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 4: Error Correction,Find and correct the mistake,error_correction,We have two knife in the kitchen.,knife,knives,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Sắp xếp trật tự từ</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Sentence_Text, Score, Help_Text</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">"She / has worked / here / for five years",1,Thì HTHT</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Điền ô trống ngắn<br><code style="font-size: 11px;">fitb</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Câu hỏi chứa <code>___</code>. Cột 5: Đáp án đúng. Cột 6: Biến thể chấp nhận cách nhau bởi <code>|</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Water freezes at ___ degrees Celsius.,0,zero,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 5: Short Blank,Fill in the missing word,fitb,Water freezes at ___ degrees Celsius.,0,zero,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Sắp xếp thứ tự nghe</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Event_Text, Correct_Order, Score</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Welcome aboard meeting,1,1</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Cặp từ vựng<br><code style="font-size: 11px;">vocabulary_pair</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Từ tiếng Anh. Cột 5: Nghĩa tiếng Việt tương ứng</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">destination,điểm đến,,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 6: Vocabulary,Match meaning,vocabulary_pair,destination,điểm đến,,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Tìm và sửa lỗi</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Original_Sentence, Error_Part, Correction, Accepted_Variants, Explanation</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">There are much people...,much,many,a lot of,Much không đếm được</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Viết lại câu có từ khóa<br><code style="font-size: 11px;">sentence_transformation</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Câu gốc. Cột 5: Từ khóa in hoa. Cột 6: Câu đích có <code>___</code> | Đáp án đúng</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">It is not necessary to book.,HAVE,You ___ in advance. | do not have to book,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 7: Transformation,Rewrite the sentence,sentence_transformation,It is not necessary to book in advance.,HAVE,You ___ in advance. | do not have to book,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Viết lại câu có từ khóa</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Original_Sentence, Mandatory_Keyword, Target_Sentence, Expected_Answer, Variants</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">It is not necessary...,HAVE,You ___ tickets,do not have to book</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Sắp xếp câu<br><code style="font-size: 11px;">sentence_reorder</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Các cụm từ ngăn cách bằng <code>/</code>. Cột 5: Câu hoàn chỉnh</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">"She / has worked / here",She has worked here.,,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample='Part 8: Reorder,Arrange the words,sentence_reorder,"She / has worked / here / for five years",She has worked here for five years.,,1' style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Thẻ từ vựng qua ảnh</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Image_URL, Target_Word, Vietnamese_Meaning, Accepted_Variants, Score</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">assets/.../image1.png,apple,quả táo,an apple,1</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Sắp xếp nghe<br><code style="font-size: 11px;">listening_order</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Tên sự kiện. Cột 5: Thứ tự xuất hiện (1, 2, 3...)</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Safety drill and inspection,2,,1</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 9: Listening Order,Order the events,listening_order,Safety drill and lifeboat inspection,2,,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
             <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Phát âm & Trọng âm</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Prompt, Option_A, Option_B, Option_C, Option_D, Correct_Option, Score</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">camera,/ˈkæm.ər.ə/,/kəˈmɪər.ə/,,,A,1</td>
-            </tr>
-            <tr>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 600;">Tự luận chấm AI</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Prompt, Reference_Context, Max_Score, Preset_Type, Criterion_1, Criterion_2</td>
-              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">Translate into English...,,4,translation,Ý nghĩa,Ngữ pháp</td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Tự luận chấm AI<br><code style="font-size: 11px;">rubric_async</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Đề bài. Cột 6: Tiêu chí chấm điểm ngăn cách bởi <code>|</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Summarize paragraph A in 50 words.,,Ý chính (2đ) | Ngữ pháp (2đ),4</td>
+              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 10: Writing,Write a short summary,rubric_async,Summarize the main idea of Paragraph A in 50 words.,,Ý chính đầy đủ (2đ) | Ngữ pháp chuẩn (2đ),4" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -668,7 +700,7 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
         </div>
       </div>
 
-      <div class="candidate-sim-footer" style="display: flex; justify-content: flex-end; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 10px;">
+      <div class="candidate-sim-footer" style="flex-shrink: 0; background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 20px; margin-top: auto; display: flex; justify-content: flex-end; gap: 8px;">
         <button type="button" class="btn btn-secondary btn-close-guide-footer">Đóng</button>
       </div>
     </div>
@@ -685,6 +717,26 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
   closeFooterBtn?.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
+  });
+
+  modal.querySelectorAll('.btn-copy-sample').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const sample = btn.getAttribute('data-sample') || '';
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(sample).then(() => {
+          const origText = btn.innerHTML;
+          btn.innerHTML = '✓ Đã chép';
+          btn.style.color = '#15803d';
+          btn.style.fontWeight = '600';
+          setTimeout(() => {
+            btn.innerHTML = origText;
+            btn.style.color = '';
+            btn.style.fontWeight = '';
+          }, 1500);
+        }).catch(() => {});
+      }
+    });
   });
 
   return modal;
@@ -717,13 +769,14 @@ export function openBlockCsvUploadModal(opts = {}) {
   modal.style.alignItems = 'center';
   modal.style.justifyContent = 'center';
   modal.style.zIndex = '10050';
-  modal.style.padding = '20px';
+  modal.style.padding = '24px 16px';
+  modal.style.boxSizing = 'border-box';
 
   const blockTitle = (block?.title || `Phần ${blockIdx + 1}`).trim();
 
   modal.innerHTML = `
-    <div class="candidate-sim-modal block-csv-modal" role="dialog" aria-modal="true" style="max-width: 680px; width: 95%;">
-      <div class="candidate-sim-header" style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+    <div class="candidate-sim-modal block-csv-modal" role="dialog" aria-modal="true" style="max-width: 720px; width: 95%; max-height: calc(100vh - 48px); display: flex; flex-direction: column; overflow: hidden; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);">
+      <div class="candidate-sim-header" style="flex-shrink: 0; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 16px 20px 12px; margin-bottom: 0;">
         <div>
           <h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
             ${renderSvgIcon('upload', 'icon-inline')}
@@ -736,13 +789,13 @@ export function openBlockCsvUploadModal(opts = {}) {
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-modal" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
 
-      <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="modal-body" style="flex: 1 1 auto; overflow-y: auto; min-height: 0; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #475569;">
           <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">Cấu trúc 7 cột chuẩn hóa:</div>
           <code style="display: block; background: #fff; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 11px; margin-bottom: 6px; word-break: break-all;">
             Exercise_Title, Exercise_Instructions, Question_Type, Prompt, Correct_Answer, Options_Or_Details, Score
           </code>
-          <div>Hỗ trợ: <em>single_choice, fitb, inline_cloze, vocabulary_pair, error_correction, sentence_transformation, sentence_reorder, listening_order, pictorial_vocabulary, pronunciation_choice, rubric_async</em>.</div>
+          <div>Hỗ trợ: <em>single_choice, multi_select_group, inline_cloze, fitb, vocabulary_pair, error_correction, sentence_transformation, sentence_reorder, listening_order, pictorial_vocabulary, pronunciation_choice, rubric_async</em>.</div>
         </div>
 
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px;">
@@ -784,7 +837,7 @@ export function openBlockCsvUploadModal(opts = {}) {
         <div class="block-csv-error-box" style="display: none; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #991b1b;"></div>
       </div>
 
-      <div class="candidate-sim-footer" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+      <div class="candidate-sim-footer" style="flex-shrink: 0; background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 20px; margin-top: auto; display: flex; justify-content: flex-end; gap: 8px;">
         <button type="button" class="btn btn-secondary btn-cancel-block-csv">Hủy</button>
         <button type="button" class="btn btn-primary btn-confirm-block-csv" disabled>
           ${renderSvgIcon('check', 'icon-inline')} <span>Xác nhận nhập vào Phần thi</span>
@@ -935,5 +988,89 @@ export function openCsvUploadModal(opts = {}) {
     },
     onConfirm: ({ count }) => {},
     onSingle: typeof onSingle === 'function' ? onSingle : null
+  });
+}
+
+export function openMultiGroupBatchModal(opts = {}) {
+  const {
+    blockIdx,
+    targetExercise,
+    owner = getActiveUnsavedChangesOwner(),
+    onConfirm = () => {},
+    onSingle = () => {},
+    onImport = () => {}
+  } = opts;
+
+  return openGenericBatchModal({
+    owner,
+    title: 'Thêm câu hỏi Trắc nghiệm nhóm (Chọn nhiều đáp án)',
+    subtitle: 'Tạo cụm câu hỏi chọn 2 hoặc nhiều phương án đúng hoặc nhập từ file CSV/Excel.',
+    defaultCount: 2,
+    minCount: 2,
+    maxCount: 10,
+    showPoints: true,
+    defaultPoints: 2,
+    csvConfig: {
+      templateFileName: 'mau_cau_hoi_multi_group.csv',
+      columnsHint: 'Question_Prompt, Correct_Options, All_Options, Score',
+      placeholder: '"Which TWO activities are free of charge?","A, C","Swimming pool | Tennis court | Fitness center | Sauna | Yoga class",2',
+      getTemplateCsv: generateMultiGroupTemplateCsv,
+      parseCsv: parseMultiGroupCsv,
+      renderPreviewRow: (item, idx) => `
+        <div style="font-size: 12px; margin-bottom: 4px;">
+          <strong>Vị trí ${idx + 1}:</strong> ${escapeHtml(item.prompt)} 
+          <span style="color: #047857; font-weight: 600;">(Đ/A đúng: ${escapeHtml(item.expectedOptionIds?.join(', ') || '')} - ${(item.options || []).length} lựa chọn)</span>
+        </div>
+      `,
+      onImport
+    },
+    onConfirm: ({ count, defaultPoints }) => {
+      if (typeof onConfirm === 'function') onConfirm({ count, defaultPoints });
+    },
+    onSingle: ({ defaultPoints } = {}) => {
+      if (typeof onSingle === 'function') onSingle({ defaultPoints });
+    }
+  });
+}
+
+export function openInlineClozeBatchModal(opts = {}) {
+  const {
+    blockIdx,
+    targetExercise,
+    owner = getActiveUnsavedChangesOwner(),
+    onConfirm = () => {},
+    onSingle = () => {},
+    onImport = () => {}
+  } = opts;
+
+  return openGenericBatchModal({
+    owner,
+    title: 'Thêm câu hỏi Điền từ nội tuyến (Inline Cloze)',
+    subtitle: 'Tạo đoạn văn có các ô trống (1) _____ hoặc nhập hàng loạt từ file CSV/Excel.',
+    defaultCount: 1,
+    minCount: 1,
+    maxCount: 20,
+    showPoints: true,
+    defaultPoints: 1,
+    csvConfig: {
+      templateFileName: 'mau_cau_hoi_inline_cloze.csv',
+      columnsHint: 'Prompt, Answers, Points',
+      placeholder: '"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,1',
+      getTemplateCsv: generateInlineClozeTemplateCsv,
+      parseCsv: parseInlineClozeCsv,
+      renderPreviewRow: (item, idx) => `
+        <div style="font-size: 12px; margin-bottom: 4px;">
+          <strong>Đoạn ${idx + 1}:</strong> ${escapeHtml(item.prompt.slice(0, 80))}... 
+          <span style="color: #047857; font-weight: 600;">(${Object.keys(item.clozeAnswers || {}).length} chỗ trống - ${item.maxScore} điểm)</span>
+        </div>
+      `,
+      onImport
+    },
+    onConfirm: ({ count, defaultPoints }) => {
+      if (typeof onConfirm === 'function') onConfirm({ count, defaultPoints });
+    },
+    onSingle: ({ defaultPoints } = {}) => {
+      if (typeof onSingle === 'function') onSingle({ defaultPoints });
+    }
   });
 }

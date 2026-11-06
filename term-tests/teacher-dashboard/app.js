@@ -25,7 +25,11 @@ export {
   parseRubricAsyncCsv,
   generateBlockExercisesTemplateCsv,
   parseBlockExercisesCsv,
-  normalizeQuestionType
+  normalizeQuestionType,
+  generateInlineClozeTemplateCsv,
+  parseInlineClozeCsv,
+  generateMultiGroupTemplateCsv,
+  parseMultiGroupCsv
 } from './studio/content-import.js';
 
 export { defaultApiBase, fixtureHeaders, authLoginPath, authLogoutPath, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, assignmentExamModePath, assignmentSelfProctoringPath, assignmentExamRoomPath, assignmentExamEventsPath, assignmentExamStartPath, assignmentExamExtendPath, attemptDetailPath, manualGradingDraftPath, manualGradingCompletePath, attemptPublishPath, assignmentPublishAllPath, assignmentRosterPath, eligibleStudentsPath, studentTransferPath, grantRetakePath, courseTestCatalogPath, formDraftPath, formDetailPath, previewSandboxPath, formPublishPath, formPublishPreviewPath } from './api/teacher.js';
@@ -107,7 +111,9 @@ export {
   openGenericBatchModal,
   openCsvQuickGuideModal,
   openBlockCsvUploadModal,
-  openCsvUploadModal
+  openCsvUploadModal,
+  openMultiGroupBatchModal,
+  openInlineClozeBatchModal
 } from './studio/batch-import.js';
 
 export {

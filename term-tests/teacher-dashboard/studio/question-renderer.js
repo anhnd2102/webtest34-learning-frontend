@@ -312,8 +312,21 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
           </div>
         `;
       } else if (isErrorCorrection) {
-        const expectedErrors = itemKey.expectedErrors || ['she'];
-        const expectedCorrections = itemKey.expectedCorrections || ['her'];
+        const rawErrors = (itemKey.expectedErrors && itemKey.expectedErrors.length)
+          ? itemKey.expectedErrors
+          : (item.expectedErrors && item.expectedErrors.length)
+            ? item.expectedErrors
+            : (item.targetWord ? [item.targetWord] : []);
+        const expectedErrors = rawErrors.filter(v => v != null && String(v).trim().length > 0);
+
+        const rawCorrections = (itemKey.expectedCorrections && itemKey.expectedCorrections.length)
+          ? itemKey.expectedCorrections
+          : (item.expectedCorrections && item.expectedCorrections.length)
+            ? item.expectedCorrections
+            : (item.accepted && item.accepted.length)
+              ? item.accepted
+              : [];
+        const expectedCorrections = rawCorrections.filter(v => v != null && String(v).trim().length > 0);
         const scoringRule = itemKey.scoringRule || item.scoringRule || 'split_points';
 
         const errorChipsHtml = expectedErrors.map(v => `
@@ -348,7 +361,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               <div class="dual-box error-box">
                 <label class="form-label"><strong>1. Lỗi sai trong câu (Identified Error):</strong></label>
                 <div class="fitb-input-group">
-                  <input type="text" class="form-control input-error-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedErrors[0] || '')}" placeholder="Từ / cụm từ sai (ví dụ: she)..." />
+                  <input type="text" class="form-control input-error-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedErrors[0] || item.targetWord || '')}" placeholder="Từ / cụm từ sai trong câu..." />
                   <button type="button" class="btn btn-secondary btn-sm btn-generate-error-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh biến thể cho lỗi sai">
                     ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể
                   </button>
@@ -368,7 +381,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               <div class="dual-box correction-box">
                 <label class="form-label"><strong>2. Phần sửa lại đúng (Correction):</strong></label>
                 <div class="fitb-input-group">
-                  <input type="text" class="form-control input-correction-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedCorrections[0] || '')}" placeholder="Từ / cụm từ sửa đúng (ví dụ: her)..." />
+                  <input type="text" class="form-control input-correction-token" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(expectedCorrections[0] || (item.accepted && item.accepted[0]) || '')}" placeholder="Từ / cụm từ sửa đúng..." />
                   <button type="button" class="btn btn-secondary btn-sm btn-generate-correction-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động sinh biến thể cho phần sửa">
                     ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể
                   </button>

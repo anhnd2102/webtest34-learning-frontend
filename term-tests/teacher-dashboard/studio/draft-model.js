@@ -2,22 +2,9 @@ import {
   normalizeSkillCode,
   CANONICAL_SKILL_LABELS
 } from '../ui/presentation.js';
+import { parseClozeBlanks } from './content-import.js';
 
-export function parseClozeBlanks(text) {
-  if (!text || typeof text !== 'string') return [];
-  const blanks = [];
-  const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
-  for (const match of text.matchAll(pattern)) {
-    const num = Number(match[1] || match[2]);
-    blanks.push({
-      number: num,
-      index: match.index,
-      length: match[0].length,
-      rawMatch: match[0]
-    });
-  }
-  return blanks;
-}
+export { parseClozeBlanks };
 
 export function pruneOrphanClozeKeys(item, itemKey = null) {
   if (!item || !item.prompt) return;
@@ -339,6 +326,91 @@ export function computeTestBuilderScoreSummary(blocks = []) {
   };
 }
 
+
+export function resequenceItemPositions(draftState) {
+  if (!draftState || !Array.isArray(draftState.blocks)) return;
+  const firstPos = draftState.blocks[0]?.items?.[0]?.position;
+  let pos = (typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
+  for (const b of draftState.blocks) {
+    for (const itm of b.items || []) {
+      pruneOrphanClozeKeys(itm, draftState.gradingKey?.items?.[itm.itemVersionId]);
+      const span = getItemSpanCount(itm);
+      itm.spanCount = span;
+      itm.position = pos;
+      if (itm.prompt) {
+        itm.prompt = updatePromptPosition(itm.prompt, pos, span);
+      }
+      pos += span;
+    }
+    for (const ex of b.exercises || []) {
+      ex.itemIds = (b.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
+    }
+  }
+}
+
+export function moveExerciseBetweenBlocks(draftState, { sourceBlockIdx, exerciseId, targetBlockIdx, insertIndex = -1 }) {
+  const sourceBlock = draftState?.blocks?.[sourceBlockIdx];
+  const targetBlock = draftState?.blocks?.[targetBlockIdx];
+  if (!sourceBlock || !targetBlock || !sourceBlock.exercises || !targetBlock.exercises) return false;
+
+  // 1. Find and extract the exercise from sourceBlock
+  const exIdx = sourceBlock.exercises.findIndex(e => e.exerciseId === exerciseId);
+  if (exIdx === -1) return false;
+  const [exerciseToMove] = sourceBlock.exercises.splice(exIdx, 1);
+
+  // 2. Extract all items belonging to this exercise from sourceBlock.items
+  sourceBlock.items = sourceBlock.items || [];
+  const movedItems = [];
+  const remainingSourceItems = [];
+  sourceBlock.items.forEach(it => {
+    if (it.exerciseId === exerciseId) {
+      movedItems.push(it);
+    } else {
+      remainingSourceItems.push(it);
+    }
+  });
+  sourceBlock.items = remainingSourceItems;
+
+  // 3. Determine target exercise insert index
+  targetBlock.exercises = targetBlock.exercises || [];
+  let exInsertIdx = insertIndex;
+  if (exInsertIdx < 0 || exInsertIdx > targetBlock.exercises.length) {
+    exInsertIdx = targetBlock.exercises.length;
+  }
+  targetBlock.exercises.splice(exInsertIdx, 0, exerciseToMove);
+
+  // 4. Determine item insert index in targetBlock.items
+  targetBlock.items = targetBlock.items || [];
+  let itemInsertIdx = targetBlock.items.length;
+  if (exInsertIdx === 0) {
+    itemInsertIdx = 0;
+  } else if (exInsertIdx < targetBlock.exercises.length - 1) {
+    const nextEx = targetBlock.exercises[exInsertIdx + 1];
+    const firstNextItemIdx = targetBlock.items.findIndex(it => it.exerciseId === nextEx?.exerciseId);
+    if (firstNextItemIdx !== -1) {
+      itemInsertIdx = firstNextItemIdx;
+    }
+  }
+
+  // 5. Update items metadata & insert into targetBlock
+  movedItems.forEach(it => {
+    it.exerciseTitle = exerciseToMove.title;
+  });
+  targetBlock.items.splice(itemInsertIdx, 0, ...movedItems);
+
+  // 6. Resequence exercise numbers within both blocks
+  sourceBlock.exercises.forEach((ex, idx) => {
+    ex.exerciseNumber = idx + 1;
+  });
+  targetBlock.exercises.forEach((ex, idx) => {
+    ex.exerciseNumber = idx + 1;
+  });
+
+  // 7. Global resequence of item positions
+  resequenceItemPositions(draftState);
+
+  return true;
+}
 
 export function generateUuid() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {

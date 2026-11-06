@@ -358,11 +358,18 @@ function syncInputs() {
               const correctionTokenInput = iCard.querySelector('.input-correction-token');
               const scoringRuleSelect = iCard.querySelector('.select-scoring-rule');
 
+              const fallbackErrors = (item.expectedErrors && item.expectedErrors.length)
+                ? item.expectedErrors
+                : (item.targetWord ? [item.targetWord] : []);
+              const fallbackCorrections = (item.expectedCorrections && item.expectedCorrections.length)
+                ? item.expectedCorrections
+                : (item.accepted && item.accepted.length ? item.accepted : []);
+
               const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
                 graderType: 'correction_pair',
-                expectedErrors: ['she'],
-                expectedCorrections: ['her'],
-                scoringRule: 'split_points',
+                expectedErrors: fallbackErrors,
+                expectedCorrections: fallbackCorrections,
+                scoringRule: item.scoringRule || 'split_points',
                 normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
               };
 
@@ -377,6 +384,8 @@ function syncInputs() {
                 currentKey.expectedErrors = errVariants;
               } else if (errorTokenInput && errorTokenInput.value.trim()) {
                 currentKey.expectedErrors = [errorTokenInput.value.trim()];
+              } else if (!currentKey.expectedErrors || !currentKey.expectedErrors.length) {
+                currentKey.expectedErrors = fallbackErrors;
               }
 
               const corrChips = iCard.querySelectorAll('.btn-remove-correction-chip');
@@ -385,8 +394,12 @@ function syncInputs() {
                 currentKey.expectedCorrections = corrVariants;
               } else if (correctionTokenInput && correctionTokenInput.value.trim()) {
                 currentKey.expectedCorrections = [correctionTokenInput.value.trim()];
+              } else if (!currentKey.expectedCorrections || !currentKey.expectedCorrections.length) {
+                currentKey.expectedCorrections = fallbackCorrections;
               }
 
+              item.targetWord = (currentKey.expectedErrors && currentKey.expectedErrors[0]) || item.targetWord || '';
+              item.accepted = currentKey.expectedCorrections || item.accepted || [];
               draftState.gradingKey.items[item.itemVersionId] = currentKey;
             }
 
