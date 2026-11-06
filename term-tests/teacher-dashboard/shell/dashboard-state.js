@@ -173,7 +173,11 @@ export function filterClasses(classes = [], { course = '', scope = '', classStat
     const classIdSet = new Set((userClassIds || []).map(String));
     list = list.filter(c => {
       const cid = String(c.classId || c.class_id || '');
-      return Boolean(c.isTeaching || c.is_teaching || classIdSet.has(cid));
+      const hasTeachingProp = typeof c.isTeaching === 'boolean' || typeof c.is_teaching === 'boolean';
+      if (hasTeachingProp) {
+        return Boolean(c.isTeaching || c.is_teaching);
+      }
+      return classIdSet.has(cid);
     });
   } else if (course && course !== 'all') {
     const normCourse = String(course).replace(/^[^\d]*/, '').trim().toUpperCase();

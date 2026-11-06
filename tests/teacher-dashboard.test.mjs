@@ -29,6 +29,7 @@ import {
   authMePath,
   authHeaders,
   teacherRoleLabel,
+  getRoleCapabilities,
   defaultApiBase,
   localStudentUrl,
   extractAttemptSkills,
@@ -986,6 +987,24 @@ test('filterClasses filters classes by course, scope, status, and search query',
   assert.equal(myClassesByIds.length, 2);
   assert.deepEqual(myClassesByIds.map(c => c.classId), ['103', '104']);
 
+  // 2c. Lead scope when lead teaches 0 classes (supervised only)
+  const allSupervisedClasses = [
+    { classId: '201', name: 'IC34_1', courseCode: '34', status: 'on_going', isTeaching: false },
+    { classId: '202', name: 'IC34_2', courseCode: '34', status: 'on_going', isTeaching: false }
+  ];
+  const zeroTaught = filterClasses(allSupervisedClasses, {
+    userRole: 'lead',
+    scope: 'my_classes',
+    userClassIds: []
+  });
+  assert.equal(zeroTaught.length, 0);
+  assert.equal(formatClassFilterCountLabel({ count: zeroTaught.length, userRole: 'lead', scope: 'my_classes' }), '0 lớp bạn đang dạy');
+  const allCourseClasses = filterClasses(allSupervisedClasses, {
+    userRole: 'lead',
+    scope: 'all'
+  });
+  assert.equal(allCourseClasses.length, 2);
+
   // 3. Status filter
   const ongoing = filterClasses(sampleClasses, { classStatus: 'on_going' });
   assert.equal(ongoing.length, 3);
@@ -1369,9 +1388,45 @@ test('teacher dashboard provides role capabilities popover and tooltip trigger',
   const code = readDashboardSource();
 
   assert.match(html, /id="role-capabilities-popover"/);
-  assert.match(html, /Kiểm tra toàn bộ các lớp/);
+  assert.match(html, /Quản lý lớp phụ trách|Kiểm tra toàn bộ các lớp/);
   assert.match(css, /\.role-capabilities-popover/);
   assert.match(code, /roleCapabilitiesPopover/);
+  assert.match(code, /getRoleCapabilities/);
+  assert.match(code, /roleCapsList\.replaceChildren/);
+});
+
+test('getRoleCapabilities returns role-appropriate capabilities and scopes', () => {
+  // 1. Teacher role: includes "Quản lý & Xuất bản đề thi", class-scoped management (no course-wide claims)
+  const teacherCaps = getRoleCapabilities('teacher');
+  assert.equal(teacherCaps.length, 4);
+  assert.equal(teacherCaps[0].title, 'Quản lý & Xuất bản đề thi');
+  assert.match(teacherCaps[0].description, /Test Studio/);
+  assert.match(teacherCaps[0].description, /xuất bản đợt thi/i);
+  assert.match(teacherCaps[0].description, /Exam Mode/);
+
+  assert.equal(teacherCaps[1].title, 'Quản lý lớp phụ trách');
+  assert.match(teacherCaps[1].description, /phân công giảng dạy/);
+  assert.ok(!teacherCaps.some(cap => cap.title.includes('toàn bộ khối') || cap.description.includes('toàn bộ các lớp trong khối')));
+
+  assert.equal(teacherCaps[2].title, 'Chấm thi & Phê duyệt điểm');
+  assert.equal(teacherCaps[3].title, 'Quản trị quyền làm bài');
+
+  // 2. Lead role: includes "Quản lý & Xuất bản đề thi", course-wide supervision with course codes
+  const leadCaps34 = getRoleCapabilities('lead', ['34']);
+  assert.equal(leadCaps34.length, 4);
+  assert.equal(leadCaps34[0].title, 'Quản lý & Xuất bản đề thi');
+  assert.match(leadCaps34[0].description, /Khối 34/);
+  assert.equal(leadCaps34[1].title, 'Giám sát toàn bộ khối');
+  assert.match(leadCaps34[1].description, /Khối 34/);
+  assert.match(leadCaps34[1].description, /Lớp tôi dạy/);
+  assert.match(leadCaps34[1].description, /Toàn bộ khối/);
+
+  // 3. Admin role: includes full system authority
+  const adminCaps = getRoleCapabilities('admin');
+  assert.equal(adminCaps.length, 4);
+  assert.equal(adminCaps[0].title, 'Quản lý & Xuất bản đề thi');
+  assert.equal(adminCaps[1].title, 'Giám sát toàn bộ hệ thống');
+  assert.match(adminCaps[1].description, /toàn hệ thống IZONE/);
 });
 
 test('teacher dashboard role-capabilities-popover houses teacher-role-badge inside popover and lists exam editing & publication capabilities', async () => {

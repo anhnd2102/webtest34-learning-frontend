@@ -10,6 +10,73 @@ export function teacherRoleLabel(role, courseCodes = []) {
   return 'Giáo viên phụ trách lớp';
 }
 
+export function getRoleCapabilities(role, courseCodes = []) {
+  const khoiList = courseCodes && courseCodes.length > 0 ? courseCodes.join(', ') : '';
+  const khoiText = khoiList ? ` (Khối ${khoiList})` : '';
+
+  if (role === 'admin' || role === 'qm') {
+    return [
+      {
+        title: 'Quản lý & Xuất bản đề thi',
+        description: 'Toàn quyền tạo, chỉnh sửa cấu trúc đề thi, cấu hình phiên bản đề, xuất bản đợt thi cho mọi lớp và điều phối phòng thi tập trung (Exam Mode).'
+      },
+      {
+        title: 'Giám sát toàn bộ hệ thống',
+        description: 'Xem danh sách, bài làm, phổ điểm và tiến độ nộp bài của tất cả các lớp trên toàn hệ thống IZONE.'
+      },
+      {
+        title: 'Chấm thi & Phê duyệt điểm',
+        description: 'Chấm điểm tự luận/nói, lưu chấm nháp, duyệt điểm chính thức và công bố kết quả cho mọi bài thi.'
+      },
+      {
+        title: 'Quản trị quyền làm bài',
+        description: 'Cấp quyền làm lại bài thi (Retake), bổ sung học viên chuyển lớp vào đợt thi trên toàn hệ thống.'
+      }
+    ];
+  }
+
+  if (role === 'lead') {
+    return [
+      {
+        title: 'Quản lý & Xuất bản đề thi',
+        description: `Soạn thảo, hiệu chỉnh ngân hàng đề thi trong Test Studio, cấu hình phiên bản đề và xuất bản đợt thi cho các lớp trong khối phụ trách${khoiText}; giám sát phòng thi tập trung (Exam Mode).`
+      },
+      {
+        title: 'Giám sát toàn bộ khối',
+        description: `Xem danh sách, bài làm, phổ điểm và theo dõi tiến độ nộp bài của mọi lớp trong khối phụ trách${khoiText}; hỗ trợ chuyển đổi linh hoạt giữa "Lớp tôi dạy" và "Toàn bộ khối".`
+      },
+      {
+        title: 'Chấm thi & Phê duyệt điểm',
+        description: `Chấm điểm tự luận/nói, lưu chấm nháp, duyệt điểm chính thức và công bố kết quả cho học viên toàn khối${khoiText}.`
+      },
+      {
+        title: 'Quản trị quyền làm bài',
+        description: `Cấp quyền làm lại bài thi (Retake), bổ sung học viên chuyển lớp vào đợt thi cho mọi lớp trong khối phụ trách${khoiText}.`
+      }
+    ];
+  }
+
+  // Giáo viên phụ trách lớp ('teacher' or fallback)
+  return [
+    {
+      title: 'Quản lý & Xuất bản đề thi',
+      description: 'Soạn thảo, hiệu chỉnh cấu trúc đề thi trong Test Studio, cấu hình phiên bản đề, xuất bản đợt thi cho các lớp được phân công và giám sát phòng thi tập trung (Exam Mode).'
+    },
+    {
+      title: 'Quản lý lớp phụ trách',
+      description: 'Xem danh sách học viên, bài làm, phổ điểm và theo dõi tiến độ nộp bài của các lớp được phân công giảng dạy.'
+    },
+    {
+      title: 'Chấm thi & Phê duyệt điểm',
+      description: 'Chấm điểm tự luận/nói, lưu chấm nháp, duyệt điểm chính thức và công bố kết quả cho học viên trong lớp phụ trách.'
+    },
+    {
+      title: 'Quản trị quyền làm bài',
+      description: 'Cấp quyền làm lại bài thi (Retake), bổ sung học viên chuyển lớp vào đợt thi của lớp mình phụ trách.'
+    }
+  ];
+}
+
 export function formatPublicationStatus(publication) {
   if (!publication || !publication.published) return 'Chưa công bố';
   return 'Đã công bố';
