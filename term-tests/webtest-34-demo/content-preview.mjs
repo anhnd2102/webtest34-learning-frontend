@@ -753,7 +753,23 @@ export async function mount(course) {
   const examIncidentOperations = new Map();
   const examActive = () => ['waiting', 'running'].includes(learningState.exam?.status) && learningState.status === 'active';
 
+  // Giữ màn hình sáng khi đang làm bài. Trình duyệt không hỗ trợ hoặc từ chối thì bỏ qua, bài vẫn làm bình thường.
+  // wakeLock giữ promise của lần xin hiện tại; hệ thống tự nhả khi trang bị ẩn nên xin lại khi trang hiện lại.
+  let wakeLock = null;
+  let wantWakeLock = false;
+  function requestWakeLock() {
+    if (!wantWakeLock || wakeLock || document.visibilityState !== 'visible' || !navigator.wakeLock) return;
+    wakeLock = navigator.wakeLock.request('screen').then(lock => {
+      lock.addEventListener('release', () => { wakeLock = null; });
+      if (!wantWakeLock) lock.release();
+      return lock;
+    }).catch(() => { wakeLock = null; });
+  }
+  document.addEventListener('visibilitychange', requestWakeLock);
+
   function stopExamConnections() {
+    wantWakeLock = false;
+    wakeLock?.then(lock => lock?.release());
     clearInterval(examHeartbeatTimer);
     examHeartbeatTimer = null;
     examStreamController?.abort();
@@ -1134,6 +1150,11 @@ export async function mount(course) {
               </div>
             </div>
 
+            <div id="mobileExamNotice" class="cbt-intro-notice" role="note" hidden>
+              <p>Trong lúc làm bài, <strong>không chuyển sang ứng dụng khác và không khóa màn hình</strong>.</p>
+              <p id="longWritingHint" hidden>Đề có bài viết dài. Nên làm trên máy tính hoặc iPad có bàn phím để gõ thuận tiện hơn.</p>
+            </div>
+
             <div class="cbt-intro-footer" style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;">
               <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Xem kết quả</button>
               <button type="button" class="btn-start-exam" id="startExamBtn" disabled>Bắt đầu làm bài →</button>
@@ -1191,6 +1212,9 @@ export async function mount(course) {
     const studentSelect = document.querySelector('#studentSelectInput');
     const studentStatus = document.querySelector('#studentSelectStatus');
     const startBtn = document.querySelector('#startExamBtn');
+    // Thiết bị cảm ứng; iPad đời mới tự nhận là Macintosh nên nhận qua số điểm chạm.
+    const isTouchDevice = matchMedia('(pointer: coarse)').matches || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+    document.querySelector('#mobileExamNotice').hidden = !isTouchDevice;
 
     async function handleLoadRoster() {
       const code = classInput.value.trim().toUpperCase();
@@ -1218,6 +1242,7 @@ export async function mount(course) {
         learningState.assignment = assignment;
         learningState.definition = assignment.definition;
         learningState.courseCode = code;
+        document.querySelector('#longWritingHint').hidden = !assignment.definition?.blocks?.some(block => block.items?.some(item => item.interactionType === 'long_text'));
         learningState.className = assignment.class?.name || code;
 
         studentSelect.innerHTML = '<option value="">— Chọn tên của bạn —</option>' + assignment.roster.map(s => {
@@ -1667,6 +1692,11 @@ export async function mount(course) {
           </dialog>
         </div>
       `;
+
+      if (learningState.status === 'active' && !state.submittedAt) {
+        wantWakeLock = true;
+        requestWakeLock();
+      }
 
       // Cần để env(safe-area-inset-*) có giá trị; chỉ bật ở màn thi để không đổi các trang khác.
       document.querySelector('meta[name="viewport"]')?.setAttribute('content', 'width=device-width,initial-scale=1,viewport-fit=cover');

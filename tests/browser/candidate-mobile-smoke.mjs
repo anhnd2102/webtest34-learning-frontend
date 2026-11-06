@@ -90,8 +90,18 @@ function mockLearningApi(page, attemptExtra = {}) {
 }
 
 // Mở shell thi thật và trả về page đã vào màn làm bài.
-export async function openExamShell(browser, viewport, contextOptions = {}, attemptExtra = {}) {
+export async function openExamShell(browser, viewport, contextOptions = {}, attemptExtra = {}, initScript) {
+  const page = await openStartScreen(browser, viewport, contextOptions, attemptExtra, initScript);
+  await page.selectOption('#studentSelectInput', 's1');
+  await page.click('#startExamBtn');
+  await page.waitForSelector('.cbt-exam-shell');
+  return page;
+}
+
+// Mở màn hình bắt đầu (đã tải danh sách lớp), chưa vào bài.
+export async function openStartScreen(browser, viewport, contextOptions = {}, attemptExtra = {}, initScript) {
   const page = await browser.newPage({ viewport, ...contextOptions });
+  if (initScript) await page.addInitScript(initScript);
   page.setDefaultTimeout(10000);
   page.errors = [];
   page.on('pageerror', e => page.errors.push(e.message));
@@ -104,11 +114,24 @@ export async function openExamShell(browser, viewport, contextOptions = {}, atte
   await mockLearningApi(page, attemptExtra);
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
   await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
-  await page.selectOption('#studentSelectInput', 's1');
-  await page.click('#startExamBtn');
-  await page.waitForSelector('.cbt-exam-shell');
   return page;
 }
+
+// Wake Lock giả: đếm lần xin/nhả; window.__wl.fail = true để giả lập trình duyệt từ chối.
+const fakeWakeLock = () => {
+  window.__wl = { requests: 0, releases: 0, fail: false, last: null };
+  Object.defineProperty(navigator, 'wakeLock', { configurable: true, value: { request: async () => {
+    window.__wl.requests++;
+    if (window.__wl.fail) throw new DOMException('denied', 'NotAllowedError');
+    const lock = new EventTarget();
+    lock.release = async () => { window.__wl.releases++; lock.dispatchEvent(new Event('release')); };
+    return (window.__wl.last = lock);
+  } } });
+};
+const setVisibility = (page, state) => page.evaluate(v => {
+  Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => v });
+  document.dispatchEvent(new Event('visibilitychange'));
+}, state);
 
 // Bấm qua DOM để dùng được cả khi nút đang ẩn trên khổ này (đã chuyển vào bảng trượt).
 const clickDom = (page, selector) => page.evaluate(s => document.querySelector(s).click(), selector);
@@ -565,6 +588,52 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     await guarded.locator('#examGuardOverlay').waitFor({ state: 'hidden' });
     assert.equal(await guarded.locator('.cbt-bottom-bar').evaluate(el => el.inert), false, 'thanh đáy không mở lại sau cảnh báo');
     await guarded.close();
+
+    // Ticket #35: thông báo ở màn bắt đầu chỉ trên thiết bị cảm ứng (kể cả iPad tự nhận là Macintosh).
+    const ipadMacUA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15';
+    for (const [name, vp, opts, expected] of [
+      ['điện thoại', VIEWPORTS[1], { hasTouch: true, isMobile: true }, true],
+      ['iPad tự nhận Macintosh', VIEWPORTS[3], { hasTouch: true, userAgent: ipadMacUA }, true],
+      ['máy tính dùng chuột', VIEWPORTS[4], {}, false]
+    ]) {
+      const start = await openStartScreen(browser, vp, opts, {}, name.startsWith('iPad') ? () => Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 5 }) : undefined);
+      assert.equal(await start.locator('#mobileExamNotice').isVisible(), expected, `thông báo di động sai trên ${name}`);
+      // Đề mẫu có câu long_text (Phần B) nên gợi ý bài viết dài hiện cùng thông báo.
+      assert.equal(await start.locator('#longWritingHint').isVisible(), expected, `gợi ý bài viết dài sai trên ${name}`);
+      await start.selectOption('#studentSelectInput', 's1');
+      assert.ok(await start.locator('#startExamBtn').isEnabled(), `không bắt đầu được trên ${name}`);
+      await start.close();
+    }
+
+    // Ticket #35: Wake Lock xin khi vào bài, xin lại khi trang hiện lại, nhả khi nộp bài.
+    const wl = await openExamShell(browser, VIEWPORTS[1], { hasTouch: true, isMobile: true }, {}, fakeWakeLock);
+    const counts = () => wl.evaluate(() => ({ requests: window.__wl.requests, releases: window.__wl.releases }));
+    await wl.waitForFunction(() => window.__wl.requests === 1);
+    await setVisibility(wl, 'hidden');
+    await wl.evaluate(() => window.__wl.last.release()); // hệ thống tự nhả khi trang bị ẩn
+    await setVisibility(wl, 'visible');
+    await wl.waitForFunction(() => window.__wl.requests === 2);
+    await clickDom(wl, '#demo-submit-top');
+    await clickDom(wl, '#demo-confirm-submit');
+    await wl.waitForFunction(() => window.__wl.releases === 2);
+    await setVisibility(wl, 'hidden');
+    await setVisibility(wl, 'visible');
+    assert.deepEqual(await counts(), { requests: 2, releases: 2 }, 'còn xin Wake Lock sau khi nộp');
+    assert.deepEqual(wl.errors, [], 'lỗi trang khi dùng Wake Lock');
+    await wl.close();
+    // Trình duyệt không hỗ trợ: không lỗi, vẫn vào bài.
+    const unsupported = await openExamShell(browser, VIEWPORTS[1], { hasTouch: true, isMobile: true }, {}, () => { delete Navigator.prototype.wakeLock; });
+    assert.deepEqual(unsupported.errors, [], 'lỗi trang khi không có Wake Lock');
+    await unsupported.close();
+    // Trình duyệt từ chối: không lỗi, vẫn vào bài.
+    const deniedLock = await openStartScreen(browser, VIEWPORTS[1], { hasTouch: true, isMobile: true }, {}, fakeWakeLock);
+    await deniedLock.evaluate(() => { window.__wl.fail = true; });
+    await deniedLock.selectOption('#studentSelectInput', 's1');
+    await deniedLock.click('#startExamBtn');
+    await deniedLock.waitForSelector('.cbt-exam-shell');
+    await deniedLock.waitForFunction(() => window.__wl.requests === 1);
+    assert.deepEqual(deniedLock.errors, [], 'lỗi trang khi Wake Lock bị từ chối');
+    await deniedLock.close();
     console.log(JSON.stringify(report));
     console.log('candidate-mobile-smoke: OK');
   } finally {
