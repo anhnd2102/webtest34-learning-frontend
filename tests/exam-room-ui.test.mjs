@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import { readDashboardSource } from './helpers/dashboard-source.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -33,7 +34,7 @@ test('teacher room markup offers a manual refresh, start, and extension control'
 
 test('teacher room consumes the scoped Bearer SSE stream and reconnects with a fresh snapshot', async () => {
   const source = readDashboardSource();
-  const styles = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const styles = await readDashboardCss();
   assert.match(source, /fetch\(`\$\{origin\}\$\{path\}`,[\s\S]*?Authorization: `Bearer \$\{token\}`[\s\S]*?response\.body\.getReader\(\)/);
   assert.match(source, /parseSseChunk\(buffer/);
   assert.match(source, /message\.event === 'snapshot'[\s\S]*?message\.event === 'exam\.incident\.opened'/);

@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import { readDashboardSource } from './helpers/dashboard-source.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -10,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const stylesCssPath = path.resolve(__dirname, '../term-tests/teacher-dashboard/styles.css');
 const appJsContent = readDashboardSource();
-const stylesCssContent = fs.readFileSync(stylesCssPath, 'utf8');
+const stylesCssContent = readDashboardCss();
 
 test('Issue 51: formatOptionDisplayLetter helper formats internal IDs to academic letters A, B, C, D', () => {
   assert.equal(formatOptionDisplayLetter('opt_a', 0), 'A');

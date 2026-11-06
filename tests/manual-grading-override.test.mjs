@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -14,7 +15,7 @@ test('detail items table header renders "Thao tác" and dedicated column classes
 });
 
 test('CSS enforces nowrap on table score, action, verdict, and badge-manual-override', async () => {
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.grading-table th\.col-action[^}]*white-space:\s*nowrap/);
   assert.match(css, /\.grading-table th\.col-score[^}]*white-space:\s*nowrap/);

@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -207,7 +208,7 @@ test('Issue 55: Candidate Simulation grades vocabulary pair questions and captur
 
 test('Issue 55: styles.css enables scrolling in simulation results modal and fixes table header', () => {
   const cssPath = resolve(new URL('.', import.meta.url).pathname.replace(/^\/([A-Z]:)/i, '$1'), '../term-tests/teacher-dashboard/styles.css');
-  const css = readFileSync(cssPath, 'utf8');
+  const css = readDashboardCss();
 
   // 1. .sim-results-body must have flex: 1 1 auto (or flex: 1) and min-height: 0 so flexbox allows it to shrink and scroll
   assert.match(css, /\.sim-results-body\s*\{[^}]*min-height:\s*0/s, 'styles.css .sim-results-body must specify min-height: 0');

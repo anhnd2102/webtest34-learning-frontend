@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -341,7 +342,7 @@ test('Issue 54: Mixed questions exercise groups pictorial questions into 2-colum
 
 test('Issue 54: styles.css contains 2-column grid styles and responsive layout for pictorial vocabulary', () => {
   const cssPath = resolve(new URL('.', import.meta.url).pathname.replace(/^\/([A-Z]:)/i, '$1'), '../term-tests/teacher-dashboard/styles.css');
-  const css = readFileSync(cssPath, 'utf8');
+  const css = readDashboardCss();
 
   assert.match(css, /\.candidate-pictorial-group-container/, 'styles.css must style .candidate-pictorial-group-container');
   assert.match(css, /\.candidate-pictorial-grid/, 'styles.css must style .candidate-pictorial-grid');

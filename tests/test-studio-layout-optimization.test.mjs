@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -150,7 +151,7 @@ test('Test Studio reading passage textarea has rows="8" for long-text editing', 
 
 test('teacher dashboard styles.css provides Test Studio UI/UX refresh design tokens and layout rules', () => {
   const cssPath = resolve('term-tests/teacher-dashboard/styles.css');
-  const css = readFileSync(cssPath, 'utf8');
+  const css = readDashboardCss();
 
   // Verify brand token aligned with Webtest
   assert.ok(css.includes('--studio-primary') || css.includes('#db0829'), 'Should include IZONE Webtest brand color');

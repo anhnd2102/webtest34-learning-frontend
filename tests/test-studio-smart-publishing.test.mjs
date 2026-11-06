@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -491,7 +492,7 @@ test('Smart Publishing Modal: renders selection tiles with minimalist icons, hid
   // Let's verify modal HTML after opening
   // Since we also test styles.css, verify stylesheet has the tokens:
   import('node:fs').then(({ readFileSync }) => {
-    const css = readFileSync(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+    const css = readDashboardCss();
     assert.ok(css.includes('.tile-card-header'), 'styles.css defines .tile-card-header');
     assert.ok(css.includes('.tile-card-icon'), 'styles.css defines .tile-card-icon');
     assert.ok(css.includes('.tile-card-check'), 'styles.css defines .tile-card-check');

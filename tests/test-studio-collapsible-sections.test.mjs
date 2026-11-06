@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -84,7 +85,7 @@ test('Test Studio Accordion UI: renders collapse/expand buttons for blocks, exer
 
 test('Test Studio Accordion UI: CSS contains collapse rules for blocks and exercises', () => {
   const cssPath = resolve('term-tests/teacher-dashboard/styles.css');
-  const css = readFileSync(cssPath, 'utf8');
+  const css = readDashboardCss();
 
   // Verify CSS rules exist for hiding collapsed block and exercise bodies
   assert.match(

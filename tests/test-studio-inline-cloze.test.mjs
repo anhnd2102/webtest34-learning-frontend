@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import fs from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -280,7 +281,7 @@ test('Test Studio: Inline Cloze preserves clozeAnswers during onSaveDraft', asyn
 
 
 test('inline cloze badge styles enforce nowrap and prevent line breaks on brackets and index numbers', () => {
-  const stylesCss = fs.readFileSync('term-tests/teacher-dashboard/styles.css', 'utf8');
+  const stylesCss = readDashboardCss();
   assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*white-space:\s*nowrap\s*!important;/i, 'Wrapper must have white-space: nowrap !important');
   assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*flex-shrink:\s*0\s*!important;/i, 'Wrapper must have flex-shrink: 0 !important');
   assert.match(stylesCss, /\.inline-blank-number,[^}]*white-space:\s*nowrap\s*!important;/i, 'Badge must have white-space: nowrap !important');

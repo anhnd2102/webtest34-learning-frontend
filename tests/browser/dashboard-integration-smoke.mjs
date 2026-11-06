@@ -9,9 +9,9 @@ const root = process.env.FRONTEND_ROOT || fileURLToPath(new URL('../../', import
 const port = Number(process.env.SMOKE_PORT || 18324);
 const captureOnly = process.env.CAPTURE_ONLY === '1';
 const label = process.env.ARTIFACT_LABEL || 'final';
-const artifacts = pathToFileURL(execFileSync('git', [
+const artifacts = pathToFileURL((process.env.ARTIFACT_DIR || execFileSync('git', [
   'rev-parse', '--path-format=absolute', '--git-path', `verification/issue-24/${label}`
-], { cwd: fileURLToPath(new URL('../../', import.meta.url)), encoding: 'utf8' }).trim() + '/');
+], { cwd: fileURLToPath(new URL('../../', import.meta.url)), encoding: 'utf8' }).trim()) + '/');
 const server = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
 const form = id => ({
   id, formVersionId: id, title: `Synthetic ${id}`, status: 'draft', version: 1, durationMinutes: 45,
@@ -48,6 +48,7 @@ try {
       page.setDefaultTimeout(10000);
       const errors = [];
       const modules = [];
+      const cssResponses = [];
       const reads = { me: 0, classes: 0, assignments: 0, results: 0, catalog: 0, detail: 0, saves: 0 };
       const pendingSaves = [];
       const savedPayloads = [];
@@ -55,6 +56,7 @@ try {
       page.on('pageerror', error => errors.push(error.message));
       page.on('response', response => {
         if (new URL(response.url()).pathname.endsWith('.js')) modules.push({ url: response.url(), status: response.status(), type: response.headers()['content-type'] });
+        if (/\/teacher-dashboard\/(styles\.css|styles\/[^/]+\.css)$/.test(new URL(response.url()).pathname)) cssResponses.push({ url: response.url(), status: response.status(), type: response.headers()['content-type'] });
       });
       await page.addInitScript(() => {
         sessionStorage.setItem('izone_teacher_token', 'synthetic-integration-token');
@@ -131,7 +133,30 @@ try {
       assert.equal(reads.me, 1, 're-importing the actual entry does not bootstrap twice');
       const screenshot = async state => {
         if (prefix) return;
+        await page.mouse.move(-1, -1);
         await page.evaluate(async () => { await document.fonts.ready; document.activeElement?.blur?.(); window.scrollTo(0, 0); });
+        if (process.env.CAPTURE_COMPUTED === '1') {
+          const styles = await page.evaluate(() => {
+            const properties = ['display', 'position', 'color', 'background-color', 'font-family', 'font-size', 'font-weight', 'line-height', 'width', 'height', 'padding', 'margin', 'border', 'border-radius', 'overflow', 'z-index', 'box-shadow', 'fill'];
+            return Array.from(document.body.querySelectorAll('*')).map(el => ({ tag: el.tagName, id: el.id, class: el.getAttribute('class'), styles: Object.fromEntries(properties.map(key => [key, getComputedStyle(el).getPropertyValue(key)])) }));
+          });
+          await writeFile(new URL(`${viewport.width}-${state}-computed.json`, artifacts), JSON.stringify(styles));
+          if (viewport.width === 1440 && state === 'dashboard') {
+            const rules = await page.evaluate(() => {
+              const map = [];
+              function visit(rules, source, conditions = []) {
+                for (const rule of rules) {
+                  if (rule.styleSheet) visit(rule.styleSheet.cssRules, new URL(rule.styleSheet.href).pathname.split('/').at(-1), conditions);
+                  else if (rule.selectorText) map.push({ order: map.length, source, conditions, selector: rule.selectorText });
+                  else if (rule.cssRules) visit(rule.cssRules, source, [...conditions, rule.conditionText || rule.name || rule.constructor.name]);
+                }
+              }
+              for (const sheet of document.styleSheets) if (sheet.href && new URL(sheet.href).pathname.endsWith('/styles.css')) visit(sheet.cssRules, 'styles.css');
+              return map;
+            });
+            await writeFile(new URL('css-rule-map.json', artifacts), JSON.stringify(rules, null, 2));
+          }
+        }
         await page.screenshot({ path: fileURLToPath(new URL(`${viewport.width}-${state}.png`, artifacts)), fullPage: true, animations: 'disabled', caret: 'hide' });
       };
       const openBuilder = async id => {
@@ -148,6 +173,32 @@ try {
       await page.locator('#modal-unsaved-changes').waitFor();
       await screenshot('dirty-modal');
       await page.locator('#btn-stay-editing').click();
+      if (process.env.CSS_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'css-parity-host'; document.body.append(host);
+          data.blocks[0].items[0] = { ...data.blocks[0].items[0], interactionType: 'listening_order', pedagogicalTypeCode: 'listening_order', events: [{ label: 'A', text: 'Synthetic event' }], audioUrl: 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=' };
+          window.cssParityBuilder = integrationApp.mountBuilder(host, data);
+          host.querySelector('#btn-preview-test').click();
+        }, form('css-parity'));
+        await page.locator('#candidate-simulation-modal').waitFor();
+        assert.ok(await page.locator('#candidate-simulation-modal audio').count() > 0);
+        await screenshot('simulation-audio');
+        await page.locator('#btn-close-simulation').click();
+        await page.locator('#css-parity-host #btn-publish-test').click();
+        await page.locator('#smart-publishing-modal').waitFor();
+        await screenshot('publishing');
+        await page.locator('#btn-close-publish-modal').click();
+        await page.evaluate(() => { cssParityBuilder.dispose(); document.querySelector('#css-parity-host').remove(); });
+        await page.evaluate(() => {
+          const host = document.createElement('div'); host.id = 'css-gradient-probe';
+          host.style.cssText = 'position:fixed;left:0;top:0;z-index:99999;background:white';
+          host.innerHTML = '<svg width="120" height="80"><defs><linearGradient id="barGradient"><stop stop-color="var(--izone-primary)"/></linearGradient></defs><rect class="histogram-bar" x="10" y="10" width="100" height="60"/></svg>';
+          document.body.append(host);
+        });
+        assert.match(await page.locator('#css-gradient-probe rect').evaluate(el => getComputedStyle(el).fill), /^url\(["']?#barGradient/);
+        await page.locator('#css-gradient-probe').screenshot({ path: fileURLToPath(new URL(`${viewport.width}-histogram-bar.png`, artifacts)) });
+        await page.locator('#css-gradient-probe').evaluate(el => el.remove());
+      }
       if (!captureOnly) {
         assert.equal(await page.evaluate(() => document.activeElement?.id), 'btn-back-to-catalog', 'Staying returns keyboard focus to the initiating control');
         await page.locator('#btn-back-to-catalog').click();
@@ -382,8 +433,17 @@ try {
         for (const route of pendingReports) await route.abort().catch(() => {});
       }
       assert.deepEqual(errors, []);
+      const cssLoad = await page.evaluate(() => {
+        const resources = performance.getEntriesByType('resource').filter(entry => /\/teacher-dashboard\/(styles\.css|styles\/[^/]+\.css)$/.test(new URL(entry.name).pathname));
+        return { resources: resources.map(entry => ({ url: entry.name, startTime: entry.startTime, responseEnd: entry.responseEnd, duration: entry.duration })), firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime ?? null };
+      });
+      assert.ok(cssResponses.every(response => response.status === 200 && response.type?.includes('text/css')));
+      if (cssResponses.some(response => response.url.includes('/styles/'))) {
+        assert.equal(cssResponses.length, 13, 'entry and all 12 fragments load');
+        assert.ok(cssLoad.firstPaint !== null && cssLoad.firstPaint >= Math.max(...cssLoad.resources.map(entry => entry.responseEnd)), 'cold first paint waits for imported styles');
+      }
       assert.ok(modules.every(module => module.status === 200 && module.type?.includes('javascript')));
-      report.push({ viewport: `${viewport.width}x${viewport.height}`, prefix: prefix || '/', reads, cycles: captureOnly ? 0 : 10, cacheContract, modules: modules.length, errors: errors.length });
+      report.push({ viewport: `${viewport.width}x${viewport.height}`, prefix: prefix || '/', reads, cycles: captureOnly ? 0 : 10, cacheContract, modules: modules.length, errors: errors.length, css: { responses: cssResponses, ...cssLoad } });
       await page.close();
     }
   }

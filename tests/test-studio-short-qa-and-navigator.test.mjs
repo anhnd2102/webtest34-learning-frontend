@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -10,7 +11,7 @@ const __dirname = path.dirname(__filename);
 const stylesCssPath = path.resolve(__dirname, '../term-tests/teacher-dashboard/styles.css');
 
 test('Issue 58: CSS defines styles for candidate-short-qa-container and compact input', () => {
-  const css = fs.readFileSync(stylesCssPath, 'utf8');
+  const css = readDashboardCss();
 
   assert.ok(css.includes('.candidate-short-qa-container'), 'styles.css must include .candidate-short-qa-container');
   assert.ok(css.includes('.candidate-short-qa-item'), 'styles.css must include .candidate-short-qa-item');

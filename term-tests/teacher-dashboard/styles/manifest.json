@@ -1,0 +1,79 @@
+{
+  "baseline": "6aebf2e",
+  "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
+  "sourceLines": 11527,
+  "fragments": [
+    {
+      "href": "styles/01-foundation.css?rev=20261106-css1",
+      "startLine": 1,
+      "endLine": 1069,
+      "sha256": "4ed3039fab5e2cb5f8253e1dff24ad736e434c9bd6b2e7fed10ad1877263f21d"
+    },
+    {
+      "href": "styles/02-dashboard-grading.css?rev=20261106-css1",
+      "startLine": 1070,
+      "endLine": 2726,
+      "sha256": "24d81c4921e4b6bf6b43df98234cde1590478e2de483ee366d8064698cce5050"
+    },
+    {
+      "href": "styles/03-studio-builder.css?rev=20261106-css1",
+      "startLine": 2727,
+      "endLine": 4644,
+      "sha256": "910e81aa18dc036d2a3202aa10042804825578bcfb790bc689e90b75ed02a8a5"
+    },
+    {
+      "href": "styles/04-authoring.css?rev=20261106-css1",
+      "startLine": 4645,
+      "endLine": 5289,
+      "sha256": "736fe95bb5af26ed4eac0e6c2a76dfb803ffc7bd5cc64688d46b6953b08ba065"
+    },
+    {
+      "href": "styles/05-simulation-questions.css?rev=20261106-css1",
+      "startLine": 5290,
+      "endLine": 6204,
+      "sha256": "22311374bd167b5e2d40127967b50fab434487f6e58ec351578ea8b9f72d5a9a"
+    },
+    {
+      "href": "styles/06-publishing.css?rev=20261106-css1",
+      "startLine": 6205,
+      "endLine": 6829,
+      "sha256": "28a5d85a945f398e97b5140d04ab86c9ec241b6e70d3505953a4c0d871ca9fa4"
+    },
+    {
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261106-css1",
+      "startLine": 6830,
+      "endLine": 7911,
+      "sha256": "df7875a0146c15dda2e1eb0fd929082d0d74352366b29672514c73054a3ed839"
+    },
+    {
+      "href": "styles/08-studio-simulation-shell.css?rev=20261106-css1",
+      "startLine": 7912,
+      "endLine": 8949,
+      "sha256": "d18576a7dc4d9e5ac4f9f5418312542e8d831f364cd39cf5a5e0602c2f95144e"
+    },
+    {
+      "href": "styles/09-editor-media.css?rev=20261106-css1",
+      "startLine": 8950,
+      "endLine": 9535,
+      "sha256": "00b9cd086a48222a0b7b9577c4d3efcd0df4c0ca1e936b7ddd497d0066a17e1b"
+    },
+    {
+      "href": "styles/10-studio-overrides.css?rev=20261106-css1",
+      "startLine": 9536,
+      "endLine": 10306,
+      "sha256": "37b90dbc5549c50a7fee5aba033afdf039008f367da861852bce6f07fb051957"
+    },
+    {
+      "href": "styles/11-analytics.css?rev=20261106-css1",
+      "startLine": 10307,
+      "endLine": 11174,
+      "sha256": "090a8b29cd6c3777beebf1096df9f272717595d969cb75a033105750bbdda19e"
+    },
+    {
+      "href": "styles/12-context-and-assessment.css?rev=20261106-css1",
+      "startLine": 11175,
+      "endLine": 11527,
+      "sha256": "30348bca09ecef46be660d0a09719a5d17a42685cba8b1b72d796841a653deb1"
+    }
+  ]
+}

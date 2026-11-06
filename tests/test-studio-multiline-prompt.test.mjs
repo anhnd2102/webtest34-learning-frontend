@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -10,7 +11,7 @@ const __dirname = path.dirname(__filename);
 const stylesCssPath = path.resolve(__dirname, '../term-tests/teacher-dashboard/styles.css');
 
 test('Issue 57: CSS defines white-space pre-wrap for multiline prompts and preview blocks', () => {
-  const css = fs.readFileSync(stylesCssPath, 'utf8');
+  const css = readDashboardCss();
 
   // Verify candidate-question-prompt has white-space pre-wrap
   const promptMatch = css.match(/\.candidate-question-prompt\s*\{[^}]+\}/g);

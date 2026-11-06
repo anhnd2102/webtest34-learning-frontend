@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import { readDashboardSource } from './helpers/dashboard-source.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -11,7 +12,7 @@ const frontendDir = path.resolve(__dirname, '..');
 
 test('Test Studio: styles.css enforces full-width textarea reset and button proportions', () => {
   const cssPath = path.join(frontendDir, 'term-tests', 'teacher-dashboard', 'styles.css');
-  const cssContent = fs.readFileSync(cssPath, 'utf8');
+  const cssContent = readDashboardCss();
 
   // Verify textarea reset width 100% and box-sizing
   assert.ok(

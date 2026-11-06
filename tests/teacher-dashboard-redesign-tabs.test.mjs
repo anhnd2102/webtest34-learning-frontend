@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import { readDashboardSource } from './helpers/dashboard-source.mjs';
 import assert from 'node:assert/strict';
@@ -153,7 +154,7 @@ test('Teacher Dashboard Redesign: Exam Room rows render 7th column with retake b
 
 test('Teacher Dashboard Redesign: styles.css contains required design system styles and hides link bar in grading', () => {
   const cssPath = path.join(__dirname, '../term-tests/teacher-dashboard/styles.css');
-  const css = fs.readFileSync(cssPath, 'utf-8');
+  const css = readDashboardCss();
 
   assert.match(css, /\.assessment-header/, 'Must define .assessment-header');
   assert.match(css, /\.assessment-nav-tabs/, 'Must define .assessment-nav-tabs');
@@ -167,7 +168,7 @@ test('Teacher Dashboard Redesign: styles.css contains required design system sty
 
 test('Teacher Dashboard Assessment Tabs: hover and active styles use brand colors and items tab triggers item_analysis', () => {
   const cssPath = path.join(__dirname, '../term-tests/teacher-dashboard/styles.css');
-  const css = fs.readFileSync(cssPath, 'utf-8');
+  const css = readDashboardCss();
   const dashboardJsPath = path.join(__dirname, '../term-tests/teacher-dashboard/shell/dashboard.js');
   const dashboardJs = readDashboardSource();
 
