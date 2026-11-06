@@ -1,3 +1,4 @@
+import { readDashboardSource } from './helpers/dashboard-source.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
@@ -58,8 +59,7 @@ test('Dynamic Renderer: navigation uses currentActiveBlockIdx, onclick handlers,
 });
 
 test('Test Studio: error correction batch import initializes correct graderType correction_pair', () => {
-  const file = findFile('term-tests/teacher-dashboard/app.js');
-  const code = readFileSync(file, 'utf8');
+  const code = readDashboardSource();
 
   assert.ok(
     code.includes("graderType: 'correction_pair'") && code.includes("targetWord: parsed.targetWord"),
@@ -68,8 +68,7 @@ test('Test Studio: error correction batch import initializes correct graderType 
 });
 
 test('Test Studio: Block CSV import handles vocabulary_pair and inline_cloze with proper grading keys', () => {
-  const file = findFile('term-tests/teacher-dashboard/app.js');
-  const code = readFileSync(file, 'utf8');
+  const code = readDashboardSource();
 
   assert.ok(
     code.includes("graderType: 'accepted_text_exact_option'"),
