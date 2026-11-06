@@ -855,6 +855,7 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
           <span class="dot dot-ended"></span>
           <span class="audio-note">Đã nghe xong bài nghe · Bài nghe đã khóa</span>
         </div>
+        <span class="audio-listens-left">Còn ${maxListens} lượt nghe</span>
       </div>
       <audio class="audio-hidden-element" src="${escape(convertedUrl)}" preload="auto" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;"></audio>
     </div>
@@ -1596,6 +1597,11 @@ export function initStrictAudioDocks(rootEl, { state } = {}) {
     const maxListens = parseInt(dock.getAttribute('data-max-listens') || '1', 10);
     let listensCount = parseInt(dock.getAttribute('data-listens-count') || '0', 10);
     let maxPlayedTime = 0;
+    const listensLeft = dock.querySelector('.audio-listens-left');
+    // Lượt đang nghe dở cũng tính là đã dùng, vì không được nghe lại từ đầu.
+    const syncListensLeft = () => {
+      if (listensLeft) listensLeft.textContent = `Còn ${Math.max(0, maxListens - listensCount - (maxPlayedTime > 0 || !audioEl.paused ? 1 : 0))} lượt nghe`;
+    };
 
     const formatSec = (secs) => {
       if (isNaN(secs) || secs < 0) return '00:00';
@@ -1647,6 +1653,7 @@ export function initStrictAudioDocks(rootEl, { state } = {}) {
       audioEl.addEventListener('playing', () => {
         playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
         if (liveStatus) liveStatus.style.display = 'inline-flex';
+        syncListensLeft();
 
         // Mở khóa đề bài khi audio bắt đầu phát
         const sectionCard = dock.closest('.simulation-section-card');
@@ -1667,6 +1674,7 @@ export function initStrictAudioDocks(rootEl, { state } = {}) {
         dock.setAttribute('data-listens-count', String(listensCount));
         maxPlayedTime = 0;
         if (liveStatus) liveStatus.style.display = 'none';
+        syncListensLeft();
 
         playBtn.disabled = true;
         playBtn.style.display = 'none';

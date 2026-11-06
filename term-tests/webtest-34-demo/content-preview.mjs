@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261105-question-sheet-v20';
+} from './dynamic-exam-renderer.mjs?rev=20261105-sticky-audio-v1';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 

@@ -1265,6 +1265,48 @@ body {
   background: #94a3b8;
 }
 
+.audio-listens-left {
+  display: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--izone-text-muted, #64748b);
+  white-space: nowrap;
+}
+
+/* Dưới 1024px: sau khi mở khóa, trình phát thu gọn dính dưới thanh trên khi cuộn qua câu hỏi. */
+@media (max-width: 1023.98px) {
+  /* Tên bài nghe dài và thanh âm lượng không vừa một hàng trên điện thoại. */
+  .cbt-exam-shell .strict-audio-header {
+    flex-wrap: wrap;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .strict-audio-dock {
+    position: sticky;
+    top: var(--cbt-topbar-h, 0px);
+    z-index: 30;
+    padding: 8px 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .strict-audio-header {
+    display: none;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .strict-audio-body {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .audio-listens-left {
+    display: inline;
+  }
+
+  /* Ô nhập được cuộn vào tầm nhìn (focus, bàn phím) không bị trình phát dính che. */
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] :is(input, textarea, select) {
+    scroll-margin-top: calc(var(--cbt-topbar-h, 0px) + 96px);
+  }
+}
+
 /* ==========================================================================
    12. TRUE 2-COLUMN CBT LAYOUT & STICKY ASIDE
    ========================================================================== */

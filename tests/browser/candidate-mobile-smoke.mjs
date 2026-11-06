@@ -62,9 +62,26 @@ export const definition = {
         itemVersionId: 'it-11', position: 11, interactionType: 'short_text', pedagogicalTypeCode: 'table_completion', layoutType: 'inline_cloze', points: 3,
         prompt: `<p>Listen and complete.</p><table style="width:900px"><thead><tr><th></th><th>The right career</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td style="width:300px"><b>Factors for the right career</b></td><td style="width:600px"><b>There are some factors</b><br>The most important: A job suitable for your personality (1) ........ E.g: Outgoing people can be tour guides. Happiness at work changes (2) ........ and more.</td></tr><tr><td><b>Other factors</b></td><td>The money or the (3) ........ may not be the right factors</td></tr></tbody></table>`
       }]
+    },
+    {
+      // Phần nghe: audio giả (WAV im lặng ngắn) để thử trình phát dính khi cuộn.
+      blockId: 'b6', title: 'Phần F', audioUrl: `${origin}/smoke-audio.wav`,
+      items: Array.from({ length: 20 }, (_, i) => ({
+        itemVersionId: `it-${12 + i}`, position: 12 + i, interactionType: 'short_text', prompt: `Nghe và điền câu ${12 + i}.`, points: 1
+      }))
     }
   ]
 };
+
+// WAV 8 kHz, 8-bit, mono, im lặng 1,5 giây.
+function silentWav(seconds = 1.5) {
+  const n = Math.round(8000 * seconds), buf = Buffer.alloc(44 + n, 128);
+  buf.write('RIFF', 0); buf.writeUInt32LE(36 + n, 4); buf.write('WAVEfmt ', 8);
+  buf.writeUInt32LE(16, 16); buf.writeUInt16LE(1, 20); buf.writeUInt16LE(1, 22);
+  buf.writeUInt32LE(8000, 24); buf.writeUInt32LE(8000, 28); buf.writeUInt16LE(1, 32); buf.writeUInt16LE(8, 34);
+  buf.write('data', 36); buf.writeUInt32LE(n, 40);
+  return buf;
+}
 
 // Giả lập Learning API: resolve → start; mọi route khác trả {}.
 function mockLearningApi(page, attemptExtra = {}) {
@@ -98,6 +115,7 @@ export async function openExamShell(browser, viewport, contextOptions = {}, atte
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     if (url.pathname.includes('/api/learning/')) return route.fallback();
+    if (url.pathname === '/smoke-audio.wav') return route.fulfill({ status: 200, contentType: 'audio/wav', body: silentWav() });
     // Chặn mạng ngoài (font, ...), chỉ cho static server cục bộ.
     return url.origin === origin ? route.continue() : route.abort();
   });
@@ -503,6 +521,40 @@ export const checks = {
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
   },
   // Nộp bài làm khóa màn hình nên check này phải đứng cuối.
+  // Ticket #34: trình phát thu gọn dính dưới thanh trên khi cuộn qua câu của phần nghe.
+  async stickyAudioPlayer(page, vp) {
+    const sec = '#sim-block-5';
+    const dock = page.locator(`${sec} .strict-audio-dock`);
+    await goToSection(page, -1);
+    await clickDom(page, `${sec} .btn-sim-audio-play`);
+    await page.waitForSelector(`${sec}[data-audio-unlocked="true"]`);
+    const sticky = vp.width < 1024;
+    assert.equal(await dock.evaluate(el => getComputedStyle(el).position), sticky ? 'sticky' : 'static', `vị trí trình phát sai ở ${vp.width}px`);
+    assert.equal(await page.locator(`${sec} .strict-audio-header`).isVisible(), !sticky, `đầu trình phát sai ở ${vp.width}px`);
+    assert.equal(await page.locator(`${sec} .audio-listens-left`).isVisible(), sticky, `số lượt nghe sai ở ${vp.width}px`);
+    if (sticky) {
+      assert.equal((await page.locator(`${sec} .audio-listens-left`).textContent()).trim(), 'Còn 0 lượt nghe');
+      assert.equal(await page.locator(`${sec} .sim-audio-bar-track input, ${sec} [class*="seek"]`).count(), 0, 'có nút tua');
+      const last = page.locator('input[type="text"][data-item-id="it-31"]');
+      await last.evaluate(el => el.scrollIntoView({ block: 'end', behavior: 'instant' }));
+      await page.waitForTimeout(100);
+      const [bar, d] = [await box(page, '.cbt-topbar'), await dock.boundingBox()];
+      assert.ok(Math.abs(d.y - (bar.y + bar.height)) <= 1, `trình phát không dính dưới thanh trên ở ${vp.width}px: ${d.y} vs ${bar.y + bar.height}`);
+      assert.ok(d.height <= 120, `trình phát chưa thu gọn ở ${vp.width}px: ${d.height}px`);
+      // Ô đang nhập không bị trình phát che khi được cuộn vào tầm nhìn.
+      const mid = page.locator('input[type="text"][data-item-id="it-15"]');
+      await mid.evaluate(el => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
+      await page.waitForTimeout(100);
+      const [d2, input] = [await dock.boundingBox(), await mid.boundingBox()];
+      assert.ok(input.y >= d2.y + d2.height, `ô nhập bị trình phát che ở ${vp.width}px`);
+    }
+    await page.locator(`${sec} .audio-ended-notice`).waitFor({ state: 'visible', timeout: 5000 });
+    if (sticky) assert.equal(await dock.evaluate(el => getComputedStyle(el).position), 'sticky', 'trình phát mất ghim khi nghe xong');
+    // Phần không có audio: phần đang chọn không có trình phát (check trước có thể đã ép hiện mọi phần).
+    await goToSection(page, 0);
+    assert.equal(await page.locator('.section-page.active .strict-audio-dock').count(), 0, 'trình phát còn hiện ở phần không có audio');
+    await page.evaluate(() => scrollTo(0, 0));
+  },
   async submitClearsSaveAlert(page, vp) {
     const alert = page.locator('#demo-save-alert');
     page.draftFails = 500;
@@ -520,6 +572,7 @@ export const checks = {
     assert.ok(await page.locator('.cbt-nav-pill').first().isVisible(), `không xem lại được bài sau khi nộp ở ${vp.width}px`);
   }
 };
+
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const child = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
