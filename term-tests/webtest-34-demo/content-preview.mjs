@@ -2046,7 +2046,8 @@ export async function mount(course) {
     function persist() {
       try {
         localStorage.setItem(key, JSON.stringify(state));
-        query('#demo-save').textContent = isLearningMode ? 'Đang lưu…' : 'Đã lưu trên trình duyệt';
+        // Sau khi nộp không còn gửi nháp (queueServerDraft thoát sớm), nên không ghi "Đang lưu…".
+        query('#demo-save').textContent = !isLearningMode ? 'Đã lưu trên trình duyệt' : state.submittedAt ? 'Đã nộp bài' : 'Đang lưu…';
       } catch {
         query('#demo-save').textContent = 'Không lưu được bản nháp.';
       }

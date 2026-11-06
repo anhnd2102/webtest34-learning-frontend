@@ -589,6 +589,8 @@ export const checks = {
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
     await page.waitForTimeout(2000);
     assert.equal(page.draftCalls, calls, 'vẫn gửi nháp sau khi nộp');
+    // #37: sau khi nộp, trạng thái lưu không kẹt ở "Đang lưu…".
+    assert.equal((await page.locator('#demo-save').textContent()).trim(), 'Đã nộp bài', 'trạng thái lưu sai sau khi nộp');
     await checks.topbarNotClipped(page, vp);
     assert.equal(await page.locator('.cbt-bottom-bar').isVisible(), false, 'thanh đáy còn hiện sau khi nộp');
     // Không còn thanh đáy và bảng trượt: vẫn phải chuyển được phần để xem lại bài.
