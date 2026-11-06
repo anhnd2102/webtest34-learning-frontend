@@ -62,9 +62,26 @@ export const definition = {
         itemVersionId: 'it-11', position: 11, interactionType: 'short_text', pedagogicalTypeCode: 'table_completion', layoutType: 'inline_cloze', points: 3,
         prompt: `<p>Listen and complete.</p><table style="width:900px"><thead><tr><th></th><th>The right career</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td style="width:300px"><b>Factors for the right career</b></td><td style="width:600px"><b>There are some factors</b><br>The most important: A job suitable for your personality (1) ........ E.g: Outgoing people can be tour guides. Happiness at work changes (2) ........ and more.</td></tr><tr><td><b>Other factors</b></td><td>The money or the (3) ........ may not be the right factors</td></tr></tbody></table>`
       }]
+    },
+    {
+      // Phần nghe: audio giả (WAV im lặng ngắn) để thử trình phát dính khi cuộn.
+      blockId: 'b6', title: 'Phần F', audioUrl: `${origin}/smoke-audio.wav`,
+      items: Array.from({ length: 20 }, (_, i) => ({
+        itemVersionId: `it-${12 + i}`, position: 12 + i, interactionType: 'short_text', prompt: `Nghe và điền câu ${12 + i}.`, points: 1
+      }))
     }
   ]
 };
+
+// WAV 8 kHz, 8-bit, mono, im lặng 1,5 giây.
+function silentWav(seconds = 1.5) {
+  const n = Math.round(8000 * seconds), buf = Buffer.alloc(44 + n, 128);
+  buf.write('RIFF', 0); buf.writeUInt32LE(36 + n, 4); buf.write('WAVEfmt ', 8);
+  buf.writeUInt32LE(16, 16); buf.writeUInt16LE(1, 20); buf.writeUInt16LE(1, 22);
+  buf.writeUInt32LE(8000, 24); buf.writeUInt32LE(8000, 28); buf.writeUInt16LE(1, 32); buf.writeUInt16LE(8, 34);
+  buf.write('data', 36); buf.writeUInt32LE(n, 40);
+  return buf;
+}
 
 // Giả lập Learning API: resolve → start; mọi route khác trả {}.
 function mockLearningApi(page, attemptExtra = {}) {
@@ -90,25 +107,49 @@ function mockLearningApi(page, attemptExtra = {}) {
 }
 
 // Mở shell thi thật và trả về page đã vào màn làm bài.
-export async function openExamShell(browser, viewport, contextOptions = {}, attemptExtra = {}) {
+export async function openExamShell(browser, viewport, contextOptions = {}, attemptExtra = {}, initScript) {
+  const page = await openStartScreen(browser, viewport, contextOptions, attemptExtra, initScript);
+  await page.selectOption('#studentSelectInput', 's1');
+  await page.click('#startExamBtn');
+  await page.waitForSelector('.cbt-exam-shell');
+  return page;
+}
+
+// Mở màn hình bắt đầu (đã tải danh sách lớp), chưa vào bài.
+export async function openStartScreen(browser, viewport, contextOptions = {}, attemptExtra = {}, initScript) {
   const page = await browser.newPage({ viewport, ...contextOptions });
+  if (initScript) await page.addInitScript(initScript);
   page.setDefaultTimeout(10000);
   page.errors = [];
   page.on('pageerror', e => page.errors.push(e.message));
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     if (url.pathname.includes('/api/learning/')) return route.fallback();
+    if (url.pathname === '/smoke-audio.wav') return route.fulfill({ status: 200, contentType: 'audio/wav', body: silentWav() });
     // Chặn mạng ngoài (font, ...), chỉ cho static server cục bộ.
     return url.origin === origin ? route.continue() : route.abort();
   });
   await mockLearningApi(page, attemptExtra);
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
   await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
-  await page.selectOption('#studentSelectInput', 's1');
-  await page.click('#startExamBtn');
-  await page.waitForSelector('.cbt-exam-shell');
   return page;
 }
+
+// Wake Lock giả: đếm lần xin/nhả; window.__wl.fail = true để giả lập trình duyệt từ chối.
+const fakeWakeLock = () => {
+  window.__wl = { requests: 0, releases: 0, fail: false, last: null };
+  Object.defineProperty(navigator, 'wakeLock', { configurable: true, value: { request: async () => {
+    window.__wl.requests++;
+    if (window.__wl.fail) throw new DOMException('denied', 'NotAllowedError');
+    const lock = new EventTarget();
+    lock.release = async () => { window.__wl.releases++; lock.dispatchEvent(new Event('release')); };
+    return (window.__wl.last = lock);
+  } } });
+};
+const setVisibility = (page, state) => page.evaluate(v => {
+  Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => v });
+  document.dispatchEvent(new Event('visibilitychange'));
+}, state);
 
 // Bấm qua DOM để dùng được cả khi nút đang ẩn trên khổ này (đã chuyển vào bảng trượt).
 const clickDom = (page, selector) => page.evaluate(s => document.querySelector(s).click(), selector);
@@ -503,6 +544,40 @@ export const checks = {
     await alert.waitFor({ state: 'hidden', timeout: 5000 });
   },
   // Nộp bài làm khóa màn hình nên check này phải đứng cuối.
+  // Ticket #34: trình phát thu gọn dính dưới thanh trên khi cuộn qua câu của phần nghe.
+  async stickyAudioPlayer(page, vp) {
+    const sec = '#sim-block-5';
+    const dock = page.locator(`${sec} .strict-audio-dock`);
+    await goToSection(page, -1);
+    await clickDom(page, `${sec} .btn-sim-audio-play`);
+    await page.waitForSelector(`${sec}[data-audio-unlocked="true"]`);
+    const sticky = vp.width < 1024;
+    assert.equal(await dock.evaluate(el => getComputedStyle(el).position), sticky ? 'sticky' : 'static', `vị trí trình phát sai ở ${vp.width}px`);
+    assert.equal(await page.locator(`${sec} .strict-audio-header`).isVisible(), !sticky, `đầu trình phát sai ở ${vp.width}px`);
+    assert.equal(await page.locator(`${sec} .audio-listens-left`).isVisible(), sticky, `số lượt nghe sai ở ${vp.width}px`);
+    if (sticky) {
+      assert.equal((await page.locator(`${sec} .audio-listens-left`).textContent()).trim(), 'Còn 0 lượt nghe');
+      assert.equal(await page.locator(`${sec} .sim-audio-bar-track input, ${sec} [class*="seek"]`).count(), 0, 'có nút tua');
+      const last = page.locator('input[type="text"][data-item-id="it-31"]');
+      await last.evaluate(el => el.scrollIntoView({ block: 'end', behavior: 'instant' }));
+      await page.waitForTimeout(100);
+      const [bar, d] = [await box(page, '.cbt-topbar'), await dock.boundingBox()];
+      assert.ok(Math.abs(d.y - (bar.y + bar.height)) <= 1, `trình phát không dính dưới thanh trên ở ${vp.width}px: ${d.y} vs ${bar.y + bar.height}`);
+      assert.ok(d.height <= 120, `trình phát chưa thu gọn ở ${vp.width}px: ${d.height}px`);
+      // Ô đang nhập không bị trình phát che khi được cuộn vào tầm nhìn.
+      const mid = page.locator('input[type="text"][data-item-id="it-15"]');
+      await mid.evaluate(el => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
+      await page.waitForTimeout(100);
+      const [d2, input] = [await dock.boundingBox(), await mid.boundingBox()];
+      assert.ok(input.y >= d2.y + d2.height, `ô nhập bị trình phát che ở ${vp.width}px`);
+    }
+    await page.locator(`${sec} .audio-ended-notice`).waitFor({ state: 'visible', timeout: 5000 });
+    if (sticky) assert.equal(await dock.evaluate(el => getComputedStyle(el).position), 'sticky', 'trình phát mất ghim khi nghe xong');
+    // Phần không có audio: phần đang chọn không có trình phát (check trước có thể đã ép hiện mọi phần).
+    await goToSection(page, 0);
+    assert.equal(await page.locator('.section-page.active .strict-audio-dock').count(), 0, 'trình phát còn hiện ở phần không có audio');
+    await page.evaluate(() => scrollTo(0, 0));
+  },
   async submitClearsSaveAlert(page, vp) {
     const alert = page.locator('#demo-save-alert');
     page.draftFails = 500;
@@ -520,6 +595,7 @@ export const checks = {
     assert.ok(await page.locator('.cbt-nav-pill').first().isVisible(), `không xem lại được bài sau khi nộp ở ${vp.width}px`);
   }
 };
+
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const child = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -565,6 +641,52 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     await guarded.locator('#examGuardOverlay').waitFor({ state: 'hidden' });
     assert.equal(await guarded.locator('.cbt-bottom-bar').evaluate(el => el.inert), false, 'thanh đáy không mở lại sau cảnh báo');
     await guarded.close();
+
+    // Ticket #35: thông báo ở màn bắt đầu chỉ trên thiết bị cảm ứng (kể cả iPad tự nhận là Macintosh).
+    const ipadMacUA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15';
+    for (const [name, vp, opts, expected] of [
+      ['điện thoại', VIEWPORTS[1], { hasTouch: true, isMobile: true }, true],
+      ['iPad tự nhận Macintosh', VIEWPORTS[3], { hasTouch: true, userAgent: ipadMacUA }, true],
+      ['máy tính dùng chuột', VIEWPORTS[4], {}, false]
+    ]) {
+      const start = await openStartScreen(browser, vp, opts, {}, name.startsWith('iPad') ? () => Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 5 }) : undefined);
+      assert.equal(await start.locator('#mobileExamNotice').isVisible(), expected, `thông báo di động sai trên ${name}`);
+      // Đề mẫu có câu long_text (Phần B) nên gợi ý bài viết dài hiện cùng thông báo.
+      assert.equal(await start.locator('#longWritingHint').isVisible(), expected, `gợi ý bài viết dài sai trên ${name}`);
+      await start.selectOption('#studentSelectInput', 's1');
+      assert.ok(await start.locator('#startExamBtn').isEnabled(), `không bắt đầu được trên ${name}`);
+      await start.close();
+    }
+
+    // Ticket #35: Wake Lock xin khi vào bài, xin lại khi trang hiện lại, nhả khi nộp bài.
+    const wl = await openExamShell(browser, VIEWPORTS[1], { hasTouch: true, isMobile: true }, {}, fakeWakeLock);
+    const counts = () => wl.evaluate(() => ({ requests: window.__wl.requests, releases: window.__wl.releases }));
+    await wl.waitForFunction(() => window.__wl.requests === 1);
+    await setVisibility(wl, 'hidden');
+    await wl.evaluate(() => window.__wl.last.release()); // hệ thống tự nhả khi trang bị ẩn
+    await setVisibility(wl, 'visible');
+    await wl.waitForFunction(() => window.__wl.requests === 2);
+    await clickDom(wl, '#demo-submit-top');
+    await clickDom(wl, '#demo-confirm-submit');
+    await wl.waitForFunction(() => window.__wl.releases === 2);
+    await setVisibility(wl, 'hidden');
+    await setVisibility(wl, 'visible');
+    assert.deepEqual(await counts(), { requests: 2, releases: 2 }, 'còn xin Wake Lock sau khi nộp');
+    assert.deepEqual(wl.errors, [], 'lỗi trang khi dùng Wake Lock');
+    await wl.close();
+    // Trình duyệt không hỗ trợ: không lỗi, vẫn vào bài.
+    const unsupported = await openExamShell(browser, VIEWPORTS[1], { hasTouch: true, isMobile: true }, {}, () => { delete Navigator.prototype.wakeLock; });
+    assert.deepEqual(unsupported.errors, [], 'lỗi trang khi không có Wake Lock');
+    await unsupported.close();
+    // Trình duyệt từ chối: không lỗi, vẫn vào bài.
+    const deniedLock = await openStartScreen(browser, VIEWPORTS[1], { hasTouch: true, isMobile: true }, {}, fakeWakeLock);
+    await deniedLock.evaluate(() => { window.__wl.fail = true; });
+    await deniedLock.selectOption('#studentSelectInput', 's1');
+    await deniedLock.click('#startExamBtn');
+    await deniedLock.waitForSelector('.cbt-exam-shell');
+    await deniedLock.waitForFunction(() => window.__wl.requests === 1);
+    assert.deepEqual(deniedLock.errors, [], 'lỗi trang khi Wake Lock bị từ chối');
+    await deniedLock.close();
     console.log(JSON.stringify(report));
     console.log('candidate-mobile-smoke: OK');
   } finally {
