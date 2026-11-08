@@ -188,6 +188,52 @@ try {
         }, form('builder-style'));
         const host = page.locator('#builder-style-fixture');
         await screenshot('builder-controls');
+        if (process.env.IPA_STYLE_PARITY === '1') {
+          const ipa = host.locator('#builder-block-0 .template-pronunciation-ipa');
+          const font = await ipa.locator('.input-ipa-transcription').evaluate(el => ({ family: getComputedStyle(el).fontFamily, size: getComputedStyle(el).fontSize }));
+          assert.match(font.family, /Consolas/);
+          assert.equal(parseFloat(font.size), 16.8, 'IPA font retains the baseline 1.05rem size');
+          await ipa.locator('.input-pronunciation-word').fill('synthetic-word');
+          await ipa.locator('.input-ipa-transcription').fill('ab');
+          await ipa.locator('.input-ipa-transcription').evaluate(el => el.setSelectionRange(1, 1));
+          const symbol = ipa.locator('.btn-ipa-symbol').first();
+          const value = await symbol.getAttribute('data-symbol');
+          await symbol.click();
+          assert.equal(await ipa.locator('.input-ipa-transcription').inputValue(), `a${value}b`);
+          assert.equal(await ipa.locator('.input-ipa-transcription').evaluate(el => el.selectionStart), 1 + value.length);
+          assert.ok((await ipa.locator('.ipa-phonetic-badge').innerText()).includes(`a${value}b`));
+          await screenshot('ipa-typing', { preserveFocus: true });
+          await symbol.hover();
+          await screenshot('ipa-symbol-hover', { preserveHover: true });
+          const count = await ipa.locator('.pronunciation-option-row').count();
+          await ipa.locator('.btn-add-pronunciation-option').click();
+          assert.equal(await ipa.locator('.pronunciation-option-row').count(), count + 1);
+          assert.equal(await ipa.locator('.input-pronunciation-word').inputValue(), 'synthetic-word');
+          assert.equal(await ipa.locator('.input-ipa-transcription').inputValue(), `a${value}b`);
+          await screenshot('ipa-added-option');
+          await ipa.locator('.radio-pron-correct').last().check();
+          await ipa.locator('.btn-del-pronunciation-option').first().click();
+          assert.equal(await ipa.locator('.pronunciation-option-row').count(), count);
+          const selected = await ipa.locator('.radio-pron-correct:checked').inputValue();
+          assert.equal(await page.evaluate(() => builderStyleHandle.getDraft().gradingKey.items.i1.expectedOptionId), selected);
+          await screenshot('ipa-deleted-option');
+          // Observe the public audio action without playing media or contacting a host.
+          await page.evaluate(() => {
+            window.ipaAudioCalls = [];
+            window.ipaOriginalAudio = window.Audio;
+            window.Audio = class {
+              constructor(src) { this.src = src; this.paused = true; ipaAudioCalls.push({ src }); }
+              addEventListener() {}
+              play() { this.paused = false; ipaAudioCalls.at(-1).played = true; return Promise.resolve(); }
+              pause() { this.paused = true; }
+            };
+          });
+          await ipa.locator('.input-pronunciation-audio').fill('https://example.invalid/synthetic.wav');
+          await ipa.locator('.btn-preview-audio').click();
+          assert.equal(await page.evaluate(() => ipaAudioCalls.some(call => call.played)), true);
+          await ipa.locator('.btn-preview-audio').click();
+          await page.evaluate(() => { window.Audio = ipaOriginalAudio; });
+        }
         await host.locator('.btn-next-block').first().click();
         assert.equal(await host.locator('#builder-block-1').isVisible(), true);
         await screenshot('builder-next-block');

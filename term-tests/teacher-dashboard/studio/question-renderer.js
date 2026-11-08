@@ -94,7 +94,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               <span class="badge badge-info">Bàn phím ký tự IPA 1-click & Audio</span>
             </div>
 
-            <div class="pronunciation-grid-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px;">
+            <div class="pronunciation-grid-inputs">
               <div class="form-group">
                 <label class="form-label"><strong>1. Từ / Cụm từ mục tiêu (Target Word):</strong></label>
                 <input type="text" class="form-control input-pronunciation-word" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetWord)}" placeholder="Ví dụ: camera, generous, though..." />
@@ -110,37 +110,37 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="form-group" style="margin-top:10px;">
+            <div class="form-group">
               <label class="form-label"><strong>3. Ký hiệu phiên âm chuẩn quốc tế (IPA Transcription):</strong></label>
               <div class="fitb-input-group">
-                <input type="text" class="form-control input-ipa-transcription" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(ipaTranscription)}" placeholder="Ví dụ: /ˈkæm.ər.ə/" style="font-family: 'Consolas', 'Menlo', monospace; font-size: 1.05rem;" />
+                <input type="text" class="form-control input-ipa-transcription" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(ipaTranscription)}" placeholder="Ví dụ: /ˈkæm.ər.ə/" />
               </div>
             </div>
 
-            <div class="ipa-symbol-keyboard-panel" style="margin-top:8px;">
-              <div class="ipa-keyboard-header" style="font-size:0.8rem; font-weight:700; color:#64748b; margin-bottom:4px; text-transform:uppercase;">
+            <div class="ipa-symbol-keyboard-panel">
+              <div class="ipa-keyboard-header">
                 Bàn phím chèn nhanh ký tự IPA (Bấm để chèn vào ô phiên âm):
               </div>
-              <div class="ipa-symbol-keyboard" style="display:flex; flex-wrap:wrap; gap:5px;">
+              <div class="ipa-symbol-keyboard">
                 ${ipaButtonsHtml}
               </div>
             </div>
 
-            <div class="ipa-phonetic-badge-wrap" style="margin-top:12px; padding:12px 16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
-              <span class="ipa-preview-label" style="font-size:0.8rem; font-weight:700; color:#64748b; text-transform:uppercase;">Xem trước huy hiệu phiên âm (IPA Badge Preview):</span>
-              <div class="ipa-phonetic-badge" style="margin-top:6px; display:inline-flex; align-items:center; padding:4px 14px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-family:'Consolas', 'Menlo', monospace; font-size:1.15rem; font-weight:700; color:#0f172a; letter-spacing:0.04em;">
+            <div class="ipa-phonetic-badge-wrap">
+              <span class="ipa-preview-label">Xem trước huy hiệu phiên âm (IPA Badge Preview):</span>
+              <div class="ipa-phonetic-badge">
                 ${escapeHtml(formatIpaTranscription(ipaTranscription) || '/.../')}
               </div>
             </div>
 
-            <div class="pronunciation-options-section" style="margin-top:14px;">
+            <div class="pronunciation-options-section">
               <div class="template-header-bar">
                 <span class="section-sublabel"><strong>Danh sách phương án phân biệt (Tích chọn đáp án đúng):</strong></span>
               </div>
-              <div class="pronunciation-options-list" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+              <div class="pronunciation-options-list">
                 ${optionsHtml}
               </div>
-              <div class="options-actions" style="margin-top:8px;">
+              <div class="options-actions">
                 <button type="button" class="btn btn-secondary btn-sm btn-add-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                   + Thêm phương án IPA
                 </button>

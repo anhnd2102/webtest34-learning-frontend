@@ -1,7 +1,7 @@
 {
-  "baseline": "c4d3121",
-  "revision": "builder-layout1",
-  "note": "Lexical inventory after Builder/editor static style extraction; not a CSS parser.",
+  "baseline": "1cd0c9f",
+  "revision": "ipa-layout1",
+  "note": "Lexical inventory after IPA static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -1230,11 +1230,6 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 383,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
       "line": 384,
       "kind": "attribute"
     },
@@ -1245,113 +1240,88 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 388,
+      "line": 386,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 395,
+      "line": 389,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 477,
+      "line": 396,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 502,
+      "line": 478,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 830,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2145,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2146,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2162,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2262,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2263,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2470,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2471,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2472,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2615,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2663,
+      "line": 503,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2682,
+      "line": 831,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2148,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2149,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2165,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2265,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2266,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2473,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2474,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2475,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2618,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2666,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2850,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2852,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2853,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2860,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2862,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2868,
-      "kind": "property"
+      "line": 2685,
+      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
@@ -1360,57 +1330,87 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2925,
+      "line": 2871,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2969,
+      "line": 2872,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2972,
+      "line": 2879,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2973,
+      "line": 2881,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2978,
+      "line": 2887,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2979,
+      "line": 2888,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 3098,
+      "line": 2944,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 3137,
+      "line": 2988,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 3151,
+      "line": 2991,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 3159,
+      "line": 2992,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 3190,
+      "line": 2997,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 2998,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 3117,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 3156,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 3170,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 3178,
+      "kind": "property"
+    },
+    {
+      "file": "term-tests/teacher-dashboard/studio/builder.js",
+      "line": 3209,
       "kind": "property"
     },
     {
@@ -1762,66 +1762,6 @@
       "file": "term-tests/teacher-dashboard/studio/publishing.js",
       "line": 734,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 97,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 113,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 116,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 120,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 121,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 124,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 129,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 130,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 131,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 136,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 140,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 143,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
