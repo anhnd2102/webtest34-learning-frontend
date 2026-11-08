@@ -169,12 +169,12 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               <span class="badge badge-info">Biến đổi câu giữ nguyên nghĩa</span>
             </div>
 
-            <div class="form-group" style="margin-top: 8px;">
+            <div class="form-group">
               <label class="form-label"><strong>1. Từ khóa bắt buộc (Keyword - Tự động in hoa):</strong></label>
-              <input type="text" class="form-control input-transformation-keyword" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(keyword)}" placeholder="Ví dụ: PREVENTED, UNLESS, SO..." style="font-weight:700; text-transform:uppercase; letter-spacing:0.05em;" />
+              <input type="text" class="form-control input-transformation-keyword" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(keyword)}" placeholder="Ví dụ: PREVENTED, UNLESS, SO..." />
             </div>
 
-            <div class="transformation-frame-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px;">
+            <div class="transformation-frame-inputs">
               <div class="form-group">
                 <label class="form-label"><strong>2. Tiền tố khung câu (Frame Prefix):</strong></label>
                 <input type="text" class="form-control input-frame-prefix" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(framePrefix)}" placeholder="Ví dụ: His severe illness" />
@@ -185,7 +185,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="form-group" style="margin-top: 10px;">
+            <div class="form-group">
               <label class="form-label"><strong>4. Đáp án mẫu trong chỗ trống (Target Answer):</strong></label>
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-transformation-answer" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetAnswer)}" placeholder="Ví dụ: prevented him" />
@@ -195,17 +195,17 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="transformation-frame-preview" style="margin-top: 12px; padding: 12px 16px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px;">
-              <div class="frame-preview-title" style="font-size:0.8rem; font-weight:700; color:#64748b; margin-bottom:6px; text-transform:uppercase;">Xem trước khung câu hoàn chỉnh:</div>
-              <div class="frame-preview-content" style="font-size:1rem; color:#1e293b;">
-                <span class="frame-prefix-text" style="font-weight:600;">${escapeHtml(framePrefix || '')}</span>
-                <span class="frame-blank-placeholder" style="display:inline-block; margin:0 4px; padding:2px 10px; background:#eff6ff; border-bottom:2px solid #3b82f6; color:#1d4ed8; font-weight:700;">[ ${escapeHtml(targetAnswer || '_____')} ]</span>
-                <span class="frame-suffix-text" style="font-weight:600;">${escapeHtml(frameSuffix || '')}</span>
+            <div class="transformation-frame-preview">
+              <div class="frame-preview-title">Xem trước khung câu hoàn chỉnh:</div>
+              <div class="frame-preview-content">
+                <span class="frame-prefix-text">${escapeHtml(framePrefix || '')}</span>
+                <span class="frame-blank-placeholder">[ ${escapeHtml(targetAnswer || '_____')} ]</span>
+                <span class="frame-suffix-text">${escapeHtml(frameSuffix || '')}</span>
               </div>
             </div>
 
             <!-- Accepted variants chips -->
-            <div class="variant-chips-container" style="margin-top: 12px;">
+            <div class="variant-chips-container">
               <div class="chips-meta-bar">
                 <span class="chips-count-badge">Các biến thể đáp án được chấp nhận (${acceptedList.length}/20)</span>
                 <div class="quick-add-variant">
@@ -251,7 +251,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               <span class="badge badge-info">Tự động xáo trộn từ/cụm từ</span>
             </div>
 
-            <div class="form-group" style="margin-top: 8px;">
+            <div class="form-group">
               <label class="form-label"><strong>1. Câu hoàn chỉnh mục tiêu (Target Sentence):</strong></label>
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-target-sentence" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(targetSentence)}" placeholder="Nhập câu chuẩn hoàn chỉnh..." />
@@ -261,27 +261,27 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="form-group" style="margin-top: 10px;">
+            <div class="form-group">
               <label class="form-label"><strong>2. Các mảnh từ phân tách bởi dấu gạch chéo <code>/</code> hoặc ngoặc vuông <code>[ ]</code>:</strong></label>
               <input type="text" class="form-control input-raw-tokens" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(rawTokensStr)}" placeholder="She / has worked / at the company / for five years" />
-              <div class="reorder-tokens-hint" style="font-size:0.78rem;color:#64748b;margin-top:4px;">
+              <div class="reorder-tokens-hint">
                 Ví dụ: <code>She / has worked / at the company / for five years</code> hoặc <code>[We] [have decided] [to postpone]</code>.
               </div>
             </div>
 
             <!-- Scrambled preview pool -->
-            <div class="scrambled-preview-box" style="margin-top: 10px; padding: 10px 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px;">
-              <div class="scrambled-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
-                <span class="preview-mini-label" style="font-size:0.76rem; font-weight:700; color:#475569; text-transform:uppercase;">Mô phỏng ngân hàng thẻ từ xáo trộn (${tokens.length + distractors.length} thẻ):</span>
-                <span class="scramble-refresh-hint" style="font-size:0.75rem; color:#94a3b8;">Học viên bấm vào thẻ để ghép câu</span>
+            <div class="scrambled-preview-box">
+              <div class="scrambled-title-bar">
+                <span class="preview-mini-label">Mô phỏng ngân hàng thẻ từ xáo trộn (${tokens.length + distractors.length} thẻ):</span>
+                <span class="scramble-refresh-hint">Học viên bấm vào thẻ để ghép câu</span>
               </div>
-              <div class="scrambled-tokens-pool" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+              <div class="scrambled-tokens-pool">
                 ${scrambledPreviewChips || '<em>Chưa có mảnh từ nào...</em>'}
               </div>
             </div>
 
             <!-- Distractor manager -->
-            <div class="distractors-manager-box" style="margin-top: 12px;">
+            <div class="distractors-manager-box">
               <label class="form-label"><strong>3. Từ gây nhiễu (Distractor Tokens - Tùy chọn):</strong></label>
               <div class="fitb-input-group">
                 <input type="text" class="form-control input-add-distractor" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="Nhập từ gây nhiễu (không có trong câu đúng)..." />
@@ -289,13 +289,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   + Thêm từ nhiễu
                 </button>
               </div>
-              <div class="distractor-chips-wrap" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
-                ${distractorChipsHtml || '<span style="font-size:0.8rem;color:#94a3b8;">Chưa có từ gây nhiễu.</span>'}
+              <div class="distractor-chips-wrap">
+                ${distractorChipsHtml || '<span>Chưa có từ gây nhiễu.</span>'}
               </div>
             </div>
 
             <!-- Accepted sentence variants -->
-            <div class="variant-chips-container" style="margin-top: 12px;">
+            <div class="variant-chips-container">
               <div class="chips-meta-bar">
                 <span class="chips-count-badge">Các biến thể câu được chấp nhận (${acceptedList.length}/20)</span>
                 <button type="button" class="btn btn-secondary btn-sm btn-generate-reorder-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">

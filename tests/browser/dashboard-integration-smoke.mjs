@@ -173,6 +173,62 @@ try {
       await page.locator('#modal-unsaved-changes').waitFor();
       await screenshot('dirty-modal');
       await page.locator('#btn-stay-editing').click();
+      if (process.env.SENTENCE_STYLE_PARITY === '1') {
+        await page.evaluate(data => {
+          window.sentenceRandom = Math.random; Math.random = () => 0.375;
+          const host = document.createElement('section'); host.id = 'sentence-style-fixture'; document.body.prepend(host);
+          data.blocks[0].items = [
+            { itemVersionId: 's1', exerciseId: 'ex1', position: 1, prompt: 'Synthetic transformation', interactionType: 'short_text', pedagogicalTypeCode: 'sentence_rewrite', graderType: 'accepted_text', maxScore: 1, keyword: 'PREVENTED', framePrefix: 'His illness', frameSuffix: 'from leaving.', targetAnswer: 'prevented him' },
+            { itemVersionId: 's2', exerciseId: 'ex1', position: 2, prompt: 'Synthetic reorder', interactionType: 'short_text', pedagogicalTypeCode: 'sentence_reorder', graderType: 'accepted_text', maxScore: 1, targetSentence: 'We have finished.', tokens: ['We', 'have', 'finished.'], distractors: [] }
+          ];
+          data.blocks[0].exercises[0].itemIds = ['s1', 's2'];
+          data.gradingKey.items = { s1: { graderType: 'accepted_text', accepted: ['prevented him'] }, s2: { graderType: 'accepted_text', accepted: ['We have finished.'], tokens: ['We', 'have', 'finished.'], distractors: [] } };
+          window.sentenceStyleHandle = integrationApp.mountBuilder(host, data);
+        }, form('sentence-style'));
+        const host = page.locator('#sentence-style-fixture');
+        const rewrite = host.locator('[data-item-id="s1"]');
+        const reorder = host.locator('[data-item-id="s2"]');
+        await screenshot('sentence-default');
+        await rewrite.locator('.input-transformation-keyword').fill('prevented');
+        await rewrite.locator('.input-frame-prefix').fill('The weather');
+        await rewrite.locator('.input-frame-suffix').fill('from leaving.');
+        await rewrite.locator('.input-transformation-answer').fill('prevented us');
+        await rewrite.locator('.btn-generate-transformation-variants').click();
+        assert.equal(await rewrite.locator('.input-transformation-keyword').inputValue(), 'PREVENTED');
+        assert.ok((await rewrite.locator('.frame-preview-content').innerText()).includes('prevented us'));
+        assert.equal(await rewrite.locator('.input-frame-prefix').inputValue(), 'The weather');
+        await screenshot('sentence-generated');
+        await rewrite.locator('.input-add-transformation-variant').fill('manual alternative');
+        await rewrite.locator('.input-add-transformation-variant').press('Enter');
+        await rewrite.locator('.accepted-chip[data-variant="manual alternative"] .btn-remove-chip').click();
+        assert.equal(await rewrite.locator('.accepted-chip[data-variant="manual alternative"]').count(), 0);
+        await reorder.locator('.input-target-sentence').fill('We have finished the task.');
+        await reorder.locator('.btn-tokenize-sentence').click();
+        assert.deepEqual(await page.evaluate(() => sentenceStyleHandle.getDraft().blocks[0].items[1].tokens), ['We', 'have', 'finished', 'the', 'task.']);
+        await screenshot('sentence-tokenized');
+        await reorder.locator('.input-add-distractor').fill('yesterday');
+        await reorder.locator('.btn-add-distractor-btn').click();
+        assert.equal(await reorder.locator('.distractor-chip').count(), 1);
+        await screenshot('sentence-distractor');
+        await reorder.locator('.btn-remove-distractor-chip').click();
+        assert.equal(await reorder.locator('.distractor-chip').count(), 0);
+        await reorder.locator('.btn-generate-reorder-variants').click();
+        await reorder.locator('.input-add-variant').fill('Manual reordered alternative');
+        await reorder.locator('.input-add-variant').press('Enter');
+        await reorder.locator('.accepted-chip[data-variant="Manual reordered alternative"] .btn-remove-chip').click();
+        assert.equal(await reorder.locator('.input-target-sentence').inputValue(), 'We have finished the task.');
+        assert.equal(await rewrite.locator('.input-transformation-answer').inputValue(), 'prevented us');
+        await screenshot('sentence-variants');
+        if (process.env.SENTENCE_DRAG_CHECK === '1') {
+          for (const button of await host.locator('.btn-toggle-item-collapse').all()) await button.click();
+          await rewrite.evaluate(el => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+          await reorder.locator('.item-drag-handle').dragTo(rewrite, { targetPosition: { x: 100, y: 10 } });
+          assert.deepEqual(await page.evaluate(() => sentenceStyleHandle.getDraft().blocks[0].items.map(item => item.itemVersionId)), ['s2', 's1']);
+          assert.equal(await rewrite.locator('.input-transformation-answer').inputValue(), 'prevented us');
+          assert.equal(await reorder.locator('.input-target-sentence').inputValue(), 'We have finished the task.');
+        }
+        await page.evaluate(() => { sentenceStyleHandle.dispose(); document.querySelector('#sentence-style-fixture').remove(); Math.random = sentenceRandom; });
+      }
       if (process.env.VOCAB_STYLE_PARITY === '1') {
         await page.evaluate(data => {
           const host = document.createElement('section'); host.id = 'vocab-style-fixture'; document.body.prepend(host);

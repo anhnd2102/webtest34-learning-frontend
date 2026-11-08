@@ -1,7 +1,7 @@
 {
-  "baseline": "1345d7e",
-  "revision": "vocab-layout1",
-  "note": "Lexical inventory after Vocabulary Pair static style extraction; not a CSS parser.",
+  "baseline": "e9c075b",
+  "revision": "sentence-layout1",
+  "note": "Lexical inventory after sentence authoring static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -1762,121 +1762,6 @@
       "file": "term-tests/teacher-dashboard/studio/publishing.js",
       "line": 734,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 172,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 174,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 177,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 188,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 198,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 199,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 200,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 201,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 202,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 203,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 208,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 254,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 264,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 267,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 273,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 274,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 275,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 276,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 278,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 284,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 292,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 293,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 298,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
