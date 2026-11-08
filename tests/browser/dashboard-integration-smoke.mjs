@@ -173,6 +173,63 @@ try {
       await page.locator('#modal-unsaved-changes').waitFor();
       await screenshot('dirty-modal');
       await page.locator('#btn-stay-editing').click();
+      if (process.env.VOCAB_STYLE_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'vocab-style-fixture'; document.body.prepend(host);
+          data.blocks[0].items = ['v1', 'v2'].map((id, index) => ({ itemVersionId: id, exerciseId: 'ex1', position: index + 1, prompt: 'Synthetic vocabulary', targetWord: index ? 'second-word' : 'full-time', interactionType: 'text_select_pair', graderType: 'accepted_text_exact_option', maxScore: 1, options: ['one', 'two', 'three'].map((label, option) => ({ id: `opt_${option + 1}`, label: `Synthetic ${label}` })) }));
+          data.blocks[0].exercises[0].itemIds = ['v1', 'v2'];
+          data.gradingKey.items = Object.fromEntries(data.blocks[0].items.map(item => [item.itemVersionId, { graderType: item.graderType, accepted: [item.targetWord], expectedOptionId: 'opt_1' }]));
+          window.vocabStyleHandle = integrationApp.mountBuilder(host, data);
+        }, form('vocab-style'));
+        const host = page.locator('#vocab-style-fixture');
+        const first = host.locator('[data-item-id="v1"]');
+        const openBank = async card => { if (!await card.locator('.vocab-bank-collapsible').isVisible()) await card.locator('.btn-toggle-vocab-bank').click(); };
+        await screenshot('vocab-default');
+        await first.locator('.input-vocab-raw').fill('well-known');
+        await first.locator('.btn-generate-vocab-variants').click();
+        assert.ok(await page.evaluate(() => vocabStyleHandle.getDraft().gradingKey.items.v1.accepted.includes('well known')));
+        await first.locator('.input-add-vocab-variant').fill('custom spelling');
+        await first.locator('.input-add-vocab-variant').press('Enter');
+        await first.locator('.accepted-chip[data-variant="custom spelling"] .btn-remove-chip').click();
+        assert.equal(await first.locator('.accepted-chip[data-variant="custom spelling"]').count(), 0);
+        await screenshot('vocab-variants');
+        await openBank(first);
+        await screenshot('vocab-bank');
+        await first.locator('.btn-add-vocab-option').click();
+        await openBank(first);
+        assert.equal(await first.locator('.vocab-meaning-row').count(), 4);
+        await first.locator('.vocab-meaning-input').first().fill('Edited meaning');
+        await first.locator('.select-vocab-correct-dropdown').selectOption('opt_2');
+        await openBank(first);
+        await first.locator('.btn-del-vocab-option').first().click();
+        await openBank(first);
+        assert.equal(await first.locator('.vocab-meaning-row').count(), 3);
+        assert.equal(await first.locator('.select-vocab-correct-dropdown').inputValue(), 'opt_2');
+        assert.equal(await first.locator('.input-vocab-raw').inputValue(), 'well-known');
+        await screenshot('vocab-options');
+        await first.locator('.btn-bulk-paste-vocab-options').click();
+        await first.locator('.input-bulk-vocab-options').fill('Meaning alpha\nMeaning beta\nMeaning gamma');
+        await screenshot('vocab-bulk');
+        await first.locator('.btn-cancel-bulk-vocab-options').click();
+        assert.equal(await first.locator('.vocab-bulk-paste-panel').isVisible(), false);
+        await first.locator('.btn-bulk-paste-vocab-options').click();
+        await first.locator('.input-bulk-vocab-options').fill('Meaning alpha\nMeaning beta\nMeaning gamma');
+        await first.locator('.btn-apply-bulk-vocab-options').click();
+        assert.deepEqual(await page.evaluate(() => vocabStyleHandle.getDraft().blocks[0].items[0].options.map(option => option.label)), ['Meaning alpha', 'Meaning beta', 'Meaning gamma']);
+        assert.equal(await page.evaluate(() => vocabStyleHandle.getDraft().gradingKey.items.v1.expectedOptionId), 'opt_2');
+        await openBank(first);
+        await screenshot('vocab-applied');
+        if (process.env.VOCAB_DRAG_CHECK === '1') {
+          const second = host.locator('[data-item-id="v2"]');
+          await second.locator('.input-vocab-raw').fill('kept-word');
+          for (const button of await host.locator('.btn-toggle-item-collapse').all()) await button.click();
+          await first.evaluate(el => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+          await second.locator('.item-drag-handle').dragTo(first, { targetPosition: { x: 100, y: 10 } });
+          assert.deepEqual(await page.evaluate(() => vocabStyleHandle.getDraft().blocks[0].items.map(item => item.itemVersionId)), ['v2', 'v1']);
+          assert.equal(await page.evaluate(() => vocabStyleHandle.getDraft().blocks[0].items[0].targetWord), 'kept-word');
+        }
+        await page.evaluate(() => { vocabStyleHandle.dispose(); document.querySelector('#vocab-style-fixture').remove(); });
+      }
       if (process.env.BUILDER_STYLE_PARITY === '1') {
         await page.evaluate(data => {
           const host = document.createElement('section'); host.id = 'builder-style-fixture'; document.body.prepend(host);

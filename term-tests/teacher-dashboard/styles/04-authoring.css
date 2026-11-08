@@ -643,3 +643,22 @@
   color: #0f172a;
 }
 
+
+/* Vocabulary authoring: static values formerly supplied by inline attributes. */
+.template-vocab-pair .variant-chips-container { margin-top: 8px; }
+.template-vocab-pair .vocab-options-box { margin-top: 14px; }
+.template-vocab-pair .vocab-options-header-bar .form-label { margin: 0; }
+.template-vocab-pair .vocab-compact-selector-row > span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--izone-text-body);
+  white-space: nowrap;
+}
+.template-vocab-pair .vocab-options-tools-bar {
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.template-vocab-pair .vocab-bulk-paste-panel { margin-bottom: 10px; }
+.template-vocab-pair .options-actions { margin-top: 8px; }

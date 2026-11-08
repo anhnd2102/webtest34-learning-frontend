@@ -1,7 +1,7 @@
 {
-  "baseline": "1cd0c9f",
-  "revision": "ipa-layout1",
-  "note": "Lexical inventory after IPA static style extraction; not a CSS parser.",
+  "baseline": "1345d7e",
+  "revision": "vocab-layout1",
+  "note": "Lexical inventory after Vocabulary Pair static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -2030,42 +2030,12 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 968,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 981,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 983,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 988,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
       "line": 998,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 999,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
       "line": 1016,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 1036,
       "kind": "attribute"
     },
     {

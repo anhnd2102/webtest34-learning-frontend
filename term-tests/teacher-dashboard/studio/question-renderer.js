@@ -965,7 +965,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể tự động
                 </button>
               </div>
-              <div class="variant-chips-container" style="margin-top: 8px;">
+              <div class="variant-chips-container">
                 <div class="chips-meta-bar">
                   <span class="chips-count-badge">Các biến thể tiếng Anh được chấp nhận (${acceptedList.length}/40)</span>
                   <div class="quick-add-variant">
@@ -978,14 +978,14 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="vocab-options-box" style="margin-top: 14px;">
+            <div class="vocab-options-box">
               <div class="template-header-bar vocab-options-header-bar">
-                <label class="form-label" style="margin: 0;"><strong>2. Danh sách nghĩa tiếng Việt (50% điểm - Tích tròn nghĩa đúng):</strong></label>
+                <label class="form-label"><strong>2. Danh sách nghĩa tiếng Việt (50% điểm - Tích tròn nghĩa đúng):</strong></label>
               </div>
 
               <!-- Compact selector row -->
               <div class="vocab-compact-selector-row">
-                <span style="font-size: 0.82rem; font-weight: 700; color: #334155; white-space: nowrap;">Nghĩa đúng câu này:</span>
+                <span>Nghĩa đúng câu này:</span>
                 <select class="form-select form-select-sm select-vocab-correct-dropdown" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                   ${dropdownOptionsHtml}
                 </select>
@@ -996,7 +996,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
 
               <!-- Collapsible Bank Details -->
               <div class="vocab-bank-collapsible" id="vocab-bank-${blockIdx}-${itemIdx}" style="display: none;">
-                <div class="vocab-options-tools-bar" style="margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <div class="vocab-options-tools-bar">
                   <button type="button" class="btn btn-secondary btn-sm btn-bulk-paste-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Dán nhanh nhiều nghĩa từ Excel hoặc Word">
                     ${renderSvgIcon('copy', 'icon-inline')} Dán nhanh danh sách nghĩa
                   </button>
@@ -1013,7 +1013,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 </div>
 
                 <!-- Collapsible Bulk Paste Box -->
-                <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" style="display: none; margin-bottom: 10px;">
+                <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" style="display: none;">
                   <div class="bulk-paste-caption">
                     <span>Nhập hoặc dán danh sách nghĩa tiếng Việt (Mỗi dòng là một nghĩa):</span>
                   </div>
@@ -1033,7 +1033,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     ${optionsHtml}
                   </div>
                 </div>
-                <div class="options-actions" style="margin-top: 8px;">
+                <div class="options-actions">
                   <button type="button" class="btn btn-secondary btn-sm btn-add-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                     + Thêm nghĩa tiếng Việt
                   </button>

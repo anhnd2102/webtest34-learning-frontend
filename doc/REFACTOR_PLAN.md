@@ -264,6 +264,7 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã hoàn thành đợt đầu cho fragment context/assessment: xem `CSS_CONTEXT_CLEANUP_VERIFICATION.md`. Các fragment còn lại, inline styles và cleanup override vẫn chưa hoàn tất.
   - Đã chuyển nhóm inline styles tĩnh của audio controls, thanh thêm bài tập/footer và rich editor sang class: xem `BUILDER_INLINE_STYLES_VERIFICATION.md`. Các nhóm inline styles khác còn trong lộ trình.
   - Đã chuyển 12 inline styles của editor phát âm/IPA sang class/token, kèm parity và kiểm caret/options/audio controller: xem `IPA_STYLES_VERIFICATION.md`.
+  - Đã chuyển nhóm style tĩnh Vocabulary Pair sang class/token, giữ trạng thái bank/bulk, kèm parity và kiểm chỉnh sửa: xem `VOCABULARY_STYLES_VERIFICATION.md`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
 - Rollback: revert nhóm fragment/link theo commit; không để entry trỏ fragment thiếu. Rủi ro chính: đổi cascade hoặc FOUC.
