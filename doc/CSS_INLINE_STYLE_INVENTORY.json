@@ -1,7 +1,7 @@
 {
-  "baseline": "41de13f",
-  "revision": "generic-batch1",
-  "note": "Lexical inventory after generic batch modal static style extraction; not a CSS parser.",
+  "baseline": "a8e30ce",
+  "revision": "move-exercise1",
+  "note": "Lexical inventory after move exercise modal static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -720,152 +720,17 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 48,
+      "line": 152,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 49,
+      "line": 167,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 50,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 51,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 52,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 53,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 54,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 55,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 56,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 57,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 72,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 73,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 75,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 79,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 86,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 87,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 88,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 91,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 96,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 97,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 98,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 103,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 104,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 105,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 113,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 114,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 115,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 119,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 125,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 162,
+      "line": 169,
       "kind": "property"
     },
     {
@@ -875,17 +740,7 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 179,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 187,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 190,
+      "line": 180,
       "kind": "property"
     },
     {

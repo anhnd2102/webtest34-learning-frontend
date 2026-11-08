@@ -1050,3 +1050,112 @@
   color: var(--izone-text-muted);
   font-style: italic;
 }
+
+/* Move exercise modal: static presentation; visibility remains runtime controlled. */
+.move-exercise-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--izone-overlay-backdrop);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10050;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+#modal-move-exercise .move-layout-dialog {
+  max-width: 580px;
+  width: 95%;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--izone-surface);
+  border: 1px solid var(--izone-slate-300);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px var(--izone-shadow-modal-color);
+}
+#modal-move-exercise .move-layout-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--izone-border);
+  padding: 16px 20px 12px;
+  margin-bottom: 0;
+}
+#modal-move-exercise .move-layout-title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--izone-slate-900);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#modal-move-exercise .move-layout-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--izone-text-muted);
+}
+#modal-move-exercise .move-layout-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+#modal-move-exercise .move-layout-summary {
+  background: var(--izone-slate-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--izone-text-body);
+}
+#modal-move-exercise .move-layout-exercise-title {
+  font-weight: 700;
+  color: var(--izone-slate-900);
+  margin-bottom: 2px;
+}
+#modal-move-exercise .move-layout-summary-meta {
+  color: var(--izone-text-muted);
+  font-size: 12px;
+}
+#modal-move-exercise .move-layout-field {
+  margin: 0;
+}
+#modal-move-exercise .move-layout-label {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+#modal-move-exercise .move-layout-select {
+  font-size: 13px;
+}
+#modal-move-exercise .move-layout-anchor-field {
+  margin: 0;
+  display: none;
+}
+#modal-move-exercise .move-layout-note {
+  background: var(--izone-answer-blank-bg);
+  border: 1px solid var(--izone-info-soft-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--izone-info-strong-text);
+  line-height: 1.45;
+}
+#modal-move-exercise .move-layout-footer {
+  flex-shrink: 0;
+  background: var(--izone-slate-bg);
+  border-top: 1px solid var(--izone-border);
+  padding: 14px 20px;
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -134,7 +134,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -176,6 +176,94 @@ try {
       await page.locator('#modal-unsaved-changes').waitFor();
       await screenshot('dirty-modal');
       await page.locator('#btn-stay-editing').click();
+      if (process.env.MOVE_EXERCISE_STYLE_PARITY === '1') {
+        await page.evaluate(async ({ base, data }) => {
+          const modalModule = await import(new URL('studio/move-exercise-modal.js', base).href);
+          const model = await import(new URL('studio/draft-model.js', base).href);
+          const item = (id, ex, position) => ({ ...structuredClone(data.blocks[0].items[0]), itemVersionId: id, exerciseId: ex, position, spanCount: 1, prompt: `Synthetic ${id}`, maxScore: 2 });
+          const exercise = (id, ids) => ({ exerciseId: id, title: `Synthetic ${id}`, exerciseNumber: 1, itemIds: ids });
+          data.blocks = [
+            { blockId: 'b1', title: 'Source', exercises: [exercise('keep', ['i3']), exercise('ex1', ['i1', 'i2'])], items: [item('i3','keep',1),item('i1','ex1',2),item('i2','ex1',3)] },
+            { blockId: 'b2', title: 'Target', exercises: [exercise('target1',['t1']),exercise('target2',['t2'])], items: [item('t1','target1',4),item('t2','target2',5)] },
+            { blockId: 'b3', title: 'Empty target', exercises: [], items: [] }
+          ];
+          data.gradingKey = { items: Object.fromEntries(['i1','i2','i3','t1','t2'].map(id => [id, { graderType: 'exact_option', expectedOptionId: 'A' }])), groups: {} };
+          window.moveFixtureData = data;
+          window.moveCalls = [];
+          window.openMoveFixture = () => {
+            window.moveDraft = structuredClone(moveFixtureData);
+            modalModule.openMoveExerciseModal({ draftState: moveDraft, sourceBlockIdx: 0, exerciseId: 'ex1', onConfirm: args => {
+              moveCalls.push(args);
+              window.moveSucceeded = model.moveExerciseBetweenBlocks(moveDraft, args);
+            } });
+          };
+          openMoveFixture();
+        }, { base, data: form('move-fixture') });
+        const move = page.locator('#modal-move-exercise');
+        const target = move.locator('.select-target-block');
+        const position = move.locator('.select-target-position');
+        assert.equal(await target.inputValue(), '0');
+        assert.equal(await move.locator('.target-exercise-row').isVisible(), false);
+        await screenshot('move-default');
+        await target.selectOption('1');
+        await position.selectOption('before_ex');
+        assert.equal(await move.locator('.target-exercise-row').isVisible(), true);
+        assert.equal(await move.locator('.select-target-exercise option').count(), 2);
+        await move.locator('.select-target-exercise').selectOption('1');
+        await screenshot('move-before');
+        await position.selectOption('after_ex');
+        await screenshot('move-after');
+        await target.selectOption('2');
+        assert.equal(await position.inputValue(), 'end');
+        assert.equal(await move.locator('.target-exercise-row').isVisible(), false);
+        await screenshot('move-empty-target');
+        await move.locator('.btn-cancel-move-modal').click();
+        assert.equal(await move.count(), 0);
+        assert.equal(await page.evaluate(() => moveCalls.length), 0);
+        for (const [targetIdx, pos, anchor, expected] of [
+          [1,'start', '0', ['ex1','target1','target2']], [1,'end','0',['target1','target2','ex1']],
+          [1,'before_ex','1',['target1','ex1','target2']], [1,'after_ex','0',['target1','ex1','target2']],
+          [2,'end','0',['ex1']]
+        ]) {
+          await page.evaluate(() => openMoveFixture());
+          await target.selectOption(String(targetIdx)); await position.selectOption(pos);
+          if (pos.endsWith('_ex')) await move.locator('.select-target-exercise').selectOption(anchor);
+          await move.locator('.btn-confirm-move-modal').click();
+          assert.equal(await move.count(), 0);
+          assert.equal(await page.evaluate(() => moveSucceeded), true);
+          assert.deepEqual(await page.evaluate(idx => moveDraft.blocks[idx].exercises.map(ex => ex.exerciseId), targetIdx), expected);
+          assert.deepEqual(await page.evaluate(() => moveDraft.blocks[0].items.map(item => item.itemVersionId)), ['i3']);
+          assert.deepEqual(await page.evaluate(idx => moveDraft.blocks[idx].items.filter(item => item.exerciseId === 'ex1').map(item => item.itemVersionId), targetIdx), ['i1','i2']);
+          assert.equal(await page.evaluate(() => JSON.stringify(moveDraft.gradingKey) === JSON.stringify(moveFixtureData.gradingKey)), true);
+          assert.equal(await page.evaluate(() => {
+            const content = draft => draft.blocks.flatMap(block => block.items).map(({ position, exerciseTitle, ...item }) => item).sort((a,b) => a.itemVersionId.localeCompare(b.itemVersionId));
+            return JSON.stringify(content(moveDraft)) === JSON.stringify(content(moveFixtureData));
+          }), true);
+          assert.deepEqual(await page.evaluate(() => moveDraft.blocks.flatMap(block => block.items).map(item => item.position)), [1,2,3,4,5]);
+        }
+        for (const close of ['.btn-close-move-modal', 'backdrop']) {
+          await page.evaluate(() => openMoveFixture());
+          if (close === 'backdrop') await move.click({ position: { x: 1, y: 1 } });
+          else await move.locator(close).click();
+          assert.equal(await move.count(), 0);
+        }
+        assert.equal(await page.evaluate(() => moveCalls.length), 5);
+        await page.evaluate(() => {
+          const host = document.createElement('section'); host.id = 'move-builder-fixture'; document.body.prepend(host);
+          window.moveBuilderHandle = integrationApp.mountBuilder(host, structuredClone(moveFixtureData));
+          window.moveBuilderBefore = structuredClone(moveBuilderHandle.getDraft());
+        });
+        await page.locator('#move-builder-fixture .btn-move-exercise-to-block[data-exercise-id="ex1"]').click();
+        await target.selectOption('1'); await position.selectOption('start');
+        await move.locator('.btn-confirm-move-modal').click();
+        assert.equal(await move.count(), 0);
+        assert.deepEqual(await page.evaluate(() => moveBuilderHandle.getDraft().blocks[1].exercises.map(ex => ex.exerciseId)), ['ex1','target1','target2']);
+        assert.deepEqual(await page.evaluate(() => moveBuilderHandle.getDraft().blocks[1].items.filter(item => item.exerciseId === 'ex1').map(item => item.itemVersionId)), ['i1','i2']);
+        assert.deepEqual(await page.evaluate(() => moveBuilderHandle.getDraft().gradingKey), await page.evaluate(() => moveBuilderBefore.gradingKey));
+        assert.deepEqual(await page.evaluate(() => moveBuilderHandle.getDraft().blocks[1].items.filter(item => item.exerciseId === 'ex1').map(item => item.maxScore)), [2,2]);
+        assert.equal(await page.locator('#move-builder-fixture .builder-exercise-card[data-exercise-id="ex1"]').count(), 1);
+        await page.evaluate(() => { moveBuilderHandle.dispose(); document.querySelector('#move-builder-fixture').remove(); });
+      }
       if (process.env.GENERIC_BATCH_STYLE_PARITY === '1') {
         await page.evaluate(async base => {
           window.genericBatchModule = await import(new URL('studio/batch-import.js', base).href);

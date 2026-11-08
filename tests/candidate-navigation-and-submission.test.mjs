@@ -1,4 +1,5 @@
 import { readDashboardSource } from './helpers/dashboard-source.mjs';
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
@@ -78,8 +79,8 @@ test('Test Studio: Block CSV import handles vocabulary_pair and inline_cloze wit
     code.includes("graderType: 'inline_cloze'"),
     'Must handle inline_cloze with graderType inline_cloze and blanks in gradingKey'
   );
-  assert.ok(
-    code.includes("modal.style.position = 'fixed';"),
-    'Block CSV and guide modals must have fixed position to guarantee popup modal overlay display'
-  );
+  const css = readDashboardCss();
+  for (const overlay of ['block-csv-modal-overlay', 'quick-csv-guide-modal-overlay', 'move-exercise-modal-overlay']) {
+    assert.match(css, new RegExp(`\\.${overlay}\\b[^{}]*\\{[^{}]*\\bposition:\\s*fixed\\s*;`), `${overlay} must remain fixed after static presentation moves to CSS`);
+  }
 });
