@@ -17,7 +17,7 @@ import { mountedBuilders, registerUnsavedChangesGuard, openUnsavedChangesModal, 
 import { generateUuid } from './draft-model.js';
 import { previewSandboxPath } from '../api/teacher.js';
 import { renderSvgIcon } from '../ui/icons.js';
-import { updatePromptPosition, isComprehensionExercise, findPrecedingClozeScript, pruneOrphanClozeKeys, getItemSpanCount, parseClozeBlanks, computeTestBuilderScoreSummary, scaleRubricCriteriaScores, insertItemsIntoBlockExercise, reorderBlockItem, moveItemToExercise, moveExerciseBetweenBlocks, resequenceItemPositions } from './draft-model.js';
+import { updatePromptPosition, isComprehensionExercise, findPrecedingClozeScript, pruneOrphanClozeKeys, getItemSpanCount, parseClozeBlanks, computeTestBuilderScoreSummary, scaleRubricCriteriaScores, insertItemsIntoBlockExercise, reorderBlockItem, moveItemToExercise, moveExerciseBetweenBlocks, deleteExerciseFromBlock, resequenceItemPositions } from './draft-model.js';
 import { generateHangmanHint, expandSentenceVariants, batchGenerateExerciseVocabVariants } from './question-content.js';
 import { escapeHtml } from '../ui/presentation.js';
 import { sanitizeRichContent, renderInlineClozeMarkup, generateTableHtml } from '../ui/rich-content.js';
@@ -228,9 +228,10 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
     return updatePromptPosition(prompt, newPos, span);
   }
 
-  function resequenceItemPositions() {
+  function resequenceItemPositions(options = {}) {
+    const forceStartAtOne = options.forceStartAtOne ?? false;
     const firstPos = draftState.blocks[0]?.items?.[0]?.position;
-    let pos = (typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
+    let pos = (!forceStartAtOne && typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
     for (const b of draftState.blocks) {
       for (const itm of b.items || []) {
         pruneOrphanClozeKeys(itm, draftState.gradingKey?.items?.[itm.itemVersionId]);
@@ -1191,18 +1192,20 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const block = draftState.blocks[bIdx];
         if (!block || !block.exercises || block.exercises.length <= 1) return;
         const deletedEx = block.exercises[exIdx];
-        block.exercises.splice(exIdx, 1);
-        const survivorEx = block.exercises[Math.max(0, exIdx - 1)] || block.exercises[0];
-        (block.items || []).forEach(it => {
-          if (it.exerciseId === deletedEx.exerciseId) {
-            it.exerciseId = survivorEx.exerciseId;
-            it.exerciseTitle = survivorEx.title;
+        if (!deletedEx) return;
+
+        const exItems = (block.items || []).filter(it => it.exerciseId === deletedEx.exerciseId);
+        if (exItems.length > 0) {
+          const exTitle = deletedEx.title || `Bài tập ${exIdx + 1}`;
+          const confirmMsg = `Bạn có chắc chắn muốn xóa "${exTitle}" cùng toàn bộ ${exItems.length} câu hỏi bên trong không? Thao tác này không thể hoàn tác.`;
+          if (typeof window !== 'undefined' && typeof window.confirm === 'function') {
+            if (!window.confirm(confirmMsg)) return;
           }
-        });
-        block.exercises.forEach((ex, idx) => {
-          ex.exerciseNumber = idx + 1;
-          ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
-        });
+        }
+
+        // Perform exercise and child questions deletion
+        deleteExerciseFromBlock(draftState, { blockIdx: bIdx, exerciseIdx: exIdx });
+        markAsDirty();
         render();
       });
     });
@@ -2740,7 +2743,23 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             syncInputs();
             const idx = Number(btn.getAttribute('data-index'));
             if (draftState.blocks.length > 1) {
-              draftState.blocks.splice(idx, 1);
+              const targetBlock = draftState.blocks[idx];
+              if (!targetBlock) return;
+              if (targetBlock.items && targetBlock.items.length > 0) {
+                const blockTitle = targetBlock.title || `Phần ${idx + 1}`;
+                const confirmMsg = `Bạn có chắc chắn muốn xóa "${blockTitle}" cùng toàn bộ ${targetBlock.items.length} câu hỏi bên trong không? Thao tác này không thể hoàn tác.`;
+                if (typeof window !== 'undefined' && typeof window.confirm === 'function') {
+                  if (!window.confirm(confirmMsg)) return;
+                }
+              }
+              const [deletedBlock] = draftState.blocks.splice(idx, 1);
+              if (deletedBlock?.items) {
+                deletedBlock.items.forEach(it => {
+                  if (it?.itemVersionId && draftState.gradingKey?.items) {
+                    delete draftState.gradingKey.items[it.itemVersionId];
+                  }
+                });
+              }
               draftState.blocks.forEach((b, i) => { b.checkpoint = i + 1; });
               activeBlockIdx = Math.max(0, Math.min(activeBlockIdx, draftState.blocks.length - 1));
               resequenceItemPositions();

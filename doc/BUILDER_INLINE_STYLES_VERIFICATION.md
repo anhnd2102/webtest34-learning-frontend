@@ -31,3 +31,7 @@ Artifacts local ở `C:/Users/OS/AppData/Local/Temp/builder-style-before/`, `bui
 Không kiểm thử DB/API thật, Pages deployment hoặc hiệu năng mạng production; không sửa backend/Pages workflow. Overflow mobile và nợ design-system có sẵn không được sửa trong commit này. Các inline styles khác vẫn còn; không coi đây là hoàn thành cleanup toàn bộ Builder.
 
 Rollback bằng revert commit như một đơn vị gồm template, CSS, revision, manifest và maps. Khi tích hợp cần giữ các chỉnh sửa Builder đang làm dở ở checkout chính; không reset/stash hoặc ghi đè chúng để ép merge.
+
+## Đồng bộ ngày 08/11/2026
+
+Cleanup được lưu riêng trong commit `98a31b1`. Sau khi sửa xóa bài tập được lưu thành `fd8220d` trên nhánh phát triển, ghép commit đó vào nhánh cleanup trong worktree riêng; `builder.js` và `index.html` tự merge, không xung đột. Suite sau đồng bộ: **660 tests, 658 pass, 2 skip, 0 fail** trong worktree. Các chỉnh sửa chưa commit của test xóa bài tập ở checkout chính không thuộc merge này. Snapshot parity phía trên so riêng cleanup với baseline `c4d3121`, không chứng nhận parity cho chức năng xóa mới.

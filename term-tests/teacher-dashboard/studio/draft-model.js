@@ -327,10 +327,11 @@ export function computeTestBuilderScoreSummary(blocks = []) {
 }
 
 
-export function resequenceItemPositions(draftState) {
+export function resequenceItemPositions(draftState, options = {}) {
   if (!draftState || !Array.isArray(draftState.blocks)) return;
+  const forceStartAtOne = options.forceStartAtOne ?? false;
   const firstPos = draftState.blocks[0]?.items?.[0]?.position;
-  let pos = (typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
+  let pos = (!forceStartAtOne && typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
   for (const b of draftState.blocks) {
     for (const itm of b.items || []) {
       pruneOrphanClozeKeys(itm, draftState.gradingKey?.items?.[itm.itemVersionId]);
@@ -408,6 +409,44 @@ export function moveExerciseBetweenBlocks(draftState, { sourceBlockIdx, exercise
 
   // 7. Global resequence of item positions
   resequenceItemPositions(draftState);
+
+  return true;
+}
+
+export function deleteExerciseFromBlock(draftState, { blockIdx, exerciseIdx }) {
+  if (!draftState || !Array.isArray(draftState.blocks)) return false;
+  const block = draftState.blocks[blockIdx];
+  if (!block || !Array.isArray(block.exercises) || block.exercises.length <= 1) return false;
+  if (exerciseIdx < 0 || exerciseIdx >= block.exercises.length) return false;
+
+  const deletedEx = block.exercises[exerciseIdx];
+  if (!deletedEx) return false;
+
+  // 1. Remove deleted exercise
+  block.exercises.splice(exerciseIdx, 1);
+
+  // 2. Remove all child questions belonging to this exercise & clean up grading keys
+  const remainingItems = [];
+  (block.items || []).forEach(it => {
+    if (it.exerciseId === deletedEx.exerciseId) {
+      if (it.itemVersionId && draftState.gradingKey?.items) {
+        delete draftState.gradingKey.items[it.itemVersionId];
+      }
+    } else {
+      remainingItems.push(it);
+    }
+  });
+  block.items = remainingItems;
+
+  // 3. Update exercise numbers and itemIds for remaining exercises
+  block.exercises.forEach((ex, idx) => {
+    ex.exerciseNumber = idx + 1;
+    ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
+  });
+
+  // 4. Global resequence of item positions
+  const forceStartAtOne = blockIdx === 0 && exerciseIdx === 0;
+  resequenceItemPositions(draftState, { forceStartAtOne });
 
   return true;
 }
