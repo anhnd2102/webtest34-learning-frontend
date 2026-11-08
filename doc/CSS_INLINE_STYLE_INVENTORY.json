@@ -1,7 +1,7 @@
 {
-  "baseline": "e9c075b",
-  "revision": "sentence-layout1",
-  "note": "Lexical inventory after sentence authoring static style extraction; not a CSS parser.",
+  "baseline": "1f24d8f",
+  "revision": "csv-guide1",
+  "note": "Lexical inventory after CSV/Quick Guide static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -605,573 +605,48 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 565,
+      "line": 720,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 566,
+      "line": 721,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 567,
+      "line": 724,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 568,
+      "line": 725,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 569,
+      "line": 873,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 570,
+      "line": 874,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 571,
+      "line": 885,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 572,
+      "line": 887,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 573,
+      "line": 892,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 574,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 577,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 578,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 580,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 584,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 591,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 592,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 593,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 596,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 602,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 603,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 604,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 606,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 607,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 608,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 609,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 610,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 615,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 616,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 617,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 618,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 619,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 623,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 624,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 625,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 626,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 627,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 631,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 632,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 633,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 634,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 635,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 639,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 640,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 641,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 642,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 643,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 647,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 648,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 649,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 650,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 651,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 655,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 656,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 657,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 658,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 659,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 663,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 664,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 665,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 666,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 667,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 671,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 672,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 673,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 674,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 675,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 679,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 680,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 681,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 682,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 683,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 687,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 688,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 689,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 690,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 691,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 698,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 703,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 730,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 731,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 734,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 735,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 764,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 765,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 766,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 767,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 768,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 769,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 770,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 771,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 772,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 773,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 778,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 779,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 781,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 785,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 792,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 793,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 794,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 795,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 801,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 802,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 814,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 817,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 818,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 819,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 822,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 823,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 824,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 825,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 829,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 836,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 837,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 840,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
@@ -1180,52 +655,22 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 894,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 905,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 907,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 912,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 913,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 916,
+      "line": 1000,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1020,
+      "line": 1002,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1022,
+      "line": 1042,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1062,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1064,
+      "line": 1044,
       "kind": "attribute"
     },
     {

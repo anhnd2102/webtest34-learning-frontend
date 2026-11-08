@@ -562,145 +562,135 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
   const modal = document.createElement('div');
   modal.id = 'modal-csv-quick-guide';
   modal.className = 'candidate-sim-overlay quick-csv-guide-modal-overlay';
-  modal.style.position = 'fixed';
-  modal.style.inset = '0';
-  modal.style.backgroundColor = 'rgba(15, 23, 42, 0.65)';
-  modal.style.backdropFilter = 'blur(4px)';
-  modal.style.display = 'flex';
-  modal.style.alignItems = 'center';
-  modal.style.justifyContent = 'center';
-  modal.style.zIndex = '10050';
-  modal.style.padding = '24px 16px';
-  modal.style.boxSizing = 'border-box';
 
   modal.innerHTML = `
-    <div class="candidate-sim-modal quick-csv-guide-modal" role="dialog" aria-modal="true" style="max-width: 820px; width: 95%; max-height: calc(100vh - 48px); display: flex; flex-direction: column; overflow: hidden; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);">
-      <div class="candidate-sim-header" style="flex-shrink: 0; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 16px 20px 12px; margin-bottom: 0;">
+    <div class="candidate-sim-modal quick-csv-guide-modal csv-layout-guide-dialog" role="dialog" aria-modal="true">
+      <div class="candidate-sim-header csv-layout-header">
         <div>
-          <h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+          <h3 class="csv-layout-title">
             ${renderSvgIcon('fileText', 'icon-inline')}
             <span>Hướng dẫn điền file CSV / Excel tạo đề thi (Test Studio)</span>
           </h3>
-          <p style="margin: 0; font-size: 13px; color: #64748b;">
+          <p class="csv-layout-subtitle">
             Hệ thống hỗ trợ tiếng Việt có dấu (UTF-8 BOM), phân tách bằng dấu phẩy hoặc tab Excel.
           </p>
         </div>
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-guide" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
 
-      <div class="modal-body" style="flex: 1 1 auto; overflow-y: auto; min-height: 0; padding: 16px 20px; font-size: 13px; color: #334155; line-height: 1.5;">
-        <h4 style="margin: 0 0 6px; font-size: 14px; color: #0f172a; font-weight: 700;">1. Cấu trúc 7 cột chuẩn hóa gộp cả Phần thi (Block CSV / Excel Sheet 1)</h4>
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-family: monospace; font-size: 12px; word-break: break-all;">
+      <div class="modal-body csv-layout-guide-body">
+        <h4 class="csv-layout-section-title">1. Cấu trúc 7 cột chuẩn hóa gộp cả Phần thi (Block CSV / Excel Sheet 1)</h4>
+        <div class="csv-layout-column-schema">
           Exercise_Title, Exercise_Instructions, Question_Type, Prompt, Correct_Answer, Options_Or_Details, Score
         </div>
-        <ul style="margin: 0 0 14px; padding-left: 20px;">
+        <ul class="csv-layout-column-notes">
           <li><strong>Exercise_Title</strong>: Tiêu đề bài tập. Các câu tiếp theo cùng bài tập có thể để trống cột này.</li>
           <li><strong>Exercise_Instructions</strong>: Hướng dẫn làm bài tập (chỉ cần điền ở dòng đầu tiên của bài tập).</li>
           <li><strong>Question_Type</strong>: Loại câu hỏi (tiếng Anh hoặc tiếng Việt chuẩn hóa bên dưới).</li>
         </ul>
 
-        <h4 style="margin: 0 0 8px; font-size: 14px; color: #0f172a; font-weight: 700;">2. Chi tiết cách điền từng dạng câu hỏi (Bấm "Chép mẫu" để dán ngay)</h4>
-        <div style="border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; margin-bottom: 14px;">
-        <table class="quick-guide-table" style="width: 100%; border-collapse: collapse; font-size: 12px; margin: 0;">
+        <h4 class="csv-layout-types-title">2. Chi tiết cách điền từng dạng câu hỏi (Bấm "Chép mẫu" để dán ngay)</h4>
+        <div class="csv-layout-table-frame">
+        <table class="quick-guide-table csv-layout-table">
           <thead>
-            <tr style="background: #f1f5f9; text-align: left;">
-              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a; width: 150px;">Dạng bài</th>
-              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Quy ước các cột (Prompt, Đáp án, Chi tiết)</th>
-              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">Dòng ví dụ mẫu</th>
-              <th style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a; text-align: center; width: 85px;">Thao tác</th>
+            <tr class="csv-layout-table-heading">
+              <th class="csv-layout-type-heading">Dạng bài</th>
+              <th class="csv-layout-column-heading">Quy ước các cột (Prompt, Đáp án, Chi tiết)</th>
+              <th class="csv-layout-column-heading">Dòng ví dụ mẫu</th>
+              <th class="csv-layout-action-heading">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Trắc nghiệm đơn<br><code style="font-size: 11px;">single_choice</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 5: Chữ cái đáp án đúng (A/B/C/D). Cột 6: Các lựa chọn cách nhau bởi <code>|</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">The cruise departs ___ Miami.,B,at | from | on | in,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 1: Grammar,Choose correct answer,single_choice,The cruise departs ___ Miami.,B,at | from | on | in,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Trắc nghiệm đơn<br><code class="csv-layout-type-code">single_choice</code></td>
+              <td class="csv-layout-details-cell">Cột 5: Chữ cái đáp án đúng (A/B/C/D). Cột 6: Các lựa chọn cách nhau bởi <code>|</code></td>
+              <td class="csv-layout-sample-cell">The cruise departs ___ Miami.,B,at | from | on | in,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 1: Grammar,Choose correct answer,single_choice,The cruise departs ___ Miami.,B,at | from | on | in,1">Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Trắc nghiệm nhóm<br><code style="font-size: 11px;">multi_select_group</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 5: Các đáp án đúng (VD: <code>A, C</code> hoặc <code>A|C</code>). Cột 6: Danh sách lựa chọn cách nhau bởi <code>|</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Which TWO activities are free?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga,2</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 2: Group Choice,Select correct options,multi_select_group,Which TWO activities are free of charge?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga class,2" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Trắc nghiệm nhóm<br><code class="csv-layout-type-code">multi_select_group</code></td>
+              <td class="csv-layout-details-cell">Cột 5: Các đáp án đúng (VD: <code>A, C</code> hoặc <code>A|C</code>). Cột 6: Danh sách lựa chọn cách nhau bởi <code>|</code></td>
+              <td class="csv-layout-sample-cell">Which TWO activities are free?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga,2</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 2: Group Choice,Select correct options,multi_select_group,Which TWO activities are free of charge?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga class,2">Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Điền từ nội tuyến (Đoạn văn)<br><code style="font-size: 11px;">inline_cloze</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Đoạn văn chứa <code>(1) _____</code> hoặc <code>[1]</code>. Cột 5: Đáp án theo thứ tự cách nhau bởi <code>|</code> (nhiều biến thể cách nhau bởi <code>/</code>)</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">"She visits (1) _____ islands and arrives in (2) _____.",six | Nassau,,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample='Part 3: Cloze Passage,Fill in the blanks,inline_cloze,"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,,1' style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Điền từ nội tuyến (Đoạn văn)<br><code class="csv-layout-type-code">inline_cloze</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Đoạn văn chứa <code>(1) _____</code> hoặc <code>[1]</code>. Cột 5: Đáp án theo thứ tự cách nhau bởi <code>|</code> (nhiều biến thể cách nhau bởi <code>/</code>)</td>
+              <td class="csv-layout-sample-cell">"She visits (1) _____ islands and arrives in (2) _____.",six | Nassau,,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample='Part 3: Cloze Passage,Fill in the blanks,inline_cloze,"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,,1'>Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Tìm và sửa lỗi sai<br><code style="font-size: 11px;">error_correction</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Câu gốc chứa lỗi. Cột 5: Từ viết sai (Error). Cột 6: Từ sửa lại đúng (Correction) kèm biến thể cách nhau bởi <code>|</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">We have two knife in the kitchen.,knife,knives,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 4: Error Correction,Find and correct the mistake,error_correction,We have two knife in the kitchen.,knife,knives,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Tìm và sửa lỗi sai<br><code class="csv-layout-type-code">error_correction</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Câu gốc chứa lỗi. Cột 5: Từ viết sai (Error). Cột 6: Từ sửa lại đúng (Correction) kèm biến thể cách nhau bởi <code>|</code></td>
+              <td class="csv-layout-sample-cell">We have two knife in the kitchen.,knife,knives,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 4: Error Correction,Find and correct the mistake,error_correction,We have two knife in the kitchen.,knife,knives,1">Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Điền ô trống ngắn<br><code style="font-size: 11px;">fitb</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Câu hỏi chứa <code>___</code>. Cột 5: Đáp án đúng. Cột 6: Biến thể chấp nhận cách nhau bởi <code>|</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Water freezes at ___ degrees Celsius.,0,zero,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 5: Short Blank,Fill in the missing word,fitb,Water freezes at ___ degrees Celsius.,0,zero,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Điền ô trống ngắn<br><code class="csv-layout-type-code">fitb</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Câu hỏi chứa <code>___</code>. Cột 5: Đáp án đúng. Cột 6: Biến thể chấp nhận cách nhau bởi <code>|</code></td>
+              <td class="csv-layout-sample-cell">Water freezes at ___ degrees Celsius.,0,zero,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 5: Short Blank,Fill in the missing word,fitb,Water freezes at ___ degrees Celsius.,0,zero,1">Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Cặp từ vựng<br><code style="font-size: 11px;">vocabulary_pair</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Từ tiếng Anh. Cột 5: Nghĩa tiếng Việt tương ứng</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">destination,điểm đến,,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 6: Vocabulary,Match meaning,vocabulary_pair,destination,điểm đến,,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Cặp từ vựng<br><code class="csv-layout-type-code">vocabulary_pair</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Từ tiếng Anh. Cột 5: Nghĩa tiếng Việt tương ứng</td>
+              <td class="csv-layout-sample-cell">destination,điểm đến,,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 6: Vocabulary,Match meaning,vocabulary_pair,destination,điểm đến,,1">Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Viết lại câu có từ khóa<br><code style="font-size: 11px;">sentence_transformation</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Câu gốc. Cột 5: Từ khóa in hoa. Cột 6: Câu đích có <code>___</code> | Đáp án đúng</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">It is not necessary to book.,HAVE,You ___ in advance. | do not have to book,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 7: Transformation,Rewrite the sentence,sentence_transformation,It is not necessary to book in advance.,HAVE,You ___ in advance. | do not have to book,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Viết lại câu có từ khóa<br><code class="csv-layout-type-code">sentence_transformation</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Câu gốc. Cột 5: Từ khóa in hoa. Cột 6: Câu đích có <code>___</code> | Đáp án đúng</td>
+              <td class="csv-layout-sample-cell">It is not necessary to book.,HAVE,You ___ in advance. | do not have to book,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 7: Transformation,Rewrite the sentence,sentence_transformation,It is not necessary to book in advance.,HAVE,You ___ in advance. | do not have to book,1">Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Sắp xếp câu<br><code style="font-size: 11px;">sentence_reorder</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Các cụm từ ngăn cách bằng <code>/</code>. Cột 5: Câu hoàn chỉnh</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">"She / has worked / here",She has worked here.,,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample='Part 8: Reorder,Arrange the words,sentence_reorder,"She / has worked / here / for five years",She has worked here for five years.,,1' style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Sắp xếp câu<br><code class="csv-layout-type-code">sentence_reorder</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Các cụm từ ngăn cách bằng <code>/</code>. Cột 5: Câu hoàn chỉnh</td>
+              <td class="csv-layout-sample-cell">"She / has worked / here",She has worked here.,,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample='Part 8: Reorder,Arrange the words,sentence_reorder,"She / has worked / here / for five years",She has worked here for five years.,,1'>Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Sắp xếp nghe<br><code style="font-size: 11px;">listening_order</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Tên sự kiện. Cột 5: Thứ tự xuất hiện (1, 2, 3...)</td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Safety drill and inspection,2,,1</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 9: Listening Order,Order the events,listening_order,Safety drill and lifeboat inspection,2,,1" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Sắp xếp nghe<br><code class="csv-layout-type-code">listening_order</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Tên sự kiện. Cột 5: Thứ tự xuất hiện (1, 2, 3...)</td>
+              <td class="csv-layout-sample-cell">Safety drill and inspection,2,,1</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 9: Listening Order,Order the events,listening_order,Safety drill and lifeboat inspection,2,,1">Chép mẫu</button>
               </td>
             </tr>
             <tr>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 600;">Tự luận chấm AI<br><code style="font-size: 11px;">rubric_async</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1;">Cột 4: Đề bài. Cột 6: Tiêu chí chấm điểm ngăn cách bởi <code>|</code></td>
-              <td style="padding: 8px 10px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 11px;">Summarize paragraph A in 50 words.,,Ý chính (2đ) | Ngữ pháp (2đ),4</td>
-              <td style="padding: 6px; border: 1px solid #cbd5e1; text-align: center;">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample" data-sample="Part 10: Writing,Write a short summary,rubric_async,Summarize the main idea of Paragraph A in 50 words.,,Ý chính đầy đủ (2đ) | Ngữ pháp chuẩn (2đ),4" style="font-size: 11px; padding: 2px 8px;">Chép mẫu</button>
+              <td class="csv-layout-type-cell">Tự luận chấm AI<br><code class="csv-layout-type-code">rubric_async</code></td>
+              <td class="csv-layout-details-cell">Cột 4: Đề bài. Cột 6: Tiêu chí chấm điểm ngăn cách bởi <code>|</code></td>
+              <td class="csv-layout-sample-cell">Summarize paragraph A in 50 words.,,Ý chính (2đ) | Ngữ pháp (2đ),4</td>
+              <td class="csv-layout-action-cell">
+                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 10: Writing,Write a short summary,rubric_async,Summarize the main idea of Paragraph A in 50 words.,,Ý chính đầy đủ (2đ) | Ngữ pháp chuẩn (2đ),4">Chép mẫu</button>
               </td>
             </tr>
           </tbody>
         </table>
         </div>
 
-        <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #92400e;">
+        <div class="csv-layout-warning">
           <strong>Lưu ý quan trọng khi lưu file từ Excel:</strong> Nếu câu hỏi có dấu phẩy hoặc xuống dòng, hãy bọc câu trong dấu nháy kép <code>""</code>. Khi lưu từ Excel, hãy chọn <em>CSV UTF-8 (Comma delimited) (*.csv)</em> để đảm bảo tiếng Việt không bị lỗi font.
         </div>
       </div>
 
-      <div class="candidate-sim-footer" style="flex-shrink: 0; background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 20px; margin-top: auto; display: flex; justify-content: flex-end; gap: 8px;">
+      <div class="candidate-sim-footer csv-layout-footer">
         <button type="button" class="btn btn-secondary btn-close-guide-footer">Đóng</button>
       </div>
     </div>
@@ -761,45 +751,35 @@ export function openBlockCsvUploadModal(opts = {}) {
   const modal = document.createElement('div');
   modal.id = 'modal-block-csv-upload';
   modal.className = 'candidate-sim-overlay block-csv-modal-overlay';
-  modal.style.position = 'fixed';
-  modal.style.inset = '0';
-  modal.style.backgroundColor = 'rgba(15, 23, 42, 0.65)';
-  modal.style.backdropFilter = 'blur(4px)';
-  modal.style.display = 'flex';
-  modal.style.alignItems = 'center';
-  modal.style.justifyContent = 'center';
-  modal.style.zIndex = '10050';
-  modal.style.padding = '24px 16px';
-  modal.style.boxSizing = 'border-box';
 
   const blockTitle = (block?.title || `Phần ${blockIdx + 1}`).trim();
 
   modal.innerHTML = `
-    <div class="candidate-sim-modal block-csv-modal" role="dialog" aria-modal="true" style="max-width: 720px; width: 95%; max-height: calc(100vh - 48px); display: flex; flex-direction: column; overflow: hidden; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);">
-      <div class="candidate-sim-header" style="flex-shrink: 0; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 16px 20px 12px; margin-bottom: 0;">
+    <div class="candidate-sim-modal block-csv-modal csv-layout-upload-dialog" role="dialog" aria-modal="true">
+      <div class="candidate-sim-header csv-layout-header">
         <div>
-          <h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+          <h3 class="csv-layout-title">
             ${renderSvgIcon('upload', 'icon-inline')}
             <span>Nhập CSV các bài tập vào ${escapeHtml(blockTitle)}</span>
           </h3>
-          <p style="margin: 0; font-size: 13px; color: #64748b;">
+          <p class="csv-layout-subtitle">
             Tải lên file CSV gộp 7 cột đa năng để tạo hàng loạt bài tập và câu hỏi cho Phần này.
           </p>
         </div>
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-modal" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
 
-      <div class="modal-body" style="flex: 1 1 auto; overflow-y: auto; min-height: 0; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #475569;">
-          <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">Cấu trúc 7 cột chuẩn hóa:</div>
-          <code style="display: block; background: #fff; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 11px; margin-bottom: 6px; word-break: break-all;">
+      <div class="modal-body csv-layout-upload-body">
+        <div class="csv-layout-schema-panel">
+          <div class="csv-layout-schema-title">Cấu trúc 7 cột chuẩn hóa:</div>
+          <code class="csv-layout-schema-code">
             Exercise_Title, Exercise_Instructions, Question_Type, Prompt, Correct_Answer, Options_Or_Details, Score
           </code>
           <div>Hỗ trợ: <em>single_choice, multi_select_group, inline_cloze, fitb, vocabulary_pair, error_correction, sentence_transformation, sentence_reorder, listening_order, pictorial_vocabulary, pronunciation_choice, rubric_async</em>.</div>
         </div>
 
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px;">
-          <a href="./assets/templates/mau_de_thi_test_studio.xlsx" download="mau_de_thi_test_studio.xlsx" class="btn btn-primary btn-sm btn-download-excel-template" style="text-decoration: none;">
+        <div class="csv-layout-file-actions">
+          <a href="./assets/templates/mau_de_thi_test_studio.xlsx" download="mau_de_thi_test_studio.xlsx" class="btn btn-primary btn-sm btn-download-excel-template csv-layout-download-link">
             ${renderSvgIcon('download', 'icon-inline')} <span>Tải mẫu Excel 2 Sheet (.xlsx)</span>
           </a>
           <button type="button" class="btn btn-secondary btn-sm btn-download-block-template">
@@ -811,33 +791,33 @@ export function openBlockCsvUploadModal(opts = {}) {
           <button type="button" class="btn btn-secondary btn-sm btn-view-csv-guide" title="Xem hướng dẫn chi tiết cách điền các cột mẫu">
             ${renderSvgIcon('fileText', 'icon-inline')} <span>Xem hướng dẫn điền</span>
           </button>
-          <input type="file" class="input-block-csv-file" accept=".csv,.tsv,.txt,.xlsx,.xls" style="display: none;" />
+          <input type="file" class="input-block-csv-file csv-layout-file-input" accept=".csv,.tsv,.txt,.xlsx,.xls" />
         </div>
 
-        <div class="form-group" style="margin: 0;">
-          <label class="form-label" style="font-weight: 600; font-size: 13px; margin-bottom: 6px;">Hoặc dán nội dung CSV vào đây:</label>
-          <textarea class="form-control block-csv-textarea" rows="6" placeholder="Dán nội dung CSV theo 7 cột vào đây..." style="font-family: monospace; font-size: 12px; resize: vertical;"></textarea>
+        <div class="form-group csv-layout-field">
+          <label class="form-label csv-layout-field-label">Hoặc dán nội dung CSV vào đây:</label>
+          <textarea class="form-control block-csv-textarea csv-layout-textarea" rows="6" placeholder="Dán nội dung CSV theo 7 cột vào đây..."></textarea>
         </div>
 
-        <div class="form-group" style="margin: 0; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
-          <label class="form-label" style="font-weight: 600; font-size: 13px; margin-bottom: 6px;">Chế độ nhập dữ liệu:</label>
-          <div style="display: flex; gap: 16px; font-size: 13px; flex-wrap: wrap;">
-            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+        <div class="form-group csv-layout-mode-panel">
+          <label class="form-label csv-layout-field-label">Chế độ nhập dữ liệu:</label>
+          <div class="csv-layout-modes">
+            <label class="csv-layout-mode-option">
               <input type="radio" name="block-import-mode" value="append" checked />
               <span><strong>Thêm nối tiếp</strong> vào sau các bài tập hiện tại</span>
             </label>
-            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: #b91c1c;">
+            <label class="csv-layout-overwrite-option">
               <input type="radio" name="block-import-mode" value="overwrite" />
               <span><strong>Ghi đè / Thay thế</strong> toàn bộ bài tập cũ trong Phần này</span>
             </label>
           </div>
         </div>
 
-        <div class="block-csv-preview-box" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #166534;"></div>
-        <div class="block-csv-error-box" style="display: none; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #991b1b;"></div>
+        <div class="block-csv-preview-box csv-layout-preview"></div>
+        <div class="block-csv-error-box csv-layout-error"></div>
       </div>
 
-      <div class="candidate-sim-footer" style="flex-shrink: 0; background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 20px; margin-top: auto; display: flex; justify-content: flex-end; gap: 8px;">
+      <div class="candidate-sim-footer csv-layout-footer">
         <button type="button" class="btn btn-secondary btn-cancel-block-csv">Hủy</button>
         <button type="button" class="btn btn-primary btn-confirm-block-csv" disabled>
           ${renderSvgIcon('check', 'icon-inline')} <span>Xác nhận nhập vào Phần thi</span>
@@ -913,7 +893,7 @@ export function openBlockCsvUploadModal(opts = {}) {
     previewBox.style.display = 'block';
     confirmBtn.disabled = false;
 
-    let html = `<strong>Đã nhận diện: ${exCount} bài tập, ${totalItems} câu hỏi</strong><ul style="margin: 6px 0 0; padding-left: 18px;">`;
+    let html = `<strong>Đã nhận diện: ${exCount} bài tập, ${totalItems} câu hỏi</strong><ul class="csv-layout-preview-list">`;
     parsedData.exercises.forEach((ex) => {
       html += `<li><strong>${escapeHtml(ex.title)}:</strong> ${ex.items.length} câu hỏi <em>(${escapeHtml(ex.instructions || 'Không có hướng dẫn')})</em></li>`;
     });

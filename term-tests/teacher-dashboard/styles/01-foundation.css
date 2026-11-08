@@ -23,6 +23,11 @@
   --izone-slate-600: #475569;
   --izone-text-body: #334155;
   --izone-text-muted: #64748b;
+  --izone-warning-bg: #fffbeb;
+  --izone-danger-strong: #b91c1c;
+  --izone-danger-bg: #fef2f2;
+  --izone-danger-border: #fecaca;
+  --izone-danger-text: #991b1b;
   --izone-answer-blank-bg: #eff6ff;
   --izone-answer-blank-border: #3b82f6;
   --izone-answer-blank-text: #1d4ed8;

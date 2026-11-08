@@ -623,3 +623,290 @@
   gap: 10px;
 }
 
+
+/* CSV upload and Quick Guide: former static inline presentation. */
+.quick-csv-guide-modal-overlay, .block-csv-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--izone-overlay-backdrop);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10050;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-guide-dialog {
+  max-width: 820px;
+  width: 95%;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--izone-surface);
+  border: 1px solid var(--izone-slate-300);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px var(--izone-shadow-modal-color);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--izone-border);
+  padding: 16px 20px 12px;
+  margin-bottom: 0;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--izone-slate-900);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--izone-text-muted);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-guide-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--izone-text-body);
+  line-height: 1.5;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-section-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: var(--izone-slate-900);
+  font-weight: 700;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-schema {
+  background: var(--izone-slate-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-notes {
+  margin: 0 0 14px;
+  padding-left: 20px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-types-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--izone-slate-900);
+  font-weight: 700;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table-frame {
+  border: 1px solid var(--izone-slate-300);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 0;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table-heading {
+  background: var(--izone-slate-100);
+  text-align: left;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-heading {
+  padding: 8px 10px;
+  border: 1px solid var(--izone-slate-300);
+  font-weight: 700;
+  color: var(--izone-slate-900);
+  width: 150px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-heading {
+  padding: 8px 10px;
+  border: 1px solid var(--izone-slate-300);
+  font-weight: 700;
+  color: var(--izone-slate-900);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-action-heading {
+  padding: 8px 10px;
+  border: 1px solid var(--izone-slate-300);
+  font-weight: 700;
+  color: var(--izone-slate-900);
+  text-align: center;
+  width: 85px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-cell {
+  padding: 8px 10px;
+  border: 1px solid var(--izone-slate-300);
+  font-weight: 600;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-code {
+  font-size: 11px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-details-cell {
+  padding: 8px 10px;
+  border: 1px solid var(--izone-slate-300);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-sample-cell {
+  padding: 8px 10px;
+  border: 1px solid var(--izone-slate-300);
+  font-family: monospace;
+  font-size: 11px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-action-cell {
+  padding: 6px;
+  border: 1px solid var(--izone-slate-300);
+  text-align: center;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-copy-button {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-warning {
+  background: var(--izone-warning-bg);
+  border: 1px solid var(--izone-retake-active-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--izone-retake-active-text);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-footer {
+  flex-shrink: 0;
+  background: var(--izone-slate-bg);
+  border-top: 1px solid var(--izone-border);
+  padding: 14px 20px;
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-upload-dialog {
+  max-width: 720px;
+  width: 95%;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--izone-surface);
+  border: 1px solid var(--izone-slate-300);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px var(--izone-shadow-modal-color);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-upload-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-panel {
+  background: var(--izone-slate-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--izone-slate-600);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-title {
+  font-weight: 600;
+  color: var(--izone-slate-900);
+  margin-bottom: 4px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-code {
+  display: block;
+  background: var(--izone-surface);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--izone-slate-300);
+  font-size: 11px;
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-file-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--izone-slate-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-download-link {
+  text-decoration: none;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-file-input {
+  display: none;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-field {
+  margin: 0;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-field-label {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-textarea {
+  font-family: monospace;
+  font-size: 12px;
+  resize: vertical;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-mode-panel {
+  margin: 0;
+  background: var(--izone-surface);
+  border: 1px solid var(--izone-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-modes {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-mode-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-overwrite-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--izone-danger-strong);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-preview {
+  display: none;
+  background: var(--izone-context-inherited-bg);
+  border: 1px solid var(--izone-context-inherited-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--izone-context-inherited-text);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-error {
+  display: none;
+  background: var(--izone-danger-bg);
+  border: 1px solid var(--izone-danger-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--izone-danger-text);
+}
+:is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-preview-list {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}

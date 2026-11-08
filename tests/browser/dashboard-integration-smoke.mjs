@@ -134,6 +134,9 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1') {
+          await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
+        }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
         if (process.env.CAPTURE_COMPUTED === '1') {
           const styles = await page.evaluate(() => {
@@ -173,6 +176,63 @@ try {
       await page.locator('#modal-unsaved-changes').waitFor();
       await screenshot('dirty-modal');
       await page.locator('#btn-stay-editing').click();
+      if (process.env.CSV_GUIDE_STYLE_PARITY === '1') {
+        await page.evaluate(async base => {
+          window.csvGuideModule = await import(new URL('studio/batch-import.js', base).href);
+          window.csvImports = [];
+          window.openCsvStyleFixture = () => csvGuideModule.openBlockCsvUploadModal({ block: { title: 'Synthetic CSV block' }, blockIdx: 0, onImport: data => csvImports.push(data) });
+          window.csvCopiedSamples = [];
+          Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async value => { csvCopiedSamples.push(value); } } });
+          openCsvStyleFixture();
+        }, base);
+        const csvModal = page.locator('#modal-block-csv-upload');
+        const csvInput = csvModal.locator('.block-csv-textarea');
+        const sample = 'Part 1,Choose,single_choice,Synthetic question,A,Yes | No,1';
+        assert.equal(await csvModal.locator('.btn-confirm-block-csv').isDisabled(), true);
+        await screenshot('csv-empty');
+        await csvInput.fill('invalid');
+        await csvModal.locator('.block-csv-error-box').waitFor({ state: 'visible' });
+        assert.equal(await csvModal.locator('.btn-confirm-block-csv').isDisabled(), true);
+        await screenshot('csv-invalid');
+        await csvInput.fill(sample);
+        await csvModal.locator('.block-csv-preview-box').waitFor({ state: 'visible' });
+        assert.equal(await csvModal.locator('.btn-confirm-block-csv').isEnabled(), true);
+        await screenshot('csv-preview');
+        await csvModal.locator('.btn-view-csv-guide').click();
+        const guide = page.locator('#modal-csv-quick-guide');
+        await guide.waitFor();
+        await screenshot('csv-guide-top');
+        const copy = guide.locator('.btn-copy-sample').first();
+        await copy.click();
+        await page.waitForFunction(() => csvCopiedSamples.length === 1);
+        assert.equal(await page.evaluate(() => csvCopiedSamples[0]), await copy.getAttribute('data-sample'));
+        await page.waitForFunction(() => !document.querySelector('#modal-csv-quick-guide .btn-copy-sample').style.color);
+        await guide.locator('.modal-body').evaluate(el => { el.scrollTop = el.scrollHeight; });
+        await screenshot('csv-guide-bottom');
+        await guide.locator('.btn-close-guide-footer').click();
+        assert.equal(await guide.count(), 0);
+        await csvModal.locator('.btn-confirm-block-csv').click();
+        assert.equal(await csvModal.count(), 0);
+        assert.equal(await page.evaluate(() => csvImports[0].mode), 'append');
+        assert.equal(await page.evaluate(() => csvImports[0].exercises[0].items.length), 1);
+        await page.evaluate(() => openCsvStyleFixture());
+        await csvModal.locator('.input-block-csv-file').setInputFiles({ name: 'synthetic.csv', mimeType: 'text/csv', buffer: Buffer.from('\uFEFF' + sample) });
+        await csvModal.locator('.block-csv-preview-box').waitFor({ state: 'visible' });
+        await csvModal.locator('input[value="overwrite"]').check();
+        await screenshot('csv-file-overwrite');
+        await csvModal.locator('.btn-confirm-block-csv').click();
+        assert.equal(await page.evaluate(() => csvImports[1].mode), 'overwrite');
+        assert.equal(await page.evaluate(() => csvImports[1].exercises[0].items.length), 1);
+        await page.evaluate(() => openCsvStyleFixture());
+        await csvModal.locator('.btn-cancel-block-csv').click();
+        assert.equal(await page.evaluate(() => csvImports.length), 2);
+        await page.evaluate(() => { csvGuideModule.openCsvQuickGuideModal(); });
+        await guide.locator('.btn-close-guide').click();
+        assert.equal(await guide.count(), 0);
+        await page.evaluate(() => { csvGuideModule.openCsvQuickGuideModal(); });
+        await guide.click({ position: { x: 1, y: 1 } });
+        assert.equal(await guide.count(), 0);
+      }
       if (process.env.SENTENCE_STYLE_PARITY === '1') {
         await page.evaluate(data => {
           window.sentenceRandom = Math.random; Math.random = () => 0.375;
