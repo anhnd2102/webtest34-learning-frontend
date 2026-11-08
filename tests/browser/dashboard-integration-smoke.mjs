@@ -134,7 +134,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -176,6 +176,86 @@ try {
       await page.locator('#modal-unsaved-changes').waitFor();
       await screenshot('dirty-modal');
       await page.locator('#btn-stay-editing').click();
+      if (process.env.GENERIC_BATCH_STYLE_PARITY === '1') {
+        await page.evaluate(async base => {
+          window.genericBatchModule = await import(new URL('studio/batch-import.js', base).href);
+          window.genericCsvParser = await import(new URL('studio/content-import.js', base).href);
+          window.genericResults = [];
+          window.openGenericFixture = ({ csv = true, custom = false } = {}) => genericBatchModule.openGenericBatchModal({
+            title: 'Synthetic batch questions', subtitle: 'Synthetic CSV and quick creation', defaultCount: 3, minCount: 2, maxCount: 5, defaultPoints: 2,
+            extraConfigHtml: '<label>Extra configuration <input class="synthetic-extra" value="retained"></label>',
+            csvConfig: csv ? { columnsHint: 'Prompt, Answers, Options, Score', parseCsv: genericCsvParser.parseMultiGroupCsv,
+              renderPreviewRow: custom ? (item, index) => `<em>Custom ${index}: ${item.prompt}</em>` : undefined,
+              onImport: (items, options) => genericResults.push({ action: 'import', items, defaultPoints: options.defaultPoints }) } : null,
+            onConfirm: ({ count, defaultPoints }) => genericResults.push({ action: 'confirm', count, defaultPoints }),
+            onSingle: ({ count, defaultPoints }) => genericResults.push({ action: 'single', count, defaultPoints })
+          });
+          openGenericFixture();
+        }, base);
+        const modal = page.locator('#generic-batch-modal');
+        const csv = modal.locator('.textarea-batch-csv');
+        const sample = 'Synthetic question,A|B,Yes | No | Maybe,2';
+        await screenshot('generic-empty');
+        await csv.fill(',A,Yes | No,2');
+        await modal.locator('.csv-preview-summary').waitFor({ state: 'visible' });
+        assert.equal(await modal.locator('.csv-preview-items').count(), 0);
+        await screenshot('generic-invalid');
+        const invalidDialog = page.waitForEvent('dialog').then(dialog => dialog.accept());
+        await modal.locator('.btn-batch-confirm').click();
+        await invalidDialog;
+        assert.equal(await modal.isVisible(), true);
+        assert.equal(await page.evaluate(() => genericResults.length), 0);
+        await csv.fill([sample, sample, sample, sample, ',A,Yes | No,2'].join('\n'));
+        assert.equal(await modal.locator('.csv-preview-items > div').count(), 4);
+        await screenshot('generic-preview');
+        await modal.locator('.input-batch-csv-points').fill('2.75');
+        assert.equal(await modal.locator('.input-batch-points').inputValue(), '2.75');
+        await modal.locator('[data-tab="stepper"]').click();
+        assert.equal(await modal.locator('[data-tab="stepper"]').getAttribute('aria-selected'), 'true');
+        assert.equal(await modal.locator('[data-panel="csv"]').isVisible(), false);
+        await modal.locator('.btn-batch-step-up').click();
+        assert.equal(await modal.locator('.input-batch-count').inputValue(), '4');
+        await modal.locator('.btn-batch-step-down').click();
+        assert.equal(await modal.locator('.input-batch-count').inputValue(), '3');
+        await modal.locator('.input-batch-points').fill('3.25');
+        assert.equal(await modal.locator('.input-batch-csv-points').inputValue(), '3.25');
+        assert.equal(await modal.locator('.synthetic-extra').inputValue(), 'retained');
+        await screenshot('generic-stepper');
+        await modal.locator('[data-tab="csv"]').click();
+        assert.equal(await csv.inputValue(), [sample, sample, sample, sample, ',A,Yes | No,2'].join('\n'));
+        await modal.locator('.btn-batch-confirm').click();
+        assert.equal(await modal.isVisible(), false);
+        assert.deepEqual(await page.evaluate(() => ({ action: genericResults[0].action, length: genericResults[0].items.length, points: genericResults[0].defaultPoints })), { action: 'import', length: 8, points: 3.25 });
+        await page.evaluate(() => openGenericFixture({ custom: true }));
+        await modal.locator('.input-csv-file').setInputFiles({ name: 'synthetic.csv', mimeType: 'text/csv', buffer: Buffer.from('\uFEFF' + sample) });
+        await modal.locator('.csv-preview-items em').first().waitFor();
+        await screenshot('generic-custom-preview');
+        await modal.locator('.btn-batch-single').click();
+        assert.equal(await modal.isVisible(), false);
+        assert.deepEqual(await page.evaluate(() => genericResults[1]), { action: 'single', count: 1, defaultPoints: 2 });
+        await page.evaluate(() => openGenericFixture({ csv: false }));
+        assert.equal(await modal.locator('.modal-batch-tabs').count(), 0);
+        await modal.locator('.input-batch-count').fill('99');
+        await modal.locator('.btn-batch-step-up').click();
+        assert.equal(await modal.locator('.input-batch-count').inputValue(), '5');
+        await modal.locator('.input-batch-count').fill('0');
+        await modal.locator('.btn-batch-step-down').click();
+        assert.equal(await modal.locator('.input-batch-count').inputValue(), '2');
+        await modal.locator('.input-batch-points').fill('0');
+        await screenshot('generic-no-csv');
+        await modal.locator('.input-batch-count').press('Enter');
+        assert.equal(await modal.isVisible(), false);
+        assert.deepEqual(await page.evaluate(() => genericResults[2]), { action: 'confirm', count: 2, defaultPoints: 2 });
+        for (const close of ['.btn-close-batch-modal', '.btn-close-batch-modal-btn', 'escape', 'backdrop']) {
+          await page.evaluate(() => openGenericFixture());
+          if (close === 'escape') await page.keyboard.press('Escape');
+          else if (close === 'backdrop') await modal.click({ position: { x: 1, y: 1 } });
+          else await modal.locator(close).click();
+          assert.equal(await modal.isVisible(), false);
+        }
+        assert.equal(await page.evaluate(() => genericResults.length), 3);
+        await page.evaluate(() => document.querySelector('#generic-batch-modal')?.remove());
+      }
       if (process.env.CSV_GUIDE_STYLE_PARITY === '1') {
         await page.evaluate(async base => {
           window.csvGuideModule = await import(new URL('studio/batch-import.js', base).href);

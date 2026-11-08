@@ -23,6 +23,9 @@
   --izone-slate-600: #475569;
   --izone-text-body: #334155;
   --izone-text-muted: #64748b;
+  --izone-import-error: #ef4444;
+  --izone-import-success: #10b981;
+  --izone-import-warning: #f59e0b;
   --izone-warning-bg: #fffbeb;
   --izone-danger-strong: #b91c1c;
   --izone-danger-bg: #fef2f2;

@@ -910,3 +910,143 @@
   margin: 6px 0 0;
   padding-left: 18px;
 }
+
+/* Generic batch modal: shared static presentation for CSV and quick creation. */
+#generic-batch-modal .generic-layout-card {
+  max-width: 680px;
+}
+#generic-batch-modal .generic-layout-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#generic-batch-modal .generic-layout-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+#generic-batch-modal .generic-layout-body {
+  padding: 16px 20px;
+}
+#generic-batch-modal .generic-layout-notice {
+  margin: 0 0 12px 0;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+}
+#generic-batch-modal .generic-layout-file-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#generic-batch-modal .generic-layout-hidden {
+  display: none;
+}
+#generic-batch-modal .generic-layout-hint {
+  font-size: 0.8rem;
+  color: var(--izone-text-muted);
+}
+#generic-batch-modal .generic-layout-csv-field {
+  margin-bottom: 8px;
+}
+#generic-batch-modal .generic-layout-csv-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+#generic-batch-modal .generic-layout-textarea {
+  font-family: monospace;
+  font-size: 13px;
+}
+#generic-batch-modal .generic-layout-csv-points-group {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+#generic-batch-modal .generic-layout-csv-points-label {
+  margin: 0;
+  font-size: 0.875rem;
+}
+#generic-batch-modal .generic-layout-csv-points {
+  width: 85px;
+  text-align: center;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+#generic-batch-modal .generic-layout-preview {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background: var(--izone-slate-bg);
+  border-radius: 6px;
+  border: 1px solid var(--izone-border);
+  display: none;
+}
+#generic-batch-modal .generic-layout-stepper-fields {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+#generic-batch-modal .generic-layout-number {
+  width: 100px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+#generic-batch-modal .generic-layout-points-unit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#generic-batch-modal .generic-layout-points-caption {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--izone-slate-600);
+}
+#generic-batch-modal .generic-layout-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-top: 1px solid var(--izone-border);
+  background: var(--izone-slate-bg);
+  border-radius: 0 0 8px 8px;
+}
+#generic-batch-modal .generic-layout-footer-actions {
+  display: flex;
+  gap: 8px;
+}
+#generic-batch-modal .generic-layout-error {
+  color: var(--izone-import-error);
+  font-weight: 500;
+}
+#generic-batch-modal .generic-layout-success {
+  color: var(--izone-import-success);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+#generic-batch-modal .generic-layout-warning {
+  color: var(--izone-import-warning);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#generic-batch-modal .generic-layout-preview-items {
+  max-height: 140px;
+  overflow-y: auto;
+  border-top: 1px dashed var(--izone-slate-300);
+  padding-top: 6px;
+}
+#generic-batch-modal .generic-layout-preview-row {
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+#generic-batch-modal .generic-layout-preview-more {
+  font-size: 11px;
+  color: var(--izone-text-muted);
+  font-style: italic;
+}

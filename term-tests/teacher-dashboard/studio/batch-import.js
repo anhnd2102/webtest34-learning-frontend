@@ -111,16 +111,16 @@ export function openGenericBatchModal({
   const hasCsv = Boolean(csvConfig);
 
   modal.innerHTML = `
-    <div class="modal-generic-batch-card modal-batch-vocab-card" style="max-width: 680px;" role="dialog" aria-modal="true" aria-labelledby="generic-batch-modal-title">
+    <div class="modal-generic-batch-card modal-batch-vocab-card generic-layout-card" role="dialog" aria-modal="true" aria-labelledby="generic-batch-modal-title">
       <div class="modal-generic-batch-header modal-batch-vocab-header">
-        <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="generic-layout-heading">
           ${hasCsv ? renderSvgIcon('fileText', 'icon-inline') : renderSvgIcon('plusCircle', 'icon-inline')}
-          <h3 id="generic-batch-modal-title" style="margin: 0; font-size: 1.1rem; font-weight: 600;">${escapeHtml(title)}</h3>
+          <h3 id="generic-batch-modal-title" class="generic-layout-title">${escapeHtml(title)}</h3>
         </div>
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
-      <div class="modal-generic-batch-body modal-batch-vocab-body" style="padding: 16px 20px;">
-        ${subtitle ? `<div class="alert-notice alert-info" style="margin: 0 0 12px 0; padding: 10px 14px; font-size: 0.85rem;">${escapeHtml(subtitle)}</div>` : ''}
+      <div class="modal-generic-batch-body modal-batch-vocab-body generic-layout-body">
+        ${subtitle ? `<div class="alert-notice alert-info generic-layout-notice">${escapeHtml(subtitle)}</div>` : ''}
 
         ${hasCsv ? `
           <div class="modal-batch-tabs" role="tablist">
@@ -133,7 +133,7 @@ export function openGenericBatchModal({
           </div>
 
           <div class="modal-batch-tab-panel active" data-panel="csv">
-            <div style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap;">
+            <div class="generic-layout-file-actions">
               <button type="button" class="btn btn-secondary btn-sm btn-download-template">
                 ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV</span>
               </button>
@@ -143,79 +143,79 @@ export function openGenericBatchModal({
               <button type="button" class="btn btn-secondary btn-sm btn-view-csv-guide" title="Xem hướng dẫn chi tiết cách điền các cột mẫu">
                 ${renderSvgIcon('fileText', 'icon-inline')} <span>Xem hướng dẫn điền</span>
               </button>
-              <input type="file" class="input-csv-file" accept=".csv,text/csv,text/plain,.tsv" style="display: none;" />
-              <span style="font-size: 0.8rem; color: #64748b;">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
+              <input type="file" class="input-csv-file generic-layout-hidden" accept=".csv,text/csv,text/plain,.tsv" />
+              <span class="generic-layout-hint">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
             </div>
 
-            <div class="form-group" style="margin-bottom: 8px;">
-              <label class="form-label" style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+            <div class="form-group generic-layout-csv-field">
+              <label class="form-label generic-layout-csv-label">
                 <strong>Dán các cột từ Excel / Sheets hoặc nội dung CSV:</strong>
-                ${csvConfig.columnsHint ? `<span style="font-size: 0.8rem; color: #64748b;">${escapeHtml(csvConfig.columnsHint)}</span>` : ''}
+                ${csvConfig.columnsHint ? `<span class="generic-layout-hint">${escapeHtml(csvConfig.columnsHint)}</span>` : ''}
               </label>
-              <textarea class="form-control textarea-batch-csv" rows="7" placeholder="${escapeHtml(csvConfig.placeholder || 'Dán các dòng dữ liệu copy từ Excel hoặc file CSV...')}" style="font-family: monospace; font-size: 13px;"></textarea>
+              <textarea class="form-control textarea-batch-csv generic-layout-textarea" rows="7" placeholder="${escapeHtml(csvConfig.placeholder || 'Dán các dòng dữ liệu copy từ Excel hoặc file CSV...')}"></textarea>
             </div>
 
-            <div class="form-group" style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-              <label class="form-label" style="margin: 0; font-size: 0.875rem;"><strong>Điểm mặc định mỗi câu:</strong></label>
-              <input type="number" class="form-control input-batch-csv-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 85px; text-align: center; font-weight: 700; padding: 6px 10px;" />
-              <span style="font-size: 0.8rem; color: #64748b;">(Tự động áp dụng nếu dòng dữ liệu CSV không có điểm riêng)</span>
+            <div class="form-group generic-layout-csv-points-group">
+              <label class="form-label generic-layout-csv-points-label"><strong>Điểm mặc định mỗi câu:</strong></label>
+              <input type="number" class="form-control input-batch-csv-points generic-layout-csv-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" />
+              <span class="generic-layout-hint">(Tự động áp dụng nếu dòng dữ liệu CSV không có điểm riêng)</span>
             </div>
 
-            <div class="vocab-preview-summary csv-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
+            <div class="vocab-preview-summary csv-preview-summary generic-layout-preview"></div>
           </div>
 
-          <div class="modal-batch-tab-panel" data-panel="stepper" style="display: none;">
-            <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
+          <div class="modal-batch-tab-panel generic-layout-hidden" data-panel="stepper">
+            <div class="generic-layout-stepper-fields">
               <div class="form-group batch-count-form-group">
                 <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
                 <div class="batch-count-stepper-wrap">
                   <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
-                  <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                  <input type="number" class="form-control input-batch-count generic-layout-number" min="${minCount}" max="${maxCount}" value="${initialCount}" />
                   <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
                 </div>
-                <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
+                <span class="batch-count-hint generic-layout-hint">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
               </div>
 
               <div class="form-group batch-points-form-group">
                 <label class="form-label"><strong>Điểm số mỗi câu:</strong></label>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <input type="number" class="form-control input-batch-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
-                  <span style="font-size: 0.9rem; font-weight: 600; color: #475569;">điểm</span>
+                <div class="generic-layout-points-unit">
+                  <input type="number" class="form-control input-batch-points generic-layout-number" min="0.25" max="100" step="0.25" value="${defaultPoints}" />
+                  <span class="generic-layout-points-caption">điểm</span>
                 </div>
-                <span class="batch-points-hint" style="font-size: 0.8rem; color: #64748b;">(Mặc định cho các câu được tạo)</span>
+                <span class="batch-points-hint generic-layout-hint">(Mặc định cho các câu được tạo)</span>
               </div>
             </div>
             ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
           </div>
         ` : `
-          <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
+          <div class="generic-layout-stepper-fields">
             <div class="form-group batch-count-form-group">
               <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
               <div class="batch-count-stepper-wrap">
                 <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-down" title="Giảm 1 câu" aria-label="Giảm 1 câu">−</button>
-                <input type="number" class="form-control input-batch-count" min="${minCount}" max="${maxCount}" value="${initialCount}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
+                <input type="number" class="form-control input-batch-count generic-layout-number" min="${minCount}" max="${maxCount}" value="${initialCount}" />
                 <button type="button" class="btn btn-outline btn-batch-step btn-batch-step-up" title="Tăng 1 câu" aria-label="Tăng 1 câu">+</button>
               </div>
-              <span class="batch-count-hint" style="font-size: 0.8rem; color: #64748b;">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
+              <span class="batch-count-hint generic-layout-hint">(Tối thiểu ${minCount}, tối đa ${maxCount} câu)</span>
             </div>
 
             <div class="form-group batch-points-form-group">
               <label class="form-label"><strong>Điểm số mỗi câu:</strong></label>
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <input type="number" class="form-control input-batch-points" min="0.25" max="100" step="0.25" value="${defaultPoints}" style="width: 100px; text-align: center; font-weight: 700; font-size: 1.1rem;" />
-                <span style="font-size: 0.9rem; font-weight: 600; color: #475569;">điểm</span>
+              <div class="generic-layout-points-unit">
+                <input type="number" class="form-control input-batch-points generic-layout-number" min="0.25" max="100" step="0.25" value="${defaultPoints}" />
+                <span class="generic-layout-points-caption">điểm</span>
               </div>
-              <span class="batch-points-hint" style="font-size: 0.8rem; color: #64748b;">(Mặc định cho các câu được tạo)</span>
+              <span class="batch-points-hint generic-layout-hint">(Mặc định cho các câu được tạo)</span>
             </div>
           </div>
           ${extraConfigHtml ? `<div class="batch-extra-config">${extraConfigHtml}</div>` : ''}
         `}
       </div>
-      <div class="modal-generic-batch-footer modal-batch-vocab-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 8px 8px;">
+      <div class="modal-generic-batch-footer modal-batch-vocab-footer generic-layout-footer">
         <button type="button" class="btn btn-secondary btn-batch-single">
           + Chỉ tạo 1 câu thủ công
         </button>
-        <div style="display: flex; gap: 8px;">
+        <div class="generic-layout-footer-actions">
           <button type="button" class="btn btn-secondary btn-close-batch-modal-btn">Hủy bỏ</button>
           ${hasCsv ? `
             <button type="button" class="btn btn-primary btn-batch-confirm btn-confirm-csv-import">
@@ -363,22 +363,22 @@ export function openGenericBatchModal({
       previewBox.style.display = 'block';
 
       if (parsedItems.length === 0) {
-        previewBox.innerHTML = `<span style="color: #ef4444; font-weight: 500;">Chưa tìm thấy câu hỏi hợp lệ nào. Vui lòng kiểm tra lại cấu trúc cột hoặc bấm “Tải file mẫu CSV” để xem định dạng chuẩn.</span>`;
+        previewBox.innerHTML = `<span class="generic-layout-error">Chưa tìm thấy câu hỏi hợp lệ nào. Vui lòng kiểm tra lại cấu trúc cột hoặc bấm “Tải file mẫu CSV” để xem định dạng chuẩn.</span>`;
       } else {
-        let html = `<div style="color: #10b981; font-weight: 600; margin-bottom: 6px;">Tìm thấy ${parsedItems.length} câu hỏi hợp lệ.</div>`;
+        let html = `<div class="generic-layout-success">Tìm thấy ${parsedItems.length} câu hỏi hợp lệ.</div>`;
         if (parsed.invalidRows && parsed.invalidRows.length > 0) {
-          html += `<div style="color: #f59e0b; font-size: 12px; margin-bottom: 6px;">Bỏ qua ${parsed.invalidRows.length} dòng không hợp lệ (Dòng: ${parsed.invalidRows.slice(0, 5).map(r => r.line).join(', ')}${parsed.invalidRows.length > 5 ? '...' : ''}).</div>`;
+          html += `<div class="generic-layout-warning">Bỏ qua ${parsed.invalidRows.length} dòng không hợp lệ (Dòng: ${parsed.invalidRows.slice(0, 5).map(r => r.line).join(', ')}${parsed.invalidRows.length > 5 ? '...' : ''}).</div>`;
         }
-        html += `<div class="csv-preview-items" style="max-height: 140px; overflow-y: auto; border-top: 1px dashed #cbd5e1; padding-top: 6px;">`;
+        html += `<div class="csv-preview-items generic-layout-preview-items">`;
         parsedItems.slice(0, 3).forEach((itm, idx) => {
           if (typeof csvConfig.renderPreviewRow === 'function') {
-            html += `<div style="margin-bottom: 4px; font-size: 12px;">${csvConfig.renderPreviewRow(itm, idx + 1)}</div>`;
+            html += `<div class="generic-layout-preview-row">${csvConfig.renderPreviewRow(itm, idx + 1)}</div>`;
           } else {
-            html += `<div style="margin-bottom: 4px; font-size: 12px;"><strong>Câu ${idx + 1}:</strong> ${escapeHtml(itm.prompt || '')}</div>`;
+            html += `<div class="generic-layout-preview-row"><strong>Câu ${idx + 1}:</strong> ${escapeHtml(itm.prompt || '')}</div>`;
           }
         });
         if (parsedItems.length > 3) {
-          html += `<div style="font-size: 11px; color: #64748b; font-style: italic;">... và ${parsedItems.length - 3} câu hỏi khác</div>`;
+          html += `<div class="generic-layout-preview-more">... và ${parsedItems.length - 3} câu hỏi khác</div>`;
         }
         html += `</div>`;
         previewBox.innerHTML = html;
