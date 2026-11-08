@@ -262,6 +262,7 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 - [x] Tách fragment giữ thứ tự; sửa entry styles.css hoặc link HTML có manifest kiểm được. Đảm bảo test đọc CSS chuyển sang kiểm artifact/rule contract thay vì xóa test cho pass.
 - [ ] Cleanup token, override/!important và style trùng chỉ trong các commit sau, khi chứng minh thắng/thua tương đương.
   - Đã hoàn thành đợt đầu cho fragment context/assessment: xem `CSS_CONTEXT_CLEANUP_VERIFICATION.md`. Các fragment còn lại, inline styles và cleanup override vẫn chưa hoàn tất.
+  - Đã chuyển nhóm inline styles tĩnh của audio controls, thanh thêm bài tập/footer và rich editor sang class: xem `BUILDER_INLINE_STYLES_VERIFICATION.md`. Các nhóm inline styles khác còn trong lộ trình.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
 - Rollback: revert nhóm fragment/link theo commit; không để entry trỏ fragment thiếu. Rủi ro chính: đổi cascade hoặc FOUC.

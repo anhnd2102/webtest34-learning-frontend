@@ -173,6 +173,50 @@ try {
       await page.locator('#modal-unsaved-changes').waitFor();
       await screenshot('dirty-modal');
       await page.locator('#btn-stay-editing').click();
+      if (process.env.BUILDER_STYLE_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'builder-style-fixture'; document.body.prepend(host);
+          data.blocks[0].items.push({ ...structuredClone(data.blocks[0].items[0]), itemVersionId: 'i2', position: 2, pedagogicalTypeCode: 'inline_cloze', layoutType: 'inline_cloze', interactionType: 'short_text', graderType: 'exact_text', prompt: 'Synthetic (1) _____' });
+          data.blocks[0].exercises[0].itemIds.push('i2');
+          data.blocks[0].items[0] = { ...data.blocks[0].items[0], pedagogicalTypeCode: 'pronunciation_choice', targetWord: 'camera', ipaTranscription: '/test/' };
+          const second = structuredClone(data.blocks[0]);
+          second.blockId = 'b2'; second.title = 'Second synthetic block';
+          second.exercises[0].exerciseId = 'ex2'; second.exercises[0].itemIds = ['i3', 'i4'];
+          second.items.forEach((item, index) => { item.itemVersionId = `i${index + 3}`; item.exerciseId = 'ex2'; });
+          data.blocks.push(second);
+          window.builderStyleHandle = integrationApp.mountBuilder(host, data);
+        }, form('builder-style'));
+        const host = page.locator('#builder-style-fixture');
+        await screenshot('builder-controls');
+        await host.locator('.btn-next-block').first().click();
+        assert.equal(await host.locator('#builder-block-1').isVisible(), true);
+        await screenshot('builder-next-block');
+        await host.locator('#builder-block-1 .btn-prev-block').click();
+        const card = host.locator('#builder-block-0');
+        await card.locator('.block-audio-input').fill('https://drive.google.com/file/d/synthetic/view');
+        await card.locator('.block-audio-input').dispatchEvent('change');
+        assert.equal(await card.locator('.audio-drive-warning').isVisible(), true);
+        await screenshot('builder-audio-warning');
+        await card.locator('.btn-toggle-exercise-collapse').click();
+        assert.equal(await card.locator('.builder-exercise-card').evaluate(el => el.classList.contains('is-collapsed')), true);
+        await screenshot('builder-exercise-collapsed');
+        await card.locator('.btn-toggle-exercise-collapse').click();
+        await card.locator('.btn-rich-insert-image').first().click();
+        await card.locator('.input-image-link').first().fill('not-a-valid-url');
+        await card.locator('.btn-confirm-insert-image').first().click();
+        assert.equal(await card.locator('.popup-image-error').first().isVisible(), true);
+        await screenshot('builder-image-error');
+        if (process.env.BUILDER_DRAG_CHECK === '1') {
+          await card.locator('.btn-rich-insert-image').first().click();
+          await card.locator('.input-ipa-transcription').fill('/typed-value/');
+          for (const button of await card.locator('.btn-toggle-item-collapse').all()) await button.click();
+          const cards = card.locator('.builder-item-card');
+          await cards.nth(1).locator('.item-drag-handle').dragTo(cards.first(), { targetPosition: { x: 100, y: 10 } });
+          assert.deepEqual(await page.evaluate(() => builderStyleHandle.getDraft().blocks[0].items.map(item => item.itemVersionId)), ['i2', 'i1']);
+          assert.equal(await card.locator('.input-ipa-transcription').inputValue(), '/typed-value/');
+        }
+        await page.evaluate(() => { builderStyleHandle.dispose(); document.querySelector('#builder-style-fixture').remove(); });
+      }
       if (process.env.CSS_PARITY === '1') {
         await page.evaluate(data => {
           const host = document.createElement('section'); host.id = 'css-parity-host'; document.body.append(host);

@@ -492,14 +492,14 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             </div>
             <div class="form-group block-field">
               <label class="form-label">File âm thanh (Audio URL / Path):</label>
-              <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
-                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/... hoặc assets/34/test-1/listening.mp3" style="flex:1;" />
+              <div class="audio-input-with-preview">
+                <input type="text" class="form-control block-audio-input" data-index="${index}" value="${escapeHtml(audioVal)}" placeholder="https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/... hoặc assets/34/test-1/listening.mp3" />
                 <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="block" data-index="${index}" title="Nghe thử file âm thanh">
                   ${renderSvgIcon('play', 'icon-inline')} Nghe thử
                 </button>
               </div>
-              <div class="form-hint audio-guide-hint" style="font-size:0.78rem; color:#64748b; margin-top:4px;">Chỉ sử dụng link âm thanh Cloudflare R2 (hoặc assets/). Không hỗ trợ link Google Drive cho bài nghe.</div>
-              <div class="audio-drive-warning text-danger" style="${(audioVal.includes('drive.google.com') || audioVal.includes('docs.google.com')) ? 'display:block;' : 'display:none;'} color:var(--izone-primary, #db0829); font-size:0.8rem; margin-top:4px;">Hệ thống không hỗ trợ link Google Drive cho bài nghe. Vui lòng sử dụng link Cloudflare R2 hoặc assets/.</div>
+              <div class="form-hint audio-guide-hint">Chỉ sử dụng link âm thanh Cloudflare R2 (hoặc assets/). Không hỗ trợ link Google Drive cho bài nghe.</div>
+              <div class="audio-drive-warning text-danger" style="${(audioVal.includes('drive.google.com') || audioVal.includes('docs.google.com')) ? 'display:block;' : 'display:none;'}">Hệ thống không hỗ trợ link Google Drive cho bài nghe. Vui lòng sử dụng link Cloudflare R2 hoặc assets/.</div>
             </div>
             <div class="form-group block-field">
               <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
@@ -513,7 +513,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               <div class="block-exercises-container block-items-list" data-block-idx="${index}">
                 ${renderBlockExercises(block, index)}
               </div>
-              <div class="block-exercise-actions" style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+              <div class="block-exercise-actions">
                 <button type="button" class="btn btn-outline-primary btn-add-exercise" data-block-idx="${index}">
                   + Thêm bài tập (Exercise)
                 </button>
@@ -523,7 +523,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               </div>
             </div>
 
-            <div class="block-tab-footer-nav" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div class="block-tab-footer-nav">
               <div>
                 ${index > 0 ? `
                   <button type="button" class="btn btn-outline-secondary btn-sm btn-prev-block" data-target-idx="${index - 1}">

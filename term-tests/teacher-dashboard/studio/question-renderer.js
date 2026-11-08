@@ -101,8 +101,8 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
               <div class="form-group">
                 <label class="form-label"><strong>2. File âm thanh mẫu (Audio Pronunciation URL - Tùy chọn):</strong></label>
-                <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
-                  <input type="text" class="form-control input-pronunciation-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="https://assets.izone.edu.vn/audio/... hoặc link Google Drive" style="flex:1;" />
+                <div class="audio-input-with-preview">
+                  <input type="text" class="form-control input-pronunciation-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="https://assets.izone.edu.vn/audio/... hoặc link Google Drive" />
                   <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="pron" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Nghe thử file âm thanh">
                     ${renderSvgIcon('play', 'icon-inline')} Nghe thử
                   </button>
@@ -515,7 +515,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                         <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
                       </label>
                       <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
-                      <div class="rich-editor__error popup-image-error" style="display: none; padding: 6px 10px; font-size: 12px; margin-top: 4px;"></div>
+                      <div class="rich-editor__error popup-image-error" style="display: none;"></div>
                       <div class="rich-editor__actions">
                         <button type="button" class="btn-confirm-insert-image">Chèn</button>
                       </div>
@@ -530,7 +530,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 </div>
               </div>
 
-              <div class="rich-editor__content-area" style="position: relative;">
+              <div class="rich-editor__content-area">
                 <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">${sanitizeRichContent(passageText)}</div>
                 <textarea class="rich-editor__code rich-editor-code form-control input-reading-passage" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="8" style="display: none;" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
               </div>
@@ -596,8 +596,8 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
           <div class="template-section template-listening-order">
             <div class="form-group audio-input-group">
               <label class="form-label"><strong>File ghi âm Audio (URL / Path):</strong></label>
-              <div class="audio-input-with-preview" style="display:flex; gap:8px; align-items:center;">
-                <input type="text" class="form-control form-control-sm input-listening-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="assets/34/test-1/listening.mp3 hoặc link Google Drive" style="flex:1;" />
+              <div class="audio-input-with-preview">
+                <input type="text" class="form-control form-control-sm input-listening-audio" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" value="${escapeHtml(audioUrl)}" placeholder="assets/34/test-1/listening.mp3 hoặc link Google Drive" />
                 <button type="button" class="btn btn-secondary btn-sm btn-preview-audio" data-target="item" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Nghe thử file âm thanh">
                   ${renderSvgIcon('play', 'icon-inline')} Nghe thử
                 </button>
@@ -1335,7 +1335,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                         <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
                       </label>
                       <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
-                      <div class="rich-editor__error popup-image-error" style="display: none; padding: 6px 10px; font-size: 12px; margin-top: 4px;"></div>
+                      <div class="rich-editor__error popup-image-error" style="display: none;"></div>
                       <div class="rich-editor__actions">
                         <button type="button" class="btn-confirm-insert-image">Chèn</button>
                       </div>
@@ -1355,7 +1355,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 </div>
               </div>
 
-              <div class="rich-editor__content-area" style="position: relative;">
+              <div class="rich-editor__content-area">
                 <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">${sanitizeRichContent(item.prompt || '')}</div>
                 <textarea class="rich-editor__code rich-editor-code form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" style="display: none;" placeholder="Nhập đề bài hoặc đoạn văn chứa token (1) __________...">${escapeHtml(item.prompt || '')}</textarea>
               </div>

@@ -584,3 +584,11 @@
   font-size: 12px;
 }
 
+
+/* Shared by question-card and standalone rich HTML editors. */
+.rich-editor .rich-editor__content-area { position: relative; }
+.rich-editor .popup-image-error {
+  padding: 6px 10px;
+  font-size: 12px;
+  margin-top: 4px;
+}

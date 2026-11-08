@@ -119,7 +119,7 @@ export function renderRichHtmlEditor(container, {
                 <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
               </label>
               <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
-              <div class="rich-editor__error popup-image-error" style="display: none; padding: 6px 10px; font-size: 12px; margin-top: 4px;"></div>
+              <div class="rich-editor__error popup-image-error" style="display: none;"></div>
               <div class="rich-editor__actions">
                 <button type="button" class="btn-confirm-insert-image">Chèn</button>
               </div>
@@ -140,7 +140,7 @@ export function renderRichHtmlEditor(container, {
         </div>
       </div>
 
-      <div class="rich-editor__content-area" style="position: relative;">
+      <div class="rich-editor__content-area">
         <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-placeholder="${escapeHtml(placeholder)}" role="textbox" aria-label="Nội dung bài" aria-multiline="true">${sanitized}</div>
         <textarea class="rich-editor__code rich-editor-code form-control" style="display: none;" rows="8">${escapeHtml(sanitized)}</textarea>
       </div>

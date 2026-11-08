@@ -1916,3 +1916,34 @@
   transition: border-color 0.15s ease;
 }
 
+
+/* Builder controls: static layout previously repeated in template attributes. */
+.test-builder-workspace .block-exercise-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.test-builder-workspace .block-tab-footer-nav {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--izone-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.test-builder-workspace .block-audio-input,
+.test-builder-workspace .input-pronunciation-audio,
+.test-builder-workspace .input-listening-audio { flex: 1; }
+.test-builder-workspace .audio-guide-hint {
+  font-size: 0.78rem;
+  color: var(--izone-text-muted);
+  margin-top: 4px;
+}
+.test-builder-workspace .audio-drive-warning {
+  color: var(--izone-primary);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
