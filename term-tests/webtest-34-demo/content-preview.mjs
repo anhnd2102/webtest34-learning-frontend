@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261105-mobile-nav-v18';
+} from './dynamic-exam-renderer.mjs?rev=20261105-sticky-audio-v1';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -25,6 +25,15 @@ export function sanitizeDraft(form, raw) {
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const words = value => String(value || '').trim().split(/\s+/).filter(Boolean).length;
+// Lý do cho học viên khi /attempts/draft trả lỗi 409 (mã lấy từ learning-service.saveDraft của backend).
+const DRAFT_REJECTED_REASON = {
+  ATTEMPT_ALREADY_SUBMITTED: 'Bài đã được nộp. ',
+  ATTEMPT_EXPIRED: 'Đã hết giờ làm bài. ',
+  FORM_VERSION_MISMATCH: 'Đề vừa được cập nhật. ',
+  STALE_DRAFT: 'Bài đang được mở ở một trang khác. ',
+  EXAM_DEVICE_SUPERSEDED: 'Bài đang được mở ở máy khác. ',
+  EXAM_NOT_RUNNING: 'Phiên thi chưa bắt đầu hoặc đã kết thúc. '
+};
 
 export function formatCandidateOptionLabel(s) {
   let email = (s.email || s.discriminator || '').trim();
@@ -753,7 +762,23 @@ export async function mount(course) {
   const examIncidentOperations = new Map();
   const examActive = () => ['waiting', 'running'].includes(learningState.exam?.status) && learningState.status === 'active';
 
+  // Giữ màn hình sáng khi đang làm bài. Trình duyệt không hỗ trợ hoặc từ chối thì bỏ qua, bài vẫn làm bình thường.
+  // wakeLock giữ promise của lần xin hiện tại; hệ thống tự nhả khi trang bị ẩn nên xin lại khi trang hiện lại.
+  let wakeLock = null;
+  let wantWakeLock = false;
+  function requestWakeLock() {
+    if (!wantWakeLock || wakeLock || document.visibilityState !== 'visible' || !navigator.wakeLock) return;
+    wakeLock = navigator.wakeLock.request('screen').then(lock => {
+      lock.addEventListener('release', () => { wakeLock = null; });
+      if (!wantWakeLock) lock.release();
+      return lock;
+    }).catch(() => { wakeLock = null; });
+  }
+  document.addEventListener('visibilitychange', requestWakeLock);
+
   function stopExamConnections() {
+    wantWakeLock = false;
+    wakeLock?.then(lock => lock?.release());
     clearInterval(examHeartbeatTimer);
     examHeartbeatTimer = null;
     examStreamController?.abort();
@@ -921,6 +946,9 @@ export async function mount(course) {
     examGuardState = result.state;
     const overlay = document.querySelector('#examGuardOverlay');
     document.querySelector('.content-demo')?.classList.toggle('exam-guard-blurred', Boolean(examGuardState.prompt));
+    document.querySelector('.cbt-bottom-bar')?.toggleAttribute('inert', Boolean(examGuardState.prompt));
+    // Bảng trượt nằm trên top layer, sẽ che mất lớp cảnh báo nếu còn mở.
+    if (examGuardState.prompt) document.querySelector('#cbtSheet')?.close();
     if (overlay) overlay.hidden = !examGuardState.prompt;
     if (examGuardState.superseded) {
       learningState.status = 'superseded';
@@ -1131,6 +1159,11 @@ export async function mount(course) {
               </div>
             </div>
 
+            <div id="mobileExamNotice" class="cbt-intro-notice" role="note" hidden>
+              <p>Trong lúc làm bài, <strong>không chuyển sang ứng dụng khác và không khóa màn hình</strong>.</p>
+              <p id="longWritingHint" hidden>Đề có bài viết dài. Nên làm trên máy tính hoặc iPad có bàn phím để gõ thuận tiện hơn.</p>
+            </div>
+
             <div class="cbt-intro-footer" style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;">
               <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Xem kết quả</button>
               <button type="button" class="btn-start-exam" id="startExamBtn" disabled>Bắt đầu làm bài →</button>
@@ -1188,6 +1221,9 @@ export async function mount(course) {
     const studentSelect = document.querySelector('#studentSelectInput');
     const studentStatus = document.querySelector('#studentSelectStatus');
     const startBtn = document.querySelector('#startExamBtn');
+    // Thiết bị cảm ứng; iPad đời mới tự nhận là Macintosh nên nhận qua số điểm chạm.
+    const isTouchDevice = matchMedia('(pointer: coarse)').matches || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+    document.querySelector('#mobileExamNotice').hidden = !isTouchDevice;
 
     async function handleLoadRoster() {
       const code = classInput.value.trim().toUpperCase();
@@ -1215,6 +1251,7 @@ export async function mount(course) {
         learningState.assignment = assignment;
         learningState.definition = assignment.definition;
         learningState.courseCode = code;
+        document.querySelector('#longWritingHint').hidden = !assignment.definition?.blocks?.some(block => block.items?.some(item => item.interactionType === 'long_text'));
         learningState.className = assignment.class?.name || code;
 
         studentSelect.innerHTML = '<option value="">— Chọn tên của bạn —</option>' + assignment.roster.map(s => {
@@ -1618,6 +1655,7 @@ export async function mount(course) {
                   <div class="brand-sub cbt-brand-sub">${headerSub}</div>
                 </div>
               </div>
+              <div class="cbt-current-section" id="cbt-current-section"></div>
               <div class="top-actions cbt-top-actions">
                 <span id="demo-save" role="status" class="cbt-save-pill">Đã lưu</span>
                 <div class="cbt-font-toggles">
@@ -1664,6 +1702,13 @@ export async function mount(course) {
         </div>
       `;
 
+      if (learningState.status === 'active' && !state.submittedAt) {
+        wantWakeLock = true;
+        requestWakeLock();
+      }
+
+      // Cần để env(safe-area-inset-*) có giá trị; chỉ bật ở màn thi để không đổi các trang khác.
+      document.querySelector('meta[name="viewport"]')?.setAttribute('content', 'width=device-width,initial-scale=1,viewport-fit=cover');
       renderDynamicExam(learningState.definition, document.querySelector('#examMainViewport'), {
         state,
         activeSection,
@@ -1994,9 +2039,10 @@ export async function mount(course) {
         } catch (err) {
           if (state.submittedAt) return;
           query('#demo-save').textContent = 'Lưu máy chủ thất bại';
-          setSaveAlert('Chưa lưu được, kiểm tra mạng');
-          // Chỉ thử lại lỗi tạm thời; 4xx khác (đã nộp, hết giờ, máy khác) thử lại cũng không qua.
-          if (!err.status || err.status >= 500 || err.status === 429) {
+          // Chỉ thử lại lỗi tạm thời; 4xx khác (đã nộp, hết giờ, máy khác) không do mạng, thử lại cũng không qua.
+          const retryable = !err.status || err.status >= 500 || err.status === 429;
+          setSaveAlert(retryable ? 'Chưa lưu được, kiểm tra mạng' : `Chưa lưu được. ${DRAFT_REJECTED_REASON[err.code] || ''}Hãy tải lại trang hoặc báo giáo viên.`);
+          if (retryable) {
             clearTimeout(draftDebounceTimer);
             draftDebounceTimer = setTimeout(queueServerDraft, 15000);
           }
@@ -2010,7 +2056,8 @@ export async function mount(course) {
     function persist() {
       try {
         localStorage.setItem(key, JSON.stringify(state));
-        query('#demo-save').textContent = isLearningMode ? 'Đang lưu…' : 'Đã lưu trên trình duyệt';
+        // Sau khi nộp không còn gửi nháp (queueServerDraft thoát sớm), nên không ghi "Đang lưu…".
+        query('#demo-save').textContent = !isLearningMode ? 'Đã lưu trên trình duyệt' : state.submittedAt ? 'Đã nộp bài' : 'Đang lưu…';
       } catch {
         query('#demo-save').textContent = 'Không lưu được bản nháp.';
       }

@@ -1265,6 +1265,48 @@ body {
   background: #94a3b8;
 }
 
+.audio-listens-left {
+  display: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--izone-text-muted, #64748b);
+  white-space: nowrap;
+}
+
+/* Dưới 1024px: sau khi mở khóa, trình phát thu gọn dính dưới thanh trên khi cuộn qua câu hỏi. */
+@media (max-width: 1023.98px) {
+  /* Tên bài nghe dài và thanh âm lượng không vừa một hàng trên điện thoại. */
+  .cbt-exam-shell .strict-audio-header {
+    flex-wrap: wrap;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .strict-audio-dock {
+    position: sticky;
+    top: var(--cbt-topbar-h, 0px);
+    z-index: 30;
+    padding: 8px 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .strict-audio-header {
+    display: none;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .strict-audio-body {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] .audio-listens-left {
+    display: inline;
+  }
+
+  /* Ô nhập được cuộn vào tầm nhìn (focus, bàn phím) không bị trình phát dính che. */
+  .cbt-exam-shell .simulation-section-card[data-audio-unlocked="true"] :is(input, textarea, select) {
+    scroll-margin-top: calc(var(--cbt-topbar-h, 0px) + 96px);
+  }
+}
+
 /* ==========================================================================
    12. TRUE 2-COLUMN CBT LAYOUT & STICKY ASIDE
    ========================================================================== */
@@ -1296,6 +1338,124 @@ body {
   .cbt-exam-shell .cbt-btn-submit {
     flex-shrink: 0;
     white-space: nowrap;
+  }
+}
+
+.cbt-bottom-bar,
+.cbt-current-section {
+  display: none;
+}
+
+/* Dưới 1024px, thanh đáy thay cho cặp nút chuyển phần cuối trang. */
+@media (max-width: 1023.98px) {
+  .cbt-exam-shell {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  }
+  .cbt-exam-shell .cbt-footer-actions {
+    display: none;
+  }
+  .cbt-exam-shell .cbt-bottom-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 8px max(14px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+    background: var(--izone-card-bg);
+    border-top: 1px solid var(--izone-border);
+  }
+  .cbt-exam-shell .cbt-bottom-bar[hidden] {
+    display: none;
+  }
+  .cbt-exam-shell .cbt-bottom-bar .btn {
+    justify-content: center;
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+  .cbt-exam-shell .cbt-bottom-bar-count {
+    min-height: 44px;
+    padding: 0 8px;
+    border: 0;
+    background: transparent;
+    color: var(--izone-slate);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+  .cbt-exam-shell .cbt-top-actions .cbt-btn-submit {
+    display: none;
+  }
+  .cbt-exam-shell .cbt-exam-layout > .cbt-side-container {
+    display: none;
+  }
+
+  /* Bảng trượt mở từ số câu trên thanh đáy. */
+  .cbt-exam-shell dialog.cbt-sheet {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 12px 12px 0 0;
+    background: var(--izone-card-bg);
+  }
+  .cbt-sheet-inner {
+    max-height: 85vh;
+    max-height: 85dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px 14px calc(16px + env(safe-area-inset-bottom));
+  }
+  .cbt-sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .cbt-sheet-head h2 {
+    margin: 0;
+    color: var(--izone-navy);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .cbt-sheet-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  /* A−/A+ và Nộp bài lên đầu để không phải cuộn trong bảng trên điện thoại. */
+  .cbt-sheet-body > .cbt-side-container {
+    order: 1;
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+  /* Luật chung ẩn .side-panel dưới 1024px; trong bảng trượt thì hiện lại. */
+  .cbt-sheet-body .cbt-side-panel {
+    display: flex;
+    position: static;
+    padding-bottom: 0;
+  }
+  .cbt-sheet-body .cbt-tips-card,
+  .cbt-sheet-body .cbt-qnav-chip {
+    display: none;
+  }
+  /* Bảng bên trên desktop chỉ lọc câu của phần đang mở; trong bảng trượt phải thấy cả đề. */
+  .cbt-sheet-body .btn-qnav {
+    display: inline-flex !important;
   }
 }
 
@@ -1332,7 +1492,25 @@ body {
   }
 
   .cbt-exam-shell .cbt-topbar-inner {
-    padding: 8px 14px;
+    min-height: 56px;
+    padding: 6px 14px;
+    box-sizing: border-box;
+  }
+  .cbt-exam-shell .cbt-current-section {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--izone-navy);
+    font-size: 15px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Bảng trượt đã có các nút này. Sau khi nộp không còn bảng trượt nên trả lại để xem lại bài. */
+  .cbt-exam-shell:not(.is-submitted) .cbt-section-nav-wrap,
+  .cbt-exam-shell:not(.is-submitted) .cbt-top-actions .cbt-font-toggles {
+    display: none;
   }
   .cbt-exam-shell .cbt-section-nav-bar {
     padding: 6px 14px;
@@ -2048,6 +2226,32 @@ body {
   font-size: 0.82rem;
   color: #64748b;
   line-height: 1.4;
+}
+
+/* Thông báo ở màn hình bắt đầu, chỉ hiện trên thiết bị cảm ứng. */
+.cbt-intro-notice {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border: 1px solid var(--izone-border, #e2e8f0);
+  border-left: 4px solid var(--izone-primary, #e11d48);
+  border-radius: 10px;
+  background: var(--izone-card-bg, #ffffff);
+  color: var(--izone-navy, #0f172a);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.cbt-intro-notice p {
+  margin: 0;
+}
+
+.cbt-intro-notice p + p {
+  margin-top: 6px;
+}
+
+.cbt-intro-notice[hidden],
+.cbt-intro-notice p[hidden] {
+  display: none;
 }
 
 .cbt-soundcheck-box {

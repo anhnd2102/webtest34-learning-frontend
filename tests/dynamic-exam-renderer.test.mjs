@@ -284,3 +284,10 @@ test('dynamic-exam-renderer: đề đọc ghép dựng hai tab Bài đọc/Câu 
   assert.ok(html.includes('Câu hỏi (1)'), 'tab Câu hỏi phải kèm số câu');
 });
 
+test('isKeyboardOpen phân biệt bàn phím với phóng to và thanh địa chỉ', async () => {
+  const { isKeyboardOpen } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
+  assert.equal(isKeyboardOpen({ height: 844, scale: 1 }, 844), false);
+  assert.equal(isKeyboardOpen({ height: 500, scale: 1 }, 844), true, 'bàn phím che hơn 120px');
+  assert.equal(isKeyboardOpen({ height: 422, scale: 2 }, 844), false, 'phóng to 2 lần không phải bàn phím');
+  assert.equal(isKeyboardOpen({ height: 780, scale: 1 }, 844), false, 'thanh địa chỉ co giãn không phải bàn phím');
+});
