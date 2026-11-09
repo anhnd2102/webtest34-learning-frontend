@@ -1259,3 +1259,19 @@
 .template-sentence-reorder .variant-chips-container {
   margin-top: 12px;
 }
+
+/* Simulation pronunciation and transformation: former static inline presentation. */
+#candidate-simulation-modal .candidate-pronunciation-wrap .ipa-inline-audio {
+  display: none;
+}
+#candidate-simulation-modal .candidate-pronunciation-wrap .candidate-pron-options-grid {
+  margin-top: 10px;
+}
+#candidate-simulation-modal .candidate-transformation-wrap .transformation-keyword-row {
+  margin-bottom: 8px;
+}
+#candidate-simulation-modal .candidate-transformation-wrap .keyword-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--izone-slate-600);
+}

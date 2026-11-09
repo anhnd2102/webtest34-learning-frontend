@@ -135,7 +135,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -604,6 +604,47 @@ try {
           assert.equal(await card.locator('.input-ipa-transcription').inputValue(), '/typed-value/');
         }
         await page.evaluate(() => { builderStyleHandle.dispose(); document.querySelector('#builder-style-fixture').remove(); });
+      }
+      if (process.env.SIMULATION_QUESTION_STYLE_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'simulation-question-fixture'; document.body.append(host);
+          data.blocks[0].items = [
+            { itemVersionId:'p1',exerciseId:'ex1',position:1,prompt:'Synthetic pronunciation',interactionType:'single_choice',pedagogicalTypeCode:'pronunciation_choice',graderType:'exact_option',maxScore:1,ipaTranscription:'/kæt/',audioUrl:'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=',options:[{id:'A',label:'cat'},{id:'B',label:'cut'}] },
+            { itemVersionId:'r1',exerciseId:'ex1',position:2,prompt:'Synthetic original sentence',interactionType:'short_text',pedagogicalTypeCode:'sentence_rewrite',graderType:'accepted_text',maxScore:1,keyword:'PREVENTED',framePrefix:'His illness',frameSuffix:'from leaving.',targetAnswer:'prevented him' }
+          ];
+          data.blocks[0].exercises[0].itemIds=['p1','r1'];
+          data.gradingKey={items:{p1:{graderType:'exact_option',expectedOptionId:'A'},r1:{graderType:'accepted_text',accepted:['prevented him'],keyword:'PREVENTED',framePrefix:'His illness',frameSuffix:'from leaving.',maxScore:1}},groups:{}};
+          window.simulationQuestionBuilder=integrationApp.mountBuilder(host,data);
+          host.querySelector('#btn-preview-test').click();
+          window.pronunciationPlayCalls=0;
+          document.querySelector('#candidate-simulation-modal .ipa-inline-audio').play=async()=>{ pronunciationPlayCalls++; };
+        }, form('simulation-question'));
+        const sim=page.locator('#candidate-simulation-modal');
+        assert.equal(await sim.locator('.ipa-inline-audio').isVisible(),false);
+        assert.equal(await sim.locator('.keyword-badge-pill').textContent(),'PREVENTED');
+        await screenshot('simulation-question-default');
+        await sim.locator('.candidate-ipa-audio-btn').click();
+        await writeFile(new URL(`${viewport.width}-pronunciation-play-observation.json`,artifacts),JSON.stringify({playCalls:await page.evaluate(()=>pronunciationPlayCalls)}));
+        const radio=sim.locator('input[name="sim_pron_p1"][value="A"]');
+        await radio.check();
+        await sim.locator('.candidate-transformation-input').fill('prevented him');
+        assert.equal(await sim.locator('.progress-ratio').textContent(),'2/2');
+        await screenshot('simulation-question-answered');
+        await sim.locator('#btn-submit-simulation').click();
+        assert.equal(await sim.locator('.score-banner-value').textContent(),'2/2đ');
+        await screenshot('simulation-question-results');
+        await sim.locator('#btn-retest-simulation').click();
+        assert.equal(await sim.locator('.candidate-transformation-input').inputValue(),'prevented him');
+        await sim.locator('input[name="sim_pron_p1"][value="B"]').check();
+        await sim.locator('.candidate-transformation-input').fill('stopped him');
+        await sim.locator('#btn-submit-simulation').click();
+        assert.equal(await sim.locator('.score-banner-value').textContent(),'0/2đ');
+        await screenshot('simulation-question-incorrect');
+        await sim.locator('#btn-done-simulation-results').click();
+        assert.equal(await sim.locator('#simulation-results-modal').isVisible(),false);
+        await sim.locator('#btn-close-simulation').click();
+        assert.equal(await sim.isVisible(),false);
+        await page.evaluate(()=>{ simulationQuestionBuilder.dispose();document.querySelector('#simulation-question-fixture').remove(); });
       }
       if (process.env.SIMULATION_SHELL_PARITY === '1') {
         await page.evaluate(data => {

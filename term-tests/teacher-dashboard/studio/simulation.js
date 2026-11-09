@@ -103,11 +103,11 @@ function openCandidateSimulationModal() {
                     <button type="button" class="btn btn-sm btn-secondary candidate-ipa-audio-btn" data-audio-src="${escapeHtml(audioSrc)}" title="Nghe phát âm mẫu">
                       ${renderSvgIcon('audio', 'icon-inline')} Nghe phát âm
                     </button>
-                    <audio src="${escapeHtml(audioSrc)}" class="ipa-inline-audio" style="display:none;"></audio>
+                    <audio src="${escapeHtml(audioSrc)}" class="ipa-inline-audio"></audio>
                   ` : ''}
                 </div>
 
-                <div class="candidate-pron-options-grid ${colsClass}" style="margin-top: 10px;">
+                <div class="candidate-pron-options-grid ${colsClass}">
                   ${(item.options || []).map((opt, optIdx) => `
                     <label class="candidate-choice-label candidate-pron-option-label">
                       <input type="radio" name="sim_pron_${item.itemVersionId}" value="${opt.id}" />
@@ -122,8 +122,8 @@ function openCandidateSimulationModal() {
             const kw = (item.keyword || '').toUpperCase();
             interactiveHtml = `
               <div class="candidate-transformation-wrap" data-item-id="${item.itemVersionId}">
-                <div class="transformation-keyword-row" style="margin-bottom: 8px;">
-                  <span class="keyword-label" style="font-size:0.85rem; font-weight:600; color:#475569;">Từ khóa bắt buộc:</span>
+                <div class="transformation-keyword-row">
+                  <span class="keyword-label">Từ khóa bắt buộc:</span>
                   <span class="keyword-badge-pill">${escapeHtml(kw)}</span>
                 </div>
                 <div class="candidate-frame-box">

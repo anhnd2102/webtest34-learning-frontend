@@ -1,7 +1,7 @@
 {
-  "baseline": "f026aa7",
-  "revision": "simulation-shell1",
-  "note": "Lexical inventory after simulation shell static style extraction; not a CSS parser.",
+  "baseline": "07b8782",
+  "revision": "simulation-question1",
+  "note": "Lexical inventory after simulation pronunciation/transformation static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -1216,26 +1216,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/rich-editor.js",
       "line": 475,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 106,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 110,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 125,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 126,
       "kind": "attribute"
     },
     {
