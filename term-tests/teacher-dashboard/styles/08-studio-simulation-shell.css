@@ -1036,3 +1036,39 @@ button.btn-publish-test:hover:not(:disabled) {
 
 
 
+
+/* Simulation shell: former static inline presentation; runtime state remains inline. */
+#candidate-simulation-modal .sim-section-lead-head {
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  background: var(--izone-slate-bg);
+  border-left: 4px solid var(--izone-navy);
+  border-radius: 6px;
+}
+#candidate-simulation-modal .sim-section-lead-head > h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.15rem;
+  color: var(--izone-navy);
+}
+#candidate-simulation-modal .sim-section-lead-head .sim-instructions > p {
+  margin: 0;
+  color: var(--izone-slate-600);
+  font-size: 0.9rem;
+}
+#candidate-simulation-modal .sim-section-lead-head .sim-audio-dock {
+  margin-top: 10px;
+}
+#candidate-simulation-modal .sim-section-lead-head .sim-reading-dock {
+  margin-top: 10px;
+}
+#candidate-simulation-modal .progress-fill {
+  width: 0%;
+}
+#candidate-simulation-modal .footer-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+#candidate-simulation-modal .simulation-results-modal {
+  display: none;
+}

@@ -1,7 +1,7 @@
 {
-  "baseline": "a8e30ce",
-  "revision": "move-exercise1",
-  "note": "Lexical inventory after move exercise modal static style extraction; not a CSS parser.",
+  "baseline": "f026aa7",
+  "revision": "simulation-shell1",
+  "note": "Lexical inventory after simulation shell static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -1272,46 +1272,6 @@
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
       "line": 442,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 615,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 616,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 617,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 619,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 624,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 755,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 792,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 801,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",

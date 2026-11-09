@@ -612,16 +612,16 @@ function openCandidateSimulationModal() {
         return `
           <section class="simulation-section-card section-page ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
             ${(b.instructions || audioUrl || reading) && exercises.length > 1 ? `
-              <div class="sim-section-lead-head" style="margin-bottom:18px; padding:12px 16px; background:#f8fafc; border-left:4px solid #174266; border-radius:6px;">
-                <h2 style="margin:0 0 6px 0; font-size:1.15rem; color:#174266;">Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>
-                ${b.instructions ? `<div class="sim-instructions"><p style="margin:0; color:#475569; font-size:0.9rem;">${escapeHtml(b.instructions)}</p></div>` : ''}
+              <div class="sim-section-lead-head">
+                <h2>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>
+                ${b.instructions ? `<div class="sim-instructions"><p>${escapeHtml(b.instructions)}</p></div>` : ''}
                 ${audioUrl && !exercises.some(e => e.audioUrl) ? `
-                  <div class="audio-dock sim-audio-dock" style="margin-top:10px;">
+                  <div class="audio-dock sim-audio-dock">
                     ${renderStrictCandidateAudioDock(null, { audioUrl: audioUrl, label: `Bài nghe phần ${bIdx + 1}` })}
                   </div>
                 ` : ''}
                 ${reading && !exercises.some(e => e.readingPassage) ? `
-                  <div class="sim-reading-dock" style="margin-top:10px;">
+                  <div class="sim-reading-dock">
                     <div class="reading-header">${renderSvgIcon('book', 'icon-inline')} Bài đọc hiểu phần ${bIdx + 1}:</div>
                     <div class="reading-content">${escapeHtml(reading).replace(/\n/g, '<br/>')}</div>
                   </div>
@@ -752,7 +752,7 @@ function openCandidateSimulationModal() {
                   <span class="progress-ratio">0/${totalItems}</span>
                 </div>
                 <div class="progress-track">
-                  <div class="progress-fill" style="width: 0%;"></div>
+                  <div class="progress-fill"></div>
                 </div>
                 <div class="section-list">
                   ${blocks.map((b, i) => {
@@ -789,7 +789,7 @@ function openCandidateSimulationModal() {
 
           <footer class="simulation-footer">
             <div class="footer-note">Đây là màn hình mô phỏng trực quan giao diện bài thi của thí sinh theo chuẩn IZONE. Mọi thao tác làm bài tại đây chỉ dùng để kiểm tra hiển thị.</div>
-            <div class="footer-actions" style="display:flex; gap:10px; align-items:center;">
+            <div class="footer-actions">
               <button type="button" class="btn btn-success btn-sm btn-submit-simulation" id="btn-submit-simulation">
                 ${renderSvgIcon('check', 'icon-inline')} <span>Nộp bài & Chấm thử</span>
               </button>
@@ -798,7 +798,7 @@ function openCandidateSimulationModal() {
           </footer>
 
           <!-- Simulation Results Modal -->
-          <div class="simulation-results-modal" id="simulation-results-modal" style="display: none;">
+          <div class="simulation-results-modal" id="simulation-results-modal">
             <div class="sim-results-dialog">
               <header class="sim-results-header">
                 <div class="sim-results-title-wrap">

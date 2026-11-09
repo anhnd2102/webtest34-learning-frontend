@@ -134,7 +134,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -603,6 +603,62 @@ try {
           assert.equal(await card.locator('.input-ipa-transcription').inputValue(), '/typed-value/');
         }
         await page.evaluate(() => { builderStyleHandle.dispose(); document.querySelector('#builder-style-fixture').remove(); });
+      }
+      if (process.env.SIMULATION_SHELL_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'simulation-shell-fixture'; document.body.append(host);
+          const first = data.blocks[0]; first.instructions = 'Synthetic section instructions'; first.readingPassage = 'Synthetic shared passage';
+          first.audioUrl = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+          first.exercises.push({ exerciseId: 'ex2', title: 'Second exercise', exerciseNumber: 2, itemIds: ['i2'] });
+          first.items.push({ ...structuredClone(first.items[0]), itemVersionId: 'i2', exerciseId: 'ex2', position: 2 });
+          data.blocks.push({ blockId: 'b2', title: 'Second section', exercises: [{ exerciseId: 'ex3', title: 'Third exercise', exerciseNumber: 1, itemIds: ['i3'] }], items: [{ ...structuredClone(first.items[0]), itemVersionId: 'i3', exerciseId: 'ex3', position: 3 }] });
+          data.gradingKey.items.i2 = structuredClone(data.gradingKey.items.i1); data.gradingKey.items.i3 = structuredClone(data.gradingKey.items.i1);
+          window.simulationShellBuilder = integrationApp.mountBuilder(host, data);
+          host.querySelector('#btn-preview-test').click();
+        }, form('simulation-shell'));
+        const sim = page.locator('#candidate-simulation-modal');
+        const answer = async id => {
+          const radio = sim.locator(`input[name="sim_choice_${id}"][value="A"]`);
+          if (viewport.width === 390) await radio.evaluate(el => { el.checked = true; el.dispatchEvent(new Event('change', { bubbles: true })); });
+          else await radio.check();
+        };
+        assert.equal(await sim.locator('.sim-section-lead-head').count(), 1);
+        assert.equal(await sim.locator('#simulation-results-modal').isVisible(), false);
+        await screenshot('simulation-shell-default');
+        await answer('i1');
+        assert.equal(await sim.locator('.progress-ratio').textContent(), '1/3');
+        await sim.locator('.simulation-nav-pill[data-section-target="sim-block-1"]').click();
+        assert.equal(await sim.locator('#sim-block-1').isVisible(), true);
+        await answer('i3');
+        await screenshot('simulation-shell-second-section');
+        await sim.locator('.side-section-btn[data-section-target="sim-block-0"]').click();
+        assert.equal(await sim.locator('input[name="sim_choice_i1"][value="A"]').isChecked(), true);
+        const dock = sim.locator('.sim-section-lead-head .strict-audio-dock');
+        await dock.locator('audio').evaluate(el => { el.play = async () => { window.simulationAudioPlayCalls = (window.simulationAudioPlayCalls || 0) + 1; }; });
+        await dock.locator('.candidate-audio-volume').fill('0.5');
+        assert.equal(await dock.locator('audio').evaluate(el => el.volume), 0.5);
+        await dock.locator('.btn-start-listening').click();
+        assert.equal(await page.evaluate(() => simulationAudioPlayCalls), 1);
+        await dock.locator('audio').evaluate(el => el.dispatchEvent(new Event('ended')));
+        assert.equal(await dock.locator('.audio-ended-notice').isVisible(), true);
+        assert.equal(await dock.locator('.btn-start-listening').isDisabled(), true);
+        await sim.locator('.btn-qnav[data-item-id="i2"]').click();
+        await answer('i2');
+        assert.equal(await sim.locator('.progress-ratio').textContent(), '3/3');
+        await screenshot('simulation-shell-complete');
+        await sim.locator('#btn-submit-simulation').click();
+        await sim.locator('#simulation-results-modal').waitFor({ state: 'visible' });
+        assert.equal(await sim.locator('.score-banner-value').textContent(), '3/3đ');
+        assert.equal(await sim.locator('.sim-breakdown-table tbody tr').count(), 3);
+        await screenshot('simulation-shell-results');
+        await sim.locator('#btn-retest-simulation').click();
+        assert.equal(await sim.locator('#simulation-results-modal').isVisible(), false);
+        await sim.locator('#btn-close-simulation-footer').click();
+        assert.equal(await sim.isVisible(), false);
+        await page.locator('#simulation-shell-fixture #btn-preview-test').click();
+        await sim.locator('#btn-close-simulation').click();
+        assert.equal(await sim.isVisible(), false);
+        await page.evaluate(() => { simulationShellBuilder.dispose(); document.querySelector('#simulation-shell-fixture').remove(); });
       }
       if (process.env.CSS_PARITY === '1') {
         await page.evaluate(data => {
