@@ -270,6 +270,7 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã chuyển styles tĩnh của modal nhập câu hỏi tổng quát (tab CSV/tạo nhanh và preview) sang class/token: xem `GENERIC_BATCH_STYLES_VERIFICATION.md`.
   - Đã chuyển styles tĩnh của modal chuyển bài tập, kiểm thứ tự và bảo toàn câu hỏi/đáp án/điểm: xem `MOVE_EXERCISE_STYLES_VERIFICATION.md`.
   - Đã chuyển styles tĩnh của khung Phần, audio/reading dock, progress/footer/results ban đầu trong mô phỏng: xem `SIMULATION_SHELL_STYLES_VERIFICATION.md`.
+  - Đã sửa grid một cột khiến bảng điều hướng che đáp án mô phỏng trên mobile, kiểm native mouse/touch và breakpoint: xem `SIMULATION_MOBILE_LAYOUT_FIX.md`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
 - Rollback: revert nhóm fragment/link theo commit; không để entry trỏ fragment thiếu. Rủi ro chính: đổi cascade hoặc FOUC.

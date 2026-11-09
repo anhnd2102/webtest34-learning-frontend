@@ -389,6 +389,9 @@ button.btn-publish-test:hover:not(:disabled) {
   .exam-layout {
     grid-template-columns: 1fr;
   }
+  #candidate-simulation-modal .exam-layout {
+    grid-auto-rows: max-content;
+  }
 }
 
 .main-column,

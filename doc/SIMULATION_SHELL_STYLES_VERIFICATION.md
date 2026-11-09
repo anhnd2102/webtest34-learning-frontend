@@ -1,5 +1,7 @@
 # Cleanup khung mô phỏng làm bài
 
+Cập nhật: lỗi overlap mobile được ghi nhận ở baseline trong báo cáo này đã được xử lý ở đợt sau; xem `SIMULATION_MOBILE_LAYOUT_FIX.md` để biết phạm vi native mouse/touch đã kiểm.
+
 Ngày 09/11/2026. Baseline `f026aa7`; nhánh `refactor/simulation-shell-styles`.
 
 ## Phạm vi

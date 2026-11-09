@@ -39,12 +39,13 @@ try {
   });
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const report = [];
-  for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
+  const viewports = process.env.SMOKE_VIEWPORTS ? JSON.parse(process.env.SMOKE_VIEWPORTS) : [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }];
+  for (const viewport of viewports) {
     if (process.env.SMOKE_WIDTH && Number(process.env.SMOKE_WIDTH) !== viewport.width) continue;
     for (const prefix of ['', '/preview-base']) {
       if (process.env.SMOKE_ROOT_ONLY === '1' && prefix) continue;
       if (captureOnly && prefix) continue;
-      const page = await browser.newPage({ viewport, reducedMotion: 'reduce', locale: 'vi-VN', timezoneId: 'Asia/Ho_Chi_Minh' });
+      const page = await browser.newPage({ viewport, hasTouch: process.env.SMOKE_TOUCH === '1', reducedMotion: 'reduce', locale: 'vi-VN', timezoneId: 'Asia/Ho_Chi_Minh' });
       page.setDefaultTimeout(10000);
       const errors = [];
       const modules = [];
@@ -619,8 +620,10 @@ try {
         const sim = page.locator('#candidate-simulation-modal');
         const answer = async id => {
           const radio = sim.locator(`input[name="sim_choice_${id}"][value="A"]`);
-          if (viewport.width === 390) await radio.evaluate(el => { el.checked = true; el.dispatchEvent(new Event('change', { bubbles: true })); });
-          else await radio.check();
+          if (process.env.SMOKE_TOUCH === '1') {
+            await radio.tap();
+            assert.equal(await radio.isChecked(), true);
+          } else await radio.check();
         };
         assert.equal(await sim.locator('.sim-section-lead-head').count(), 1);
         assert.equal(await sim.locator('#simulation-results-modal').isVisible(), false);
@@ -629,6 +632,9 @@ try {
         assert.equal(await sim.locator('.progress-ratio').textContent(), '1/3');
         await sim.locator('.simulation-nav-pill[data-section-target="sim-block-1"]').click();
         assert.equal(await sim.locator('#sim-block-1').isVisible(), true);
+        if (viewport.width <= 900) {
+          assert.equal(await sim.evaluate(el => el.querySelector('.side-panel').getBoundingClientRect().top >= el.querySelector('.main-column').getBoundingClientRect().bottom - 1), true, 'Stacked navigator must follow the question content without overlapping it');
+        }
         await answer('i3');
         await screenshot('simulation-shell-second-section');
         await sim.locator('.side-section-btn[data-section-target="sim-block-0"]').click();
