@@ -1261,6 +1261,10 @@
 }
 
 /* Simulation pronunciation and transformation: former static inline presentation. */
+.candidate-pronunciation-wrap .candidate-ipa-audio-status {
+  font-size: 0.8rem;
+  color: var(--izone-danger-strong);
+}
 #candidate-simulation-modal .candidate-pronunciation-wrap .ipa-inline-audio {
   display: none;
 }

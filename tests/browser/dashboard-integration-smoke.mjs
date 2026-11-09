@@ -605,6 +605,133 @@ try {
         }
         await page.evaluate(() => { builderStyleHandle.dispose(); document.querySelector('#builder-style-fixture').remove(); });
       }
+      if (process.env.IPA_AUDIO_CHECK === '1') {
+        await page.evaluate(data => {
+          const bytes = new Uint8Array(32044), view = new DataView(bytes.buffer);
+          const word = (offset, value) => [...value].forEach((char, i) => { bytes[offset + i] = char.charCodeAt(0); });
+          word(0, 'RIFF'); view.setUint32(4, 32036, true); word(8, 'WAVE'); word(12, 'fmt ');
+          view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+          view.setUint32(24, 8000, true); view.setUint32(28, 16000, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+          word(36, 'data'); view.setUint32(40, 32000, true);
+          const audioUrl = 'data:audio/wav;base64,' + btoa(String.fromCharCode(...bytes));
+          const item = id => ({ ...structuredClone(data.blocks[0].items[0]), itemVersionId: id, pedagogicalTypeCode: 'pronunciation_choice', ipaTranscription: '/kæt/', audioUrl });
+          data.blocks[0].items = [item('a1'), { ...item('a2'), position: 2 }];
+          data.blocks[0].exercises[0].itemIds = ['a1','a2'];
+          data.blocks.push({ blockId:'b2',title:'Second section',exercises:[{exerciseId:'ex2',title:'Second exercise',itemIds:['a3']}],items:[{...item('a3'),exerciseId:'ex2',position:3}] });
+          const host = document.createElement('section'); host.id = 'ipa-audio-fixture'; document.body.append(host);
+          window.ipaAudioBuilder = integrationApp.mountBuilder(host, data);
+          host.querySelector('#btn-preview-test').click();
+        }, form('ipa-audio'));
+        const sim = page.locator('#candidate-simulation-modal');
+        const card = id => sim.locator(`.candidate-pronunciation-wrap[data-item-id="${id}"]`);
+        const button = id => card(id).locator('.candidate-ipa-audio-btn');
+        const audio = id => card(id).locator('audio');
+        await screenshot('ipa-audio-default');
+        if (process.env.SMOKE_TOUCH === '1') await button('a1').tap();
+        else await button('a1').click();
+        await page.waitForFunction(() => { const el = document.querySelector('.candidate-pronunciation-wrap[data-item-id="a1"] audio'); return !el.paused && el.currentTime > 0; });
+        assert.equal(await button('a1').getAttribute('aria-pressed'), 'true');
+        await button('a1').click();
+        assert.equal(await audio('a1').evaluate(el => el.paused && el.currentTime === 0), true);
+        assert.equal(await button('a1').getAttribute('aria-pressed'), 'false');
+        const wavBytes = Buffer.from((await audio('a1').getAttribute('src')).split(',')[1], 'base64');
+        let audioRequests = 0;
+        await page.route('**/synthetic-ipa-audio.wav', route => {
+          audioRequests++;
+          return audioRequests === 1
+            ? route.fulfill({ status: 503, contentType: 'audio/wav', body: '' })
+            : route.fulfill({ status: 200, contentType: 'audio/wav', body: wavBytes });
+        });
+        await audio('a1').evaluate((el, url) => { el.preload = 'none'; el.src = url; }, new URL('synthetic-ipa-audio.wav', base).href);
+        await button('a1').click();
+        await card('a1').locator('[role="status"]').waitFor({ state: 'visible' });
+        assert.equal(await audio('a1').evaluate(el => Boolean(el.error)), true);
+        await button('a1').click();
+        await page.waitForFunction(() => { const el = document.querySelector('.candidate-pronunciation-wrap[data-item-id="a1"] audio'); return !el.paused && el.currentTime > 0; });
+        assert.ok(audioRequests >= 2, 'Retry must reload a failed media resource');
+        assert.equal(await card('a1').locator('[role="status"]').isVisible(), false);
+        await button('a1').click();
+        await button('a1').click();
+        await sim.locator('#btn-close-simulation').click();
+        assert.equal(await audio('a1').evaluate(el => el.paused), true);
+        await page.locator('#ipa-audio-fixture #btn-preview-test').click();
+        const instrument = async () => page.evaluate(() => {
+          window.ipaPlayLog = []; window.ipaPauseLog = []; window.ipaMode = 'resolve'; window.ipaPending = [];
+          document.querySelectorAll('#candidate-simulation-modal .candidate-pronunciation-wrap').forEach(wrapper => {
+            const el = wrapper.querySelector('audio'), id = wrapper.dataset.itemId;
+            const pause = el.pause.bind(el);
+            el.pause = () => { ipaPauseLog.push(id); pause(); };
+            el.play = () => {
+              ipaPlayLog.push(id);
+              if (ipaMode === 'reject') return Promise.reject(new Error('Synthetic playback failure'));
+              if (ipaMode === 'pending') return new Promise((resolve, reject) => ipaPending.push({ resolve, reject }));
+              return Promise.resolve();
+            };
+          });
+        });
+        await instrument();
+        await page.evaluate(() => { ipaMode = 'pending'; });
+        await button('a1').click();
+        await button('a1').click();
+        await page.evaluate(() => { ipaMode = 'resolve'; });
+        await button('a1').click();
+        await page.evaluate(() => ipaPending.at(-1).reject(new Error('Obsolete same-audio failure')));
+        assert.equal(await button('a1').getAttribute('aria-pressed'), 'true');
+        assert.equal(await card('a1').locator('[role="status"]').isVisible(), false);
+        await button('a1').click();
+        await page.evaluate(() => { ipaMode = 'reject'; });
+        await button('a1').click();
+        await card('a1').locator('[role="status"]').waitFor({ state: 'visible' });
+        assert.equal(await button('a1').getAttribute('aria-pressed'), 'false');
+        await screenshot('ipa-audio-error');
+        await sim.screenshot({ path: fileURLToPath(new URL(`${viewport.width}-ipa-audio-error-modal.png`, artifacts)), animations: 'disabled' });
+        await page.evaluate(() => { ipaMode = 'resolve'; });
+        await button('a1').click();
+        assert.equal(await card('a1').locator('[role="status"]').isVisible(), false);
+        await button('a2').click();
+        assert.equal(await button('a1').getAttribute('aria-pressed'), 'false');
+        assert.equal(await button('a2').getAttribute('aria-pressed'), 'true');
+        assert.equal(await page.evaluate(() => ipaPauseLog.includes('a1')), true);
+        await sim.locator('.btn-qnav[data-item-id="a1"]').click();
+        assert.equal(await button('a2').getAttribute('aria-pressed'), 'false');
+        await button('a1').click();
+        await sim.locator('.simulation-nav-pill[data-section-target="sim-block-1"]').click();
+        assert.equal(await button('a1').getAttribute('aria-pressed'), 'false');
+        await button('a3').click();
+        await audio('a3').evaluate(el => el.dispatchEvent(new Event('ended')));
+        assert.equal(await button('a3').getAttribute('aria-pressed'), 'false');
+        await button('a3').click();
+        await audio('a3').evaluate(el => el.dispatchEvent(new Event('error')));
+        await card('a3').locator('[role="status"]').waitFor({ state: 'visible' });
+        await button('a3').click();
+        await sim.locator('#btn-submit-simulation').click();
+        assert.equal(await button('a3').getAttribute('aria-pressed'), 'false');
+        await sim.locator('#btn-done-simulation-results').click();
+        for (const close of ['#btn-close-simulation', '#btn-close-simulation-footer']) {
+          await page.evaluate(() => { ipaMode = 'pending'; });
+          await button('a3').click();
+          await sim.locator(close).click();
+          assert.equal(await button('a3').getAttribute('aria-pressed'), 'false');
+          await page.evaluate(() => ipaPending.at(-1).reject(new Error('Late synthetic failure')));
+          await page.locator('#ipa-audio-fixture #btn-preview-test').click();
+          await instrument();
+          await sim.locator('.simulation-nav-pill[data-section-target="sim-block-1"]').click();
+        }
+        await page.evaluate(() => { ipaMode = 'pending'; });
+        await button('a3').click();
+        await page.evaluate(() => document.querySelector('#ipa-audio-fixture #btn-preview-test').click());
+        await page.evaluate(() => ipaPending.at(-1).resolve());
+        assert.equal(await button('a1').getAttribute('aria-pressed'), 'false');
+        await instrument();
+        await button('a1').click();
+        assert.deepEqual(await page.evaluate(() => ipaPlayLog), ['a1']);
+        await page.evaluate(() => { ipaMode = 'pending'; });
+        await button('a2').click();
+        await page.evaluate(() => { ipaAudioBuilder.dispose(); ipaPending.at(-1).resolve(); });
+        assert.equal(await sim.count(), 0);
+        assert.equal(await page.evaluate(() => ipaPauseLog.includes('a2')), true);
+        await page.locator('#ipa-audio-fixture').evaluate(el => el.remove());
+      }
       if (process.env.SIMULATION_QUESTION_STYLE_PARITY === '1') {
         await page.evaluate(data => {
           const host = document.createElement('section'); host.id = 'simulation-question-fixture'; document.body.append(host);
@@ -624,6 +751,7 @@ try {
         assert.equal(await sim.locator('.keyword-badge-pill').textContent(),'PREVENTED');
         await screenshot('simulation-question-default');
         await sim.locator('.candidate-ipa-audio-btn').click();
+        await page.waitForFunction(()=>pronunciationPlayCalls===1);
         await writeFile(new URL(`${viewport.width}-pronunciation-play-observation.json`,artifacts),JSON.stringify({playCalls:await page.evaluate(()=>pronunciationPlayCalls)}));
         const radio=sim.locator('input[name="sim_pron_p1"][value="A"]');
         await radio.check();

@@ -1,7 +1,7 @@
 {
-  "baseline": "07b8782",
-  "revision": "simulation-question1",
-  "note": "Lexical inventory after simulation pronunciation/transformation static style extraction; not a CSS parser.",
+  "baseline": "3f6b5cb",
+  "revision": "ipa-audio1",
+  "note": "Lexical inventory after IPA playback lifecycle fix; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -1220,72 +1220,72 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 139,
+      "line": 144,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 219,
+      "line": 224,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 250,
+      "line": 255,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 251,
+      "line": 256,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 265,
+      "line": 270,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 269,
+      "line": 274,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 442,
+      "line": 447,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 820,
+      "line": 825,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 826,
+      "line": 834,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 838,
+      "line": 846,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 972,
+      "line": 982,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 1210,
+      "line": 1221,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 1217,
+      "line": 1228,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 1227,
+      "line": 1238,
       "kind": "property"
     },
     {

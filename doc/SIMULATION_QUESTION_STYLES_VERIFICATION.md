@@ -1,5 +1,7 @@
 # Cleanup Pronunciation và Sentence Transformation trong mô phỏng
 
+Cập nhật: lỗi nút nghe IPA của baseline được xử lý ở đợt sau; xem `SIMULATION_IPA_AUDIO_FIX.md` về playback/lifecycle và giới hạn đã kiểm.
+
 Ngày 09/11/2026. Baseline `07b8782`; nhánh `refactor/simulation-pronunciation-transformation`.
 
 ## Phạm vi

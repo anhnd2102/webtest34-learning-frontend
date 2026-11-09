@@ -1,6 +1,9 @@
 import {
-  trackBuilderModal
+  trackBuilderModal,
+  releaseBuilderModal,
+  registerBuilderModalCleanup
 } from '../navigation/unsaved-changes.js';
+import { initSimulationPronunciationAudio } from './simulation-pronunciation-audio.js';
 import {
   escapeHtml
 } from '../ui/presentation.js';
@@ -32,6 +35,7 @@ export function createSimulation({ draftState, builderOwner, syncInputs }) {
 function openCandidateSimulationModal() {
       syncInputs();
       let modal = document.querySelector('#candidate-simulation-modal');
+      if (modal) releaseBuilderModal(modal);
       if (!modal) {
         modal = document.createElement('div');
         modal.id = 'candidate-simulation-modal';
@@ -100,9 +104,10 @@ function openCandidateSimulationModal() {
                 <div class="candidate-ipa-display-dock">
                   <div class="candidate-ipa-badge">${escapeHtml(formattedIpa || '/.../')}</div>
                   ${audioSrc ? `
-                    <button type="button" class="btn btn-sm btn-secondary candidate-ipa-audio-btn" data-audio-src="${escapeHtml(audioSrc)}" title="Nghe phát âm mẫu">
-                      ${renderSvgIcon('audio', 'icon-inline')} Nghe phát âm
+                    <button type="button" class="btn btn-sm btn-secondary candidate-ipa-audio-btn" data-audio-src="${escapeHtml(audioSrc)}" title="Nghe phát âm mẫu" aria-pressed="false">
+                      ${renderSvgIcon('audio', 'icon-inline')} <span class="ipa-audio-button-label">Nghe phát âm</span>
                     </button>
+                    <span class="candidate-ipa-audio-status" role="status" hidden></span>
                     <audio src="${escapeHtml(audioSrc)}" class="ipa-inline-audio"></audio>
                   ` : ''}
                 </div>
@@ -819,10 +824,13 @@ function openCandidateSimulationModal() {
 
       modal.style.display = 'flex';
       initStrictCandidateAudioDocks(modal);
+      const pronunciationAudio = initSimulationPronunciationAudio(modal);
+      registerBuilderModalCleanup(modal, () => pronunciationAudio.dispose());
 
       const closeBtns = modal.querySelectorAll('#btn-close-simulation, #btn-close-simulation-footer');
       closeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+          pronunciationAudio.stop();
           modal.style.display = 'none';
         });
       });
@@ -848,6 +856,7 @@ function openCandidateSimulationModal() {
       const allNavBtns = modal.querySelectorAll('.section-tab, .simulation-nav-pill, .side-section-btn');
       allNavBtns.forEach(btn => {
         btn.addEventListener?.('click', () => {
+          pronunciationAudio.stop();
           const targetId = btn.getAttribute('data-section-target');
           modal.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
             b.classList?.toggle('active', b.getAttribute('data-section-target') === targetId);
@@ -869,6 +878,7 @@ function openCandidateSimulationModal() {
       // Question Navigator click-to-focus and section navigation
       qnavBtns.forEach(btn => {
         btn.addEventListener?.('click', () => {
+          pronunciationAudio.stop();
           const targetSectionId = btn.getAttribute('data-section-target');
           const pos = btn.getAttribute('data-pos');
           const blankPos = btn.getAttribute('data-blank-pos');
@@ -982,6 +992,7 @@ function openCandidateSimulationModal() {
       const submitSimBtn = modal.querySelector('#btn-submit-simulation');
       if (submitSimBtn) {
         submitSimBtn.addEventListener('click', () => {
+          pronunciationAudio.stop();
           let totalAchieved = 0;
           let totalMax = 0;
           const details = [];
