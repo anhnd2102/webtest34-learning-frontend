@@ -135,7 +135,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -515,6 +515,61 @@ try {
         }
         await page.evaluate(() => { vocabStyleHandle.dispose(); document.querySelector('#vocab-style-fixture').remove(); });
       }
+      if (process.env.QUESTION_RENDERER_STYLE_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'question-renderer-style-fixture'; document.body.prepend(host);
+          const base = { exerciseId: 'ex1', maxScore: 1, options: [] };
+          data.blocks[0].readingPassage = 'Paragraph A: Synthetic opening.\nParagraph B: Synthetic detail.';
+          data.blocks[0].exercises = [
+            { exerciseId: 'ex1', exerciseNumber: 1, title: 'Synthetic exercise', itemIds: ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'] },
+            { exerciseId: 'ex2', exerciseNumber: 2, title: 'Synthetic context exercise', referenceContext: 'Synthetic shared context.', itemIds: ['q7'] }
+          ];
+          data.blocks[0].items = [
+            { ...base, itemVersionId: 'q1', position: 1, prompt: 'Synthetic error sentence', interactionType: 'correction_pair', pedagogicalTypeCode: 'error_correction', graderType: 'correction_pair' },
+            { ...base, itemVersionId: 'q2', position: 2, prompt: 'Synthetic heading', interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', layoutType: 'split_pane_matching', graderType: 'exact_option', options: [{ id: 'A', label: 'Synthetic heading A' }, { id: 'B', label: 'Synthetic heading B' }] },
+            { ...base, itemVersionId: 'q3', position: 3, prompt: 'Synthetic order', interactionType: 'ordered_sequence', pedagogicalTypeCode: 'listening_order', layoutType: 'timeline_sequence', graderType: 'ordered_sequence', events: [{ label: 'A', rank: 1, text: 'Synthetic first' }, { label: 'B', rank: 2, text: 'Synthetic second' }] },
+            { ...base, itemVersionId: 'q4', position: 4, prompt: 'Synthetic (1) _____ and (2) _____.', interactionType: 'short_text', pedagogicalTypeCode: 'inline_cloze', layoutType: 'inline_cloze', graderType: 'accepted_text', clozeAnswers: { 1: { targetWord: 'alpha', accepted: ['alpha', 'Alpha'] }, 2: { targetWord: 'beta', accepted: ['beta'] } } },
+            { ...base, itemVersionId: 'q5', position: 5, prompt: 'Synthetic picture', interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', image: '../webtest-34-demo/assets/03/test-1/pic-2.png', targetWord: 'synthetic' },
+            { ...base, itemVersionId: 'q6', position: 6, prompt: 'Synthetic comprehension', interactionType: 'long_text', pedagogicalTypeCode: 'writing', graderType: 'rubric_async', maxScore: 4, referenceContext: 'Synthetic item context.' },
+            { ...base, exerciseId: 'ex2', itemVersionId: 'q7', position: 7, prompt: 'Synthetic inherited context', interactionType: 'long_text', pedagogicalTypeCode: 'writing', graderType: 'rubric_async', maxScore: 4 }
+          ];
+          const rubric = { scoringVersion: 'rubric-comprehension-v1', maxScore: 4, criteria: [{ id: 'meaning', label: 'Synthetic meaning', maxScore: 2, requiredConcepts: ['alpha'] }, { id: 'keywords', label: 'Synthetic keywords', maxScore: 2, requiredConcepts: [] }] };
+          data.gradingKey.items = {
+            q1: { graderType: 'correction_pair', expectedErrors: ['goes'], expectedCorrections: ['went'] },
+            q2: { graderType: 'exact_option', expectedOptionId: 'A' },
+            q3: { graderType: 'ordered_sequence' },
+            q4: { graderType: 'accepted_text', accepted: ['alpha'] },
+            q5: { graderType: 'accepted_text', accepted: ['synthetic', 'synthetic item'] },
+            q6: { graderType: 'rubric_async', rubricCode: 'rubric_comprehension_v1', rubric: structuredClone(rubric) },
+            q7: { graderType: 'rubric_async', rubricCode: 'rubric_comprehension_v1', rubric: structuredClone(rubric) }
+          };
+          window.questionRendererStyleHandle = integrationApp.mountBuilder(host, data);
+        }, form('question-renderer-style'));
+        const host = page.locator('#question-renderer-style-fixture');
+        for (const id of ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7']) assert.equal(await host.locator(`[data-item-id="${id}"]`).count(), 1, `fixture renders ${id}`);
+        const cloze = host.locator('[data-item-id="q4"] .template-inline-cloze');
+        const rubricItem = host.locator('[data-item-id="q6"] .template-rubric-async');
+        assert.equal(await cloze.locator('.cloze-blank-config-card').count(), 2);
+        assert.equal(await rubricItem.locator('.ai-reference-context-group').isVisible(), true, 'item context starts visible');
+        assert.equal(await host.locator('[data-item-id="q7"] .ai-reference-context-group').isVisible(), false, 'inherited context hides item context');
+        assert.equal(await host.locator('[data-item-id="q7"] .ai-inherited-context-notice').count(), 1);
+        await host.locator('[data-item-id="q5"] .pictorial-preview-img').evaluate(img => img.complete || new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true }); }));
+        await screenshot('question-renderer-default');
+        await cloze.locator('.cloze-blank-config-card[data-blank-num="2"] .input-add-cloze-blank-variant').fill('Beta');
+        await cloze.locator('.cloze-blank-config-card[data-blank-num="2"] .input-add-cloze-blank-variant').press('Enter');
+        assert.equal(await host.locator('[data-item-id="q4"] .cloze-blank-config-card[data-blank-num="2"] .accepted-chip[data-variant="Beta"]').count(), 1);
+        await host.locator('[data-item-id="q1"] .input-add-error-variant').fill('goed');
+        await host.locator('[data-item-id="q1"] .input-add-error-variant').press('Enter');
+        assert.equal(await host.locator('[data-item-id="q1"] .accepted-chip[data-variant="goed"]').count(), 1);
+        await host.locator('[data-item-id="q6"] .btn-rubric-tab[data-tab="sandbox"]').click();
+        assert.equal(await host.locator('[data-item-id="q6"] .pane-sandbox').isVisible(), true);
+        await screenshot('question-renderer-edited');
+        await host.locator('[data-item-id="q6"] .btn-rubric-tab[data-tab="criteria"]').click();
+        assert.equal(await host.locator('[data-item-id="q6"] .pane-criteria').isVisible(), true);
+        const draft = await page.evaluate(() => questionRendererStyleHandle.getDraft());
+        assert.deepEqual(draft.blocks[0].items.find(item => item.itemVersionId === 'q4').clozeAnswers[2].accepted, ['beta', 'Beta']);
+        await page.evaluate(() => { questionRendererStyleHandle.dispose(); document.querySelector('#question-renderer-style-fixture').remove(); });
+      }
       if (process.env.BUILDER_STYLE_PARITY === '1') {
         await page.evaluate(data => {
           const host = document.createElement('section'); host.id = 'builder-style-fixture'; document.body.prepend(host);
@@ -732,7 +787,7 @@ try {
         assert.equal(await page.evaluate(() => ipaPauseLog.includes('a2')), true);
         await page.locator('#ipa-audio-fixture').evaluate(el => el.remove());
       }
-      if (process.env.SIMULATION_QUESTION_STYLE_PARITY === '1') {
+      if (process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1') {
         await page.evaluate(data => {
           const host = document.createElement('section'); host.id = 'simulation-question-fixture'; document.body.append(host);
           data.blocks[0].items = [

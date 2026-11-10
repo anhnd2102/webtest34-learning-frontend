@@ -1279,3 +1279,142 @@
   font-weight: 600;
   color: var(--izone-slate-600);
 }
+
+/* Question renderer authoring templates: former static inline presentation. */
+.template-error-correction .scoring-rule-selector .form-label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.template-error-correction .variant-chips-container {
+  margin-top: 8px;
+}
+.template-reading-matching .rich-html-editor-wrap {
+  margin-top: 8px;
+}
+.template-reading-matching .matching-headings-pool {
+  margin-top: 12px;
+}
+.template-reading-matching .options-actions {
+  margin-top: 8px;
+}
+.template-listening-order .template-header-bar {
+  margin-top: 12px;
+}
+.template-listening-order .options-actions {
+  margin-top: 8px;
+}
+.template-inline-cloze .cloze-live-preview-box {
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--izone-slate-bg);
+  border: 1px dashed var(--izone-slate-300);
+  border-radius: 6px;
+}
+.template-inline-cloze .preview-mini-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--izone-slate-600);
+  text-transform: uppercase;
+}
+.template-inline-cloze .cloze-preview-content {
+  margin-top: 6px;
+  line-height: 1.75;
+}
+.template-inline-cloze .cloze-answers-config {
+  margin-top: 12px;
+}
+.template-inline-cloze .cloze-blank-config-card {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: var(--izone-surface);
+  border: 1px solid var(--izone-border);
+  border-radius: 8px;
+}
+.template-inline-cloze .cloze-blank-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.template-inline-cloze .cloze-blank-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--izone-slate);
+}
+.template-inline-cloze .variant-chips-container {
+  margin-top: 6px;
+}
+.template-inline-cloze .chips-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.template-inline-cloze .chips-count-badge {
+  font-size: 0.75rem;
+  color: var(--izone-text-muted);
+}
+.template-inline-cloze .quick-add-variant {
+  flex: 1;
+  max-width: 260px;
+}
+.template-inline-cloze .variant-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.template-pictorial-vocab .pictorial-preview-wrap {
+  margin-top: 8px;
+}
+.template-pictorial-vocab .pictorial-preview-error {
+  margin-top: 4px;
+}
+.template-pictorial-vocab > .variant-chips-container {
+  margin-top: 10px;
+}
+.template-rubric-async .ai-inherited-context-notice {
+  margin-bottom: 10px;
+}
+.template-rubric-async .ai-reference-context-group {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: var(--izone-slate-bg);
+  border: 1px solid var(--izone-border);
+  border-radius: 6px;
+}
+.template-rubric-async .ai-reference-context-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.template-rubric-async .ai-reference-context-header .form-label {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--izone-text-body);
+}
+.template-rubric-async .ai-reference-context-group .form-hint {
+  font-size: 0.74rem;
+  color: var(--izone-text-muted);
+  margin-top: 4px;
+}
+.template-rubric-async .rubric-tab-content {
+  margin-top: 10px;
+}
+.template-rubric-async .criteria-actions {
+  margin-top: 8px;
+}
+.template-rubric-async .criterion-header-right .form-label {
+  margin: 0;
+  font-size: 0.76rem;
+}
+.template-rubric-async .criterion-card-body .form-label {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--izone-text-muted);
+}

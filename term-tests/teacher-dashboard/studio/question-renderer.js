@@ -350,7 +350,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             <div class="template-header-bar">
               <span class="section-sublabel"><strong>Cặp dữ liệu tìm lỗi sai và sửa lại:</strong></span>
               <div class="scoring-rule-selector">
-                <label class="form-label" style="margin: 0; font-size: 0.8rem; font-weight: 600;">Quy tắc chấm điểm:</label>
+                <label class="form-label">Quy tắc chấm điểm:</label>
                 <select class="form-select form-select-sm select-scoring-rule" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                   <option value="split_points" ${scoringRule === 'split_points' ? 'selected' : ''}>Chia điểm (50% Lỗi sai + 50% Sửa lại)</option>
                   <option value="all_or_nothing" ${scoringRule === 'all_or_nothing' ? 'selected' : ''}>Trọn điểm (Đúng cả 2 mới có điểm)</option>
@@ -368,7 +368,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể
                   </button>
                 </div>
-                <div class="variant-chips-container" style="margin-top: 8px;">
+                <div class="variant-chips-container">
                   <div class="chips-meta-bar">
                     <span class="chips-count-badge">Biến thể lỗi sai (${expectedErrors.length}/20)</span>
                     <input type="text" class="form-control form-control-sm input-add-error-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể lỗi (Enter)..." />
@@ -388,7 +388,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     ${renderSvgIcon('zap', 'icon-inline')} Sinh biến thể
                   </button>
                 </div>
-                <div class="variant-chips-container" style="margin-top: 8px;">
+                <div class="variant-chips-container">
                   <div class="chips-meta-bar">
                     <span class="chips-count-badge">Biến thể sửa đúng (${expectedCorrections.length}/20)</span>
                     <input type="text" class="form-control form-control-sm input-add-correction-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" placeholder="+ Thêm biến thể sửa (Enter)..." />
@@ -425,7 +425,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               ${detectedParagraphs.length ? `<span class="badge badge-success">Phát hiện ${detectedParagraphs.length} đoạn văn: [${detectedParagraphs.join(', ')}]</span>` : ''}
             </div>
 
-            <div class="rich-editor rich-html-editor-wrap" style="margin-top: 8px;" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
+            <div class="rich-editor rich-html-editor-wrap" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
               <div class="rich-editor__toolbar rich-editor-toolbar">
                 <div class="rich-editor__toolbar-left toolbar-group">
                   <button type="button" class="btn btn-secondary btn-sm btn-extract-paragraphs" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động nhận diện các đoạn văn Paragraph A, B, C...">
@@ -542,14 +542,14 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="matching-headings-pool" style="margin-top: 12px;">
+            <div class="matching-headings-pool">
               <div class="template-header-bar">
                 <span class="section-sublabel"><strong>Danh sách Headings / Tiêu đề lựa chọn (Tích chọn đáp án đúng):</strong></span>
               </div>
               <div class="matching-headings-list">
                 ${optionsHtml}
               </div>
-              <div class="options-actions" style="margin-top: 8px;">
+              <div class="options-actions">
                 <button type="button" class="btn btn-secondary btn-sm btn-add-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                   + Thêm Heading mới
                 </button>
@@ -604,7 +604,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="template-header-bar" style="margin-top: 12px;">
+            <div class="template-header-bar">
               <span class="section-sublabel"><strong>Danh sách chuỗi sự kiện & Thứ tự chuẩn:</strong></span>
               <div class="validation-status-wrap">
                 ${orderValidation.isValid
@@ -617,7 +617,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               ${eventsHtml}
             </div>
 
-            <div class="options-actions" style="margin-top: 8px;">
+            <div class="options-actions">
               <button type="button" class="btn btn-secondary btn-sm btn-add-listening-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                 + Thêm sự kiện tiếp theo (${String.fromCharCode(65 + events.length)})
               </button>
@@ -756,9 +756,9 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
           `).join('');
 
           return `
-            <div class="cloze-blank-config-card" data-blank-num="${bNum}" style="margin-top: 10px; padding: 10px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
-              <div class="cloze-blank-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-                <span class="cloze-blank-badge" style="font-size: 0.85rem; font-weight: 700; color: #1e293b;">
+            <div class="cloze-blank-config-card" data-blank-num="${bNum}">
+              <div class="cloze-blank-header">
+                <span class="cloze-blank-badge">
                   Chỗ trống (${bNum})
                 </span>
               </div>
@@ -768,14 +768,14 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   ${renderSvgIcon('zap', 'icon-inline')} Tự động sinh biến thể
                 </button>
               </div>
-              <div class="variant-chips-container" style="margin-top: 6px;">
-                <div class="chips-meta-bar" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                  <span class="chips-count-badge" style="font-size:0.75rem; color:#64748b;">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
-                  <div class="quick-add-variant" style="flex:1; max-width:260px;">
+              <div class="variant-chips-container">
+                <div class="chips-meta-bar">
+                  <span class="chips-count-badge">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
+                  <div class="quick-add-variant">
                     <input type="text" class="form-control form-control-sm input-add-variant input-add-cloze-blank-variant" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" placeholder="+ Thêm biến thể thủ công (Enter)..." />
                   </div>
                 </div>
-                <div class="variant-chips-wrap" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+                <div class="variant-chips-wrap">
                   ${chipsHtml}
                 </div>
               </div>
@@ -789,12 +789,12 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
 
         specificHtml = `
           <div class="template-section template-inline-cloze">
-            <div class="cloze-live-preview-box" style="margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px;">
-              <span class="preview-mini-label" style="font-size: 0.76rem; font-weight: 700; color: #475569; text-transform: uppercase;">Xem trước hiển thị nội tuyến:</span>
-              <div class="cloze-preview-content" style="margin-top: 6px; line-height: 1.75;">${livePreviewHtml || '<em>Chưa có nội dung văn bản chứa chỗ trống...</em>'}</div>
+            <div class="cloze-live-preview-box">
+              <span class="preview-mini-label">Xem trước hiển thị nội tuyến:</span>
+              <div class="cloze-preview-content">${livePreviewHtml || '<em>Chưa có nội dung văn bản chứa chỗ trống...</em>'}</div>
             </div>
 
-            <div class="cloze-answers-config" style="margin-top: 12px;">
+            <div class="cloze-answers-config">
               <label class="form-label"><strong>Cấu hình đáp án chuẩn cho các chỗ trống (${uniqueBlankNums.length} chỗ trống):</strong></label>
               <div class="cloze-blanks-list">
                 ${blanksConfigHtml}
@@ -827,9 +827,9 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     ${renderSvgIcon('eye', 'icon-inline')} Xem trước ảnh
                   </button>
                 </div>
-                <div class="pictorial-preview-wrap pictorial-thumb-preview" style="margin-top: 8px;">
+                <div class="pictorial-preview-wrap pictorial-thumb-preview">
                   <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview" style="${imgSrc ? 'max-height: 180px; max-width: 100%; border-radius: 6px; border: 1px solid #e2e8f0; object-fit: contain;' : 'display: none;'}" onerror="this.style.display='none'; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='inline-block';" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='none'; this.style.display='inline-block';" />
-                  <span class="pictorial-preview-error badge badge-warning" style="display: none; margin-top: 4px;">${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
+                  <span class="pictorial-preview-error badge badge-warning" style="display: none;">${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
                 </div>
               </div>
 
@@ -855,7 +855,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
 
-            <div class="variant-chips-container" style="margin-top: 10px;">
+            <div class="variant-chips-container">
               <div class="chips-meta-bar">
                 <span class="chips-count-badge">Các biến thể được chấp nhận (${acceptedList.length}/40)</span>
                 <button type="button" class="btn btn-secondary btn-sm btn-generate-variants" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
@@ -1061,13 +1061,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 <input type="text" class="form-control form-control-sm criterion-label-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" value="${escapeHtml(crit.label || '')}" placeholder="Tên tiêu chí..." />
               </div>
               <div class="criterion-header-right">
-                <label class="form-label" style="margin:0;font-size:0.76rem;">Điểm:</label>
+                <label class="form-label">Điểm:</label>
                 <input type="number" class="form-control form-control-sm criterion-max-score-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" value="${crit.maxScore}" step="0.5" min="0" max="100" />
                 <button type="button" class="btn btn-icon btn-sm btn-del-criterion" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" title="Xóa tiêu chí" aria-label="Xóa tiêu chí">${renderSvgIcon('close', 'icon-inline')}</button>
               </div>
             </div>
             <div class="criterion-card-body">
-              <label class="form-label" style="margin:0;font-size:0.75rem;color:#64748b;">Từ khóa / khái niệm bắt buộc (Phân tách bởi dấu phẩy):</label>
+              <label class="form-label">Từ khóa / khái niệm bắt buộc (Phân tách bởi dấu phẩy):</label>
               <input type="text" class="form-control form-control-sm criterion-concepts-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-criterion-idx="${cIdx}" value="${escapeHtml((crit.requiredConcepts || []).join(', '))}" placeholder="keyword1, phrase2..." />
             </div>
           </div>
@@ -1084,15 +1084,15 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
         specificHtml = `
           <div class="template-section template-rubric-async">
             ${hasExContext ? `
-              <div class="ai-inherited-context-notice" style="margin-bottom: 10px;">
+              <div class="ai-inherited-context-notice">
                 <span>✓ <strong>Đã kế thừa ngữ cảnh chung từ Bài tập</strong> (${escapeHtml(parentEx.title || 'Exercise')}).</span>
 
               </div>
             ` : ''}
 
-            <div class="ai-reference-context-group" id="ai-ref-group-${blockIdx}-${itemIdx}" style="${showItemContextInitially ? 'display: block;' : 'display: none;'} margin-bottom: 12px; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
-                <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #334155;">
+            <div class="ai-reference-context-group" id="ai-ref-group-${blockIdx}-${itemIdx}" style="display: ${showItemContextInitially ? 'block' : 'none'};">
+              <div class="ai-reference-context-header">
+                <label class="form-label">
                   ${renderSvgIcon('book', 'icon-inline')} Ngữ cảnh bài đọc / Script tham chiếu cho AI:
                 </label>
                 <button type="button" class="btn btn-secondary btn-sm btn-pull-cloze-script" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Tự động lấy đoạn văn từ bài Điền từ nội tuyến hoặc bài nghe phía trước">
@@ -1100,7 +1100,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 </button>
               </div>
               <textarea class="form-control form-control-sm item-reference-context-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe để AI hiểu ngữ cảnh (ví dụ: dòng thứ mấy, đại từ 'its' thay thế cho từ nào...). Ẩn hoàn toàn với học viên.">${escapeHtml(item.referenceContext || '')}</textarea>
-              <div class="form-hint" style="font-size: 0.74rem; color: #64748b; margin-top: 4px;">
+              <div class="form-hint">
                 ${renderSvgIcon('lock', 'icon-inline')} <strong>Ẩn hoàn toàn với học viên:</strong> Văn bản này chỉ gửi ngầm kèm theo cho AI Gateway làm căn cứ đối chiếu khi chấm; giao diện thí sinh chỉ hiển thị câu hỏi và ô trả lời.
               </div>
             </div>
@@ -1127,12 +1127,12 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 </button>
               </div>
 
-              <div class="rubric-tab-content" style="margin-top: 10px;">
+              <div class="rubric-tab-content">
                 <div class="rubric-tab-pane pane-criteria" id="pane-criteria-${blockIdx}-${itemIdx}">
                   <div class="rubric-criteria-list">
                     ${criteriaHtml}
                   </div>
-                  <div class="criteria-actions" style="margin-top: 8px;">
+                  <div class="criteria-actions">
                     <button type="button" class="btn btn-secondary btn-sm btn-add-criterion" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">
                       + Thêm tiêu chí (Criterion)
                     </button>

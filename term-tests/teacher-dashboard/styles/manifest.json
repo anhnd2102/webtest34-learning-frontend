@@ -1,10 +1,10 @@
 {
-  "baseline": "3f6b5cb",
-  "sourceSha256": "b3f495f1b0d951599c7fae95a84cc1242489c9a7f90ae69f951ba05b66e176af",
-  "sourceLines": 12399,
+  "baseline": "5cd46b0",
+  "sourceSha256": "c9b5129a646784d83e39bcf81fe37ce640c08a59313c99a97cb10d62785077d9",
+  "sourceLines": 12538,
   "fragments": [
     {
-      "href": "styles/01-foundation.css?rev=20261109-ipa-audio1",
+      "href": "styles/01-foundation.css?rev=20261110-question-renderer1",
       "startLine": 1,
       "endLine": 1109,
       "sha256": "0c22ecb57dc69b834d5dd80070ebca80ea060ba90daeaf835f283e5823afa791",
@@ -12,7 +12,7 @@
       "extractionEndLine": 1069
     },
     {
-      "href": "styles/02-dashboard-grading.css?rev=20261109-ipa-audio1",
+      "href": "styles/02-dashboard-grading.css?rev=20261110-question-renderer1",
       "startLine": 1110,
       "endLine": 2766,
       "sha256": "24d81c4921e4b6bf6b43df98234cde1590478e2de483ee366d8064698cce5050",
@@ -20,7 +20,7 @@
       "extractionEndLine": 2726
     },
     {
-      "href": "styles/03-studio-builder.css?rev=20261109-ipa-audio1",
+      "href": "styles/03-studio-builder.css?rev=20261110-question-renderer1",
       "startLine": 2767,
       "endLine": 4715,
       "sha256": "b75cb5651b7a5fdd8b98a8637a7b6651132877c212ea3edb3b94ab10cae83b31",
@@ -28,7 +28,7 @@
       "extractionEndLine": 4644
     },
     {
-      "href": "styles/04-authoring.css?rev=20261109-ipa-audio1",
+      "href": "styles/04-authoring.css?rev=20261110-question-renderer1",
       "startLine": 4716,
       "endLine": 5379,
       "sha256": "29201654065856f93de3778075cb86e5d929d69a717106af47375ffc83717532",
@@ -36,7 +36,7 @@
       "extractionEndLine": 5289
     },
     {
-      "href": "styles/05-simulation-questions.css?rev=20261109-ipa-audio1",
+      "href": "styles/05-simulation-questions.css?rev=20261110-question-renderer1",
       "startLine": 5380,
       "endLine": 6294,
       "sha256": "22311374bd167b5e2d40127967b50fab434487f6e58ec351578ea8b9f72d5a9a",
@@ -44,7 +44,7 @@
       "extractionEndLine": 6204
     },
     {
-      "href": "styles/06-publishing.css?rev=20261109-ipa-audio1",
+      "href": "styles/06-publishing.css?rev=20261110-question-renderer1",
       "startLine": 6295,
       "endLine": 7455,
       "sha256": "b0c388389a8139524b1acc8aa41a0abe822a08b5bcb66fb5278de9fe1443d361",
@@ -52,49 +52,49 @@
       "extractionEndLine": 6829
     },
     {
-      "href": "styles/07-reports-and-question-layouts.css?rev=20261109-ipa-audio1",
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261110-question-renderer1",
       "startLine": 7456,
-      "endLine": 8736,
-      "sha256": "90d765a4d82149b12d1c0b2cc5555e3e52ab58470871943bcebc1e33029c7fc5",
+      "endLine": 8875,
+      "sha256": "6ccbbbb96fdb3d6323e2dd04fee7ef5db0db60d65e9ded62bf7da6fde45a615e",
       "extractionStartLine": 6830,
       "extractionEndLine": 7911
     },
     {
-      "href": "styles/08-studio-simulation-shell.css?rev=20261109-ipa-audio1",
-      "startLine": 8737,
-      "endLine": 9813,
+      "href": "styles/08-studio-simulation-shell.css?rev=20261110-question-renderer1",
+      "startLine": 8876,
+      "endLine": 9952,
       "sha256": "c62240d373c95586cc107a95f69de58e8ec23c148a772d991d9180417aecd34e",
       "extractionStartLine": 7912,
       "extractionEndLine": 8949
     },
     {
-      "href": "styles/09-editor-media.css?rev=20261109-ipa-audio1",
-      "startLine": 9814,
-      "endLine": 10407,
+      "href": "styles/09-editor-media.css?rev=20261110-question-renderer1",
+      "startLine": 9953,
+      "endLine": 10546,
       "sha256": "b2b74c5786313f48080a1c9d81b686642c256656fefc306a5f3fe1b4d7eda5e9",
       "extractionStartLine": 8950,
       "extractionEndLine": 9535
     },
     {
-      "href": "styles/10-studio-overrides.css?rev=20261109-ipa-audio1",
-      "startLine": 10408,
-      "endLine": 11178,
+      "href": "styles/10-studio-overrides.css?rev=20261110-question-renderer1",
+      "startLine": 10547,
+      "endLine": 11317,
       "sha256": "37b90dbc5549c50a7fee5aba033afdf039008f367da861852bce6f07fb051957",
       "extractionStartLine": 9536,
       "extractionEndLine": 10306
     },
     {
-      "href": "styles/11-analytics.css?rev=20261109-ipa-audio1",
-      "startLine": 11179,
-      "endLine": 12046,
+      "href": "styles/11-analytics.css?rev=20261110-question-renderer1",
+      "startLine": 11318,
+      "endLine": 12185,
       "sha256": "090a8b29cd6c3777beebf1096df9f272717595d969cb75a033105750bbdda19e",
       "extractionStartLine": 10307,
       "extractionEndLine": 11174
     },
     {
-      "href": "styles/12-context-and-assessment.css?rev=20261109-ipa-audio1",
-      "startLine": 12047,
-      "endLine": 12399,
+      "href": "styles/12-context-and-assessment.css?rev=20261110-question-renderer1",
+      "startLine": 12186,
+      "endLine": 12538,
       "sha256": "c9bb9bc16309f066ca61e574b3d6664e88ce894a7390dddb874365597eb86823",
       "extractionStartLine": 11175,
       "extractionEndLine": 11527
@@ -105,5 +105,5 @@
     "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
     "sourceLines": 11527
   },
-  "revision": "ipa-audio1"
+  "revision": "question-renderer1"
 }
