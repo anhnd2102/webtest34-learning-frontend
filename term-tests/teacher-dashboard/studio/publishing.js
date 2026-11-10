@@ -241,7 +241,7 @@ function openPublishingModal() {
             <footer class="publishing-footer">
               <button type="button" class="btn btn-secondary" id="btn-cancel-publish">Hủy</button>
               <button type="button" class="btn btn-primary" id="btn-step1-next">
-                <span>Tiếp tục</span> ${renderSvgIcon('arrow-right', 'icon-inline')}
+                <span>Tiếp tục</span> ${renderSvgIcon('arrowRight', 'icon-inline')}
               </button>
             </footer>
           </div>
@@ -405,7 +405,7 @@ function openPublishingModal() {
             renderModalContent();
           } catch (err) {
             nextBtn.disabled = false;
-            nextBtn.innerHTML = `<span>Tiếp tục</span> ${renderSvgIcon('arrow-right', 'icon-inline')}`;
+            nextBtn.innerHTML = `<span>Tiếp tục</span> ${renderSvgIcon('arrowRight', 'icon-inline')}`;
             if (errorMsgEl) {
               errorMsgEl.textContent = 'Lỗi phân tích: ' + (err.message || 'Lỗi kết nối');
               errorMsgEl.style.display = 'block';

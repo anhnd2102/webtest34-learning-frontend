@@ -163,6 +163,12 @@ try {
         }
         await page.screenshot({ path: fileURLToPath(new URL(`${viewport.width}-${state}.png`, artifacts)), fullPage: true, animations: 'disabled', caret: 'hide' });
       };
+      // Optional close-up of one element (ELEMENT_SHOTS=1) for manual review at narrow widths.
+      const elementShot = async (name, locator) => {
+        if (process.env.ELEMENT_SHOTS !== '1' || prefix) return;
+        await locator.scrollIntoViewIfNeeded();
+        await locator.screenshot({ path: fileURLToPath(new URL(`${viewport.width}-el-${name}.png`, artifacts)), animations: 'disabled', caret: 'hide' });
+      };
       const openBuilder = async id => {
         await page.evaluate(() => { location.hash = '#exams'; });
         await page.locator(`.btn-edit-test[data-form-version-id="${id}"]`).click();
@@ -206,6 +212,8 @@ try {
         assert.equal(await target.inputValue(), '0');
         assert.equal(await move.locator('.target-exercise-row').isVisible(), false);
         await screenshot('move-default');
+        { const html = await move.innerHTML(); assert.ok(html.includes('points="5 9 2 12 5 15"'), 'move dialog shows the move icon'); assert.ok(html.includes('x2="12.01" y2="8"'), 'move dialog shows the info icon'); }
+        await elementShot('move-dialog', move);
         await target.selectOption('1');
         await position.selectOption('before_ex');
         assert.equal(await move.locator('.target-exercise-row').isVisible(), true);
@@ -480,6 +488,7 @@ try {
         await screenshot('vocab-variants');
         await openBank(first);
         await screenshot('vocab-bank');
+        assert.ok((await first.locator('.vocab-bank-collapsible').innerHTML()).includes('M3.51 9a9 9 0 0 1 14.85-3.36'), 'apply-to-block button shows the refresh icon');
         await first.locator('.btn-add-vocab-option').click();
         await openBank(first);
         assert.equal(await first.locator('.vocab-meaning-row').count(), 4);
@@ -555,6 +564,10 @@ try {
         assert.equal(await host.locator('[data-item-id="q7"] .ai-inherited-context-notice').count(), 1);
         await host.locator('[data-item-id="q5"] .pictorial-preview-img').evaluate(img => img.complete || new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true }); }));
         await screenshot('question-renderer-default');
+        assert.ok((await host.locator('.btn-preview-audio').first().innerHTML()).includes('points="5 3 19 12 5 21 5 3"'), 'listen-preview button shows the play icon');
+        assert.ok((await host.locator('.btn-preview-drive-image').first().innerHTML()).includes('M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'), 'image preview button shows the eye icon');
+        await elementShot('pictorial-image', host.locator('.btn-preview-drive-image').first().locator('xpath=ancestor::div[contains(@class,"pictorial-image-group")]'));
+        await elementShot('listening-audio', host.locator('.template-listening-order .audio-input-group').first());
         await cloze.locator('.cloze-blank-config-card[data-blank-num="2"] .input-add-cloze-blank-variant').fill('Beta');
         await cloze.locator('.cloze-blank-config-card[data-blank-num="2"] .input-add-cloze-blank-variant').press('Enter');
         assert.equal(await host.locator('[data-item-id="q4"] .cloze-blank-config-card[data-blank-num="2"] .accepted-chip[data-variant="Beta"]').count(), 1);
@@ -626,6 +639,8 @@ try {
         const field = host.locator('.exercise-reference-context-field');
         assert.equal(await field.count(), 1, 'comprehension exercise renders the shared context field');
         await screenshot('builder-static-default');
+        assert.ok((await host.locator('.btn-move-exercise-to-block').first().innerHTML()).includes('points="5 9 2 12 5 15"'), 'move-exercise button shows the move icon');
+        await elementShot('exercise-header', host.locator('.btn-move-exercise-to-block').first().locator('xpath=..'));
         await field.locator('.exercise-reference-context-input').focus();
         await screenshot('builder-static-focus', { preserveFocus: true });
         const card = host.locator('[data-item-id="r1"]');
@@ -682,6 +697,8 @@ try {
         assert.equal(await modal.locator('#input-class-search').getAttribute('placeholder'), 'Tìm kiếm mã lớp...');
         await assertNoEmoji('step1');
         await screenshot('publishing-step1');
+        assert.ok((await modal.locator('#btn-step1-next').innerHTML()).includes('points="12 5 19 12 12 19"'), 'step 1 continue button shows the arrow icon');
+        await elementShot('publish-footer', modal.locator('.publishing-footer'));
         await modal.locator('#btn-deselect-all-classes').click();
         await modal.locator('#btn-step1-next').click();
         assert.ok((await modal.locator('#publishing-error-msg').innerText()).includes('Vui lòng chọn ít nhất 1 lớp'));

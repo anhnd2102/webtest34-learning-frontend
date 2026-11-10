@@ -31,7 +31,7 @@ Các sắc độ nhạt/đậm cùng họ màu đỏ vẫn giữ nguyên vì yê
 
 ## Giới hạn
 
-- Không đo tương phản màu (a11y) giữa `#e11d48` và các nền hiện có; `#e11d48` trên nền trắng đạt khoảng 4.6:1 theo công thức WCAG nhưng chưa kiểm trên từng nền thực tế.
+- Không đo tương phản màu (a11y) giữa `#e11d48` và các nền hiện có; `#e11d48` trên nền trắng đạt khoảng 4.7:1 theo công thức WCAG nhưng chưa kiểm trên từng nền thực tế.
 - Phần tử học viên (`content-preview.mjs`) chỉ đổi giá trị chuỗi, chưa chụp trạng thái làm lại hết hạn trong trình duyệt.
 
 Rollback: revert commit như một đơn vị.
