@@ -1,100 +1,100 @@
 {
-  "baseline": "6c1696f",
-  "sourceSha256": "1c4cf732b05b053926add2615982e8c3069427b7eecb545261961ddf98be5e6c",
-  "sourceLines": 12651,
+  "baseline": "c4d45ab",
+  "sourceSha256": "881922f59232e8e69a2409521f49a2da1c0b04161811e57c0c629874836130b6",
+  "sourceLines": 12659,
   "fragments": [
     {
-      "href": "styles/01-foundation.css?rev=20261110-builder-static1",
+      "href": "styles/01-foundation.css?rev=20261110-publishing-static1",
       "startLine": 1,
-      "endLine": 1109,
-      "sha256": "0c22ecb57dc69b834d5dd80070ebca80ea060ba90daeaf835f283e5823afa791",
+      "endLine": 1110,
+      "sha256": "9df4413b9ecd828b349cede311ccfb9c63b7669131293e33de1d80ae0ca3d663",
       "extractionStartLine": 1,
       "extractionEndLine": 1069
     },
     {
-      "href": "styles/02-dashboard-grading.css?rev=20261110-builder-static1",
-      "startLine": 1110,
-      "endLine": 2766,
+      "href": "styles/02-dashboard-grading.css?rev=20261110-publishing-static1",
+      "startLine": 1111,
+      "endLine": 2767,
       "sha256": "24d81c4921e4b6bf6b43df98234cde1590478e2de483ee366d8064698cce5050",
       "extractionStartLine": 1070,
       "extractionEndLine": 2726
     },
     {
-      "href": "styles/03-studio-builder.css?rev=20261110-builder-static1",
-      "startLine": 2767,
-      "endLine": 4715,
+      "href": "styles/03-studio-builder.css?rev=20261110-publishing-static1",
+      "startLine": 2768,
+      "endLine": 4716,
       "sha256": "b75cb5651b7a5fdd8b98a8637a7b6651132877c212ea3edb3b94ab10cae83b31",
       "extractionStartLine": 2727,
       "extractionEndLine": 4644
     },
     {
-      "href": "styles/04-authoring.css?rev=20261110-builder-static1",
-      "startLine": 4716,
-      "endLine": 5379,
+      "href": "styles/04-authoring.css?rev=20261110-publishing-static1",
+      "startLine": 4717,
+      "endLine": 5380,
       "sha256": "29201654065856f93de3778075cb86e5d929d69a717106af47375ffc83717532",
       "extractionStartLine": 4645,
       "extractionEndLine": 5289
     },
     {
-      "href": "styles/05-simulation-questions.css?rev=20261110-builder-static1",
-      "startLine": 5380,
-      "endLine": 6294,
+      "href": "styles/05-simulation-questions.css?rev=20261110-publishing-static1",
+      "startLine": 5381,
+      "endLine": 6295,
       "sha256": "22311374bd167b5e2d40127967b50fab434487f6e58ec351578ea8b9f72d5a9a",
       "extractionStartLine": 5290,
       "extractionEndLine": 6204
     },
     {
-      "href": "styles/06-publishing.css?rev=20261110-builder-static1",
-      "startLine": 6295,
-      "endLine": 7455,
-      "sha256": "b0c388389a8139524b1acc8aa41a0abe822a08b5bcb66fb5278de9fe1443d361",
+      "href": "styles/06-publishing.css?rev=20261110-publishing-static1",
+      "startLine": 6296,
+      "endLine": 7463,
+      "sha256": "858c019c2b8167ef187c1371a838300517fc49490fd3144d0e5327e40c95a45f",
       "extractionStartLine": 6205,
       "extractionEndLine": 6829
     },
     {
-      "href": "styles/07-reports-and-question-layouts.css?rev=20261110-builder-static1",
-      "startLine": 7456,
-      "endLine": 8988,
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261110-publishing-static1",
+      "startLine": 7464,
+      "endLine": 8996,
       "sha256": "527b1ea1827dd477efc7f047c3daef6d5e3bb3a570eb07e2e7a3a4ca66234e24",
       "extractionStartLine": 6830,
       "extractionEndLine": 7911
     },
     {
-      "href": "styles/08-studio-simulation-shell.css?rev=20261110-builder-static1",
-      "startLine": 8989,
-      "endLine": 10065,
+      "href": "styles/08-studio-simulation-shell.css?rev=20261110-publishing-static1",
+      "startLine": 8997,
+      "endLine": 10073,
       "sha256": "c62240d373c95586cc107a95f69de58e8ec23c148a772d991d9180417aecd34e",
       "extractionStartLine": 7912,
       "extractionEndLine": 8949
     },
     {
-      "href": "styles/09-editor-media.css?rev=20261110-builder-static1",
-      "startLine": 10066,
-      "endLine": 10659,
+      "href": "styles/09-editor-media.css?rev=20261110-publishing-static1",
+      "startLine": 10074,
+      "endLine": 10667,
       "sha256": "b2b74c5786313f48080a1c9d81b686642c256656fefc306a5f3fe1b4d7eda5e9",
       "extractionStartLine": 8950,
       "extractionEndLine": 9535
     },
     {
-      "href": "styles/10-studio-overrides.css?rev=20261110-builder-static1",
-      "startLine": 10660,
-      "endLine": 11430,
+      "href": "styles/10-studio-overrides.css?rev=20261110-publishing-static1",
+      "startLine": 10668,
+      "endLine": 11438,
       "sha256": "37b90dbc5549c50a7fee5aba033afdf039008f367da861852bce6f07fb051957",
       "extractionStartLine": 9536,
       "extractionEndLine": 10306
     },
     {
-      "href": "styles/11-analytics.css?rev=20261110-builder-static1",
-      "startLine": 11431,
-      "endLine": 12298,
+      "href": "styles/11-analytics.css?rev=20261110-publishing-static1",
+      "startLine": 11439,
+      "endLine": 12306,
       "sha256": "090a8b29cd6c3777beebf1096df9f272717595d969cb75a033105750bbdda19e",
       "extractionStartLine": 10307,
       "extractionEndLine": 11174
     },
     {
-      "href": "styles/12-context-and-assessment.css?rev=20261110-builder-static1",
-      "startLine": 12299,
-      "endLine": 12651,
+      "href": "styles/12-context-and-assessment.css?rev=20261110-publishing-static1",
+      "startLine": 12307,
+      "endLine": 12659,
       "sha256": "c9bb9bc16309f066ca61e574b3d6664e88ce894a7390dddb874365597eb86823",
       "extractionStartLine": 11175,
       "extractionEndLine": 11527
@@ -105,5 +105,5 @@
     "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
     "sourceLines": 11527
   },
-  "revision": "builder-static1"
+  "revision": "publishing-static1"
 }

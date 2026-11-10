@@ -435,9 +435,16 @@
 }
 
 .classes-selection-counter {
-  font-size: 0.78rem;
-  color: #64748b;
+  font-size: 12px;
+  color: var(--izone-text-muted);
+  margin-top: 6px;
   text-align: right;
+}
+
+.publishing-error-msg {
+  color: var(--izone-danger-legacy);
+  font-size: 13px;
+  margin-top: 8px;
 }
 
 /* Impact Summary Card (Step 2) */

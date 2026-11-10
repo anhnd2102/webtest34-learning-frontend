@@ -230,12 +230,12 @@ function openPublishingModal() {
                 <div class="classes-checkbox-grid" id="classes-checkbox-grid">
                   ${classesListHtml}
                 </div>
-                <div class="classes-selection-counter" style="font-size:12px; color:#64748b; margin-top:6px;">
+                <div class="classes-selection-counter">
                   Đã chọn <strong>${selectedClassIds.length}</strong> / ${availableClasses.length} lớp học.
                 </div>
               </div>
 
-              <div class="publishing-error-msg" id="publishing-error-msg" style="display:none; color:#dc2626; font-size:13px; margin-top:8px;"></div>
+              <div class="publishing-error-msg" id="publishing-error-msg" style="display:none;"></div>
             </div>
 
             <footer class="publishing-footer">
@@ -521,7 +521,7 @@ function openPublishingModal() {
                 </div>
               </div>
 
-              <div class="publishing-error-msg" id="publishing-error-msg" style="display:none; color:#dc2626; font-size:13px; margin-top:8px;"></div>
+              <div class="publishing-error-msg" id="publishing-error-msg" style="display:none;"></div>
             </div>
 
             <footer class="publishing-footer">

@@ -1,7 +1,7 @@
 {
-  "baseline": "6c1696f",
-  "revision": "builder-static1",
-  "note": "Lexical inventory after builder static style extraction; not a CSS parser.",
+  "baseline": "c4d45ab",
+  "revision": "publishing-static1",
+  "note": "Lexical inventory after publishing static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -646,11 +646,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/publishing.js",
       "line": 220,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 233,
       "kind": "attribute"
     },
     {

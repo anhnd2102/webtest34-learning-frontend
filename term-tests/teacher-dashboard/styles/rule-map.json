@@ -5987,1035 +5987,1033 @@
     "order": 990,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-summary-card"
+    "selector": ".publishing-error-msg"
   },
   {
     "order": 991,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-summary-header"
+    "selector": ".impact-summary-card"
   },
   {
     "order": 992,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-summary-badge"
+    "selector": ".impact-summary-header"
   },
   {
     "order": 993,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-summary-header h4"
+    "selector": ".impact-summary-badge"
   },
   {
     "order": 994,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-summary-grid"
+    "selector": ".impact-summary-header h4"
   },
   {
     "order": 995,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-row"
+    "selector": ".impact-summary-grid"
   },
   {
     "order": 996,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-label"
+    "selector": ".impact-row"
   },
   {
     "order": 997,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-value"
+    "selector": ".impact-label"
   },
   {
     "order": 998,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-value.text-success"
+    "selector": ".impact-value"
   },
   {
     "order": 999,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-value.text-warning"
+    "selector": ".impact-value.text-success"
   },
   {
     "order": 1000,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".impact-value.text-info"
+    "selector": ".impact-value.text-warning"
   },
   {
     "order": 1001,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".double-check-box"
+    "selector": ".impact-value.text-info"
   },
   {
     "order": 1002,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".double-check-title"
+    "selector": ".double-check-box"
   },
   {
     "order": 1003,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".double-check-desc"
+    "selector": ".double-check-title"
   },
   {
     "order": 1004,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".double-check-reference"
+    "selector": ".double-check-desc"
   },
   {
     "order": 1005,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".reference-label"
+    "selector": ".double-check-reference"
   },
   {
     "order": 1006,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".reference-code"
+    "selector": ".reference-label"
   },
   {
     "order": 1007,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".confirm-input-row"
+    "selector": ".reference-code"
   },
   {
     "order": 1008,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".confirm-input-row input"
+    "selector": ".confirm-input-row"
   },
   {
     "order": 1009,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".confirm-match-status"
+    "selector": ".confirm-input-row input"
   },
   {
     "order": 1010,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".status-unmatched"
+    "selector": ".confirm-match-status"
   },
   {
     "order": 1011,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".status-matched"
+    "selector": ".status-unmatched"
   },
   {
     "order": 1012,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#btn-final-publish.is-ready"
+    "selector": ".status-matched"
   },
   {
     "order": 1013,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".publishing-footer, .report-footer"
+    "selector": "#btn-final-publish.is-ready"
   },
   {
     "order": 1014,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".publishing-actions-right"
+    "selector": ".publishing-footer, .report-footer"
   },
   {
     "order": 1015,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".quick-csv-guide-modal-overlay, .block-csv-modal-overlay"
+    "selector": ".publishing-actions-right"
   },
   {
     "order": 1016,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-guide-dialog"
+    "selector": ".quick-csv-guide-modal-overlay, .block-csv-modal-overlay"
   },
   {
     "order": 1017,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-header"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-guide-dialog"
   },
   {
     "order": 1018,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-title"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-header"
   },
   {
     "order": 1019,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-subtitle"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-title"
   },
   {
     "order": 1020,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-guide-body"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-subtitle"
   },
   {
     "order": 1021,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-section-title"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-guide-body"
   },
   {
     "order": 1022,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-schema"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-section-title"
   },
   {
     "order": 1023,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-notes"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-schema"
   },
   {
     "order": 1024,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-types-title"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-notes"
   },
   {
     "order": 1025,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table-frame"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-types-title"
   },
   {
     "order": 1026,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table-frame"
   },
   {
     "order": 1027,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table-heading"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table"
   },
   {
     "order": 1028,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-heading"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-table-heading"
   },
   {
     "order": 1029,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-heading"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-heading"
   },
   {
     "order": 1030,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-action-heading"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-column-heading"
   },
   {
     "order": 1031,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-cell"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-action-heading"
   },
   {
     "order": 1032,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-code"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-cell"
   },
   {
     "order": 1033,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-details-cell"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-type-code"
   },
   {
     "order": 1034,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-sample-cell"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-details-cell"
   },
   {
     "order": 1035,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-action-cell"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-sample-cell"
   },
   {
     "order": 1036,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-copy-button"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-action-cell"
   },
   {
     "order": 1037,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-warning"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-copy-button"
   },
   {
     "order": 1038,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-footer"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-warning"
   },
   {
     "order": 1039,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-upload-dialog"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-footer"
   },
   {
     "order": 1040,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-upload-body"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-upload-dialog"
   },
   {
     "order": 1041,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-panel"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-upload-body"
   },
   {
     "order": 1042,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-title"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-panel"
   },
   {
     "order": 1043,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-code"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-title"
   },
   {
     "order": 1044,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-file-actions"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-schema-code"
   },
   {
     "order": 1045,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-download-link"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-file-actions"
   },
   {
     "order": 1046,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-file-input"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-download-link"
   },
   {
     "order": 1047,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-field"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-file-input"
   },
   {
     "order": 1048,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-field-label"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-field"
   },
   {
     "order": 1049,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-textarea"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-field-label"
   },
   {
     "order": 1050,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-mode-panel"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-textarea"
   },
   {
     "order": 1051,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-modes"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-mode-panel"
   },
   {
     "order": 1052,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-mode-option"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-modes"
   },
   {
     "order": 1053,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-overwrite-option"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-mode-option"
   },
   {
     "order": 1054,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-preview"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-overwrite-option"
   },
   {
     "order": 1055,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-error"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-preview"
   },
   {
     "order": 1056,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-preview-list"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-error"
   },
   {
     "order": 1057,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-card"
+    "selector": ":is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-preview-list"
   },
   {
     "order": 1058,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-heading"
+    "selector": "#generic-batch-modal .generic-layout-card"
   },
   {
     "order": 1059,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-title"
+    "selector": "#generic-batch-modal .generic-layout-heading"
   },
   {
     "order": 1060,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-body"
+    "selector": "#generic-batch-modal .generic-layout-title"
   },
   {
     "order": 1061,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-notice"
+    "selector": "#generic-batch-modal .generic-layout-body"
   },
   {
     "order": 1062,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-file-actions"
+    "selector": "#generic-batch-modal .generic-layout-notice"
   },
   {
     "order": 1063,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-hidden"
+    "selector": "#generic-batch-modal .generic-layout-file-actions"
   },
   {
     "order": 1064,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-hint"
+    "selector": "#generic-batch-modal .generic-layout-hidden"
   },
   {
     "order": 1065,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-csv-field"
+    "selector": "#generic-batch-modal .generic-layout-hint"
   },
   {
     "order": 1066,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-csv-label"
+    "selector": "#generic-batch-modal .generic-layout-csv-field"
   },
   {
     "order": 1067,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-textarea"
+    "selector": "#generic-batch-modal .generic-layout-csv-label"
   },
   {
     "order": 1068,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-csv-points-group"
+    "selector": "#generic-batch-modal .generic-layout-textarea"
   },
   {
     "order": 1069,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-csv-points-label"
+    "selector": "#generic-batch-modal .generic-layout-csv-points-group"
   },
   {
     "order": 1070,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-csv-points"
+    "selector": "#generic-batch-modal .generic-layout-csv-points-label"
   },
   {
     "order": 1071,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-preview"
+    "selector": "#generic-batch-modal .generic-layout-csv-points"
   },
   {
     "order": 1072,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-stepper-fields"
+    "selector": "#generic-batch-modal .generic-layout-preview"
   },
   {
     "order": 1073,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-number"
+    "selector": "#generic-batch-modal .generic-layout-stepper-fields"
   },
   {
     "order": 1074,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-points-unit"
+    "selector": "#generic-batch-modal .generic-layout-number"
   },
   {
     "order": 1075,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-points-caption"
+    "selector": "#generic-batch-modal .generic-layout-points-unit"
   },
   {
     "order": 1076,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-footer"
+    "selector": "#generic-batch-modal .generic-layout-points-caption"
   },
   {
     "order": 1077,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-footer-actions"
+    "selector": "#generic-batch-modal .generic-layout-footer"
   },
   {
     "order": 1078,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-error"
+    "selector": "#generic-batch-modal .generic-layout-footer-actions"
   },
   {
     "order": 1079,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-success"
+    "selector": "#generic-batch-modal .generic-layout-error"
   },
   {
     "order": 1080,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-warning"
+    "selector": "#generic-batch-modal .generic-layout-success"
   },
   {
     "order": 1081,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-preview-items"
+    "selector": "#generic-batch-modal .generic-layout-warning"
   },
   {
     "order": 1082,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-preview-row"
+    "selector": "#generic-batch-modal .generic-layout-preview-items"
   },
   {
     "order": 1083,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#generic-batch-modal .generic-layout-preview-more"
+    "selector": "#generic-batch-modal .generic-layout-preview-row"
   },
   {
     "order": 1084,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".move-exercise-modal-overlay"
+    "selector": "#generic-batch-modal .generic-layout-preview-more"
   },
   {
     "order": 1085,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-dialog"
+    "selector": ".move-exercise-modal-overlay"
   },
   {
     "order": 1086,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-header"
+    "selector": "#modal-move-exercise .move-layout-dialog"
   },
   {
     "order": 1087,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-title"
+    "selector": "#modal-move-exercise .move-layout-header"
   },
   {
     "order": 1088,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-subtitle"
+    "selector": "#modal-move-exercise .move-layout-title"
   },
   {
     "order": 1089,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-body"
+    "selector": "#modal-move-exercise .move-layout-subtitle"
   },
   {
     "order": 1090,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-summary"
+    "selector": "#modal-move-exercise .move-layout-body"
   },
   {
     "order": 1091,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-exercise-title"
+    "selector": "#modal-move-exercise .move-layout-summary"
   },
   {
     "order": 1092,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-summary-meta"
+    "selector": "#modal-move-exercise .move-layout-exercise-title"
   },
   {
     "order": 1093,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-field"
+    "selector": "#modal-move-exercise .move-layout-summary-meta"
   },
   {
     "order": 1094,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-label"
+    "selector": "#modal-move-exercise .move-layout-field"
   },
   {
     "order": 1095,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-select"
+    "selector": "#modal-move-exercise .move-layout-label"
   },
   {
     "order": 1096,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-anchor-field"
+    "selector": "#modal-move-exercise .move-layout-select"
   },
   {
     "order": 1097,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-note"
+    "selector": "#modal-move-exercise .move-layout-anchor-field"
   },
   {
     "order": 1098,
     "source": "06-publishing.css",
     "conditions": [],
-    "selector": "#modal-move-exercise .move-layout-footer"
+    "selector": "#modal-move-exercise .move-layout-note"
   },
   {
     "order": 1099,
-    "source": "07-reports-and-question-layouts.css",
+    "source": "06-publishing.css",
     "conditions": [],
-    "selector": ".report-summary-cards"
+    "selector": "#modal-move-exercise .move-layout-footer"
   },
   {
     "order": 1100,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".report-stat-card"
+    "selector": ".report-summary-cards"
   },
   {
     "order": 1101,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".stat-success"
+    "selector": ".report-stat-card"
   },
   {
     "order": 1102,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".stat-warning"
+    "selector": ".stat-success"
   },
   {
     "order": 1103,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".stat-info"
+    "selector": ".stat-warning"
   },
   {
     "order": 1104,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".stat-number"
+    "selector": ".stat-info"
   },
   {
     "order": 1105,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".stat-label"
+    "selector": ".stat-number"
   },
   {
     "order": 1106,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".stat-icon"
+    "selector": ".stat-label"
   },
   {
     "order": 1107,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".report-section-block"
+    "selector": ".stat-icon"
   },
   {
     "order": 1108,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".report-block-title"
+    "selector": ".report-section-block"
   },
   {
     "order": 1109,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".report-classes-list"
+    "selector": ".report-block-title"
   },
   {
     "order": 1110,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".report-class-item"
+    "selector": ".report-classes-list"
   },
   {
     "order": 1111,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".updated-item"
+    "selector": ".report-class-item"
   },
   {
     "order": 1112,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".frozen-item"
+    "selector": ".updated-item"
   },
   {
     "order": 1113,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".badge-status-pill"
+    "selector": ".frozen-item"
   },
   {
     "order": 1114,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".badge-status-pill.success"
+    "selector": ".badge-status-pill"
   },
   {
     "order": 1115,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".badge-status-pill.warning"
+    "selector": ".badge-status-pill.success"
   },
   {
     "order": 1116,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".template-listening-order"
+    "selector": ".badge-status-pill.warning"
   },
   {
     "order": 1117,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".listening-events-list"
+    "selector": ".template-listening-order"
   },
   {
     "order": 1118,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".listening-event-row"
+    "selector": ".listening-events-list"
   },
   {
     "order": 1119,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".listening-event-row:hover"
+    "selector": ".listening-event-row"
   },
   {
     "order": 1120,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".listening-event-row .event-badge"
+    "selector": ".listening-event-row:hover"
   },
   {
     "order": 1121,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".listening-event-row .input-event-text"
+    "selector": ".listening-event-row .event-badge"
   },
   {
     "order": 1122,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".rank-selector-wrap"
+    "selector": ".listening-event-row .input-event-text"
   },
   {
     "order": 1123,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".rank-selector-wrap .rank-label"
+    "selector": ".rank-selector-wrap"
   },
   {
     "order": 1124,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".rank-selector-wrap .select-event-rank"
+    "selector": ".rank-selector-wrap .rank-label"
   },
   {
     "order": 1125,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-preview-bar"
+    "selector": ".rank-selector-wrap .select-event-rank"
   },
   {
     "order": 1126,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-preview-label"
+    "selector": ".timeline-preview-bar"
   },
   {
     "order": 1127,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-steps-container"
+    "selector": ".timeline-preview-label"
   },
   {
     "order": 1128,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-step"
+    "selector": ".timeline-steps-container"
   },
   {
     "order": 1129,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-step .step-num"
+    "selector": ".timeline-step"
   },
   {
     "order": 1130,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-step .step-label"
+    "selector": ".timeline-step .step-num"
   },
   {
     "order": 1131,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-listening-order-wrap"
+    "selector": ".timeline-step .step-label"
   },
   {
     "order": 1132,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-events-pool"
+    "selector": ".candidate-listening-order-wrap"
   },
   {
     "order": 1133,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".events-pool-title, .timeline-slots-title"
+    "selector": ".candidate-events-pool"
   },
   {
     "order": 1134,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".events-pool-grid"
+    "selector": ".events-pool-title, .timeline-slots-title"
   },
   {
     "order": 1135,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".event-pool-card"
+    "selector": ".events-pool-grid"
   },
   {
     "order": 1136,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".event-pool-badge"
+    "selector": ".event-pool-card"
   },
   {
     "order": 1137,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-slots-grid"
+    "selector": ".event-pool-badge"
   },
   {
     "order": 1138,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-slot-card"
+    "selector": ".timeline-slots-grid"
   },
   {
     "order": 1139,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".timeline-slot-card .slot-badge"
+    "selector": ".timeline-slot-card"
   },
   {
     "order": 1140,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".template-reading-matching"
+    "selector": ".timeline-slot-card .slot-badge"
   },
   {
     "order": 1141,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".split-pane-header-bar"
+    "selector": ".template-reading-matching"
   },
   {
     "order": 1142,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".split-pane-preview-badge"
+    "selector": ".split-pane-header-bar"
   },
   {
     "order": 1143,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".passage-label-bar"
+    "selector": ".split-pane-preview-badge"
   },
   {
     "order": 1144,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".matching-headings-list"
+    "selector": ".passage-label-bar"
   },
   {
     "order": 1145,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".matching-heading-row"
+    "selector": ".matching-headings-list"
   },
   {
     "order": 1146,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".matching-heading-row .matching-heading-input"
+    "selector": ".matching-heading-row"
   },
   {
     "order": 1147,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".simulation-split-pane-section"
+    "selector": ".matching-heading-row .matching-heading-input"
   },
   {
     "order": 1148,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".split-pane-mobile-toggle"
+    "selector": ".simulation-split-pane-section"
   },
   {
     "order": 1149,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".split-pane-mobile-toggle .toggle-pane-btn.active"
+    "selector": ".split-pane-mobile-toggle"
   },
   {
     "order": 1150,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".split-pane-reading"
+    "selector": ".split-pane-mobile-toggle .toggle-pane-btn.active"
   },
   {
     "order": 1151,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".reading-passage-column"
+    "selector": ".split-pane-reading"
   },
   {
     "order": 1152,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".reading-passage-sticky-header"
+    "selector": ".reading-passage-column"
   },
   {
     "order": 1153,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".reading-title-badge"
+    "selector": ".reading-passage-sticky-header"
   },
   {
     "order": 1154,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".reading-hint"
+    "selector": ".reading-title-badge"
   },
   {
     "order": 1155,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".reading-passage-content"
+    "selector": ".reading-hint"
   },
   {
     "order": 1156,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".matching-questions-column"
+    "selector": ".reading-passage-content"
   },
   {
     "order": 1157,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".matching-column-header"
+    "selector": ".matching-questions-column"
   },
   {
     "order": 1158,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".matching-title-badge"
+    "selector": ".matching-column-header"
   },
   {
     "order": 1159,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-matching-wrap"
+    "selector": ".matching-title-badge"
   },
   {
     "order": 1160,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".matching-select"
+    "selector": ".candidate-matching-wrap"
   },
   {
     "order": 1161,
     "source": "07-reports-and-question-layouts.css",
-    "conditions": [
-      "(max-width: 768px)"
-    ],
-    "selector": ".split-pane-mobile-toggle"
+    "conditions": [],
+    "selector": ".matching-select"
   },
   {
     "order": 1162,
@@ -7023,7 +7021,7 @@
     "conditions": [
       "(max-width: 768px)"
     ],
-    "selector": ".split-pane-reading"
+    "selector": ".split-pane-mobile-toggle"
   },
   {
     "order": 1163,
@@ -7031,7 +7029,7 @@
     "conditions": [
       "(max-width: 768px)"
     ],
-    "selector": ".reading-passage-column, .matching-questions-column"
+    "selector": ".split-pane-reading"
   },
   {
     "order": 1164,
@@ -7039,112 +7037,120 @@
     "conditions": [
       "(max-width: 768px)"
     ],
-    "selector": ".reading-passage-column.active-pane, .matching-questions-column.active-pane"
+    "selector": ".reading-passage-column, .matching-questions-column"
   },
   {
     "order": 1165,
     "source": "07-reports-and-question-layouts.css",
-    "conditions": [],
-    "selector": ".template-error-correction"
+    "conditions": [
+      "(max-width: 768px)"
+    ],
+    "selector": ".reading-passage-column.active-pane, .matching-questions-column.active-pane"
   },
   {
     "order": 1166,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".template-error-correction .template-header-bar"
+    "selector": ".template-error-correction"
   },
   {
     "order": 1167,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".scoring-rule-selector"
+    "selector": ".template-error-correction .template-header-bar"
   },
   {
     "order": 1168,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".scoring-rule-selector select"
+    "selector": ".scoring-rule-selector"
   },
   {
     "order": 1169,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".dual-input-grid"
+    "selector": ".scoring-rule-selector select"
   },
   {
     "order": 1170,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".dual-box"
+    "selector": ".dual-input-grid"
   },
   {
     "order": 1171,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".dual-box.error-box"
+    "selector": ".dual-box"
   },
   {
     "order": 1172,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".dual-box.error-box label"
+    "selector": ".dual-box.error-box"
   },
   {
     "order": 1173,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".dual-box.correction-box"
+    "selector": ".dual-box.error-box label"
   },
   {
     "order": 1174,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".dual-box.correction-box label"
+    "selector": ".dual-box.correction-box"
   },
   {
     "order": 1175,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-error-correction-grid"
+    "selector": ".dual-box.correction-box label"
   },
   {
     "order": 1176,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-dual-box"
+    "selector": ".candidate-error-correction-grid"
   },
   {
     "order": 1177,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-dual-box.candidate-error-box"
+    "selector": ".candidate-dual-box"
   },
   {
     "order": 1178,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-dual-box.candidate-correction-box"
+    "selector": ".candidate-dual-box.candidate-error-box"
   },
   {
     "order": 1179,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-error-input:focus"
+    "selector": ".candidate-dual-box.candidate-correction-box"
   },
   {
     "order": 1180,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-correction-input:focus"
+    "selector": ".candidate-error-input:focus"
   },
   {
     "order": 1181,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".correction-prompt-quote"
+    "selector": ".candidate-correction-input:focus"
   },
   {
     "order": 1182,
+    "source": "07-reports-and-question-layouts.css",
+    "conditions": [],
+    "selector": ".correction-prompt-quote"
+  },
+  {
+    "order": 1183,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [
       "(max-width: 768px)"
@@ -7152,249 +7158,249 @@
     "selector": ".dual-input-grid, .candidate-error-correction-grid"
   },
   {
-    "order": 1183,
+    "order": 1184,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder"
   },
   {
-    "order": 1184,
+    "order": 1185,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .template-header-bar"
   },
   {
-    "order": 1185,
+    "order": 1186,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".token-chip"
   },
   {
-    "order": 1186,
+    "order": 1187,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".token-chip.token-distractor"
   },
   {
-    "order": 1187,
+    "order": 1188,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".distractor-chip"
   },
   {
-    "order": 1188,
+    "order": 1189,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-remove-distractor-chip"
   },
   {
-    "order": 1189,
+    "order": 1190,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-remove-distractor-chip:hover"
   },
   {
-    "order": 1190,
+    "order": 1191,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-sentence-reorder-wrap"
   },
   {
-    "order": 1191,
+    "order": 1192,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-token-bank-header"
   },
   {
-    "order": 1192,
+    "order": 1193,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".token-bank-label"
   },
   {
-    "order": 1193,
+    "order": 1194,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-token-bank"
   },
   {
-    "order": 1194,
+    "order": 1195,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-token-chip"
   },
   {
-    "order": 1195,
+    "order": 1196,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-token-chip:hover:not(.is-used)"
   },
   {
-    "order": 1196,
+    "order": 1197,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-token-chip:active:not(.is-used)"
   },
   {
-    "order": 1197,
+    "order": 1198,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-token-chip.is-used"
   },
   {
-    "order": 1198,
+    "order": 1199,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".assembly-input-wrap"
   },
   {
-    "order": 1199,
+    "order": 1200,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-reorder-input"
   },
   {
-    "order": 1200,
+    "order": 1201,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-reorder-input:focus"
   },
   {
-    "order": 1201,
+    "order": 1202,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-clear-assembly"
   },
   {
-    "order": 1202,
+    "order": 1203,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".reorder-prompt-quote"
   },
   {
-    "order": 1203,
+    "order": 1204,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation"
   },
   {
-    "order": 1204,
+    "order": 1205,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .template-header-bar"
   },
   {
-    "order": 1205,
+    "order": 1206,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".input-transformation-keyword"
   },
   {
-    "order": 1206,
-    "source": "07-reports-and-question-layouts.css",
-    "conditions": [],
-    "selector": ".transformation-frame-inputs"
-  },
-  {
     "order": 1207,
     "source": "07-reports-and-question-layouts.css",
-    "conditions": [
-      "(max-width: 640px)"
-    ],
+    "conditions": [],
     "selector": ".transformation-frame-inputs"
   },
   {
     "order": 1208,
     "source": "07-reports-and-question-layouts.css",
-    "conditions": [],
-    "selector": ".transformation-frame-preview"
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".transformation-frame-inputs"
   },
   {
     "order": 1209,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".transformation-frame-preview .frame-preview-title"
+    "selector": ".transformation-frame-preview"
   },
   {
     "order": 1210,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".transformation-frame-preview .frame-preview-content"
+    "selector": ".transformation-frame-preview .frame-preview-title"
   },
   {
     "order": 1211,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".frame-blank-placeholder"
+    "selector": ".transformation-frame-preview .frame-preview-content"
   },
   {
     "order": 1212,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-transformation-wrap"
+    "selector": ".frame-blank-placeholder"
   },
   {
     "order": 1213,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".transformation-keyword-row"
+    "selector": ".candidate-transformation-wrap"
   },
   {
     "order": 1214,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".keyword-badge-pill"
+    "selector": ".transformation-keyword-row"
   },
   {
     "order": 1215,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-frame-box"
+    "selector": ".keyword-badge-pill"
   },
   {
     "order": 1216,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".frame-prefix-text, .frame-suffix-text"
+    "selector": ".candidate-frame-box"
   },
   {
     "order": 1217,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-transformation-input"
+    "selector": ".frame-prefix-text, .frame-suffix-text"
   },
   {
     "order": 1218,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".candidate-transformation-input:focus"
+    "selector": ".candidate-transformation-input"
   },
   {
     "order": 1219,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".transformation-prompt-quote"
+    "selector": ".candidate-transformation-input:focus"
   },
   {
     "order": 1220,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".template-pronunciation-ipa"
+    "selector": ".transformation-prompt-quote"
   },
   {
     "order": 1221,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".template-pronunciation-ipa .template-header-bar"
+    "selector": ".template-pronunciation-ipa"
   },
   {
     "order": 1222,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
-    "selector": ".pronunciation-grid-inputs"
+    "selector": ".template-pronunciation-ipa .template-header-bar"
   },
   {
     "order": 1223,
+    "source": "07-reports-and-question-layouts.css",
+    "conditions": [],
+    "selector": ".pronunciation-grid-inputs"
+  },
+  {
+    "order": 1224,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [
       "(max-width: 640px)"
@@ -7402,900 +7408,892 @@
     "selector": ".pronunciation-grid-inputs"
   },
   {
-    "order": 1224,
+    "order": 1225,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".ipa-symbol-keyboard-panel"
   },
   {
-    "order": 1225,
+    "order": 1226,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".ipa-keyboard-header"
   },
   {
-    "order": 1226,
+    "order": 1227,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".ipa-symbol-keyboard"
   },
   {
-    "order": 1227,
+    "order": 1228,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-ipa-symbol"
   },
   {
-    "order": 1228,
+    "order": 1229,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".btn-ipa-symbol:hover"
   },
   {
-    "order": 1229,
+    "order": 1230,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".ipa-phonetic-badge-wrap"
   },
   {
-    "order": 1230,
+    "order": 1231,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".ipa-phonetic-badge"
   },
   {
-    "order": 1231,
+    "order": 1232,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".pronunciation-options-section"
   },
   {
-    "order": 1232,
+    "order": 1233,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".pronunciation-option-row"
   },
   {
-    "order": 1233,
+    "order": 1234,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".input-pron-option-label"
   },
   {
-    "order": 1234,
+    "order": 1235,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-pronunciation-wrap"
   },
   {
-    "order": 1235,
+    "order": 1236,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-ipa-display-dock"
   },
   {
-    "order": 1236,
+    "order": 1237,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-ipa-badge"
   },
   {
-    "order": 1237,
+    "order": 1238,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-ipa-audio-btn"
   },
   {
-    "order": 1238,
+    "order": 1239,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .pronunciation-grid-inputs"
   },
   {
-    "order": 1239,
+    "order": 1240,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa > .form-group"
   },
   {
-    "order": 1240,
+    "order": 1241,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .form-control.input-ipa-transcription"
   },
   {
-    "order": 1241,
+    "order": 1242,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .ipa-symbol-keyboard-panel"
   },
   {
-    "order": 1242,
+    "order": 1243,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .ipa-keyboard-header"
   },
   {
-    "order": 1243,
+    "order": 1244,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .ipa-symbol-keyboard"
   },
   {
-    "order": 1244,
+    "order": 1245,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .ipa-phonetic-badge-wrap"
   },
   {
-    "order": 1245,
+    "order": 1246,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .ipa-preview-label"
   },
   {
-    "order": 1246,
+    "order": 1247,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .ipa-phonetic-badge"
   },
   {
-    "order": 1247,
+    "order": 1248,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .pronunciation-options-section"
   },
   {
-    "order": 1248,
+    "order": 1249,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .pronunciation-options-list"
   },
   {
-    "order": 1249,
+    "order": 1250,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pronunciation-ipa .options-actions"
   },
   {
-    "order": 1250,
+    "order": 1251,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation > .form-group"
   },
   {
-    "order": 1251,
+    "order": 1252,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .form-control.input-transformation-keyword"
   },
   {
-    "order": 1252,
+    "order": 1253,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .transformation-frame-inputs"
   },
   {
-    "order": 1253,
+    "order": 1254,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .transformation-frame-inputs + .form-group"
   },
   {
-    "order": 1254,
+    "order": 1255,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .transformation-frame-preview"
   },
   {
-    "order": 1255,
+    "order": 1256,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .frame-preview-title"
   },
   {
-    "order": 1256,
+    "order": 1257,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .frame-preview-content"
   },
   {
-    "order": 1257,
+    "order": 1258,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .frame-prefix-text"
   },
   {
-    "order": 1258,
+    "order": 1259,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .frame-blank-placeholder"
   },
   {
-    "order": 1259,
+    "order": 1260,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .frame-suffix-text"
   },
   {
-    "order": 1260,
+    "order": 1261,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-transformation .variant-chips-container"
   },
   {
-    "order": 1261,
+    "order": 1262,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder > .form-group"
   },
   {
-    "order": 1262,
+    "order": 1263,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder > .form-group + .form-group"
   },
   {
-    "order": 1263,
+    "order": 1264,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .reorder-tokens-hint"
   },
   {
-    "order": 1264,
+    "order": 1265,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .scrambled-preview-box"
   },
   {
-    "order": 1265,
+    "order": 1266,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .scrambled-title-bar"
   },
   {
-    "order": 1266,
+    "order": 1267,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .preview-mini-label"
   },
   {
-    "order": 1267,
+    "order": 1268,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .scramble-refresh-hint"
   },
   {
-    "order": 1268,
+    "order": 1269,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .scrambled-tokens-pool"
   },
   {
-    "order": 1269,
+    "order": 1270,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .distractors-manager-box"
   },
   {
-    "order": 1270,
+    "order": 1271,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .distractor-chips-wrap"
   },
   {
-    "order": 1271,
+    "order": 1272,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .distractor-chips-wrap > span:not(.distractor-chip)"
   },
   {
-    "order": 1272,
+    "order": 1273,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-sentence-reorder .variant-chips-container"
   },
   {
-    "order": 1273,
+    "order": 1274,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".candidate-pronunciation-wrap .candidate-ipa-audio-status"
   },
   {
-    "order": 1274,
+    "order": 1275,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#candidate-simulation-modal .candidate-pronunciation-wrap .ipa-inline-audio"
   },
   {
-    "order": 1275,
+    "order": 1276,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#candidate-simulation-modal .candidate-pronunciation-wrap .candidate-pron-options-grid"
   },
   {
-    "order": 1276,
+    "order": 1277,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#candidate-simulation-modal .candidate-transformation-wrap .transformation-keyword-row"
   },
   {
-    "order": 1277,
+    "order": 1278,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#candidate-simulation-modal .candidate-transformation-wrap .keyword-label"
   },
   {
-    "order": 1278,
+    "order": 1279,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-error-correction .scoring-rule-selector .form-label"
   },
   {
-    "order": 1279,
+    "order": 1280,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-error-correction .variant-chips-container"
   },
   {
-    "order": 1280,
+    "order": 1281,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-reading-matching .rich-html-editor-wrap"
   },
   {
-    "order": 1281,
+    "order": 1282,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-reading-matching .matching-headings-pool"
   },
   {
-    "order": 1282,
+    "order": 1283,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-reading-matching .options-actions"
   },
   {
-    "order": 1283,
+    "order": 1284,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-listening-order .template-header-bar"
   },
   {
-    "order": 1284,
+    "order": 1285,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-listening-order .options-actions"
   },
   {
-    "order": 1285,
+    "order": 1286,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .cloze-live-preview-box"
   },
   {
-    "order": 1286,
+    "order": 1287,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .preview-mini-label"
   },
   {
-    "order": 1287,
+    "order": 1288,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .cloze-preview-content"
   },
   {
-    "order": 1288,
+    "order": 1289,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .cloze-answers-config"
   },
   {
-    "order": 1289,
+    "order": 1290,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .cloze-blank-config-card"
   },
   {
-    "order": 1290,
+    "order": 1291,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .cloze-blank-header"
   },
   {
-    "order": 1291,
+    "order": 1292,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .cloze-blank-badge"
   },
   {
-    "order": 1292,
+    "order": 1293,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .variant-chips-container"
   },
   {
-    "order": 1293,
+    "order": 1294,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .chips-meta-bar"
   },
   {
-    "order": 1294,
+    "order": 1295,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .chips-count-badge"
   },
   {
-    "order": 1295,
+    "order": 1296,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .quick-add-variant"
   },
   {
-    "order": 1296,
+    "order": 1297,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-inline-cloze .variant-chips-wrap"
   },
   {
-    "order": 1297,
+    "order": 1298,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pictorial-vocab .pictorial-preview-wrap"
   },
   {
-    "order": 1298,
+    "order": 1299,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pictorial-vocab .pictorial-preview-error"
   },
   {
-    "order": 1299,
+    "order": 1300,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-pictorial-vocab > .variant-chips-container"
   },
   {
-    "order": 1300,
+    "order": 1301,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .ai-inherited-context-notice"
   },
   {
-    "order": 1301,
+    "order": 1302,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .ai-reference-context-group"
   },
   {
-    "order": 1302,
+    "order": 1303,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .ai-reference-context-header"
   },
   {
-    "order": 1303,
+    "order": 1304,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .ai-reference-context-header .form-label"
   },
   {
-    "order": 1304,
+    "order": 1305,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .ai-reference-context-group .form-hint"
   },
   {
-    "order": 1305,
+    "order": 1306,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .rubric-tab-content"
   },
   {
-    "order": 1306,
+    "order": 1307,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .criteria-actions"
   },
   {
-    "order": 1307,
+    "order": 1308,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .criterion-header-right .form-label"
   },
   {
-    "order": 1308,
+    "order": 1309,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".template-rubric-async .criterion-card-body .form-label"
   },
   {
-    "order": 1309,
+    "order": 1310,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-title"
   },
   {
-    "order": 1310,
+    "order": 1311,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .modal-batch-vocab-header h3"
   },
   {
-    "order": 1311,
+    "order": 1312,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-notice"
   },
   {
-    "order": 1312,
+    "order": 1313,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-file-actions"
   },
   {
-    "order": 1313,
+    "order": 1314,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-hidden"
   },
   {
-    "order": 1314,
+    "order": 1315,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-hint"
   },
   {
-    "order": 1315,
+    "order": 1316,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-csv-field"
   },
   {
-    "order": 1316,
+    "order": 1317,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-csv-label"
   },
   {
-    "order": 1317,
+    "order": 1318,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-preview-summary"
   },
   {
-    "order": 1318,
+    "order": 1319,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-options"
   },
   {
-    "order": 1319,
+    "order": 1320,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .modal-batch-vocab-footer"
   },
   {
-    "order": 1320,
+    "order": 1321,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-footer-actions"
   },
   {
-    "order": 1321,
+    "order": 1322,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-preview-error"
   },
   {
-    "order": 1322,
+    "order": 1323,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-preview-success"
   },
   {
-    "order": 1323,
+    "order": 1324,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": "#batch-vocab-pair-modal .vocab-batch-preview-warning"
   },
   {
-    "order": 1324,
+    "order": 1325,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".builder-exercise-body .exercise-reference-context-field"
   },
   {
-    "order": 1325,
+    "order": 1326,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".exercise-reference-context-field .exercise-reference-context-header"
   },
   {
-    "order": 1326,
+    "order": 1327,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".exercise-reference-context-header .form-label"
   },
   {
-    "order": 1327,
+    "order": 1328,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".exercise-reference-context-header .exercise-reference-context-badge"
   },
   {
-    "order": 1328,
+    "order": 1329,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".exercise-reference-context-field .exercise-reference-context-hint"
   },
   {
-    "order": 1329,
+    "order": 1330,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".sandbox-errors-breakdown .error-pill"
   },
   {
-    "order": 1330,
+    "order": 1331,
     "source": "07-reports-and-question-layouts.css",
     "conditions": [],
     "selector": ".sandbox-results-container .sandbox-error-text"
   },
   {
-    "order": 1331,
+    "order": 1332,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-top-right"
   },
   {
-    "order": 1332,
+    "order": 1333,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-top-right .btn, #btn-preview-test, #btn-save-draft, #btn-publish-test"
   },
   {
-    "order": 1333,
+    "order": 1334,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": "#btn-preview-test"
   },
   {
-    "order": 1334,
+    "order": 1335,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": "#btn-preview-test:hover:not(:disabled)"
   },
   {
-    "order": 1335,
+    "order": 1336,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": "#btn-save-draft, button.btn-save-draft"
   },
   {
-    "order": 1336,
+    "order": 1337,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": "#btn-save-draft:hover:not(:disabled), button.btn-save-draft:hover:not(:disabled)"
   },
   {
-    "order": 1337,
+    "order": 1338,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": "#btn-save-draft:disabled, button.btn-save-draft:disabled"
   },
   {
-    "order": 1338,
+    "order": 1339,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": "#btn-publish-test, button.btn-publish-test"
   },
   {
-    "order": 1339,
+    "order": 1340,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": "#btn-publish-test:hover:not(:disabled), button.btn-publish-test:hover:not(:disabled)"
   },
   {
-    "order": 1340,
+    "order": 1341,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-status-pill"
   },
   {
-    "order": 1341,
+    "order": 1342,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-status-pill.saving"
   },
   {
-    "order": 1342,
+    "order": 1343,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-status-pill.success"
   },
   {
-    "order": 1343,
+    "order": 1344,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-status-pill.forked"
   },
   {
-    "order": 1344,
+    "order": 1345,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-status-pill.error"
   },
   {
-    "order": 1345,
+    "order": 1346,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".builder-status-pill.unsaved"
   },
   {
-    "order": 1346,
+    "order": 1347,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".icon-inline.spin"
   },
   {
-    "order": 1347,
+    "order": 1348,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".candidate-simulation-overlay"
   },
   {
-    "order": 1348,
+    "order": 1349,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".candidate-simulation-shell, .candidate-simulation-dialog"
   },
   {
-    "order": 1349,
+    "order": 1350,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar, .simulation-top-header"
   },
   {
-    "order": 1350,
+    "order": 1351,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .topbar-inner"
   },
   {
-    "order": 1351,
+    "order": 1352,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .brand, .simulation-top-header .sim-title-area"
   },
   {
-    "order": 1352,
+    "order": 1353,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .brand-mark"
   },
   {
-    "order": 1353,
+    "order": 1354,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .brand-copy"
   },
   {
-    "order": 1354,
+    "order": 1355,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .brand-title"
   },
   {
-    "order": 1355,
+    "order": 1356,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .brand-sub"
   },
   {
-    "order": 1356,
+    "order": 1357,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .top-actions, .simulation-top-header .sim-meta-badges"
   },
   {
-    "order": 1357,
+    "order": 1358,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .preview-badge"
   },
   {
-    "order": 1358,
+    "order": 1359,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .meta-pill"
   },
   {
-    "order": 1359,
+    "order": 1360,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".simulation-topbar .meta-pill .icon-inline"
   },
   {
-    "order": 1360,
+    "order": 1361,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".section-nav-wrap"
   },
   {
-    "order": 1361,
+    "order": 1362,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".section-nav-wrap::-webkit-scrollbar"
   },
   {
-    "order": 1362,
+    "order": 1363,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".section-nav, .simulation-nav-bar"
   },
   {
-    "order": 1363,
+    "order": 1364,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".section-tab, .simulation-nav-pill"
   },
   {
-    "order": 1364,
+    "order": 1365,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".section-tab:hover, .simulation-nav-pill:hover"
   },
   {
-    "order": 1365,
+    "order": 1366,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".section-tab.active, .simulation-nav-pill.active"
   },
   {
-    "order": 1366,
+    "order": 1367,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
     "selector": ".section-tab .tab-count"
   },
   {
-    "order": 1367,
-    "source": "08-studio-simulation-shell.css",
-    "conditions": [],
-    "selector": ".exam-layout"
-  },
-  {
     "order": 1368,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exam-layout::-webkit-scrollbar"
+    "selector": ".exam-layout"
   },
   {
     "order": 1369,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exam-layout::-webkit-scrollbar-track"
+    "selector": ".exam-layout::-webkit-scrollbar"
   },
   {
     "order": 1370,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exam-layout::-webkit-scrollbar-thumb"
+    "selector": ".exam-layout::-webkit-scrollbar-track"
   },
   {
     "order": 1371,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exam-layout::-webkit-scrollbar-thumb:hover"
+    "selector": ".exam-layout::-webkit-scrollbar-thumb"
   },
   {
     "order": 1372,
     "source": "08-studio-simulation-shell.css",
-    "conditions": [
-      "(max-width: 900px)"
-    ],
-    "selector": ".exam-layout"
+    "conditions": [],
+    "selector": ".exam-layout::-webkit-scrollbar-thumb:hover"
   },
   {
     "order": 1373,
@@ -8303,1894 +8301,1902 @@
     "conditions": [
       "(max-width: 900px)"
     ],
-    "selector": "#candidate-simulation-modal .exam-layout"
+    "selector": ".exam-layout"
   },
   {
     "order": 1374,
     "source": "08-studio-simulation-shell.css",
-    "conditions": [],
-    "selector": ".main-column, .simulation-viewport"
+    "conditions": [
+      "(max-width: 900px)"
+    ],
+    "selector": "#candidate-simulation-modal .exam-layout"
   },
   {
     "order": 1375,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel"
+    "selector": ".main-column, .simulation-viewport"
   },
   {
     "order": 1376,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .panel-card"
+    "selector": ".side-panel"
   },
   {
     "order": 1377,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .progress-row"
+    "selector": ".side-panel .panel-card"
   },
   {
     "order": 1378,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .progress-track"
+    "selector": ".side-panel .progress-row"
   },
   {
     "order": 1379,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .progress-fill"
+    "selector": ".side-panel .progress-track"
   },
   {
     "order": 1380,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .section-list"
+    "selector": ".side-panel .progress-fill"
   },
   {
     "order": 1381,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .side-section-btn"
+    "selector": ".side-panel .section-list"
   },
   {
     "order": 1382,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .side-section-btn:hover"
+    "selector": ".side-panel .side-section-btn"
   },
   {
     "order": 1383,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .side-section-btn.active"
+    "selector": ".side-panel .side-section-btn:hover"
   },
   {
     "order": 1384,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".side-panel .side-count"
+    "selector": ".side-panel .side-section-btn.active"
   },
   {
     "order": 1385,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-notice-text"
+    "selector": ".side-panel .side-count"
   },
   {
     "order": 1386,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".section-page"
+    "selector": ".sim-notice-text"
   },
   {
     "order": 1387,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".section-page.active"
+    "selector": ".section-page"
   },
   {
     "order": 1388,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exercise"
+    "selector": ".section-page.active"
   },
   {
     "order": 1389,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exercise-head, .sim-section-header"
+    "selector": ".exercise"
   },
   {
     "order": 1390,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exercise-head h2, .sim-section-header h3"
+    "selector": ".exercise-head, .sim-section-header"
   },
   {
     "order": 1391,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".exercise-head p, .sim-instructions"
+    "selector": ".exercise-head h2, .sim-section-header h3"
   },
   {
     "order": 1392,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".points"
+    "selector": ".exercise-head p, .sim-instructions"
   },
   {
     "order": 1393,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".audio-dock, .sim-audio-dock"
+    "selector": ".points"
   },
   {
     "order": 1394,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".audio-dock-controls"
+    "selector": ".audio-dock, .sim-audio-dock"
   },
   {
     "order": 1395,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-sim-audio-play"
+    "selector": ".audio-dock-controls"
   },
   {
     "order": 1396,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-sim-audio-play:hover"
+    "selector": ".btn-sim-audio-play"
   },
   {
     "order": 1397,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".audio-note"
+    "selector": ".btn-sim-audio-play:hover"
   },
   {
     "order": 1398,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".candidate-question-card"
+    "selector": ".audio-note"
   },
   {
     "order": 1399,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".candidate-question-card:hover"
+    "selector": ".candidate-question-card"
   },
   {
     "order": 1400,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".candidate-question-header"
+    "selector": ".candidate-question-card:hover"
   },
   {
     "order": 1401,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".qnum, .question-num-badge"
+    "selector": ".candidate-question-header"
   },
   {
     "order": 1402,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".question-type-badge"
+    "selector": ".qnum, .question-num-badge"
   },
   {
     "order": 1403,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".candidate-question-prompt"
+    "selector": ".question-type-badge"
   },
   {
     "order": 1404,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".candidate-question-prompt p"
+    "selector": ".candidate-question-prompt"
   },
   {
     "order": 1405,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".candidate-question-prompt p:last-child"
+    "selector": ".candidate-question-prompt p"
   },
   {
     "order": 1406,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-reading-dock"
+    "selector": ".candidate-question-prompt p:last-child"
   },
   {
     "order": 1407,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".reading-header"
+    "selector": ".sim-reading-dock"
   },
   {
     "order": 1408,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".reading-content"
+    "selector": ".reading-header"
   },
   {
     "order": 1409,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".simulation-footer"
+    "selector": ".reading-content"
   },
   {
     "order": 1410,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".footer-note"
+    "selector": ".simulation-footer"
   },
   {
     "order": 1411,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#btn-close-simulation-footer"
+    "selector": ".footer-note"
   },
   {
     "order": 1412,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#btn-close-simulation-footer:hover"
+    "selector": "#btn-close-simulation-footer"
   },
   {
     "order": 1413,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".question-navigator-card"
+    "selector": "#btn-close-simulation-footer:hover"
   },
   {
     "order": 1414,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".navigator-header"
+    "selector": ".question-navigator-card"
   },
   {
     "order": 1415,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".navigator-header strong"
+    "selector": ".navigator-header"
   },
   {
     "order": 1416,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".navigator-summary"
+    "selector": ".navigator-header strong"
   },
   {
     "order": 1417,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".question-navigator-grid"
+    "selector": ".navigator-summary"
   },
   {
     "order": 1418,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-qnav"
+    "selector": ".question-navigator-grid"
   },
   {
     "order": 1419,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-qnav:hover"
+    "selector": ".btn-qnav"
   },
   {
     "order": 1420,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-qnav.answered"
+    "selector": ".btn-qnav:hover"
   },
   {
     "order": 1421,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-qnav.is-correct"
+    "selector": ".btn-qnav.answered"
   },
   {
     "order": 1422,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-qnav.is-incorrect"
+    "selector": ".btn-qnav.is-correct"
   },
   {
     "order": 1423,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".nav-focus-pulse"
+    "selector": ".btn-qnav.is-incorrect"
   },
   {
     "order": 1424,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".timeline-slot-card .slot-badge"
+    "selector": ".nav-focus-pulse"
   },
   {
     "order": 1425,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".simulation-results-modal"
+    "selector": ".timeline-slot-card .slot-badge"
   },
   {
     "order": 1426,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-results-dialog"
+    "selector": ".simulation-results-modal"
   },
   {
     "order": 1427,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-results-header"
+    "selector": ".sim-results-dialog"
   },
   {
     "order": 1428,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-results-title-wrap h3"
+    "selector": ".sim-results-header"
   },
   {
     "order": 1429,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-results-badge"
+    "selector": ".sim-results-title-wrap h3"
   },
   {
     "order": 1430,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-close-sim-results"
+    "selector": ".sim-results-badge"
   },
   {
     "order": 1431,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".btn-close-sim-results:hover"
+    "selector": ".btn-close-sim-results"
   },
   {
     "order": 1432,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-results-body"
+    "selector": ".btn-close-sim-results:hover"
   },
   {
     "order": 1433,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-score-banner"
+    "selector": ".sim-results-body"
   },
   {
     "order": 1434,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".score-banner-title"
+    "selector": ".sim-score-banner"
   },
   {
     "order": 1435,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".score-banner-value"
+    "selector": ".score-banner-title"
   },
   {
     "order": 1436,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".score-banner-sub"
+    "selector": ".score-banner-value"
   },
   {
     "order": 1437,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-breakdown-table-wrap"
+    "selector": ".score-banner-sub"
   },
   {
     "order": 1438,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-breakdown-table"
+    "selector": ".sim-breakdown-table-wrap"
   },
   {
     "order": 1439,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-breakdown-table th"
+    "selector": ".sim-breakdown-table"
   },
   {
     "order": 1440,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-breakdown-table td"
+    "selector": ".sim-breakdown-table th"
   },
   {
     "order": 1441,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-breakdown-table tr:last-child td"
+    "selector": ".sim-breakdown-table td"
   },
   {
     "order": 1442,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-breakdown-table tr.row-correct"
+    "selector": ".sim-breakdown-table tr:last-child td"
   },
   {
     "order": 1443,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-breakdown-table tr.row-incorrect"
+    "selector": ".sim-breakdown-table tr.row-correct"
   },
   {
     "order": 1444,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".type-badge"
+    "selector": ".sim-breakdown-table tr.row-incorrect"
   },
   {
     "order": 1445,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".correct-badge"
+    "selector": ".type-badge"
   },
   {
     "order": 1446,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".status-correct"
+    "selector": ".correct-badge"
   },
   {
     "order": 1447,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".status-incorrect"
+    "selector": ".status-correct"
   },
   {
     "order": 1448,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".sim-results-footer"
+    "selector": ".status-incorrect"
   },
   {
     "order": 1449,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .sim-section-lead-head"
+    "selector": ".sim-results-footer"
   },
   {
     "order": 1450,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .sim-section-lead-head > h2"
+    "selector": "#candidate-simulation-modal .sim-section-lead-head"
   },
   {
     "order": 1451,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .sim-section-lead-head .sim-instructions > p"
+    "selector": "#candidate-simulation-modal .sim-section-lead-head > h2"
   },
   {
     "order": 1452,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .sim-section-lead-head .sim-audio-dock"
+    "selector": "#candidate-simulation-modal .sim-section-lead-head .sim-instructions > p"
   },
   {
     "order": 1453,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .sim-section-lead-head .sim-reading-dock"
+    "selector": "#candidate-simulation-modal .sim-section-lead-head .sim-audio-dock"
   },
   {
     "order": 1454,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .progress-fill"
+    "selector": "#candidate-simulation-modal .sim-section-lead-head .sim-reading-dock"
   },
   {
     "order": 1455,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .footer-actions"
+    "selector": "#candidate-simulation-modal .progress-fill"
   },
   {
     "order": 1456,
     "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": "#candidate-simulation-modal .simulation-results-modal"
+    "selector": "#candidate-simulation-modal .footer-actions"
   },
   {
     "order": 1457,
-    "source": "09-editor-media.css",
+    "source": "08-studio-simulation-shell.css",
     "conditions": [],
-    "selector": ".block-exercises-container"
+    "selector": "#candidate-simulation-modal .simulation-results-modal"
   },
   {
     "order": 1458,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".builder-exercise-card"
+    "selector": ".block-exercises-container"
   },
   {
     "order": 1459,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".builder-exercise-card:hover"
+    "selector": ".builder-exercise-card"
   },
   {
     "order": 1460,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".builder-exercise-header"
+    "selector": ".builder-exercise-card:hover"
   },
   {
     "order": 1461,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-header-left"
+    "selector": ".builder-exercise-header"
   },
   {
     "order": 1462,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-badge"
+    "selector": ".exercise-header-left"
   },
   {
     "order": 1463,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-title-input"
+    "selector": ".exercise-badge"
   },
   {
     "order": 1464,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-items-count"
+    "selector": ".exercise-title-input"
   },
   {
     "order": 1465,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-header-actions"
+    "selector": ".exercise-items-count"
   },
   {
     "order": 1466,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".builder-exercise-body"
+    "selector": ".exercise-header-actions"
   },
   {
     "order": 1467,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-instructions-input"
+    "selector": ".builder-exercise-body"
   },
   {
     "order": 1468,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-items-list"
+    "selector": ".exercise-instructions-input"
   },
   {
     "order": 1469,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-add-item-bar"
+    "selector": ".exercise-items-list"
   },
   {
     "order": 1470,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".btn-add-exercise"
+    "selector": ".exercise-add-item-bar"
   },
   {
     "order": 1471,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".btn-add-exercise:hover"
+    "selector": ".btn-add-exercise"
   },
   {
     "order": 1472,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".section-exercises-wrapper"
+    "selector": ".btn-add-exercise:hover"
   },
   {
     "order": 1473,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-head h3"
+    "selector": ".section-exercises-wrapper"
   },
   {
     "order": 1474,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table, .inline-cloze-table"
+    "selector": ".exercise-head h3"
   },
   {
     "order": 1475,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table th, .cloze-table td, .inline-cloze-table th, .inline-cloze-table td"
+    "selector": ".cloze-table, .inline-cloze-table"
   },
   {
     "order": 1476,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table thead th, .inline-cloze-table thead th"
+    "selector": ".cloze-table th, .cloze-table td, .inline-cloze-table th, .inline-cloze-table td"
   },
   {
     "order": 1477,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table tbody tr:nth-child(2n), .inline-cloze-table tbody tr:nth-child(2n)"
+    "selector": ".cloze-table thead th, .inline-cloze-table thead th"
   },
   {
     "order": 1478,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table tbody tr:hover, .inline-cloze-table tbody tr:hover"
+    "selector": ".cloze-table tbody tr:nth-child(2n), .inline-cloze-table tbody tr:nth-child(2n)"
   },
   {
     "order": 1479,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table .inline-blank-wrapper, .inline-cloze-table .inline-blank-wrapper"
+    "selector": ".cloze-table tbody tr:hover, .inline-cloze-table tbody tr:hover"
   },
   {
     "order": 1480,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table .inline-fill-input, .inline-cloze-table .inline-fill-input"
+    "selector": ".cloze-table .inline-blank-wrapper, .inline-cloze-table .inline-blank-wrapper"
   },
   {
     "order": 1481,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".pictorial-preview-wrap"
+    "selector": ".cloze-table .inline-fill-input, .inline-cloze-table .inline-fill-input"
   },
   {
     "order": 1482,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".pictorial-preview-img"
+    "selector": ".pictorial-preview-wrap"
   },
   {
     "order": 1483,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".pictorial-preview-error"
+    "selector": ".pictorial-preview-img"
   },
   {
     "order": 1484,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor, .rich-html-editor-wrap"
+    "selector": ".pictorial-preview-error"
   },
   {
     "order": 1485,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor:focus-within, .rich-html-editor-wrap:focus-within"
+    "selector": ".rich-editor, .rich-html-editor-wrap"
   },
   {
     "order": 1486,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__toolbar, .rich-editor-toolbar"
+    "selector": ".rich-editor:focus-within, .rich-html-editor-wrap:focus-within"
   },
   {
     "order": 1487,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__toolbar-left, .toolbar-group"
+    "selector": ".rich-editor__toolbar, .rich-editor-toolbar"
   },
   {
     "order": 1488,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor button, .rich-editor-toolbar .btn, .btn-editor-action"
+    "selector": ".rich-editor__toolbar-left, .toolbar-group"
   },
   {
     "order": 1489,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor button:hover, .rich-editor-toolbar .btn:hover, .btn-editor-action:hover"
+    "selector": ".rich-editor button, .rich-editor-toolbar .btn, .btn-editor-action"
   },
   {
     "order": 1490,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".btn-editor-action.active"
+    "selector": ".rich-editor button:hover, .rich-editor-toolbar .btn:hover, .btn-editor-action:hover"
   },
   {
     "order": 1491,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".control-heading-select"
+    "selector": ".btn-editor-action.active"
   },
   {
     "order": 1492,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".select-format-heading"
+    "selector": ".control-heading-select"
   },
   {
     "order": 1493,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".select-format-heading:focus"
+    "selector": ".select-format-heading"
   },
   {
     "order": 1494,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".toolbar-divider"
+    "selector": ".select-format-heading:focus"
   },
   {
     "order": 1495,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor button:focus-visible, .rich-editor input:focus-visible"
+    "selector": ".toolbar-divider"
   },
   {
     "order": 1496,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__control, .dropdown-table-wrap"
+    "selector": ".rich-editor button:focus-visible, .rich-editor input:focus-visible"
   },
   {
     "order": 1497,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup, .table-presets-menu"
+    "selector": ".rich-editor__control, .dropdown-table-wrap"
   },
   {
     "order": 1498,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup strong"
+    "selector": ".rich-editor__popup, .table-presets-menu"
   },
   {
     "order": 1499,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup label"
+    "selector": ".rich-editor__popup strong"
   },
   {
     "order": 1500,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup input"
+    "selector": ".rich-editor__popup label"
   },
   {
     "order": 1501,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup small"
+    "selector": ".rich-editor__popup input"
   },
   {
     "order": 1502,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__table-options"
+    "selector": ".rich-editor__popup small"
   },
   {
     "order": 1503,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__table-options button, .table-presets-menu .btn-table-grid"
+    "selector": ".rich-editor__table-options"
   },
   {
     "order": 1504,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__table-options button:hover, .table-presets-menu .btn-table-grid:hover"
+    "selector": ".rich-editor__table-options button, .table-presets-menu .btn-table-grid"
   },
   {
     "order": 1505,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__presets-section"
+    "selector": ".rich-editor__table-options button:hover, .table-presets-menu .btn-table-grid:hover"
   },
   {
     "order": 1506,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__presets-section button, .table-presets-menu .btn-table-preset"
+    "selector": ".rich-editor__presets-section"
   },
   {
     "order": 1507,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__presets-section button:hover, .table-presets-menu .btn-table-preset:hover"
+    "selector": ".rich-editor__presets-section button, .table-presets-menu .btn-table-preset"
   },
   {
     "order": 1508,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__actions"
+    "selector": ".rich-editor__presets-section button:hover, .table-presets-menu .btn-table-preset:hover"
   },
   {
     "order": 1509,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__actions button"
+    "selector": ".rich-editor__actions"
   },
   {
     "order": 1510,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__actions button:hover"
+    "selector": ".rich-editor__actions button"
   },
   {
     "order": 1511,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content, .rich-editor-visual"
+    "selector": ".rich-editor__actions button:hover"
   },
   {
     "order": 1512,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__code, .rich-editor-code"
+    "selector": ".rich-editor__content, .rich-editor-visual"
   },
   {
     "order": 1513,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content img, .rich-editor-visual img, .rich-content img"
+    "selector": ".rich-editor__code, .rich-editor-code"
   },
   {
     "order": 1514,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content table, .rich-editor-visual table, .rich-content table"
+    "selector": ".rich-editor__content img, .rich-editor-visual img, .rich-content img"
   },
   {
     "order": 1515,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content th, .rich-editor__content td, .rich-editor-visual th, .rich-editor-visual td, .rich-content th, .rich-content td"
+    "selector": ".rich-editor__content table, .rich-editor-visual table, .rich-content table"
   },
   {
     "order": 1516,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content th, .rich-editor-visual th, .rich-content th"
+    "selector": ".rich-editor__content th, .rich-editor__content td, .rich-editor-visual th, .rich-editor-visual td, .rich-content th, .rich-content td"
   },
   {
     "order": 1517,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content tbody tr:nth-child(2n), .rich-editor-visual tbody tr:nth-child(2n), .rich-content tbody tr:nth-child(2n)"
+    "selector": ".rich-editor__content th, .rich-editor-visual th, .rich-content th"
   },
   {
     "order": 1518,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__error"
+    "selector": ".rich-editor__content tbody tr:nth-child(2n), .rich-editor-visual tbody tr:nth-child(2n), .rich-content tbody tr:nth-child(2n)"
   },
   {
     "order": 1519,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__footer"
+    "selector": ".rich-editor__error"
   },
   {
     "order": 1520,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor .rich-editor__content-area"
+    "selector": ".rich-editor__footer"
   },
   {
     "order": 1521,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor .popup-image-error"
+    "selector": ".rich-editor .rich-editor__content-area"
   },
   {
     "order": 1522,
-    "source": "10-studio-overrides.css",
+    "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".btn-icon, .btn.btn-icon, button.btn-icon, .btn-toggle-block-collapse, .btn-toggle-exercise-collapse, .btn-toggle-item-collapse, .btn-move-block-up, .btn-move-block-down, .btn-delete-block, .btn-move-exercise-up, .btn-move-exercise-down, .btn-delete-exercise, .btn-move-item-up, .btn-move-item-down, .btn-delete-item, .btn-close-batch-modal"
+    "selector": ".rich-editor .popup-image-error"
   },
   {
     "order": 1523,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".btn-icon:hover:not(:disabled), .btn.btn-icon:hover:not(:disabled), button.btn-icon:hover:not(:disabled), .btn-toggle-block-collapse:hover:not(:disabled), .btn-toggle-exercise-collapse:hover:not(:disabled), .btn-toggle-item-collapse:hover:not(:disabled), .btn-move-block-up:hover:not(:disabled), .btn-move-block-down:hover:not(:disabled), .btn-move-exercise-up:hover:not(:disabled), .btn-move-exercise-down:hover:not(:disabled), .btn-move-item-up:hover:not(:disabled), .btn-move-item-down:hover:not(:disabled), .btn-close-batch-modal:hover:not(:disabled)"
+    "selector": ".btn-icon, .btn.btn-icon, button.btn-icon, .btn-toggle-block-collapse, .btn-toggle-exercise-collapse, .btn-toggle-item-collapse, .btn-move-block-up, .btn-move-block-down, .btn-delete-block, .btn-move-exercise-up, .btn-move-exercise-down, .btn-delete-exercise, .btn-move-item-up, .btn-move-item-down, .btn-delete-item, .btn-close-batch-modal"
   },
   {
     "order": 1524,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".btn-delete-block:hover:not(:disabled), .btn-delete-exercise:hover:not(:disabled), .btn-delete-item:hover:not(:disabled)"
+    "selector": ".btn-icon:hover:not(:disabled), .btn.btn-icon:hover:not(:disabled), button.btn-icon:hover:not(:disabled), .btn-toggle-block-collapse:hover:not(:disabled), .btn-toggle-exercise-collapse:hover:not(:disabled), .btn-toggle-item-collapse:hover:not(:disabled), .btn-move-block-up:hover:not(:disabled), .btn-move-block-down:hover:not(:disabled), .btn-move-exercise-up:hover:not(:disabled), .btn-move-exercise-down:hover:not(:disabled), .btn-move-item-up:hover:not(:disabled), .btn-move-item-down:hover:not(:disabled), .btn-close-batch-modal:hover:not(:disabled)"
   },
   {
     "order": 1525,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".btn-icon:disabled, .btn.btn-icon:disabled, button.btn-icon:disabled, .btn-move-block-up:disabled, .btn-move-block-down:disabled, .btn-delete-block:disabled, .btn-move-exercise-up:disabled, .btn-move-exercise-down:disabled, .btn-delete-exercise:disabled, .btn-move-item-up:disabled, .btn-move-item-down:disabled, .btn-delete-item:disabled"
+    "selector": ".btn-delete-block:hover:not(:disabled), .btn-delete-exercise:hover:not(:disabled), .btn-delete-item:hover:not(:disabled)"
   },
   {
     "order": 1526,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-batch-tabs"
+    "selector": ".btn-icon:disabled, .btn.btn-icon:disabled, button.btn-icon:disabled, .btn-move-block-up:disabled, .btn-move-block-down:disabled, .btn-delete-block:disabled, .btn-move-exercise-up:disabled, .btn-move-exercise-down:disabled, .btn-delete-exercise:disabled, .btn-move-item-up:disabled, .btn-move-item-down:disabled, .btn-delete-item:disabled"
   },
   {
     "order": 1527,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-batch-tab-btn"
+    "selector": ".modal-batch-tabs"
   },
   {
     "order": 1528,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-batch-tab-btn:hover:not(.active)"
+    "selector": ".modal-batch-tab-btn"
   },
   {
     "order": 1529,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-batch-tab-btn.active"
+    "selector": ".modal-batch-tab-btn:hover:not(.active)"
   },
   {
     "order": 1530,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-batch-tab-panel"
+    "selector": ".modal-batch-tab-btn.active"
   },
   {
     "order": 1531,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-batch-tab-panel.active"
+    "selector": ".modal-batch-tab-panel"
   },
   {
     "order": 1532,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".builder-exercise-card"
+    "selector": ".modal-batch-tab-panel.active"
   },
   {
     "order": 1533,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".builder-exercise-card:hover"
+    "selector": ".builder-exercise-card"
   },
   {
     "order": 1534,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".builder-exercise-header"
+    "selector": ".builder-exercise-card:hover"
   },
   {
     "order": 1535,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-header-left"
+    "selector": ".builder-exercise-header"
   },
   {
     "order": 1536,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-badge"
+    "selector": ".exercise-header-left"
   },
   {
     "order": 1537,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-items-count"
+    "selector": ".exercise-badge"
   },
   {
     "order": 1538,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-header-actions"
+    "selector": ".exercise-items-count"
   },
   {
     "order": 1539,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-add-item-bar"
+    "selector": ".exercise-header-actions"
   },
   {
     "order": 1540,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-add-item-bar .add-item-caption"
+    "selector": ".exercise-add-item-bar"
   },
   {
     "order": 1541,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-add-item-bar .add-item-buttons"
+    "selector": ".exercise-add-item-bar .add-item-caption"
   },
   {
     "order": 1542,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-add-item-bar button, .exercise-add-item-bar .btn-secondary"
+    "selector": ".exercise-add-item-bar .add-item-buttons"
   },
   {
     "order": 1543,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".exercise-add-item-bar button:hover:not(:disabled), .exercise-add-item-bar .btn-secondary:hover:not(:disabled)"
+    "selector": ".exercise-add-item-bar button, .exercise-add-item-bar .btn-secondary"
   },
   {
     "order": 1544,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".input-batch-count:focus"
+    "selector": ".exercise-add-item-bar button:hover:not(:disabled), .exercise-add-item-bar .btn-secondary:hover:not(:disabled)"
   },
   {
     "order": 1545,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-catalog-tables"
+    "selector": ".input-batch-count:focus"
   },
   {
     "order": 1546,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-phase-group"
+    "selector": ".test-catalog-tables"
   },
   {
     "order": 1547,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-phase-header"
+    "selector": ".test-phase-group"
   },
   {
     "order": 1548,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".phase-title-badge"
+    "selector": ".test-phase-header"
   },
   {
     "order": 1549,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".phase-pill-large"
+    "selector": ".phase-title-badge"
   },
   {
     "order": 1550,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".phase-group-heading"
+    "selector": ".phase-pill-large"
   },
   {
     "order": 1551,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".phase-count-pill"
+    "selector": ".phase-group-heading"
   },
   {
     "order": 1552,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-table-wrapper"
+    "selector": ".phase-count-pill"
   },
   {
     "order": 1553,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table"
+    "selector": ".test-table-wrapper"
   },
   {
     "order": 1554,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table th"
+    "selector": ".test-compact-table"
   },
   {
     "order": 1555,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table td"
+    "selector": ".test-compact-table th"
   },
   {
     "order": 1556,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table tr.test-row:hover"
+    "selector": ".test-compact-table td"
   },
   {
     "order": 1557,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table tr.test-row:last-child td"
+    "selector": ".test-compact-table tr.test-row:hover"
   },
   {
     "order": 1558,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .col-session"
+    "selector": ".test-compact-table tr.test-row:last-child td"
   },
   {
     "order": 1559,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .col-phase"
+    "selector": ".test-compact-table .col-session"
   },
   {
     "order": 1560,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .col-title"
+    "selector": ".test-compact-table .col-phase"
   },
   {
     "order": 1561,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .test-card-title"
+    "selector": ".test-compact-table .col-title"
   },
   {
     "order": 1562,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .col-meta"
+    "selector": ".test-compact-table .test-card-title"
   },
   {
     "order": 1563,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .test-card-meta"
+    "selector": ".test-compact-table .col-meta"
   },
   {
     "order": 1564,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .test-key-tag code"
+    "selector": ".test-compact-table .test-card-meta"
   },
   {
     "order": 1565,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .version-tag"
+    "selector": ".test-compact-table .test-key-tag code"
   },
   {
     "order": 1566,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .col-status"
+    "selector": ".test-compact-table .version-tag"
   },
   {
     "order": 1567,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-compact-table .col-actions"
+    "selector": ".test-compact-table .col-status"
   },
   {
     "order": 1568,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-row-actions"
+    "selector": ".test-compact-table .col-actions"
   },
   {
     "order": 1569,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-table-header"
+    "selector": ".test-row-actions"
   },
   {
     "order": 1570,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-card.test-row"
+    "selector": ".test-table-header"
   },
   {
     "order": 1571,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-card.test-row:hover"
+    "selector": ".test-card.test-row"
   },
   {
     "order": 1572,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-card.test-row:last-child"
+    "selector": ".test-card.test-row:hover"
   },
   {
     "order": 1573,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".col-session"
+    "selector": ".test-card.test-row:last-child"
   },
   {
     "order": 1574,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".col-phase"
+    "selector": ".col-session"
   },
   {
     "order": 1575,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".col-title"
+    "selector": ".col-phase"
   },
   {
     "order": 1576,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".col-meta"
+    "selector": ".col-title"
   },
   {
     "order": 1577,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".col-status"
+    "selector": ".col-meta"
   },
   {
     "order": 1578,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".col-actions"
+    "selector": ".col-status"
   },
   {
     "order": 1579,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".submission-count-tag"
+    "selector": ".col-actions"
   },
   {
     "order": 1580,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".action-locked"
+    "selector": ".submission-count-tag"
   },
   {
     "order": 1581,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".izone-modal-overlay"
+    "selector": ".action-locked"
   },
   {
     "order": 1582,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".izone-modal-dialog"
+    "selector": ".izone-modal-overlay"
   },
   {
     "order": 1583,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-danger-dialog"
+    "selector": ".izone-modal-dialog"
   },
   {
     "order": 1584,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-warning-dialog"
+    "selector": ".modal-danger-dialog"
   },
   {
     "order": 1585,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-create-dialog"
+    "selector": ".modal-warning-dialog"
   },
   {
     "order": 1586,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".izone-modal-header"
+    "selector": ".modal-create-dialog"
   },
   {
     "order": 1587,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-header-icon-danger"
+    "selector": ".izone-modal-header"
   },
   {
     "order": 1588,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-header-icon-warning"
+    "selector": ".modal-header-icon-danger"
   },
   {
     "order": 1589,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".modal-header-icon-primary"
+    "selector": ".modal-header-icon-warning"
   },
   {
     "order": 1590,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".izone-modal-header .modal-title-wrap h3"
+    "selector": ".modal-header-icon-primary"
   },
   {
     "order": 1591,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".izone-modal-header .modal-subtitle"
+    "selector": ".izone-modal-header .modal-title-wrap h3"
   },
   {
     "order": 1592,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".btn-close-modal"
+    "selector": ".izone-modal-header .modal-subtitle"
   },
   {
     "order": 1593,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".btn-close-modal:hover"
+    "selector": ".btn-close-modal"
   },
   {
     "order": 1594,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".izone-modal-body"
+    "selector": ".btn-close-modal:hover"
   },
   {
     "order": 1595,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".izone-modal-footer"
+    "selector": ".izone-modal-body"
   },
   {
     "order": 1596,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".target-test-card"
+    "selector": ".izone-modal-footer"
   },
   {
     "order": 1597,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-target-title"
+    "selector": ".target-test-card"
   },
   {
     "order": 1598,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-target-meta"
+    "selector": ".test-target-title"
   },
   {
     "order": 1599,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".test-target-meta .meta-tag"
+    "selector": ".test-target-meta"
   },
   {
     "order": 1600,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".alert-danger-box"
+    "selector": ".test-target-meta .meta-tag"
   },
   {
     "order": 1601,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".alert-danger-icon"
+    "selector": ".alert-danger-box"
   },
   {
     "order": 1602,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".alert-warning-box"
+    "selector": ".alert-danger-icon"
   },
   {
     "order": 1603,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".alert-warning-icon"
+    "selector": ".alert-warning-box"
   },
   {
     "order": 1604,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".alert-warning-text"
+    "selector": ".alert-warning-icon"
   },
   {
     "order": 1605,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".unsaved-hint-text"
+    "selector": ".alert-warning-text"
   },
   {
     "order": 1606,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".confirmation-input-group"
+    "selector": ".unsaved-hint-text"
   },
   {
     "order": 1607,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".danger-keyword"
+    "selector": ".confirmation-input-group"
   },
   {
     "order": 1608,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".input-danger-confirm"
+    "selector": ".danger-keyword"
   },
   {
     "order": 1609,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".input-danger-confirm:focus"
+    "selector": ".input-danger-confirm"
   },
   {
     "order": 1610,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".form-grid-2"
+    "selector": ".input-danger-confirm:focus"
   },
   {
     "order": 1611,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".form-hint"
+    "selector": ".form-grid-2"
   },
   {
     "order": 1612,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".proctoring-lock-hint"
+    "selector": ".form-hint"
   },
   {
     "order": 1613,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-sync"
+    "selector": ".proctoring-lock-hint"
   },
   {
     "order": 1614,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-sync h3"
+    "selector": ".portal-sync"
   },
   {
     "order": 1615,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-sync-row"
+    "selector": ".portal-sync h3"
   },
   {
     "order": 1616,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-tone-ready"
+    "selector": ".portal-sync-row"
   },
   {
     "order": 1617,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-tone-ok"
+    "selector": ".portal-tone-ready"
   },
   {
     "order": 1618,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-tone-warn"
+    "selector": ".portal-tone-ok"
   },
   {
     "order": 1619,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-tone-blocked"
+    "selector": ".portal-tone-warn"
   },
   {
     "order": 1620,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-sync input[type=\"checkbox\"]"
+    "selector": ".portal-tone-blocked"
   },
   {
     "order": 1621,
     "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".portal-sync .portal-sync-row button"
+    "selector": ".portal-sync input[type=\"checkbox\"]"
   },
   {
     "order": 1622,
-    "source": "11-analytics.css",
+    "source": "10-studio-overrides.css",
     "conditions": [],
-    "selector": ".score-distribution-view"
+    "selector": ".portal-sync .portal-sync-row button"
   },
   {
     "order": 1623,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-header-toolbar"
+    "selector": ".score-distribution-view"
   },
   {
     "order": 1624,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-header-info"
+    "selector": ".report-header-toolbar"
   },
   {
     "order": 1625,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-title"
+    "selector": ".report-header-info"
   },
   {
     "order": 1626,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-title svg"
+    "selector": ".report-title"
   },
   {
     "order": 1627,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-meta"
+    "selector": ".report-title svg"
   },
   {
     "order": 1628,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-meta strong"
+    "selector": ".report-meta"
   },
   {
     "order": 1629,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-header-actions"
+    "selector": ".report-meta strong"
   },
   {
     "order": 1630,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".toggle-control"
+    "selector": ".report-header-actions"
   },
   {
     "order": 1631,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".toggle-control:hover"
+    "selector": ".toggle-control"
   },
   {
     "order": 1632,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-skill-tabs"
+    "selector": ".toggle-control:hover"
   },
   {
     "order": 1633,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skill-tab-btn"
+    "selector": ".report-skill-tabs"
   },
   {
     "order": 1634,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skill-tab-btn:hover"
+    "selector": ".skill-tab-btn"
   },
   {
     "order": 1635,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skill-tab-btn.active"
+    "selector": ".skill-tab-btn:hover"
   },
   {
     "order": 1636,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-roster-grid"
+    "selector": ".skill-tab-btn.active"
   },
   {
     "order": 1637,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card"
+    "selector": ".report-roster-grid"
   },
   {
     "order": 1638,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card:hover"
+    "selector": ".report-metric-card"
   },
   {
     "order": 1639,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".metric-card-header"
+    "selector": ".report-metric-card:hover"
   },
   {
     "order": 1640,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".metric-card-value"
+    "selector": ".metric-card-header"
   },
   {
     "order": 1641,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card.metric-primary .metric-icon"
+    "selector": ".metric-card-value"
   },
   {
     "order": 1642,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card.metric-success .metric-icon"
+    "selector": ".report-metric-card.metric-primary .metric-icon"
   },
   {
     "order": 1643,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card.metric-warning .metric-icon"
+    "selector": ".report-metric-card.metric-success .metric-icon"
   },
   {
     "order": 1644,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card.metric-neutral .metric-icon"
+    "selector": ".report-metric-card.metric-warning .metric-icon"
   },
   {
     "order": 1645,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card.metric-muted .metric-icon"
+    "selector": ".report-metric-card.metric-neutral .metric-icon"
   },
   {
     "order": 1646,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-metric-card.metric-info .metric-icon"
+    "selector": ".report-metric-card.metric-muted .metric-icon"
   },
   {
     "order": 1647,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-statistics-grid"
+    "selector": ".report-metric-card.metric-info .metric-icon"
   },
   {
     "order": 1648,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-stat-card"
+    "selector": ".report-statistics-grid"
   },
   {
     "order": 1649,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".stat-card-top"
+    "selector": ".report-stat-card"
   },
   {
     "order": 1650,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".stat-icon"
+    "selector": ".stat-card-top"
   },
   {
     "order": 1651,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".stat-value"
+    "selector": ".stat-icon"
   },
   {
     "order": 1652,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".stat-desc"
+    "selector": ".stat-value"
   },
   {
     "order": 1653,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-card-container"
+    "selector": ".stat-desc"
   },
   {
     "order": 1654,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-chart-header"
+    "selector": ".histogram-card-container"
   },
   {
     "order": 1655,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".chart-header-left"
+    "selector": ".histogram-chart-header"
   },
   {
     "order": 1656,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".chart-title"
+    "selector": ".chart-header-left"
   },
   {
     "order": 1657,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".chart-title svg"
+    "selector": ".chart-title"
   },
   {
     "order": 1658,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".chart-subtitle"
+    "selector": ".chart-title svg"
   },
   {
     "order": 1659,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-svg-wrapper"
+    "selector": ".chart-subtitle"
   },
   {
     "order": 1660,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-svg"
+    "selector": ".histogram-svg-wrapper"
   },
   {
     "order": 1661,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-grid-line line"
+    "selector": ".histogram-svg"
   },
   {
     "order": 1662,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-grid-line:first-child line"
+    "selector": ".histogram-grid-line line"
   },
   {
     "order": 1663,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-y-axis-label"
+    "selector": ".histogram-grid-line:first-child line"
   },
   {
     "order": 1664,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-baseline"
+    "selector": ".histogram-y-axis-label"
   },
   {
     "order": 1665,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-hover-slot"
+    "selector": ".histogram-baseline"
   },
   {
     "order": 1666,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-bucket-col:hover .histogram-hover-slot"
+    "selector": ".histogram-hover-slot"
   },
   {
     "order": 1667,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-bucket-col.active .histogram-hover-slot"
+    "selector": ".histogram-bucket-col:hover .histogram-hover-slot"
   },
   {
     "order": 1668,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-bar"
+    "selector": ".histogram-bucket-col.active .histogram-hover-slot"
   },
   {
     "order": 1669,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-bar:hover"
+    "selector": ".histogram-bar"
   },
   {
     "order": 1670,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-bar.bar-selected"
+    "selector": ".histogram-bar:hover"
   },
   {
     "order": 1671,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-count-label"
+    "selector": ".histogram-bar.bar-selected"
   },
   {
     "order": 1672,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-axis-label"
+    "selector": ".histogram-count-label"
   },
   {
     "order": 1673,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-bucket-col.active .histogram-axis-label"
+    "selector": ".histogram-axis-label"
   },
   {
     "order": 1674,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-chart-footer"
+    "selector": ".histogram-bucket-col.active .histogram-axis-label"
   },
   {
     "order": 1675,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".chart-hint"
+    "selector": ".histogram-chart-footer"
   },
   {
     "order": 1676,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-empty-state"
+    "selector": ".chart-hint"
   },
   {
     "order": 1677,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-loading-container"
+    "selector": ".report-empty-state"
   },
   {
     "order": 1678,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skeleton-pulse .skeleton-card"
+    "selector": ".report-loading-container"
   },
   {
     "order": 1679,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skeleton-line"
+    "selector": ".skeleton-pulse .skeleton-card"
   },
   {
     "order": 1680,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skeleton-line.short"
+    "selector": ".skeleton-line"
   },
   {
     "order": 1681,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skeleton-line.large"
+    "selector": ".skeleton-line.short"
   },
   {
     "order": 1682,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skeleton-line.medium"
+    "selector": ".skeleton-line.large"
   },
   {
     "order": 1683,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".skeleton-chart-box"
+    "selector": ".skeleton-line.medium"
   },
   {
     "order": 1684,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-error-panel"
+    "selector": ".skeleton-chart-box"
   },
   {
     "order": 1685,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-drilldown-split-area"
+    "selector": ".report-error-panel"
   },
   {
     "order": 1686,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".histogram-card-slot"
+    "selector": ".histogram-drilldown-split-area"
   },
   {
     "order": 1687,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-drilldown-slot"
+    "selector": ".histogram-card-slot"
   },
   {
     "order": 1688,
+    "source": "11-analytics.css",
+    "conditions": [],
+    "selector": ".report-drilldown-slot"
+  },
+  {
+    "order": 1689,
     "source": "11-analytics.css",
     "conditions": [
       "(max-width: 1100px)"
@@ -10198,90 +10204,82 @@
     "selector": ".histogram-drilldown-split-area"
   },
   {
-    "order": 1689,
+    "order": 1690,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-drilldown-container"
   },
   {
-    "order": 1690,
+    "order": 1691,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-card"
   },
   {
-    "order": 1691,
+    "order": 1692,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-header"
   },
   {
-    "order": 1692,
+    "order": 1693,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-title"
   },
   {
-    "order": 1693,
+    "order": 1694,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-count"
   },
   {
-    "order": 1694,
+    "order": 1695,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-empty"
   },
   {
-    "order": 1695,
+    "order": 1696,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-badge-all"
   },
   {
-    "order": 1696,
+    "order": 1697,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table-wrapper"
   },
   {
-    "order": 1697,
+    "order": 1698,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table"
   },
   {
-    "order": 1698,
+    "order": 1699,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table th"
   },
   {
-    "order": 1699,
+    "order": 1700,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table td"
   },
   {
-    "order": 1700,
+    "order": 1701,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table tr:hover td"
   },
   {
-    "order": 1701,
+    "order": 1702,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".student-score-cell"
-  },
-  {
-    "order": 1702,
-    "source": "11-analytics.css",
-    "conditions": [
-      "print"
-    ],
-    "selector": "header, .navbar, .navbar-menu, .control-toolbar, .report-header-actions, .skill-tab-btn:not(.active), .chart-hint, .btn-close-drilldown"
   },
   {
     "order": 1703,
@@ -10289,7 +10287,7 @@
     "conditions": [
       "print"
     ],
-    "selector": "body, main"
+    "selector": "header, .navbar, .navbar-menu, .control-toolbar, .report-header-actions, .skill-tab-btn:not(.active), .chart-hint, .btn-close-drilldown"
   },
   {
     "order": 1704,
@@ -10297,7 +10295,7 @@
     "conditions": [
       "print"
     ],
-    "selector": ".score-distribution-view"
+    "selector": "body, main"
   },
   {
     "order": 1705,
@@ -10305,634 +10303,642 @@
     "conditions": [
       "print"
     ],
-    "selector": ".report-header-toolbar, .histogram-card-container, .drilldown-card, .report-metric-card, .report-stat-card"
+    "selector": ".score-distribution-view"
   },
   {
     "order": 1706,
     "source": "11-analytics.css",
-    "conditions": [],
-    "selector": ".report-mode-nav-wrapper"
+    "conditions": [
+      "print"
+    ],
+    "selector": ".report-header-toolbar, .histogram-card-container, .drilldown-card, .report-metric-card, .report-stat-card"
   },
   {
     "order": 1707,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-mode-switcher-container"
+    "selector": ".report-mode-nav-wrapper"
   },
   {
     "order": 1708,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-mode-btn"
+    "selector": ".report-mode-switcher-container"
   },
   {
     "order": 1709,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-mode-btn:hover:not(.active)"
+    "selector": ".report-mode-btn"
   },
   {
     "order": 1710,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".report-mode-btn.active"
+    "selector": ".report-mode-btn:hover:not(.active)"
   },
   {
     "order": 1711,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-analysis-container"
+    "selector": ".report-mode-btn.active"
   },
   {
     "order": 1712,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-analysis-toolbar"
+    "selector": ".item-analysis-container"
   },
   {
     "order": 1713,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-skill-tabs"
+    "selector": ".item-analysis-toolbar"
   },
   {
     "order": 1714,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-filter-tab"
+    "selector": ".item-skill-tabs"
   },
   {
     "order": 1715,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-filter-tab:hover:not(.active)"
+    "selector": ".item-filter-tab"
   },
   {
     "order": 1716,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-filter-tab.active"
+    "selector": ".item-filter-tab:hover:not(.active)"
   },
   {
     "order": 1717,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".tab-count"
+    "selector": ".item-filter-tab.active"
   },
   {
     "order": 1718,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-sort-controls"
+    "selector": ".tab-count"
   },
   {
     "order": 1719,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".sort-label"
+    "selector": ".item-sort-controls"
   },
   {
     "order": 1720,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-sort-btn"
+    "selector": ".sort-label"
   },
   {
     "order": 1721,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-sort-btn:hover:not(.active)"
+    "selector": ".item-sort-btn"
   },
   {
     "order": 1722,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-sort-btn.active"
+    "selector": ".item-sort-btn:hover:not(.active)"
   },
   {
     "order": 1723,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-cards-list"
+    "selector": ".item-sort-btn.active"
   },
   {
     "order": 1724,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-card"
+    "selector": ".item-cards-list"
   },
   {
     "order": 1725,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-card:hover"
+    "selector": ".item-card"
   },
   {
     "order": 1726,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-card.card-expanded"
+    "selector": ".item-card:hover"
   },
   {
     "order": 1727,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-card-header"
+    "selector": ".item-card.card-expanded"
   },
   {
     "order": 1728,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-card-header:hover"
+    "selector": ".item-card-header"
   },
   {
     "order": 1729,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-header-left"
+    "selector": ".item-card-header:hover"
   },
   {
     "order": 1730,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-position-badge"
+    "selector": ".item-header-left"
   },
   {
     "order": 1731,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-skill-tag"
+    "selector": ".item-position-badge"
   },
   {
     "order": 1732,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-prompt-snippet"
+    "selector": ".item-skill-tag"
   },
   {
     "order": 1733,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-header-center"
+    "selector": ".item-prompt-snippet"
   },
   {
     "order": 1734,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-dist-bar"
+    "selector": ".item-header-center"
   },
   {
     "order": 1735,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".bar-segment-correct"
+    "selector": ".item-dist-bar"
   },
   {
     "order": 1736,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".bar-segment-partial"
+    "selector": ".bar-segment-correct"
   },
   {
     "order": 1737,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".bar-segment-incorrect"
+    "selector": ".bar-segment-partial"
   },
   {
     "order": 1738,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".bar-segment-unanswered"
+    "selector": ".bar-segment-incorrect"
   },
   {
     "order": 1739,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".bar-segment-empty"
+    "selector": ".bar-segment-unanswered"
   },
   {
     "order": 1740,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-header-right"
+    "selector": ".bar-segment-empty"
   },
   {
     "order": 1741,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-error-badge"
+    "selector": ".item-header-right"
   },
   {
     "order": 1742,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".badge-danger-soft"
+    "selector": ".item-error-badge"
   },
   {
     "order": 1743,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".badge-warning-soft"
+    "selector": ".badge-danger-soft"
   },
   {
     "order": 1744,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".badge-neutral-soft"
+    "selector": ".badge-warning-soft"
   },
   {
     "order": 1745,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".error-count-text"
+    "selector": ".badge-neutral-soft"
   },
   {
     "order": 1746,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".error-rate-text"
+    "selector": ".error-count-text"
   },
   {
     "order": 1747,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".btn-item-accordion"
+    "selector": ".error-rate-text"
   },
   {
     "order": 1748,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".btn-item-accordion:hover"
+    "selector": ".btn-item-accordion"
   },
   {
     "order": 1749,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-card-drawer"
+    "selector": ".btn-item-accordion:hover"
   },
   {
     "order": 1750,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-detail-section"
+    "selector": ".item-card-drawer"
   },
   {
     "order": 1751,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".detail-subtitle"
+    "selector": ".item-detail-section"
   },
   {
     "order": 1752,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".expected-answer-box"
+    "selector": ".detail-subtitle"
   },
   {
     "order": 1753,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".expected-answer-content code"
+    "selector": ".expected-answer-box"
   },
   {
     "order": 1754,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".common-wrong-pills"
+    "selector": ".expected-answer-content code"
   },
   {
     "order": 1755,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".wrong-pill"
+    "selector": ".common-wrong-pills"
   },
   {
     "order": 1756,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".pill-answer"
+    "selector": ".wrong-pill"
   },
   {
     "order": 1757,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".pill-count"
+    "selector": ".pill-answer"
   },
   {
     "order": 1758,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-wrong-table-wrapper"
+    "selector": ".pill-count"
   },
   {
     "order": 1759,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".table-compact th, .table-compact td"
+    "selector": ".item-wrong-table-wrapper"
   },
   {
     "order": 1760,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".badge-status"
+    "selector": ".table-compact th, .table-compact td"
   },
   {
     "order": 1761,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".status-incorrect"
+    "selector": ".badge-status"
   },
   {
     "order": 1762,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".status-partial"
+    "selector": ".status-incorrect"
   },
   {
     "order": 1763,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".status-unanswered"
+    "selector": ".status-partial"
   },
   {
     "order": 1764,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".item-analysis-state-box"
+    "selector": ".status-unanswered"
   },
   {
     "order": 1765,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".state-title"
+    "selector": ".item-analysis-state-box"
   },
   {
     "order": 1766,
     "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".state-desc"
+    "selector": ".state-title"
   },
   {
     "order": 1767,
-    "source": "12-context-and-assessment.css",
+    "source": "11-analytics.css",
     "conditions": [],
-    "selector": ".exercise-reference-context-field"
+    "selector": ".state-desc"
   },
   {
     "order": 1768,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".exercise-reference-context-field:focus-within"
+    "selector": ".exercise-reference-context-field"
   },
   {
     "order": 1769,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".ai-inherited-context-notice"
+    "selector": ".exercise-reference-context-field:focus-within"
   },
   {
     "order": 1770,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-toggle-custom-item-context"
+    "selector": ".ai-inherited-context-notice"
   },
   {
     "order": 1771,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-toggle-custom-item-context:hover"
+    "selector": ".btn-toggle-custom-item-context"
   },
   {
     "order": 1772,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".candidate-sim-overlay"
+    "selector": ".btn-toggle-custom-item-context:hover"
   },
   {
     "order": 1773,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".candidate-sim-modal, .block-csv-modal, .quick-csv-guide-modal"
+    "selector": ".candidate-sim-overlay"
   },
   {
     "order": 1774,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".block-csv-modal"
+    "selector": ".candidate-sim-modal, .block-csv-modal, .quick-csv-guide-modal"
   },
   {
     "order": 1775,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".quick-csv-guide-modal"
+    "selector": ".block-csv-modal"
   },
   {
     "order": 1776,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn.btn-view-csv-guide, .btn-ghost-subtle.btn-view-csv-guide"
+    "selector": ".quick-csv-guide-modal"
   },
   {
     "order": 1777,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn.btn-view-csv-guide:hover, .btn-ghost-subtle.btn-view-csv-guide:hover"
+    "selector": ".btn.btn-view-csv-guide, .btn-ghost-subtle.btn-view-csv-guide"
   },
   {
     "order": 1778,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".quick-guide-table"
+    "selector": ".btn.btn-view-csv-guide:hover, .btn-ghost-subtle.btn-view-csv-guide:hover"
   },
   {
     "order": 1779,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".quick-guide-table th"
+    "selector": ".quick-guide-table"
   },
   {
     "order": 1780,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".quick-guide-table td"
+    "selector": ".quick-guide-table th"
   },
   {
     "order": 1781,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".quick-guide-table tr:nth-child(2n) td"
+    "selector": ".quick-guide-table td"
   },
   {
     "order": 1782,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".page-title-bar[hidden]"
+    "selector": ".quick-guide-table tr:nth-child(2n) td"
   },
   {
     "order": 1783,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": "#view-grading .assignment-link-bar"
+    "selector": ".page-title-bar[hidden]"
   },
   {
     "order": 1784,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-header"
+    "selector": "#view-grading .assignment-link-bar"
   },
   {
     "order": 1785,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-header-top"
+    "selector": ".assessment-header"
   },
   {
     "order": 1786,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-back-dashboard"
+    "selector": ".assessment-header-top"
   },
   {
     "order": 1787,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-back-dashboard:hover"
+    "selector": ".btn-back-dashboard"
   },
   {
     "order": 1788,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb"
+    "selector": ".btn-back-dashboard:hover"
   },
   {
     "order": 1789,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-class"
+    "selector": ".assessment-breadcrumb"
   },
   {
     "order": 1790,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-separator"
+    "selector": ".assessment-breadcrumb .crumb-class"
   },
   {
     "order": 1791,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-test"
+    "selector": ".assessment-breadcrumb .crumb-separator"
   },
   {
     "order": 1792,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-badge"
+    "selector": ".assessment-breadcrumb .crumb-test"
   },
   {
     "order": 1793,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-nav-tabs"
+    "selector": ".assessment-breadcrumb .crumb-badge"
   },
   {
     "order": 1794,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn"
+    "selector": ".assessment-nav-tabs"
   },
   {
     "order": 1795,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn:hover"
+    "selector": ".assessment-tab-btn"
   },
   {
     "order": 1796,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn:hover svg"
+    "selector": ".assessment-tab-btn:hover"
   },
   {
     "order": 1797,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn:active"
+    "selector": ".assessment-tab-btn:hover svg"
   },
   {
     "order": 1798,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn.active"
+    "selector": ".assessment-tab-btn:active"
   },
   {
     "order": 1799,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn.active:hover"
+    "selector": ".assessment-tab-btn.active"
   },
   {
     "order": 1800,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn.active svg"
+    "selector": ".assessment-tab-btn.active:hover"
   },
   {
     "order": 1801,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-panel[hidden]"
+    "selector": ".assessment-tab-btn.active svg"
   },
   {
     "order": 1802,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".report-kpi-grid"
+    "selector": ".assessment-tab-panel[hidden]"
   },
   {
     "order": 1803,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".clickable-kpi-card"
+    "selector": ".report-kpi-grid"
   },
   {
     "order": 1804,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".clickable-kpi-card:hover"
+    "selector": ".clickable-kpi-card"
   },
   {
     "order": 1805,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".clickable-kpi-card:focus-visible"
+    "selector": ".clickable-kpi-card:hover"
   },
   {
     "order": 1806,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".retake-action-wrap"
+    "selector": ".clickable-kpi-card:focus-visible"
   },
   {
     "order": 1807,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".retake-badge"
+    "selector": ".retake-action-wrap"
   },
   {
     "order": 1808,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".retake-badge.active"
+    "selector": ".retake-badge"
   },
   {
     "order": 1809,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-retake-renew"
+    "selector": ".retake-badge.active"
   },
   {
     "order": 1810,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".btn-retake-renew"
+  },
+  {
+    "order": 1811,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-retake-renew:hover"

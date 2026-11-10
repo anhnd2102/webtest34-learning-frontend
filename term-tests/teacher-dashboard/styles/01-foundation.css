@@ -33,6 +33,7 @@
   --izone-danger-bg: #fef2f2;
   --izone-danger-border: #fecaca;
   --izone-danger-text: #991b1b;
+  --izone-danger-legacy: #dc2626; /* giữ nguyên màu cũ để parity; DESIGN_SYSTEM.md quy định Danger là #e11d48 */
   --izone-answer-blank-bg: #eff6ff;
   --izone-answer-blank-border: #3b82f6;
   --izone-answer-blank-text: #1d4ed8;
