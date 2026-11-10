@@ -96,39 +96,39 @@ function createSingleVocabItem(bIdx, targetEx) {
       modal.innerHTML = `
         <div class="modal-batch-vocab-card">
           <div class="modal-batch-vocab-header">
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="vocab-batch-title">
               ${renderSvgIcon('fileText', 'icon-inline')}
-              <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Nhập Cặp từ vựng vào Exercise (CSV / Excel)</h3>
+              <h3>Nhập Cặp từ vựng vào Exercise (CSV / Excel)</h3>
             </div>
             <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-batch-modal" title="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
           <div class="modal-batch-vocab-body">
-            <div class="alert-notice alert-info" style="margin: 0; padding: 10px 14px; font-size: 0.85rem;">
+            <div class="alert-notice alert-info vocab-batch-notice">
               Nhập danh sách từ vựng cho bài tập <strong>${escapeHtml(targetEx.title || 'Bài tập')}</strong>. Cột 2 (nghĩa tiếng Việt) sẽ tự động được gộp trùng, sắp xếp tăng dần A-Z tiếng Việt và ánh xạ chính xác vào đáp án.
             </div>
 
-            <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center; flex-wrap: wrap;">
+            <div class="vocab-batch-file-actions">
               <button type="button" class="btn btn-secondary btn-sm btn-download-template">
                 ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV</span>
               </button>
               <button type="button" class="btn btn-secondary btn-sm btn-trigger-csv-file">
                 ${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file .CSV</span>
               </button>
-              <input type="file" class="input-vocab-csv-file" accept=".csv,text/csv,text/plain" style="display:none;" />
-              <span style="font-size: 0.8rem; color: #64748b;">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
+              <input type="file" class="input-vocab-csv-file vocab-batch-hidden" accept=".csv,text/csv,text/plain" />
+              <span class="vocab-batch-hint">(Hỗ trợ UTF-8 BOM, tab Excel hoặc dấu phẩy)</span>
             </div>
 
-            <div class="form-group" style="margin-top: 12px;">
-              <label class="form-label" style="display: flex; justify-content: space-between;">
+            <div class="form-group vocab-batch-csv-field">
+              <label class="form-label vocab-batch-csv-label">
                 <strong>Dán 2 cột từ Excel / Sheets hoặc nội dung CSV:</strong>
-                <span style="font-size: 0.8rem; color: #64748b;">Cột 1: Từ tiếng Anh | Cột 2: Nghĩa tiếng Việt</span>
+                <span class="vocab-batch-hint">Cột 1: Từ tiếng Anh | Cột 2: Nghĩa tiếng Việt</span>
               </label>
               <textarea class="form-control textarea-batch-vocab-csv" rows="8" placeholder="destination&#9;điểm đến&#10;itinerary&#9;lịch trình chuyến đi&#10;resilient&#9;kiên cường&#10;sustainable&#9;bền vững&#10;environment&#9;môi trường"></textarea>
             </div>
 
-            <div class="vocab-preview-summary" style="margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; display: none;"></div>
+            <div class="vocab-preview-summary" style="display: none;"></div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
+            <div class="vocab-batch-options">
               <label class="batch-checkbox-row">
                 <input type="checkbox" class="chk-auto-variants" checked />
                 <span>Tự động sinh biến thể đáp án sau khi nhập (Apostrophe, contractions, NFKC)</span>
@@ -139,11 +139,11 @@ function createSingleVocabItem(bIdx, targetEx) {
               </label>
             </div>
           </div>
-          <div class="modal-batch-vocab-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <div class="modal-batch-vocab-footer">
             <button type="button" class="btn btn-secondary btn-batch-single">
               + Chỉ tạo 1 câu thủ công
             </button>
-            <div style="display: flex; gap: 8px;">
+            <div class="vocab-batch-footer-actions">
               <button type="button" class="btn btn-secondary btn-close-batch-modal-btn">Hủy bỏ</button>
               <button type="button" class="btn btn-primary btn-batch-confirm">
                 ${renderSvgIcon('check', 'icon-inline')} <span>Xác nhận nhập dữ liệu</span>
@@ -193,11 +193,11 @@ function createSingleVocabItem(bIdx, targetEx) {
         const parsed = parseVocabPairCsv(val);
         previewBox.style.display = 'block';
         if (parsed.validRows.length === 0) {
-          previewBox.innerHTML = `<span style="color: #ef4444;">Chưa tìm thấy cặp từ vựng hợp lệ nào. Vui lòng kiểm tra định dạng dữ liệu (mỗi dòng gồm 2 cột cách nhau bằng Tab hoặc phẩy).</span>`;
+          previewBox.innerHTML = `<span class="vocab-batch-preview-error">Chưa tìm thấy cặp từ vựng hợp lệ nào. Vui lòng kiểm tra định dạng dữ liệu (mỗi dòng gồm 2 cột cách nhau bằng Tab hoặc phẩy).</span>`;
         } else {
-          let html = `<span style="color: #10b981; font-weight: 600;">Tìm thấy ${parsed.validRows.length} cặp từ vựng hợp lệ.</span> Sắp xếp A-Z tiếng Việt và tự động ánh xạ đáp án.`;
+          let html = `<span class="vocab-batch-preview-success">Tìm thấy ${parsed.validRows.length} cặp từ vựng hợp lệ.</span> Sắp xếp A-Z tiếng Việt và tự động ánh xạ đáp án.`;
           if (parsed.invalidRows.length > 0) {
-            html += `<br/><span style="color: #f59e0b;">Bỏ qua ${parsed.invalidRows.length} dòng không đủ 2 cột (Dòng: ${parsed.invalidRows.slice(0, 5).map(r => r.line).join(', ')}${parsed.invalidRows.length > 5 ? '...' : ''}).</span>`;
+            html += `<br/><span class="vocab-batch-preview-warning">Bỏ qua ${parsed.invalidRows.length} dòng không đủ 2 cột (Dòng: ${parsed.invalidRows.slice(0, 5).map(r => r.line).join(', ')}${parsed.invalidRows.length > 5 ? '...' : ''}).</span>`;
           }
           previewBox.innerHTML = html;
         }

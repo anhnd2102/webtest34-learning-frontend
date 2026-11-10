@@ -1418,3 +1418,74 @@
   font-size: 0.75rem;
   color: var(--izone-text-muted);
 }
+
+/* Vocabulary pair CSV modal: former static inline presentation. */
+#batch-vocab-pair-modal .vocab-batch-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#batch-vocab-pair-modal .modal-batch-vocab-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+#batch-vocab-pair-modal .vocab-batch-notice {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+}
+#batch-vocab-pair-modal .vocab-batch-file-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#batch-vocab-pair-modal .vocab-batch-hidden {
+  display: none;
+}
+#batch-vocab-pair-modal .vocab-batch-hint {
+  font-size: 0.8rem;
+  color: var(--izone-text-muted);
+}
+#batch-vocab-pair-modal .vocab-batch-csv-field {
+  margin-top: 12px;
+}
+#batch-vocab-pair-modal .vocab-batch-csv-label {
+  display: flex;
+  justify-content: space-between;
+}
+#batch-vocab-pair-modal .vocab-preview-summary {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background: var(--izone-slate-bg);
+  border-radius: 6px;
+  border: 1px solid var(--izone-border);
+}
+#batch-vocab-pair-modal .vocab-batch-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+#batch-vocab-pair-modal .modal-batch-vocab-footer {
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+#batch-vocab-pair-modal .vocab-batch-footer-actions {
+  display: flex;
+  gap: 8px;
+}
+#batch-vocab-pair-modal .vocab-batch-preview-error {
+  color: var(--izone-import-error);
+}
+#batch-vocab-pair-modal .vocab-batch-preview-success {
+  color: var(--izone-import-success);
+  font-weight: 600;
+}
+#batch-vocab-pair-modal .vocab-batch-preview-warning {
+  color: var(--izone-import-warning);
+}

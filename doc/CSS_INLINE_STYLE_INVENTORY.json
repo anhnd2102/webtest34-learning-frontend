@@ -1,7 +1,7 @@
 {
-  "baseline": "5cd46b0",
-  "revision": "question-renderer1",
-  "note": "Lexical inventory after question renderer static style extraction; not a CSS parser.",
+  "baseline": "a158c4d",
+  "revision": "vocab-batch1",
+  "note": "Lexical inventory after vocabulary CSV modal static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -275,67 +275,7 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 99,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 101,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 106,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 110,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 117,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 118,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 121,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 122,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 124,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
       "line": 129,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 131,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 142,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 146,
       "kind": "attribute"
     },
     {
@@ -352,21 +292,6 @@
       "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
       "line": 194,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 196,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 198,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 200,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",

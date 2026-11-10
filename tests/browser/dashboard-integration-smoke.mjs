@@ -135,7 +135,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1' || process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -569,6 +569,37 @@ try {
         const draft = await page.evaluate(() => questionRendererStyleHandle.getDraft());
         assert.deepEqual(draft.blocks[0].items.find(item => item.itemVersionId === 'q4').clozeAnswers[2].accepted, ['beta', 'Beta']);
         await page.evaluate(() => { questionRendererStyleHandle.dispose(); document.querySelector('#question-renderer-style-fixture').remove(); });
+      }
+      if (process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'vocab-batch-fixture'; document.body.prepend(host);
+          data.blocks[0].items = ['v1', 'v2'].map((id, index) => ({ itemVersionId: id, exerciseId: 'ex1', position: index + 1, prompt: 'Synthetic vocabulary', targetWord: index ? 'second-word' : 'full-time', interactionType: 'text_select_pair', graderType: 'accepted_text_exact_option', maxScore: 1, options: ['one', 'two', 'three'].map((label, option) => ({ id: `opt_${option + 1}`, label: `Synthetic ${label}` })) }));
+          data.blocks[0].exercises[0].itemIds = ['v1', 'v2'];
+          data.gradingKey.items = Object.fromEntries(data.blocks[0].items.map(item => [item.itemVersionId, { graderType: item.graderType, accepted: [item.targetWord], expectedOptionId: 'opt_1' }]));
+          window.vocabBatchHandle = integrationApp.mountBuilder(host, data);
+        }, form('vocab-batch'));
+        const host = page.locator('#vocab-batch-fixture');
+        await host.locator('.btn-add-vocab-pair').first().click();
+        const modal = page.locator('#batch-vocab-pair-modal');
+        await modal.waitFor({ state: 'visible' });
+        const area = modal.locator('.textarea-batch-vocab-csv');
+        const preview = modal.locator('.vocab-preview-summary');
+        assert.equal(await preview.isVisible(), false, 'preview starts hidden');
+        assert.equal(await modal.locator('.input-vocab-csv-file').isVisible(), false, 'file input stays hidden');
+        await screenshot('vocab-batch-empty');
+        await area.fill('only-one-column');
+        assert.equal(await preview.isVisible(), true);
+        assert.ok((await preview.innerText()).includes('Chưa tìm thấy'), 'invalid-only input shows the error message');
+        await screenshot('vocab-batch-invalid');
+        await area.fill('destination\tđiểm đến\nbad-line\nitinerary\tlịch trình');
+        const mixed = await preview.innerText();
+        assert.ok(mixed.includes('Tìm thấy 2') && mixed.includes('Bỏ qua 1'), 'mixed input shows success and skipped-line summary');
+        await screenshot('vocab-batch-mixed');
+        await area.fill('');
+        assert.equal(await preview.isVisible(), false, 'clearing input hides the preview again');
+        await modal.locator('.btn-close-batch-modal-btn').click();
+        assert.equal(await modal.isVisible(), false);
+        await page.evaluate(() => { vocabBatchHandle.dispose(); document.querySelector('#vocab-batch-fixture').remove(); });
       }
       if (process.env.BUILDER_STYLE_PARITY === '1') {
         await page.evaluate(data => {
