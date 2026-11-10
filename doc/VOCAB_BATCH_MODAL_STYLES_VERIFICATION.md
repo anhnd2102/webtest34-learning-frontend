@@ -17,7 +17,7 @@ Ngày 10/11/2026. Nhánh `refactor/vocab-batch-modal-styles`, xếp chồng trê
 - `npm test`: **661 tests, 661 pass, 0 fail, 0 skip** (Node v24.19.0).
 - Harness mới `VOCAB_BATCH_MODAL_STYLE_PARITY=1`: mount Builder thật với hai câu vocab, mở modal bằng nút thật, chụp 3 trạng thái runtime: modal rỗng (preview ẩn, file input ẩn), chỉ dòng lỗi (thông báo "Chưa tìm thấy"), hỗn hợp hợp lệ + bỏ qua ("Tìm thấy 2", "Bỏ qua 1"); sau đó xóa input (preview ẩn lại), đóng modal, dispose. Baseline chụp trên nhánh mới sau khi thêm fixture, trước khi sửa code.
 - Parity trước/sau trên 1440×900, 1024×768, 390×844: **21/21 computed snapshots toàn DOM giống baseline** (gồm 9 snapshot trạng thái modal; 23 thuộc tính, không loại phần tử).
-- PNG: 20/21 giống từng byte, gồm cả 9 ảnh modal. `1024-dirty-modal.png` khác 34 pixel (maxChannel 11/255) ở màn xác nhận thay đổi chưa lưu, không dùng module này và computed giống hệt; không chụp lại để chọn kết quả thuận lợi.
+- PNG: lần chụp đầu 20/21 giống từng byte, gồm cả 9 ảnh modal; `1024-dirty-modal.png` khác 34 pixel (maxChannel 11/255) ở màn xác nhận thay đổi chưa lưu, không dùng module này và computed giống hệt. Để xác định đó có phải nhiễu hay không, chụp lại hai lần nữa trên đúng code này: cả hai lần giống baseline từng byte, còn lần đầu là ngoại lệ. Đây là biến động giữa các lần chạy ở lần chụp đầu, không phải khác biệt do thay đổi; kết quả đầu tiên vẫn được giữ trong báo cáo, không loại bỏ.
 - Smoke tích hợp đầy đủ (không bật cờ parity): root và `/preview-base` × 3 viewport, mỗi lượt 10 vòng mount/dispose, 0 browser errors, 13 CSS responses 200/`text/css`.
 
 ## Giới hạn

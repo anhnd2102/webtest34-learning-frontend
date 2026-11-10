@@ -273,8 +273,8 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã sửa grid một cột khiến bảng điều hướng che đáp án mô phỏng trên mobile, kiểm native mouse/touch và breakpoint: xem `SIMULATION_MOBILE_LAYOUT_FIX.md`.
   - Đã chuyển 4 styles của Pronunciation/Sentence Transformation mô phỏng, ghi nhận giới hạn nút nghe IPA từ baseline: xem `SIMULATION_QUESTION_STYLES_VERIFICATION.md`.
   - Đã bổ sung controller phát/dừng IPA, xử lý lỗi và cleanup theo vòng đời mô phỏng: xem `SIMULATION_IPA_AUDIO_FIX.md`.
-  - Đã chuyển 15 inline styles tĩnh của modal nhập Cặp từ vựng (CSV/Excel) sang class/token, giữ `display` do JS bật/tắt: xem `VOCAB_BATCH_MODAL_STYLES_VERIFICATION.md`.
   - Đã chuyển 30 inline styles tĩnh của Question Renderer (Error Correction, Reading Matching, Listening Order, Inline Cloze, Pictorial, AI Rubric) sang class/token; giữ các `display` do JS bật/tắt: xem `QUESTION_RENDERER_STYLES_VERIFICATION.md`.
+  - Đã chuyển 15 inline styles tĩnh của modal nhập Cặp từ vựng (CSV/Excel) sang class/token, giữ `display` do JS bật/tắt: xem `VOCAB_BATCH_MODAL_STYLES_VERIFICATION.md`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
 - Rollback: revert nhóm fragment/link theo commit; không để entry trỏ fragment thiếu. Rủi ro chính: đổi cascade hoặc FOUC.
