@@ -278,6 +278,8 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã chuyển 7 inline styles tĩnh của Builder (khung ngữ cảnh Bài tập Đọc hiểu, lỗi sandbox chấm thử AI) sang class/token; loại có chủ đích các `display` do JS/dữ liệu điều khiển: xem `BUILDER_STATIC_STYLES_VERIFICATION.md`.
   - Đã thay emoji màu bằng SVG đơn sắc ở nút sandbox và wizard Công bố, kèm fixture kiểm không còn emoji ở mọi trạng thái: xem `EMOJI_CLEANUP_VERIFICATION.md`.
   - Đã chuyển 3 inline styles tĩnh của luồng Công bố (thêm token `--izone-danger-legacy`); `rich-editor.js` không có vị trí hợp lệ; phân loại 208 vị trí còn lại (46 tĩnh): xem `PUBLISHING_STATIC_STYLES_VERIFICATION.md`.
+  - Đã thống nhất màu Danger về `#e11d48`, bổ sung icon còn thiếu và sửa spinner, thay `▶/⏸` ở giao diện audio bằng SVG: xem `DANGER_COLOR_UNIFY_VERIFICATION.md`, `ICON_FIX_VERIFICATION.md`, `CANDIDATE_AUDIO_GLYPHS_VERIFICATION.md`.
+  - Đã chuyển 9 inline styles tĩnh của modal tạo hàng loạt AI Rubric và Single Choice; phát hiện `openBatchPictorialModal` là mã chết (rút 5 vị trí khỏi đợt này): xem `BATCH_MODALS_STYLES_VERIFICATION.md`.
   - Metadata CSS (manifest, rule map, inventory inline style) tái tạo bằng `node scripts/css-metadata.mjs` (rule-map/manifest/inventory/check) thay vì sửa tay; `tests/css-metadata.test.mjs` chặn rule map lệch khỏi `styles/*.css`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.

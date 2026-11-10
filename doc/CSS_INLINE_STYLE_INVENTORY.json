@@ -1,7 +1,7 @@
 {
-  "baseline": "c4d45ab",
-  "revision": "publishing-static1",
-  "note": "Lexical inventory after publishing static style extraction; not a CSS parser.",
+  "baseline": "5b06753",
+  "revision": "batch-modals1",
+  "note": "Lexical inventory after batch modal static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -144,11 +144,6 @@
       "kind": "property"
     },
     {
-      "file": "term-tests/teacher-dashboard/studio/authoring/choice.js",
-      "line": 121,
-      "kind": "attribute"
-    },
-    {
       "file": "term-tests/teacher-dashboard/studio/authoring/error-correction.js",
       "line": 76,
       "kind": "attribute"
@@ -222,46 +217,6 @@
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
       "line": 398,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 71,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 73,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 78,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 80,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 81,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 82,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 85,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 92,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",

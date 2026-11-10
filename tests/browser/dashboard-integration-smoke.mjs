@@ -135,7 +135,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1' || process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1' || process.env.BUILDER_STATIC_STYLE_PARITY === '1' || process.env.PUBLISHING_UI_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1' || process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1' || process.env.BUILDER_STATIC_STYLE_PARITY === '1' || process.env.PUBLISHING_UI_PARITY === '1' || process.env.BATCH_MODALS_STYLE_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -736,6 +736,41 @@ try {
         await screenshot('publishing-step2-error');
         await page.evaluate(() => { publishingHandle.dispose(); document.querySelector('#publishing-fixture').remove(); });
         assert.equal(await page.locator('#smart-publishing-modal').count(), 0, 'dispose removes the publishing modal');
+      }
+      if (process.env.BATCH_MODALS_STYLE_PARITY === '1') {
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'batch-modals-fixture'; document.body.prepend(host);
+          window.batchModalsHandle = integrationApp.mountBuilder(host, data);
+        }, form('batch-modals'));
+        const host = page.locator('#batch-modals-fixture');
+        await host.locator('.btn-add-rubric-async').first().click();
+        const generic = page.locator('#generic-batch-modal');
+        await generic.waitFor({ state: 'visible' });
+        // The extra configuration lives in the quick-create tab, hidden behind the default CSV tab.
+        assert.equal(await generic.locator('.batch-rubric-context-group').isVisible(), false, 'rubric options start behind the CSV tab');
+        await generic.locator('.modal-batch-tab-btn[data-tab="stepper"]').click();
+        assert.equal(await generic.locator('.batch-rubric-context-group').isVisible(), true);
+        assert.equal(await generic.locator('.select-batch-rubric-type').inputValue(), 'comprehension');
+        await page.waitForTimeout(300); // the generic modal moves focus after a short delay
+        await screenshot('batch-rubric');
+        await generic.locator('.select-batch-rubric-type').selectOption('translation');
+        assert.equal(await generic.locator('.select-batch-rubric-type').inputValue(), 'translation');
+        assert.equal(await generic.locator('.batch-rubric-context-group').isVisible(), false, 'context group hides for a non-comprehension preset');
+        await page.waitForTimeout(300); // the generic modal moves focus after a short delay
+        await screenshot('batch-rubric-translation');
+        await generic.locator('.select-batch-rubric-type').selectOption('comprehension');
+        assert.equal(await generic.locator('.batch-rubric-context-group').isVisible(), true, 'context group returns for the comprehension preset');
+        await generic.locator('.btn-close-batch-modal-btn').click();
+        assert.equal(await generic.isVisible(), false, 'rubric modal closes');
+        await host.locator('.btn-add-single-choice').first().click();
+        await generic.waitFor({ state: 'visible' });
+        await generic.locator('.modal-batch-tab-btn[data-tab="stepper"]').click();
+        assert.equal(await generic.locator('.batch-option-count-form-group').isVisible(), true);
+        await page.waitForTimeout(300); // the generic modal moves focus after a short delay
+        await screenshot('batch-single-choice');
+        await generic.locator('.btn-close-batch-modal-btn').click();
+        assert.equal(await generic.isVisible(), false, 'single-choice modal closes');
+        await page.evaluate(() => { batchModalsHandle.dispose(); document.querySelector('#batch-modals-fixture').remove(); });
       }
       if (process.env.DANGER_COLOR_CHECK === '1') {
         // Probe elements for danger styles that the synthetic fixtures do not render; DESIGN_SYSTEM.md Danger text is #e11d48.

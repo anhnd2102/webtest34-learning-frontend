@@ -118,7 +118,7 @@ function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4, def
           }
         },
         extraConfigHtml: `
-          <div class="form-group batch-option-count-form-group" style="margin-top: 14px;">
+          <div class="form-group batch-option-count-form-group">
             <label class="form-label"><strong>Số lượng phương án mỗi câu (khi tạo câu trống):</strong></label>
             <div class="batch-option-radios">
               <label class="batch-radio-label">

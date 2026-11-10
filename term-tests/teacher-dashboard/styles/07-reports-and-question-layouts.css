@@ -1531,3 +1531,55 @@
 .sandbox-results-container .sandbox-error-text {
   color: var(--izone-danger-strong);
 }
+
+/* Batch authoring modals (AI rubric, single choice): former static inline presentation. */
+#generic-batch-modal .batch-rubric-type-form-group {
+  margin-top: 14px;
+}
+#generic-batch-modal .select-batch-rubric-type {
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+#generic-batch-modal .batch-rubric-type-hint {
+  font-size: 0.8rem;
+  color: var(--izone-text-muted);
+  margin-top: 4px;
+  display: block;
+}
+#generic-batch-modal .batch-rubric-context-group {
+  margin-top: 12px;
+  background: var(--izone-slate-bg);
+  border: 1px dashed var(--izone-slate-300);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+#generic-batch-modal .batch-rubric-context-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#generic-batch-modal .batch-rubric-context-header .form-label {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--izone-slate);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#generic-batch-modal .batch-rubric-context-badge {
+  font-size: 0.72rem;
+  padding: 2px 6px;
+}
+#generic-batch-modal .batch-rubric-context-hint {
+  font-size: 0.75rem;
+  color: var(--izone-text-muted);
+  margin-top: 4px;
+}
+#generic-batch-modal .batch-option-count-form-group {
+  margin-top: 14px;
+}

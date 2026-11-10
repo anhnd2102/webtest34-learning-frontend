@@ -68,28 +68,28 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
           maxCount: 10,
           defaultPoints: 4.0,
           extraConfigHtml: `
-            <div class="form-group batch-rubric-type-form-group" style="margin-top: 14px;">
+            <div class="form-group batch-rubric-type-form-group">
               <label class="form-label"><strong>Dạng câu hỏi tự luận (Question Type / Rubric Preset):</strong></label>
-              <select class="form-control select-batch-rubric-type" style="font-weight: 600; padding: 8px 12px; border-radius: 6px;">
+              <select class="form-control select-batch-rubric-type">
                 <option value="translation">Dịch thuật (Translation) — Rubric 50% Ý nghĩa + 50% Ngữ pháp</option>
                 <option value="comprehension" selected>Đọc hiểu Khối 03 (Reading Comprehension) — Rubric 70% Đọc hiểu + 30% Từ khóa</option>
                 <option value="speaking">Speaking dạng văn bản (Speaking Text Response) — Rubric 40% Ý tưởng + 30% Từ vựng + 30% Ngữ pháp</option>
               </select>
-              <span style="font-size: 0.8rem; color: #64748b; margin-top: 4px; display: block;">(Hệ thống sẽ tự động cấu hình các tiêu chí chấm AI phù hợp theo dạng bài được chọn)</span>
+              <span class="batch-rubric-type-hint">(Hệ thống sẽ tự động cấu hình các tiêu chí chấm AI phù hợp theo dạng bài được chọn)</span>
             </div>
-            <div class="form-group batch-rubric-context-group" id="batch-rubric-context-group" style="margin-top: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
-                <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
+            <div class="form-group batch-rubric-context-group" id="batch-rubric-context-group">
+              <div class="batch-rubric-context-header">
+                <label class="form-label">
                   ${renderSvgIcon('book', 'icon-inline')}
                   <span>Ngữ cảnh bài đọc / Script tham chiếu chung cho AI:</span>
-                  <span class="badge badge-info" style="font-size: 0.72rem; padding: 2px 6px;">Ẩn với học viên</span>
+                  <span class="badge badge-info batch-rubric-context-badge">Ẩn với học viên</span>
                 </label>
                 <button type="button" class="btn btn-secondary btn-sm btn-modal-pull-cloze-script" title="Tự động lấy đoạn văn từ bài Điền từ nội tuyến hoặc bài nghe phía trước">
                   ${renderSvgIcon('clipboard', 'icon-inline')} Lấy Script từ bài Điền từ phía trước
                 </button>
               </div>
               <textarea class="form-control form-control-sm batch-rubric-context-input" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Đọc hiểu Khối 03 trong phần này...">${escapeHtml(targetEx.referenceContext || '')}</textarea>
-              <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+              <div class="batch-rubric-context-hint">
                 ${renderSvgIcon('lock', 'icon-inline')} <strong>Ẩn với học viên:</strong> AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con trong bài tập.
               </div>
             </div>
