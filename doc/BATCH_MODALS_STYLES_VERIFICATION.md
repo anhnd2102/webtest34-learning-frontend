@@ -28,3 +28,7 @@ Kế hoạch ban đầu gồm 5 vị trí trong `studio/authoring/pictorial.js` 
 - Bật cờ parity vẫn gặp assertion focus có sẵn của harness; parity chạy ở chế độ `CAPTURE_ONLY`.
 
 Rollback: revert commit như một đơn vị.
+
+## Cập nhật 10/11/2026: đã xóa mã chết pictorial
+
+Hàm `openBatchPictorialModal` và `createSinglePictorialItem` (chỉ được gọi từ hàm trước) cùng 2 import không còn dùng (`trackBuilderModal`, `renderSvgIcon`) đã bị xóa khỏi `studio/authoring/pictorial.js` (157 dòng, gồm 2 dòng import) ở commit riêng. Đường chạy thật của nút "Thẻ từ vựng qua ảnh" (modal generic) không đổi; fixture `BATCH_MODALS_STYLE_PARITY` nay mở modal đó và khẳng định `#batch-pictorial-modal` không bao giờ được tạo. Inventory còn 192 vị trí (từ 199).

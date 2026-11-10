@@ -1,7 +1,7 @@
 {
-  "baseline": "5b06753",
-  "revision": "batch-modals1",
-  "note": "Lexical inventory after batch modal static style extraction; not a CSS parser.",
+  "baseline": "f85c07c",
+  "revision": "dead-pictorial1",
+  "note": "Lexical inventory after removing the unreachable pictorial batch modal; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -150,72 +150,37 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 71,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 73,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 78,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 83,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 84,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 99,
+      "line": 200,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 165,
+      "line": 201,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 357,
+      "line": 204,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 358,
+      "line": 205,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 361,
+      "line": 237,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 362,
+      "line": 238,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 394,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 395,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 398,
+      "line": 241,
       "kind": "property"
     },
     {

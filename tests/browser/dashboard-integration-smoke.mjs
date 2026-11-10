@@ -743,8 +743,14 @@ try {
           window.batchModalsHandle = integrationApp.mountBuilder(host, data);
         }, form('batch-modals'));
         const host = page.locator('#batch-modals-fixture');
-        await host.locator('.btn-add-rubric-async').first().click();
+        await host.locator('.btn-add-pictorial').first().click();
         const generic = page.locator('#generic-batch-modal');
+        await generic.waitFor({ state: 'visible' });
+        assert.ok((await generic.locator('#generic-batch-modal-title').innerText()).includes('Thẻ từ vựng qua ảnh'), 'pictorial button opens the generic batch modal');
+        assert.equal(await page.locator('#batch-pictorial-modal').count(), 0, 'the removed dedicated pictorial modal is never created');
+        await generic.locator('.btn-close-batch-modal-btn').click();
+        assert.equal(await generic.isVisible(), false, 'pictorial modal closes');
+        await host.locator('.btn-add-rubric-async').first().click();
         await generic.waitFor({ state: 'visible' });
         // The extra configuration lives in the quick-create tab, hidden behind the default CSV tab.
         assert.equal(await generic.locator('.batch-rubric-context-group').isVisible(), false, 'rubric options start behind the CSV tab');
