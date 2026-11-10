@@ -220,7 +220,7 @@ function openPublishingModal() {
               <div class="specific-classes-container" id="specific-classes-container" style="${scope === 'specific_classes' ? '' : 'display: none;'}">
                 <div class="classes-container-header">
                   <div class="classes-search-wrap">
-                    <input type="text" class="form-control class-search-input" id="input-class-search" placeholder="🔍 Tìm kiếm mã lớp..." value="${escapeHtml(searchQuery)}" />
+                    <input type="text" class="form-control class-search-input" id="input-class-search" placeholder="Tìm kiếm mã lớp..." value="${escapeHtml(searchQuery)}" />
                   </div>
                   <div class="classes-actions">
                     <button type="button" class="btn btn-secondary btn-sm" id="btn-select-all-classes">Chọn tất cả</button>
@@ -370,7 +370,7 @@ function openPublishingModal() {
 
           if (errorMsgEl) errorMsgEl.style.display = 'none';
           nextBtn.disabled = true;
-          nextBtn.textContent = '⏳ Đang phân tích tác động...';
+          nextBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang phân tích tác động...</span>`;
 
           try {
             const previewPayload = {
@@ -514,10 +514,10 @@ function openPublishingModal() {
 
                 <div class="confirm-input-row">
                   <input type="text" class="form-control" id="input-confirm-title" placeholder="Nhập hoặc dán tên bài test vào đây..." autocomplete="off" />
-                  <button type="button" class="btn btn-secondary btn-sm" id="btn-auto-fill-confirm" title="Điền tự động">📋 Điền tự động</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-auto-fill-confirm" title="Điền tự động">${renderSvgIcon('clipboard', 'icon-inline')} Điền tự động</button>
                 </div>
                 <div class="confirm-match-status" id="confirm-match-status">
-                  <span class="status-unmatched">⚠️ Chưa khớp tên bài test (nút công bố đang khóa)</span>
+                  <span class="status-unmatched">${renderSvgIcon('alert', 'icon-inline')} Chưa khớp tên bài test (nút công bố đang khóa)</span>
                 </div>
               </div>
 
@@ -525,7 +525,7 @@ function openPublishingModal() {
             </div>
 
             <footer class="publishing-footer">
-              <button type="button" class="btn btn-secondary" id="btn-step2-back">⬅ Quay lại</button>
+              <button type="button" class="btn btn-secondary" id="btn-step2-back">${renderSvgIcon('arrowLeft', 'icon-inline')} Quay lại</button>
               <button type="button" class="btn btn-danger" id="btn-final-publish" disabled>
                 ${renderSvgIcon('publish', 'icon-inline')} <span>Xác nhận &amp; Công bố ngay</span>
               </button>
@@ -559,13 +559,13 @@ function openPublishingModal() {
           const target = targetTitleToMatch.toLowerCase();
           const isMatched = val === target && val.length > 0;
           if (isMatched) {
-            if (statusEl) statusEl.innerHTML = '<span class="status-matched">✅ Tên bài test đã khớp chính xác. Bạn có thể tiến hành công bố.</span>';
+            if (statusEl) statusEl.innerHTML = `<span class="status-matched">${renderSvgIcon('check', 'icon-inline')} Tên bài test đã khớp chính xác. Bạn có thể tiến hành công bố.</span>`;
             if (finalBtn) {
               finalBtn.disabled = false;
               finalBtn.classList.add('is-ready');
             }
           } else {
-            if (statusEl) statusEl.innerHTML = '<span class="status-unmatched">⚠️ Chưa khớp tên bài test (nút công bố đang khóa)</span>';
+            if (statusEl) statusEl.innerHTML = `<span class="status-unmatched">${renderSvgIcon('alert', 'icon-inline')} Chưa khớp tên bài test (nút công bố đang khóa)</span>`;
             if (finalBtn) {
               finalBtn.disabled = true;
               finalBtn.classList.remove('is-ready');
@@ -588,7 +588,7 @@ function openPublishingModal() {
           if (finalBtn.disabled || isPublishing) return;
           isPublishing = true;
           finalBtn.disabled = true;
-          finalBtn.textContent = '⏳ Đang công bố...';
+          finalBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang công bố...</span>`;
           if (errorMsgEl) errorMsgEl.style.display = 'none';
 
           try {

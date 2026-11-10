@@ -135,7 +135,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1' || process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1' || process.env.BUILDER_STATIC_STYLE_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1' || process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1' || process.env.BUILDER_STATIC_STYLE_PARITY === '1' || process.env.PUBLISHING_UI_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -601,11 +601,15 @@ try {
         assert.equal(await modal.isVisible(), false);
         await page.evaluate(() => { vocabBatchHandle.dispose(); document.querySelector('#vocab-batch-fixture').remove(); });
       }
+      // Colour emoji are banned by DESIGN_SYSTEM.md; plain dingbat glyphs such as the check mark are not checked here.
+      const bannedEmoji = '[\\u{1F000}-\\u{1FAFF}\\u{2190}-\\u{21FF}\\u{231A}-\\u{23FF}\\u{2600}-\\u{26FF}\\u{2705}\\u{274C}\\u{2B00}-\\u{2BFF}\\u{FE0F}]';
       if (process.env.BUILDER_STATIC_STYLE_PARITY === '1') {
         let sandboxMode = 'errors';
-        await page.route('**/api/teacher/forms/preview-sandbox', route => {
+        let sandboxGate = Promise.resolve();
+        await page.route('**/api/teacher/forms/preview-sandbox', async route => {
           const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'POST, OPTIONS' };
           if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+          await sandboxGate;
           const body = sandboxMode === 'errors'
             ? { ok: true, scoreEarned: 1, maxScore: 4, criteria: [{ id: 'meaning', score: 1, maxScore: 2 }], errors: [{ code: 'SYNTHETIC_CODE', message: 'Synthetic error message' }] }
             : { ok: false, message: 'Synthetic failure' };
@@ -627,8 +631,16 @@ try {
         const card = host.locator('[data-item-id="r1"]');
         await card.locator('.btn-rubric-tab[data-tab="sandbox"]').click();
         await card.locator('.input-sandbox-sample').fill('Synthetic sample answer');
+        let releaseSandbox;
+        sandboxGate = new Promise(resolve => { releaseSandbox = resolve; });
         await card.locator('.btn-trigger-sandbox').click();
+        const sandboxButton = card.locator('.btn-trigger-sandbox');
+        await sandboxButton.locator('svg.spin').waitFor();
+        assert.ok((await sandboxButton.innerText()).includes('Đang chấm AI'), 'sandbox button shows the loading label');
+        assert.equal(new RegExp(bannedEmoji, 'u').test(await sandboxButton.innerText()), false, 'sandbox loading label has no colour emoji');
+        releaseSandbox();
         await card.locator('.sandbox-errors-breakdown .error-pill').waitFor();
+        assert.ok((await sandboxButton.innerText()).includes('Chấm thử AI'), 'sandbox button label is restored after the request');
         assert.ok((await card.locator('.error-pill').innerText()).includes('SYNTHETIC_CODE'));
         await screenshot('builder-static-sandbox-errors');
         sandboxMode = 'failed';
@@ -637,6 +649,76 @@ try {
         assert.ok((await card.locator('.sandbox-results-container .notice-text').innerText()).includes('Synthetic failure'));
         await screenshot('builder-static-sandbox-failed');
         await page.evaluate(() => { builderStaticHandle.dispose(); document.querySelector('#builder-static-fixture').remove(); });
+      }
+      if (process.env.PUBLISHING_UI_PARITY === '1') {
+        const assertNoEmoji = async stateName => {
+          const found = await page.evaluate(source => {
+            const pattern = new RegExp(source, 'u');
+            const modal = document.querySelector('#smart-publishing-modal');
+            const texts = [modal.innerText];
+            for (const el of modal.querySelectorAll('*')) for (const name of ['placeholder', 'title', 'aria-label', 'value']) texts.push(el.getAttribute(name) || '');
+            return texts.join('\n').split('').filter(ch => pattern.test(ch));
+          }, bannedEmoji);
+          assert.deepEqual(found, [], `${stateName}: publishing modal has no colour emoji`);
+        };
+        // The loading spinner rotates forever; freeze it so computed transform and pixels are deterministic.
+        const freezeSpinners = () => page.evaluate(() => document.getAnimations().forEach(animation => { animation.pause(); animation.currentTime = 0; }));
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'publishing-fixture'; document.body.prepend(host);
+          window.publishingGate = {};
+          window.publishingHandle = integrationApp.mountBuilder(host, data, {
+            courseId: 2,
+            catalog: [{ testKey: 'synthetic-test', title: 'Synthetic test', sessionNumber: 1 }],
+            classes: [{ classId: '101', name: 'Synthetic class A', courseCode: '34' }, { classId: '102', name: 'Synthetic class B', courseCode: '34', submissionCount: 3 }],
+            onPublishPreview: () => new Promise(resolve => { publishingGate.preview = resolve; }),
+            onPublish: () => new Promise(resolve => { publishingGate.publish = resolve; })
+          });
+        }, form('publishing'));
+        await page.locator('#publishing-fixture #btn-publish-test').click();
+        const modal = page.locator('#smart-publishing-modal');
+        await modal.waitFor({ state: 'visible' });
+        await modal.locator('label.scope-radio-card:has(#radio-scope-classes)').click();
+        await modal.locator('#specific-classes-container').waitFor({ state: 'visible' });
+        assert.equal(await modal.locator('#input-class-search').getAttribute('placeholder'), 'Tìm kiếm mã lớp...');
+        await assertNoEmoji('step1');
+        await screenshot('publishing-step1');
+        await modal.locator('#btn-deselect-all-classes').click();
+        await modal.locator('#btn-step1-next').click();
+        assert.ok((await modal.locator('#publishing-error-msg').innerText()).includes('Vui lòng chọn ít nhất 1 lớp'));
+        await screenshot('publishing-step1-error');
+        await modal.locator('#btn-select-all-classes').click();
+        await modal.locator('#btn-step1-next').click();
+        await modal.locator('#btn-step1-next svg.spin').waitFor();
+        assert.ok((await modal.locator('#btn-step1-next').innerText()).includes('Đang phân tích tác động'));
+        await assertNoEmoji('step1-loading');
+        await freezeSpinners();
+        await screenshot('publishing-step1-loading');
+        await page.evaluate(() => publishingGate.preview({ totalChecked: 2, updatedCount: 1, skippedCount: 1, targetTestTitle: 'Synthetic test' }));
+        await modal.locator('#input-confirm-title').waitFor();
+        assert.ok(await modal.locator('#btn-step2-back svg').count() >= 1, 'back button has an SVG icon');
+        assert.ok(await modal.locator('#btn-auto-fill-confirm svg').count() >= 1, 'auto-fill button has an SVG icon');
+        assert.ok(await modal.locator('#confirm-match-status .status-unmatched svg').count() >= 1, 'unmatched status has an SVG icon');
+        await assertNoEmoji('step2-unmatched');
+        await screenshot('publishing-step2-unmatched');
+        await modal.locator('#input-confirm-title').fill(await modal.locator('#target-title-reference').innerText());
+        await modal.locator('#confirm-match-status .status-matched svg').waitFor();
+        await assertNoEmoji('step2-matched');
+        await screenshot('publishing-step2-matched');
+        await modal.locator('#btn-final-publish').click();
+        await modal.locator('#btn-final-publish svg.spin').waitFor();
+        assert.ok((await modal.locator('#btn-final-publish').innerText()).includes('Đang công bố'));
+        await assertNoEmoji('step2-loading');
+        await freezeSpinners();
+        await screenshot('publishing-step2-loading');
+        await page.evaluate(() => publishingGate.publish({ ok: false, message: 'Synthetic publish failure' }));
+        await modal.locator('#publishing-error-msg').waitFor({ state: 'visible' });
+        assert.ok((await modal.locator('#publishing-error-msg').innerText()).includes('Synthetic publish failure'));
+        assert.ok((await modal.locator('#btn-final-publish').innerText()).includes('Xác nhận'), 'publish button label is restored after the error');
+        assert.equal(await modal.locator('#btn-final-publish svg.spin').count(), 0, 'spinner is removed after the error');
+        await assertNoEmoji('step2-error');
+        await screenshot('publishing-step2-error');
+        await page.evaluate(() => { publishingHandle.dispose(); document.querySelector('#publishing-fixture').remove(); });
+        assert.equal(await page.locator('#smart-publishing-modal').count(), 0, 'dispose removes the publishing modal');
       }
       if (process.env.BUILDER_STYLE_PARITY === '1') {
         await page.evaluate(data => {

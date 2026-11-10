@@ -2613,7 +2613,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         }
 
         btn.disabled = true;
-        btn.textContent = '⏳ Đang chấm AI...';
+        btn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang chấm AI...</span>`;
         if (resultsContainer) {
           resultsContainer.style.display = 'block';
           resultsContainer.innerHTML = '<div class="alert-notice"><div class="notice-text">Đang gửi yêu cầu đánh giá đến AI Gateway...</div></div>';
