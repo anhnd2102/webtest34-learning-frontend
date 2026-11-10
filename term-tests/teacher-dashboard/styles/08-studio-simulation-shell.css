@@ -1023,7 +1023,7 @@ button.btn-publish-test:hover:not(:disabled) {
 
 .status-incorrect {
   font-weight: 700;
-  color: #dc2626;
+  color: var(--izone-danger);
 }
 
 .sim-results-footer {

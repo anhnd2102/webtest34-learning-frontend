@@ -720,6 +720,28 @@ try {
         await page.evaluate(() => { publishingHandle.dispose(); document.querySelector('#publishing-fixture').remove(); });
         assert.equal(await page.locator('#smart-publishing-modal').count(), 0, 'dispose removes the publishing modal');
       }
+      if (process.env.DANGER_COLOR_CHECK === '1') {
+        // Probe elements for danger styles that the synthetic fixtures do not render; DESIGN_SYSTEM.md Danger text is #e11d48.
+        const colours = await page.evaluate(() => {
+          const probe = document.createElement('div');
+          probe.innerHTML = '<span class="score-total tier-red">1</span><span class="immutability-badge warning">w</span><button class="btn btn-outline-danger">d</button><button id="btn-final-publish" class="btn btn-danger is-ready">p</button><div class="publishing-error-msg">e</div>';
+          document.body.append(probe);
+          const read = selector => { const style = getComputedStyle(probe.querySelector(selector)); return { color: style.color, background: style.backgroundColor, border: style.borderTopColor }; };
+          const result = {
+            tierRed: read('.tier-red'), immutability: read('.immutability-badge.warning'), outlineDanger: read('.btn-outline-danger'),
+            ready: read('#btn-final-publish.is-ready'), errorMsg: read('.publishing-error-msg')
+          };
+          probe.remove();
+          return result;
+        });
+        const danger = 'rgb(225, 29, 72)';
+        assert.equal(colours.tierRed.color, danger);
+        assert.equal(colours.immutability.color, danger);
+        assert.equal(colours.outlineDanger.color, danger);
+        assert.equal(colours.errorMsg.color, danger);
+        assert.equal(colours.ready.background, danger);
+        assert.equal(colours.ready.border, 'rgb(185, 28, 28)', 'ready button keeps its darker border');
+      }
       if (process.env.BUILDER_STYLE_PARITY === '1') {
         await page.evaluate(data => {
           const host = document.createElement('section'); host.id = 'builder-style-fixture'; document.body.prepend(host);

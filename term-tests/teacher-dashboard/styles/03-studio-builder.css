@@ -360,7 +360,7 @@
   align-items: center;
   gap: 5px;
   background: transparent;
-  color: #dc2626;
+  color: var(--izone-danger);
   border: 1px solid #fca5a5;
   box-shadow: none;
   font-weight: 600;
@@ -431,7 +431,7 @@
 
 .immutability-badge.warning {
   background: #fef2f2;
-  color: #dc2626;
+  color: var(--izone-danger);
   border: 1px solid #fecaca;
 }
 

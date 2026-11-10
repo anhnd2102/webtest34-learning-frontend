@@ -37,3 +37,7 @@ Ngày 10/11/2026. Nhánh `refactor/publishing-static-styles`, baseline `c4d45ab`
 - Artifacts nằm trong scratchpad của phiên: `pb-before1/`, `pb-before2/`, `pb-after/`, `pb-smoke/`.
 
 Rollback: revert commit template/CSS/token/metadata như một đơn vị.
+
+## Cập nhật 10/11/2026
+
+Token `--izone-danger-legacy` đã được thay bằng `--izone-danger: #e11d48` và các chỗ dùng `#dc2626` khác được thống nhất theo quyết định của chủ dự án; xem `DANGER_COLOR_UNIFY_VERIFICATION.md`. Phần "parity giữ nguyên màu" ở trên mô tả trạng thái tại thời điểm commit gốc.

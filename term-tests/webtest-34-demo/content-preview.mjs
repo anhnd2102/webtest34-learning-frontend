@@ -1321,7 +1321,7 @@ export async function mount(course) {
               timeZone: 'Asia/Ho_Chi_Minh'
             }).format(new Date(grant.expiresAt));
             studentStatus.textContent = `Quyền làm lại đã hết hạn (hạn chót: ${expTime}). Hãy liên hệ giáo viên để được cấp lại.`;
-            studentStatus.style.color = '#dc2626';
+            studentStatus.style.color = '#e11d48';
             return;
           } else if (availableFromMs && availableFromMs > now) {
             startBtn.disabled = true;
@@ -1331,7 +1331,7 @@ export async function mount(course) {
               timeZone: 'Asia/Ho_Chi_Minh'
             }).format(new Date(grant.availableFrom));
             studentStatus.textContent = `Quyền làm lại chưa tới thời gian mở (bắt đầu lúc: ${openTime}).`;
-            studentStatus.style.color = '#dc2626';
+            studentStatus.style.color = '#e11d48';
             return;
           } else {
             const defMinutes = Number(learningState.assignment?.definition?.timing?.totalMinutes) || 120;
@@ -1383,7 +1383,7 @@ export async function mount(course) {
             if (soundcheckStatus) {
               soundcheckStatus.textContent = 'Lỗi tải audio';
               soundcheckStatus.style.background = '#fee2e2';
-              soundcheckStatus.style.color = '#dc2626';
+              soundcheckStatus.style.color = '#e11d48';
             }
           });
         }

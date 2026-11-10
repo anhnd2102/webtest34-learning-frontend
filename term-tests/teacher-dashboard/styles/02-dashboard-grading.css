@@ -894,7 +894,7 @@
 }
 
 .score-total.tier-red {
-  color: #dc2626;
+  color: var(--izone-danger);
 }
 
 .score-total.tier-gray {
