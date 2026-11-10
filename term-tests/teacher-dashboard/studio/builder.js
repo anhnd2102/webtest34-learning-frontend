@@ -381,19 +381,19 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               <textarea class="form-control exercise-instructions-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="2" placeholder="Ví dụ: Listen and note down the words/phrases you hear from the audio...">${escapeHtml(ex.instructions || '')}</textarea>
             </div>
             ${isComprehensionExercise(ex, block, draftState.gradingKey) ? `
-            <div class="form-group exercise-field exercise-reference-context-field" style="margin-top: 10px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
-                <label class="form-label" style="margin: 0; font-size: 0.82rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
+            <div class="form-group exercise-field exercise-reference-context-field">
+              <div class="exercise-reference-context-header">
+                <label class="form-label">
                   ${renderSvgIcon('book', 'icon-inline')}
                   <span>Ngữ cảnh bài đọc / Script tham chiếu chung cho AI:</span>
-                  <span class="badge badge-info" style="font-size: 0.72rem; padding: 2px 6px;">Ẩn với học viên</span>
+                  <span class="badge badge-info exercise-reference-context-badge">Ẩn với học viên</span>
                 </label>
                 <button type="button" class="btn btn-secondary btn-sm btn-pull-exercise-cloze-script" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" title="Tự động lấy đoạn văn từ bài Điền từ nội tuyến hoặc bài nghe phía trước">
                   ${renderSvgIcon('clipboard', 'icon-inline')} Lấy Script từ bài Điền từ phía trước
                 </button>
               </div>
               <textarea class="form-control form-control-sm exercise-reference-context-input" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" rows="3" placeholder="Dán đoạn văn bài đọc hoặc Script bài nghe dùng chung cho các câu hỏi Đọc hiểu Khối 03 trong bài này... AI sẽ đối chiếu văn bản này khi chấm các câu hỏi tự luận con.">${escapeHtml(ex.referenceContext || '')}</textarea>
-              <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+              <div class="exercise-reference-context-hint">
                 ${renderSvgIcon('lock', 'icon-inline')} <strong>Dùng chung toàn bài tập:</strong> Các câu hỏi Tự luận AI bên dưới sẽ tự động kế thừa ngữ cảnh này, không cần dán lặp lại ở từng câu hỏi.
               </div>
             </div>
@@ -2663,7 +2663,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           `).join('');
 
           const errorsRows = (sandboxResult.errors || []).map(err => `
-            <div class="error-pill" style="color: #b91c1c; font-size: 0.78rem;">
+            <div class="error-pill">
               • <strong>${escapeHtml(err.code || '')}:</strong> ${escapeHtml(err.message || '')}
             </div>
           `).join('');
@@ -2682,7 +2682,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           }
         } catch (err) {
           if (resultsContainer) {
-            resultsContainer.innerHTML = `<div class="alert-notice alert-immutable"><div class="notice-text" style="color:#b91c1c;">Lỗi: ${escapeHtml(err.message || 'Không thể chấm thử')}</div></div>`;
+            resultsContainer.innerHTML = `<div class="alert-notice alert-immutable"><div class="notice-text sandbox-error-text">Lỗi: ${escapeHtml(err.message || 'Không thể chấm thử')}</div></div>`;
           }
         } finally {
           btn.disabled = false;

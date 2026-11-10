@@ -1489,3 +1489,45 @@
 #batch-vocab-pair-modal .vocab-batch-preview-warning {
   color: var(--izone-import-warning);
 }
+
+/* Builder exercise context field and sandbox feedback: former static inline presentation. */
+.builder-exercise-body .exercise-reference-context-field {
+  margin-top: 10px;
+  background: var(--izone-slate-bg);
+  border: 1px dashed var(--izone-slate-300);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.exercise-reference-context-field .exercise-reference-context-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.exercise-reference-context-header .form-label {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--izone-slate);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.exercise-reference-context-header .exercise-reference-context-badge {
+  font-size: 0.72rem;
+  padding: 2px 6px;
+}
+.exercise-reference-context-field .exercise-reference-context-hint {
+  font-size: 0.75rem;
+  color: var(--izone-text-muted);
+  margin-top: 4px;
+}
+.sandbox-errors-breakdown .error-pill {
+  color: var(--izone-danger-strong);
+  font-size: 0.78rem;
+}
+.sandbox-results-container .sandbox-error-text {
+  color: var(--izone-danger-strong);
+}

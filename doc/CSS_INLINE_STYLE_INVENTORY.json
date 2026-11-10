@@ -1,7 +1,7 @@
 {
-  "baseline": "a158c4d",
-  "revision": "vocab-batch1",
-  "note": "Lexical inventory after vocabulary CSV modal static style extraction; not a CSS parser.",
+  "baseline": "6c1696f",
+  "revision": "builder-static1",
+  "note": "Lexical inventory after builder static style extraction; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/grading/attempt-review.js",
@@ -395,31 +395,6 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 384,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 385,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 386,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 389,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 396,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
       "line": 478,
       "kind": "attribute"
     },
@@ -477,16 +452,6 @@
       "file": "term-tests/teacher-dashboard/studio/builder.js",
       "line": 2618,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2666,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2685,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",

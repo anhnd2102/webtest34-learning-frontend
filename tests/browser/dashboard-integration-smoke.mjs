@@ -135,7 +135,7 @@ try {
       const screenshot = async (state, { preserveFocus = false, preserveHover = false } = {}) => {
         if (prefix) return;
         if (!preserveHover) await page.mouse.move(-1, -1);
-        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1' || process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1') {
+        if (process.env.CSV_GUIDE_STYLE_PARITY === '1' || process.env.GENERIC_BATCH_STYLE_PARITY === '1' || process.env.MOVE_EXERCISE_STYLE_PARITY === '1' || process.env.SIMULATION_SHELL_PARITY === '1' || process.env.SIMULATION_QUESTION_STYLE_PARITY === '1' || process.env.QUESTION_RENDERER_STYLE_PARITY === '1' || process.env.VOCAB_BATCH_MODAL_STYLE_PARITY === '1' || process.env.BUILDER_STATIC_STYLE_PARITY === '1') {
           await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getTiming().iterations)).map(animation => animation.finished.catch(() => {}))));
         }
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
@@ -600,6 +600,43 @@ try {
         await modal.locator('.btn-close-batch-modal-btn').click();
         assert.equal(await modal.isVisible(), false);
         await page.evaluate(() => { vocabBatchHandle.dispose(); document.querySelector('#vocab-batch-fixture').remove(); });
+      }
+      if (process.env.BUILDER_STATIC_STYLE_PARITY === '1') {
+        let sandboxMode = 'errors';
+        await page.route('**/api/teacher/forms/preview-sandbox', route => {
+          const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'POST, OPTIONS' };
+          if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+          const body = sandboxMode === 'errors'
+            ? { ok: true, scoreEarned: 1, maxScore: 4, criteria: [{ id: 'meaning', score: 1, maxScore: 2 }], errors: [{ code: 'SYNTHETIC_CODE', message: 'Synthetic error message' }] }
+            : { ok: false, message: 'Synthetic failure' };
+          return route.fulfill({ status: 200, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+        });
+        await page.evaluate(data => {
+          const host = document.createElement('section'); host.id = 'builder-static-fixture'; document.body.prepend(host);
+          data.blocks[0].exercises = [{ exerciseId: 'ex1', exerciseNumber: 1, title: 'Synthetic comprehension exercise', referenceContext: 'Synthetic shared context.', itemIds: ['r1'] }];
+          data.blocks[0].items = [{ itemVersionId: 'r1', exerciseId: 'ex1', position: 1, prompt: 'Synthetic comprehension', interactionType: 'long_text', pedagogicalTypeCode: 'writing', graderType: 'rubric_async', maxScore: 4, options: [] }];
+          data.gradingKey.items = { r1: { graderType: 'rubric_async', rubricCode: 'rubric_comprehension_v1', rubric: { scoringVersion: 'rubric-comprehension-v1', maxScore: 4, criteria: [{ id: 'meaning', label: 'Synthetic meaning', maxScore: 2, requiredConcepts: [] }, { id: 'keywords', label: 'Synthetic keywords', maxScore: 2, requiredConcepts: [] }] } } };
+          window.builderStaticHandle = integrationApp.mountBuilder(host, data);
+        }, form('builder-static'));
+        const host = page.locator('#builder-static-fixture');
+        const field = host.locator('.exercise-reference-context-field');
+        assert.equal(await field.count(), 1, 'comprehension exercise renders the shared context field');
+        await screenshot('builder-static-default');
+        await field.locator('.exercise-reference-context-input').focus();
+        await screenshot('builder-static-focus', { preserveFocus: true });
+        const card = host.locator('[data-item-id="r1"]');
+        await card.locator('.btn-rubric-tab[data-tab="sandbox"]').click();
+        await card.locator('.input-sandbox-sample').fill('Synthetic sample answer');
+        await card.locator('.btn-trigger-sandbox').click();
+        await card.locator('.sandbox-errors-breakdown .error-pill').waitFor();
+        assert.ok((await card.locator('.error-pill').innerText()).includes('SYNTHETIC_CODE'));
+        await screenshot('builder-static-sandbox-errors');
+        sandboxMode = 'failed';
+        await card.locator('.btn-trigger-sandbox').click();
+        await card.locator('.sandbox-results-container .alert-immutable .notice-text').waitFor();
+        assert.ok((await card.locator('.sandbox-results-container .notice-text').innerText()).includes('Synthetic failure'));
+        await screenshot('builder-static-sandbox-failed');
+        await page.evaluate(() => { builderStaticHandle.dispose(); document.querySelector('#builder-static-fixture').remove(); });
       }
       if (process.env.BUILDER_STYLE_PARITY === '1') {
         await page.evaluate(data => {
