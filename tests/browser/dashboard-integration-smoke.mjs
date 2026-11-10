@@ -615,7 +615,7 @@ try {
         await page.evaluate(() => { vocabBatchHandle.dispose(); document.querySelector('#vocab-batch-fixture').remove(); });
       }
       // Colour emoji are banned by DESIGN_SYSTEM.md; plain dingbat glyphs such as the check mark are not checked here.
-      const bannedEmoji = '[\\u{1F000}-\\u{1FAFF}\\u{2190}-\\u{21FF}\\u{231A}-\\u{23FF}\\u{2600}-\\u{26FF}\\u{2705}\\u{274C}\\u{2B00}-\\u{2BFF}\\u{FE0F}]';
+      const bannedEmoji = '[\\u{1F000}-\\u{1FAFF}\\u{2190}-\\u{21FF}\\u{231A}-\\u{23FF}\\u{25A0}-\\u{25FF}\\u{2600}-\\u{26FF}\\u{2705}\\u{274C}\\u{2B00}-\\u{2BFF}\\u{FE0F}]';
       if (process.env.BUILDER_STATIC_STYLE_PARITY === '1') {
         let sandboxMode = 'errors';
         let sandboxGate = Promise.resolve();
@@ -1041,6 +1041,8 @@ try {
         assert.equal(await sim.locator('.sim-section-lead-head').count(), 1);
         assert.equal(await sim.locator('#simulation-results-modal').isVisible(), false);
         await screenshot('simulation-shell-default');
+        assert.equal(await sim.locator('.strict-audio-dock').count(), 1, 'fixture renders the section audio dock');
+        assert.equal(await sim.locator('.btn-sim-audio-play').count(), 0, 'the simulation dock uses .btn-start-listening, never .btn-sim-audio-play');
         await answer('i1');
         assert.equal(await sim.locator('.progress-ratio').textContent(), '1/3');
         await sim.locator('.simulation-nav-pill[data-section-target="sim-block-1"]').click();

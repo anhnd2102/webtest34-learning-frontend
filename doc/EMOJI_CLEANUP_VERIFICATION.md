@@ -37,3 +37,7 @@ Ngày 10/11/2026. Nhánh `fix/design-system-emoji`, baseline `df3ed47` (`feature
 - Artifacts nằm trong scratchpad của phiên: `pub-try/`, `emoji-smoke/`, `emoji-assert/`.
 
 Rollback: revert commit như một đơn vị.
+
+## Cập nhật 10/11/2026
+
+Mục "Còn lại có chủ đích" ở trên nhận định `studio/simulation.js:1249-1252` là nút audio dùng chung với giao diện học viên. Nhận định đó sai: đó là handler không bao giờ chạy (0 nút `.btn-sim-audio-play` trong mô phỏng) và đã được xóa; các ký tự `▶` thật sự hiển thị cho học viên (`index.html`, `content-preview.mjs`) đã đổi sang SVG. Xem `CANDIDATE_AUDIO_GLYPHS_VERIFICATION.md`. Ngoài ra, danh sách 8 tên icon không tồn tại đã được xử lý bằng `ICON_FIX_VERIFICATION.md`.

@@ -1239,22 +1239,6 @@ function openCandidateSimulationModal() {
         });
       });
 
-      const audioPlayBtns = modal.querySelectorAll('.btn-sim-audio-play');
-      audioPlayBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const audioEl = btn.closest('.audio-dock')?.querySelector('audio');
-          if (audioEl) {
-            if (audioEl.paused) {
-              audioEl.play().catch(() => {});
-              btn.textContent = '⏸ Tạm dừng audio';
-            } else {
-              audioEl.pause();
-              btn.textContent = '▶ Phát audio (nếu có)';
-            }
-          }
-        });
-      });
-
       const openTextareas = modal.querySelectorAll('.candidate-open-textarea');
       openTextareas.forEach(ta => {
         ta.addEventListener('input', () => {

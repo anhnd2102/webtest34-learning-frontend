@@ -618,7 +618,7 @@ export function groupSections(form, bypass = false) {
     const ownsAudio = gateId && !renderedAudio.has(gateId);
     if (ownsAudio) renderedAudio.add(gateId);
     const audioControl = ownsAudio
-      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">▶ Phát audio (nếu có)</button><audio preload="metadata" src="${escape(resolveAudioUrl(group.audioPath))}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">${bypass ? 'Đã mở khóa nội dung câu hỏi để kiểm tra.' : 'Nội dung bài nghe đang được khóa.'}</span></div>`
+      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">${ICONS.play} Phát audio (nếu có)</button><audio preload="metadata" src="${escape(resolveAudioUrl(group.audioPath))}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">${bypass ? 'Đã mở khóa nội dung câu hỏi để kiểm tra.' : 'Nội dung bài nghe đang được khóa.'}</span></div>`
       : gateId
         ? `<p class="demo-notice demo-audio-linked">${bypass ? 'Bài nghe này dùng chung audio ở phần trên.' : 'Nhóm này sẽ mở khi audio ở phần trên bắt đầu phát.'}</p>`
         : group.audioRequired
