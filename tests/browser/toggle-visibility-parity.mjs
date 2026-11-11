@@ -35,6 +35,10 @@ const rubricForm = () => {
   form.gradingKey.items = Object.fromEntries(['r1', 'r2', 'r3'].map(id => [id, { graderType: 'rubric_async', rubricCode: 'rubric_comprehension_v1', rubric: structuredClone(rubric) }]));
   return form;
 };
+const pictorialForm = () => {
+  const item = (id, position, image) => ({ itemVersionId: id, exerciseId: 'ex1', position, prompt: 'Synthetic picture', interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: 1, options: [], targetWord: 'synthetic', ...(image ? { image } : {}) });
+  return baseForm([item('p1', 1, '../webtest-34-demo/assets/03/test-1/pic-2.png'), item('p2', 2, null)]);
+};
 const vocabItems = () => ['v1', 'v2'].map((id, index) => ({
   itemVersionId: id, exerciseId: 'ex1', position: index + 1, prompt: 'Synthetic vocabulary', targetWord: index ? 'second-word' : 'full-time',
   interactionType: 'text_select_pair', graderType: 'accepted_text_exact_option', maxScore: 1,
@@ -168,6 +172,54 @@ try {
       await expectOnly('sandbox');
       await expectVisible(r1.locator('.sandbox-results-container'), true, 'sandbox results persist across tab switches');
       await page.evaluate(() => { window['toggle-rubricHandle'].dispose?.(); });
+    }
+    if (groups.includes('pictorial')) {
+      const host = await mount('toggle-pictorial', pictorialForm());
+      const good = '../webtest-34-demo/assets/03/test-1/pic-2.png';
+      const bad = '../webtest-34-demo/assets/03/test-1/missing-image.png';
+      const settled = locator => locator.evaluate(img => img.complete || new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true }); }));
+      const p1 = host.locator('[data-item-id="p1"]');
+      const p2 = host.locator('[data-item-id="p2"]');
+      const state = card => ({ img: card.locator('.pictorial-preview-img'), err: card.locator('.pictorial-preview-error'), input: card.locator('.input-pictorial-image'), btn: card.locator('.btn-preview-drive-image') });
+      const a = state(p1), b = state(p2);
+      await settled(a.img);
+      await expectVisible(a.img, true, 'item with an image starts with the preview visible');
+      await expectVisible(a.err, false, 'no error badge initially');
+      await expectVisible(b.img, false, 'item without an image starts with the preview hidden');
+      // Hành vi có sẵn (giữ nguyên, không sửa trong đợt này): <img src=""> phát sự kiện error nên huy hiệu lỗi hiện cả khi chưa có ảnh.
+      await b.err.waitFor({ state: 'visible' });
+      await expectVisible(b.err, true, 'existing behaviour: an empty src fires onerror and shows the badge');
+      await capture('pictorial-with-image', p1);
+      await capture('pictorial-no-image', p2);
+      // Nhập URL hợp lệ vào câu chưa có ảnh: ảnh hiện sau khi tải.
+      await b.input.fill(good);
+      await settled(b.img);
+      await expectVisible(b.img, true, 'a valid URL shows the preview');
+      await expectVisible(b.err, false, 'no error badge for a valid URL');
+      await capture('pictorial-typed-valid', p2);
+      // URL lỗi: onerror ẩn ảnh và hiện huy hiệu lỗi.
+      await b.input.fill(bad);
+      await b.err.waitFor({ state: 'visible' });
+      await expectVisible(b.img, false, 'a broken URL hides the preview');
+      await expectVisible(b.err, true, 'a broken URL shows the error badge');
+      await capture('pictorial-typed-broken', p2);
+      // Xóa URL: ảnh ẩn (huy hiệu lỗi: xem ghi chú hành vi có sẵn bên dưới).
+      await b.input.fill('');
+      await expectVisible(b.img, false, 'clearing the URL hides the preview');
+      // Cùng hành vi có sẵn: JS đặt src = '' nên onerror chạy ngay sau đó và hiện lại huy hiệu lỗi.
+      await b.err.waitFor({ state: 'visible' });
+      await expectVisible(b.err, true, 'existing behaviour: clearing the URL sets an empty src, so onerror shows the badge');
+      await capture('pictorial-cleared', p2);
+      // Nút xem trước với URL hợp lệ.
+      await b.input.fill(good);
+      await b.input.fill('');
+      await b.input.evaluate((el, value) => { el.value = value; }, good);
+      await b.btn.click();
+      await settled(b.img);
+      await expectVisible(b.img, true, 'the preview button shows a valid image');
+      await expectVisible(b.err, false, 'the preview button leaves no error badge');
+      await capture('pictorial-preview-button', p2);
+      await page.evaluate(() => { window['toggle-pictorialHandle'].dispose?.(); });
     }
     assert.deepEqual(errors, [], `browser errors at ${viewport.width}`);
     await page.close();

@@ -147,10 +147,10 @@ test('Pictorial Vocabulary: input listener converts Google Drive sharing link to
 
   const mockImg = {
     src: '',
-    style: {}
+    hidden: true
   };
   const mockErr = {
-    style: {}
+    hidden: false
   };
 
   const mockCard = {
@@ -223,7 +223,8 @@ test('Pictorial Vocabulary: input listener converts Google Drive sharing link to
     'https://drive.google.com/thumbnail?id=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs&sz=w1600',
     'Updates image preview src'
   );
-  assert.equal(mockImg.style.display, 'inline-block', 'Makes image preview visible');
+  assert.equal(mockImg.hidden, false, 'Makes image preview visible');
+  assert.equal(mockErr.hidden, true, 'Hides the load-error badge while a new URL is previewed');
 });
 
 test('Inline Cloze: deduplicates editor toolbar by removing redundant .cloze-editor-box', () => {

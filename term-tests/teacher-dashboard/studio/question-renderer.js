@@ -828,8 +828,8 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   </button>
                 </div>
                 <div class="pictorial-preview-wrap pictorial-thumb-preview">
-                  <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview"${imgSrc ? '' : ' style="display: none;"'} onerror="this.style.display='none'; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='inline-block';" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='none'; this.style.display='inline-block';" />
-                  <span class="pictorial-preview-error badge badge-warning" style="display: none;">${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
+                  <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview"${imgSrc ? '' : ' hidden'} onerror="this.hidden = true; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.hidden = false;" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.hidden = true; this.hidden = false;" />
+                  <span class="pictorial-preview-error badge badge-warning" hidden>${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
                 </div>
               </div>
 

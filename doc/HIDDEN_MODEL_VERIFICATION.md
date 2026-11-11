@@ -14,7 +14,7 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 |---|---|---|---|
 | 1 | **Vocabulary bank + bulk paste** (đợt này) | `question-renderer.js` 998, 1016 | Hai panel `div` block; xong |
 | 2 | **Rubric panes + sandbox results + ngữ cảnh AI** (đợt 2, xong) | 1093, 1142, 1147, 1156 | `display` ban đầu của ngữ cảnh AI phụ thuộc dữ liệu |
-| 3 | Pictorial lỗi/ảnh xem trước | 831, 832 | `pictorial.js` đặt `inline-block` nhưng CSS fragment 05 là `block`; `onerror` đặt `inline-block` nhưng fragment 09 là `inline-flex` — cần rule giữ giá trị |
+| 3 | **Pictorial lỗi/ảnh xem trước** (đợt 3, xong) | 831, 832 | `pictorial.js` đặt `inline-block` nhưng CSS fragment 05 là `block`; `onerror` đặt `inline-block` nhưng fragment 09 là `inline-flex` — cần rule giữ giá trị |
 | 4 | Publishing (5), media (2), vocabulary.js (1) | | modal đặt `flex`; `liveStatus`/`endedNotice` đặt `inline-flex` |
 | 5 | Rich editor (popup bảng/ảnh, lỗi, textarea mã) | 491, 512, 518, 535, 538, 1310, 1332, 1338, 1360, 1363 + `rich-editor.js` | **Rủi ro cao nhất**: `draft-inputs.js:25` đọc `vEl.style.display !== 'none'` để chọn nguồn lưu (editor trực quan hay mã HTML); `builder.js` 2944/2988 đọc cùng cờ. Lệch = lưu nhầm nội dung. Cần test hành vi chuyển chế độ → sửa → lưu trước khi chuyển. `builder.js` (2879, 2992, 2998, 3170) và `rich-editor.js` (206, 287, 293, 418) dường như bật/tắt cùng các phần tử; phải xác định đường nào đang chạy hoặc chuyển cả hai |
 
@@ -47,14 +47,32 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 - **21/21 computed snapshots giống baseline và 21/21 PNG trùng từng byte**; baseline chạy hai lần cũng trùng nhau (không nhiễu ở nhóm này). 0 browser errors.
 - `npm test`: 671/671 pass; `css-metadata check` khớp.
 
+## Đợt 3: Pictorial (ảnh xem trước + huy hiệu lỗi)
+
+- `question-renderer.js`: `<img class="pictorial-preview-img">` dùng `hidden` khi chưa có `imgSrc`; huy hiệu `.pictorial-preview-error` dùng `hidden`. Hai handler nội tuyến trong template đổi sang `hidden`: `onerror` → `this.hidden = true` + hiện huy hiệu; `onload` → ẩn huy hiệu + `this.hidden = false`.
+- `authoring/pictorial.js`: hai chỗ cập nhật xem trước (sự kiện nhập và nút "Xem trước ảnh") đặt `previewImg.hidden`/`previewErr.hidden` thay cho `style.display`.
+- **Lệch `display` đúng như đã dự đoán, đã sửa**: JS cũ đặt huy hiệu lỗi `inline-block` (thắng `display: inline-flex` ở fragment 09), nên sau khi chỉ đổi sang `hidden` thì huy hiệu thành `flex`, cao thêm 17px (phát hiện bằng so sánh computed: `display: block -> flex`, `height: 82px -> 99px`). Thêm rule `.pictorial-thumb-preview .pictorial-preview-error:not([hidden]) { display: inline-block; }` ở fragment 12 để giữ nguyên. Ảnh xem trước không cần rule: JS cũ đặt `inline-block` nhưng ảnh là flex item (blockify thành `block`), trùng `display: block` của fragment 05.
+- Test: `tests/test-studio-pictorial-vocab.test.mjs` thêm 5 assertion về `hidden`/handler (đã kiểm **đỏ trên template cũ, xanh sau thay đổi**); `tests/test-studio-inline-cloze-table-and-drive-preview.test.mjs` đổi mock từ `style.display` sang `hidden` (`mockImg.hidden === false`, `mockErr.hidden === true`).
+- Inventory 152 → 142; rule map 1841 → 1842.
+
+### Hành vi có sẵn được ghi nhận, KHÔNG sửa trong đợt này
+
+`<img src="">` phát sự kiện `error`, nên `onerror` chạy và **hiện huy hiệu "Không thể tải ảnh" cả khi câu chưa có ảnh**, và hiện lại ngay sau khi xóa URL (JS đặt `src = ''`). Hành vi này có từ trước (baseline cũng vậy) và fixture khẳng định đúng như thế để giữ parity. Đây có thể là lỗi UX thật (giáo viên thấy cảnh báo lỗi ở thẻ trống); sửa sẽ là thay đổi hành vi nên cần quyết định riêng, ví dụ chỉ gắn `src` khi có giá trị.
+
+### Xác minh đợt 3
+
+- Fixture `toggle-visibility-parity.mjs` thêm nhóm `pictorial` (`TOGGLE_GROUPS=pictorial`): câu có ảnh, câu không ảnh, nhập URL hợp lệ, nhập URL lỗi (404), xóa URL, nút xem trước. 6 trạng thái × 3 viewport; khẳng định `isVisible()` của ảnh và huy hiệu ở từng bước, bao gồm trạng thái ảnh lỗi mà các fixture trước chưa phủ.
+- **18/18 computed snapshots giống baseline và 18/18 PNG trùng từng byte** (sau khi thêm rule giữ `inline-block`); baseline chạy hai lần trùng nhau 18/18. 0 browser errors.
+- `npm test`: 671/671 pass; `css-metadata check` khớp.
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.
 
 ## Giới hạn
 
-- Mới hai nhóm (vocab, rubric). Còn các nhóm 3–5 trong bảng (pictorial, publishing/media/vocabulary.js, rich editor).
+- Mới ba nhóm (vocab, rubric, pictorial). Còn nhóm 4 (publishing/media/vocabulary.js) và nhóm 5 (rich editor).
 - Chưa chạy lại smoke vòng đời `/preview-base`.
-- Fixture hiện có nhóm `vocab` và `rubric`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
+- Fixture hiện có nhóm `vocab`, `rubric` và `pictorial`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
 
 Rollback: revert commit như một đơn vị.

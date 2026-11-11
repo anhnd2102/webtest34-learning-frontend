@@ -469,3 +469,9 @@
   border: 1px solid var(--izone-border);
   object-fit: contain;
 }
+
+/* Huy hiệu lỗi ảnh Pictorial: trước đây JS đặt inline display:inline-block khi hiện (thắng inline-flex ở fragment 09).
+   Sau khi chuyển sang thuộc tính hidden, giữ nguyên giá trị đó để bố cục không đổi. */
+.pictorial-thumb-preview .pictorial-preview-error:not([hidden]) {
+  display: inline-block;
+}

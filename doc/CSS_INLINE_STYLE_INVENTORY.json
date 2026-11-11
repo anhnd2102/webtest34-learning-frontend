@@ -1,7 +1,7 @@
 {
-  "baseline": "7c31a87",
-  "revision": "20261111-hidden-rubric",
-  "note": "Lexical inventory after rubric panes, sandbox results and AI context moved to the hidden attribute; not a CSS parser.",
+  "baseline": "d6e212b",
+  "revision": "20261111-hidden-pictorial",
+  "note": "Lexical inventory after pictorial preview image and error badge moved to the hidden attribute; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -62,41 +62,6 @@
       "file": "term-tests/teacher-dashboard/studio/authoring/error-correction.js",
       "line": 76,
       "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 200,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 201,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 204,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 205,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 237,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 238,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/pictorial.js",
-      "line": 241,
-      "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
@@ -516,21 +481,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
       "line": 538,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 831,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 831,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 832,
       "kind": "attribute"
     },
     {

@@ -11116,5 +11116,11 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".pictorial-thumb-preview .pictorial-preview-img"
+  },
+  {
+    "order": 1841,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".pictorial-thumb-preview .pictorial-preview-error:not([hidden])"
   }
 ]

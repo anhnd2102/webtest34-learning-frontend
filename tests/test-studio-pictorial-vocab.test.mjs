@@ -71,6 +71,12 @@ test('renderTestBuilderView provides button to add pictorial vocabulary cards', 
   assert.ok(container.innerHTML.includes('input-pictorial-caption'), 'Renders Vietnamese meaning caption input');
   assert.ok(container.innerHTML.includes('input-pictorial-letter-hint'), 'Renders letter hint input field');
   assert.ok(container.innerHTML.includes('pictorial-thumb-preview'), 'Renders thumbnail preview when image is supplied');
+  // Ẩn/hiện của ảnh xem trước và huy hiệu lỗi dùng thuộc tính hidden; handler tải ảnh đảo bằng el.hidden.
+  assert.doesNotMatch(container.innerHTML, /class="pictorial-preview-img"[^>]* hidden[ >]/, 'preview image is visible when an image is supplied');
+  assert.match(container.innerHTML, /class="pictorial-preview-error[^"]*" hidden>/, 'error badge starts hidden');
+  assert.match(container.innerHTML, /onerror="this\.hidden = true;[^"]*err\.hidden = false;"/, 'onerror hides the image and shows the badge through hidden');
+  assert.match(container.innerHTML, /onload="[^"]*err\.hidden = true;[^"]*this\.hidden = false;"/, 'onload hides the badge and shows the image through hidden');
+  assert.doesNotMatch(container.innerHTML, /pictorial-preview-(img|error)[^>]*display:\s*none/, 'pictorial preview no longer relies on inline display');
 });
 
 test('generateHangmanHint handles single letters, numbers, and uppercase characters gracefully', () => {
