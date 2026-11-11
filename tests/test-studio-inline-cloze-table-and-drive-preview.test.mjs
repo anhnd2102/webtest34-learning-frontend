@@ -227,6 +227,49 @@ test('Pictorial Vocabulary: input listener converts Google Drive sharing link to
   assert.equal(mockErr.hidden, true, 'Hides the load-error badge while a new URL is previewed');
 });
 
+test('Pictorial Vocabulary: clearing the image URL removes src and hides the preview without raising the load-error badge', () => {
+  let capturedInputHandler = null;
+  const attributes = new Map([['src', 'assets/old.png']]);
+  const mockImg = {
+    hidden: false,
+    get src() { return attributes.get('src') ?? ''; },
+    set src(value) { attributes.set('src', value); },
+    removeAttribute: name => attributes.delete(name)
+  };
+  const mockErr = { hidden: false };
+  const mockCard = {
+    querySelector: sel => sel === '.pictorial-preview-img' ? mockImg : (sel === '.pictorial-preview-error' ? mockErr : null)
+  };
+  const mockInput = {
+    value: '',
+    getAttribute: attr => (attr === 'data-block-idx' || attr === 'data-item-idx' ? '0' : null),
+    addEventListener: (evt, handler) => { if (evt === 'input') capturedInputHandler = handler; },
+    closest: () => mockCard
+  };
+  const mockContainer = {
+    innerHTML: '',
+    querySelector: () => null,
+    querySelectorAll: sel => (sel === '.input-pictorial-image' ? [mockInput] : [])
+  };
+  const mockForm = {
+    id: '44010000-0000-4000-8000-000000000003', version: 1, status: 'draft', title: 'Pictorial Test 3', submissionCount: 0,
+    publicDefinition: {
+      schemaVersion: 'FormDefinitionV1', formVersionId: '44010000-0000-4000-8000-000000000003', title: 'Pictorial Test 3', durationMinutes: 45,
+      blocks: [{ blockId: 'b1', items: [{ itemFamilyId: 'f1', itemVersionId: 'it-pic-3', position: 1, interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', image: 'assets/old.png', options: [] }] }]
+    },
+    gradingKey: { items: { 'it-pic-3': { graderType: 'accepted_text', accepted: ['car'] } } }
+  };
+
+  renderTestBuilderView(mockContainer, mockForm);
+  assert.ok(typeof capturedInputHandler === 'function', 'Registers input event listener on image input');
+
+  capturedInputHandler();
+
+  assert.equal(attributes.has('src'), false, 'removes the src attribute instead of assigning an empty src (an empty src fires onerror)');
+  assert.equal(mockImg.hidden, true, 'hides the image preview');
+  assert.equal(mockErr.hidden, true, 'keeps the load-error badge hidden');
+});
+
 test('Inline Cloze: deduplicates editor toolbar by removing redundant .cloze-editor-box', () => {
   const mockContainer = {
     innerHTML: '',

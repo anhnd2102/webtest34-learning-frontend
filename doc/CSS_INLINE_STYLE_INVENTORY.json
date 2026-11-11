@@ -1,7 +1,7 @@
 {
-  "baseline": "d6e212b",
-  "revision": "20261111-hidden-pictorial",
-  "note": "Lexical inventory after pictorial preview image and error badge moved to the hidden attribute; not a CSS parser.",
+  "baseline": "4316e71",
+  "revision": "20261111-hidden-pictorial2",
+  "note": "Lexical inventory after pictorial empty-src fix; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",

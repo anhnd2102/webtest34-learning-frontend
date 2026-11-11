@@ -55,14 +55,21 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 - Test: `tests/test-studio-pictorial-vocab.test.mjs` thêm 5 assertion về `hidden`/handler (đã kiểm **đỏ trên template cũ, xanh sau thay đổi**); `tests/test-studio-inline-cloze-table-and-drive-preview.test.mjs` đổi mock từ `style.display` sang `hidden` (`mockImg.hidden === false`, `mockErr.hidden === true`).
 - Inventory 152 → 142; rule map 1841 → 1842.
 
-### Hành vi có sẵn được ghi nhận, KHÔNG sửa trong đợt này
+### Sửa lỗi huy hiệu ảnh trống (đợt 3b, thay đổi hành vi có chủ đích)
 
-`<img src="">` phát sự kiện `error`, nên `onerror` chạy và **hiện huy hiệu "Không thể tải ảnh" cả khi câu chưa có ảnh**, và hiện lại ngay sau khi xóa URL (JS đặt `src = ''`). Hành vi này có từ trước (baseline cũng vậy) và fixture khẳng định đúng như thế để giữ parity. Đây có thể là lỗi UX thật (giáo viên thấy cảnh báo lỗi ở thẻ trống); sửa sẽ là thay đổi hành vi nên cần quyết định riêng, ví dụ chỉ gắn `src` khi có giá trị.
+Lỗi có sẵn từ baseline: `<img src="">` phát sự kiện `error`, nên `onerror` hiện huy hiệu "Không thể tải ảnh" **cả ở thẻ chưa có ảnh** và ngay sau khi giáo viên xóa URL (JS gán `src = ''`). Đã sửa:
+
+- `question-renderer.js`: không in thuộc tính `src` khi `imgSrc` rỗng (`${imgSrc ? ` src="..."` : ' hidden'}`).
+- `authoring/pictorial.js`: hai chỗ xóa xem trước dùng `previewImg.removeAttribute('src')` thay cho `src = ''`.
+- Test: `test-studio-pictorial-vocab.test.mjs` (thẻ trống không có `src`, thẻ có ảnh giữ `src`) và `test-studio-inline-cloze-table-and-drive-preview.test.mjs` (xóa URL gỡ `src`, ẩn ảnh, không hiện huy hiệu). Cả hai nhóm test **đỏ trên mã cũ, xanh sau thay đổi**. Lưu ý khi viết test: `renderTestBuilderView` lưu trạng thái theo id form, nên hai lần render cùng id trả về dữ liệu lần đầu; dùng id khác cho mỗi trường hợp.
+- Fixture `pictorial` đổi khẳng định sang hành vi mới (huy hiệu ẩn ở thẻ trống và sau khi xóa; `src` bị gỡ).
+- So sánh với baseline cũ: **12/12 trạng thái không liên quan giữ nguyên** (computed và PNG của câu có ảnh, nhập URL hợp lệ, URL lỗi, nút xem trước). **Chỉ 6 trạng thái "không ảnh" và "đã xóa" (3 viewport × 2) khác**, và khác biệt đúng là huy hiệu chuyển từ `display: block` sang `none`, thẻ co lại 86px (463px → 377px); không có thuộc tính nào khác đổi.
+- `npm test`: 671/671 + test mới; `css-metadata check` khớp.
 
 ### Xác minh đợt 3
 
 - Fixture `toggle-visibility-parity.mjs` thêm nhóm `pictorial` (`TOGGLE_GROUPS=pictorial`): câu có ảnh, câu không ảnh, nhập URL hợp lệ, nhập URL lỗi (404), xóa URL, nút xem trước. 6 trạng thái × 3 viewport; khẳng định `isVisible()` của ảnh và huy hiệu ở từng bước, bao gồm trạng thái ảnh lỗi mà các fixture trước chưa phủ.
-- **18/18 computed snapshots giống baseline và 18/18 PNG trùng từng byte** (sau khi thêm rule giữ `inline-block`); baseline chạy hai lần trùng nhau 18/18. 0 browser errors.
+- **18/18 computed snapshots giống baseline và 18/18 PNG trùng từng byte** tại thời điểm đợt 3 (sau khi thêm rule giữ `inline-block`; đợt 3b sau đó cố ý đổi 6 trạng thái, xem trên); baseline chạy hai lần trùng nhau 18/18. 0 browser errors.
 - `npm test`: 671/671 pass; `css-metadata check` khớp.
 
 ## Phát hiện cần quyết định (chưa thay đổi)

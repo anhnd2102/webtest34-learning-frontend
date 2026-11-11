@@ -200,7 +200,7 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
             previewImg.hidden = false;
             if (previewErr) previewErr.hidden = true;
           } else {
-            previewImg.src = '';
+            previewImg.removeAttribute('src');
             previewImg.hidden = true;
             if (previewErr) previewErr.hidden = true;
           }
@@ -237,7 +237,7 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
               previewImg.hidden = false;
               if (previewErr) previewErr.hidden = true;
             } else {
-              previewImg.src = '';
+              previewImg.removeAttribute('src');
               previewImg.hidden = true;
             }
           }

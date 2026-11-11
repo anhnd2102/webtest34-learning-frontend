@@ -186,9 +186,10 @@ try {
       await expectVisible(a.img, true, 'item with an image starts with the preview visible');
       await expectVisible(a.err, false, 'no error badge initially');
       await expectVisible(b.img, false, 'item without an image starts with the preview hidden');
-      // Hành vi có sẵn (giữ nguyên, không sửa trong đợt này): <img src=""> phát sự kiện error nên huy hiệu lỗi hiện cả khi chưa có ảnh.
-      await b.err.waitFor({ state: 'visible' });
-      await expectVisible(b.err, true, 'existing behaviour: an empty src fires onerror and shows the badge');
+      // Đã sửa: không gắn src rỗng nên onerror không chạy và huy hiệu lỗi không hiện ở thẻ chưa có ảnh (trước đây <img src=""> phát error).
+      await page.waitForTimeout(150);
+      await expectVisible(b.err, false, 'no error badge on a card without an image');
+      assert.equal(await b.img.evaluate(img => img.hasAttribute('src')), false, 'card without an image has no src attribute');
       await capture('pictorial-with-image', p1);
       await capture('pictorial-no-image', p2);
       // Nhập URL hợp lệ vào câu chưa có ảnh: ảnh hiện sau khi tải.
@@ -203,12 +204,13 @@ try {
       await expectVisible(b.img, false, 'a broken URL hides the preview');
       await expectVisible(b.err, true, 'a broken URL shows the error badge');
       await capture('pictorial-typed-broken', p2);
-      // Xóa URL: ảnh ẩn (huy hiệu lỗi: xem ghi chú hành vi có sẵn bên dưới).
+      // Xóa URL: ảnh và huy hiệu lỗi đều ẩn.
       await b.input.fill('');
       await expectVisible(b.img, false, 'clearing the URL hides the preview');
-      // Cùng hành vi có sẵn: JS đặt src = '' nên onerror chạy ngay sau đó và hiện lại huy hiệu lỗi.
-      await b.err.waitFor({ state: 'visible' });
-      await expectVisible(b.err, true, 'existing behaviour: clearing the URL sets an empty src, so onerror shows the badge');
+      // Đã sửa: xóa URL gỡ thuộc tính src thay vì gán src rỗng nên huy hiệu lỗi không hiện lại.
+      await page.waitForTimeout(150);
+      await expectVisible(b.err, false, 'clearing the URL does not raise the error badge');
+      assert.equal(await b.img.evaluate(img => img.hasAttribute('src')), false, 'clearing the URL removes the src attribute');
       await capture('pictorial-cleared', p2);
       // Nút xem trước với URL hợp lệ.
       await b.input.fill(good);
