@@ -13,7 +13,7 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 | # | Nhóm | Vị trí template | Ghi chú rủi ro |
 |---|---|---|---|
 | 1 | **Vocabulary bank + bulk paste** (đợt này) | `question-renderer.js` 998, 1016 | Hai panel `div` block; xong |
-| 2 | Rubric panes + sandbox results + ngữ cảnh AI | 1093, 1142, 1147, 1156 | `display` ban đầu của ngữ cảnh AI phụ thuộc dữ liệu |
+| 2 | **Rubric panes + sandbox results + ngữ cảnh AI** (đợt 2, xong) | 1093, 1142, 1147, 1156 | `display` ban đầu của ngữ cảnh AI phụ thuộc dữ liệu |
 | 3 | Pictorial lỗi/ảnh xem trước | 831, 832 | `pictorial.js` đặt `inline-block` nhưng CSS fragment 05 là `block`; `onerror` đặt `inline-block` nhưng fragment 09 là `inline-flex` — cần rule giữ giá trị |
 | 4 | Publishing (5), media (2), vocabulary.js (1) | | modal đặt `flex`; `liveStatus`/`endedNotice` đặt `inline-flex` |
 | 5 | Rich editor (popup bảng/ảnh, lỗi, textarea mã) | 491, 512, 518, 535, 538, 1310, 1332, 1338, 1360, 1363 + `rich-editor.js` | **Rủi ro cao nhất**: `draft-inputs.js:25` đọc `vEl.style.display !== 'none'` để chọn nguồn lưu (editor trực quan hay mã HTML); `builder.js` 2944/2988 đọc cùng cờ. Lệch = lưu nhầm nội dung. Cần test hành vi chuyển chế độ → sửa → lưu trước khi chuyển. `builder.js` (2879, 2992, 2998, 3170) và `rich-editor.js` (206, 287, 293, 418) dường như bật/tắt cùng các phần tử; phải xác định đường nào đang chạy hoặc chuyển cả hai |
@@ -27,10 +27,25 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 
 ### Xác minh
 
-- Fixture mới `tests/browser/toggle-visibility-parity.mjs` (dùng chung cho các nhóm sau, chọn nhóm bằng `GROUPS=vocab,...`): mount Builder thật với 2 câu Vocabulary, chạy kịch bản đóng → mở bank → mở bulk (kiểm focus textarea) → bulk toggle đóng/mở lại → Hủy → đóng bank → mở lại bank, khẳng định `isVisible()` từng bước và chụp computed style + ảnh ở các trạng thái đóng/mở. 4 trạng thái × 3 viewport. Bộ so sánh dùng chung: `node tests/browser/grading-modal-parity.mjs --compare <before> <after>`.
+- Fixture mới `tests/browser/toggle-visibility-parity.mjs` (dùng chung cho các nhóm sau, chọn nhóm bằng `TOGGLE_GROUPS=vocab,...`): mount Builder thật với 2 câu Vocabulary, chạy kịch bản đóng → mở bank → mở bulk (kiểm focus textarea) → bulk toggle đóng/mở lại → Hủy → đóng bank → mở lại bank, khẳng định `isVisible()` từng bước và chụp computed style + ảnh ở các trạng thái đóng/mở. 4 trạng thái × 3 viewport. Bộ so sánh dùng chung: `node tests/browser/grading-modal-parity.mjs --compare <before> <after>`.
 - **12/12 computed snapshots giống baseline.** 0 browser errors.
 - PNG: 9/12 trùng từng byte; 3 ảnh trạng thái mở khác nhau. Chạy baseline lần hai cho thấy **baseline tự khác chính nó** ở các ảnh trạng thái mở (`1024-vocab-bank-open`, `1440-vocab-bulk-open` khác giữa hai lần chạy baseline; computed không đổi), nên đó là nhiễu render (nhiều khả năng khử răng cưa viền đứt nét/focus), không phải lệch do thay đổi. Chưa đo số pixel.
 - `npm test`: 671/671 pass; `node scripts/css-metadata.mjs check` khớp (không đổi CSS).
+
+## Đợt 2: Rubric panes, sandbox results, ngữ cảnh AI
+
+- `question-renderer.js`: `#pane-guidance-*`, `#pane-sandbox-*` và `.sandbox-results-container` dùng `hidden`; `#ai-ref-group-*` dùng `hidden` có điều kiện (`${showItemContextInitially ? '' : ' hidden'}`) thay cho `style="display: block|none"`.
+- `builder.js`: bộ chuyển tab rubric đặt `pane.hidden = tab !== '<tên>'` cho cả ba pane (trước đó đặt `flex`/`none`); chấm thử sandbox đặt `resultsContainer.hidden = false` (trước đó `block`).
+- Bảng `display` khi hiện: `.rubric-tab-pane` đã có `display: flex` trong fragment 04 (trùng giá trị JS cũ `flex`); `.sandbox-results-container` và `.ai-reference-context-group` không đặt `display` nên là `block` mặc định của `div` (trùng `block` cũ). Không cần rule bổ sung.
+- Nhóm này không có chỗ nào đọc `style.display` làm trạng thái; `#ai-ref-group-*` chỉ do template quyết định, không có JS bật/tắt sau đó.
+- Test: `tests/test-studio-ai-rubric.test.mjs` thêm 6 assertion (ngữ cảnh riêng không ẩn, hai pane và kết quả sandbox có `hidden`, pane tiêu chí không ẩn, không còn inline display). Đã kiểm **đỏ trên template cũ, xanh sau thay đổi**.
+- Inventory 160 → 152.
+
+### Xác minh đợt 2
+
+- Fixture `toggle-visibility-parity.mjs` thêm nhóm `rubric` (`TOGGLE_GROUPS=rubric`): 3 câu (ngữ cảnh kế thừa từ Bài tập → ẩn; comprehension không ngữ cảnh → hiện; có ngữ cảnh riêng → hiện), duyệt 3 tab (tiêu chí, hướng dẫn, chấm thử), khẳng định chỉ một pane hiện ở mỗi tab, chạy chấm thử sandbox (API giả lập bằng route) rồi kiểm kết quả hiện và còn hiện khi đổi tab. 7 trạng thái × 3 viewport.
+- **21/21 computed snapshots giống baseline và 21/21 PNG trùng từng byte**; baseline chạy hai lần cũng trùng nhau (không nhiễu ở nhóm này). 0 browser errors.
+- `npm test`: 671/671 pass; `css-metadata check` khớp.
 
 ## Phát hiện cần quyết định (chưa thay đổi)
 
@@ -38,8 +53,8 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 
 ## Giới hạn
 
-- Mới một nhóm. 29 vị trí template ban đầu `display: none` còn lại (xem bảng).
+- Mới hai nhóm (vocab, rubric). Còn các nhóm 3–5 trong bảng (pictorial, publishing/media/vocabulary.js, rich editor).
 - Chưa chạy lại smoke vòng đời `/preview-base`.
-- Fixture mới chỉ có nhóm `vocab`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
+- Fixture hiện có nhóm `vocab` và `rubric`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
 
 Rollback: revert commit như một đơn vị.

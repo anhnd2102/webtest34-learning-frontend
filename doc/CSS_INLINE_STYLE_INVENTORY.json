@@ -1,7 +1,7 @@
 {
-  "baseline": "2e84198",
-  "revision": "20261111-hidden-vocab",
-  "note": "Lexical inventory after vocab bank/bulk panels moved to the hidden attribute; not a CSS parser.",
+  "baseline": "7c31a87",
+  "revision": "20261111-hidden-rubric",
+  "note": "Lexical inventory after rubric panes, sandbox results and AI context moved to the hidden attribute; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -201,26 +201,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
       "line": 831,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2473,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2474,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2475,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2618,
       "kind": "property"
     },
     {
@@ -551,26 +531,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
       "line": 832,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 1093,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 1142,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 1147,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 1156,
       "kind": "attribute"
     },
     {

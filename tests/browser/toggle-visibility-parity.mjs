@@ -1,6 +1,6 @@
 // Parity fixture cho các phần tử ẩn/hiện bằng JS trong Test Studio (chuyển display:none inline -> hidden).
 // Mỗi nhóm chụp computed style + ảnh ở cả trạng thái đóng và mở, và khẳng định isVisible() từng bước.
-//   GROUPS=vocab[,rubric,...] ARTIFACT_DIR=<dir> [FRONTEND_ROOT=<root>] node tests/browser/toggle-visibility-parity.mjs
+//   TOGGLE_GROUPS=vocab[,rubric,...] ARTIFACT_DIR=<dir> [FRONTEND_ROOT=<root>] node tests/browser/toggle-visibility-parity.mjs
 //   node tests/browser/grading-modal-parity.mjs --compare <dirBefore> <dirAfter>   (dùng chung bộ so sánh)
 // Dữ liệu hoàn toàn tổng hợp; không gọi API thật. Chạy cùng một kịch bản trên baseline và sau thay đổi.
 import assert from 'node:assert/strict';
@@ -14,7 +14,7 @@ const root = process.env.FRONTEND_ROOT || fileURLToPath(new URL('../../', import
 const port = Number(process.env.SMOKE_PORT || 18333);
 const artifacts = process.env.ARTIFACT_DIR;
 assert.ok(artifacts, 'ARTIFACT_DIR is required');
-const groups = (process.env.GROUPS || 'vocab').split(',');
+const groups = (process.env.TOGGLE_GROUPS || 'vocab').split(',');
 const server = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
 
 const baseForm = items => ({
@@ -24,6 +24,17 @@ const baseForm = items => ({
     items }],
   gradingKey: { items: Object.fromEntries(items.map(i => [i.itemVersionId, { graderType: i.graderType, accepted: [i.targetWord || 'x'], expectedOptionId: 'opt_1' }])), groups: {} }
 });
+const rubricForm = () => {
+  const rubric = { scoringVersion: 'rubric-comprehension-v1', maxScore: 4, criteria: [{ id: 'meaning', label: 'Synthetic meaning', maxScore: 2, requiredConcepts: ['alpha'] }, { id: 'keywords', label: 'Synthetic keywords', maxScore: 2, requiredConcepts: [] }] };
+  const item = (id, exerciseId, position, extra = {}) => ({ itemVersionId: id, exerciseId, position, prompt: 'Synthetic comprehension', interactionType: 'long_text', pedagogicalTypeCode: 'writing', graderType: 'rubric_async', maxScore: 4, options: [], ...extra });
+  const form = baseForm([item('r1', 'ex1', 1), item('r2', 'ex2', 2), item('r3', 'ex2', 3, { referenceContext: 'Synthetic item-level context.' })]);
+  form.blocks[0].exercises = [
+    { exerciseId: 'ex1', exerciseNumber: 1, title: 'Synthetic context exercise', referenceContext: 'Synthetic shared context.', itemIds: ['r1'] },
+    { exerciseId: 'ex2', exerciseNumber: 2, title: 'Synthetic plain exercise', itemIds: ['r2', 'r3'] }
+  ];
+  form.gradingKey.items = Object.fromEntries(['r1', 'r2', 'r3'].map(id => [id, { graderType: 'rubric_async', rubricCode: 'rubric_comprehension_v1', rubric: structuredClone(rubric) }]));
+  return form;
+};
 const vocabItems = () => ['v1', 'v2'].map((id, index) => ({
   itemVersionId: id, exerciseId: 'ex1', position: index + 1, prompt: 'Synthetic vocabulary', targetWord: index ? 'second-word' : 'full-time',
   interactionType: 'text_select_pair', graderType: 'accepted_text_exact_option', maxScore: 1,
@@ -47,6 +58,11 @@ try {
     await page.addInitScript(() => sessionStorage.setItem('izone_teacher_token', 'synthetic-token'));
     await page.route('**/*', async route => {
       const url = new URL(route.request().url());
+      if (url.pathname.endsWith('/forms/preview-sandbox')) {
+        const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'POST, OPTIONS' };
+        if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+        return route.fulfill({ status: 200, contentType: 'application/json', headers: cors, body: JSON.stringify({ ok: true, scoreEarned: 1, maxScore: 4, criteria: [{ id: 'meaning', score: 1, maxScore: 2 }], errors: [{ code: 'SYNTHETIC_CODE', message: 'Synthetic error message' }] }) });
+      }
       if (url.pathname.startsWith('/api/teacher/')) {
         let payload = {};
         if (url.pathname.endsWith('/auth/me')) payload = { teacher: { name: 'Synthetic teacher', role: 'admin', courseCodes: ['34'] } };
@@ -113,6 +129,45 @@ try {
       await card.locator('.btn-toggle-vocab-bank').click();
       await expectVisible(bank, true, 'bank reopens');
       await page.evaluate(() => { window['toggle-vocabHandle'].dispose?.(); });
+    }
+    if (groups.includes('rubric')) {
+      const host = await mount('toggle-rubric', rubricForm());
+      const r1 = host.locator('[data-item-id="r1"]');
+      const r2 = host.locator('[data-item-id="r2"]');
+      const r3 = host.locator('[data-item-id="r3"]');
+      // Ngữ cảnh AI: r1 kế thừa từ Bài tập (ẩn), r2 comprehension không có ngữ cảnh (hiện), r3 có ngữ cảnh riêng (hiện).
+      await expectVisible(r1.locator('.ai-reference-context-group'), false, 'inherited exercise context hides the item context');
+      await expectVisible(r2.locator('.ai-reference-context-group'), true, 'comprehension item without context shows the field');
+      await expectVisible(r3.locator('.ai-reference-context-group'), true, 'item with its own context shows the field');
+      await capture('rubric-ctx-inherited', r1);
+      await capture('rubric-ctx-plain', r2);
+      await capture('rubric-ctx-own', r3);
+      const pane = name => r1.locator(`.pane-${name}`);
+      const tab = name => r1.locator(`.btn-rubric-tab[data-tab="${name}"]`);
+      const expectOnly = async which => {
+        for (const name of ['criteria', 'guidance', 'sandbox']) await expectVisible(pane(name), name === which, `${name} pane visibility on the ${which} tab`);
+      };
+      await expectOnly('criteria');
+      await tab('guidance').click();
+      await expectOnly('guidance');
+      await capture('rubric-tab-guidance', r1);
+      await tab('sandbox').click();
+      await expectOnly('sandbox');
+      await expectVisible(r1.locator('.sandbox-results-container'), false, 'sandbox results start hidden');
+      await capture('rubric-tab-sandbox', r1);
+      await r1.locator('.input-sandbox-sample').fill('Synthetic sample answer');
+      await r1.locator('.btn-trigger-sandbox').click();
+      await r1.locator('.sandbox-errors-breakdown .error-pill').waitFor();
+      await expectVisible(r1.locator('.sandbox-results-container'), true, 'sandbox results show after a run');
+      await page.waitForTimeout(200);
+      await capture('rubric-sandbox-results', r1);
+      await tab('criteria').click();
+      await expectOnly('criteria');
+      await capture('rubric-tab-criteria', r1);
+      await tab('sandbox').click();
+      await expectOnly('sandbox');
+      await expectVisible(r1.locator('.sandbox-results-container'), true, 'sandbox results persist across tab switches');
+      await page.evaluate(() => { window['toggle-rubricHandle'].dispose?.(); });
     }
     assert.deepEqual(errors, [], `browser errors at ${viewport.width}`);
     await page.close();

@@ -1090,7 +1090,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             ` : ''}
 
-            <div class="ai-reference-context-group" id="ai-ref-group-${blockIdx}-${itemIdx}" style="display: ${showItemContextInitially ? 'block' : 'none'};">
+            <div class="ai-reference-context-group" id="ai-ref-group-${blockIdx}-${itemIdx}"${showItemContextInitially ? '' : ' hidden'}>
               <div class="ai-reference-context-header">
                 <label class="form-label">
                   ${renderSvgIcon('book', 'icon-inline')} Ngữ cảnh bài đọc / Script tham chiếu cho AI:
@@ -1139,12 +1139,12 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   </div>
                 </div>
 
-                <div class="rubric-tab-pane pane-guidance" id="pane-guidance-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="rubric-tab-pane pane-guidance" id="pane-guidance-${blockIdx}-${itemIdx}" hidden>
                   <label class="form-label">Chỉ dẫn nâng cao dành cho AI Grader (Custom Prompt Instructions):</label>
                   <textarea class="form-control input-rubric-guidance" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Ví dụ: Chấp nhận các cách diễn đạt đồng nghĩa cho từ 'thành công'; trừ điểm nếu thiếu liên từ nối...">${escapeHtml(promptGuidance)}</textarea>
                 </div>
 
-                <div class="rubric-tab-pane pane-sandbox" id="pane-sandbox-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="rubric-tab-pane pane-sandbox" id="pane-sandbox-${blockIdx}-${itemIdx}" hidden>
                   <div class="rubric-sandbox-panel">
                     <p class="sandbox-desc">Nhập câu trả lời mẫu của học sinh để chạy thử nghiệm bộ chấm qua AI Gateway ngay lập tức (không lưu bài thi):</p>
                     <div class="sandbox-input-group">
@@ -1153,7 +1153,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                         ${renderSvgIcon('zap', 'icon-inline')} Chấm thử AI
                       </button>
                     </div>
-                    <div class="sandbox-results-container" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="display: none;"></div>
+                    <div class="sandbox-results-container" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" hidden></div>
                   </div>
                 </div>
               </div>

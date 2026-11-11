@@ -2470,9 +2470,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const guidancePane = card.querySelector(`#pane-guidance-${bIdx}-${iIdx}`);
         const sandboxPane = card.querySelector(`#pane-sandbox-${bIdx}-${iIdx}`);
 
-        if (criteriaPane) criteriaPane.style.display = tab === 'criteria' ? 'flex' : 'none';
-        if (guidancePane) guidancePane.style.display = tab === 'guidance' ? 'flex' : 'none';
-        if (sandboxPane) sandboxPane.style.display = tab === 'sandbox' ? 'flex' : 'none';
+        if (criteriaPane) criteriaPane.hidden = tab !== 'criteria';
+        if (guidancePane) guidancePane.hidden = tab !== 'guidance';
+        if (sandboxPane) sandboxPane.hidden = tab !== 'sandbox';
       });
     });
 
@@ -2615,7 +2615,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         btn.disabled = true;
         btn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang chấm AI...</span>`;
         if (resultsContainer) {
-          resultsContainer.style.display = 'block';
+          resultsContainer.hidden = false;
           resultsContainer.innerHTML = '<div class="alert-notice"><div class="notice-text">Đang gửi yêu cầu đánh giá đến AI Gateway...</div></div>';
         }
 
