@@ -481,3 +481,15 @@
 .specific-classes-container:not([hidden]) {
   display: block;
 }
+
+/* Rich editor: trước đây JS bật các phần tử này bằng inline display (block). Sau khi chuyển sang thuộc tính hidden,
+   giữ nguyên giá trị đó: ô mã HTML là block (textarea mặc định inline-block làm cao thêm 4px), lỗi ảnh là block
+   (CSS gốc của .rich-editor__error là flex). Popup (grid) và lỗi chung (flex) đã trùng CSS nên không cần rule. */
+.rich-editor__code:not([hidden]),
+.rich-editor-code:not([hidden]) {
+  display: block;
+}
+
+.rich-editor__error.popup-image-error:not([hidden]) {
+  display: block;
+}

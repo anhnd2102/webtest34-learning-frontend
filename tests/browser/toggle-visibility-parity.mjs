@@ -58,7 +58,8 @@ try {
     const page = await browser.newPage({ viewport, reducedMotion: 'reduce', locale: 'vi-VN', timezoneId: 'Asia/Ho_Chi_Minh' });
     page.setDefaultTimeout(10000);
     const errors = [];
-    page.on('pageerror', e => errors.push(e.message));
+    page.on('pageerror', e => { errors.push(e.message); if (process.env.TOGGLE_DEBUG) console.error('PAGEERROR', e.message); });
+    page.on('console', m => { if (process.env.TOGGLE_DEBUG && m.type() === 'error') console.error('CONSOLE', m.text()); });
     await page.addInitScript(() => sessionStorage.setItem('izone_teacher_token', 'synthetic-token'));
     await page.route('**/*', async route => {
       const url = new URL(route.request().url());
@@ -84,6 +85,7 @@ try {
     await page.evaluate(async () => {
       const entry = document.querySelector('script[type="module"][src]').src;
       window.toggleApp = await import(new URL('./app.js', entry).href);
+      window.addEventListener('unhandledrejection', e => console.error('UNHANDLED', String(e.reason && e.reason.stack || e.reason)));
     });
     const mount = async (id, form) => {
       await page.evaluate(({ id, form }) => {
@@ -222,6 +224,131 @@ try {
       await expectVisible(b.err, false, 'the preview button leaves no error badge');
       await capture('pictorial-preview-button', p2);
       await page.evaluate(() => { window['toggle-pictorialHandle'].dispose?.(); });
+    }
+    if (groups.includes('richeditor')) {
+      const clozeItem = { itemVersionId: 'c1', exerciseId: 'ex1', position: 1, prompt: 'Synthetic (1) _____ prompt', interactionType: 'short_text', pedagogicalTypeCode: 'inline_cloze', layoutType: 'inline_cloze', graderType: 'accepted_text', maxScore: 1, options: [], clozeAnswers: { 1: { targetWord: 'alpha', accepted: ['alpha'] } } };
+      const matchItem = { itemVersionId: 'm1', exerciseId: 'ex1', position: 2, prompt: 'Synthetic heading', interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', layoutType: 'split_pane_matching', graderType: 'exact_option', maxScore: 1, options: [{ id: 'A', label: 'Synthetic heading A' }, { id: 'B', label: 'Synthetic heading B' }] };
+      const form = baseForm([clozeItem, matchItem]);
+      form.blocks[0].readingPassage = 'Paragraph A: Synthetic opening.\nParagraph B: Synthetic detail.';
+      form.gradingKey.items.c1 = { graderType: 'accepted_text', accepted: ['alpha'] };
+      form.gradingKey.items.m1 = { graderType: 'exact_option', expectedOptionId: 'A' };
+      await page.evaluate(data => {
+        const host = document.createElement('section'); host.id = 'toggle-richeditor'; document.body.prepend(host);
+        window.richSaved = [];
+        window.richHandle = toggleApp.mountBuilder(host, data, { onSaveDraft: async payload => { window.richSaved.push(JSON.parse(JSON.stringify(payload))); return { version: 2 }; } });
+      }, form);
+      const host = page.locator('#toggle-richeditor');
+      const lastSaved = async () => { const list = await page.evaluate(() => window.richSaved); return list[list.length - 1]; };
+      const save = async () => { if (process.env.TOGGLE_DEBUG) console.error('SAVE-STATE', JSON.stringify(await page.evaluate(() => { const b = document.querySelector('#toggle-richeditor #btn-save-draft'); return { disabled: b?.disabled, text: b?.innerText, saved: window.richSaved.length, status: document.querySelector('#toggle-richeditor #builder-status-msg')?.innerText }; }))); const count = (await page.evaluate(() => window.richSaved.length)); if (process.env.TOGGLE_DEBUG) console.error('HIT', JSON.stringify(await page.evaluate(() => { const b = document.querySelector('#toggle-richeditor #btn-save-draft'); const r = b.getBoundingClientRect(); const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return { same: hit === b || b.contains(hit), hit: hit && (hit.id || hit.className), buttons: document.querySelectorAll('#btn-save-draft').length, connected: b.isConnected }; }))); await host.locator('#btn-save-draft').scrollIntoViewIfNeeded(); await host.locator('#btn-save-draft').dispatchEvent('click'); if (process.env.TOGGLE_DEBUG) { await page.waitForTimeout(600); console.error('AFTER-CLICK', JSON.stringify(await page.evaluate(() => ({ saved: window.richSaved.length, status: document.querySelector('#toggle-richeditor #builder-status-msg')?.innerText, alerts: document.querySelector('#toggle-richeditor .builder-error')?.innerText })))); } await page.waitForFunction(n => window.richSaved.length > n, count); await host.locator('#btn-save-draft:not([disabled])').waitFor(); await page.waitForTimeout(120); return lastSaved(); };
+
+      const scenario = async (name, card) => {
+        const wrap = card.locator('.rich-html-editor-wrap').first();
+        const visual = wrap.locator('.rich-editor-visual');
+        const code = wrap.locator('.rich-editor-code');
+        const tableBtn = wrap.locator('.btn-rich-insert-table');
+        const tableMenu = wrap.locator('.table-presets-menu');
+        const imageBtn = wrap.locator('.btn-rich-insert-image');
+        const imagePopup = wrap.locator('.image-insert-popup');
+        const imageError = wrap.locator('.popup-image-error');
+        const toggle = wrap.locator('.btn-toggle-html-mode');
+        await expectVisible(visual, true, `${name}: visual editor visible initially`);
+        await expectVisible(code, false, `${name}: code editor hidden initially`);
+        await expectVisible(tableMenu, false, `${name}: table menu hidden initially`);
+        await expectVisible(imagePopup, false, `${name}: image popup hidden initially`);
+        await expectVisible(imageError, false, `${name}: image error hidden initially`);
+        await capture(`${name}-closed`, wrap);
+        await tableBtn.click();
+        await expectVisible(tableMenu, true, `${name}: table menu opens`);
+        await capture(`${name}-table-menu`, wrap);
+        await tableBtn.click();
+        await expectVisible(tableMenu, false, `${name}: the table button toggles the menu closed`);
+        await imageBtn.click();
+        await expectVisible(imagePopup, true, `${name}: image popup opens`);
+        await expectVisible(imageError, false, `${name}: image error hidden on open`);
+        await capture(`${name}-image-popup`, wrap);
+        await wrap.locator('.btn-confirm-insert-image').click();
+        await expectVisible(imageError, true, `${name}: empty URL shows the image error`);
+        await capture(`${name}-image-error`, wrap);
+        await imageBtn.click();
+        await expectVisible(imagePopup, false, `${name}: the image button toggles the popup closed`);
+        await expectVisible(imageError, false, `${name}: closing the popup hides the image error`);
+        await imageBtn.click();
+        await expectVisible(imagePopup, true, `${name}: image popup reopens`);
+        await expectVisible(imageError, false, `${name}: reopening clears the image error`);
+        await tableBtn.click();
+        await expectVisible(tableMenu, true, `${name}: opening the table menu`);
+        await expectVisible(imagePopup, false, `${name}: opening one popup closes the other`);
+        await page.mouse.click(3, 3);
+        await expectVisible(tableMenu, false, `${name}: an outside click closes the table menu`);
+        // Chuyển chế độ khi popup đang mở: popup đóng, code hiện, visual ẩn.
+        await tableBtn.click();
+        await expectVisible(tableMenu, true, `${name}: table menu open before switching mode`);
+        if (process.env.TOGGLE_DEBUG) console.error('TOGGLE-DEBUG', name, JSON.stringify(await wrap.evaluate(w => { const b = w.querySelector('.btn-toggle-html-mode'); const r = b.getBoundingClientRect(); const cs = getComputedStyle(b); return { rect: [r.x, r.y, r.width, r.height], display: cs.display, vis: cs.visibility, wraps: w.ownerDocument.querySelectorAll('#toggle-richeditor [data-item-id="m1"] .rich-html-editor-wrap').length, toggles: w.querySelectorAll('.btn-toggle-html-mode').length, parentHidden: !!b.closest('[hidden]') }; })));
+        await toggle.dispatchEvent('click');
+        await expectVisible(tableMenu, false, `${name}: switching to code mode closes popups`);
+        await expectVisible(code, true, `${name}: code editor visible in code mode`);
+        await expectVisible(visual, false, `${name}: visual editor hidden in code mode`);
+        await capture(`${name}-code-mode`, wrap);
+        await toggle.dispatchEvent('click');
+        await expectVisible(visual, true, `${name}: visual editor returns`);
+        await expectVisible(code, false, `${name}: code editor hides again`);
+        await capture(`${name}-visual-again`, wrap);
+      };
+
+      await scenario('rich-prompt', host.locator('[data-item-id="c1"]'));
+      await scenario('rich-passage', host.locator('[data-item-id="m1"]'));
+
+      // Ngăn mất dữ liệu: nguồn lưu phải là editor đang hiển thị.
+      const card = host.locator('[data-item-id="c1"]');
+      const wrap = card.locator('.rich-html-editor-wrap').first();
+      const visual = wrap.locator('.rich-editor-visual');
+      const code = wrap.locator('.rich-editor-code');
+      const toggle = wrap.locator('.btn-toggle-html-mode');
+      const setVisual = html => visual.evaluate((el, value) => { el.innerHTML = value; el.dispatchEvent(new Event('input', { bubbles: true })); }, html);
+      await setVisual('<p>VISUAL ONE (1) ____</p>');
+      let payload = await save();
+      assert.ok(payload.blocks[0].items.find(i => i.itemVersionId === 'c1').prompt.includes('VISUAL ONE'), 'saving from visual mode keeps the visual edit');
+      await toggle.dispatchEvent('click');
+      await code.fill('<p>CODE ONLY (1) ____</p>');
+      payload = await save();
+      const afterCode = payload.blocks[0].items.find(i => i.itemVersionId === 'c1').prompt;
+      assert.ok(afterCode.includes('CODE ONLY') && !afterCode.includes('VISUAL ONE'), 'saving from code mode keeps the code edit, not the stale visual content');
+      await toggle.dispatchEvent('click');
+      await expectVisible(visual, true, 'visual editor returns after the data-safety scenario');
+      assert.ok((await visual.innerHTML()).includes('CODE ONLY'), 'switching back to visual shows the code edit');
+      await setVisual('<p>VISUAL TWO (1) ____</p>');
+      payload = await save();
+      const afterVisual = payload.blocks[0].items.find(i => i.itemVersionId === 'c1').prompt;
+      assert.ok(afterVisual.includes('VISUAL TWO') && !afterVisual.includes('CODE ONLY'), 'saving after returning to visual keeps the visual edit, not the stale code');
+      await setVisual('<p>VISUAL THREE (1) ____</p>');
+      await toggle.dispatchEvent('click');
+      assert.ok((await code.inputValue()).includes('VISUAL THREE'), 'switching to code mode syncs the latest visual edit into the code view');
+      payload = await save();
+      assert.ok(payload.blocks[0].items.find(i => i.itemVersionId === 'c1').prompt.includes('VISUAL THREE'), 'saving right after switching to code keeps the synced edit');
+      await toggle.dispatchEvent('click');
+      // Đoạn văn đọc hiểu (editor thứ hai) cũng lưu theo editor đang hiển thị.
+      const passageWrap = host.locator('[data-item-id="m1"] .rich-html-editor-wrap').first();
+      await passageWrap.locator('.rich-editor-visual').evaluate(el => { el.innerHTML = '<p>PASSAGE VISUAL EDIT</p>'; el.dispatchEvent(new Event('input', { bubbles: true })); });
+      payload = await save();
+      assert.ok((payload.blocks[0].readingPassage || '').includes('PASSAGE VISUAL EDIT'), 'the reading passage saves its visual edit');
+      await passageWrap.locator('.btn-toggle-html-mode').dispatchEvent('click');
+      await passageWrap.locator('.rich-editor-code').fill('<p>PASSAGE CODE EDIT</p>');
+      payload = await save();
+      assert.ok((payload.blocks[0].readingPassage || '').includes('PASSAGE CODE EDIT'), 'the reading passage saves its code edit');
+      await page.evaluate(() => { richHandle.dispose(); document.querySelector('#toggle-richeditor').remove(); });
+    }
+    if (groups.includes('audiowarn')) {
+      const host = await mount('toggle-audiowarn', baseForm(vocabItems()));
+      const input = host.locator('.block-audio-input').first();
+      const warning = host.locator('.audio-drive-warning').first();
+      await expectVisible(warning, false, 'drive warning hidden for an empty audio URL');
+      await capture('audiowarn-closed', warning.locator('xpath=ancestor::div[contains(@class,"block-field")][1]'));
+      await input.fill('https://drive.google.com/file/d/synthetic/view');
+      await expectVisible(warning, true, 'drive warning shows for a Google Drive link');
+      await capture('audiowarn-shown', warning.locator('xpath=ancestor::div[contains(@class,"block-field")][1]'));
+      await input.fill('assets/synthetic.mp3');
+      await expectVisible(warning, false, 'drive warning hides again for an asset path');
+      await page.evaluate(() => { window['toggle-audiowarnHandle'].dispose?.(); });
     }
     if (groups.includes('publishing')) {
       await page.evaluate(data => {

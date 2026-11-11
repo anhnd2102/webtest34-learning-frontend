@@ -500,7 +500,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
                 </button>
               </div>
               <div class="form-hint audio-guide-hint">Chỉ sử dụng link âm thanh Cloudflare R2 (hoặc assets/). Không hỗ trợ link Google Drive cho bài nghe.</div>
-              <div class="audio-drive-warning text-danger" style="${(audioVal.includes('drive.google.com') || audioVal.includes('docs.google.com')) ? 'display:block;' : 'display:none;'}">Hệ thống không hỗ trợ link Google Drive cho bài nghe. Vui lòng sử dụng link Cloudflare R2 hoặc assets/.</div>
+              <div class="audio-drive-warning text-danger"${(audioVal.includes('drive.google.com') || audioVal.includes('docs.google.com')) ? '' : ' hidden'}>Hệ thống không hỗ trợ link Google Drive cho bài nghe. Vui lòng sử dụng link Cloudflare R2 hoặc assets/.</div>
             </div>
             <div class="form-group block-field">
               <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
@@ -826,9 +826,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           const val = e.target.value || '';
           const parent = e.target.closest ? e.target.closest('.block-field') : null;
           const warningEl = parent && parent.querySelector ? parent.querySelector('.audio-drive-warning') : null;
-          if (warningEl && warningEl.style) {
+          if (warningEl) {
             const hasDrive = val.includes('drive.google.com') || val.includes('docs.google.com');
-            warningEl.style.display = hasDrive ? 'block' : 'none';
+            warningEl.hidden = !hasDrive;
           }
         }
       };
@@ -2866,26 +2866,26 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         };
 
         const closeAllPopups = () => {
-          if (tableMenu && tableMenu.style) tableMenu.style.display = 'none';
-          if (imagePopup && imagePopup.style) {
-            imagePopup.style.display = 'none';
-            if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
+          if (tableMenu) tableMenu.hidden = true;
+          if (imagePopup) {
+            imagePopup.hidden = true;
+            if (imageErrorEl) imageErrorEl.hidden = true;
           }
         };
 
         const showError = (msg) => {
           if (generalErrorEl) {
             generalErrorEl.textContent = msg;
-            if (generalErrorEl.style) generalErrorEl.style.display = 'flex';
+            if (generalErrorEl) generalErrorEl.hidden = false;
             setTimeout(() => {
-              if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
+              if (generalErrorEl) generalErrorEl.hidden = true;
             }, 5000);
           }
         };
 
         const clearError = () => {
-          if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
-          if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
+          if (generalErrorEl) generalErrorEl.hidden = true;
+          if (imageErrorEl) imageErrorEl.hidden = true;
         };
 
         const syncToCode = () => {
@@ -2941,7 +2941,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
 
         const insertHtmlAtCursor = (htmlToInsert) => {
           if (!htmlToInsert) return;
-          const isCodeVisible = codeEl && codeEl.style && codeEl.style.display !== 'none';
+          const isCodeVisible = Boolean(codeEl) && !codeEl.hidden;
           if (isCodeVisible) {
             const start = codeEl.selectionStart || codeEl.value.length;
             const end = codeEl.selectionEnd || codeEl.value.length;
@@ -2985,17 +2985,17 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         if (toggleBtn && visualEl && codeEl && toggleBtn.addEventListener) {
           toggleBtn.addEventListener('click', () => {
             closeAllPopups();
-            const isCurrentlyVisual = visualEl.style && visualEl.style.display !== 'none';
+            const isCurrentlyVisual = !visualEl.hidden;
             if (isCurrentlyVisual) {
               syncToCode();
-              if (visualEl.style) visualEl.style.display = 'none';
-              if (codeEl.style) codeEl.style.display = 'block';
+              if (visualEl) visualEl.hidden = true;
+              if (codeEl) codeEl.hidden = false;
               toggleBtn.classList?.add?.('active');
               toggleBtn.textContent = 'Trực quan';
             } else {
               syncToVisual();
-              if (codeEl.style) codeEl.style.display = 'none';
-              if (visualEl.style) visualEl.style.display = 'block';
+              if (codeEl) codeEl.hidden = true;
+              if (visualEl) visualEl.hidden = false;
               toggleBtn.classList?.remove?.('active');
               toggleBtn.textContent = '</> Mã HTML';
             }
@@ -3112,9 +3112,9 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           tableBtn.addEventListener('click', (e) => {
             e.stopPropagation?.();
             saveSelection();
-            const isVisible = tableMenu.style?.display !== 'none';
+            const isVisible = !tableMenu.hidden;
             closeAllPopups();
-            if (tableMenu.style) tableMenu.style.display = isVisible ? 'none' : 'grid';
+            if (tableMenu) tableMenu.hidden = isVisible;
           });
 
           const gridBtns = tableMenu.querySelectorAll?.('.btn-table-grid') || [];
@@ -3150,10 +3150,10 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           imageBtn.addEventListener('click', (e) => {
             e.stopPropagation?.();
             saveSelection();
-            const isVisible = imagePopup.style?.display !== 'none';
+            const isVisible = !imagePopup.hidden;
             closeAllPopups();
-            if (imagePopup.style) {
-              imagePopup.style.display = isVisible ? 'none' : 'grid';
+            if (imagePopup) {
+              imagePopup.hidden = isVisible;
               if (!isVisible && imageLinkInput) {
                 imageLinkInput.value = '';
                 clearError();
@@ -3167,7 +3167,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             if (!urlVal) {
               if (imageErrorEl) {
                 imageErrorEl.textContent = 'Vui lòng nhập đường dẫn ảnh.';
-                if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+                if (imageErrorEl) imageErrorEl.hidden = false;
               }
               return;
             }
@@ -3175,7 +3175,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
             if (!validateImageUrl(converted)) {
               if (imageErrorEl) {
                 imageErrorEl.textContent = 'Link không hợp lệ. Hãy dùng link HTTPS hoặc Google Drive.';
-                if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+                if (imageErrorEl) imageErrorEl.hidden = false;
               }
               return;
             }
@@ -3206,7 +3206,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         if (openMenus.forEach) {
           openMenus.forEach(m => {
             if (!e.target || !m.contains?.(e.target)) {
-              if (m.style) m.style.display = 'none';
+              if (m) m.hidden = true;
             }
           });
         }

@@ -11128,5 +11128,17 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".specific-classes-container:not([hidden])"
+  },
+  {
+    "order": 1843,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rich-editor__code:not([hidden]), .rich-editor-code:not([hidden])"
+  },
+  {
+    "order": 1844,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rich-editor__error.popup-image-error:not([hidden])"
   }
 ]

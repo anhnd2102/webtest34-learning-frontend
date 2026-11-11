@@ -44,12 +44,12 @@ test('renderRichHtmlEditor mounts toolbar with Table, Image, and HTML toggle but
 
   const visualEl = {
     innerHTML: '<p>Initial content</p>',
-    style: { display: 'block' },
+    hidden: false,
     addEventListener: () => {}
   };
   const codeEl = {
     value: '<p>Initial content</p>',
-    style: { display: 'none' },
+    hidden: true,
     addEventListener: () => {}
   };
   const toggleBtn = {
@@ -74,6 +74,13 @@ test('renderRichHtmlEditor mounts toolbar with Table, Image, and HTML toggle but
   assert.ok(container.innerHTML.includes('btn-toggle-html-mode'), 'Renders Mode Toggle button');
   assert.ok(container.innerHTML.includes('rich-editor-visual'), 'Renders visual contenteditable area');
   assert.ok(container.innerHTML.includes('rich-editor-code'), 'Renders code textarea');
+  // Ẩn/hiện ban đầu dùng thuộc tính hidden, không dùng display inline.
+  assert.match(container.innerHTML, /class="rich-editor__code rich-editor-code form-control" hidden rows="8">/, 'code textarea starts hidden');
+  assert.match(container.innerHTML, /class="rich-editor__popup table-presets-menu" hidden>/, 'table popup starts hidden');
+  assert.match(container.innerHTML, /class="rich-editor__popup image-insert-popup" hidden>/, 'image popup starts hidden');
+  assert.match(container.innerHTML, /class="rich-editor__error popup-image-error" hidden>/, 'image error starts hidden');
+  assert.match(container.innerHTML, /class="rich-editor__error general-editor-error" hidden role="alert">/, 'general error starts hidden');
+  assert.doesNotMatch(container.innerHTML, /rich-editor[^>]*display:s*none/, 'rich editor no longer relies on inline display');
 });
 
 test('renderRichHtmlEditor blocks base64 images and sanitizes insecure scripts', () => {
@@ -177,6 +184,11 @@ test('Test Studio: inline_cloze and reading_matching mount Rich HTML Editor tool
   assert.ok(mockContainer.innerHTML.includes('table-presets-menu'), 'Mounts Table Presets popup');
   assert.ok(mockContainer.innerHTML.includes('image-insert-popup'), 'Mounts Image Insert popup');
   assert.ok(mockContainer.innerHTML.includes('rich-editor__footer'), 'Mounts editor keyboard shortcuts footer');
+  // Hai editor trong builder (đoạn văn đọc hiểu và đề bài cloze): mỗi editor có 2 popup, 2 vùng lỗi và ô mã HTML ẩn bằng hidden.
+  assert.equal((mockContainer.innerHTML.match(/class="rich-editor__code rich-editor-code[^"]*"[^>]* hidden[ >]/g) || []).length, 2, 'both code textareas start hidden');
+  assert.equal((mockContainer.innerHTML.match(/class="rich-editor__popup (table-presets-menu|image-insert-popup)" hidden>/g) || []).length, 4, 'both editors start with hidden table and image popups');
+  assert.equal((mockContainer.innerHTML.match(/class="rich-editor__error (popup-image-error|general-editor-error)"[^>]* hidden[ >]/g) || []).length, 4, 'both editors start with hidden error areas');
+  assert.doesNotMatch(mockContainer.innerHTML, /rich-editor[^>]*display:s*none/, 'builder rich editors no longer rely on inline display');
 });
 
 test('renderRichHtmlEditor provides modern table and image popups and guidance notes from insert_image_table', () => {

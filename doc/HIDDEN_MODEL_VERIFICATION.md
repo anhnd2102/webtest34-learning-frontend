@@ -16,7 +16,7 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 | 2 | **Rubric panes + sandbox results + ngữ cảnh AI** (đợt 2, xong) | 1093, 1142, 1147, 1156 | `display` ban đầu của ngữ cảnh AI phụ thuộc dữ liệu |
 | 3 | **Pictorial lỗi/ảnh xem trước** (đợt 3, xong) | 831, 832 | `pictorial.js` đặt `inline-block` nhưng CSS fragment 05 là `block`; `onerror` đặt `inline-block` nhưng fragment 09 là `inline-flex` — cần rule giữ giá trị |
 | 4 | **Publishing (5), media (2), vocabulary.js (1)** (đợt 4, xong) | | modal đặt `flex`; `liveStatus`/`endedNotice` đặt `inline-flex` |
-| 5 | Rich editor (popup bảng/ảnh, lỗi, textarea mã) | 491, 512, 518, 535, 538, 1310, 1332, 1338, 1360, 1363 + `rich-editor.js` | **Rủi ro cao nhất**: `draft-inputs.js:25` đọc `vEl.style.display !== 'none'` để chọn nguồn lưu (editor trực quan hay mã HTML); `builder.js` 2944/2988 đọc cùng cờ. Lệch = lưu nhầm nội dung. Cần test hành vi chuyển chế độ → sửa → lưu trước khi chuyển. `builder.js` (2879, 2992, 2998, 3170) và `rich-editor.js` (206, 287, 293, 418) dường như bật/tắt cùng các phần tử; phải xác định đường nào đang chạy hoặc chuyển cả hai |
+| 5 | **Rich editor (popup bảng/ảnh, lỗi, textarea mã)** (đợt 5, xong) | 491, 512, 518, 535, 538, 1310, 1332, 1338, 1360, 1363 + `rich-editor.js` | **Rủi ro cao nhất**: `draft-inputs.js:25` đọc `vEl.style.display !== 'none'` để chọn nguồn lưu (editor trực quan hay mã HTML); `builder.js` 2944/2988 đọc cùng cờ. Lệch = lưu nhầm nội dung. Cần test hành vi chuyển chế độ → sửa → lưu trước khi chuyển. `builder.js` (2879, 2992, 2998, 3170) và `rich-editor.js` (206, 287, 293, 418) dường như bật/tắt cùng các phần tử; phải xác định đường nào đang chạy hoặc chuyển cả hai |
 
 ## Đợt 1: Vocabulary bank + bulk paste
 
@@ -87,14 +87,56 @@ Lỗi có sẵn từ baseline: `<img src="">` phát sự kiện `error`, nên `o
 - So với baseline từ worktree tạm tại `4316e71`/`dc458b0`: **`media` 9/9 và `vocabbatch` 9/9 computed giống và PNG trùng từng byte; `publishing`: mọi trạng thái giống trừ hai trạng thái đi qua đường render lại (`step1-error`, `classes-after-back`) đúng như mô tả ở trên** (khác biệt chỉ là `display: flex -> block` và `height` −20px của `.specific-classes-container`). 0 browser errors.
 - `npm test`: 673/673; `css-metadata check` khớp.
 
+## Đợt 5: Rich editor (nhóm rủi ro cao)
+
+Có **hai bộ nối dây song song** cho cùng loại editor, cộng một chỗ đọc ở `draft-inputs.js`:
+
+- Editor trong Builder (đoạn văn đọc hiểu `.input-reading-passage` và đề bài `.item-prompt-input`): template ở `question-renderer.js` (10 vị trí), nối dây trong khối inline của `builder.js` (đóng popup, lỗi chung/lỗi ảnh, chuyển chế độ, bật/tắt bảng/ảnh, chèn ảnh, click ngoài đóng popup).
+- `renderRichHtmlEditor` trong `rich-editor.js` (template 5 vị trí và nối dây riêng, xuất qua facade; hiện chỉ test và facade dùng).
+- `draft-inputs.js:25` quyết định nguồn lưu theo `vEl.style.display !== 'none'`.
+
+Cả ba chuyển **cùng một lượt**: template dùng `hidden`; mọi `style.display = ...` đổi sang `.hidden`; mọi chỗ đọc đổi sang `!el.hidden` (`isVisible` của popup, `isCodeVisible`/`isCurrentlyVisual` trong `builder.js`, `!vEl.hidden` trong `draft-inputs.js`); các guard `el && el.style` (chỉ để chịu mock) được gỡ. Kèm theo `.audio-drive-warning` trong `builder.js` (template có điều kiện và bộ cập nhật khi nhập link) vì cùng kiểu ẩn/hiện.
+
+### Bảng `display` khi hiện và hai rule giữ nguyên giao diện
+
+| Phần tử | JS cũ đặt | CSS gốc | Xử lý |
+|---|---|---|---|
+| Popup bảng/ảnh (`.rich-editor__popup`) | `grid` | `grid` | trùng, không cần rule |
+| Lỗi chung (`.general-editor-error`) | `flex` | `flex` (`.rich-editor__error`) | trùng |
+| Lỗi ảnh (`.popup-image-error`) | `block` | `flex` (`.rich-editor__error`) | **lệch** → `.rich-editor__error.popup-image-error:not([hidden]) { display: block; }` |
+| Ô mã HTML (`.rich-editor__code`) | `block` | không đặt (textarea `inline-block`) | **lệch** (+4px chiều cao) → `.rich-editor__code:not([hidden]), .rich-editor-code:not([hidden]) { display: block; }` |
+| Vùng trực quan (`.rich-editor-visual`) | `block` | `div` (block) | trùng |
+| Cảnh báo link Drive (`.audio-drive-warning`) | `block` | không đặt (block) | trùng |
+
+Hai chỗ lệch được **phát hiện bằng chính fixture trước khi thêm rule** (chạy bản đã đổi nhưng chưa có rule: `display: block -> flex` ở lỗi ảnh, `block -> inline-block` và +4px ở ô mã) rồi thêm rule ở fragment 12.
+
+### Kiểm thử an toàn dữ liệu (nguồn lưu đúng editor đang hiển thị)
+
+Viết **trước khi chuyển** và chạy xanh trên mã cũ:
+
+- Fixture `richeditor` (nhiều bước, `isVisible()` từng bước) trên cả hai editor (đề bài cloze, đoạn văn đọc hiểu): mặc định chỉ vùng trực quan hiện; bật/tắt bảng và ảnh (nút bật hai lần = tắt); lỗi ảnh khi URL rỗng; mở lại xóa lỗi; mở popup này đóng popup kia; click ngoài đóng popup; chuyển sang mã HTML đóng popup, hiện ô mã, ẩn vùng trực quan; quay lại.
+- Kịch bản lưu thật qua `onSaveDraft` (nút Lưu): (1) sửa ở chế độ trực quan rồi lưu → payload có nội dung trực quan; (2) chuyển sang mã HTML, sửa mã, lưu → payload có nội dung mã và **không** còn nội dung trực quan cũ; (3) quay lại trực quan thấy nội dung mã, sửa, lưu → payload có nội dung trực quan mới, **không** còn mã cũ; (4) sửa trực quan rồi chuyển sang mã HTML ngay (đồng bộ vào ô mã) và lưu → giữ bản mới nhất; (5) đoạn văn đọc hiểu lưu đúng ở cả hai chế độ.
+- Test đơn vị `tests/draft-inputs-rich-editor-source.test.mjs` (mới): `syncInputs` chép trực quan → ô mã khi vùng trực quan hiện, và **không ghi đè ô mã** khi vùng trực quan ẩn (chế độ mã). Đỏ trên mã cũ (mock không có `style`), xanh sau thay đổi.
+- Các test hiện có cập nhật mock từ `style.display` sang `hidden` (`test-studio-rich-html-editor`, `test-studio-inline-cloze-table-and-drive-preview`) và thêm assertion template (`hidden` cho ô mã, popup, vùng lỗi ở cả hai nguồn editor; không còn display inline) — **đỏ trên mã cũ, xanh sau thay đổi**.
+
+### Xác minh đợt 5
+
+- Fixture thêm nhóm `richeditor` và `audiowarn`. So với baseline từ worktree tạm tại `2f28172`: **42/42 computed snapshots giống baseline**; PNG: 40/42 trùng từng byte, 2 ảnh (`1024-rich-passage-table-menu`, `1024-rich-passage-code-mode`) lệch **đúng 1 pixel, 1/255**, cùng vị trí (426,4) — nhiễu khử răng cưa (đo bằng công cụ mới `tests/browser/png-diff.mjs`, đếm pixel bằng canvas của Chrome); computed không đổi. 0 browser errors.
+- `npm test`: 675/675; `css-metadata check` khớp. **Smoke vòng đời builder** (`builder-lifecycle-smoke`: 10 vòng mount/dispose × 3 viewport, 0 lỗi) và **smoke tích hợp đầy đủ** (`dashboard-integration-smoke`, root và `/preview-base`) đều **đạt** — các lượt này đã chạy cho đợt 5 (chưa chạy lại cho các đợt 1–4 riêng lẻ).
+- Inventory 105 → 54.
+
+### Lưu ý khi viết fixture
+
+Bấm chuột thật vào nút "Mã HTML" ngay sau khi mở menu bảng làm Playwright báo phần tử không hiển thị ở khung hẹp (bố cục thanh công cụ ở 390px); fixture kích hoạt sự kiện click trực tiếp (`dispatchEvent`) cho các nút chuyển chế độ và nút Lưu. Chưa điều tra nguyên nhân bố cục; không ảnh hưởng logic ẩn/hiện đang kiểm.
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.
 
 ## Giới hạn
 
-- Mới bốn nhóm (vocab, rubric, pictorial, publishing/media/vocabulary.js). Còn nhóm 5 (rich editor).
+- Đã xong cả năm nhóm trong bảng. Còn các chỗ `style.display` ngoài bảng: `batch-import.js` (modal/preview tạo hàng loạt), `move-exercise-modal.js`, `simulation.js` (modal mô phỏng, nút lọc), `authoring/rubric.js` (`ctxGroup`) và template ở `builder.js:478` (thẻ khối đang chọn: `style="display: block|none"` theo `isActiveBlock`, chỉ quyết định lúc render, không có JS bật/tắt; inline `block` đang thắng các rule `display` của `.builder-block-card` nên cần bảng `display` riêng trước khi đổi); chưa chuyển vì ngoài phạm vi các nhóm đã lập kế hoạch và vì mỗi nhóm cần fixture riêng.
 - Chưa chạy lại smoke vòng đời `/preview-base`.
-- Fixture hiện có nhóm `vocab`, `rubric`, `pictorial`, `publishing`, `vocabbatch` và `media`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
+- Fixture hiện có nhóm `vocab`, `rubric`, `pictorial`, `publishing`, `vocabbatch`, `media`, `richeditor` và `audiowarn`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
 
 Rollback: revert commit như một đơn vị.

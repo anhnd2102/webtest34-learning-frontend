@@ -335,7 +335,7 @@ test('Inline Cloze: input or table insertion into rich editor triggers real-time
 
   const mockVisualEl = {
     innerHTML: '<p>Initial</p>',
-    style: { display: 'block' },
+    hidden: false,
     addEventListener: (evt, handler) => {
       if (evt === 'input') visualInputListener = handler;
     }
@@ -343,7 +343,7 @@ test('Inline Cloze: input or table insertion into rich editor triggers real-time
 
   const mockCodeEl = {
     value: '<p>Initial</p>',
-    style: { display: 'none' },
+    hidden: true,
     addEventListener: () => {}
   };
 

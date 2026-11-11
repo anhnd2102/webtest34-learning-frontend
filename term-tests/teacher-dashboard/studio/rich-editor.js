@@ -90,7 +90,7 @@ export function renderRichHtmlEditor(container, {
             <button type="button" class="btn-editor-action btn-rich-insert-table" title="Chèn Bảng dữ liệu">
               ${renderSvgIcon('table', 'icon-inline')} <span>Chèn bảng</span> ${renderSvgIcon('chevronDown', 'icon-inline')}
             </button>
-            <div class="rich-editor__popup table-presets-menu" style="display: none;">
+            <div class="rich-editor__popup table-presets-menu" hidden>
               <strong>Tạo bảng nhanh</strong>
               <div class="rich-editor__table-options">
                 <button type="button" class="btn-table-grid" data-rows="2" data-cols="2">2 cột × 2 dòng</button>
@@ -113,13 +113,13 @@ export function renderRichHtmlEditor(container, {
             <button type="button" class="btn-editor-action btn-rich-insert-image" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
               ${renderSvgIcon('image', 'icon-inline')} <span>Chèn ảnh</span>
             </button>
-            <div class="rich-editor__popup image-insert-popup" style="display: none;">
+            <div class="rich-editor__popup image-insert-popup" hidden>
               <label>
                 Link ảnh
                 <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
               </label>
               <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
-              <div class="rich-editor__error popup-image-error" style="display: none;"></div>
+              <div class="rich-editor__error popup-image-error" hidden></div>
               <div class="rich-editor__actions">
                 <button type="button" class="btn-confirm-insert-image">Chèn</button>
               </div>
@@ -142,10 +142,10 @@ export function renderRichHtmlEditor(container, {
 
       <div class="rich-editor__content-area">
         <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-placeholder="${escapeHtml(placeholder)}" role="textbox" aria-label="Nội dung bài" aria-multiline="true">${sanitized}</div>
-        <textarea class="rich-editor__code rich-editor-code form-control" style="display: none;" rows="8">${escapeHtml(sanitized)}</textarea>
+        <textarea class="rich-editor__code rich-editor-code form-control" hidden rows="8">${escapeHtml(sanitized)}</textarea>
       </div>
 
-      <div class="rich-editor__error general-editor-error" style="display: none;" role="alert"></div>
+      <div class="rich-editor__error general-editor-error" hidden role="alert"></div>
 
       <div class="rich-editor__footer">
         <span>Enter để xuống dòng. Shift+Enter để ngắt dòng mềm. Nhấp vào ô bảng để chỉnh sửa.</span>
@@ -193,26 +193,26 @@ export function renderRichHtmlEditor(container, {
   };
 
   const closeAllPopups = () => {
-    if (tableMenu && tableMenu.style) tableMenu.style.display = 'none';
-    if (imagePopup && imagePopup.style) {
-      imagePopup.style.display = 'none';
-      if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
+    if (tableMenu) tableMenu.hidden = true;
+    if (imagePopup) {
+      imagePopup.hidden = true;
+      if (imageErrorEl) imageErrorEl.hidden = true;
     }
   };
 
   const showError = (msg) => {
     if (generalErrorEl) {
       generalErrorEl.textContent = msg;
-      if (generalErrorEl.style) generalErrorEl.style.display = 'flex';
+      if (generalErrorEl) generalErrorEl.hidden = false;
       setTimeout(() => {
-        if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
+        if (generalErrorEl) generalErrorEl.hidden = true;
       }, 5000);
     }
   };
 
   const clearError = () => {
-    if (generalErrorEl && generalErrorEl.style) generalErrorEl.style.display = 'none';
-    if (imageErrorEl && imageErrorEl.style) imageErrorEl.style.display = 'none';
+    if (generalErrorEl) generalErrorEl.hidden = true;
+    if (imageErrorEl) imageErrorEl.hidden = true;
   };
 
   const syncToCode = () => {
@@ -283,14 +283,14 @@ export function renderRichHtmlEditor(container, {
       closeAllPopups();
       if (isCodeMode) {
         syncToCode();
-        if (visualEl && visualEl.style) visualEl.style.display = 'none';
-        if (codeEl && codeEl.style) codeEl.style.display = 'block';
+        if (visualEl) visualEl.hidden = true;
+        if (codeEl) codeEl.hidden = false;
         toggleBtn.classList?.add?.('active');
         toggleBtn.textContent = 'Trực quan';
       } else {
         syncToVisual();
-        if (codeEl && codeEl.style) codeEl.style.display = 'none';
-        if (visualEl && visualEl.style) visualEl.style.display = 'block';
+        if (codeEl) codeEl.hidden = true;
+        if (visualEl) visualEl.hidden = false;
         toggleBtn.classList?.remove?.('active');
         toggleBtn.textContent = '</> Mã HTML';
       }
@@ -364,9 +364,9 @@ export function renderRichHtmlEditor(container, {
     tableBtn.addEventListener?.('click', (e) => {
       e.stopPropagation?.();
       saveSelection();
-      const isVisible = tableMenu.style?.display !== 'none';
+      const isVisible = !tableMenu.hidden;
       closeAllPopups();
-      if (tableMenu.style) tableMenu.style.display = isVisible ? 'none' : 'grid';
+      if (tableMenu) tableMenu.hidden = isVisible;
     });
 
     const gridBtns = tableMenu.querySelectorAll?.('.btn-table-grid') || [];
@@ -398,10 +398,10 @@ export function renderRichHtmlEditor(container, {
     imageBtn.addEventListener?.('click', (e) => {
       e.stopPropagation?.();
       saveSelection();
-      const isVisible = imagePopup.style?.display !== 'none';
+      const isVisible = !imagePopup.hidden;
       closeAllPopups();
-      if (imagePopup.style) {
-        imagePopup.style.display = isVisible ? 'none' : 'grid';
+      if (imagePopup) {
+        imagePopup.hidden = isVisible;
         if (!isVisible && imageLinkInput) {
           imageLinkInput.value = '';
           clearError();
@@ -415,7 +415,7 @@ export function renderRichHtmlEditor(container, {
       if (!urlVal) {
         if (imageErrorEl) {
           imageErrorEl.textContent = 'Vui lòng nhập đường dẫn ảnh.';
-          if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+          if (imageErrorEl) imageErrorEl.hidden = false;
         }
         return;
       }
@@ -423,7 +423,7 @@ export function renderRichHtmlEditor(container, {
       if (!validateImageUrl(converted)) {
         if (imageErrorEl) {
           imageErrorEl.textContent = 'Link không hợp lệ. Hãy dùng link HTTPS hoặc Google Drive.';
-          if (imageErrorEl.style) imageErrorEl.style.display = 'block';
+          if (imageErrorEl) imageErrorEl.hidden = false;
         }
         return;
       }
