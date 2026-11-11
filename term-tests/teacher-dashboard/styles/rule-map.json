@@ -11110,5 +11110,11 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn.btn-copy-sample.is-copied"
+  },
+  {
+    "order": 1840,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".pictorial-thumb-preview .pictorial-preview-img"
   }
 ]

@@ -291,6 +291,7 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã chuyển 9 inline styles tĩnh của modal tạo hàng loạt AI Rubric và Single Choice; phát hiện `openBatchPictorialModal` là mã chết (rút 5 vị trí khỏi đợt này): xem `BATCH_MODALS_STYLES_VERIFICATION.md`.
   - Đã chuyển 17 inline styles tĩnh của modal chi tiết câu/chấm điểm (`grading/attempt-review.js`) sang class/token; parity browser 12/12 giống baseline, xem `GRADING_MODAL_STYLES_VERIFICATION.md`.
   - Đã chuyển 8 vị trí của `studio/batch-import.js` (preview CSV, nút Chép mẫu) sang class/token; parity browser 15/15 giống baseline: xem `BATCH_IMPORT_STYLES_VERIFICATION.md`.
+  - Rà lại `studio/question-renderer.js`: chuyển style tĩnh của ảnh xem trước Pictorial; 18 vị trí còn lại là `display` ban đầu do JS bật/tắt, giữ inline (đổi sang class/`hidden` là đổi mô hình ẩn/hiện, cần đợt riêng); parity 30/30: xem `QUESTION_RENDERER_REMAINING_STYLES_VERIFICATION.md`.
   - Metadata CSS (manifest, rule map, inventory inline style) tái tạo bằng `node scripts/css-metadata.mjs` (rule-map/manifest/inventory/check) thay vì sửa tay; `tests/css-metadata.test.mjs` chặn rule map lệch khỏi `styles/*.css`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.

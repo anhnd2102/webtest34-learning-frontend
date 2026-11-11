@@ -1,7 +1,7 @@
 {
-  "baseline": "ec9b8c5",
-  "revision": "20261111-batch-import1",
-  "note": "Lexical inventory after batch-import static styles; not a CSS parser.",
+  "baseline": "1f6af9f",
+  "revision": "20261111-question-renderer2",
+  "note": "Lexical inventory after pictorial preview image static styles; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",

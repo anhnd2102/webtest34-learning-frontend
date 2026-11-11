@@ -460,3 +460,12 @@
   color: var(--izone-context-action);
   font-weight: 600;
 }
+
+/* Ảnh xem trước Pictorial (studio/question-renderer.js): phần tĩnh của inline style cũ; display ban đầu vẫn do template/JS quyết định. */
+.pictorial-thumb-preview .pictorial-preview-img {
+  max-height: 180px;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--izone-border);
+  object-fit: contain;
+}

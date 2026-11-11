@@ -1,10 +1,10 @@
 {
-  "baseline": "ec9b8c5",
-  "sourceSha256": "54416d1c5e4ba972174821267dcf2c261cd34867e98cdc6679c98a989b2c9524",
-  "sourceLines": 12823,
+  "baseline": "1f6af9f",
+  "sourceSha256": "c21a8e88addcab146088a0d39066eb9a946c8f7be31896706d397fef98c41ce5",
+  "sourceLines": 12832,
   "fragments": [
     {
-      "href": "styles/01-foundation.css?rev=20261111-batch-import1",
+      "href": "styles/01-foundation.css?rev=20261111-question-renderer2",
       "startLine": 1,
       "endLine": 1113,
       "sha256": "9651feeca2871f10e710cc8c3de26fe4541b4dcd9c82f3dfd67204302036e6f4",
@@ -12,7 +12,7 @@
       "extractionEndLine": 1069
     },
     {
-      "href": "styles/02-dashboard-grading.css?rev=20261111-batch-import1",
+      "href": "styles/02-dashboard-grading.css?rev=20261111-question-renderer2",
       "startLine": 1114,
       "endLine": 2770,
       "sha256": "c5b8ed78598860eeaaa1e8c10dd746a3181c2dc8126f60d17ade0f95bdb0a668",
@@ -20,7 +20,7 @@
       "extractionEndLine": 2726
     },
     {
-      "href": "styles/03-studio-builder.css?rev=20261111-batch-import1",
+      "href": "styles/03-studio-builder.css?rev=20261111-question-renderer2",
       "startLine": 2771,
       "endLine": 4719,
       "sha256": "ba22a5f9d543b92daf39770b9bf91a9a7e5d472b2d5132ce1196a6a4f3373671",
@@ -28,7 +28,7 @@
       "extractionEndLine": 4644
     },
     {
-      "href": "styles/04-authoring.css?rev=20261111-batch-import1",
+      "href": "styles/04-authoring.css?rev=20261111-question-renderer2",
       "startLine": 4720,
       "endLine": 5383,
       "sha256": "29201654065856f93de3778075cb86e5d929d69a717106af47375ffc83717532",
@@ -36,7 +36,7 @@
       "extractionEndLine": 5289
     },
     {
-      "href": "styles/05-simulation-questions.css?rev=20261111-batch-import1",
+      "href": "styles/05-simulation-questions.css?rev=20261111-question-renderer2",
       "startLine": 5384,
       "endLine": 6298,
       "sha256": "22311374bd167b5e2d40127967b50fab434487f6e58ec351578ea8b9f72d5a9a",
@@ -44,7 +44,7 @@
       "extractionEndLine": 6204
     },
     {
-      "href": "styles/06-publishing.css?rev=20261111-batch-import1",
+      "href": "styles/06-publishing.css?rev=20261111-question-renderer2",
       "startLine": 6299,
       "endLine": 7466,
       "sha256": "71273bfe56ff53200a541ef35e04446ef748179a0a1f6d439366ef8ffe782996",
@@ -52,7 +52,7 @@
       "extractionEndLine": 6829
     },
     {
-      "href": "styles/07-reports-and-question-layouts.css?rev=20261111-batch-import1",
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261111-question-renderer2",
       "startLine": 7467,
       "endLine": 9051,
       "sha256": "d4e134bb9ffcf300d97943113da6fb1424ce34ab590f17642331a631298bb75d",
@@ -60,7 +60,7 @@
       "extractionEndLine": 7911
     },
     {
-      "href": "styles/08-studio-simulation-shell.css?rev=20261111-batch-import1",
+      "href": "styles/08-studio-simulation-shell.css?rev=20261111-question-renderer2",
       "startLine": 9052,
       "endLine": 10128,
       "sha256": "ee74984b1f7fe94166ca8d0408db4597a779c025ab4ee2d9919f6242a21bdf41",
@@ -68,7 +68,7 @@
       "extractionEndLine": 8949
     },
     {
-      "href": "styles/09-editor-media.css?rev=20261111-batch-import1",
+      "href": "styles/09-editor-media.css?rev=20261111-question-renderer2",
       "startLine": 10129,
       "endLine": 10722,
       "sha256": "b2b74c5786313f48080a1c9d81b686642c256656fefc306a5f3fe1b4d7eda5e9",
@@ -76,7 +76,7 @@
       "extractionEndLine": 9535
     },
     {
-      "href": "styles/10-studio-overrides.css?rev=20261111-batch-import1",
+      "href": "styles/10-studio-overrides.css?rev=20261111-question-renderer2",
       "startLine": 10723,
       "endLine": 11493,
       "sha256": "37b90dbc5549c50a7fee5aba033afdf039008f367da861852bce6f07fb051957",
@@ -84,7 +84,7 @@
       "extractionEndLine": 10306
     },
     {
-      "href": "styles/11-analytics.css?rev=20261111-batch-import1",
+      "href": "styles/11-analytics.css?rev=20261111-question-renderer2",
       "startLine": 11494,
       "endLine": 12361,
       "sha256": "090a8b29cd6c3777beebf1096df9f272717595d969cb75a033105750bbdda19e",
@@ -92,10 +92,10 @@
       "extractionEndLine": 11174
     },
     {
-      "href": "styles/12-context-and-assessment.css?rev=20261111-batch-import1",
+      "href": "styles/12-context-and-assessment.css?rev=20261111-question-renderer2",
       "startLine": 12362,
-      "endLine": 12823,
-      "sha256": "e6e7e3761353194896d71cb31a967572069771da3af0b95b6775dc4079a2abf6",
+      "endLine": 12832,
+      "sha256": "f54aeb8cb59bd5f5541823f09794e425b897c74979049ba2510cac45a62f7568",
       "extractionStartLine": 11175,
       "extractionEndLine": 11527
     }
@@ -105,5 +105,5 @@
     "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
     "sourceLines": 11527
   },
-  "revision": "batch-import1"
+  "revision": "question-renderer2"
 }

@@ -828,7 +828,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   </button>
                 </div>
                 <div class="pictorial-preview-wrap pictorial-thumb-preview">
-                  <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview" style="${imgSrc ? 'max-height: 180px; max-width: 100%; border-radius: 6px; border: 1px solid #e2e8f0; object-fit: contain;' : 'display: none;'}" onerror="this.style.display='none'; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='inline-block';" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='none'; this.style.display='inline-block';" />
+                  <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview"${imgSrc ? '' : ' style="display: none;"'} onerror="this.style.display='none'; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='inline-block';" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='none'; this.style.display='inline-block';" />
                   <span class="pictorial-preview-error badge badge-warning" style="display: none;">${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
                 </div>
               </div>
