@@ -15,7 +15,6 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
   const detailScores = root.querySelector('#detail-scores');
   const detailIncidents = root.querySelector('#detail-incidents');
   const detailAttemptHistory = root.querySelector('#detail-attempt-history');
-  const detailGradingHistory = root.querySelector('#detail-grading-history');
   const conflictAlert = root.querySelector('#conflict-alert');
   const draftStatusMsg = root.querySelector('#draft-status-msg');
   const saveDraftBtn = root.querySelector('#save-draft-btn');
@@ -132,41 +131,6 @@ function renderAttemptDetail(payload) {
         detailAttemptHistory.append(historyTable);
       } else {
         detailAttemptHistory.textContent = 'Không có lịch sử lần làm nào khác.';
-      }
-    }
-
-    if (detailGradingHistory) {
-      detailGradingHistory.replaceChildren();
-      if (payload.gradingHistory && payload.gradingHistory.length > 0) {
-        const gTable = document.createElement('table');
-        gTable.className = 'mini-table';
-        gTable.innerHTML = `
-          <thead>
-            <tr>
-              <th>Lượt chấm</th>
-              <th>Phiên bản chấm</th>
-              <th>Trạng thái</th>
-              <th>Bắt đầu</th>
-              <th>Hoàn tất</th>
-            </tr>
-          </thead>
-        `;
-        const gBody = document.createElement('tbody');
-        for (const run of payload.gradingHistory) {
-          const gRow = document.createElement('tr');
-          gRow.innerHTML = `
-            <td>${run.gradingRunId.slice(0, 8)}…</td>
-            <td>v${run.graderVersion}</td>
-            <td><span class="result-status ${run.status}">${resultStatusLabel(run.status)}</span></td>
-            <td>${run.startedAt ? formatAssignmentWindow(run.startedAt, null).split(' → ')[0] : '—'}</td>
-            <td>${run.completedAt ? formatAssignmentWindow(run.completedAt, null).split(' → ')[0] : '—'}</td>
-          `;
-          gBody.append(gRow);
-        }
-        gTable.append(gBody);
-        detailGradingHistory.append(gTable);
-      } else {
-        detailGradingHistory.textContent = 'Chưa có thông tin lượt chấm.';
       }
     }
 

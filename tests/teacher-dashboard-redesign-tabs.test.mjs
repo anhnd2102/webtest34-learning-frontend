@@ -162,7 +162,7 @@ test('Teacher Dashboard Redesign: styles.css contains required design system sty
   assert.match(css, /\.clickable-kpi-card/, 'Must define .clickable-kpi-card');
   assert.match(css, /\.retake-badge\.active/, 'Must define .retake-badge.active');
   assert.match(css, /\.btn-retake-renew/, 'Must define .btn-retake-renew');
-  assert.match(css, /#view-grading\s+\.assignment-link-bar\s*\{\s*display:\s*none\s*!important;?\s*\}/, 'Must hide assignment-link-bar in view-grading');
+  assert.doesNotMatch(css, /#view-grading\s+\.assignment-link-bar/, 'The legacy link bar is gone, so no rule hides it in view-grading');
 });
 
 

@@ -717,7 +717,6 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const detailIncidents = root.querySelector('#detail-incidents');
   const detailItems = root.querySelector('#detail-items');
   const detailAttemptHistory = root.querySelector('#detail-attempt-history');
-  const detailGradingHistory = root.querySelector('#detail-grading-history');
   const attemptSkillTabs = root.querySelector('#attempt-skill-tabs');
   const skillSummaryCard = root.querySelector('#skill-summary-card');
   const detailItemsTable = root.querySelector('#detail-items-table');
@@ -740,26 +739,6 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const draftStatusMsg = root.querySelector('#draft-status-msg');
   const conflictAlert = root.querySelector('#conflict-alert');
   const gradingActionsBar = root.querySelector('#grading-actions-bar');
-  const assignmentLinkBar = root.querySelector('#assignment-link-bar');
-  const assignmentStudentUrl = root.querySelector('#assignment-student-url');
-  const copyStudentLinkBtn = root.querySelector('#copy-student-link-btn');
-  const openStudentLinkBtn = root.querySelector('#open-student-link-btn');
-
-  if (copyStudentLinkBtn) {
-    lifecycle.listen(copyStudentLinkBtn, 'click', async () => {
-      const url = assignmentStudentUrl?.value;
-      if (!url) return;
-      try {
-        await navigator.clipboard.writeText(url);
-        const originalHtml = copyStudentLinkBtn.innerHTML;
-        copyStudentLinkBtn.innerHTML = `${ICONS.check} <span>Đã sao chép!</span>`;
-        lifecycle.timeout(() => { copyStudentLinkBtn.innerHTML = originalHtml; }, 2000);
-      } catch {
-        assignmentStudentUrl?.select();
-        document.execCommand('copy');
-      }
-    });
-  }
 
   if (copyShowcaseLinkBtn) {
     lifecycle.listen(copyShowcaseLinkBtn, 'click', async () => {
@@ -822,9 +801,6 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       if (showcaseProgressText) showcaseProgressText.textContent = '—';
       if (showcaseProgressBar) showcaseProgressBar.style.width = '0%';
       if (examRoom) examRoom.hidden = true;
-      if (assignmentStudentUrl) assignmentStudentUrl.value = '';
-      if (openStudentLinkBtn) openStudentLinkBtn.href = '#';
-      if (assignmentLinkBar) assignmentLinkBar.hidden = true;
       if (showcaseStudentUrl) showcaseStudentUrl.value = '';
       if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = '#';
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
@@ -872,14 +848,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       if (showcaseStudentUrl) showcaseStudentUrl.value = studentUrl;
       if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = studentUrl;
       if (showcaseLinkBar) showcaseLinkBar.hidden = false;
-
-      // Also sync legacy assignmentLinkBar
-      if (assignmentStudentUrl) assignmentStudentUrl.value = studentUrl;
-      if (openStudentLinkBtn) openStudentLinkBtn.href = studentUrl;
-      if (assignmentLinkBar) assignmentLinkBar.hidden = false;
     } else {
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
-      if (assignmentLinkBar) assignmentLinkBar.hidden = true;
     }
   }
 
@@ -2711,7 +2681,6 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     if (detailScores) detailScores.replaceChildren();
     if (detailItemsBody) detailItemsBody.replaceChildren();
     if (detailAttemptHistory) detailAttemptHistory.replaceChildren();
-    if (detailGradingHistory) detailGradingHistory.replaceChildren();
     if (searchInput) searchInput.value = '';
     if (statusFilter) statusFilter.value = '';
     if (skillFilter) skillFilter.value = '';

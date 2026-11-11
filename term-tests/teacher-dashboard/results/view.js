@@ -1,23 +1,18 @@
 import { computeClassSkillSummary, getStudentInitials, getAvatarColor, resultStatusLabel, getScoreTier, formatCompactScore, formatSubmissionTimestamp, formatCurrentTime } from './presentation.js';
 import { escapeHtml, normalizeSkillCode, CANONICAL_SKILL_LABELS } from '../ui/presentation.js';
 import { toggleExportXlsxButton } from './export.js';
-import { formatAssignmentMeta, localStudentUrl } from '../shell/dashboard-state.js';
+import { formatAssignmentMeta } from '../shell/dashboard-state.js';
 import { incidentCellText } from '../exam-room/presentation.js';
 import { ICONS } from '../ui/icons.js';
 
 export function createResultsView({ root, lifecycle, state, viewState, actions }) {
   const document = root.ownerDocument || root;
-  const window = document.defaultView || globalThis.window;
-  const currentLocation = window?.location;
-  const { ensurePortalPanel, apiBase, setUrl, loadAttemptDetail, openGrantRetakeModal } = actions;
+  const { ensurePortalPanel, setUrl, loadAttemptDetail, openGrantRetakeModal } = actions;
   const exportXlsxBtn = root.querySelector('#export-xlsx-btn');
   const results = root.querySelector('#results');
   const resultsContent = root.querySelector('#results-content');
   const assignmentHeading = root.querySelector('#assignment-heading');
   const assignmentMeta = root.querySelector('#assignment-meta');
-  const assignmentLinkBar = root.querySelector('#assignment-link-bar');
-  const assignmentStudentUrl = root.querySelector('#assignment-student-url');
-  const openStudentLinkBtn = root.querySelector('#open-student-link-btn');
   const classSkillSummary = root.querySelector('#class-skill-summary');
   const skillFilter = root.querySelector('#skill-filter');
   const status = root.querySelector('#status');
@@ -86,18 +81,6 @@ function renderResults(payload) {
       if (meta.phaseLabel) parts.push(meta.phaseLabel);
       parts.push(`Phiên bản ${payload.assignment.formVersion}`);
       assignmentMeta.textContent = parts.join(' · ');
-    }
-
-    if (assignmentLinkBar) {
-      const currentApi = typeof apiBase === 'function' ? apiBase() : '';
-      const studentUrl = localStudentUrl(payload.assignment?.studentUrl, currentLocation, currentApi);
-      if (studentUrl) {
-        assignmentLinkBar.hidden = false;
-        if (assignmentStudentUrl) assignmentStudentUrl.value = studentUrl;
-        if (openStudentLinkBtn) openStudentLinkBtn.href = studentUrl;
-      } else {
-        assignmentLinkBar.hidden = true;
-      }
     }
 
     // Update showcase progress bar

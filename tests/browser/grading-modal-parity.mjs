@@ -48,7 +48,7 @@ const attempt = {
   incidents: [], incidentCount: 0,
   scores: { total: { earned: 3, max: 6, provisional: true }, skills: {} },
   skills: [],
-  attemptHistory: [], gradingHistory: [],
+  attemptHistory: [],
   manualGrading: { status: 'draft', revision: 0 },
   items: [
     { itemVersionId: 'i1', position: 1, primarySkill: 'vocabulary', sectionId: 's1', sectionTitle: 'Phần từ vựng', prompt: 'Chọn từ đúng cho câu: She ____ to school.', helpText: 'Chọn một đáp án.',

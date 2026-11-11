@@ -136,11 +136,6 @@
   display: none !important;
 }
 
-/* Hide assignment-link-bar in grading center */
-#view-grading .assignment-link-bar {
-  display: none !important;
-}
-
 /* Compact Assessment Header */
 .assessment-header {
   background: var(--izone-surface);

@@ -10815,310 +10815,304 @@
     "order": 1790,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": "#view-grading .assignment-link-bar"
+    "selector": ".assessment-header"
   },
   {
     "order": 1791,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-header"
+    "selector": ".assessment-header-top"
   },
   {
     "order": 1792,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-header-top"
+    "selector": ".btn-back-dashboard"
   },
   {
     "order": 1793,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-back-dashboard"
+    "selector": ".btn-back-dashboard:hover"
   },
   {
     "order": 1794,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-back-dashboard:hover"
+    "selector": ".assessment-breadcrumb"
   },
   {
     "order": 1795,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb"
+    "selector": ".assessment-breadcrumb .crumb-class"
   },
   {
     "order": 1796,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-class"
+    "selector": ".assessment-breadcrumb .crumb-separator"
   },
   {
     "order": 1797,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-separator"
+    "selector": ".assessment-breadcrumb .crumb-test"
   },
   {
     "order": 1798,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-test"
+    "selector": ".assessment-breadcrumb .crumb-badge"
   },
   {
     "order": 1799,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-breadcrumb .crumb-badge"
+    "selector": ".assessment-nav-tabs"
   },
   {
     "order": 1800,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-nav-tabs"
+    "selector": ".assessment-tab-btn"
   },
   {
     "order": 1801,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn"
+    "selector": ".assessment-tab-btn:hover"
   },
   {
     "order": 1802,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn:hover"
+    "selector": ".assessment-tab-btn:hover svg"
   },
   {
     "order": 1803,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn:hover svg"
+    "selector": ".assessment-tab-btn:active"
   },
   {
     "order": 1804,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn:active"
+    "selector": ".assessment-tab-btn.active"
   },
   {
     "order": 1805,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn.active"
+    "selector": ".assessment-tab-btn.active:hover"
   },
   {
     "order": 1806,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn.active:hover"
+    "selector": ".assessment-tab-btn.active svg"
   },
   {
     "order": 1807,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-btn.active svg"
+    "selector": ".assessment-tab-panel[hidden]"
   },
   {
     "order": 1808,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".assessment-tab-panel[hidden]"
+    "selector": ".report-kpi-grid"
   },
   {
     "order": 1809,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".report-kpi-grid"
+    "selector": ".clickable-kpi-card"
   },
   {
     "order": 1810,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".clickable-kpi-card"
+    "selector": ".clickable-kpi-card:hover"
   },
   {
     "order": 1811,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".clickable-kpi-card:hover"
+    "selector": ".clickable-kpi-card:focus-visible"
   },
   {
     "order": 1812,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".clickable-kpi-card:focus-visible"
+    "selector": ".retake-action-wrap"
   },
   {
     "order": 1813,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".retake-action-wrap"
+    "selector": ".retake-badge"
   },
   {
     "order": 1814,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".retake-badge"
+    "selector": ".retake-badge.active"
   },
   {
     "order": 1815,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".retake-badge.active"
+    "selector": ".btn-retake-renew"
   },
   {
     "order": 1816,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-retake-renew"
+    "selector": ".btn-retake-renew:hover"
   },
   {
     "order": 1817,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn-retake-renew:hover"
+    "selector": ".meta-badge.badge-retake-grant"
   },
   {
     "order": 1818,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".meta-badge.badge-retake-grant"
+    "selector": ".prompt-help-text"
   },
   {
     "order": 1819,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".prompt-help-text"
+    "selector": ".modal-ctx-prompt"
   },
   {
     "order": 1820,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-ctx-prompt"
+    "selector": ".modal-ctx-help"
   },
   {
     "order": 1821,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-ctx-help"
+    "selector": ".modal-ctx-answer"
   },
   {
     "order": 1822,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-ctx-answer"
+    "selector": ".modal-ctx-answer.modal-ctx-answer-expected"
   },
   {
     "order": 1823,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-ctx-answer.modal-ctx-answer-expected"
+    "selector": ".modal-ctx-feedback"
   },
   {
     "order": 1824,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-ctx-feedback"
+    "selector": ".modal-override-head"
   },
   {
     "order": 1825,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-head"
+    "selector": ".modal-override-head h4"
   },
   {
     "order": 1826,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-head h4"
+    "selector": ".modal-override-score-row"
   },
   {
     "order": 1827,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-score-row"
+    "selector": ".modal-override-block input.modal-override-score-input"
   },
   {
     "order": 1828,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-block input.modal-override-score-input"
+    "selector": ".modal-override-label"
   },
   {
     "order": 1829,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-label"
+    "selector": ".modal-override-label.modal-override-label-block"
   },
   {
     "order": 1830,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-label.modal-override-label-block"
+    "selector": ".modal-override-max"
   },
   {
     "order": 1831,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-max"
+    "selector": ".modal-override-feedback-row"
   },
   {
     "order": 1832,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-feedback-row"
+    "selector": ".modal-override-actions"
   },
   {
     "order": 1833,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".modal-override-actions"
+    "selector": ".batch-preview-row-text"
   },
   {
     "order": 1834,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".batch-preview-row-text"
+    "selector": ".batch-preview-row-meta"
   },
   {
     "order": 1835,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".batch-preview-row-meta"
+    "selector": ".btn.btn-copy-sample.is-copied"
   },
   {
     "order": 1836,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".btn.btn-copy-sample.is-copied"
+    "selector": ".pictorial-thumb-preview .pictorial-preview-img"
   },
   {
     "order": 1837,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".pictorial-thumb-preview .pictorial-preview-img"
+    "selector": ".pictorial-thumb-preview .pictorial-preview-error:not([hidden])"
   },
   {
     "order": 1838,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".pictorial-thumb-preview .pictorial-preview-error:not([hidden])"
+    "selector": ".specific-classes-container:not([hidden])"
   },
   {
     "order": 1839,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".specific-classes-container:not([hidden])"
-  },
-  {
-    "order": 1840,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
     "selector": ".rich-editor__code:not([hidden]), .rich-editor-code:not([hidden])"
   },
   {
-    "order": 1841,
+    "order": 1840,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rich-editor__error.popup-image-error:not([hidden])"

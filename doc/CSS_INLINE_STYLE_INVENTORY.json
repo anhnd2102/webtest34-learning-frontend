@@ -1,16 +1,16 @@
 {
-  "baseline": "c2814f2",
-  "revision": "20261111-hidden-batchimport",
-  "note": "Lexical inventory after batch import visibility moved to hidden; not a CSS parser.",
+  "baseline": "ad7367e",
+  "revision": "20261112-dead-ui",
+  "note": "Lexical inventory after removing the always-hidden legacy link bar and grading history section; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
-      "line": 112,
+      "line": 95,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
-      "line": 198,
+      "line": 181,
       "kind": "attribute"
     },
     {
@@ -50,12 +50,12 @@
     },
     {
       "file": "term-tests/teacher-dashboard/shell/dashboard.js",
-      "line": 800,
+      "line": 779,
       "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/shell/dashboard.js",
-      "line": 823,
+      "line": 802,
       "kind": "property"
     },
     {

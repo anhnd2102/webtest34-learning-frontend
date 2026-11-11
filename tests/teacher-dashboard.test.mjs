@@ -192,8 +192,9 @@ test('teacher dashboard index.html provides required controls and result contain
   assert.match(html, /id="detail-meta"/);
   assert.match(html, /id="detail-scores"/);
   assert.match(html, /id="detail-items"/);
-  assert.match(html, /id="detail-grading-history"/);
   assert.match(html, /id="detail-attempt-history"/);
+  // Lịch sử chấm đã được gỡ khỏi drawer chi tiết (860e55f); không để lại section ẩn vĩnh viễn.
+  assert.doesNotMatch(html, /detail-grading-history/);
 });
 
 test('student exam page has a waiting room that displays no form content', async () => {
@@ -481,10 +482,12 @@ test('teacher dashboard index.html and styles.css provide conflict alert element
 test('teacher dashboard index.html and styles.css provide student test link bar and copy button', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  assert.match(html, /id="assignment-link-bar"/);
-  assert.match(html, /id="assignment-student-url"/);
-  assert.match(html, /id="copy-student-link-btn"/);
-  assert.match(html, /id="open-student-link-btn"/);
+  assert.match(html, /id="showcase-link-bar"/);
+  assert.match(html, /id="showcase-student-url"/);
+  assert.match(html, /id="copy-showcase-link-btn"/);
+  assert.match(html, /id="open-showcase-link-btn"/);
+  // Thanh link cũ trong Trung tâm chấm điểm đã bị thay bằng thanh link ở thẻ bài được giao và đã được gỡ hẳn.
+  assert.doesNotMatch(html, /id="assignment-link-bar"|id="assignment-student-url"|id="copy-student-link-btn"|id="open-student-link-btn"/);
 
   const css = await readDashboardCss();
   assert.match(css, /\.assignment-link-bar/);

@@ -185,10 +185,23 @@ Bảng `display` khi hiện: các hộp và panel là `div` block mặc định,
 - Smoke vòng đời builder (10 vòng × 3 viewport) và smoke tích hợp đầy đủ (root và `/preview-base`) **đạt sau khi hoàn tất cả năm nhóm 6a–6e**; `npm test` 682/682; `css-metadata check` khớp.
 - Không còn `element.style.display = ...` nào trong JS của dashboard (grep: 0) và không còn `style="...display..."` trong template JS. Các chỗ inline style còn lại trong kiểm kê (28) là style *thuộc tính động* (độ rộng %, màu avatar...), không phải ẩn/hiện. Trong `index.html` còn 3 chỗ `style` có `display`, chưa đổi: `#assignment-link-bar` (xem mục dưới), `#detail-grading-history-section` (xem mục dưới) và một thanh tiêu đề flex tĩnh của modal chi tiết câu (không phải ẩn/hiện).
 
-## Phát hiện cần quyết định (chưa thay đổi)
+## Hai phát hiện: UI bị ẩn vĩnh viễn — đã xử lý bằng cách gỡ hẳn (12/11/2026)
 
-- `index.html:601` `#detail-grading-history-section` có `style="display: none;"` và **không có chỗ nào trong JS tham chiếu id này hay bật nó lên**, trong khi `attempt-review.js` vẫn render lịch sử chấm điểm vào `#detail-grading-history` (phần tử con nằm trong section đó). Kết quả: lịch sử lượt chấm được dựng nhưng **không bao giờ hiển thị**. Có thể là tính năng chưa nối hoặc mã chết; cần chủ sản phẩm xác nhận trước khi nối lại hiển thị hoặc xóa. Không đổi trong lộ trình này.
-- `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.
+Cả hai là UI đã bị gỡ *có chủ đích* ở các đợt trước nhưng để lại mã dở dang. Quyết định: hoàn tất việc gỡ (có thể khôi phục từ git), không bật lại.
+
+### Lịch sử chấm trong drawer chi tiết bài làm
+
+- Bằng chứng ý định: commit `860e55f` (26/10/2026, "remove manual grading history table from attempt detail drawer") đã ẩn section bằng `style="display: none;"`, giữ lại mã dựng bảng. Không có JS nào tham chiếu `#detail-grading-history-section`, nên bảng được dựng vào phần tử luôn ẩn.
+- Đã gỡ: section trong `index.html`; khối dựng bảng trong `grading/attempt-review.js` (và biến `detailGradingHistory`); lệnh xóa nội dung trong `shell/dashboard.js`; assertion `detail-grading-history` ở `teacher-dashboard.test.mjs` (đổi thành khẳng định section không còn). Backend vẫn có thể trả `gradingHistory`; frontend bỏ qua.
+- **Lệch với spec ở repo backend**: `.scratch/teacher-dashboard/issues/04-attempt-detail.md` còn ghi "lịch sử chấm được hiển thị" ở trạng thái `[x]`. Spec nằm ngoài workspace frontend nên **không sửa ở đây**; cần cập nhật spec cho khớp hành vi đã gỡ từ 26/10.
+
+### Thanh link làm bài cũ `#assignment-link-bar`
+
+- Bằng chứng: đợt redesign (`67518f2`) thêm `#showcase-link-bar` (thẻ bài được giao, có ô link, nút sao chép và nút mở) và ẩn thanh cũ bằng cả `hidden`, inline `display:none !important` và rule `#view-grading .assignment-link-bar { display: none !important; }`. JS vẫn đồng bộ giá trị vào thanh cũ ("Also sync legacy assignmentLinkBar").
+- Đã gỡ: markup thanh cũ (`#assignment-link-bar`, `#assignment-student-url`, `#copy-student-link-btn`, `#open-student-link-btn`); trình xử lý sao chép và các chỗ đồng bộ/ẩn trong `shell/dashboard.js`; khối đồng bộ trong `results/view.js` cùng import/biến không còn dùng (`localStudentUrl`, `currentLocation`); rule CSS `#view-grading .assignment-link-bar` (thanh mới nằm trong `#view-dashboard`, không nằm trong `#view-grading`). Các style `.assignment-link-bar` chung vẫn được thanh mới dùng nên giữ.
+- Test: `teacher-dashboard.test.mjs` đổi khẳng định sang thanh mới (`showcase-*`) và khẳng định các id cũ không còn; `teacher-dashboard-redesign-tabs.test.mjs` đổi khẳng định "phải có rule ẩn" thành "không còn rule".
+- Kiểm chứng: vì hai phần tử không bao giờ hiển thị nên giao diện nhìn thấy không đổi. Fixture `grading-modal-parity` (drawer chi tiết, badge, bảng câu, hai modal; 3 viewport) trước/sau: **12/12 computed snapshots giống nhau và 12/12 PNG trùng khít**. `npm test` 682/682; smoke vòng đời builder và smoke tích hợp đầy đủ đạt. Inventory không đổi (28); rule map 1842 → 1841.
+- Lưu ý: `tests/browser/dashboard-lifecycle-smoke.mjs` import trực tiếp gói `playwright` (không có trong máy; các script khác dùng đường dẫn NuGet), nên không chạy được ở đây — lỗi có sẵn, không liên quan thay đổi. Smoke tích hợp đã chạy đủ 10 vòng vòng đời dashboard.
 
 ## Giới hạn
 
