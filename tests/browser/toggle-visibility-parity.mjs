@@ -223,6 +223,154 @@ try {
       await capture('pictorial-preview-button', p2);
       await page.evaluate(() => { window['toggle-pictorialHandle'].dispose?.(); });
     }
+    if (groups.includes('publishing')) {
+      await page.evaluate(data => {
+        const host = document.createElement('section'); host.id = 'toggle-publishing'; document.body.prepend(host);
+        window.publishingGate = {};
+        window.publishingHandle = toggleApp.mountBuilder(host, data, {
+          courseId: 2,
+          catalog: [{ testKey: 'synthetic-test', title: 'Synthetic test', sessionNumber: 1 }],
+          classes: [{ classId: '101', name: 'Synthetic class A', courseCode: '34' }, { classId: '102', name: 'Synthetic class B', courseCode: '34', submissionCount: 3 }],
+          onPublishPreview: () => new Promise(resolve => { publishingGate.preview = resolve; }),
+          onPublish: () => new Promise(resolve => { publishingGate.publish = resolve; })
+        });
+      }, baseForm(vocabItems()));
+      const modal = page.locator('#smart-publishing-modal');
+      const dialog = modal.locator('.publishing-dialog');
+      const open = async () => { await page.locator('#toggle-publishing #btn-publish-test').click(); await modal.waitFor({ state: 'visible' }); };
+      const sub = id => modal.locator(`#${id}`);
+      await open();
+      await expectVisible(sub('replace-subfields'), true, 'replace subfields visible by default');
+      await expectVisible(sub('add-subfields'), false, 'add subfields hidden by default');
+      await expectVisible(sub('specific-classes-container'), false, 'class list hidden by default');
+      await expectVisible(sub('publishing-error-msg'), false, 'error message hidden by default');
+      await capture('publishing-default', dialog);
+      await modal.locator('label.purpose-radio-card:has(#radio-purpose-add)').click();
+      await expectVisible(sub('replace-subfields'), false, 'replace subfields hide for add_new');
+      await expectVisible(sub('add-subfields'), true, 'add subfields show for add_new');
+      await capture('publishing-purpose-add', dialog);
+      await modal.locator('label.purpose-radio-card:has(#radio-purpose-replace)').click();
+      await expectVisible(sub('replace-subfields'), true, 'replace subfields return');
+      await expectVisible(sub('add-subfields'), false, 'add subfields hide again');
+      await modal.locator('label.scope-radio-card:has(#radio-scope-classes)').click();
+      await expectVisible(sub('specific-classes-container'), true, 'class list shows for specific classes');
+      await capture('publishing-scope-classes', dialog);
+      await capture('publishing-classes-container', sub('specific-classes-container'));
+      await modal.locator('label.scope-radio-card:has(#radio-scope-whole)').click();
+      await expectVisible(sub('specific-classes-container'), false, 'class list hides for whole course');
+      await modal.locator('label.scope-radio-card:has(#radio-scope-classes)').click();
+      await expectVisible(sub('specific-classes-container'), true, 'class list shows again');
+      await capture('publishing-scope-classes-again', dialog);
+      await modal.locator('#btn-deselect-all-classes').click();
+      await modal.locator('#btn-step1-next').click();
+      await expectVisible(sub('publishing-error-msg'), true, 'error message shows when no class is selected');
+      await capture('publishing-step1-error', dialog);
+      // Đóng bằng nút X rồi mở lại: modal phải hiện lại và thông báo lỗi còn nguyên trạng thái do render lại.
+      await modal.locator('#btn-close-publish-modal').click();
+      await expectVisible(modal, false, 'the close button hides the modal');
+      await open();
+      await expectVisible(modal, true, 'the modal reopens');
+      await expectVisible(sub('publishing-error-msg'), false, 'error message is hidden again after reopening');
+      await modal.locator('label.scope-radio-card:has(#radio-scope-classes)').click();
+      await modal.locator('#btn-select-all-classes').click();
+      await modal.locator('#btn-step1-next').click();
+      await modal.locator('#btn-step1-next svg.spin').waitFor();
+      await page.evaluate(() => publishingGate.preview({ totalChecked: 2, updatedCount: 1, skippedCount: 1, targetTestTitle: 'Synthetic test' }));
+      await modal.locator('#input-confirm-title').waitFor();
+      await modal.locator('#btn-auto-fill-confirm').click();
+      await modal.locator('#confirm-match-status .status-matched svg').waitFor();
+      await expectVisible(sub('publishing-error-msg'), false, 'step 2 error message starts hidden');
+      await modal.locator('#btn-final-publish').click();
+      await modal.locator('#btn-final-publish svg.spin').waitFor();
+      await page.evaluate(() => publishingGate.publish({ ok: false, message: 'Synthetic publish failure' }));
+      await modal.locator('#publishing-error-msg').waitFor({ state: 'visible' });
+      await page.evaluate(() => document.getAnimations().forEach(animation => { animation.pause(); animation.currentTime = 0; }));
+      await capture('publishing-step2-error', dialog);
+      // Quay lại bước 1: phạm vi 'specific_classes' được render lại ngay từ đầu (không qua nút radio).
+      await modal.locator('#btn-step2-back').click();
+      await expectVisible(sub('specific-classes-container'), true, 'class list is visible when step 1 re-renders with specific classes');
+      await capture('publishing-classes-after-back', sub('specific-classes-container'));
+      await modal.locator('#btn-step1-next').click();
+      await modal.locator('#btn-step1-next svg.spin').waitFor();
+      await page.evaluate(() => publishingGate.preview({ totalChecked: 2, updatedCount: 1, skippedCount: 1, targetTestTitle: 'Synthetic test' }));
+      await modal.locator('#input-confirm-title').waitFor();
+      await modal.locator('#btn-auto-fill-confirm').click();
+      await modal.locator('#confirm-match-status .status-matched svg').waitFor();
+      await modal.locator('#btn-final-publish').click();
+      await modal.locator('#btn-final-publish svg.spin').waitFor();
+      await page.evaluate(() => publishingGate.publish({ ok: true, updatedClasses: [{ classId: '101', name: 'Synthetic class A' }], skippedClasses: [] }));
+      const report = page.locator('#publish-report-dialog');
+      await report.waitFor({ state: 'visible' });
+      await expectVisible(modal, false, 'the wizard modal hides after a successful publish');
+      await page.waitForTimeout(150);
+      await capture('publishing-report', report.locator('.publish-report-dialog'));
+      await report.locator('#btn-close-report').click();
+      await expectVisible(report, false, 'the report dialog closes');
+      await page.evaluate(() => { publishingHandle.dispose(); document.querySelector('#toggle-publishing').remove(); });
+    }
+    if (groups.includes('vocabbatch')) {
+      const host = await mount('toggle-vocabbatch', baseForm(vocabItems()));
+      await host.locator('.btn-add-vocab-pair').first().click();
+      const modal = page.locator('#batch-vocab-pair-modal');
+      await modal.waitFor({ state: 'visible' });
+      const area = modal.locator('.textarea-batch-vocab-csv');
+      const preview = modal.locator('.vocab-preview-summary');
+      await expectVisible(preview, false, 'vocab preview starts hidden');
+      await page.waitForTimeout(300);
+      await capture('vocabbatch-empty', modal.locator('.modal-batch-vocab-card'));
+      await area.fill('only-one-column');
+      await expectVisible(preview, true, 'vocab preview shows for invalid input');
+      await page.waitForTimeout(150);
+      await capture('vocabbatch-invalid', modal.locator('.modal-batch-vocab-card'));
+      await area.fill('destination\tđiểm đến\nbad-line\nitinerary\tlịch trình');
+      await expectVisible(preview, true, 'vocab preview shows for mixed input');
+      await capture('vocabbatch-mixed', modal.locator('.modal-batch-vocab-card'));
+      await area.fill('');
+      await expectVisible(preview, false, 'clearing the input hides the preview');
+      await modal.locator('.btn-close-batch-modal-btn').click();
+      await expectVisible(modal, false, 'the vocab batch modal closes');
+      await host.locator('.btn-add-vocab-pair').first().click();
+      await expectVisible(modal, true, 'the vocab batch modal reopens');
+      await expectVisible(preview, false, 'vocab preview is hidden after reopening');
+      await modal.locator('.btn-close-batch-modal-btn').click();
+      await page.evaluate(() => { window['toggle-vocabbatchHandle'].dispose?.(); });
+    }
+    if (groups.includes('media')) {
+      await page.route('**/__fixture/silence.wav', route => {
+        const rate = 8000, samples = 2400, data = Buffer.alloc(samples, 128);
+        const header = Buffer.alloc(44);
+        header.write('RIFF', 0); header.writeUInt32LE(36 + samples, 4); header.write('WAVEfmt ', 8); header.writeUInt32LE(16, 16);
+        header.writeUInt16LE(1, 20); header.writeUInt16LE(1, 22); header.writeUInt32LE(rate, 24); header.writeUInt32LE(rate, 28);
+        header.writeUInt16LE(1, 32); header.writeUInt16LE(8, 34); header.write('data', 36); header.writeUInt32LE(samples, 40);
+        return route.fulfill({ status: 200, contentType: 'audio/wav', body: Buffer.concat([header, data]) });
+      });
+      await page.evaluate(port => {
+        const host = document.createElement('section'); host.id = 'toggle-media'; document.body.prepend(host);
+        host.innerHTML = toggleApp.renderStrictCandidateAudioDock(null, { audioUrl: `http://127.0.0.1:${port}/__fixture/silence.wav`, label: 'Synthetic listening' });
+        toggleApp.initStrictCandidateAudioDocks(host);
+      }, port);
+      const dock = page.locator('#toggle-media .strict-audio-dock');
+      const start = dock.locator('.btn-start-listening');
+      const live = dock.locator('.audio-live-status');
+      const ended = dock.locator('.audio-ended-notice');
+      await expectVisible(start, true, 'start button visible initially');
+      await expectVisible(live, false, 'live status hidden initially');
+      await expectVisible(ended, false, 'ended notice hidden initially');
+      await capture('media-initial', dock);
+      // Làm chậm phát để chụp trạng thái đang phát trước khi kết thúc.
+      await page.evaluate(() => { document.querySelector('#toggle-media audio').playbackRate = 0.1; });
+      await start.click();
+      await expectVisible(start, false, 'start button hides after starting');
+      await expectVisible(live, true, 'live status shows while playing');
+      await expectVisible(ended, false, 'ended notice still hidden while playing');
+      await capture('media-playing', dock);
+      await page.evaluate(() => { document.querySelector('#toggle-media audio').playbackRate = 16; });
+      await ended.waitFor({ state: 'visible' });
+      await expectVisible(live, false, 'live status hides when playback ends');
+      await page.waitForTimeout(100);
+      await capture('media-ended', dock);
+      await page.evaluate(() => document.querySelector('#toggle-media').remove());
+    }
     assert.deepEqual(errors, [], `browser errors at ${viewport.width}`);
     await page.close();
   }

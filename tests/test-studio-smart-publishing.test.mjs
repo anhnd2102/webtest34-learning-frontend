@@ -386,6 +386,12 @@ test('Smart Publishing Modal: renders 2-step wizard, calculates impact, and enfo
   assert.ok(mockModal.innerHTML.includes('Bổ sung thành một bài test mới trong lộ trình'), 'Contains add new option');
   assert.ok(mockModal.innerHTML.includes('Cơ chế Roster Freezing'), 'Contains Roster Freezing safety banner');
   assert.ok(mockModal.innerHTML.includes('45.01 - Sáng Thứ 7'), 'Displays available Khối 45 classes');
+  // Ẩn/hiện bằng thuộc tính hidden (JS đảo bằng el.hidden), không dùng display inline.
+  assert.ok(mockModal.innerHTML.includes('id="add-subfields" hidden>'), 'Add-new subfields start hidden for the default replace purpose');
+  assert.ok(mockModal.innerHTML.includes('id="specific-classes-container" hidden>'), 'Class list starts hidden for the default whole-course scope');
+  assert.ok(mockModal.innerHTML.includes('id="publishing-error-msg" hidden>'), 'Error message starts hidden');
+  assert.equal(/id="replace-subfields"[^>]*hidden/.test(mockModal.innerHTML), false, 'Replace subfields are visible for the default purpose');
+  assert.equal(/id="(replace-subfields|add-subfields|specific-classes-container|publishing-error-msg)"[^>]*display:/.test(mockModal.innerHTML), false, 'Publishing panels no longer rely on inline display');
 
   // 2. Click Step 1 Next button to trigger preview pre-flight and advance to Step 2
   const nextBtn = mockModal.querySelector('#btn-step1-next');

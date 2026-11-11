@@ -127,11 +127,11 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
         <button type="button" class="btn btn-primary btn-sm btn-start-listening">
           ${renderSvgIcon('play', 'icon-inline')} Bắt đầu nghe
         </button>
-        <div class="audio-live-status" style="display:none;">
+        <div class="audio-live-status" hidden>
           <span class="dot"></span>
           <span class="status-text">Đang phát bài nghe…</span>
         </div>
-        <div class="audio-ended-notice" style="display:none;">
+        <div class="audio-ended-notice" hidden>
           <span class="dot dot-ended" style="background:#12805c;"></span>
           <span class="audio-note">Đã phát xong · Audio chỉ được nghe một lần.</span>
         </div>
@@ -159,8 +159,8 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
         startBtn.addEventListener('click', async () => {
           if (hasStarted) return;
           hasStarted = true;
-          startBtn.style.display = 'none';
-          if (liveStatus) liveStatus.style.display = 'inline-flex';
+          startBtn.hidden = true;
+          if (liveStatus) liveStatus.hidden = false;
           try {
             audioEl.muted = false;
             await audioEl.play();
@@ -194,8 +194,8 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
         });
 
         audioEl.addEventListener('ended', () => {
-          if (liveStatus) liveStatus.style.display = 'none';
-          if (endedNotice) endedNotice.style.display = 'inline-flex';
+          if (liveStatus) liveStatus.hidden = true;
+          if (endedNotice) endedNotice.hidden = false;
           if (startBtn) {
             startBtn.disabled = true;
           }
@@ -226,8 +226,8 @@ export function initStrictCandidateAudioDocks(rootEl) {
       startBtn.addEventListener('click', async () => {
         if (hasStarted) return;
         hasStarted = true;
-        startBtn.style.display = 'none';
-        if (liveStatus) liveStatus.style.display = 'inline-flex';
+        startBtn.hidden = true;
+        if (liveStatus) liveStatus.hidden = false;
         try {
           await audioEl.play();
         } catch (err) {
@@ -266,8 +266,8 @@ export function initStrictCandidateAudioDocks(rootEl) {
       });
 
       audioEl.addEventListener('ended', () => {
-        if (liveStatus) liveStatus.style.display = 'none';
-        if (endedNotice) endedNotice.style.display = 'inline-flex';
+        if (liveStatus) liveStatus.hidden = true;
+        if (endedNotice) endedNotice.hidden = false;
         if (startBtn) {
           startBtn.disabled = true;
         }

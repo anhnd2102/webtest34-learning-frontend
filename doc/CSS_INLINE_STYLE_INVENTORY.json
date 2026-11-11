@@ -1,7 +1,7 @@
 {
-  "baseline": "4316e71",
-  "revision": "20261111-hidden-pictorial2",
-  "note": "Lexical inventory after pictorial empty-src fix; not a CSS parser.",
+  "baseline": "dc458b0",
+  "revision": "20261111-hidden-group4",
+  "note": "Lexical inventory after publishing, media and vocabulary batch visibility moved to the hidden attribute; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -71,31 +71,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
       "line": 255,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 129,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 157,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 190,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 194,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/vocabulary.js",
-      "line": 316,
       "kind": "property"
     },
     {
@@ -265,16 +240,6 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 130,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 134,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
       "line": 135,
       "kind": "attribute"
     },
@@ -282,46 +247,6 @@
       "file": "term-tests/teacher-dashboard/studio/media.js",
       "line": 139,
       "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 162,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 163,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 197,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 198,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 229,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 230,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 269,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/media.js",
-      "line": 270,
-      "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
@@ -346,116 +271,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
       "line": 180,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 145,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 164,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 220,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 238,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 258,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 270,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 271,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 278,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 279,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 309,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 316,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 366,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 371,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 411,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 524,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 542,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 592,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 626,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 635,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 641,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 729,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/publishing.js",
-      "line": 734,
       "kind": "property"
     },
     {

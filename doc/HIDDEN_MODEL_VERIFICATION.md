@@ -15,7 +15,7 @@ Ngày 11/11/2026. Baseline `2e84198` (`feature/test-studio`). Đợt 1 trong nhi
 | 1 | **Vocabulary bank + bulk paste** (đợt này) | `question-renderer.js` 998, 1016 | Hai panel `div` block; xong |
 | 2 | **Rubric panes + sandbox results + ngữ cảnh AI** (đợt 2, xong) | 1093, 1142, 1147, 1156 | `display` ban đầu của ngữ cảnh AI phụ thuộc dữ liệu |
 | 3 | **Pictorial lỗi/ảnh xem trước** (đợt 3, xong) | 831, 832 | `pictorial.js` đặt `inline-block` nhưng CSS fragment 05 là `block`; `onerror` đặt `inline-block` nhưng fragment 09 là `inline-flex` — cần rule giữ giá trị |
-| 4 | Publishing (5), media (2), vocabulary.js (1) | | modal đặt `flex`; `liveStatus`/`endedNotice` đặt `inline-flex` |
+| 4 | **Publishing (5), media (2), vocabulary.js (1)** (đợt 4, xong) | | modal đặt `flex`; `liveStatus`/`endedNotice` đặt `inline-flex` |
 | 5 | Rich editor (popup bảng/ảnh, lỗi, textarea mã) | 491, 512, 518, 535, 538, 1310, 1332, 1338, 1360, 1363 + `rich-editor.js` | **Rủi ro cao nhất**: `draft-inputs.js:25` đọc `vEl.style.display !== 'none'` để chọn nguồn lưu (editor trực quan hay mã HTML); `builder.js` 2944/2988 đọc cùng cờ. Lệch = lưu nhầm nội dung. Cần test hành vi chuyển chế độ → sửa → lưu trước khi chuyển. `builder.js` (2879, 2992, 2998, 3170) và `rich-editor.js` (206, 287, 293, 418) dường như bật/tắt cùng các phần tử; phải xác định đường nào đang chạy hoặc chuyển cả hai |
 
 ## Đợt 1: Vocabulary bank + bulk paste
@@ -72,14 +72,29 @@ Lỗi có sẵn từ baseline: `<img src="">` phát sự kiện `error`, nên `o
 - **18/18 computed snapshots giống baseline và 18/18 PNG trùng từng byte** tại thời điểm đợt 3 (sau khi thêm rule giữ `inline-block`; đợt 3b sau đó cố ý đổi 6 trạng thái, xem trên); baseline chạy hai lần trùng nhau 18/18. 0 browser errors.
 - `npm test`: 671/671 pass; `css-metadata check` khớp.
 
+## Đợt 4: Publishing, media (audio dock), vocabulary batch
+
+- `publishing.js`: `#replace-subfields`, `#add-subfields`, `#specific-classes-container` (template có điều kiện: `${cond ? '' : ' hidden'}`), hai `#publishing-error-msg` (step 1 và 2) dùng `hidden`; mọi `style.display` bật/tắt (radio mục tiêu/phạm vi, lỗi, nút Đóng/Hủy, mở modal) đổi sang `.hidden`. Hai overlay `#smart-publishing-modal` và `#publish-report-dialog` cũng đổi (đóng = `hidden = true`, mở = `hidden = false`): CSS fragment 06 đã có `display: flex` cho cả hai overlay nên inline `flex` trước đó dư.
+- `media.js`: `.audio-live-status`, `.audio-ended-notice` (`hidden`), nút "Bắt đầu nghe" ẩn bằng `.hidden = true` sau khi bấm; cả hai bộ dock (render và `initStrictCandidateAudioDocks`) đổi cùng lúc. Bảng `display`: `.strict-audio-body .audio-live-status/.audio-ended-notice` đã là `inline-flex` trong CSS, trùng giá trị JS cũ.
+- `authoring/vocabulary.js`: `.vocab-preview-summary` (`hidden`; CSS không đặt display nên `block` mặc định, trùng JS cũ) và overlay `#batch-vocab-pair-modal` (CSS fragment 04 đã `flex`).
+- Mọi `style.display` trong ba file đã chuyển hết (grep còn 0). Inventory 142 → 105.
+- **Lệch `display` có chủ đích, đã xử lý**: `.specific-classes-container` có `display: flex` + `gap` trong CSS, nhưng JS cũ bật bằng radio với inline `block` — nên đường giáo viên thường thấy (bật bằng radio) là `block`, còn đường render lại bước 1 với phạm vi lớp đã chọn (nút Tiếp tục khi lỗi, Quay lại từ bước 2) là `flex`. Hai đường này vốn không nhất quán. Giữ nguyên đường thường thấy: thêm `.specific-classes-container:not([hidden]) { display: block; }` ở fragment 12. **Hệ quả: đường render lại đổi từ `flex` sang `block`** (danh sách lớp mất khoảng cách 10px, thấp hơn 20px) và nay giống đường bật bằng radio. Nếu muốn dùng thiết kế `flex + gap` cho cả hai thì xóa rule này và chấp nhận thay đổi giao diện đường chính.
+- Test: `test-studio-smart-publishing.test.mjs` (5 assertion: ba panel và lỗi có `hidden`, panel mặc định hiện không `hidden`, không còn display inline) và `test-studio-google-drive-audio.test.mjs` (2 assertion). **Đỏ trên mã cũ (2 test), xanh sau thay đổi.**
+
+### Xác minh đợt 4
+
+- Fixture thêm ba nhóm: `publishing` (mở wizard, đổi mục tiêu thay thế/bổ sung, đổi phạm vi toàn khóa/lớp chọn hai lượt, lỗi chưa chọn lớp, đóng bằng X rồi mở lại, sang bước 2, lỗi công bố, Quay lại bước 1, công bố thành công → hộp báo cáo → đóng), `vocabbatch` (modal nhập từ: rỗng, dữ liệu sai, hỗn hợp, xóa, đóng/mở lại) và `media` (dock nghe: ban đầu, đang phát, kết thúc; WAV tổng hợp 0,3 giây phục vụ qua route, tăng `playbackRate` để kết thúc nhanh). Mỗi bước khẳng định `isVisible()`.
+- So với baseline từ worktree tạm tại `4316e71`/`dc458b0`: **`media` 9/9 và `vocabbatch` 9/9 computed giống và PNG trùng từng byte; `publishing`: mọi trạng thái giống trừ hai trạng thái đi qua đường render lại (`step1-error`, `classes-after-back`) đúng như mô tả ở trên** (khác biệt chỉ là `display: flex -> block` và `height` −20px của `.specific-classes-container`). 0 browser errors.
+- `npm test`: 673/673; `css-metadata check` khớp.
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.
 
 ## Giới hạn
 
-- Mới ba nhóm (vocab, rubric, pictorial). Còn nhóm 4 (publishing/media/vocabulary.js) và nhóm 5 (rich editor).
+- Mới bốn nhóm (vocab, rubric, pictorial, publishing/media/vocabulary.js). Còn nhóm 5 (rich editor).
 - Chưa chạy lại smoke vòng đời `/preview-base`.
-- Fixture hiện có nhóm `vocab`, `rubric` và `pictorial`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
+- Fixture hiện có nhóm `vocab`, `rubric`, `pictorial`, `publishing`, `vocabbatch` và `media`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
 
 Rollback: revert commit như một đơn vị.

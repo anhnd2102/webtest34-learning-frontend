@@ -5,7 +5,7 @@
 - Nhánh làm việc hiện tại: `feature/test-studio` (các nhánh `refactor/*` đã tích hợp). 671/671 frontend tests pass.
 - **Bước 1–2 đã hoàn tất** (#18, #20–#24, có báo cáo `ISSUE_*_VERIFICATION.md`): `app.js` còn 137 dòng, chỉ là facade; bootstrap ở `main.js`; `shell/`, `studio/`, `results/`, `grading/`, `exam-room/`, `api/`, `navigation/`, `ui/` đã tách.
 - **Bước 3 hoàn tất một phần**: `studio/builder.js` còn 3.272 dòng, `shell/dashboard.js` 2.894 dòng; đã tách content-import, draft-model, rich-editor, media, simulation, publishing, batch-import, question-renderer. Còn tách tiếp orchestration builder và dashboard controller.
-- **Bước 4**: tách CSS hoàn tất (12 fragment); cleanup inline style/token/!important đang tiến hành, kiểm kê lexical còn 142 vị trí (xem `CSS_INLINE_STYLE_INVENTORY.json`). Chưa mở bước 5–7.
+- **Bước 4**: tách CSS hoàn tất (12 fragment); cleanup inline style/token/!important đang tiến hành, kiểm kê lexical còn 105 vị trí (xem `CSS_INLINE_STYLE_INVENTORY.json`). Chưa mở bước 5–7.
 - Ba quyết định ở mục 8 vẫn chưa được duyệt.
 - Phần "30/10/2026" bên dưới là lịch sử.
 
@@ -292,7 +292,7 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã chuyển 17 inline styles tĩnh của modal chi tiết câu/chấm điểm (`grading/attempt-review.js`) sang class/token; parity browser 12/12 giống baseline, xem `GRADING_MODAL_STYLES_VERIFICATION.md`.
   - Đã chuyển 8 vị trí của `studio/batch-import.js` (preview CSV, nút Chép mẫu) sang class/token; parity browser 15/15 giống baseline: xem `BATCH_IMPORT_STYLES_VERIFICATION.md`.
   - Rà lại `studio/question-renderer.js`: chuyển style tĩnh của ảnh xem trước Pictorial; 18 vị trí còn lại là `display` ban đầu do JS bật/tắt, giữ inline (đổi sang class/`hidden` là đổi mô hình ẩn/hiện, cần đợt riêng); parity 30/30: xem `QUESTION_RENDERER_REMAINING_STYLES_VERIFICATION.md`.
-  - Mô hình ẩn/hiện: chuyển `display: none` inline ban đầu sang `hidden`, từng nhóm phần tử trọn gói (template + bật/tắt + đọc) vì `[hidden]` có `!important`; đợt 1 (Vocabulary bank/bulk) và đợt 2 (rubric panes, sandbox, ngữ cảnh AI) và đợt 3 (Pictorial) xong, parity computed 12/12, 21/21 và 18/18: xem `HIDDEN_MODEL_VERIFICATION.md` (có bảng các nhóm còn lại và rủi ro rich editor).
+  - Mô hình ẩn/hiện: chuyển `display: none` inline ban đầu sang `hidden`, từng nhóm phần tử trọn gói (template + bật/tắt + đọc) vì `[hidden]` có `!important`; đợt 1 (Vocabulary bank/bulk) và đợt 2 (rubric panes, sandbox, ngữ cảnh AI) đợt 3 (Pictorial) và đợt 4 (Publishing, media, vocabulary batch) xong, parity computed 12/12, 21/21 và 18/18: xem `HIDDEN_MODEL_VERIFICATION.md` (có bảng các nhóm còn lại và rủi ro rich editor).
   - Metadata CSS (manifest, rule map, inventory inline style) tái tạo bằng `node scripts/css-metadata.mjs` (rule-map/manifest/inventory/check) thay vì sửa tay; `tests/css-metadata.test.mjs` chặn rule map lệch khỏi `styles/*.css`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.

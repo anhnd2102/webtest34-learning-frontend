@@ -475,3 +475,9 @@
 .pictorial-thumb-preview .pictorial-preview-error:not([hidden]) {
   display: inline-block;
 }
+
+/* Danh sách lớp trong wizard Công bố: trước đây JS bật bằng inline display:block (thắng display:flex ở fragment 06).
+   Sau khi chuyển sang thuộc tính hidden, giữ nguyên bố cục block mà giáo viên đang thấy khi bật bằng nút radio. */
+.specific-classes-container:not([hidden]) {
+  display: block;
+}
