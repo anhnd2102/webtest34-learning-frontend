@@ -147,6 +147,13 @@ Mỗi nhóm một fixture riêng, một commit riêng. Baseline chạy một l�
 - Fixture `rubricmodal`: mở modal, chuyển tab "Tạo nhanh", đổi preset Hiểu bài đọc → Dịch → Hiểu bài đọc, đóng, mở lại; khẳng định `isVisible()` từng bước. **6/6 computed snapshots giống baseline.** Ảnh: lần chạy baseline đầu khác lần sau ~64 pixel (tối đa 3/255, hàng cuối modal) nên **ảnh sau thay đổi được so với lần chạy baseline thứ hai: 6/6 trùng khít** (đo bằng `tests/browser/png-diff.mjs`); chênh giữa hai lần chạy baseline là nhiễu render sẵn có.
 - Không có test đơn vị riêng: hàm nằm trong closure của modal và đã có khẳng định hiển thị trong fixture (và `BATCH_MODALS_STYLE_PARITY` của smoke tích hợp). Inventory 53 → 51.
 
+### 6c. Hàng "bài tập mốc" trong modal chuyển bài tập (`move-exercise-modal.js`)
+
+- Trường hợp đặc biệt: hàng này **ẩn bằng CSS** (`#modal-move-exercise .move-layout-anchor-field { display: none; }`, do đợt tách CSS trước đưa style tĩnh ra fragment 06) rồi JS bật bằng inline `block`. Chuyển trọn gói: template thêm `hidden`; 5 chỗ `style.display` → `.hidden`; **xóa `display: none` khỏi rule CSS** (nếu để lại thì `hidden = false` chỉ gỡ thuộc tính và hàng không bao giờ hiện).
+- Bảng `display`: hết `display: none` thì `.form-group` là `block` mặc định, trùng `block` của JS cũ.
+- Fixture `moveex`: mở modal từ nút chuyển của Phần 1 (có Bài tập mốc khác), đổi vị trí chèn (cuối → trước bài tập → cuối → sau bài tập), đổi Phần đích (Phần 2 có bài tập), hủy; rồi mở lại từ Phần chỉ có đúng bài tập đang chuyển (không có bài tập mốc nào khác): hàng phải ẩn, chọn "sau bài tập" phải tự trả về "cuối". **15/15 computed snapshots giống baseline, 15/15 PNG trùng từng byte.**
+- Test: `tests/move-exercise-anchor-row-visibility.test.mjs` (mới, 3 test kiểm hợp đồng trên mã nguồn vì modal cần DOM thật: template có `hidden`, JS chỉ dùng `.hidden` (3 lần ẩn, 2 lần hiện), rule CSS không còn `display`). Đỏ trên mã cũ (3/3), xanh sau thay đổi. Inventory 51 → 46.
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.

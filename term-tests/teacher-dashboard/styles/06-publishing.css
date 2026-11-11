@@ -1145,7 +1145,6 @@
 }
 #modal-move-exercise .move-layout-anchor-field {
   margin: 0;
-  display: none;
 }
 #modal-move-exercise .move-layout-note {
   background: var(--izone-answer-blank-bg);

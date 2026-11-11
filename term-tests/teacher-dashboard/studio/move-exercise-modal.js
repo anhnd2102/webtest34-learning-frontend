@@ -100,7 +100,7 @@ export function openMoveExerciseModal(opts = {}) {
           </select>
         </div>
 
-        <div class="form-group target-exercise-row move-layout-anchor-field">
+        <div class="form-group target-exercise-row move-layout-anchor-field" hidden>
           <label class="form-label move-layout-label">Chọn bài tập mốc:</label>
           <select class="form-select select-target-exercise move-layout-select">
           </select>
@@ -149,7 +149,7 @@ export function openMoveExerciseModal(opts = {}) {
     const exercises = (targetBlock?.exercises || []).filter(e => e.exerciseId !== exerciseId);
 
     if (exercises.length === 0) {
-      targetExRow.style.display = 'none';
+      targetExRow.hidden = true;
       if (targetPosSelect.value === 'before_ex' || targetPosSelect.value === 'after_ex') {
         targetPosSelect.value = 'end';
       }
@@ -164,9 +164,9 @@ export function openMoveExerciseModal(opts = {}) {
 
     const pos = targetPosSelect.value;
     if (pos === 'before_ex' || pos === 'after_ex') {
-      targetExRow.style.display = 'block';
+      targetExRow.hidden = false;
     } else {
-      targetExRow.style.display = 'none';
+      targetExRow.hidden = true;
     }
   }
 
@@ -174,10 +174,10 @@ export function openMoveExerciseModal(opts = {}) {
   targetPosSelect?.addEventListener('change', () => {
     const pos = targetPosSelect.value;
     if (pos === 'before_ex' || pos === 'after_ex') {
-      targetExRow.style.display = 'block';
+      targetExRow.hidden = false;
       updateTargetExercisesDropdown();
     } else {
-      targetExRow.style.display = 'none';
+      targetExRow.hidden = true;
     }
   });
 

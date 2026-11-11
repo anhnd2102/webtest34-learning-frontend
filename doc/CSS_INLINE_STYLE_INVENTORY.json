@@ -1,7 +1,7 @@
 {
-  "baseline": "b3d0189",
-  "revision": "20261111-hidden-rubricmodal",
-  "note": "Lexical inventory after rubric batch modal context group moved to hidden; not a CSS parser.",
+  "baseline": "168a801",
+  "revision": "20261111-hidden-moveex",
+  "note": "Lexical inventory after move-exercise anchor row moved to hidden; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -127,31 +127,6 @@
       "file": "term-tests/teacher-dashboard/studio/media.js",
       "line": 139,
       "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 152,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 167,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 169,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 177,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/move-exercise-modal.js",
-      "line": 180,
-      "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/rich-editor.js",
