@@ -1,7 +1,7 @@
 {
-  "baseline": "1f6af9f",
-  "revision": "20261111-question-renderer2",
-  "note": "Lexical inventory after pictorial preview image static styles; not a CSS parser.",
+  "baseline": "2e84198",
+  "revision": "20261111-hidden-vocab",
+  "note": "Lexical inventory after vocab bank/bulk panels moved to the hidden attribute; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -201,31 +201,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
       "line": 831,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2148,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2149,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2165,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2265,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 2266,
       "kind": "property"
     },
     {
@@ -576,16 +551,6 @@
     {
       "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
       "line": 832,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 998,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/question-renderer.js",
-      "line": 1016,
       "kind": "attribute"
     },
     {

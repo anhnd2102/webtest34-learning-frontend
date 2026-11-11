@@ -2145,8 +2145,8 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const iIdx = btn.getAttribute('data-item-idx');
         const panel = container.querySelector(`#vocab-bulk-paste-${bIdx}-${iIdx}`);
         if (panel) {
-          const isHidden = panel.style.display === 'none' || !panel.style.display;
-          panel.style.display = isHidden ? 'block' : 'none';
+          const isHidden = panel.hidden;
+          panel.hidden = !isHidden;
           if (isHidden) {
             const ta = panel.querySelector('.input-bulk-vocab-options');
             if (ta) ta.focus();
@@ -2162,7 +2162,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const bIdx = btn.getAttribute('data-block-idx');
         const iIdx = btn.getAttribute('data-item-idx');
         const panel = container.querySelector(`#vocab-bulk-paste-${bIdx}-${iIdx}`);
-        if (panel) panel.style.display = 'none';
+        if (panel) panel.hidden = true;
       });
     });
 
@@ -2262,8 +2262,8 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         const targetId = btn.getAttribute('data-target');
         const targetEl = container.querySelector('#' + targetId);
         if (targetEl) {
-          const isHidden = targetEl.style.display === 'none';
-          targetEl.style.display = isHidden ? 'block' : 'none';
+          const isHidden = targetEl.hidden;
+          targetEl.hidden = !isHidden;
           btn.textContent = isHidden ? btn.textContent.replace('▼', '▲') : btn.textContent.replace('▲', '▼');
         }
       });

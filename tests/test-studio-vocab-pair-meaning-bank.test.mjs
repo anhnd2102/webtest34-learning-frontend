@@ -87,6 +87,21 @@ test('Test Studio Vocab Pair: renders bulk paste button, copy from previous, and
     container.innerHTML.includes('vocab-bulk-paste-panel'),
     'must render bulk paste panel'
   );
+  assert.match(
+    container.innerHTML,
+    /id="vocab-bulk-paste-\d+-\d+" hidden>/,
+    'bulk paste panel starts closed through the hidden attribute'
+  );
+  assert.match(
+    container.innerHTML,
+    /id="vocab-bank-\d+-\d+" hidden>/,
+    'meaning bank starts closed through the hidden attribute'
+  );
+  assert.doesNotMatch(
+    container.innerHTML,
+    /id="vocab-(bank|bulk-paste)-[^>]*display:\s*none/,
+    'vocabulary panels no longer rely on inline display'
+  );
   assert.ok(
     container.innerHTML.includes('input-bulk-vocab-options'),
     'must render multi-line textarea for bulk pasting meanings'

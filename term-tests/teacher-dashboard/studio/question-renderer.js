@@ -995,7 +995,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
 
               <!-- Collapsible Bank Details -->
-              <div class="vocab-bank-collapsible" id="vocab-bank-${blockIdx}-${itemIdx}" style="display: none;">
+              <div class="vocab-bank-collapsible" id="vocab-bank-${blockIdx}-${itemIdx}" hidden>
                 <div class="vocab-options-tools-bar">
                   <button type="button" class="btn btn-secondary btn-sm btn-bulk-paste-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Dán nhanh nhiều nghĩa từ Excel hoặc Word">
                     ${renderSvgIcon('copy', 'icon-inline')} Dán nhanh danh sách nghĩa
@@ -1013,7 +1013,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 </div>
 
                 <!-- Collapsible Bulk Paste Box -->
-                <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" hidden>
                   <div class="bulk-paste-caption">
                     <span>Nhập hoặc dán danh sách nghĩa tiếng Việt (Mỗi dòng là một nghĩa):</span>
                   </div>
