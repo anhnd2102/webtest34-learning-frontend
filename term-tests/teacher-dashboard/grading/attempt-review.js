@@ -73,9 +73,7 @@ function renderAttemptDetail(payload) {
 
       if (payload.retakeGrant) {
         const retakeBadge = document.createElement('span');
-        retakeBadge.className = 'meta-badge';
-        retakeBadge.style.background = '#f3e8ff';
-        retakeBadge.style.color = '#6b21a8';
+        retakeBadge.className = 'meta-badge badge-retake-grant';
         retakeBadge.textContent = `Quyền làm lại: ${resultStatusLabel(payload.retakeGrant.status)}`;
         detailMeta.append(retakeBadge);
       }
@@ -209,8 +207,8 @@ function renderAttemptDetail(payload) {
       promptBlock.className = 'modal-ctx-block';
       promptBlock.innerHTML = `
         <h4>Đề bài / Yêu cầu chi tiết</h4>
-        <div style="font-size: 0.95rem; line-height: 1.5; color: #1e293b; white-space: pre-wrap;">${escapeHtml(item.prompt || '—')}</div>
-        ${item.helpText ? `<p style="margin: 6px 0 0; font-size: 0.88rem; color: #64748b; font-style: italic;">${escapeHtml(item.helpText)}</p>` : ''}
+        <div class="modal-ctx-prompt">${escapeHtml(item.prompt || '—')}</div>
+        ${item.helpText ? `<p class="modal-ctx-help">${escapeHtml(item.helpText)}</p>` : ''}
       `;
       modalItemContent.append(promptBlock);
 
@@ -260,7 +258,7 @@ function renderAttemptDetail(payload) {
       const ansStudent = resolveStudentAnswerDisplay(item);
       ansBlock.innerHTML = `
         <h4>Bài làm của học viên</h4>
-        <div style="font-size: 0.95rem; font-weight: 600; color: #0f172a;">${escapeHtml(ansStudent)}</div>
+        <div class="modal-ctx-answer">${escapeHtml(ansStudent)}</div>
       `;
       modalItemContent.append(ansBlock);
 
@@ -277,8 +275,8 @@ function renderAttemptDetail(payload) {
       }
       expBlock.innerHTML = `
         <h4>Đáp án mẫu & Tiêu chí Rubric</h4>
-        <div style="font-size: 0.95rem; font-weight: 600; color: #0369a1; margin-bottom: 6px;">${escapeHtml(ansExpected)}</div>
-        ${fbLines.length > 0 ? `<p style="margin: 0; font-size: 0.88rem; color: #92400e; background: #fffbeb; padding: 8px 12px; border-radius: 6px;">${escapeHtml(fbLines.join(' · '))}</p>` : ''}
+        <div class="modal-ctx-answer modal-ctx-answer-expected">${escapeHtml(ansExpected)}</div>
+        ${fbLines.length > 0 ? `<p class="modal-ctx-feedback">${escapeHtml(fbLines.join(' · '))}</p>` : ''}
       `;
       modalItemContent.append(expBlock);
 
@@ -293,20 +291,20 @@ function renderAttemptDetail(payload) {
         : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
 
       overrideBlock.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-          <h4 style="margin:0;">Chấm điểm / Điều chỉnh điểm</h4>
+        <div class="modal-override-head">
+          <h4>Chấm điểm / Điều chỉnh điểm</h4>
           ${item.isOverridden ? '<span class="badge-manual-override">Đã sửa tay</span>' : ''}
         </div>
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom: 10px;">
-          <label style="font-weight: 700; font-size: 0.88rem; color: #1e293b;">Điểm số:</label>
-          <input type="number" step="any" min="0" max="${item.maxScore}" class="modal-override-score-input table-grade-input" style="width: 75px;" value="${curScore !== null && curScore !== undefined ? curScore : ''}" placeholder="0-${item.maxScore}">
-          <span style="font-weight: 700; color: #475569;">/ ${item.maxScore} điểm</span>
+        <div class="modal-override-score-row">
+          <label class="modal-override-label">Điểm số:</label>
+          <input type="number" step="any" min="0" max="${item.maxScore}" class="modal-override-score-input table-grade-input" value="${curScore !== null && curScore !== undefined ? curScore : ''}" placeholder="0-${item.maxScore}">
+          <span class="modal-override-max">/ ${item.maxScore} điểm</span>
         </div>
-        <div style="margin-bottom: 12px;">
-          <label style="font-weight: 700; font-size: 0.88rem; color: #1e293b; display:block; margin-bottom: 4px;">Nhận xét của giáo viên:</label>
+        <div class="modal-override-feedback-row">
+          <label class="modal-override-label modal-override-label-block">Nhận xét của giáo viên:</label>
           <textarea class="modal-override-feedback-input table-feedback-input" placeholder="Nhập nhận xét hoặc ghi chú sửa điểm...">${escapeHtml(curFeedback || '')}</textarea>
         </div>
-        <div style="display:flex; gap:8px; align-items:center;">
+        <div class="modal-override-actions">
           <button type="button" class="btn btn-sm btn-primary btn-modal-save-grade">${renderSvgIcon('check', 'icon-inline')} <span>Lưu điểm</span></button>
           ${item.isOverridden ? `<button type="button" class="btn btn-sm btn-outline-secondary btn-modal-reset-grade">${renderSvgIcon('rotate', 'icon-inline')} <span>Khôi phục điểm gốc (${item.originalScore !== null && item.originalScore !== undefined ? item.originalScore : item.scoreEarned}/${item.maxScore})</span></button>` : ''}
         </div>
@@ -403,7 +401,7 @@ function renderAttemptDetail(payload) {
           tdPrompt.innerHTML = `
             <div class="prompt-compact">
               <div class="prompt-preview-text" title="${escapeHtml(compactPrompt.text)}">${escapeHtml(compactPrompt.text)}</div>
-              ${item.helpText ? `<small style="color:#64748b; display:block;">${escapeHtml(item.helpText)}</small>` : ''}
+              ${item.helpText ? `<small class="prompt-help-text">${escapeHtml(item.helpText)}</small>` : ''}
               ${optBtnHtml}
             </div>
           `;

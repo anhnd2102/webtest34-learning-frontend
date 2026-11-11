@@ -10996,5 +10996,101 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-retake-renew:hover"
+  },
+  {
+    "order": 1821,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".meta-badge.badge-retake-grant"
+  },
+  {
+    "order": 1822,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".prompt-help-text"
+  },
+  {
+    "order": 1823,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-ctx-prompt"
+  },
+  {
+    "order": 1824,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-ctx-help"
+  },
+  {
+    "order": 1825,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-ctx-answer"
+  },
+  {
+    "order": 1826,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-ctx-answer.modal-ctx-answer-expected"
+  },
+  {
+    "order": 1827,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-ctx-feedback"
+  },
+  {
+    "order": 1828,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-head"
+  },
+  {
+    "order": 1829,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-head h4"
+  },
+  {
+    "order": 1830,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-score-row"
+  },
+  {
+    "order": 1831,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-block input.modal-override-score-input"
+  },
+  {
+    "order": 1832,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-label"
+  },
+  {
+    "order": 1833,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-label.modal-override-label-block"
+  },
+  {
+    "order": 1834,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-max"
+  },
+  {
+    "order": 1835,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-feedback-row"
+  },
+  {
+    "order": 1836,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".modal-override-actions"
   }
 ]

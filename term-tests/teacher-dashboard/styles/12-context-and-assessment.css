@@ -351,3 +351,96 @@
   border-color: var(--izone-slate-400);
   color: var(--izone-primary-ruby);
 }
+
+/* Modal chi tiết câu (grading/attempt-review.js): thay inline style tĩnh bằng class/token. */
+.meta-badge.badge-retake-grant {
+  background: var(--izone-retake-grant-bg);
+  color: var(--izone-retake-grant-text);
+}
+
+.prompt-help-text {
+  display: block;
+  color: var(--izone-text-muted);
+}
+
+.modal-ctx-prompt {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--izone-slate);
+  white-space: pre-wrap;
+}
+
+.modal-ctx-help {
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  color: var(--izone-text-muted);
+  font-style: italic;
+}
+
+.modal-ctx-answer {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--izone-slate-900);
+}
+
+.modal-ctx-answer.modal-ctx-answer-expected {
+  color: var(--izone-expected-answer-text);
+  margin-bottom: 6px;
+}
+
+.modal-ctx-feedback {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--izone-retake-active-text);
+  background: var(--izone-warning-bg);
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.modal-override-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modal-override-head h4 {
+  margin: 0;
+}
+
+.modal-override-score-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-override-block input.modal-override-score-input {
+  width: 75px;
+}
+
+.modal-override-label {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--izone-slate);
+}
+
+.modal-override-label.modal-override-label-block {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.modal-override-max {
+  font-weight: 700;
+  color: var(--izone-slate-600);
+}
+
+.modal-override-feedback-row {
+  margin-bottom: 12px;
+}
+
+.modal-override-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

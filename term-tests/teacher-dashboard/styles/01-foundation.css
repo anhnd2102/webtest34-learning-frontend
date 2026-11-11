@@ -50,6 +50,9 @@
   --izone-retake-active-bg: #fef3c7;
   --izone-retake-active-text: #92400e;
   --izone-retake-active-border: #fde68a;
+  --izone-retake-grant-bg: #f3e8ff;
+  --izone-retake-grant-text: #6b21a8;
+  --izone-expected-answer-text: #0369a1;
   --izone-overlay-backdrop: rgba(15, 23, 42, 0.65);
   --izone-shadow-modal-color: rgba(15, 23, 42, 0.25);
   --izone-shadow-assessment-color: rgba(15, 23, 42, 0.04);

@@ -1,12 +1,21 @@
 # Phương án tái cấu trúc frontend Webtest34
 
+## Cập nhật trạng thái — 11/11/2026
+
+- Nhánh làm việc hiện tại: `feature/test-studio` (các nhánh `refactor/*` đã tích hợp). 671/671 frontend tests pass.
+- **Bước 1–2 đã hoàn tất** (#18, #20–#24, có báo cáo `ISSUE_*_VERIFICATION.md`): `app.js` còn 137 dòng, chỉ là facade; bootstrap ở `main.js`; `shell/`, `studio/`, `results/`, `grading/`, `exam-room/`, `api/`, `navigation/`, `ui/` đã tách.
+- **Bước 3 hoàn tất một phần**: `studio/builder.js` còn 3.272 dòng, `shell/dashboard.js` 2.894 dòng; đã tách content-import, draft-model, rich-editor, media, simulation, publishing, batch-import, question-renderer. Còn tách tiếp orchestration builder và dashboard controller.
+- **Bước 4**: tách CSS hoàn tất (12 fragment); cleanup inline style/token/!important đang tiến hành, kiểm kê lexical còn 175 vị trí (xem `CSS_INLINE_STYLE_INVENTORY.json`). Chưa mở bước 5–7.
+- Ba quyết định ở mục 8 vẫn chưa được duyệt.
+- Phần "30/10/2026" bên dưới là lịch sử.
+
 ## Cập nhật triển khai — 30/10/2026
 
 - Nhánh `refactor/frontend-architecture-plan`: #18 và #20 đã đóng; #21 đã có implementation commit, issue vẫn mở.
 - #22 đã triển khai và kiểm chứng local: 521/521 frontend tests pass; browser smoke 3 viewport pass. Xem [báo cáo #22](ISSUE_22_READ_CONCURRENCY_VERIFICATION.md) để biết phạm vi, review và giới hạn kiểm chứng.
 - #23 đã triển khai local: owner cho SSE/reader/reconnect và REST fallback; 542/542 frontend tests pass, browser smoke 3 viewport pass. Xem [báo cáo #23](ISSUE_23_EXAM_ROOM_LIFECYCLE_VERIFICATION.md).
-- Tiếp theo: #24 (tích hợp lifecycle và rollback). Chưa merge vào main.
-- Nội dung khảo sát và checklist bên dưới là baseline ban đầu; không coi toàn bộ bước 0–2 hoàn tất trước khi nghiệm thu #24.
+- #24 (tích hợp lifecycle và rollback) đã có báo cáo `ISSUE_24_INTEGRATION_VERIFICATION.md`. Chưa merge vào main.
+- Nội dung khảo sát (mục 1–5) là baseline ngày 28/10; số dòng/mốc code ở đó không còn đúng sau refactor.
 
 Ngày khảo sát: 28/10/2026, Asia/Ho_Chi_Minh. Trạng thái: đề xuất để review, chưa triển khai.
 
@@ -231,25 +240,25 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 
 ### Bước 1 — Pilot tách module content import giữ behavior (S–M)
 
-- [ ] Chuyển CSV/parser/template và biến thể nội dung từ `app.js:12`, `:565–1022` vào `studio/content-import.js`; chọn phạm vi CSV trước nếu variant phụ thuộc nhiều hơn dự kiến.
-- [ ] app.js import nội bộ và re-export cùng named exports; không đổi return shape, ID generation, quy tắc normalization hoặc điểm.
-- [ ] Test hành vi module mới; giữ test import facade để kiểm tương thích, sau đó chuyển consumer có kiểm soát.
+- [x] Chuyển CSV/parser/template (#18, `studio/content-import.js`) và biến thể nội dung từ `app.js:12`, `:565–1022` vào `studio/content-import.js`; chọn phạm vi CSV trước nếu variant phụ thuộc nhiều hơn dự kiến.
+- [x] app.js import nội bộ và re-export cùng named exports; không đổi return shape, ID generation, quy tắc normalization hoặc điểm.
+- [x] Test hành vi module mới; giữ test import facade để kiểm tương thích, sau đó chuyển consumer có kiểm soát.
 - Interface: tên hiện tại parseCsvRows/parseSingleChoiceCsv/parseVocabPairCsv…; không tạo interface mới không cần thiết.
 - Dependency: bước 0. Nghiệm thu: frontend suite xanh, bulk import thực tế bằng dữ liệu tổng hợp đúng, không có import ngược/cycle, module import được khi không có document.
 - Rollback: revert commit di chuyển; không có API/schema change. Rủi ro: closure dependency ẩn; kiểm hết free variables trước khi cắt.
 
 ### Bước 2 — Entry và lifecycle rõ ràng (M)
 
-- [ ] Tách bootstrap từ app.js sang `main.js`, cập nhật `teacher-dashboard/index.html:728`; tạo `shell/dashboard.js` và `navigation/unsaved-changes.js` khi chuyển owner tương ứng.
-- [ ] Bước đầu giữ hành vi bằng mount wrapper; sửa lifecycle tích lũy listener/timer ở commit riêng sau khi có test tái hiện, không lẫn với relocation.
-- [ ] Builder mount trả dispose; guard đóng/hủy đúng owner; exam room SSE/timer được hủy theo scope.
+- [x] Tách bootstrap từ app.js sang `main.js`, cập nhật `teacher-dashboard/index.html:728`; tạo `shell/dashboard.js` và `navigation/unsaved-changes.js` khi chuyển owner tương ứng.
+- [x] Bước đầu giữ hành vi bằng mount wrapper (#20–#22); sửa lifecycle tích lũy listener/timer ở commit riêng sau khi có test tái hiện, không lẫn với relocation.
+- [x] Builder mount trả dispose (#21, #23, #24); guard đóng/hủy đúng owner; exam room SSE/timer được hủy theo scope.
 - Interface: mountDashboard/mountBuilder và disposer; export cũ được facade giữ đến khi chuyển xong consumers.
 - Dependency: 0–1. Nghiệm thu: import facade không bootstrap kể cả có document; mount/dispose lặp 10 lần không tăng handler/timer còn hoạt động; đổi scope không nhận response cũ; dirty confirmation giữ đúng hành vi.
 - Rollback: revert entry và lifecycle commits tương ứng, kiểm index tải app cũ đúng. Rủi ro: mất khởi tạo hoặc listener; static route và browser smoke bắt buộc.
 
 ### Bước 3 — Chia builder theo workflow (L, chia commit con)
 
-- [ ] Từ `app.js:4127–12888`, lần lượt chuyển draft operations → rich editor/media → simulation → publishing sang các file ở cây đích; builder orchestration chuyển cuối.
+- [ ] (một phần — xem cập nhật 11/11) Từ `app.js:4127–12888`, lần lượt chuyển draft operations → rich editor/media → simulation → publishing sang các file ở cây đích; builder orchestration chuyển cuối.
 - [ ] Giữ request/payload hiện tại khi chuyển; thống nhất client/error/auth ở commit sau với test contract.
 - [ ] Chuyển results/grading và exam-room khỏi startDashboard sau builder, giữ portal-sync-view/exam-room-sse làm module hiện có.
 - Interface: draft commands, mount editor/simulation, client injection; root owner không chồng lấn.
@@ -280,6 +289,7 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã chuyển 3 inline styles tĩnh của luồng Công bố (thêm token `--izone-danger-legacy`); `rich-editor.js` không có vị trí hợp lệ; phân loại 208 vị trí còn lại (46 tĩnh): xem `PUBLISHING_STATIC_STYLES_VERIFICATION.md`.
   - Đã thống nhất màu Danger về `#e11d48`, bổ sung icon còn thiếu và sửa spinner, thay `▶/⏸` ở giao diện audio bằng SVG: xem `DANGER_COLOR_UNIFY_VERIFICATION.md`, `ICON_FIX_VERIFICATION.md`, `CANDIDATE_AUDIO_GLYPHS_VERIFICATION.md`.
   - Đã chuyển 9 inline styles tĩnh của modal tạo hàng loạt AI Rubric và Single Choice; phát hiện `openBatchPictorialModal` là mã chết (rút 5 vị trí khỏi đợt này): xem `BATCH_MODALS_STYLES_VERIFICATION.md`.
+  - Đã chuyển 17 inline styles tĩnh của modal chi tiết câu/chấm điểm (`grading/attempt-review.js`) sang class/token; parity browser 12/12 giống baseline, xem `GRADING_MODAL_STYLES_VERIFICATION.md`.
   - Metadata CSS (manifest, rule map, inventory inline style) tái tạo bằng `node scripts/css-metadata.mjs` (rule-map/manifest/inventory/check) thay vì sửa tay; `tests/css-metadata.test.mjs` chặn rule map lệch khỏi `styles/*.css`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
