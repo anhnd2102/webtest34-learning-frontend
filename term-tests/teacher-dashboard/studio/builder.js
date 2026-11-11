@@ -475,7 +475,7 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
       const isActiveBlock = index === activeBlockIdx;
 
       return `
-        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}${isActiveBlock ? ' active-block-tab' : ''}" id="builder-block-${index}" data-block-id="${block.blockId}" data-index="${index}" style="${isActiveBlock ? 'display: block;' : 'display: none;'}">
+        <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}${isActiveBlock ? ' active-block-tab' : ''}" id="builder-block-${index}" data-block-id="${block.blockId}" data-index="${index}"${isActiveBlock ? '' : ' hidden'}>
           <div class="builder-block-header">
             <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
             <div class="block-checkpoint-pill">Phần ${index + 1}</div>

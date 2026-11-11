@@ -225,6 +225,96 @@ try {
       await capture('pictorial-preview-button', p2);
       await page.evaluate(() => { window['toggle-pictorialHandle'].dispose?.(); });
     }
+    // Form nhiều Phần/Bài tập cho các nhóm điều hướng và chuyển bài tập.
+    const multiBlockForm = layout => {
+      const choice = (id, exerciseId, position) => ({ itemVersionId: id, exerciseId, position, prompt: `Synthetic question ${position}`, interactionType: 'single_choice', pedagogicalTypeCode: 'multiple_choice', graderType: 'exact_option', maxScore: 1, options: [{ id: 'A', label: 'Synthetic A' }, { id: 'B', label: 'Synthetic B' }] });
+      let position = 0;
+      const blocks = layout.map((exerciseIds, blockIndex) => {
+        const items = exerciseIds.map(exerciseId => choice(`${exerciseId}-q`, exerciseId, ++position));
+        return { blockId: `b${blockIndex + 1}`, title: `Synthetic block ${blockIndex + 1}`, checkpoint: blockIndex + 1,
+          exercises: exerciseIds.map((exerciseId, index) => ({ exerciseId, exerciseNumber: index + 1, title: `Synthetic exercise ${exerciseId}`, itemIds: [`${exerciseId}-q`] })), items };
+      });
+      const all = blocks.flatMap(block => block.items);
+      return { id: 'multi-form', formVersionId: 'multi-form', title: 'Synthetic multi form', status: 'draft', version: 1, durationMinutes: 45, blocks,
+        gradingKey: { items: Object.fromEntries(all.map(item => [item.itemVersionId, { graderType: 'exact_option', expectedOptionId: 'A' }])), groups: {} } };
+    };
+    if (groups.includes('blocktab')) {
+      const host = await mount('toggle-blocktab', multiBlockForm([['e1'], ['e2'], ['e3']]));
+      const block = index => host.locator(`#builder-block-${index}`);
+      const expectOnly = async which => { for (const index of [0, 1, 2]) await expectVisible(block(index), index === which, `block ${index} visibility with block ${which} active`); };
+      await expectOnly(0);
+      await capture('blocktab-first', host);
+      await host.locator('.btn-block-jump-chip[data-block-idx="1"]').first().click();
+      await expectOnly(1);
+      await capture('blocktab-second', host);
+      await host.locator('.btn-block-jump-chip[data-block-idx="2"]').first().click();
+      await expectOnly(2);
+      await capture('blocktab-third', host);
+      await host.locator('.btn-block-jump-chip[data-block-idx="0"]').first().click();
+      await expectOnly(0);
+      await page.evaluate(() => { window['toggle-blocktabHandle'].dispose?.(); });
+    }
+    if (groups.includes('rubricmodal')) {
+      const host = await mount('toggle-rubricmodal', baseForm(vocabItems()));
+      const modal = page.locator('#generic-batch-modal');
+      const context = modal.locator('.batch-rubric-context-group');
+      await host.locator('.btn-add-rubric-async').first().click();
+      await modal.waitFor({ state: 'visible' });
+      await modal.locator('.modal-batch-tab-btn[data-tab="stepper"]').click();
+      await expectVisible(context, true, 'comprehension preset shows the shared context field');
+      await page.waitForTimeout(300);
+      await capture('rubricmodal-comprehension', modal.locator('.modal-batch-vocab-card').first());
+      await modal.locator('.select-batch-rubric-type').selectOption('translation');
+      await expectVisible(context, false, 'translation preset hides the shared context field');
+      await page.waitForTimeout(150);
+      await capture('rubricmodal-translation', modal.locator('.modal-batch-vocab-card').first());
+      await modal.locator('.select-batch-rubric-type').selectOption('comprehension');
+      await expectVisible(context, true, 'comprehension preset shows the field again');
+      await modal.locator('.btn-close-batch-modal-btn').click();
+      await expectVisible(modal, false, 'the modal closes');
+      await host.locator('.btn-add-rubric-async').first().click();
+      await modal.waitFor({ state: 'visible' });
+      await modal.locator('.modal-batch-tab-btn[data-tab="stepper"]').click();
+      await expectVisible(context, true, 'the field is visible again after reopening');
+      await modal.locator('.btn-close-batch-modal-btn').click();
+      await page.evaluate(() => { window['toggle-rubricmodalHandle'].dispose?.(); });
+    }
+    if (groups.includes('moveex')) {
+      const host = await mount('toggle-moveex', multiBlockForm([['e1', 'e2'], ['e3'], ['e4']]));
+      const modal = page.locator('#modal-move-exercise');
+      const row = modal.locator('.target-exercise-row');
+      await host.locator('.btn-move-exercise-to-block').first().click();
+      await modal.waitFor({ state: 'visible' });
+      await expectVisible(row, false, 'anchor row hidden for the default end position');
+      await page.waitForTimeout(150);
+      await capture('moveex-end', modal.locator('.move-layout-dialog'));
+      await modal.locator('.select-target-position').selectOption('before_ex');
+      await expectVisible(row, true, 'anchor row shows for before_ex');
+      await capture('moveex-before', modal.locator('.move-layout-dialog'));
+      await modal.locator('.select-target-position').selectOption('end');
+      await expectVisible(row, false, 'anchor row hides again for end');
+      await modal.locator('.select-target-position').selectOption('after_ex');
+      await expectVisible(row, true, 'anchor row shows for after_ex');
+      await capture('moveex-after', modal.locator('.move-layout-dialog'));
+      await modal.locator('.select-target-block').selectOption('1');
+      await expectVisible(row, true, 'anchor row stays visible for a block with exercises');
+      await modal.locator('.select-target-block').selectOption('2');
+      await expectVisible(row, true, 'anchor row stays visible for another block with exercises');
+      await capture('moveex-other-block', modal.locator('.move-layout-dialog'));
+      await modal.locator('.btn-cancel-move-modal').click();
+      await expectVisible(modal, false, 'cancel closes the modal');
+      // Phần chỉ có đúng bài tập đang chuyển: không có bài tập mốc nào khác để chọn.
+      await host.locator('.btn-block-jump-chip[data-block-idx="1"]').first().click();
+      await host.locator('#builder-block-1 .btn-move-exercise-to-block').first().click();
+      await modal.waitFor({ state: 'visible' });
+      await expectVisible(row, false, 'anchor row hidden when the source block has only the moved exercise');
+      await modal.locator('.select-target-position').selectOption('after_ex');
+      await expectVisible(row, false, 'anchor row stays hidden because there is no other exercise to anchor to');
+      assert.equal(await modal.locator('.select-target-position').inputValue(), 'end', 'position resets to end when the target has no other exercise');
+      await capture('moveex-no-anchor', modal.locator('.move-layout-dialog'));
+      await modal.locator('.btn-cancel-move-modal').click();
+      await page.evaluate(() => { window['toggle-moveexHandle'].dispose?.(); });
+    }
     if (groups.includes('richeditor')) {
       const clozeItem = { itemVersionId: 'c1', exerciseId: 'ex1', position: 1, prompt: 'Synthetic (1) _____ prompt', interactionType: 'short_text', pedagogicalTypeCode: 'inline_cloze', layoutType: 'inline_cloze', graderType: 'accepted_text', maxScore: 1, options: [], clozeAnswers: { 1: { targetWord: 'alpha', accepted: ['alpha'] } } };
       const matchItem = { itemVersionId: 'm1', exerciseId: 'ex1', position: 2, prompt: 'Synthetic heading', interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', layoutType: 'split_pane_matching', graderType: 'exact_option', maxScore: 1, options: [{ id: 'A', label: 'Synthetic heading A' }, { id: 'B', label: 'Synthetic heading B' }] };

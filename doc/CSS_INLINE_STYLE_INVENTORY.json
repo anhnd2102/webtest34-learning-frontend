@@ -1,7 +1,7 @@
 {
-  "baseline": "2f28172",
-  "revision": "20261111-hidden-group5",
-  "note": "Lexical inventory after rich editor visibility moved to the hidden attribute; not a CSS parser.",
+  "baseline": "083bb01",
+  "revision": "20261111-hidden-blocktab",
+  "note": "Lexical inventory after block tab visibility moved to hidden; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -127,11 +127,6 @@
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
       "line": 891,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/builder.js",
-      "line": 478,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/media.js",

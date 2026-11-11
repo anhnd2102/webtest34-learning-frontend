@@ -129,6 +129,17 @@ Viết **trước khi chuyển** và chạy xanh trên mã cũ:
 
 Bấm chuột thật vào nút "Mã HTML" ngay sau khi mở menu bảng làm Playwright báo phần tử không hiển thị ở khung hẹp (bố cục thanh công cụ ở 390px); fixture kích hoạt sự kiện click trực tiếp (`dispatchEvent`) cho các nút chuyển chế độ và nút Lưu. Chưa điều tra nguyên nhân bố cục; không ảnh hưởng logic ẩn/hiện đang kiểm.
 
+## Đợt 6: các chỗ còn lại ngoài bảng ban đầu
+
+Mỗi nhóm một fixture riêng, một commit riêng. Baseline chạy một lần từ worktree tại `083bb01`.
+
+### 6a. Thẻ khối đang chọn (`builder.js`)
+
+- `style="display: block|none"` theo `isActiveBlock` → `hidden` (`${isActiveBlock ? '' : ' hidden'}`). Chỉ quyết định lúc render (mỗi lần chuyển Phần là render lại); không có JS bật/tắt và không có chỗ đọc `style.display`.
+- Bảng `display`: `.builder-block-card` không đặt `display` (rule ở fragment 03 chỉ có nền/viền); inline `block` trùng `block` mặc định của `div`. Không cần rule bổ sung.
+- Fixture `blocktab`: 3 Phần, chuyển bằng các chip điều hướng (`.btn-block-jump-chip`), khẳng định chỉ một Phần hiện ở mỗi bước. **9/9 computed snapshots giống baseline, 9/9 PNG trùng từng byte.**
+- Test: `test-studio-block-tab-visibility.test.mjs` (mới) và `test-studio-move-exercise-between-blocks.test.mjs` (khẳng định cũ `style="display: block;"` đổi sang kiểm `hidden` trên đúng thẻ khối). Đỏ trên mã cũ, xanh sau thay đổi. Inventory 54 → 53.
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.
