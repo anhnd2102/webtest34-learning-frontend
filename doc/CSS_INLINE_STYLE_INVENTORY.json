@@ -1,7 +1,7 @@
 {
-  "baseline": "98bed03",
-  "revision": "20261111-hidden-simulation",
-  "note": "Lexical inventory after candidate simulation visibility moved to hidden; not a CSS parser.",
+  "baseline": "c2814f2",
+  "revision": "20261111-hidden-batchimport",
+  "note": "Lexical inventory after batch import visibility moved to hidden; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -62,61 +62,6 @@
       "file": "term-tests/teacher-dashboard/studio/authoring/error-correction.js",
       "line": 76,
       "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 108,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 277,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 356,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 363,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 438,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 871,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 872,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 883,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 885,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 890,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 891,
-      "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/media.js",

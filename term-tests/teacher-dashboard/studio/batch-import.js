@@ -105,7 +105,7 @@ export function openGenericBatchModal({
   trackBuilderModal(modal, owner);
   document.body.appendChild(modal);
 
-  modal.style.display = 'flex';
+  modal.hidden = false;
 
   const initialCount = Math.max(minCount, Math.min(maxCount, parseInt(defaultCount, 10) || minCount));
   const hasCsv = Boolean(csvConfig);
@@ -161,10 +161,10 @@ export function openGenericBatchModal({
               <span class="generic-layout-hint">(Tự động áp dụng nếu dòng dữ liệu CSV không có điểm riêng)</span>
             </div>
 
-            <div class="vocab-preview-summary csv-preview-summary generic-layout-preview"></div>
+            <div class="vocab-preview-summary csv-preview-summary generic-layout-preview" hidden></div>
           </div>
 
-          <div class="modal-batch-tab-panel generic-layout-hidden" data-panel="stepper">
+          <div class="modal-batch-tab-panel" data-panel="stepper" hidden>
             <div class="generic-layout-stepper-fields">
               <div class="form-group batch-count-form-group">
                 <label class="form-label"><strong>Tổng số câu hỏi cần tạo:</strong></label>
@@ -274,7 +274,7 @@ export function openGenericBatchModal({
         panels.forEach(p => {
           const isPanelActive = p.getAttribute('data-panel') === targetTab;
           p.classList.toggle('active', isPanelActive);
-          p.style.display = isPanelActive ? 'block' : 'none';
+          p.hidden = !isPanelActive;
         });
         updateConfirmButton(getSafeCount());
       });
@@ -353,14 +353,14 @@ export function openGenericBatchModal({
       if (!textarea || !previewBox) return;
       const val = textarea.value.trim();
       if (!val) {
-        previewBox.style.display = 'none';
+        previewBox.hidden = true;
         return;
       }
 
       const parseFn = typeof csvConfig.parseCsv === 'function' ? csvConfig.parseCsv : () => ({ items: [] });
       const parsed = parseFn(val);
       parsedItems = parsed.items || [];
-      previewBox.style.display = 'block';
+      previewBox.hidden = false;
 
       if (parsedItems.length === 0) {
         previewBox.innerHTML = `<span class="generic-layout-error">Chưa tìm thấy câu hỏi hợp lệ nào. Vui lòng kiểm tra lại cấu trúc cột hoặc bấm “Tải file mẫu CSV” để xem định dạng chuẩn.</span>`;
@@ -435,7 +435,7 @@ export function openGenericBatchModal({
   let focusTimer = null;
 
   const closeModal = () => {
-    modal.style.display = 'none';
+    modal.hidden = true;
     clearTimeout(focusTimer);
     focusTimer = null;
     if (cleanupKeydown) {
@@ -811,8 +811,8 @@ export function openBlockCsvUploadModal(opts = {}) {
           </div>
         </div>
 
-        <div class="block-csv-preview-box csv-layout-preview"></div>
-        <div class="block-csv-error-box csv-layout-error"></div>
+        <div class="block-csv-preview-box csv-layout-preview" hidden></div>
+        <div class="block-csv-error-box csv-layout-error" hidden></div>
       </div>
 
       <div class="candidate-sim-footer csv-layout-footer">
@@ -868,8 +868,8 @@ export function openBlockCsvUploadModal(opts = {}) {
   function updatePreview() {
     const raw = (textarea?.value || '').trim();
     if (!raw) {
-      previewBox.style.display = 'none';
-      errorBox.style.display = 'none';
+      previewBox.hidden = true;
+      errorBox.hidden = true;
       confirmBtn.disabled = true;
       parsedData = null;
       return;
@@ -880,15 +880,15 @@ export function openBlockCsvUploadModal(opts = {}) {
     const totalItems = parsedData.exercises.reduce((s, ex) => s + (ex.items?.length || 0), 0);
 
     if (totalItems === 0) {
-      errorBox.style.display = 'block';
+      errorBox.hidden = false;
       errorBox.innerHTML = '<strong>Không nhận diện được câu hỏi nào hợp lệ!</strong> Vui lòng kiểm tra định dạng các cột.';
-      previewBox.style.display = 'none';
+      previewBox.hidden = true;
       confirmBtn.disabled = true;
       return;
     }
 
-    errorBox.style.display = 'none';
-    previewBox.style.display = 'block';
+    errorBox.hidden = true;
+    previewBox.hidden = false;
     confirmBtn.disabled = false;
 
     let html = `<strong>Đã nhận diện: ${exCount} bài tập, ${totalItems} câu hỏi</strong><ul class="csv-layout-preview-list">`;

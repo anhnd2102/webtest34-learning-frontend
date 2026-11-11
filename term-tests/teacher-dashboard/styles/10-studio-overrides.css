@@ -130,14 +130,6 @@ button.btn-icon:disabled,
   font-weight: 700;
 }
 
-.modal-batch-tab-panel {
-  display: none;
-}
-
-.modal-batch-tab-panel.active {
-  display: block;
-}
-
 /* 3. Question Builder & Exercise Visual Hierarchy */
 .builder-exercise-card {
   background: #ffffff;

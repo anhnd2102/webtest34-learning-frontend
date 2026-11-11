@@ -315,6 +315,67 @@ try {
       await modal.locator('.btn-cancel-move-modal').click();
       await page.evaluate(() => { window['toggle-moveexHandle'].dispose?.(); });
     }
+    if (groups.includes('batchimport')) {
+      const csv = '"Which TWO activities are free of charge?","A, C","Swimming pool | Tennis court | Fitness center | Sauna | Yoga class",2';
+      const openGeneric = () => page.evaluate(() => toggleApp.openMultiGroupBatchModal({}));
+      const modal = page.locator('#generic-batch-modal');
+      const panel = name => modal.locator(`.modal-batch-tab-panel[data-panel="${name}"]`);
+      const preview = modal.locator('.csv-preview-summary');
+      const card = modal.locator('.modal-batch-vocab-card');
+      await openGeneric();
+      await modal.waitFor({ state: 'visible' });
+      await expectVisible(panel('csv'), true, 'csv panel visible by default');
+      await expectVisible(panel('stepper'), false, 'stepper panel hidden by default');
+      await expectVisible(preview, false, 'csv preview hidden by default');
+      await page.waitForTimeout(300);
+      await capture('batchimport-open', card);
+      await modal.locator('.textarea-batch-csv').fill(csv);
+      await expectVisible(preview, true, 'csv preview shows for parsed input');
+      await page.waitForTimeout(150);
+      await capture('batchimport-preview', card);
+      await modal.locator('.textarea-batch-csv').fill('');
+      await expectVisible(preview, false, 'clearing the input hides the preview');
+      await modal.locator('.modal-batch-tab-btn[data-tab="stepper"]').click();
+      await expectVisible(panel('stepper'), true, 'stepper panel shows on its tab');
+      await expectVisible(panel('csv'), false, 'csv panel hides on the stepper tab');
+      await page.waitForTimeout(150);
+      await capture('batchimport-stepper', card);
+      await modal.locator('.modal-batch-tab-btn[data-tab="csv"]').click();
+      await expectVisible(panel('csv'), true, 'csv panel returns');
+      await expectVisible(panel('stepper'), false, 'stepper panel hides again');
+      await modal.locator('.btn-close-batch-modal-btn').click();
+      await expectVisible(modal, false, 'the generic modal closes');
+      await openGeneric();
+      await modal.waitFor({ state: 'visible' });
+      await expectVisible(panel('csv'), true, 'csv panel is the default again after reopening');
+      await expectVisible(panel('stepper'), false, 'stepper panel is hidden again after reopening');
+      await expectVisible(preview, false, 'preview is hidden again after reopening');
+      await modal.locator('.btn-close-batch-modal-btn').click();
+      // Modal tải CSV theo Phần: hộp xem trước và hộp lỗi.
+      await page.evaluate(() => toggleApp.openBlockCsvUploadModal({ block: { title: 'Synthetic block' }, blockIdx: 0, onImport: () => {} }));
+      const blockModal = page.locator('#modal-block-csv-upload');
+      await blockModal.waitFor({ state: 'visible' });
+      const previewBox = blockModal.locator('.block-csv-preview-box');
+      const errorBox = blockModal.locator('.block-csv-error-box');
+      const area = blockModal.locator('.block-csv-textarea');
+      await expectVisible(previewBox, false, 'block preview hidden initially');
+      await expectVisible(errorBox, false, 'block error hidden initially');
+      await page.waitForTimeout(300);
+      await capture('batchimport-block-open', blockModal.locator('.csv-layout-upload-dialog'));
+      await area.fill(await page.evaluate(() => toggleApp.generateBlockExercisesTemplateCsv()));
+      await expectVisible(previewBox, true, 'block preview shows for valid CSV');
+      await expectVisible(errorBox, false, 'block error stays hidden for valid CSV');
+      await capture('batchimport-block-preview', blockModal.locator('.csv-layout-upload-dialog'));
+      await area.fill('x');
+      await expectVisible(errorBox, true, 'block error shows for invalid CSV');
+      await expectVisible(previewBox, false, 'block preview hides for invalid CSV');
+      await capture('batchimport-block-error', blockModal.locator('.csv-layout-upload-dialog'));
+      await area.fill('');
+      await expectVisible(previewBox, false, 'clearing hides the block preview');
+      await expectVisible(errorBox, false, 'clearing hides the block error');
+      await blockModal.locator('.btn-cancel-block-csv').click();
+      assert.equal(await page.locator('#modal-block-csv-upload').count(), 0, 'cancel removes the block CSV modal');
+    }
     if (groups.includes('simulation')) {
       const form = multiBlockForm([['e1'], ['e2']]);
       const picture = (id, position, image) => ({ itemVersionId: id, exerciseId: 'e1', position, prompt: 'Synthetic picture', interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: 1, options: [], targetWord: 'synthetic', image });

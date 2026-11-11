@@ -166,13 +166,33 @@ Bảy chỗ `style.display` trong file, ba loại:
 - Fixture `simulation`: mở mô phỏng từ builder (2 Phần, thêm một thẻ từ vựng có ảnh tải được và một thẻ ảnh lỗi), khẳng định modal kết quả ẩn ban đầu, ảnh lỗi ẩn khung còn ảnh tốt giữ nguyên, lọc nút điều hướng câu theo Phần (sang Phần 2 rồi về Phần 1), nộp bài → modal kết quả hiện, đóng kết quả, đóng mô phỏng, mở lại (modal kết quả lại ẩn). **9/9 computed snapshots giống baseline, 9/9 PNG trùng từng byte** (đo bằng `png-diff.mjs`).
 - Test: hai test cũ dùng mock `style.display` đổi sang `hidden` (`test-studio-candidate-simulation-navigator`: modal kết quả; `test-studio-short-qa-and-navigator`: lọc nút điều hướng) và thêm assertion template (`#simulation-results-modal` có `hidden`, không còn display inline). **Đỏ trên mã cũ (2 test), xanh sau thay đổi.** Inventory 46 → 39. Rule map 1845 → 1844 (rule CSS bị xóa).
 
+### 6e. Modal nhập hàng loạt (`batch-import.js`)
+
+Mười một chỗ `style.display` trong bốn cơ chế khác nhau; hai trong số đó vốn ẩn bằng CSS và chỉ hiện nhờ inline:
+
+- **Overlay `#generic-batch-modal`** (mở/đóng): `hidden = false/true`; `.modal-batch-vocab-overlay` đã `display: flex` trong CSS.
+- **Hai panel tab (CSV / Tạo nhanh)**: trước đây ba cơ chế chồng nhau — CSS `.modal-batch-tab-panel { display: none }` + `.active { display: block }`, class `generic-layout-hidden` (`#generic-batch-modal .generic-layout-hidden { display: none }`, đặc hiệu 1,1,0, thắng `.active`) trên panel Tạo nhanh, và inline `block|none` do JS đặt (inline là thứ duy nhất làm panel Tạo nhanh hiện được vì class ẩn không bao giờ bị gỡ). Gộp về `hidden`: panel Tạo nhanh `hidden` trong template, `p.hidden = !isPanelActive`, **xóa cả hai rule `.modal-batch-tab-panel` ở fragment 10** và bỏ class `generic-layout-hidden` khỏi panel (class vẫn dùng cho ô chọn file nên giữ rule).
+- **Hộp xem trước `.csv-preview-summary`** (ẩn bằng `display: none` trong `.generic-layout-preview`): template thêm `hidden`, JS `.hidden`, **xóa `display: none` khỏi rule**.
+- **Modal tải CSV theo Phần `#modal-block-csv-upload`**: hộp xem trước và hộp lỗi (cũng ẩn bằng CSS trong `.csv-layout-preview` / `.csv-layout-error`): template `hidden`, 6 chỗ `.hidden`, **xóa `display: none` khỏi hai rule**.
+
+Bảng `display` khi hiện: các hộp và panel là `div` block mặc định, trùng `block` của JS cũ; overlay `flex` trùng CSS.
+
+- Fixture `batchimport`: modal Trắc nghiệm nhóm (mặc định, preview CSV, xóa, tab Tạo nhanh, quay lại tab CSV, đóng, mở lại — kiểm trạng thái mặc định được khôi phục) và modal tải CSV theo Phần (mặc định, CSV mẫu hợp lệ → preview, `x` → hộp lỗi và ẩn preview, xóa, hủy). Mỗi bước khẳng định `isVisible()`. **18/18 computed snapshots giống baseline, 18/18 PNG trùng từng byte.**
+- Test: `test-studio-generic-batch-modal` (5 test cũ dùng mock `style.display` đổi sang `.hidden`, thêm assertion template cho layout hai tab) và `batch-import-visibility-contract.test.mjs` (mới, 3 test kiểm hợp đồng nguồn: không còn `.style.display`, hai hộp của modal tải CSV có `hidden`, bốn rule CSS không còn tự ẩn). **Đỏ trên mã cũ, xanh sau thay đổi.** Inventory 39 → 28; rule map 1844 → 1842.
+
+### Tổng kết đợt 6
+
+- Smoke vòng đời builder (10 vòng × 3 viewport) và smoke tích hợp đầy đủ (root và `/preview-base`) **đạt sau khi hoàn tất cả năm nhóm 6a–6e**; `npm test` 682/682; `css-metadata check` khớp.
+- Không còn `element.style.display = ...` nào trong JS của dashboard (grep: 0) và không còn `style="...display..."` trong template JS. Các chỗ inline style còn lại trong kiểm kê (28) là style *thuộc tính động* (độ rộng %, màu avatar...), không phải ẩn/hiện. Trong `index.html` còn 3 chỗ `style` có `display`, chưa đổi: `#assignment-link-bar` (xem mục dưới), `#detail-grading-history-section` (xem mục dưới) và một thanh tiêu đề flex tĩnh của modal chi tiết câu (không phải ẩn/hiện).
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
+- `index.html:601` `#detail-grading-history-section` có `style="display: none;"` và **không có chỗ nào trong JS tham chiếu id này hay bật nó lên**, trong khi `attempt-review.js` vẫn render lịch sử chấm điểm vào `#detail-grading-history` (phần tử con nằm trong section đó). Kết quả: lịch sử lượt chấm được dựng nhưng **không bao giờ hiển thị**. Có thể là tính năng chưa nối hoặc mã chết; cần chủ sản phẩm xác nhận trước khi nối lại hiển thị hoặc xóa. Không đổi trong lộ trình này.
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.
 
 ## Giới hạn
 
-- Đã xong cả năm nhóm trong bảng. Còn các chỗ `style.display` ngoài bảng: `batch-import.js` (modal/preview tạo hàng loạt), `move-exercise-modal.js`, `simulation.js` (modal mô phỏng, nút lọc), `authoring/rubric.js` (`ctxGroup`) và template ở `builder.js:478` (thẻ khối đang chọn: `style="display: block|none"` theo `isActiveBlock`, chỉ quyết định lúc render, không có JS bật/tắt; inline `block` đang thắng các rule `display` của `.builder-block-card` nên cần bảng `display` riêng trước khi đổi); chưa chuyển vì ngoài phạm vi các nhóm đã lập kế hoạch và vì mỗi nhóm cần fixture riêng.
+- Đã xong cả năm nhóm trong bảng và các chỗ ngoài bảng (đợt 6, mục 6a–6e); phần này giữ lại để ghi lịch sử. Các chỗ `style.display` từng nằm ngoài bảng: `batch-import.js` (modal/preview tạo hàng loạt), `move-exercise-modal.js`, `simulation.js` (modal mô phỏng, nút lọc), `authoring/rubric.js` (`ctxGroup`) và template ở `builder.js:478` (thẻ khối đang chọn: `style="display: block|none"` theo `isActiveBlock`, chỉ quyết định lúc render, không có JS bật/tắt; inline `block` đang thắng các rule `display` của `.builder-block-card` nên cần bảng `display` riêng trước khi đổi); chưa chuyển vì ngoài phạm vi các nhóm đã lập kế hoạch và vì mỗi nhóm cần fixture riêng.
 - Chưa chạy lại smoke vòng đời `/preview-base`.
 - Fixture hiện có nhóm `vocab`, `rubric`, `pictorial`, `publishing`, `vocabbatch`, `media`, `richeditor` và `audiowarn`; mỗi nhóm sau phải thêm kịch bản mở/đóng tương ứng (đặc biệt popup rich editor, lỗi ảnh Pictorial, sandbox).
 

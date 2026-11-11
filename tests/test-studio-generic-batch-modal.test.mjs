@@ -158,7 +158,7 @@ test('openGenericBatchModal renders modal with title, defaultCount, stepper butt
     });
 
     assert.ok(modal, 'Modal element was returned');
-    assert.equal(modal.style.display, 'flex');
+    assert.equal(modal.hidden, false);
     assert.match(modal.innerHTML, /Thêm câu hỏi Tìm và sửa lỗi/);
     assert.match(modal.innerHTML, /Tạo nhanh 8 câu Tìm và sửa lỗi/);
     assert.match(modal.innerHTML, /input-batch-count/);
@@ -222,7 +222,7 @@ test('openGenericBatchModal stepper buttons increase and decrease count dynamica
     // Click confirm
     confirmBtn.click();
     assert.equal(confirmedCount, 6);
-    assert.equal(modal.style.display, 'none');
+    assert.equal(modal.hidden, true);
   } finally {
     globalThis.document = prevDoc;
     globalThis.window = prevWin;
@@ -251,7 +251,7 @@ test('openGenericBatchModal handles Enter key inside input and Escape key on win
     const countInput = modal1.querySelector('.input-batch-count');
     countInput.dispatchEvent({ type: 'keydown', key: 'Enter', preventDefault: () => {} });
     assert.equal(confirmed, 5, 'Enter key inside input triggers confirmation');
-    assert.equal(modal1.style.display, 'none');
+    assert.equal(modal1.hidden, true);
 
     // 2. Escape key closes without callback
     confirmed = null;
@@ -267,7 +267,7 @@ test('openGenericBatchModal handles Enter key inside input and Escape key on win
     mockWindow.dispatchKeydown('Escape');
     assert.equal(confirmed, null, 'Escape does not trigger confirm');
     assert.equal(singleCalled, false, 'Escape does not trigger single');
-    assert.equal(modal2.style.display, 'none');
+    assert.equal(modal2.hidden, true);
   } finally {
     globalThis.document = prevDoc;
     globalThis.window = prevWin;
@@ -296,7 +296,7 @@ test('openGenericBatchModal single button calls onSingle and close button closes
     singleBtn.click();
     assert.equal(singleCalled, true, 'Single button calls onSingle callback');
     assert.equal(confirmed, null, 'Confirm callback was not called');
-    assert.equal(modal.style.display, 'none');
+    assert.equal(modal.hidden, true);
   } finally {
     globalThis.document = prevDoc;
     globalThis.window = prevWin;
@@ -388,7 +388,7 @@ test('openGenericBatchModal close button and backdrop click close modal without 
     });
     const closeBtn = modal1.querySelector('.btn-close-batch-modal');
     closeBtn.click();
-    assert.equal(modal1.style.display, 'none');
+    assert.equal(modal1.hidden, true);
     assert.equal(confirmed, false);
 
     // 2. Backdrop click
@@ -398,7 +398,7 @@ test('openGenericBatchModal close button and backdrop click close modal without 
       onConfirm: () => { confirmed = true; }
     });
     modal2.click(); // Clicking overlay itself
-    assert.equal(modal2.style.display, 'none');
+    assert.equal(modal2.hidden, true);
     assert.equal(confirmed, false);
   } finally {
     globalThis.document = prevDoc;
@@ -434,6 +434,11 @@ test('openGenericBatchModal supports 2-tab layout with CSV and Stepper panels wh
     assert.match(modal.innerHTML, /data-panel="stepper"/);
     assert.match(modal.innerHTML, /Nhập từ CSV \/ Excel/);
     assert.match(modal.innerHTML, /Tạo nhanh câu trống/);
+    // Panel và hộp xem trước ẩn bằng thuộc tính hidden (JS đảo bằng .hidden), không còn display inline hay class ẩn riêng.
+    assert.match(modal.innerHTML, /class="modal-batch-tab-panel active" data-panel="csv">/, 'csv panel is the visible default tab');
+    assert.match(modal.innerHTML, /class="modal-batch-tab-panel" data-panel="stepper" hidden>/, 'stepper panel starts hidden through the hidden attribute');
+    assert.match(modal.innerHTML, /csv-preview-summary generic-layout-preview" hidden>/, 'csv preview starts hidden through the hidden attribute');
+    assert.doesNotMatch(modal.innerHTML, /data-panel="stepper"[^>]*generic-layout-hidden/, 'stepper panel no longer relies on the generic-layout-hidden class');
   } finally {
     globalThis.document = prevDoc;
     globalThis.window = prevWin;

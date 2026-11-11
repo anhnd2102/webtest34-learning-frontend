@@ -896,7 +896,6 @@
   color: var(--izone-danger-strong);
 }
 :is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-preview {
-  display: none;
   background: var(--izone-context-inherited-bg);
   border: 1px solid var(--izone-context-inherited-border);
   border-radius: 8px;
@@ -905,7 +904,6 @@
   color: var(--izone-context-inherited-text);
 }
 :is(#modal-csv-quick-guide, #modal-block-csv-upload) .csv-layout-error {
-  display: none;
   background: var(--izone-danger-bg);
   border: 1px solid var(--izone-danger-border);
   border-radius: 8px;
@@ -990,7 +988,6 @@
   background: var(--izone-slate-bg);
   border-radius: 6px;
   border: 1px solid var(--izone-border);
-  display: none;
 }
 #generic-batch-modal .generic-layout-stepper-fields {
   display: flex;
