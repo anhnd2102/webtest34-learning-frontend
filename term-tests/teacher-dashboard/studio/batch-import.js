@@ -717,12 +717,10 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
         navigator.clipboard.writeText(sample).then(() => {
           const origText = btn.innerHTML;
           btn.innerHTML = '✓ Đã chép';
-          btn.style.color = '#15803d';
-          btn.style.fontWeight = '600';
+          btn.classList.add('is-copied');
           setTimeout(() => {
             btn.innerHTML = origText;
-            btn.style.color = '';
-            btn.style.fontWeight = '';
+            btn.classList.remove('is-copied');
           }, 1500);
         }).catch(() => {});
       }
@@ -997,9 +995,9 @@ export function openMultiGroupBatchModal(opts = {}) {
       getTemplateCsv: generateMultiGroupTemplateCsv,
       parseCsv: parseMultiGroupCsv,
       renderPreviewRow: (item, idx) => `
-        <div style="font-size: 12px; margin-bottom: 4px;">
+        <div class="batch-preview-row-text">
           <strong>Vị trí ${idx + 1}:</strong> ${escapeHtml(item.prompt)} 
-          <span style="color: #047857; font-weight: 600;">(Đ/A đúng: ${escapeHtml(item.expectedOptionIds?.join(', ') || '')} - ${(item.options || []).length} lựa chọn)</span>
+          <span class="batch-preview-row-meta">(Đ/A đúng: ${escapeHtml(item.expectedOptionIds?.join(', ') || '')} - ${(item.options || []).length} lựa chọn)</span>
         </div>
       `,
       onImport
@@ -1039,9 +1037,9 @@ export function openInlineClozeBatchModal(opts = {}) {
       getTemplateCsv: generateInlineClozeTemplateCsv,
       parseCsv: parseInlineClozeCsv,
       renderPreviewRow: (item, idx) => `
-        <div style="font-size: 12px; margin-bottom: 4px;">
+        <div class="batch-preview-row-text">
           <strong>Đoạn ${idx + 1}:</strong> ${escapeHtml(item.prompt.slice(0, 80))}... 
-          <span style="color: #047857; font-weight: 600;">(${Object.keys(item.clozeAnswers || {}).length} chỗ trống - ${item.maxScore} điểm)</span>
+          <span class="batch-preview-row-meta">(${Object.keys(item.clozeAnswers || {}).length} chỗ trống - ${item.maxScore} điểm)</span>
         </div>
       `,
       onImport

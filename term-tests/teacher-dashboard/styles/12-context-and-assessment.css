@@ -444,3 +444,19 @@
   gap: 8px;
   align-items: center;
 }
+
+/* Preview CSV và nút Chép mẫu (studio/batch-import.js): thay inline style tĩnh bằng class/token. */
+.batch-preview-row-text {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.batch-preview-row-meta {
+  color: var(--izone-context-action-hover);
+  font-weight: 600;
+}
+
+.btn.btn-copy-sample.is-copied {
+  color: var(--izone-context-action);
+  font-weight: 600;
+}

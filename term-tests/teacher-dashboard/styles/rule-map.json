@@ -11092,5 +11092,23 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-actions"
+  },
+  {
+    "order": 1837,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".batch-preview-row-text"
+  },
+  {
+    "order": 1838,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".batch-preview-row-meta"
+  },
+  {
+    "order": 1839,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".btn.btn-copy-sample.is-copied"
   }
 ]

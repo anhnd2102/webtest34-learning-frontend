@@ -1,7 +1,7 @@
 {
-  "baseline": "60a7db5",
-  "revision": "20261111-grading-modal1",
-  "note": "Lexical inventory after grading item modal static styles; not a CSS parser.",
+  "baseline": "ec9b8c5",
+  "revision": "20261111-batch-import1",
+  "note": "Lexical inventory after batch-import static styles; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -160,32 +160,17 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 720,
+      "line": 871,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 721,
+      "line": 872,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 724,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 725,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 873,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 874,
+      "line": 883,
       "kind": "property"
     },
     {
@@ -195,38 +180,13 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 887,
+      "line": 890,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 892,
+      "line": 891,
       "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 893,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1000,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1002,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1042,
-      "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/batch-import.js",
-      "line": 1044,
-      "kind": "attribute"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/builder.js",
