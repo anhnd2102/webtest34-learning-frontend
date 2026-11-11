@@ -249,11 +249,7 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
 
           const updateCtxVisibility = () => {
             if (!typeSel || !ctxGroup) return;
-            if (typeSel.value === 'comprehension') {
-              ctxGroup.style.display = 'block';
-            } else {
-              ctxGroup.style.display = 'none';
-            }
+            ctxGroup.hidden = typeSel.value !== 'comprehension';
           };
 
           if (typeSel) {

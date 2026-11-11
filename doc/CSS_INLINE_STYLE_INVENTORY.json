@@ -1,7 +1,7 @@
 {
-  "baseline": "083bb01",
-  "revision": "20261111-hidden-blocktab",
-  "note": "Lexical inventory after block tab visibility moved to hidden; not a CSS parser.",
+  "baseline": "b3d0189",
+  "revision": "20261111-hidden-rubricmodal",
+  "note": "Lexical inventory after rubric batch modal context group moved to hidden; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -62,16 +62,6 @@
       "file": "term-tests/teacher-dashboard/studio/authoring/error-correction.js",
       "line": 76,
       "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 253,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/authoring/rubric.js",
-      "line": 255,
-      "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/batch-import.js",

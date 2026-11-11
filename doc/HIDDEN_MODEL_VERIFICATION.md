@@ -140,6 +140,13 @@ Mỗi nhóm một fixture riêng, một commit riêng. Baseline chạy một l�
 - Fixture `blocktab`: 3 Phần, chuyển bằng các chip điều hướng (`.btn-block-jump-chip`), khẳng định chỉ một Phần hiện ở mỗi bước. **9/9 computed snapshots giống baseline, 9/9 PNG trùng từng byte.**
 - Test: `test-studio-block-tab-visibility.test.mjs` (mới) và `test-studio-move-exercise-between-blocks.test.mjs` (khẳng định cũ `style="display: block;"` đổi sang kiểm `hidden` trên đúng thẻ khối). Đỏ trên mã cũ, xanh sau thay đổi. Inventory 54 → 53.
 
+### 6b. Nhóm ngữ cảnh chung của modal tạo câu Rubric hàng loạt (`authoring/rubric.js`)
+
+- `updateCtxVisibility` đặt `ctxGroup.hidden = typeSel.value !== 'comprehension'` thay cho `style.display = 'block'|'none'`. Template không có trạng thái ẩn ban đầu (hàm được gọi ngay khi gắn), nên không đổi template.
+- Bảng `display`: `#generic-batch-modal .batch-rubric-context-group` không đặt `display` (block mặc định), trùng `block` của JS cũ. Không cần rule bổ sung.
+- Fixture `rubricmodal`: mở modal, chuyển tab "Tạo nhanh", đổi preset Hiểu bài đọc → Dịch → Hiểu bài đọc, đóng, mở lại; khẳng định `isVisible()` từng bước. **6/6 computed snapshots giống baseline.** Ảnh: lần chạy baseline đầu khác lần sau ~64 pixel (tối đa 3/255, hàng cuối modal) nên **ảnh sau thay đổi được so với lần chạy baseline thứ hai: 6/6 trùng khít** (đo bằng `tests/browser/png-diff.mjs`); chênh giữa hai lần chạy baseline là nhiễu render sẵn có.
+- Không có test đơn vị riêng: hàm nằm trong closure của modal và đã có khẳng định hiển thị trong fixture (và `BATCH_MODALS_STYLE_PARITY` của smoke tích hợp). Inventory 53 → 51.
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.
