@@ -315,6 +315,52 @@ try {
       await modal.locator('.btn-cancel-move-modal').click();
       await page.evaluate(() => { window['toggle-moveexHandle'].dispose?.(); });
     }
+    if (groups.includes('simulation')) {
+      const form = multiBlockForm([['e1'], ['e2']]);
+      const picture = (id, position, image) => ({ itemVersionId: id, exerciseId: 'e1', position, prompt: 'Synthetic picture', interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: 1, options: [], targetWord: 'synthetic', image });
+      form.blocks[0].items.push(picture('p-good', 90, '../webtest-34-demo/assets/03/test-1/pic-2.png'), picture('p-bad', 91, '../webtest-34-demo/assets/03/test-1/missing-image.png'));
+      form.blocks[0].exercises[0].itemIds.push('p-good', 'p-bad');
+      form.gradingKey.items['p-good'] = { graderType: 'accepted_text', accepted: ['synthetic'] };
+      form.gradingKey.items['p-bad'] = { graderType: 'accepted_text', accepted: ['synthetic'] };
+      const host = await mount('toggle-simulation', form);
+      const modal = page.locator('#candidate-simulation-modal');
+      const results = modal.locator('#simulation-results-modal');
+      const navButtons = target => modal.locator(`.btn-qnav[data-section-target="${target}"]`);
+      await host.locator('#btn-preview-test').click();
+      await modal.waitFor({ state: 'visible' });
+      await expectVisible(results, false, 'results modal starts hidden');
+      await page.waitForFunction(() => [...document.querySelectorAll('#candidate-simulation-modal .candidate-pictorial-thumb img')].every(img => img.complete));
+      await page.waitForTimeout(250);
+      const thumbs = modal.locator('.candidate-pictorial-card .candidate-pictorial-thumb');
+      assert.equal(await thumbs.count(), 2, 'both pictorial cards render a thumbnail wrapper');
+      await expectVisible(thumbs.nth(0), true, 'a loadable picture keeps its wrapper visible');
+      await expectVisible(thumbs.nth(1), false, 'a broken picture hides its wrapper');
+      await expectVisible(navButtons('sim-block-0').first(), true, 'section 1 navigator buttons visible initially');
+      await capture('simulation-open', modal);
+      const goTo = target => modal.locator(`.section-tab[data-section-target="${target}"], .simulation-nav-pill[data-section-target="${target}"], .side-section-btn[data-section-target="${target}"]`).first().dispatchEvent('click');
+      await goTo('sim-block-1');
+      await expectVisible(navButtons('sim-block-1').first(), true, 'section 2 navigator buttons show on section 2');
+      await expectVisible(navButtons('sim-block-0').first(), false, 'section 1 navigator buttons hide on section 2');
+      await page.waitForTimeout(150);
+      await capture('simulation-section2', modal);
+      await goTo('sim-block-0');
+      await expectVisible(navButtons('sim-block-0').first(), true, 'section 1 navigator buttons return');
+      await expectVisible(navButtons('sim-block-1').first(), false, 'section 2 navigator buttons hide again');
+      await modal.locator('#btn-submit-simulation').dispatchEvent('click');
+      await results.waitFor({ state: 'visible' });
+      await page.waitForTimeout(250);
+      await capture('simulation-results', modal);
+      await modal.locator('#btn-close-sim-results').dispatchEvent('click');
+      await expectVisible(results, false, 'closing the results hides the results modal');
+      await modal.locator('#btn-close-simulation').dispatchEvent('click');
+      await expectVisible(modal, false, 'closing the simulation hides the overlay');
+      await host.locator('#btn-preview-test').click();
+      await modal.waitFor({ state: 'visible' });
+      await expectVisible(results, false, 'results modal is hidden again after reopening');
+      await modal.locator('#btn-close-simulation').dispatchEvent('click');
+      await expectVisible(modal, false, 'the overlay hides again');
+      await page.evaluate(() => { window['toggle-simulationHandle'].dispose?.(); });
+    }
     if (groups.includes('richeditor')) {
       const clozeItem = { itemVersionId: 'c1', exerciseId: 'ex1', position: 1, prompt: 'Synthetic (1) _____ prompt', interactionType: 'short_text', pedagogicalTypeCode: 'inline_cloze', layoutType: 'inline_cloze', graderType: 'accepted_text', maxScore: 1, options: [], clozeAnswers: { 1: { targetWord: 'alpha', accepted: ['alpha'] } } };
       const matchItem = { itemVersionId: 'm1', exerciseId: 'ex1', position: 2, prompt: 'Synthetic heading', interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', layoutType: 'split_pane_matching', graderType: 'exact_option', maxScore: 1, options: [{ id: 'A', label: 'Synthetic heading A' }, { id: 'B', label: 'Synthetic heading B' }] };

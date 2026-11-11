@@ -1,7 +1,7 @@
 {
-  "baseline": "168a801",
-  "revision": "20261111-hidden-moveex",
-  "note": "Lexical inventory after move-exercise anchor row moved to hidden; not a CSS parser.",
+  "baseline": "98bed03",
+  "revision": "20261111-hidden-simulation",
+  "note": "Lexical inventory after candidate simulation visibility moved to hidden; not a CSS parser.",
   "entries": [
     {
       "file": "term-tests/teacher-dashboard/results/view.js",
@@ -150,11 +150,6 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 224,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
       "line": 255,
       "kind": "attribute"
     },
@@ -175,43 +170,13 @@
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 447,
+      "line": 980,
       "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 825,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 834,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 846,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 982,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 1221,
+      "line": 1219,
       "kind": "attribute"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 1228,
-      "kind": "property"
-    },
-    {
-      "file": "term-tests/teacher-dashboard/studio/simulation.js",
-      "line": 1238,
-      "kind": "property"
     },
     {
       "file": "term-tests/teacher-dashboard/ui/rich-content.js",

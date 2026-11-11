@@ -8859,1398 +8859,1392 @@
   },
   {
     "order": 1466,
-    "source": "08-studio-simulation-shell.css",
-    "conditions": [],
-    "selector": "#candidate-simulation-modal .simulation-results-modal"
-  },
-  {
-    "order": 1467,
     "source": "09-editor-media.css",
     "conditions": [],
     "selector": ".block-exercises-container"
   },
   {
-    "order": 1468,
+    "order": 1467,
     "source": "09-editor-media.css",
     "conditions": [],
     "selector": ".builder-exercise-card"
+  },
+  {
+    "order": 1468,
+    "source": "09-editor-media.css",
+    "conditions": [],
+    "selector": ".builder-exercise-card:hover"
   },
   {
     "order": 1469,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".builder-exercise-card:hover"
+    "selector": ".builder-exercise-header"
   },
   {
     "order": 1470,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".builder-exercise-header"
+    "selector": ".exercise-header-left"
   },
   {
     "order": 1471,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-header-left"
+    "selector": ".exercise-badge"
   },
   {
     "order": 1472,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-badge"
+    "selector": ".exercise-title-input"
   },
   {
     "order": 1473,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-title-input"
+    "selector": ".exercise-items-count"
   },
   {
     "order": 1474,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-items-count"
+    "selector": ".exercise-header-actions"
   },
   {
     "order": 1475,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-header-actions"
+    "selector": ".builder-exercise-body"
   },
   {
     "order": 1476,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".builder-exercise-body"
+    "selector": ".exercise-instructions-input"
   },
   {
     "order": 1477,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-instructions-input"
+    "selector": ".exercise-items-list"
   },
   {
     "order": 1478,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-items-list"
+    "selector": ".exercise-add-item-bar"
   },
   {
     "order": 1479,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-add-item-bar"
+    "selector": ".btn-add-exercise"
   },
   {
     "order": 1480,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".btn-add-exercise"
+    "selector": ".btn-add-exercise:hover"
   },
   {
     "order": 1481,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".btn-add-exercise:hover"
+    "selector": ".section-exercises-wrapper"
   },
   {
     "order": 1482,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".section-exercises-wrapper"
+    "selector": ".exercise-head h3"
   },
   {
     "order": 1483,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".exercise-head h3"
+    "selector": ".cloze-table, .inline-cloze-table"
   },
   {
     "order": 1484,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table, .inline-cloze-table"
+    "selector": ".cloze-table th, .cloze-table td, .inline-cloze-table th, .inline-cloze-table td"
   },
   {
     "order": 1485,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table th, .cloze-table td, .inline-cloze-table th, .inline-cloze-table td"
+    "selector": ".cloze-table thead th, .inline-cloze-table thead th"
   },
   {
     "order": 1486,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table thead th, .inline-cloze-table thead th"
+    "selector": ".cloze-table tbody tr:nth-child(2n), .inline-cloze-table tbody tr:nth-child(2n)"
   },
   {
     "order": 1487,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table tbody tr:nth-child(2n), .inline-cloze-table tbody tr:nth-child(2n)"
+    "selector": ".cloze-table tbody tr:hover, .inline-cloze-table tbody tr:hover"
   },
   {
     "order": 1488,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table tbody tr:hover, .inline-cloze-table tbody tr:hover"
+    "selector": ".cloze-table .inline-blank-wrapper, .inline-cloze-table .inline-blank-wrapper"
   },
   {
     "order": 1489,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table .inline-blank-wrapper, .inline-cloze-table .inline-blank-wrapper"
+    "selector": ".cloze-table .inline-fill-input, .inline-cloze-table .inline-fill-input"
   },
   {
     "order": 1490,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".cloze-table .inline-fill-input, .inline-cloze-table .inline-fill-input"
+    "selector": ".pictorial-preview-wrap"
   },
   {
     "order": 1491,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".pictorial-preview-wrap"
+    "selector": ".pictorial-preview-img"
   },
   {
     "order": 1492,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".pictorial-preview-img"
+    "selector": ".pictorial-preview-error"
   },
   {
     "order": 1493,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".pictorial-preview-error"
+    "selector": ".rich-editor, .rich-html-editor-wrap"
   },
   {
     "order": 1494,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor, .rich-html-editor-wrap"
+    "selector": ".rich-editor:focus-within, .rich-html-editor-wrap:focus-within"
   },
   {
     "order": 1495,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor:focus-within, .rich-html-editor-wrap:focus-within"
+    "selector": ".rich-editor__toolbar, .rich-editor-toolbar"
   },
   {
     "order": 1496,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__toolbar, .rich-editor-toolbar"
+    "selector": ".rich-editor__toolbar-left, .toolbar-group"
   },
   {
     "order": 1497,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__toolbar-left, .toolbar-group"
+    "selector": ".rich-editor button, .rich-editor-toolbar .btn, .btn-editor-action"
   },
   {
     "order": 1498,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor button, .rich-editor-toolbar .btn, .btn-editor-action"
+    "selector": ".rich-editor button:hover, .rich-editor-toolbar .btn:hover, .btn-editor-action:hover"
   },
   {
     "order": 1499,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor button:hover, .rich-editor-toolbar .btn:hover, .btn-editor-action:hover"
+    "selector": ".btn-editor-action.active"
   },
   {
     "order": 1500,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".btn-editor-action.active"
+    "selector": ".control-heading-select"
   },
   {
     "order": 1501,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".control-heading-select"
+    "selector": ".select-format-heading"
   },
   {
     "order": 1502,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".select-format-heading"
+    "selector": ".select-format-heading:focus"
   },
   {
     "order": 1503,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".select-format-heading:focus"
+    "selector": ".toolbar-divider"
   },
   {
     "order": 1504,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".toolbar-divider"
+    "selector": ".rich-editor button:focus-visible, .rich-editor input:focus-visible"
   },
   {
     "order": 1505,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor button:focus-visible, .rich-editor input:focus-visible"
+    "selector": ".rich-editor__control, .dropdown-table-wrap"
   },
   {
     "order": 1506,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__control, .dropdown-table-wrap"
+    "selector": ".rich-editor__popup, .table-presets-menu"
   },
   {
     "order": 1507,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup, .table-presets-menu"
+    "selector": ".rich-editor__popup strong"
   },
   {
     "order": 1508,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup strong"
+    "selector": ".rich-editor__popup label"
   },
   {
     "order": 1509,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup label"
+    "selector": ".rich-editor__popup input"
   },
   {
     "order": 1510,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup input"
+    "selector": ".rich-editor__popup small"
   },
   {
     "order": 1511,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__popup small"
+    "selector": ".rich-editor__table-options"
   },
   {
     "order": 1512,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__table-options"
+    "selector": ".rich-editor__table-options button, .table-presets-menu .btn-table-grid"
   },
   {
     "order": 1513,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__table-options button, .table-presets-menu .btn-table-grid"
+    "selector": ".rich-editor__table-options button:hover, .table-presets-menu .btn-table-grid:hover"
   },
   {
     "order": 1514,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__table-options button:hover, .table-presets-menu .btn-table-grid:hover"
+    "selector": ".rich-editor__presets-section"
   },
   {
     "order": 1515,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__presets-section"
+    "selector": ".rich-editor__presets-section button, .table-presets-menu .btn-table-preset"
   },
   {
     "order": 1516,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__presets-section button, .table-presets-menu .btn-table-preset"
+    "selector": ".rich-editor__presets-section button:hover, .table-presets-menu .btn-table-preset:hover"
   },
   {
     "order": 1517,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__presets-section button:hover, .table-presets-menu .btn-table-preset:hover"
+    "selector": ".rich-editor__actions"
   },
   {
     "order": 1518,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__actions"
+    "selector": ".rich-editor__actions button"
   },
   {
     "order": 1519,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__actions button"
+    "selector": ".rich-editor__actions button:hover"
   },
   {
     "order": 1520,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__actions button:hover"
+    "selector": ".rich-editor__content, .rich-editor-visual"
   },
   {
     "order": 1521,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content, .rich-editor-visual"
+    "selector": ".rich-editor__code, .rich-editor-code"
   },
   {
     "order": 1522,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__code, .rich-editor-code"
+    "selector": ".rich-editor__content img, .rich-editor-visual img, .rich-content img"
   },
   {
     "order": 1523,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content img, .rich-editor-visual img, .rich-content img"
+    "selector": ".rich-editor__content table, .rich-editor-visual table, .rich-content table"
   },
   {
     "order": 1524,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content table, .rich-editor-visual table, .rich-content table"
+    "selector": ".rich-editor__content th, .rich-editor__content td, .rich-editor-visual th, .rich-editor-visual td, .rich-content th, .rich-content td"
   },
   {
     "order": 1525,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content th, .rich-editor__content td, .rich-editor-visual th, .rich-editor-visual td, .rich-content th, .rich-content td"
+    "selector": ".rich-editor__content th, .rich-editor-visual th, .rich-content th"
   },
   {
     "order": 1526,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content th, .rich-editor-visual th, .rich-content th"
+    "selector": ".rich-editor__content tbody tr:nth-child(2n), .rich-editor-visual tbody tr:nth-child(2n), .rich-content tbody tr:nth-child(2n)"
   },
   {
     "order": 1527,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__content tbody tr:nth-child(2n), .rich-editor-visual tbody tr:nth-child(2n), .rich-content tbody tr:nth-child(2n)"
+    "selector": ".rich-editor__error"
   },
   {
     "order": 1528,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__error"
+    "selector": ".rich-editor__footer"
   },
   {
     "order": 1529,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor__footer"
+    "selector": ".rich-editor .rich-editor__content-area"
   },
   {
     "order": 1530,
     "source": "09-editor-media.css",
     "conditions": [],
-    "selector": ".rich-editor .rich-editor__content-area"
-  },
-  {
-    "order": 1531,
-    "source": "09-editor-media.css",
-    "conditions": [],
     "selector": ".rich-editor .popup-image-error"
   },
   {
-    "order": 1532,
+    "order": 1531,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".btn-icon, .btn.btn-icon, button.btn-icon, .btn-toggle-block-collapse, .btn-toggle-exercise-collapse, .btn-toggle-item-collapse, .btn-move-block-up, .btn-move-block-down, .btn-delete-block, .btn-move-exercise-up, .btn-move-exercise-down, .btn-delete-exercise, .btn-move-item-up, .btn-move-item-down, .btn-delete-item, .btn-close-batch-modal"
   },
   {
-    "order": 1533,
+    "order": 1532,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".btn-icon:hover:not(:disabled), .btn.btn-icon:hover:not(:disabled), button.btn-icon:hover:not(:disabled), .btn-toggle-block-collapse:hover:not(:disabled), .btn-toggle-exercise-collapse:hover:not(:disabled), .btn-toggle-item-collapse:hover:not(:disabled), .btn-move-block-up:hover:not(:disabled), .btn-move-block-down:hover:not(:disabled), .btn-move-exercise-up:hover:not(:disabled), .btn-move-exercise-down:hover:not(:disabled), .btn-move-item-up:hover:not(:disabled), .btn-move-item-down:hover:not(:disabled), .btn-close-batch-modal:hover:not(:disabled)"
   },
   {
-    "order": 1534,
+    "order": 1533,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".btn-delete-block:hover:not(:disabled), .btn-delete-exercise:hover:not(:disabled), .btn-delete-item:hover:not(:disabled)"
   },
   {
-    "order": 1535,
+    "order": 1534,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".btn-icon:disabled, .btn.btn-icon:disabled, button.btn-icon:disabled, .btn-move-block-up:disabled, .btn-move-block-down:disabled, .btn-delete-block:disabled, .btn-move-exercise-up:disabled, .btn-move-exercise-down:disabled, .btn-delete-exercise:disabled, .btn-move-item-up:disabled, .btn-move-item-down:disabled, .btn-delete-item:disabled"
   },
   {
-    "order": 1536,
+    "order": 1535,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-batch-tabs"
   },
   {
-    "order": 1537,
+    "order": 1536,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-batch-tab-btn"
   },
   {
-    "order": 1538,
+    "order": 1537,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-batch-tab-btn:hover:not(.active)"
   },
   {
-    "order": 1539,
+    "order": 1538,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-batch-tab-btn.active"
   },
   {
-    "order": 1540,
+    "order": 1539,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-batch-tab-panel"
   },
   {
-    "order": 1541,
+    "order": 1540,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-batch-tab-panel.active"
   },
   {
-    "order": 1542,
+    "order": 1541,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".builder-exercise-card"
   },
   {
-    "order": 1543,
+    "order": 1542,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".builder-exercise-card:hover"
   },
   {
-    "order": 1544,
+    "order": 1543,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".builder-exercise-header"
   },
   {
-    "order": 1545,
+    "order": 1544,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-header-left"
   },
   {
-    "order": 1546,
+    "order": 1545,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-badge"
   },
   {
-    "order": 1547,
+    "order": 1546,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-items-count"
   },
   {
-    "order": 1548,
+    "order": 1547,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-header-actions"
   },
   {
-    "order": 1549,
+    "order": 1548,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-add-item-bar"
   },
   {
-    "order": 1550,
+    "order": 1549,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-add-item-bar .add-item-caption"
   },
   {
-    "order": 1551,
+    "order": 1550,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-add-item-bar .add-item-buttons"
   },
   {
-    "order": 1552,
+    "order": 1551,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-add-item-bar button, .exercise-add-item-bar .btn-secondary"
   },
   {
-    "order": 1553,
+    "order": 1552,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".exercise-add-item-bar button:hover:not(:disabled), .exercise-add-item-bar .btn-secondary:hover:not(:disabled)"
   },
   {
-    "order": 1554,
+    "order": 1553,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".input-batch-count:focus"
   },
   {
-    "order": 1555,
+    "order": 1554,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-catalog-tables"
   },
   {
-    "order": 1556,
+    "order": 1555,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-phase-group"
   },
   {
-    "order": 1557,
+    "order": 1556,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-phase-header"
   },
   {
-    "order": 1558,
+    "order": 1557,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".phase-title-badge"
   },
   {
-    "order": 1559,
+    "order": 1558,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".phase-pill-large"
   },
   {
-    "order": 1560,
+    "order": 1559,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".phase-group-heading"
   },
   {
-    "order": 1561,
+    "order": 1560,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".phase-count-pill"
   },
   {
-    "order": 1562,
+    "order": 1561,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-table-wrapper"
   },
   {
-    "order": 1563,
+    "order": 1562,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table"
   },
   {
-    "order": 1564,
+    "order": 1563,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table th"
   },
   {
-    "order": 1565,
+    "order": 1564,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table td"
   },
   {
-    "order": 1566,
+    "order": 1565,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table tr.test-row:hover"
   },
   {
-    "order": 1567,
+    "order": 1566,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table tr.test-row:last-child td"
   },
   {
-    "order": 1568,
+    "order": 1567,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .col-session"
   },
   {
-    "order": 1569,
+    "order": 1568,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .col-phase"
   },
   {
-    "order": 1570,
+    "order": 1569,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .col-title"
   },
   {
-    "order": 1571,
+    "order": 1570,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .test-card-title"
   },
   {
-    "order": 1572,
+    "order": 1571,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .col-meta"
   },
   {
-    "order": 1573,
+    "order": 1572,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .test-card-meta"
   },
   {
-    "order": 1574,
+    "order": 1573,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .test-key-tag code"
   },
   {
-    "order": 1575,
+    "order": 1574,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .version-tag"
   },
   {
-    "order": 1576,
+    "order": 1575,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .col-status"
   },
   {
-    "order": 1577,
+    "order": 1576,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-compact-table .col-actions"
   },
   {
-    "order": 1578,
+    "order": 1577,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-row-actions"
   },
   {
-    "order": 1579,
+    "order": 1578,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-table-header"
   },
   {
-    "order": 1580,
+    "order": 1579,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-card.test-row"
   },
   {
-    "order": 1581,
+    "order": 1580,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-card.test-row:hover"
   },
   {
-    "order": 1582,
+    "order": 1581,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-card.test-row:last-child"
   },
   {
-    "order": 1583,
+    "order": 1582,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".col-session"
   },
   {
-    "order": 1584,
+    "order": 1583,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".col-phase"
   },
   {
-    "order": 1585,
+    "order": 1584,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".col-title"
   },
   {
-    "order": 1586,
+    "order": 1585,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".col-meta"
   },
   {
-    "order": 1587,
+    "order": 1586,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".col-status"
   },
   {
-    "order": 1588,
+    "order": 1587,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".col-actions"
   },
   {
-    "order": 1589,
+    "order": 1588,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".submission-count-tag"
   },
   {
-    "order": 1590,
+    "order": 1589,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".action-locked"
   },
   {
-    "order": 1591,
+    "order": 1590,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".izone-modal-overlay"
   },
   {
-    "order": 1592,
+    "order": 1591,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".izone-modal-dialog"
   },
   {
-    "order": 1593,
+    "order": 1592,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-danger-dialog"
   },
   {
-    "order": 1594,
+    "order": 1593,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-warning-dialog"
   },
   {
-    "order": 1595,
+    "order": 1594,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-create-dialog"
   },
   {
-    "order": 1596,
+    "order": 1595,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".izone-modal-header"
   },
   {
-    "order": 1597,
+    "order": 1596,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-header-icon-danger"
   },
   {
-    "order": 1598,
+    "order": 1597,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-header-icon-warning"
   },
   {
-    "order": 1599,
+    "order": 1598,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".modal-header-icon-primary"
   },
   {
-    "order": 1600,
+    "order": 1599,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".izone-modal-header .modal-title-wrap h3"
   },
   {
-    "order": 1601,
+    "order": 1600,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".izone-modal-header .modal-subtitle"
   },
   {
-    "order": 1602,
+    "order": 1601,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".btn-close-modal"
   },
   {
-    "order": 1603,
+    "order": 1602,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".btn-close-modal:hover"
   },
   {
-    "order": 1604,
+    "order": 1603,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".izone-modal-body"
   },
   {
-    "order": 1605,
+    "order": 1604,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".izone-modal-footer"
   },
   {
-    "order": 1606,
+    "order": 1605,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".target-test-card"
   },
   {
-    "order": 1607,
+    "order": 1606,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-target-title"
   },
   {
-    "order": 1608,
+    "order": 1607,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-target-meta"
   },
   {
-    "order": 1609,
+    "order": 1608,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".test-target-meta .meta-tag"
   },
   {
-    "order": 1610,
+    "order": 1609,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".alert-danger-box"
   },
   {
-    "order": 1611,
+    "order": 1610,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".alert-danger-icon"
   },
   {
-    "order": 1612,
+    "order": 1611,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".alert-warning-box"
   },
   {
-    "order": 1613,
+    "order": 1612,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".alert-warning-icon"
   },
   {
-    "order": 1614,
+    "order": 1613,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".alert-warning-text"
   },
   {
-    "order": 1615,
+    "order": 1614,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".unsaved-hint-text"
   },
   {
-    "order": 1616,
+    "order": 1615,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".confirmation-input-group"
   },
   {
-    "order": 1617,
+    "order": 1616,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".danger-keyword"
   },
   {
-    "order": 1618,
+    "order": 1617,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".input-danger-confirm"
   },
   {
-    "order": 1619,
+    "order": 1618,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".input-danger-confirm:focus"
   },
   {
-    "order": 1620,
+    "order": 1619,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".form-grid-2"
   },
   {
-    "order": 1621,
+    "order": 1620,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".form-hint"
   },
   {
-    "order": 1622,
+    "order": 1621,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".proctoring-lock-hint"
   },
   {
-    "order": 1623,
+    "order": 1622,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-sync"
   },
   {
-    "order": 1624,
+    "order": 1623,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-sync h3"
   },
   {
-    "order": 1625,
+    "order": 1624,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-sync-row"
   },
   {
-    "order": 1626,
+    "order": 1625,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-tone-ready"
   },
   {
-    "order": 1627,
+    "order": 1626,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-tone-ok"
   },
   {
-    "order": 1628,
+    "order": 1627,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-tone-warn"
   },
   {
-    "order": 1629,
+    "order": 1628,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-tone-blocked"
   },
   {
-    "order": 1630,
+    "order": 1629,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-sync input[type=\"checkbox\"]"
   },
   {
-    "order": 1631,
+    "order": 1630,
     "source": "10-studio-overrides.css",
     "conditions": [],
     "selector": ".portal-sync .portal-sync-row button"
   },
   {
-    "order": 1632,
+    "order": 1631,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".score-distribution-view"
   },
   {
-    "order": 1633,
+    "order": 1632,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-header-toolbar"
   },
   {
-    "order": 1634,
+    "order": 1633,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-header-info"
   },
   {
-    "order": 1635,
+    "order": 1634,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-title"
   },
   {
-    "order": 1636,
+    "order": 1635,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-title svg"
   },
   {
-    "order": 1637,
+    "order": 1636,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-meta"
   },
   {
-    "order": 1638,
+    "order": 1637,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-meta strong"
   },
   {
-    "order": 1639,
+    "order": 1638,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-header-actions"
   },
   {
-    "order": 1640,
+    "order": 1639,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".toggle-control"
   },
   {
-    "order": 1641,
+    "order": 1640,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".toggle-control:hover"
   },
   {
-    "order": 1642,
+    "order": 1641,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-skill-tabs"
   },
   {
-    "order": 1643,
+    "order": 1642,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skill-tab-btn"
   },
   {
-    "order": 1644,
+    "order": 1643,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skill-tab-btn:hover"
   },
   {
-    "order": 1645,
+    "order": 1644,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skill-tab-btn.active"
   },
   {
-    "order": 1646,
+    "order": 1645,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-roster-grid"
   },
   {
-    "order": 1647,
+    "order": 1646,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card"
   },
   {
-    "order": 1648,
+    "order": 1647,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card:hover"
   },
   {
-    "order": 1649,
+    "order": 1648,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".metric-card-header"
   },
   {
-    "order": 1650,
+    "order": 1649,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".metric-card-value"
   },
   {
-    "order": 1651,
+    "order": 1650,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-primary .metric-icon"
   },
   {
-    "order": 1652,
+    "order": 1651,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-success .metric-icon"
   },
   {
-    "order": 1653,
+    "order": 1652,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-warning .metric-icon"
   },
   {
-    "order": 1654,
+    "order": 1653,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-neutral .metric-icon"
   },
   {
-    "order": 1655,
+    "order": 1654,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-muted .metric-icon"
   },
   {
-    "order": 1656,
+    "order": 1655,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-info .metric-icon"
   },
   {
-    "order": 1657,
+    "order": 1656,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-statistics-grid"
   },
   {
-    "order": 1658,
+    "order": 1657,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-stat-card"
   },
   {
-    "order": 1659,
+    "order": 1658,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-card-top"
   },
   {
-    "order": 1660,
+    "order": 1659,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-icon"
   },
   {
-    "order": 1661,
+    "order": 1660,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-value"
   },
   {
-    "order": 1662,
+    "order": 1661,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-desc"
   },
   {
-    "order": 1663,
+    "order": 1662,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-card-container"
   },
   {
-    "order": 1664,
+    "order": 1663,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-chart-header"
   },
   {
-    "order": 1665,
+    "order": 1664,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-header-left"
   },
   {
-    "order": 1666,
+    "order": 1665,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-title"
   },
   {
-    "order": 1667,
+    "order": 1666,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-title svg"
   },
   {
-    "order": 1668,
+    "order": 1667,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-subtitle"
   },
   {
-    "order": 1669,
+    "order": 1668,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-svg-wrapper"
   },
   {
-    "order": 1670,
+    "order": 1669,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-svg"
   },
   {
-    "order": 1671,
+    "order": 1670,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-grid-line line"
   },
   {
-    "order": 1672,
+    "order": 1671,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-grid-line:first-child line"
   },
   {
-    "order": 1673,
+    "order": 1672,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-y-axis-label"
   },
   {
-    "order": 1674,
+    "order": 1673,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-baseline"
   },
   {
-    "order": 1675,
+    "order": 1674,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-hover-slot"
   },
   {
-    "order": 1676,
+    "order": 1675,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bucket-col:hover .histogram-hover-slot"
   },
   {
-    "order": 1677,
+    "order": 1676,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bucket-col.active .histogram-hover-slot"
   },
   {
-    "order": 1678,
+    "order": 1677,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bar"
   },
   {
-    "order": 1679,
+    "order": 1678,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bar:hover"
   },
   {
-    "order": 1680,
+    "order": 1679,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bar.bar-selected"
   },
   {
-    "order": 1681,
+    "order": 1680,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-count-label"
   },
   {
-    "order": 1682,
+    "order": 1681,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-axis-label"
   },
   {
-    "order": 1683,
+    "order": 1682,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bucket-col.active .histogram-axis-label"
   },
   {
-    "order": 1684,
+    "order": 1683,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-chart-footer"
   },
   {
-    "order": 1685,
+    "order": 1684,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-hint"
   },
   {
-    "order": 1686,
+    "order": 1685,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-empty-state"
   },
   {
-    "order": 1687,
+    "order": 1686,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-loading-container"
   },
   {
-    "order": 1688,
+    "order": 1687,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-pulse .skeleton-card"
   },
   {
-    "order": 1689,
+    "order": 1688,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line"
   },
   {
-    "order": 1690,
+    "order": 1689,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line.short"
   },
   {
-    "order": 1691,
+    "order": 1690,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line.large"
   },
   {
-    "order": 1692,
+    "order": 1691,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line.medium"
   },
   {
-    "order": 1693,
+    "order": 1692,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-chart-box"
   },
   {
-    "order": 1694,
+    "order": 1693,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-error-panel"
   },
   {
-    "order": 1695,
+    "order": 1694,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-drilldown-split-area"
   },
   {
-    "order": 1696,
+    "order": 1695,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-card-slot"
   },
   {
-    "order": 1697,
+    "order": 1696,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-drilldown-slot"
   },
   {
-    "order": 1698,
+    "order": 1697,
     "source": "11-analytics.css",
     "conditions": [
       "(max-width: 1100px)"
@@ -10258,85 +10252,85 @@
     "selector": ".histogram-drilldown-split-area"
   },
   {
-    "order": 1699,
+    "order": 1698,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-drilldown-container"
   },
   {
-    "order": 1700,
+    "order": 1699,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-card"
   },
   {
-    "order": 1701,
+    "order": 1700,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-header"
   },
   {
-    "order": 1702,
+    "order": 1701,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-title"
   },
   {
-    "order": 1703,
+    "order": 1702,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-count"
   },
   {
-    "order": 1704,
+    "order": 1703,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-empty"
   },
   {
-    "order": 1705,
+    "order": 1704,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-badge-all"
   },
   {
-    "order": 1706,
+    "order": 1705,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table-wrapper"
   },
   {
-    "order": 1707,
+    "order": 1706,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table"
   },
   {
-    "order": 1708,
+    "order": 1707,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table th"
   },
   {
-    "order": 1709,
+    "order": 1708,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table td"
   },
   {
-    "order": 1710,
+    "order": 1709,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table tr:hover td"
   },
   {
-    "order": 1711,
+    "order": 1710,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".student-score-cell"
   },
   {
-    "order": 1712,
+    "order": 1711,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10344,7 +10338,7 @@
     "selector": "header, .navbar, .navbar-menu, .control-toolbar, .report-header-actions, .skill-tab-btn:not(.active), .chart-hint, .btn-close-drilldown"
   },
   {
-    "order": 1713,
+    "order": 1712,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10352,7 +10346,7 @@
     "selector": "body, main"
   },
   {
-    "order": 1714,
+    "order": 1713,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10360,7 +10354,7 @@
     "selector": ".score-distribution-view"
   },
   {
-    "order": 1715,
+    "order": 1714,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10368,775 +10362,775 @@
     "selector": ".report-header-toolbar, .histogram-card-container, .drilldown-card, .report-metric-card, .report-stat-card"
   },
   {
-    "order": 1716,
+    "order": 1715,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-nav-wrapper"
   },
   {
-    "order": 1717,
+    "order": 1716,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-switcher-container"
   },
   {
-    "order": 1718,
+    "order": 1717,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-btn"
   },
   {
-    "order": 1719,
+    "order": 1718,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-btn:hover:not(.active)"
   },
   {
-    "order": 1720,
+    "order": 1719,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-btn.active"
   },
   {
-    "order": 1721,
+    "order": 1720,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-analysis-container"
   },
   {
-    "order": 1722,
+    "order": 1721,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-analysis-toolbar"
   },
   {
-    "order": 1723,
+    "order": 1722,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-skill-tabs"
   },
   {
-    "order": 1724,
+    "order": 1723,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-filter-tab"
   },
   {
-    "order": 1725,
+    "order": 1724,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-filter-tab:hover:not(.active)"
   },
   {
-    "order": 1726,
+    "order": 1725,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-filter-tab.active"
   },
   {
-    "order": 1727,
+    "order": 1726,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".tab-count"
   },
   {
-    "order": 1728,
+    "order": 1727,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-controls"
   },
   {
-    "order": 1729,
+    "order": 1728,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".sort-label"
   },
   {
-    "order": 1730,
+    "order": 1729,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-btn"
   },
   {
-    "order": 1731,
+    "order": 1730,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-btn:hover:not(.active)"
   },
   {
-    "order": 1732,
+    "order": 1731,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-btn.active"
   },
   {
-    "order": 1733,
+    "order": 1732,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-cards-list"
   },
   {
-    "order": 1734,
+    "order": 1733,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card"
   },
   {
-    "order": 1735,
+    "order": 1734,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card:hover"
   },
   {
-    "order": 1736,
+    "order": 1735,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card.card-expanded"
   },
   {
-    "order": 1737,
+    "order": 1736,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card-header"
   },
   {
-    "order": 1738,
+    "order": 1737,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card-header:hover"
   },
   {
-    "order": 1739,
+    "order": 1738,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-header-left"
   },
   {
-    "order": 1740,
+    "order": 1739,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-position-badge"
   },
   {
-    "order": 1741,
+    "order": 1740,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-skill-tag"
   },
   {
-    "order": 1742,
+    "order": 1741,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-prompt-snippet"
   },
   {
-    "order": 1743,
+    "order": 1742,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-header-center"
   },
   {
-    "order": 1744,
+    "order": 1743,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-dist-bar"
   },
   {
-    "order": 1745,
+    "order": 1744,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-correct"
   },
   {
-    "order": 1746,
+    "order": 1745,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-partial"
   },
   {
-    "order": 1747,
+    "order": 1746,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-incorrect"
   },
   {
-    "order": 1748,
+    "order": 1747,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-unanswered"
   },
   {
-    "order": 1749,
+    "order": 1748,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-empty"
   },
   {
-    "order": 1750,
+    "order": 1749,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-header-right"
   },
   {
-    "order": 1751,
+    "order": 1750,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-error-badge"
   },
   {
-    "order": 1752,
+    "order": 1751,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-danger-soft"
   },
   {
-    "order": 1753,
+    "order": 1752,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-warning-soft"
   },
   {
-    "order": 1754,
+    "order": 1753,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-neutral-soft"
   },
   {
-    "order": 1755,
+    "order": 1754,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".error-count-text"
   },
   {
-    "order": 1756,
+    "order": 1755,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".error-rate-text"
   },
   {
-    "order": 1757,
+    "order": 1756,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".btn-item-accordion"
   },
   {
-    "order": 1758,
+    "order": 1757,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".btn-item-accordion:hover"
   },
   {
-    "order": 1759,
+    "order": 1758,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card-drawer"
   },
   {
-    "order": 1760,
+    "order": 1759,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-detail-section"
   },
   {
-    "order": 1761,
+    "order": 1760,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".detail-subtitle"
   },
   {
-    "order": 1762,
+    "order": 1761,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".expected-answer-box"
   },
   {
-    "order": 1763,
+    "order": 1762,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".expected-answer-content code"
   },
   {
-    "order": 1764,
+    "order": 1763,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".common-wrong-pills"
   },
   {
-    "order": 1765,
+    "order": 1764,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".wrong-pill"
   },
   {
-    "order": 1766,
+    "order": 1765,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".pill-answer"
   },
   {
-    "order": 1767,
+    "order": 1766,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".pill-count"
   },
   {
-    "order": 1768,
+    "order": 1767,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-wrong-table-wrapper"
   },
   {
-    "order": 1769,
+    "order": 1768,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".table-compact th, .table-compact td"
   },
   {
-    "order": 1770,
+    "order": 1769,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-status"
   },
   {
-    "order": 1771,
+    "order": 1770,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".status-incorrect"
   },
   {
-    "order": 1772,
+    "order": 1771,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".status-partial"
   },
   {
-    "order": 1773,
+    "order": 1772,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".status-unanswered"
   },
   {
-    "order": 1774,
+    "order": 1773,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-analysis-state-box"
   },
   {
-    "order": 1775,
+    "order": 1774,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".state-title"
   },
   {
-    "order": 1776,
+    "order": 1775,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".state-desc"
   },
   {
-    "order": 1777,
+    "order": 1776,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".exercise-reference-context-field"
   },
   {
-    "order": 1778,
+    "order": 1777,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".exercise-reference-context-field:focus-within"
   },
   {
-    "order": 1779,
+    "order": 1778,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".ai-inherited-context-notice"
   },
   {
-    "order": 1780,
+    "order": 1779,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-toggle-custom-item-context"
   },
   {
-    "order": 1781,
+    "order": 1780,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-toggle-custom-item-context:hover"
   },
   {
-    "order": 1782,
+    "order": 1781,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".candidate-sim-overlay"
   },
   {
-    "order": 1783,
+    "order": 1782,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".candidate-sim-modal, .block-csv-modal, .quick-csv-guide-modal"
   },
   {
-    "order": 1784,
+    "order": 1783,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".block-csv-modal"
   },
   {
-    "order": 1785,
+    "order": 1784,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-csv-guide-modal"
   },
   {
-    "order": 1786,
+    "order": 1785,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn.btn-view-csv-guide, .btn-ghost-subtle.btn-view-csv-guide"
   },
   {
-    "order": 1787,
+    "order": 1786,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn.btn-view-csv-guide:hover, .btn-ghost-subtle.btn-view-csv-guide:hover"
   },
   {
-    "order": 1788,
+    "order": 1787,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table"
   },
   {
-    "order": 1789,
+    "order": 1788,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table th"
   },
   {
-    "order": 1790,
+    "order": 1789,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table td"
   },
   {
-    "order": 1791,
+    "order": 1790,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table tr:nth-child(2n) td"
   },
   {
-    "order": 1792,
+    "order": 1791,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".page-title-bar[hidden]"
   },
   {
-    "order": 1793,
+    "order": 1792,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": "#view-grading .assignment-link-bar"
   },
   {
-    "order": 1794,
+    "order": 1793,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-header"
   },
   {
-    "order": 1795,
+    "order": 1794,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-header-top"
   },
   {
-    "order": 1796,
+    "order": 1795,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-back-dashboard"
   },
   {
-    "order": 1797,
+    "order": 1796,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-back-dashboard:hover"
   },
   {
-    "order": 1798,
+    "order": 1797,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb"
   },
   {
-    "order": 1799,
+    "order": 1798,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-class"
   },
   {
-    "order": 1800,
+    "order": 1799,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-separator"
   },
   {
-    "order": 1801,
+    "order": 1800,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-test"
   },
   {
-    "order": 1802,
+    "order": 1801,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-badge"
   },
   {
-    "order": 1803,
+    "order": 1802,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-nav-tabs"
   },
   {
-    "order": 1804,
+    "order": 1803,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn"
   },
   {
-    "order": 1805,
+    "order": 1804,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn:hover"
   },
   {
-    "order": 1806,
+    "order": 1805,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn:hover svg"
   },
   {
-    "order": 1807,
+    "order": 1806,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn:active"
   },
   {
-    "order": 1808,
+    "order": 1807,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn.active"
   },
   {
-    "order": 1809,
+    "order": 1808,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn.active:hover"
   },
   {
-    "order": 1810,
+    "order": 1809,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn.active svg"
   },
   {
-    "order": 1811,
+    "order": 1810,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-panel[hidden]"
   },
   {
-    "order": 1812,
+    "order": 1811,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".report-kpi-grid"
   },
   {
-    "order": 1813,
+    "order": 1812,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".clickable-kpi-card"
   },
   {
-    "order": 1814,
+    "order": 1813,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".clickable-kpi-card:hover"
   },
   {
-    "order": 1815,
+    "order": 1814,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".clickable-kpi-card:focus-visible"
   },
   {
-    "order": 1816,
+    "order": 1815,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".retake-action-wrap"
   },
   {
-    "order": 1817,
+    "order": 1816,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".retake-badge"
   },
   {
-    "order": 1818,
+    "order": 1817,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".retake-badge.active"
   },
   {
-    "order": 1819,
+    "order": 1818,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-retake-renew"
   },
   {
-    "order": 1820,
+    "order": 1819,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-retake-renew:hover"
   },
   {
-    "order": 1821,
+    "order": 1820,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".meta-badge.badge-retake-grant"
   },
   {
-    "order": 1822,
+    "order": 1821,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".prompt-help-text"
   },
   {
-    "order": 1823,
+    "order": 1822,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-prompt"
   },
   {
-    "order": 1824,
+    "order": 1823,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-help"
   },
   {
-    "order": 1825,
+    "order": 1824,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-answer"
   },
   {
-    "order": 1826,
+    "order": 1825,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-answer.modal-ctx-answer-expected"
   },
   {
-    "order": 1827,
+    "order": 1826,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-feedback"
   },
   {
-    "order": 1828,
+    "order": 1827,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-head"
   },
   {
-    "order": 1829,
+    "order": 1828,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-head h4"
   },
   {
-    "order": 1830,
+    "order": 1829,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-score-row"
   },
   {
-    "order": 1831,
+    "order": 1830,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-block input.modal-override-score-input"
   },
   {
-    "order": 1832,
+    "order": 1831,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-label"
   },
   {
-    "order": 1833,
+    "order": 1832,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-label.modal-override-label-block"
   },
   {
-    "order": 1834,
+    "order": 1833,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-max"
   },
   {
-    "order": 1835,
+    "order": 1834,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-feedback-row"
   },
   {
-    "order": 1836,
+    "order": 1835,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-actions"
   },
   {
-    "order": 1837,
+    "order": 1836,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".batch-preview-row-text"
   },
   {
-    "order": 1838,
+    "order": 1837,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".batch-preview-row-meta"
   },
   {
-    "order": 1839,
+    "order": 1838,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn.btn-copy-sample.is-copied"
   },
   {
-    "order": 1840,
+    "order": 1839,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".pictorial-thumb-preview .pictorial-preview-img"
   },
   {
-    "order": 1841,
+    "order": 1840,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".pictorial-thumb-preview .pictorial-preview-error:not([hidden])"
   },
   {
-    "order": 1842,
+    "order": 1841,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".specific-classes-container:not([hidden])"
   },
   {
-    "order": 1843,
+    "order": 1842,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rich-editor__code:not([hidden]), .rich-editor-code:not([hidden])"
   },
   {
-    "order": 1844,
+    "order": 1843,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rich-editor__error.popup-image-error:not([hidden])"

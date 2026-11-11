@@ -154,6 +154,18 @@ Mỗi nhóm một fixture riêng, một commit riêng. Baseline chạy một l�
 - Fixture `moveex`: mở modal từ nút chuyển của Phần 1 (có Bài tập mốc khác), đổi vị trí chèn (cuối → trước bài tập → cuối → sau bài tập), đổi Phần đích (Phần 2 có bài tập), hủy; rồi mở lại từ Phần chỉ có đúng bài tập đang chuyển (không có bài tập mốc nào khác): hàng phải ẩn, chọn "sau bài tập" phải tự trả về "cuối". **15/15 computed snapshots giống baseline, 15/15 PNG trùng từng byte.**
 - Test: `tests/move-exercise-anchor-row-visibility.test.mjs` (mới, 3 test kiểm hợp đồng trên mã nguồn vì modal cần DOM thật: template có `hidden`, JS chỉ dùng `.hidden` (3 lần ẩn, 2 lần hiện), rule CSS không còn `display`). Đỏ trên mã cũ (3/3), xanh sau thay đổi. Inventory 51 → 46.
 
+### 6d. Mô phỏng thí sinh (`simulation.js`)
+
+Bảy chỗ `style.display` trong file, ba loại:
+
+- **Overlay `#candidate-simulation-modal`** (mở/đóng): `hidden = false/true`. CSS `.candidate-simulation-overlay` đã có `display: flex` nên inline `flex` dư.
+- **Modal kết quả `#simulation-results-modal`**: như hàng "bài tập mốc", **ẩn bằng CSS** (`#candidate-simulation-modal .simulation-results-modal { display: none; }`) rồi bật bằng inline `flex`. Chuyển trọn gói: template thêm `hidden`, hai chỗ bật/tắt → `.hidden`, **xóa hẳn rule CSS ẩn** (rule chỉ có một khai báo) để `.simulation-results-modal { display: flex }` ở fragment 08 áp dụng khi hiện (trùng `flex` cũ).
+- **Nút điều hướng câu `.btn-qnav`** (lọc theo Phần): `btn.hidden = !isMatch` (bỏ guard `if (btn.style)`); `.btn-qnav` đã là `display: inline-flex` trong CSS, trùng giá trị JS cũ.
+- **Hai handler `onerror` nội tuyến của ảnh thẻ từ vựng**: `this.parentElement.style.display='none'` → `this.parentElement.hidden = true` (chỉ có đường ẩn; `.candidate-pictorial-thumb` là `flex` nhưng `[hidden]` có `!important` nên vẫn ẩn).
+
+- Fixture `simulation`: mở mô phỏng từ builder (2 Phần, thêm một thẻ từ vựng có ảnh tải được và một thẻ ảnh lỗi), khẳng định modal kết quả ẩn ban đầu, ảnh lỗi ẩn khung còn ảnh tốt giữ nguyên, lọc nút điều hướng câu theo Phần (sang Phần 2 rồi về Phần 1), nộp bài → modal kết quả hiện, đóng kết quả, đóng mô phỏng, mở lại (modal kết quả lại ẩn). **9/9 computed snapshots giống baseline, 9/9 PNG trùng từng byte** (đo bằng `png-diff.mjs`).
+- Test: hai test cũ dùng mock `style.display` đổi sang `hidden` (`test-studio-candidate-simulation-navigator`: modal kết quả; `test-studio-short-qa-and-navigator`: lọc nút điều hướng) và thêm assertion template (`#simulation-results-modal` có `hidden`, không còn display inline). **Đỏ trên mã cũ (2 test), xanh sau thay đổi.** Inventory 46 → 39. Rule map 1845 → 1844 (rule CSS bị xóa).
+
 ## Phát hiện cần quyết định (chưa thay đổi)
 
 - `index.html:442` `#assignment-link-bar` có cả `hidden` lẫn `style="display:none !important;"`, trong khi `results/view.js` (91–99) và `shell/dashboard.js` (827, 876–882, comment "legacy") vẫn bật/tắt `hidden`. Inline `!important` khiến phần tử **không bao giờ hiển thị**: có thể là UI cũ bị ẩn có chủ đích, hoặc mã chết chưa dọn. Không động vào trong lộ trình này; cần chủ sản phẩm xác nhận trước khi xóa.

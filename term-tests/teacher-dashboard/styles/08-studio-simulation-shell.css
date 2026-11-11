@@ -1072,6 +1072,3 @@ button.btn-publish-test:hover:not(:disabled) {
   gap: 10px;
   align-items: center;
 }
-#candidate-simulation-modal .simulation-results-modal {
-  display: none;
-}

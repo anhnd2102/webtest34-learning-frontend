@@ -163,19 +163,19 @@ test('Issue 58: Sidebar Question Navigator filters buttons strictly by active sk
     {
       listeners: {},
       getAttribute: (attr) => (attr === 'data-section-target' ? 'sim-block-0' : (attr === 'data-pos' ? '1' : null)),
-      style: { display: '' },
+      hidden: false,
       addEventListener: function(evt, fn) { this.listeners[evt] = fn; }
     },
     {
       listeners: {},
       getAttribute: (attr) => (attr === 'data-section-target' ? 'sim-block-0' : (attr === 'data-pos' ? '2' : null)),
-      style: { display: '' },
+      hidden: false,
       addEventListener: function(evt, fn) { this.listeners[evt] = fn; }
     },
     {
       listeners: {},
       getAttribute: (attr) => (attr === 'data-section-target' ? 'sim-block-1' : (attr === 'data-pos' ? '3' : null)),
-      style: { display: '' },
+      hidden: false,
       addEventListener: function(evt, fn) { this.listeners[evt] = fn; }
     }
   ];
@@ -272,11 +272,14 @@ test('Issue 58: Sidebar Question Navigator filters buttons strictly by active sk
     // Verify navigator buttons include section identifiers to enable filtering
     assert.ok(modalHtml.includes('data-section-target="sim-block-0"'), 'Navigator buttons must have data-section-target for block 0');
     assert.ok(modalHtml.includes('data-section-target="sim-block-1"'), 'Navigator buttons must have data-section-target for block 1');
+    // Modal kết quả ẩn bằng thuộc tính hidden (JS đảo bằng .hidden); không còn inline display hay rule CSS tự ẩn.
+    assert.ok(modalHtml.includes('id="simulation-results-modal" hidden>'), 'Results modal starts hidden through the hidden attribute');
+    assert.equal(/simulation-results-modal[^>]*display:/.test(modalHtml), false, 'Results modal no longer relies on inline display');
 
     // Verify initial filter on block 0 (Grammar has 2 questions)
-    assert.equal(mockButtons[0].style.display, 'inline-flex', 'Button 1 should be visible for block 0');
-    assert.equal(mockButtons[1].style.display, 'inline-flex', 'Button 2 should be visible for block 0');
-    assert.equal(mockButtons[2].style.display, 'none', 'Button 3 should be hidden for block 0');
+    assert.equal(mockButtons[0].hidden, false, 'Button 1 should be visible for block 0');
+    assert.equal(mockButtons[1].hidden, false, 'Button 2 should be visible for block 0');
+    assert.equal(mockButtons[2].hidden, true, 'Button 3 should be hidden for block 0');
     assert.equal(qnavSummaryMock.textContent, '2 câu', 'Summary should show 2 câu for block 0');
 
     // Simulate clicking block 1 tab (Listening has 1 question)
@@ -285,9 +288,9 @@ test('Issue 58: Sidebar Question Navigator filters buttons strictly by active sk
     block1TabListener.fn();
 
     // Verify filtering switched to block 1
-    assert.equal(mockButtons[0].style.display, 'none', 'Button 1 should be hidden for block 1');
-    assert.equal(mockButtons[1].style.display, 'none', 'Button 2 should be hidden for block 1');
-    assert.equal(mockButtons[2].style.display, 'inline-flex', 'Button 3 should be visible for block 1');
+    assert.equal(mockButtons[0].hidden, true, 'Button 1 should be hidden for block 1');
+    assert.equal(mockButtons[1].hidden, true, 'Button 2 should be hidden for block 1');
+    assert.equal(mockButtons[2].hidden, false, 'Button 3 should be visible for block 1');
     assert.equal(qnavSummaryMock.textContent, '1 câu', 'Summary should show 1 câu for block 1');
   } finally {
     // cleanup

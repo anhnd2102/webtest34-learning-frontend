@@ -221,7 +221,7 @@ function openCandidateSimulationModal() {
               <div class="candidate-pictorial-card">
                 ${imgSrc ? `
                   <div class="candidate-pictorial-thumb">
-                    <img src="${escapeHtml(imgSrc)}" alt="Câu ${item.position}" onerror="this.parentElement.style.display='none'" />
+                    <img src="${escapeHtml(imgSrc)}" alt="Câu ${item.position}" onerror="this.parentElement.hidden = true" />
                   </div>
                 ` : ''}
                 <div class="candidate-pictorial-hints">
@@ -444,7 +444,7 @@ function openCandidateSimulationModal() {
                       </div>
                       ${imgSrc ? `
                         <div class="candidate-pictorial-thumb">
-                          <img src="${escapeHtml(imgSrc)}" alt="Câu ${item.position}" onerror="this.parentElement.style.display='none'" />
+                          <img src="${escapeHtml(imgSrc)}" alt="Câu ${item.position}" onerror="this.parentElement.hidden = true" />
                         </div>
                       ` : ''}
                       <div class="candidate-pictorial-hints">
@@ -803,7 +803,7 @@ function openCandidateSimulationModal() {
           </footer>
 
           <!-- Simulation Results Modal -->
-          <div class="simulation-results-modal" id="simulation-results-modal">
+          <div class="simulation-results-modal" id="simulation-results-modal" hidden>
             <div class="sim-results-dialog">
               <header class="sim-results-header">
                 <div class="sim-results-title-wrap">
@@ -822,7 +822,7 @@ function openCandidateSimulationModal() {
         </div>
       `;
 
-      modal.style.display = 'flex';
+      modal.hidden = false;
       initStrictCandidateAudioDocks(modal);
       const pronunciationAudio = initSimulationPronunciationAudio(modal);
       registerBuilderModalCleanup(modal, () => pronunciationAudio.dispose());
@@ -831,7 +831,7 @@ function openCandidateSimulationModal() {
       closeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           pronunciationAudio.stop();
-          modal.style.display = 'none';
+          modal.hidden = true;
         });
       });
 
@@ -842,9 +842,7 @@ function openCandidateSimulationModal() {
         qnavBtns.forEach(btn => {
           const btnSection = btn.getAttribute ? btn.getAttribute('data-section-target') : null;
           const isMatch = !targetSectionId || btnSection === targetSectionId;
-          if (btn.style) {
-            btn.style.display = isMatch ? 'inline-flex' : 'none';
-          }
+          btn.hidden = !isMatch;
           if (isMatch) visibleCount++;
         });
         const summaryEl = modal.querySelector('#qnav-summary');
@@ -1225,7 +1223,7 @@ function openCandidateSimulationModal() {
                 </table>
               </div>
             `;
-            resultsModal.style.display = 'flex';
+            resultsModal.hidden = false;
           }
         });
       }
@@ -1235,7 +1233,7 @@ function openCandidateSimulationModal() {
       closeResultsBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           const resModal = modal.querySelector('#simulation-results-modal');
-          if (resModal) resModal.style.display = 'none';
+          if (resModal) resModal.hidden = true;
         });
       });
 
