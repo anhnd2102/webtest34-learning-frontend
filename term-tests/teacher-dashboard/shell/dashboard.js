@@ -1,15 +1,14 @@
+import { createLifecycle } from './lifecycle.js';
+import { createQueryCoordinator } from './query-coordinator.js';
 import { createResultsView } from '../results/view.js';
 import { createAttemptReview } from '../grading/attempt-review.js';
 import { createExamRoomView } from '../exam-room/view.js';
-import { createLifecycle } from './lifecycle.js';
-import { createQueryCoordinator } from './query-coordinator.js';
 
-import { defaultApiBase, authLoginPath, authLogoutPath, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, attemptDetailPath, assignmentRosterPath, eligibleStudentsPath } from '../api/teacher.js';
+import { defaultApiBase, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, attemptDetailPath } from '../api/teacher.js';
 
 import { ICONS } from '../ui/icons.js';
-import { localStudentUrl, readDashboardState, readDashboardTab, switchDashboardTab, assignmentUrl, resetDashboardState, extractPhase, formatAssignmentMeta, renderAssignmentChipsView } from './dashboard-state.js';
+import { localStudentUrl, readDashboardState, readDashboardTab, assignmentUrl, extractPhase, formatAssignmentMeta } from './dashboard-state.js';
 import { downloadResultsXlsx } from '../results/export.js';
-import { hasActiveUnsavedChanges, clearActiveUnsavedChanges, openUnsavedChangesModal } from '../navigation/unsaved-changes.js';
 import { renderTestBuilderView } from '../studio/builder.js';
 
 import { createPortalPanel } from './portal-panel.js';
@@ -23,6 +22,8 @@ import { createClassDirectory } from './class-directory.js';
 import { createExamRoomActions } from './exam-room-actions.js';
 import { createAuthSession } from './auth-session.js';
 import { createAddStudent } from './add-student.js';
+import { createNavigation } from './navigation.js';
+import { createAssignmentSelection } from './assignment-selection.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -77,6 +78,12 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     get currentSelectedAssignment() { return currentSelectedAssignment; }, set currentSelectedAssignment(value) { currentSelectedAssignment = value; },
     get currentServerNow() { return currentServerNow; }, set currentServerNow(value) { currentServerNow = value; },
     get isSwitchingAssignment() { return isSwitchingAssignment; }, set isSwitchingAssignment(value) { isSwitchingAssignment = value; }
+  };
+  //  - navState: tab báo cáo đang mở và cờ chống vòng lặp hash khi điều hướng bằng mã.
+  const navState = {
+    get currentAssessmentTab() { return currentAssessmentTab; }, set currentAssessmentTab(value) { currentAssessmentTab = value; },
+    get isNavigatingProgrammatically() { return isNavigatingProgrammatically; }, set isNavigatingProgrammatically(value) { isNavigatingProgrammatically = value; },
+    get previousHash() { return previousHash; }, set previousHash(value) { previousHash = value; }
   };
   const examRoomState = {
     get examRoomSession() { return examRoomSession; }, set examRoomSession(value) { examRoomSession = value; },
@@ -156,6 +163,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const assessmentTabItems = root.querySelector('#assessment-tab-items');
   const assessmentTabBtns = Array.from(root.querySelectorAll('.assessment-tab-btn'));
   let currentAssessmentTab = 'details';
+  let isNavigatingProgrammatically = false;
+  let previousHash = (typeof window !== 'undefined' ? window.location?.hash : '') || '#dashboard';
   let currentResultsPayload = null;
   let currentAssignmentsList = [];
   let currentServerNow = null;
@@ -178,302 +187,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     return activeBuilder;
   }
 
-  function syncAssessmentHeaderMeta() {
-    if (assessmentClassName) {
-      const cls = rawClassesList.find(c => String(c.classId) === String(state.classId));
-      assessmentClassName.textContent = cls?.name || currentSelectedAssignment?.className || (state.classId ? `Lớp ${state.classId}` : '—');
-    }
-    if (assessmentTestTitle) {
-      assessmentTestTitle.textContent = currentSelectedAssignment?.title || 'Bài kiểm tra';
-    }
-    if (assessmentStatusBadge) {
-      const st = currentSelectedAssignment?.status;
-      assessmentStatusBadge.textContent = st === 'published' ? 'Đang phát hành' : (st === 'closed' ? 'Đã đóng' : (st || 'Đang mở'));
-    }
-  }
 
-  function switchAssessmentTab(targetTab) {
-    currentAssessmentTab = targetTab || 'details';
-    assessmentTabBtns.forEach(btn => {
-      const isMatch = btn.getAttribute('data-assessment-tab') === currentAssessmentTab;
-      btn.classList.toggle('active', isMatch);
-      btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
-    });
-
-    if (assessmentTabDistribution) {
-      assessmentTabDistribution.hidden = currentAssessmentTab !== 'distribution';
-    }
-    if (results) {
-      results.hidden = currentAssessmentTab !== 'details';
-    }
-    if (assessmentTabItems) {
-      assessmentTabItems.hidden = currentAssessmentTab !== 'items';
-    }
-
-    if (currentAssessmentTab === 'distribution') {
-      getReportState().mode = 'distribution';
-      if (!getReportState().reportData && !getReportState().isLoading) {
-        loadScoreDistributionReport();
-      } else {
-        renderReportsView();
-      }
-    } else if (currentAssessmentTab === 'details') {
-      if (!currentResultsPayload && state.classId && state.assignmentId) {
-        loadResults(state.classId, state.assignmentId).catch(err => {
-          if (status) status.textContent = err.message;
-        });
-      }
-    } else if (currentAssessmentTab === 'items') {
-      getReportState().mode = 'item_analysis';
-      if (!getReportState().itemAnalysisData && !getReportState().itemAnalysisLoading) {
-        loadItemAnalysisReport();
-      } else {
-        renderReportsView();
-      }
-    }
-  }
-
-  function updateDashboardTab(tabId) {
-    const activeTab = switchDashboardTab(tabId, {
-      views: {
-        dashboard: viewDashboard,
-        grading: viewGrading,
-        exams: viewExams,
-        reports: viewReports
-      },
-      navItems,
-      onTabChange: (newTab) => {
-        if (newTab !== 'test-studio' && newTab !== 'exams') {
-          disposeOwnedBuilder();
-          queryCoordinator.cancel('testStudio');
-          queryCoordinator.cancel('testStudioBuilder');
-        }
-        if (newTab !== 'reports' && newTab !== 'grading') {
-          cancelAssessmentQueries();
-        }
-        if (pageTitleBar) {
-          pageTitleBar.hidden = newTab !== 'dashboard';
-        }
-        if (newTab === 'grading') {
-          if (state.assignmentId && state.classId) {
-            if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = true;
-            if (assessmentHeader) assessmentHeader.hidden = false;
-            syncAssessmentHeaderMeta();
-            switchAssessmentTab(currentAssessmentTab || 'details');
-          } else {
-            if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
-            if (assessmentHeader) assessmentHeader.hidden = true;
-            if (results) results.hidden = true;
-            if (assessmentTabDistribution) assessmentTabDistribution.hidden = true;
-            if (assessmentTabItems) assessmentTabItems.hidden = true;
-          }
-        }
-        if (newTab === 'test-studio' || newTab === 'exams') {
-          loadAndRenderTestStudio();
-        }
-        if (newTab === 'reports') {
-          if (getReportState().mode === 'item_analysis') {
-            loadItemAnalysisReport();
-          } else {
-            loadScoreDistributionReport();
-          }
-        }
-      }
-    });
-    return activeTab;
-  }
-
-
-  let isNavigatingProgrammatically = false;
-  let previousHash = (typeof window !== 'undefined' ? window.location?.hash : '') || '#dashboard';
-
-  navItems.forEach(item => {
-    lifecycle.listen(item, 'click', (e) => {
-      e.preventDefault();
-      const href = item.getAttribute('href') || '#dashboard';
-      const cleanTab = readDashboardTab(href);
-      const targetHash = '#' + cleanTab;
-
-      if (hasActiveUnsavedChanges()) {
-        openUnsavedChangesModal({
-          onDiscard: () => {
-            clearActiveUnsavedChanges();
-            isNavigatingProgrammatically = true;
-            if (window.location.hash !== targetHash) {
-              window.location.hash = targetHash;
-            }
-            previousHash = targetHash;
-            updateDashboardTab(cleanTab);
-          },
-          onStay: () => {
-            // User chooses to stay
-          }
-        });
-        return;
-      }
-
-      if (window.location.hash !== targetHash) {
-        window.location.hash = targetHash;
-      }
-      previousHash = targetHash;
-      updateDashboardTab(cleanTab);
-    });
-  });
-
-  lifecycle.listen(window, 'hashchange', () => {
-    if (isNavigatingProgrammatically) {
-      isNavigatingProgrammatically = false;
-      previousHash = window.location.hash;
-      return;
-    }
-    const newHash = window.location.hash;
-    if (hasActiveUnsavedChanges()) {
-      openUnsavedChangesModal({
-        onDiscard: () => {
-          clearActiveUnsavedChanges();
-          previousHash = newHash;
-          updateDashboardTab(newHash);
-        },
-        onStay: () => {
-          isNavigatingProgrammatically = true;
-          window.location.hash = previousHash;
-        }
-      });
-      return;
-    }
-    previousHash = newHash;
-    updateDashboardTab(newHash);
-  });
-
-  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-    lifecycle.listen(window, 'beforeunload', (e) => {
-      if (hasActiveUnsavedChanges()) {
-        e.preventDefault();
-        e.returnValue = '';
-        return '';
-      }
-    });
-  }
-
-  if (goToGradingBtn) {
-    lifecycle.listen(goToGradingBtn, 'click', (e) => {
-      e.preventDefault();
-      if (hasActiveUnsavedChanges()) {
-        openUnsavedChangesModal({
-          onDiscard: () => {
-            clearActiveUnsavedChanges();
-            isNavigatingProgrammatically = true;
-            window.location.hash = '#grading';
-            previousHash = '#grading';
-            updateDashboardTab('grading');
-          }
-        });
-        return;
-      }
-      window.location.hash = '#grading';
-      previousHash = '#grading';
-      updateDashboardTab('grading');
-    });
-  }
-
-  if (assessmentBackBtn) {
-    lifecycle.listen(assessmentBackBtn, 'click', () => {
-      updateDashboardTab('dashboard');
-      if (typeof window !== 'undefined') window.location.hash = '#dashboard';
-    });
-  }
-
-  assessmentTabBtns.forEach(btn => {
-    lifecycle.listen(btn, 'click', () => {
-      const tab = btn.getAttribute('data-assessment-tab');
-      if (tab) switchAssessmentTab(tab);
-    });
-  });
-
-  if (gradingBackToDashboardBtn) {
-    lifecycle.listen(gradingBackToDashboardBtn, 'click', (e) => {
-      e.preventDefault();
-      if (hasActiveUnsavedChanges()) {
-        openUnsavedChangesModal({
-          onDiscard: () => {
-            clearActiveUnsavedChanges();
-            isNavigatingProgrammatically = true;
-            window.location.hash = '#dashboard';
-            previousHash = '#dashboard';
-            updateDashboardTab('dashboard');
-          }
-        });
-        return;
-      }
-      window.location.hash = '#dashboard';
-      previousHash = '#dashboard';
-      updateDashboardTab('dashboard');
-    });
-  }
-
-  function renderAssignmentChips(targetAssignmentId = state.assignmentId) {
-    renderAssignmentChipsView(assignments, {
-      assignmentsList: currentAssignmentsList,
-      selectedAssignmentId: targetAssignmentId,
-      isSwitching: isSwitchingAssignment,
-      onSelect: (assignmentId) => {
-        selectAssignment(assignmentId);
-      },
-      onToggleSwitch: (switching) => {
-        isSwitchingAssignment = switching;
-        renderAssignmentChips(state.assignmentId);
-      }
-    });
-  }
-
-  function selectAssignment(assignmentId) {
-    queryCoordinator.cancel('attemptDetail');
-    cancelAssessmentQueries();
-    getReportState().reportData = null;
-    getReportState().itemAnalysisData = null;
-    getReportState().expandedItemIds.clear();
-    state.assignmentId = assignmentId || '';
-    state.attemptId = '';
-    state.page = 1;
-    setUrl();
-    if (assignmentSelect) assignmentSelect.value = assignmentId || '';
-    isSwitchingAssignment = false;
-    renderAssignmentChips(assignmentId);
-
-    const currentTab = readDashboardTab(window.location.hash);
-    if (currentTab === 'grading') {
-      if (assignmentId && state.classId) {
-        if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = true;
-        if (assessmentHeader) assessmentHeader.hidden = false;
-        syncAssessmentHeaderMeta();
-        switchAssessmentTab(currentAssessmentTab || 'details');
-      } else {
-        if (results) results.hidden = true;
-        if (assessmentTabDistribution) assessmentTabDistribution.hidden = true;
-        if (assessmentTabItems) assessmentTabItems.hidden = true;
-        if (gradingEmptyPlaceholder) gradingEmptyPlaceholder.hidden = false;
-        if (assessmentHeader) assessmentHeader.hidden = true;
-      }
-    }
-    if (currentTab === 'reports') {
-      if (getReportState().mode === 'item_analysis') {
-        loadItemAnalysisReport();
-      } else {
-        loadScoreDistributionReport();
-      }
-    }
-
-    if (assignmentId) {
-      const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === assignmentId);
-      renderSelectedAssignmentShowcase(activeAssignment);
-      if (state.classId) {
-        loadResults(state.classId, assignmentId).catch(error => { status.textContent = error.message; });
-      }
-    } else {
-      renderSelectedAssignmentShowcase(null);
-      loadResults('', '').catch(() => {});
-    }
-  }
 
   const addStudentBtn = root.querySelector('#add-student-btn');
   const addStudentModal = root.querySelector('#add-student-modal');
@@ -835,7 +549,9 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
-  const { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView } = createReports({ root, queryCoordinator, authState, document, window, status, viewReports, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab, statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange });
+  const { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView } = createReports({ root, queryCoordinator, authState, document, window, status, viewReports, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab: (...args) => switchAssessmentTab(...args), statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange });
+  const { syncAssessmentHeaderMeta, switchAssessmentTab, updateDashboardTab } = createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, viewReports, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView });
+  const { renderAssignmentChips, selectAssignment } = createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, syncAssessmentHeaderMeta, switchAssessmentTab });
 
   async function loadAssignments(classId, selectedAssignmentId = '') {
     const query = queryCoordinator?.begin?.('assignments');

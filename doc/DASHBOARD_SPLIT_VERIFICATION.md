@@ -28,6 +28,8 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 | `exam-room-actions.js` | phòng thi: timeline sự cố, tải phòng, phiên SSE, 4 nút | `fillIncidentTimeline`, `showExamRoomTimeline`, `loadExamRoom`, `stopExamRoomEvents` |
 | `add-student.js` | modal và form thêm học viên vào danh sách làm bài | `createAddStudent` (không trả giá trị) |
 | `auth-session.js` | đăng nhập, đăng xuất, hiện/ẩn mật khẩu | `handleLogout` (truyền cho cụm phòng thi qua wrapper lazy) |
+| `navigation.js` | tab dashboard, tab báo cáo, hash, cảnh báo thay đổi chưa lưu | `syncAssessmentHeaderMeta`, `switchAssessmentTab`, `updateDashboardTab` (owner `navState`) |
+| `assignment-selection.js` | chip và chọn bài được giao | `renderAssignmentChips`, `selectAssignment` |
 | `class-directory.js` | lọc, danh sách và tải lớp | `loadClasses`, `renderFilteredClasses`, `setupClassFilterToolbar`, `updateFilterPillsUI` |
 
 ## An toàn
