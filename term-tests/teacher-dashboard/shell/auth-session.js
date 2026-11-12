@@ -1,7 +1,7 @@
 import { authLoginPath, authLogoutPath } from '../api/teacher.js';
 import { resetDashboardState } from './dashboard-state.js';
 
-export function createAuthSession({ authHeader, lifecycle, queryCoordinator, authState, scopeState, document, classFilterToolbar, classSearchInput, classStatusFilter, classCountBadge, classSelect, assignmentSelect, selectedAssignmentCard, examRoom, assignments, results, resultsContent, status, classSkillSummary, disposeOwnedBuilder, searchInput, statusFilter, skillFilter, minScoreInput, maxScoreInput, sortBySelect, sortDirSelect, attemptDetail, drawerBackdrop, detailScores, detailAttemptHistory, detailItemsBody, state, loginForm, loginBtn, loginEmail, loginPhone, togglePasswordBtn, loginError, teacherProfile, roleCapabilitiesPopover, logoutBtn, apiBase, stopExamRoomEvents, resetPortal, setUrl, loadClasses, renderTeacherProfile }) {
+export function createAuthSession({ lifecycle, queryCoordinator, authState, scopeState, document, classFilterToolbar, classSearchInput, classStatusFilter, classCountBadge, classSelect, assignmentSelect, selectedAssignmentCard, examRoom, assignments, results, resultsContent, status, classSkillSummary, disposeOwnedBuilder, searchInput, statusFilter, skillFilter, minScoreInput, maxScoreInput, sortBySelect, sortDirSelect, attemptDetail, drawerBackdrop, detailScores, detailAttemptHistory, detailItemsBody, state, loginForm, loginBtn, loginEmail, loginPhone, togglePasswordBtn, loginError, teacherProfile, roleCapabilitiesPopover, logoutBtn, request, stopExamRoomEvents, resetPortal, setUrl, loadClasses, renderTeacherProfile }) {
   function handleLogout() {
     disposeOwnedBuilder();
     for (const scope of ['sessionRestore', 'classes', 'assignments', 'results', 'attemptDetail', 'testStudio', 'testStudioBuilder', 'examRoom', 'examRoomTimeline', 'reports', 'itemAnalysis']) {
@@ -98,15 +98,13 @@ export function createAuthSession({ authHeader, lifecycle, queryCoordinator, aut
       loginForm.setAttribute('aria-busy', 'true');
       try {
         if (status) status.textContent = 'Đang xác thực tài khoản…';
-        const response = await fetch(`${apiBase()}${authLoginPath()}`, {
+        const payload = await request(authLoginPath(), {
           method: 'POST',
+          anonymous: true,
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, phone })
+          body: JSON.stringify({ email, phone }),
+          errorMessage: 'Email hoặc số điện thoại không chính xác.'
         });
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload.message || 'Email hoặc số điện thoại không chính xác.');
-        }
 
         authState.sessionToken = payload.token;
         if (typeof sessionStorage !== 'undefined') {
@@ -135,10 +133,7 @@ export function createAuthSession({ authHeader, lifecycle, queryCoordinator, aut
       stopExamRoomEvents();
       try {
         if (authState.sessionToken) {
-          await fetch(`${apiBase()}${authLogoutPath()}`, {
-            method: 'POST',
-            headers: { ...authHeader() }
-          }).catch(() => {});
+          await request(authLogoutPath(), { method: 'POST', handleUnauthorized: false }).catch(() => {});
         }
       } finally {
         handleLogout();

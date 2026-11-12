@@ -523,7 +523,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   const { renderTeacherProfile, toggleRoleCapabilitiesPopover } = createProfilePanel({ root, lifecycle, authState, document, window, loadAndRenderTestStudio, loginForm, loginError, teacherProfile, teacherProfileName, teacherProfileMeta, teacherRoleBadge, roleBadgeWrap, roleInfoBtn, roleCapabilitiesPopover, closeRolePopoverBtn, setupClassFilterToolbar });
 
-  const { handleLogout } = createAuthSession({ authHeader, lifecycle, queryCoordinator, authState, scopeState, document, classFilterToolbar, classSearchInput, classStatusFilter, classCountBadge, classSelect, assignmentSelect, selectedAssignmentCard, examRoom, assignments, results, resultsContent, status, classSkillSummary, disposeOwnedBuilder, searchInput, statusFilter, skillFilter, minScoreInput, maxScoreInput, sortBySelect, sortDirSelect, attemptDetail, drawerBackdrop, detailScores, detailAttemptHistory, detailItemsBody, state, loginForm, loginBtn, loginEmail, loginPhone, togglePasswordBtn, loginError, teacherProfile, roleCapabilitiesPopover, logoutBtn, apiBase, stopExamRoomEvents, resetPortal, setUrl, loadClasses, renderTeacherProfile });
+  const { handleLogout } = createAuthSession({ lifecycle, queryCoordinator, authState, scopeState, document, classFilterToolbar, classSearchInput, classStatusFilter, classCountBadge, classSelect, assignmentSelect, selectedAssignmentCard, examRoom, assignments, results, resultsContent, status, classSkillSummary, disposeOwnedBuilder, searchInput, statusFilter, skillFilter, minScoreInput, maxScoreInput, sortBySelect, sortDirSelect, attemptDetail, drawerBackdrop, detailScores, detailAttemptHistory, detailItemsBody, state, loginForm, loginBtn, loginEmail, loginPhone, togglePasswordBtn, loginError, teacherProfile, roleCapabilitiesPopover, logoutBtn, request, stopExamRoomEvents, resetPortal, setUrl, loadClasses, renderTeacherProfile });
 
   if (toggleFixtureBtn && form) {
     lifecycle.listen(toggleFixtureBtn, 'click', () => {
@@ -542,19 +542,23 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       }
     }
     const restoreQuery = queryCoordinator.begin('sessionRestore');
-    fetch(`${apiBase()}${authMePath()}`, { headers: { ...authHeader() }, signal: restoreQuery.signal })
-      .then(async res => {
-        if (!restoreQuery.isCurrent()) return;
-        if (res.ok) {
-          const data = await res.json();
-          if (!restoreQuery.isCurrent()) return;
-          renderTeacherProfile(data.teacher);
-          await loadClasses();
-        } else {
-          handleLogout();
-        }
-      })
-      .catch(() => {});
+    (async () => {
+      let data;
+      try {
+        data = await request(authMePath(), { signal: restoreQuery.signal, handleUnauthorized: false });
+      } catch (error) {
+        // Phản hồi lỗi HTTP (kể cả 401) nghĩa là phiên không còn hợp lệ; lỗi mạng hoặc bị hủy thì bỏ qua.
+        if (restoreQuery.isCurrent() && error.status) handleLogout();
+        return;
+      }
+      if (!restoreQuery.isCurrent()) return;
+      try {
+        renderTeacherProfile(data.teacher);
+        await loadClasses();
+      } catch {
+        // lỗi hiển thị/tải lớp không làm mất phiên
+      }
+    })();
   }
 
   lifecycle.listen(form, 'submit', event => {

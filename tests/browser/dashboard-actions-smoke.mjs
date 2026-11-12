@@ -27,6 +27,7 @@ try {
   const results = [];
   const dialogs = [];
   let rosterMode = 'error';
+  let meMode = 'ok';
   page.on('pageerror', error => errors.push(error.message));
   page.on('dialog', dialog => { dialogs.push(dialog.message()); dialog.accept(); });
   await page.addInitScript(() => {
@@ -47,7 +48,8 @@ try {
       let status = 200;
       let payload = {};
       if (method !== 'GET') calls.push({ method, path, auth: request.headers().authorization || '', body: request.postData() ? JSON.parse(request.postData()) : null });
-      if (path.endsWith('/auth/me')) payload = { teacher: { name: 'Synthetic teacher', role: 'admin', courseCodes: ['34'] } };
+      if (path.endsWith('/auth/me') && meMode === 'expired') { status = 401; payload = { message: 'Synthetic expired session' }; }
+      else if (path.endsWith('/auth/me')) payload = { teacher: { name: 'Synthetic teacher', role: 'admin', courseCodes: ['34'] } };
       else if (path.endsWith('/auth/logout')) payload = { ok: true };
       else if (path.endsWith('/auth/login')) payload = { token: 'synthetic-login-token', teacher: { name: 'Synthetic teacher', role: 'admin', courseCodes: ['34'] } };
       else if (path.endsWith('/classes')) payload = { classes: [{ classId: '101', name: 'Synthetic class', courseCode: '34', status: 'on_going' }] };
@@ -138,6 +140,13 @@ try {
   assert.equal(loginCalls.length, 1);
   assert.deepEqual(loginCalls[0].body, { email: 'teacher@example.test', phone: '0900000000' });
   await page.waitForFunction(() => document.querySelectorAll('#class-select option').length > 1);
+
+  // Khôi phục phiên: token còn nhưng /auth/me trả 401 thì đăng xuất âm thầm (không báo lỗi phiên) và xóa token
+  meMode = 'expired';
+  await page.evaluate(() => sessionStorage.setItem('izone_teacher_token', 'synthetic-expired-token'));
+  await page.reload();
+  await page.waitForFunction(() => document.body.classList.contains('login-page') && sessionStorage.getItem('izone_teacher_token') === null);
+  assert.ok(await page.locator('#login-error').isHidden(), 'khôi phục phiên thất bại không hiện lỗi phiên');
 
   assert.equal(errors.length, 0, errors.join('\n'));
   process.stdout.write(JSON.stringify({ status: 'passed', writes: calls.map(call => `${call.method} ${call.path.split('/').slice(-1)[0]}`), errors: 0 }) + '\n');
