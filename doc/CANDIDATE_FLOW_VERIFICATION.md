@@ -133,3 +133,14 @@ Kiểm tra đột biến (bị bắt, đã hoàn nguyên): bỏ tạm dừng bà
 **Tải lại trang làm mất khóa "chỉ nghe một lần".** Shell thật giữ số lượt nghe và trạng thái mở khóa trong bộ nhớ trang; không gọi `/attempts/audio/checkpoint` hay `/attempts/audio/resume` (chỉ đường prototype đã gỡ gọi hai điểm cuối này). Smoke nghe hết bài A, tải lại trang, vào lại lượt: bài A lại còn 1 lượt nghe (`knownGaps.audioListenLockSurvivesReload: false`, 0 lời gọi checkpoint/resume). Hệ quả: học viên có thể nghe lại bằng cách tải lại. Backend có sẵn hai điểm cuối; sửa cần nối chúng vào khối nghe và quyết định hành vi mong muốn (khóa theo máy chủ hay chỉ trình duyệt). Chưa kiểm hành vi backend thật.
 
 Điều kiện tiên quyết cho `renderExamInterface` đã đủ: ngoài smoke luồng học viên, Exam Mode, lối vào/xem kết quả, nay có smoke âm thanh.
+
+### Đợt tách 4: `renderExamInterface` (13/11/2026)
+
+`content-preview.mjs` còn 855 dòng (từ 2.468). Ba khối của `renderExamInterface` chuyển nguyên văn sang `candidate/`:
+- `exam-timer.js` (`createExamTimer`): đếm ngược, tự bấm xác nhận nộp khi hết giờ; trả `display` và `stop()`.
+- `draft-sync.js` (`createDraftSync`): gom và gửi bản nháp (debounce 1,5 giây, thử lại sau 15 giây khi lỗi tạm thời), trạng thái lưu; trả `queueServerDraft`, `persist`, `clearDraftTimer()`.
+- `submit-flow.js` (`createSubmitFlow`): hộp thoại nộp, nộp lên máy chủ, hộp kết quả, `renderAiResultCard`, `pollLearningResult`, tự nộp do Tự giám sát; trả `pollLearningResult`.
+Thay đổi văn bản duy nhất trong các khối: `examTimerInterval` → `examTimer.stop()` (2 chỗ) và `draftDebounceTimer` → `clearDraftTimer()` (1 chỗ), vì hai biến `let` nay nằm trong module khác.
+- Thứ tự khởi tạo giữ nguyên (đồng hồ → nháp → nộp); trước đó các hàm này chỉ chạy sau khi giao diện dựng xong nên việc chuyển từ khai báo hàm (hoisting) sang `const` tại đúng vị trí cũ an toàn, và smoke xác nhận.
+- Kiểm chứng: `npm test` 693/693; `candidate-flow` (nháp, nộp, hết giờ), `candidate-exam-mode`, `candidate-entry-review`, `candidate-audio`, `candidate-mobile` và `candidate-css-audit` (hộp xác nhận, sau nộp ở 5 viewport) pass.
+- Phần còn lại của `renderExamInterface` (~470 dòng): dựng giao diện động, cỡ chữ, `update()` (tiến độ), đường xem thử tĩnh. Không tách thêm ở đợt này vì phần còn lại chủ yếu là dựng DOM gắn chặt với nhau và đã giảm dưới 1.000 dòng.
