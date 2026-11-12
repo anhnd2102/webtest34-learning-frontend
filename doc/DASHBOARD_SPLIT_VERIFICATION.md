@@ -74,3 +74,12 @@ Chưa phủ: công bố toàn bộ, chuyển tab báo cáo, chấm nháp/hoàn t
 Chrome thật, API giả, 1440×900. Chạy: `node tests/browser/dashboard-grading-smoke.mjs`. Kiểm: mở bài làm; chấm nháp gặp xung đột 409 (hiện cảnh báo, không gửi lại) rồi lưu thành công (body có `baseRevision` và điểm, có Bearer); hoàn tất chấm (một POST, tải lại chi tiết); công bố một bài (một POST); công bố toàn bộ đường batch (một POST, không công bố từng bài) và đường dự phòng khi batch trả 404 (công bố từng bài đã nộp đúng một lần, nút được bật lại); chuyển ba tab báo cáo (phổ điểm, phân tích câu hỏi, chi tiết) và quay lại tab đã tải không gọi lại API.
 Kiểm tra đột biến: đổi điều kiện `err.status === 409` của chấm nháp thì smoke lỗi; đã hoàn nguyên.
 Quan sát: sau khi hoàn tất chấm, bấm công bố làm ô điểm mất focus và kích hoạt thêm một lần lưu nháp tự động (hành vi có sẵn, không đổi).
+
+## Thống nhất client cho nhóm fetch còn lại (12/11/2026)
+
+- `api/client.js` (`createApiRequest`) là nơi duy nhất gắn auth, parse JSON, xử lý 401 và chuẩn hóa lỗi; `dashboard.js` dùng nó thay cho hàm `request` nội tuyến. Tùy chọn mới: `anonymous` (không auth, 401 không phải hết phiên: đăng nhập) và `handleUnauthorized: false` (đăng xuất, khôi phục phiên).
+- Khôi phục phiên: lỗi HTTP từ `/auth/me` (kể cả 401) đăng xuất âm thầm như trước; lỗi mạng hoặc bị hủy bị bỏ qua; lỗi khi hiển thị hồ sơ/tải lớp không làm mất phiên (ban đầu viết gộp sẽ đăng xuất nhầm khi tải lớp lỗi 500, đã tách).
+- **Lỗi thật được sửa — chấm thử AI trong production không gửi token:** `studio-view.js` không truyền `onPreviewSandbox`, nên `sandbox-actions.js` rơi vào `fetch` dự phòng với `options.apiBase`/`options.authToken` đều undefined: gọi đường dẫn tương đối của chính trang (không phải API) và không có `Authorization`. Smoke `builder-media-smoke` thêm khẳng định `Bearer` và lỗi (`actual: `) trước khi sửa; nay `studio-view.js` truyền `onPreviewSandbox` qua `request`.
+- Đã bỏ các nhánh `fetch` dự phòng trong `sandbox-actions.js` và `publishing.js` (xem trước/công bố vốn luôn được truyền callback). Thiếu callback thì báo lỗi rõ ("chưa được cấu hình") thay vì gọi ngầm không auth.
+- Còn `fetch` trực tiếp: chỉ luồng SSE phòng thi (stream, Bearer riêng, kiểm bởi `exam-room-lifecycle-smoke`) và bản thân `api/client.js`.
+- Kiểm chứng: `npm test` 713/713; chín smoke trình duyệt pass; kiểm tra đột biến: bỏ đăng xuất âm thầm khi khôi phục phiên lỗi thì smoke lỗi (đã hoàn nguyên).

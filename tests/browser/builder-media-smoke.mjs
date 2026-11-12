@@ -45,6 +45,7 @@ try {
   page.setDefaultTimeout(10000);
   const errors = [];
   const sandboxCalls = [];
+  const sandboxAuth = [];
   const alerts = [];
   const confirms = [];
   let acceptConfirm = true;
@@ -66,7 +67,7 @@ try {
       else if (path.endsWith('/course-test-catalog')) payload = { catalog: [{ testKey: 'form-a', formVersionId: 'form-a', title: 'Synthetic form-a', status: 'draft', sessionNumber: 1, phase: 'phase_1' }] };
       else if (request.method() === 'PUT' && path.includes('/forms/draft/')) { saves.push(request.postDataJSON()); payload = { version: 2, formVersionId: 'form-a' }; }
       else if (path.includes('/forms/form-')) payload = { formVersion: form('form-a') };
-      else if (path.endsWith('/preview-sandbox') || path.includes('sandbox')) { sandboxCalls.push(request.postDataJSON()); payload = { ok: true, scoreEarned: 3, maxScore: 4, criteria: [{ id: 'content', score: 2, maxScore: 2 }, { id: 'grammar', score: 1, maxScore: 2 }], errors: [] }; }
+      else if (path.endsWith('/preview-sandbox') || path.includes('sandbox')) { sandboxCalls.push(request.postDataJSON()); sandboxAuth.push(request.headers().authorization || ''); payload = { ok: true, scoreEarned: 3, maxScore: 4, criteria: [{ id: 'content', score: 2, maxScore: 2 }, { id: 'grammar', score: 1, maxScore: 2 }], errors: [] }; }
       else if (path.endsWith('/portal-tests')) payload = { tests: [] };
       else { errors.push(`Unexpected API fixture path ${request.method()} ${path}`); status = 404; }
       return route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(payload) });
@@ -181,6 +182,7 @@ try {
   await page.waitForFunction(() => /3 \/ 4/.test(document.querySelector('.sandbox-results-container')?.textContent || ''));
   assert.equal(sandboxCalls.length, 1, 'mỗi lần chấm thử đúng một request');
   assert.equal(sandboxCalls[0].sampleAnswer, 'Synthetic sample answer');
+  assert.equal(sandboxAuth[0], 'Bearer synthetic-builder-token', 'chấm thử AI gửi kèm token phiên giáo viên');
   assert.equal(await page.locator('.btn-trigger-sandbox').first().isEnabled(), true, 'nút được bật lại sau khi chấm');
   // Lấy kịch bản cloze (tách riêng để cờ dirty không bị bật bởi thao tác trước)
   await reopen();

@@ -1,4 +1,3 @@
-import { previewSandboxPath } from '../api/teacher.js';
 import { renderSvgIcon } from '../ui/icons.js';
 import { escapeHtml } from '../ui/presentation.js';
 
@@ -35,34 +34,18 @@ export function bindSandboxActions({ container, draftState, render, syncInputs, 
         try {
           const parentEx = draftState.blocks[bIdx]?.exercises?.find(e => e.exerciseId === item.exerciseId);
           const referenceContext = item.referenceContext || parentEx?.referenceContext || draftState.blocks[bIdx]?.readingPassage || draftState.blocks[bIdx]?.stimulusReadingPassage || draftState.blocks[bIdx]?.referenceContext || '';
-          let sandboxResult;
-          if (typeof options.onPreviewSandbox === 'function') {
-            sandboxResult = await options.onPreviewSandbox({
-              prompt: item.prompt,
-              context: referenceContext,
-              sampleAnswer,
-              interactionType: item.interactionType,
-              pedagogicalTypeCode: item.pedagogicalTypeCode,
-              rubric: currentKey.rubric
-            });
-          } else {
-            const apiRes = await fetch(previewSandboxPath(options.apiBase), {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {})
-              },
-              body: JSON.stringify({
-                prompt: item.prompt,
-                context: referenceContext,
-                sampleAnswer,
-                interactionType: item.interactionType,
-                pedagogicalTypeCode: item.pedagogicalTypeCode,
-                rubric: currentKey.rubric
-              })
-            });
-            sandboxResult = await apiRes.json();
+          if (typeof options.onPreviewSandbox !== 'function') {
+            throw new Error('Chấm thử AI chưa được cấu hình.');
           }
+          // Gọi qua client dùng chung của dashboard (gắn token phiên, xử lý 401), không fetch trực tiếp.
+          const sandboxResult = await options.onPreviewSandbox({
+            prompt: item.prompt,
+            context: referenceContext,
+            sampleAnswer,
+            interactionType: item.interactionType,
+            pedagogicalTypeCode: item.pedagogicalTypeCode,
+            rubric: currentKey.rubric
+          });
 
           if (!sandboxResult || !sandboxResult.ok) {
             throw new Error(sandboxResult?.message || 'Chấm thử AI thất bại.');

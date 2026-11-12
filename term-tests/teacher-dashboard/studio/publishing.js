@@ -2,7 +2,6 @@ import {
   trackBuilderModal
 } from '../navigation/unsaved-changes.js';
 import { filterClassesForCourse } from './catalog.js';
-import { formPublishPreviewPath, formPublishPath } from '../api/teacher.js';
 import {
   renderSvgIcon
 } from '../ui/icons.js';
@@ -385,20 +384,6 @@ function openPublishingModal() {
 
             if (typeof options.onPublishPreview === 'function') {
               previewResult = await options.onPublishPreview(previewPayload);
-            } else {
-              try {
-                const prevRes = await fetch(formPublishPreviewPath(options.apiBase), {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {})
-                  },
-                  body: JSON.stringify(previewPayload)
-                });
-                if (prevRes.ok) {
-                  previewResult = await prevRes.json();
-                }
-              } catch (_) {}
             }
 
             currentStep = 2;
@@ -602,20 +587,11 @@ function openPublishingModal() {
               classIds: scope === 'specific_classes' ? selectedClassIds : []
             };
 
-            let result;
-            if (typeof options.onPublish === 'function') {
-              result = await options.onPublish(publishPayload);
-            } else {
-              const res = await fetch(formPublishPath(options.apiBase), {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {})
-                },
-                body: JSON.stringify(publishPayload)
-              });
-              result = await res.json();
+            if (typeof options.onPublish !== 'function') {
+              throw new Error('Công bố đề thi chưa được cấu hình.');
             }
+            // Gọi qua client dùng chung của dashboard (gắn token phiên, xử lý 401), không fetch trực tiếp.
+            const result = await options.onPublish(publishPayload);
 
             if (!result || !result.ok) {
               throw new Error(result?.message || 'Không thể công bố đề thi');

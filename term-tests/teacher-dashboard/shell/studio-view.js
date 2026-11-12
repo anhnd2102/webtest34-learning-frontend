@@ -1,4 +1,4 @@
-import { courseTestCatalogPath, formDraftPath, formDetailPath, formPublishPath, formPublishPreviewPath } from '../api/teacher.js';
+import { courseTestCatalogPath, formDraftPath, formDetailPath, formPublishPath, formPublishPreviewPath, previewSandboxPath } from '../api/teacher.js';
 import { hasActiveUnsavedChanges, clearActiveUnsavedChanges, openUnsavedChangesModal } from '../navigation/unsaved-changes.js';
 import { openCreateTestModal, renderCourseTestCatalogView, filterClassesForCourse } from '../studio/catalog.js';
 
@@ -126,6 +126,14 @@ export function createStudioView({ root, queryCoordinator, authState, scopeState
                     });
                     return putRes;
                   },
+                  onPreviewSandbox: async (sandboxPayload) => {
+                    return await request(previewSandboxPath(), {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(sandboxPayload),
+                      errorMessage: 'Chấm thử AI thất bại.'
+                    });
+                  },
                   onPublishPreview: async (previewPayload) => {
                     return await request(formPublishPreviewPath(), {
                       method: 'POST',
@@ -199,6 +207,14 @@ export function createStudioView({ root, queryCoordinator, authState, scopeState
                   body: JSON.stringify(updatedPayload)
                 });
                 return putRes;
+              },
+              onPreviewSandbox: async (sandboxPayload) => {
+                return await request(previewSandboxPath(), {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(sandboxPayload),
+                  errorMessage: 'Chấm thử AI thất bại.'
+                });
               },
               onPublishPreview: async (previewPayload) => {
                 return await request(formPublishPreviewPath(), {
