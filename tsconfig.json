@@ -7,12 +7,18 @@
     "checkJs": true,
     "noEmit": true,
     "strict": true,
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "skipLibCheck": true,
     "types": []
   },
   "include": [
     "term-tests/teacher-dashboard/api/client.js",
-    "term-tests/teacher-dashboard/api/teacher.js"
+    "term-tests/teacher-dashboard/api/teacher.js",
+    "term-tests/webtest-34-demo/candidate/text-utils.js",
+    "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
