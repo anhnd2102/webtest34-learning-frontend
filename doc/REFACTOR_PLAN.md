@@ -1,5 +1,13 @@
 # Phương án tái cấu trúc frontend Webtest34
 
+## Tóm tắt trạng thái — 13/11/2026
+
+- **Bước 3 hoàn tất**; **bước 5**: pilot kiểm kiểu JSDoc + `tsc --noEmit` (không emit, không đổi Pages); **bước 6** hủy; **bước 7 đang tiến hành**.
+- **Bước 7 (canonical renderer):** đã gỡ đường prototype nội tuyến của `webtest-34-demo/index.html` (2.601 → ~470 dòng) sau khi có năm smoke học viên và chuyển 30 test đọc nguồn sang hành vi; tách `content-preview.mjs` 2.468 → 855 dòng sang `candidate/` (`text-utils`, `learning-api`, `result-view`, `group-render`, `exam-mode`, `intro-screen`, `review-screen`, `exam-timer`, `draft-sync`, `submit-flow`). Phần còn lại là điều phối `mount()` và dựng giao diện thi động (~470 dòng), chủ yếu là dựng DOM gắn chặt nên dừng ở đây.
+- **Lỗi thật tìm thấy và sửa nhờ lưới smoke (shell học viên):** token dính ký tự thừa khi dán link; bài nghe mở lại sau khi tải trang (nay lưu tiến độ nghe trên máy chủ); nộp lại dùng `submissionId` mới và báo lỗi sai khi bài đã nộp. Phía giáo viên: chấm thử AI không gửi token; nhiều thao tác builder không bật cảnh báo thay đổi chưa lưu; `grant-retake` thiếu `authHeader`; cú nhấp đầu vào "Quay lại danh mục" bị nuốt.
+- **Smoke trình duyệt (bấm thật, API giả):** 14 file trong `tests/browser/`, chạy tay hoặc qua `browser-smoke.yml` (chưa kiểm trên Actions thật); `npm test` 693 test; `typecheck.yml` cho kiểm kiểu.
+- **Còn mở:** `!important` còn 123 ở dashboard và 230 dòng ở `dynamic-test.css` (phần lớn là kiểm chứng chưa đủ bằng chứng hoặc bị nhiễu đo, xem `CSS_IMPORTANT_AUDIT.md`); `e2e-exam-switch.browser.mjs` lỗi thời; khóa nghe theo lượt làm bài (cấp quyền làm lại sinh lượt mới); chưa kiểm với backend và PostgreSQL thật; chuyển `.ts` + emit chờ quyết định về trình duyệt tối thiểu và ngưỡng tải.
+
 ## Cập nhật trạng thái — 11/11/2026
 
 - Nhánh làm việc hiện tại: `feature/test-studio` (các nhánh `refactor/*` đã tích hợp). 671/671 frontend tests pass.
