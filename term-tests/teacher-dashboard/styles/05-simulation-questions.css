@@ -284,19 +284,19 @@
 /* Canonical Choice Label Row (Matching Hardcoded Demo .choice-row) */
 .candidate-choice-label {
   display: flex !important;
-  flex-direction: row !important;
+  flex-direction: row;
   align-items: center !important;
   justify-content: flex-start !important;
   text-align: left !important;
-  gap: 12px !important;
-  padding: 12px 16px !important;
+  gap: 12px;
+  padding: 12px 16px;
   border: 1.5px solid #e2e8f0 !important;
   border-radius: 12px !important;
-  cursor: pointer !important;
+  cursor: pointer;
   background: #ffffff !important;
   transition: all 0.15s ease !important;
-  box-sizing: border-box !important;
-  min-height: 50px !important;
+  box-sizing: border-box;
+  min-height: 50px;
   user-select: none;
 }
 
@@ -312,14 +312,14 @@
 .candidate-choice-label input {
   width: 18px !important;
   min-width: 18px !important;
-  max-width: 18px !important;
+  max-width: 18px;
   height: 18px !important;
   margin: 0 !important;
-  padding: 0 !important;
-  flex: 0 0 18px !important;
-  flex-shrink: 0 !important;
-  cursor: pointer !important;
-  accent-color: var(--izone-primary, #db0829) !important;
+  padding: 0;
+  flex: 0 0 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--izone-primary, #db0829);
 }
 
 .candidate-choice-label:has(input:checked) {
@@ -330,17 +330,17 @@
 
 .choice-key {
   width: 28px !important;
-  min-width: 28px !important;
-  max-width: 28px !important;
+  min-width: 28px;
+  max-width: 28px;
   height: 28px !important;
-  flex: 0 0 28px !important;
-  flex-shrink: 0 !important;
+  flex: 0 0 28px;
+  flex-shrink: 0;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   border-radius: 8px !important;
   background: #f1f5f9 !important;
-  font-family: 'Geologica', sans-serif !important;
+  font-family: 'Geologica', sans-serif;
   font-size: 0.82rem !important;
   font-weight: 700 !important;
   color: #334155 !important;
@@ -356,10 +356,10 @@
 .choice-text {
   font-size: 0.94rem !important;
   color: #1e293b !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  line-height: 1.5 !important;
-  word-break: break-word !important;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.5;
+  word-break: break-word;
   text-align: left !important;
 }
 
@@ -585,9 +585,9 @@
 .inline-blank-wrapper {
   display: inline-flex !important;
   align-items: center !important;
-  vertical-align: middle !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
+  vertical-align: middle;
+  white-space: nowrap;
+  flex-shrink: 0;
   margin: 0 4px;
   position: relative;
   background: #ffffff;
@@ -605,15 +605,15 @@
 
 .inline-blank-number,
 .inline-blank-badge {
-  min-width: max-content !important;
+  min-width: max-content;
   width: auto !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  white-space: nowrap !important;
-  word-break: keep-all !important;
-  overflow-wrap: normal !important;
-  flex-shrink: 0 !important;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  flex-shrink: 0;
   font-size: 0.78rem;
   font-weight: 700;
   color: #0284c7;
@@ -622,7 +622,7 @@
   border-radius: 4px;
   margin-right: 6px;
   user-select: none;
-  line-height: 1.2 !important;
+  line-height: 1.2;
 }
 
 .inline-fill-input {

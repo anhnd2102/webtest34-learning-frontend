@@ -71,9 +71,9 @@ h2 { margin-top: 0; font-weight: 700; letter-spacing: -0.01em; color: #0f172a; }
 .exam-room-clickable { cursor: pointer; }
 #exam-room-timeline { margin-top: 16px; }
 label { display: grid; gap: 6px; font-weight: 600; font-size: 0.9rem; color: #334155; }
-input, select, textarea, button, .form-control { box-sizing: border-box !important; font-family: inherit; }
+input, select, textarea, button, .form-control { box-sizing: border-box; font-family: inherit; }
 input:not([type="checkbox"]):not([type="radio"]), select, textarea { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-input[type="checkbox"], input[type="radio"] { width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important; cursor: pointer; accent-color: #db0829; }
+input[type="checkbox"], input[type="radio"] { width: 16px !important; height: 16px !important; min-width: 16px; min-height: 16px; margin: 0 !important; padding: 0; flex-shrink: 0; cursor: pointer; accent-color: #db0829; }
 input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus { outline: none; border-color: #db0829; box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.12); }
 button { border-color: #db0829; background: #db0829; color: white; font-weight: 700; cursor: pointer; border-radius: 10px; box-shadow: 0 2px 8px rgba(219, 8, 41, 0.22); transition: all 0.15s ease; }
 button:hover:not(:disabled) { background: #b80521; border-color: #b80521; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(219, 8, 41, 0.28); }

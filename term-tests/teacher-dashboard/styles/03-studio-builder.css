@@ -472,21 +472,21 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
+  gap: 8px;
   height: 40px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
-  line-height: 40px !important;
-  padding: 0 16px !important;
+  min-height: 40px;
+  max-height: 40px;
+  line-height: 40px;
+  padding: 0 16px;
   font-size: 0.88rem !important;
   font-weight: 700 !important;
   border-radius: 10px !important;
   width: auto !important;
-  min-width: fit-content !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  box-sizing: border-box !important;
-  cursor: pointer !important;
+  min-width: fit-content;
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 #btn-preview-test .btn-text,
@@ -495,7 +495,7 @@
 #btn-preview-test span,
 #btn-save-draft span,
 #btn-publish-test span {
-  white-space: nowrap !important;
+  white-space: nowrap;
   display: inline-block !important;
 }
 
@@ -1330,26 +1330,26 @@
 .block-reading-input,
 .item-prompt-input {
   width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
+  max-width: 100%;
+  box-sizing: border-box;
   font-family: inherit;
 }
 
 .block-instructions-input {
-  min-height: 80px !important;
+  min-height: 80px;
   resize: vertical;
 }
 
 .block-reading-input {
-  min-height: 180px !important;
+  min-height: 180px;
   resize: vertical;
   line-height: 1.6;
 }
 
 .item-prompt-input {
   width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
+  max-width: 100%;
+  box-sizing: border-box;
   min-height: 110px;
   font-size: 0.95rem;
   line-height: 1.6;
@@ -1514,12 +1514,12 @@
 .option-select-label input[type="checkbox"] {
   width: 18px !important;
   min-width: 18px !important;
-  max-width: 18px !important;
+  max-width: 18px;
   height: 18px !important;
   margin: 0 !important;
-  padding: 0 !important;
-  flex: 0 0 18px !important;
-  flex-shrink: 0 !important;
+  padding: 0;
+  flex: 0 0 18px;
+  flex-shrink: 0;
   cursor: pointer;
   accent-color: var(--izone-primary, #db0829);
 }
@@ -1830,7 +1830,7 @@
 
 .input-bulk-vocab-options {
   width: 100% !important;
-  box-sizing: border-box !important;
+  box-sizing: border-box;
   font-family: inherit;
   font-size: 0.9rem;
   line-height: 1.6;
