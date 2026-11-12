@@ -40,3 +40,10 @@ Ngày 12/11/2026. Chỉ **di chuyển nguyên văn**, không đổi hành vi, AP
 - Request của sandbox, publish, chấm vẫn là `fetch` trực tiếp; thống nhất client/lỗi/auth là commit riêng sau (không retry cho thao tác ghi).
 - `shell/dashboard.js`: mới tách khối đồng bộ Portal sang `shell/portal-panel.js` (`createPortalPanel({ root, lifecycle, state, request, document, window })` trả `{ ensurePortalPanel, resetPortal }`; 2.863 → 2.616 dòng). Phần còn lại (reports, grant retake, publish-all, exam switch, profile/role, loadClasses/loadAssignments) chưa tách vì dùng chung ~15 biến `let` bị gán lại; cần thiết kế owner state trước.
 - `tests/browser/dashboard-lifecycle-smoke.mjs` hiện lỗi `ERR_MODULE_NOT_FOUND` ngay cả trên bản trước thay đổi (đã kiểm với git stash); chưa điều tra, không do đợt này.
+
+## Smoke bấm thật `tests/browser/builder-actions-smoke.mjs` (12/11/2026)
+
+Chrome thật, API giả, 1440×900. Chạy: `node tests/browser/builder-actions-smoke.mjs`. Kiểm bằng DOM dựng lại sau mỗi thao tác: thêm bài tập (`bindExerciseActions`), di chuyển câu hỏi lên/xuống (`bindItemActions`), thu gọn/mở rộng tất cả (`bindCollapseActions`), xóa câu hỏi, xóa bài tập có câu hỏi (từ chối xác nhận thì giữ nguyên, đồng ý thì xóa), thêm phần (`bindBlockNavigationActions`), di chuyển phần lên/xuống và xóa phần (`bindBlockReorderActions`, xác nhận xóa), rồi lưu nháp và kiểm `checkpoint` được đánh lại 1, 2.
+Kiểm tra đột biến: bỏ `return` khi người dùng từ chối xác nhận xóa bài tập thì smoke lỗi; đã hoàn nguyên.
+Chưa phủ: nhập CSV, từ vựng/rubric/biến thể lựa chọn, kịch bản cloze, xem trước âm thanh, sandbox, rich editor, kéo-thả câu hỏi.
+Quan sát (hành vi có sẵn, chuyển nguyên văn, không đổi): xóa câu hỏi (`.btn-delete-item`) không gọi `markAsDirty`, nên chỉ xóa câu hỏi thì cờ thay đổi chưa lưu có thể không bật.
