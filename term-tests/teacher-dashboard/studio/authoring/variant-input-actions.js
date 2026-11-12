@@ -1,6 +1,6 @@
 import { parseClozeBlanks } from '../draft-model.js';
 
-export function bindVariantInputActions({ container, draftState, render, syncInputs }) {
+export function bindVariantInputActions({ container, draftState, markAsDirty, render, syncInputs }) {
     // Add manual variant input
     const addVariantInputs = container.querySelectorAll('.input-add-variant');
     addVariantInputs.forEach(input => {
@@ -37,6 +37,7 @@ export function bindVariantInputActions({ container, draftState, render, syncInp
                 draftState.gradingKey.items[item.itemVersionId] = currentKey;
               }
             }
+            markAsDirty();
             render();
             return;
           }
@@ -50,6 +51,7 @@ export function bindVariantInputActions({ container, draftState, render, syncInp
             currentKey.accepted.push(val);
             if (currentKey.accepted.length > 40) currentKey.accepted.pop();
             draftState.gradingKey.items[item.itemVersionId] = currentKey;
+            markAsDirty();
             render();
           }
         }

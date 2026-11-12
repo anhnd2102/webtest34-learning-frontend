@@ -912,13 +912,13 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
 
     bindItemActions({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, resequenceItemPositions, render, syncInputs });
 
-    bindChoiceVariantActions({ container, draftState, render, syncInputs });
+    bindChoiceVariantActions({ container, draftState, markAsDirty, render, syncInputs });
 
     bindVocabularyActions({ container, draftState, markAsDirty, render, syncInputs, options });
 
-    bindVariantInputActions({ container, draftState, render, syncInputs });
+    bindVariantInputActions({ container, draftState, markAsDirty, render, syncInputs });
 
-    bindRubricActions({ container, draftState, render, syncInputs });
+    bindRubricActions({ container, draftState, markAsDirty, render, syncInputs });
 
     bindClozeScriptActions({ container, draftState, markAsDirty, render, syncInputs });
 

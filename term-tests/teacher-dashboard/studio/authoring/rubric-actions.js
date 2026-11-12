@@ -1,4 +1,4 @@
-export function bindRubricActions({ container, draftState, render, syncInputs }) {
+export function bindRubricActions({ container, draftState, markAsDirty, render, syncInputs }) {
     // Preset switch handler
     const presetSelects = container.querySelectorAll('.select-rubric-preset');
     presetSelects.forEach(sel => {
@@ -64,6 +64,7 @@ export function bindRubricActions({ container, draftState, render, syncInputs })
             }
           };
         }
+        markAsDirty();
         render();
       });
     });
@@ -114,6 +115,7 @@ export function bindRubricActions({ container, draftState, render, syncInputs })
         const total = currentKey.rubric.criteria.reduce((sum, c) => sum + (c.maxScore || 0), 0);
         currentKey.rubric.maxScore = total;
         item.maxScore = total;
+        markAsDirty();
         render();
       });
     });
@@ -134,6 +136,7 @@ export function bindRubricActions({ container, draftState, render, syncInputs })
           const total = currentKey.rubric.criteria.reduce((sum, c) => sum + (c.maxScore || 0), 0);
           currentKey.rubric.maxScore = total;
           item.maxScore = total;
+          markAsDirty();
           render();
         } else {
           alert('Rubric phải có ít nhất 1 tiêu chí chấm điểm.');

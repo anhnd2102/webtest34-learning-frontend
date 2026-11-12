@@ -1,7 +1,7 @@
 import { parseClozeBlanks } from '../draft-model.js';
 import { expandSentenceVariants } from '../question-content.js';
 
-export function bindChoiceVariantActions({ container, draftState, render, syncInputs }) {
+export function bindChoiceVariantActions({ container, draftState, markAsDirty, render, syncInputs }) {
     // Add Option to single/multi choice
     const addOptBtns = container.querySelectorAll('.btn-add-option');
     addOptBtns.forEach(btn => {
@@ -14,6 +14,7 @@ export function bindChoiceVariantActions({ container, draftState, render, syncIn
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const nextId = alphabet[item.options.length] || `OPT${item.options.length + 1}`;
         item.options.push({ id: nextId, label: `Phương án ${nextId}` });
+        markAsDirty();
         render();
       });
     });
@@ -29,6 +30,7 @@ export function bindChoiceVariantActions({ container, draftState, render, syncIn
         const item = draftState.blocks[bIdx]?.items?.[iIdx];
         if (item && item.options && item.options.length > 2) {
           item.options = item.options.filter(o => o.id !== optId);
+          markAsDirty();
           render();
         } else {
           alert('Một câu hỏi lựa chọn phải có ít nhất 2 phương án.');
@@ -83,6 +85,7 @@ export function bindChoiceVariantActions({ container, draftState, render, syncIn
             normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
           };
         }
+        markAsDirty();
         render();
       });
     });
@@ -111,6 +114,7 @@ export function bindChoiceVariantActions({ container, draftState, render, syncIn
               currentKey.accepted = currentKey.accepted.filter(v => v !== variantToRemove);
             }
           }
+          markAsDirty();
           render();
           return;
         }
@@ -118,6 +122,7 @@ export function bindChoiceVariantActions({ container, draftState, render, syncIn
         if (currentKey && Array.isArray(currentKey.accepted)) {
           currentKey.accepted = currentKey.accepted.filter(v => v !== variantToRemove);
           if (!currentKey.accepted.length) currentKey.accepted = ['answer'];
+          markAsDirty();
           render();
         }
       });

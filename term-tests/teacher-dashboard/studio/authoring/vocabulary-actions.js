@@ -29,6 +29,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
           expectedOptionId: currentExpected,
           normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
         };
+        markAsDirty();
         render();
       });
     });
@@ -57,6 +58,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
             currentKey.accepted.push(val);
             if (currentKey.accepted.length > 40) currentKey.accepted.pop();
             draftState.gradingKey.items[item.itemVersionId] = currentKey;
+            markAsDirty();
             render();
           }
         }
@@ -76,6 +78,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
         const nextId = `opt_${nextNum}`;
         item.options = item.options || [];
         item.options.push({ id: nextId, label: `Nghĩa phương án ${nextNum}` });
+        markAsDirty();
         render();
       });
     });
@@ -96,6 +99,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
           if (currentExpected === optId) {
             draftState.gradingKey.items[item.itemVersionId].expectedOptionId = item.options[0]?.id || 'opt_1';
           }
+          markAsDirty();
           render();
         } else {
           alert('Một câu hỏi cặp từ vựng phải có ít nhất 2 nghĩa để lựa chọn.');

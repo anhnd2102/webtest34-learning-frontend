@@ -58,6 +58,7 @@ export function bindClozeScriptActions({ container, draftState, markAsDirty, ren
 
         if (extractedScript) {
           item.referenceContext = extractedScript;
+          markAsDirty();
           render();
         } else {
           alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
