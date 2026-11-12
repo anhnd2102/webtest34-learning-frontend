@@ -4,9 +4,9 @@
 
 - Nhánh làm việc hiện tại: `feature/test-studio` (các nhánh `refactor/*` đã tích hợp). 671/671 frontend tests pass.
 - **Bước 1–2 đã hoàn tất** (#18, #20–#24, có báo cáo `ISSUE_*_VERIFICATION.md`): `app.js` còn 137 dòng, chỉ là facade; bootstrap ở `main.js`; `shell/`, `studio/`, `results/`, `grading/`, `exam-room/`, `api/`, `navigation/`, `ui/` đã tách.
-- **Bước 3 hoàn tất một phần**: `studio/builder.js` còn ~1.000 dòng (12/11/2026: 20 nhóm handler đã chuyển sang module `bindXxx`, xem `BUILDER_SPLIT_VERIFICATION.md`); `shell/dashboard.js` còn 2.616 dòng (đã tách khối Portal sang `shell/portal-panel.js`; phần còn lại cần thiết kế owner state vì dùng chung nhiều biến `let`). Đã tách content-import, draft-model, rich-editor, media, simulation, publishing, batch-import, question-renderer.
+- **Bước 3 hoàn tất một phần**: `studio/builder.js` còn ~1.000 dòng (12/11/2026: 20 nhóm handler đã chuyển sang module `bindXxx`, xem `BUILDER_SPLIT_VERIFICATION.md`); `shell/dashboard.js` còn 1.586 dòng (12/11/2026: đã thiết kế owner `authState`/`scopeState`/`examRoomState` và tách 8 module, xem `DASHBOARD_SPLIT_VERIFICATION.md`; còn cụm phòng thi vòng phụ thuộc, điều hướng, chọn bài, loadAssignments, đăng nhập). Đã tách content-import, draft-model, rich-editor, media, simulation, publishing, batch-import, question-renderer.
 - **Bước 4**: tách CSS hoàn tất (12 fragment); cleanup inline style/token/!important đang tiến hành, kiểm kê lexical còn 28 vị trí (đều là style động như độ rộng %, màu avatar) (xem `CSS_INLINE_STYLE_INVENTORY.json`). Chưa mở bước 5–7.
-- **Quyết định mục 8 (12/11/2026):** (1) duyệt lộ trình A → B; (2) **không** làm pilot Vue — bước 6 bị hủy, phương án C loại khỏi lộ trình; (3) browser tối thiểu/base path/ngưỡng tải chưa chốt, chỉ chặn khi bước 5 đổi nội dung upload của Pages (xem mục 8).
+- **Quyết định mục 8 (12/11/2026):** (1) duyệt lộ trình A → B; (2) **không** làm pilot Vue — bước 6 bị hủy, phương án C loại khỏi lộ trình; (3) base path đã chốt: Pages chạy ở `https://anhnd2102.github.io/webtest34-learning-frontend/` (có tiền tố repo); browser tối thiểu và ngưỡng tải chưa chốt, chỉ chặn khi bước 5 đổi nội dung upload của Pages (xem mục 8).
 - Phần "30/10/2026" bên dưới là lịch sử.
 
 ## Cập nhật triển khai — 30/10/2026
