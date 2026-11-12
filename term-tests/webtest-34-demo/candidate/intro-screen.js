@@ -1,7 +1,7 @@
 // Màn hình đầu: mã lớp, roster, chọn học viên, kiểm tra âm thanh và bắt đầu lượt (tách nguyên văn từ content-preview.mjs).
-import { getTotalItemCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-audio-a';
-import { escape, formatCandidateOptionLabel } from './text-utils.js?rev=20261113-audio-a';
-import { examPhase, resetLocalAttemptState } from './learning-api.js?rev=20261113-audio-a';
+import { getTotalItemCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
+import { escape, formatCandidateOptionLabel } from './text-utils.js?rev=20261113-submit-a';
+import { examPhase, resetLocalAttemptState } from './learning-api.js?rev=20261113-submit-a';
 
 export function createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn }) {
     // Thiết bị cảm ứng; iPad đời mới tự nhận là Macintosh nên nhận qua số điểm chạm.

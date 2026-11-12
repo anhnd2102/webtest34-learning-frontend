@@ -17,9 +17,9 @@ Link thi thật (`index.html#test=<token>`) **không chạy script nội tuyến
 
 Kiểm tra đột biến: bỏ `disabled = true` của nút xác nhận nộp thì mục 4 lỗi; bỏ `draftRevision += 1` thì mục 1 lỗi (`revision tăng dần: 0,0`). Cả hai đã hoàn nguyên.
 
-## Khoảng trống đã biết (ghi lại, chưa sửa)
+## Khoảng trống đã biết: `submissionId` — ĐÃ SỬA (13/11/2026)
 
-- **`submissionId` không ổn định khi nộp lại (mức độ thấp, đã đối chiếu backend).** `content-preview.mjs` sinh `createUuid()` mới ở mỗi lần bấm xác nhận nộp; đường prototype nội tuyến dùng một id cố định và xử lý `SUBMISSION_ALREADY_FINAL` bằng cách tải kết quả. Đối chiếu `webtest34-learning-platform/backend/src/learning-service.js` (`submit`, dòng ~610): khi lượt đã nộp, nếu **nội dung (hash câu trả lời) trùng** bản đã lưu thì máy chủ trả lại kết quả cũ (`replayed: true`) bất kể `submissionId`; chỉ khi nội dung **khác** và `submissionId` khác mới trả `SUBMISSION_ALREADY_FINAL`. Vì vậy cú nộp lại sau khi mất phản hồi vẫn an toàn nếu học viên không sửa đáp án giữa hai lần bấm. Hồi quy chỉ xảy ra khi học viên sửa đáp án sau lần nộp đầu đã được ghi nhận: lần nộp lại báo "Nộp bài không thành công" dù bài đã nộp (nội dung khác), và shell không có nhánh xử lý `SUBMISSION_ALREADY_FINAL`. Hiệu ứng phụ: nhánh lỗi gọi `queueServerDraft()`, nếu bài thực ra đã nộp thì bản nháp bị từ chối và học viên thấy cảnh báo lưu nháp. Smoke ghi `knownGaps.submissionIdStableAcrossRetry: false` (hành vi hiện tại, không phải lỗi dữ liệu).
+Đã đối chiếu backend (`learning-service.js` `submit`): lượt đã nộp mà nộp lại cùng nội dung thì máy chủ trả lại kết quả cũ (`replayed`), chỉ khi nội dung khác **và** `submissionId` khác mới trả `SUBMISSION_ALREADY_FINAL`. Shell thật sinh `submissionId` mới ở mỗi lần bấm và không xử lý lỗi này, nên học viên sửa đáp án sau lần nộp đầu đã được ghi nhận (phản hồi bị mất) sẽ thấy "Nộp bài không thành công" dù bài đã nộp. Nay `candidate/submit-flow.js` dùng **một `submissionId` cho cả lượt** (nộp lại luôn là cùng bản nộp) và khi gặp `SUBMISSION_ALREADY_FINAL`/`ATTEMPT_ALREADY_SUBMITTED` thì gọi `/attempts/result` rồi hiển thị trạng thái đã nộp như nộp thành công (phần xử lý thành công tách thành `acceptSubmission(res)` dùng chung). Smoke `candidate-flow`: nộp lại dùng cùng `submissionId` (đỏ trước khi sửa) và ca `SUBMISSION_ALREADY_FINAL` (không báo lỗi, không nộp lần hai, khóa bài); kiểm tra đột biến cả hai đều bị bắt.
 
 ## Chưa phủ
 
@@ -137,7 +137,7 @@ Trước khi sửa, shell thật giữ lượt nghe trong bộ nhớ trang và k
 - Hai điểm cuối âm thanh dùng schema `.strict()` nên **không được kèm `deviceId`**: `learningRequestBody` bỏ `deviceId` cho `/attempts/audio/checkpoint` và `/attempts/audio/resume` (có test); mốc gửi với `keepalive` để sống sót khi trang bị ẩn.
 - `enterRunningExam` (Exam Mode vào đề qua SSE) và màn đầu nay `await` dựng giao diện, vì dựng giao diện giờ chờ tiến độ nghe; Exam Guard vẫn gắn sau khi giao diện dựng xong.
 - Smoke: kịch bản 8 (nghe xong, tải lại, vẫn khóa, đề còn mở, resume không kèm `deviceId`), 9 (nghe dở, tải lại, tiếp tục từ vị trí đã lưu), 10 (resume lỗi 500 vẫn vào được bài). Máy chủ giả của smoke áp đúng schema nghiêm ngặt và hỗ trợ Range như R2. Kiểm tra đột biến (bị bắt, đã hoàn nguyên): kèm lại `deviceId`, không nạp tiến độ, không báo mốc khi nghe xong.
-- Giới hạn: khóa theo **lượt làm bài** (cùng `attemptToken`), nên học viên được cấp quyền làm lại có lượt mới và nghe lại; chưa kiểm với backend và PostgreSQL thật. Rev module nâng lên `20261113-audio-a`.
+- Giới hạn: khóa theo **lượt làm bài** (cùng `attemptToken`), nên học viên được cấp quyền làm lại có lượt mới và nghe lại; chưa kiểm với backend và PostgreSQL thật. Rev module nâng lên `20261113-submit-a`.
 
 Điều kiện tiên quyết cho `renderExamInterface` đã đủ: ngoài smoke luồng học viên, Exam Mode, lối vào/xem kết quả, nay có smoke âm thanh.
 

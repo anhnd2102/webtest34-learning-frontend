@@ -1,8 +1,8 @@
 // Hộp thoại nộp bài, nộp bài lên máy chủ, hộp kết quả và theo dõi kết quả sau nộp (tách nguyên văn từ content-preview.mjs).
-import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-audio-a';
-import { escape } from './text-utils.js?rev=20261113-audio-a';
-import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261113-audio-a';
-import { withLocalGroupLabels } from './group-render.js?rev=20261113-audio-a';
+import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
+import { escape } from './text-utils.js?rev=20261113-submit-a';
+import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261113-submit-a';
+import { withLocalGroupLabels } from './group-render.js?rev=20261113-submit-a';
 
 export function createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic, examTimer, query, update, queueServerDraft, persist, clearDraftTimer }) {
   const timerDisplay = examTimer.display;
@@ -218,6 +218,50 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    // Một mã nộp cho cả lượt: nộp lại sau khi mất phản hồi không bị máy chủ coi là bản nộp khác.
+    let submissionId = null;
+
+    // Dùng chung cho nộp thành công và cho trường hợp bài đã được ghi nhận từ lần nộp trước (mất phản hồi).
+    function acceptSubmission(res) {
+        state.submittedAt = Date.now();
+        // Dừng Exam Guard và tín hiệu kết nối: lượt đã nộp không còn là thiết bị đang làm bài.
+        learningState.status = 'submitted';
+        stopExamConnections();
+        persist();
+        update();
+        examTimer.stop();
+        if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
+        query('#demo-confirm').close();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+
+        query('#demo-result').hidden = false;
+        query('#demo-result').style.background = '#f0fdf4';
+        query('#demo-result').style.borderColor = '#bbf7d0';
+        query('#demo-result').style.color = '#166534';
+        query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
+
+        if (isDynamic) {
+          document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
+            if (el.id !== 'demo-prev' && el.id !== 'demo-next') {
+              el.disabled = true;
+            }
+          });
+          const topSubmit = query('#demo-submit-top');
+          if (topSubmit) {
+            topSubmit.disabled = true;
+            topSubmit.textContent = 'Đã nộp bài';
+          }
+        }
+
+        if (res.result) {
+          renderAiResultCard(res.result);
+        }
+        if (res.result?.publication?.published && !learningState.pollTimer) {
+          learningState.pollTimer = setInterval(pollLearningResult, 3500);
+          void pollLearningResult();
+        }
+    }
+
     query('#demo-confirm-submit').addEventListener('click', async () => {
       // Lệnh nộp đã mang đủ câu trả lời; bản nháp gửi chen vào sẽ làm lệch revision của lệnh nộp.
       clearDraftTimer();
@@ -227,48 +271,12 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
         if (isLearningMode && learningState.attemptToken) {
           const res = await apiRequest('/attempts/submit', {
             attemptToken: learningState.attemptToken,
-            submissionId: createUuid(),
+            submissionId: (submissionId ||= createUuid()),
             definitionHash: learningState.definitionHash,
             draftRevision: Number(learningState.draftRevision || 0),
             responses: buildResponsesPayload()
           });
-          state.submittedAt = Date.now();
-          // Dừng Exam Guard và tín hiệu kết nối: lượt đã nộp không còn là thiết bị đang làm bài.
-          learningState.status = 'submitted';
-          stopExamConnections();
-          persist();
-          update();
-          examTimer.stop();
-          if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
-          query('#demo-confirm').close();
-          window.scrollTo({top: 0, behavior: 'smooth'});
-
-          query('#demo-result').hidden = false;
-          query('#demo-result').style.background = '#f0fdf4';
-          query('#demo-result').style.borderColor = '#bbf7d0';
-          query('#demo-result').style.color = '#166534';
-          query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
-
-          if (isDynamic) {
-            document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
-              if (el.id !== 'demo-prev' && el.id !== 'demo-next') {
-                el.disabled = true;
-              }
-            });
-            const topSubmit = query('#demo-submit-top');
-            if (topSubmit) {
-              topSubmit.disabled = true;
-              topSubmit.textContent = 'Đã nộp bài';
-            }
-          }
-
-          if (res.result) {
-            renderAiResultCard(res.result);
-          }
-          if (res.result?.publication?.published && !learningState.pollTimer) {
-            learningState.pollTimer = setInterval(pollLearningResult, 3500);
-            void pollLearningResult();
-          }
+          acceptSubmission(res);
         } else {
           state.submittedAt=Date.now();
           persist();
@@ -277,6 +285,16 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
           window.scrollTo({top:0,behavior:'smooth'});
         }
       } catch (err) {
+        // Bài đã được ghi nhận từ lần nộp trước (phản hồi bị mất) nhưng bản nộp lại khác nội dung: lấy kết quả thay vì báo lỗi.
+        if (isLearningMode && learningState.attemptToken && ['SUBMISSION_ALREADY_FINAL', 'ATTEMPT_ALREADY_SUBMITTED'].includes(err.code)) {
+          try {
+            acceptSubmission(await apiRequest('/attempts/result', { attemptToken: learningState.attemptToken }));
+            return;
+          } catch (resultError) {
+            alert(`Bài đã được nộp trước đó. Chưa tải được kết quả: ${resultError.message}`);
+            return;
+          }
+        }
         alert(`Nộp bài không thành công: ${err.message}`);
         queueServerDraft();
       } finally {

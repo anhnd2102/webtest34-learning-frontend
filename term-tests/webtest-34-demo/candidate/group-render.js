@@ -1,7 +1,7 @@
 // Dựng các nhóm câu hỏi và âm thanh của bài thi (tách nguyên văn từ content-preview.mjs).
-import { escape, words, optionId } from './text-utils.js?rev=20261113-audio-a';
+import { escape, words, optionId } from './text-utils.js?rev=20261113-submit-a';
 // Cùng URL (kể cả rev) với import trong content-preview.mjs để dùng chung một thể hiện module.
-import { ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-audio-a';
+import { ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
 
 export function withLocalGroupLabels(definition, form) {
   if (!definition || !Array.isArray(definition.blocks) || !Array.isArray(form?.groups)) return definition;

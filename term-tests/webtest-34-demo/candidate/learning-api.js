@@ -1,5 +1,5 @@
 // Draft, hợp đồng lời gọi Learning API và trạng thái lượt (tách nguyên văn từ content-preview.mjs).
-import { optionId } from './text-utils.js?rev=20261113-audio-a';
+import { optionId } from './text-utils.js?rev=20261113-submit-a';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 

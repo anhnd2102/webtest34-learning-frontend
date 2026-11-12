@@ -223,8 +223,26 @@ try {
     await waitFor(async () => (await text(page, '#demo-result')).includes('Nộp bài thành công'), 'nộp lại thành công');
     assert.equal(api.count('/attempts/submit'), 2);
     const ids = api.all('/attempts/submit').map(call => call.body.submissionId);
-    // Khoảng trống đã biết (ghi lại, chưa sửa): mỗi lần bấm sinh submissionId mới nên nộp lại không idempotent nếu phản hồi bị mất.
-    report.knownGaps = { submissionIdStableAcrossRetry: ids[0] === ids[1] };
+    // Một mã nộp cho cả lượt: nếu lần nộp đầu đã được máy chủ ghi nhận nhưng phản hồi bị mất, lần nộp lại là cùng bản nộp.
+    assert.equal(ids[0], ids[1], 'nộp lại dùng cùng submissionId');
+    await page.context().close();
+  }
+
+  // 5b. Bài đã được ghi nhận từ lần nộp trước (SUBMISSION_ALREADY_FINAL): lấy kết quả thay vì báo lỗi, không nộp lần hai
+  {
+    const api = createApi();
+    const page = await openPage(browser, api);
+    await startExam(page);
+    await page.locator('input[data-item-id="it-2"]').fill('already submitted');
+    api.failNext['/attempts/submit'] = { status: 409, error: 'SUBMISSION_ALREADY_FINAL', message: 'Phiếu đã nộp với nội dung khác; cần giảng viên mở lại.' };
+    await submitAll(page);
+    await waitFor(() => api.count('/attempts/result') >= 1, 'bài đã nộp thì tải kết quả đã có');
+    await waitFor(async () => (await text(page, '#demo-result')).includes('Nộp bài thành công'), 'hiện trạng thái đã nộp');
+    assert.equal(page.dialogs.some(message => /Nộp bài không thành công/.test(message)), false, 'không báo lỗi nộp');
+    assert.equal(api.count('/attempts/submit'), 1, 'không nộp lần hai');
+    assert.equal(api.last('/attempts/result').body.attemptToken, 'flow-attempt');
+    assert.equal(await page.locator('input[data-item-id="it-2"]').isDisabled(), true, 'bài làm bị khóa');
+    assert.equal(await text(page, '#demo-submit-top'), 'Đã nộp bài');
     await page.context().close();
   }
 

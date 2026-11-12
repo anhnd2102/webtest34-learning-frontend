@@ -6,21 +6,21 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261113-audio-a';
+} from './dynamic-exam-renderer.mjs?rev=20261113-submit-a';
 
-import { escape, words } from './candidate/text-utils.js?rev=20261113-audio-a';
-import { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261113-audio-a';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, sectionKey, sectionLabels, groupSections } from './candidate/group-render.js?rev=20261113-audio-a';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261113-audio-a';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261113-audio-a';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261113-audio-a';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261113-audio-a';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261113-audio-a';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261113-audio-a';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261113-audio-a';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261113-audio-a';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261113-audio-a';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, clozeSegments, choiceLayout, groupBody, CLOUDFLARE_R2_AUDIO_BASE, resolveAudioUrl, groupSections } from './candidate/group-render.js?rev=20261113-audio-a';
+import { escape, words } from './candidate/text-utils.js?rev=20261113-submit-a';
+import { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261113-submit-a';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, sectionKey, sectionLabels, groupSections } from './candidate/group-render.js?rev=20261113-submit-a';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261113-submit-a';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261113-submit-a';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261113-submit-a';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261113-submit-a';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261113-submit-a';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261113-submit-a';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261113-submit-a';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261113-submit-a';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261113-submit-a';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, clozeSegments, choiceLayout, groupBody, CLOUDFLARE_R2_AUDIO_BASE, resolveAudioUrl, groupSections } from './candidate/group-render.js?rev=20261113-submit-a';
 
 export async function mount(course) {
   if (!['03','34','45'].includes(course)) throw new Error('Unknown demo course');

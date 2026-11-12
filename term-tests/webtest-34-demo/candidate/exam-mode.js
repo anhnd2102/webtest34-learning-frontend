@@ -1,6 +1,6 @@
 import { parseSseChunk } from '../../teacher-dashboard/exam-room-sse.js';
-import { escape } from './text-utils.js?rev=20261113-audio-a';
-import { selfProctoringBannerHtml } from './learning-api.js?rev=20261113-audio-a';
+import { escape } from './text-utils.js?rev=20261113-submit-a';
+import { selfProctoringBannerHtml } from './learning-api.js?rev=20261113-submit-a';
 
 export function createExamMode({ apiBase, learningState, deviceId, apiRequest, createUuid, renderExamInterface }) {
   const ignoreFocusSignals = Boolean(globalThis.isIosDevice?.(navigator));

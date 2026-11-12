@@ -1,6 +1,6 @@
 // Module thuần dựng Màn hình xem kết quả (view model + HTML), mobile-first, một cột.
 // Chưa nối vào index.html. Dữ liệu vào: kết quả từ /attempts/result và định nghĩa đề.
-import { resultViewModel } from '../webtest-34-demo/candidate/result-view.js?rev=20261113-audio-a';
+import { resultViewModel } from '../webtest-34-demo/candidate/result-view.js?rev=20261113-submit-a';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const round = value => Number(value.toFixed(2));
