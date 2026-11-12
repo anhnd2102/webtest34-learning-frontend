@@ -24,3 +24,24 @@ Kiểm tra đột biến: bỏ `disabled = true` của nút xác nhận nộp th
 ## Chưa phủ
 
 Audio (kiểm tra loa, checkpoint, resume), Exam Mode (phòng chờ, SSE, tín hiệu kết nối, Exam Guard, thiết bị bị thay), kết quả sau công bố (polling), các dạng câu hỏi ngoài chọn/điền/viết, di động, Wake Lock (đã có trong `candidate-mobile-smoke`).
+
+## Smoke Exam Mode và Tự giám sát (bước 2 của lộ trình gỡ đường prototype)
+
+`tests/browser/candidate-exam-mode-smoke.mjs`: Chrome thật, Learning API giả, toàn màn hình giả (headless không ổn định) và luồng SSE do test điều khiển. Chạy: `node tests/browser/candidate-exam-mode-smoke.mjs`. Mục tiêu: có bằng chứng hành vi cho Exam Mode của `content-preview.mjs` (mã học viên thật) trước khi gỡ đường prototype và chuyển các test đọc nguồn `index.html`.
+
+Phủ:
+1. Phòng chờ: chưa lộ đề; mở SSE `GET /attempts/events?deviceId=…` với `Authorization: Bearer <attemptToken>`; heartbeat gửi ngay và lặp mỗi 20 giây (đồng hồ giả); mọi lời gọi `/attempts/*` mang `deviceId`; nút "Tôi đã sẵn sàng" xin toàn màn hình trong cú bấm, gửi `/attempts/exam/ready`, báo lỗi và bật lại nút khi lỗi, hiện trạng thái sẵn sàng khi thành công.
+2. Vào đề: nhận `exam.started` qua SSE thì dựng bài thi và gắn Exam Guard.
+3. Exam Guard: rời cửa sổ (blur) mở đúng một sự cố `left_exam`, làm mờ đề, hai lần rời trong 2 giây gộp một sự cố, "Quay lại bài thi" đóng đúng sự cố đã mở; thoát toàn màn hình cũng mở sự cố; khi lần mở bị lỗi mạng thì mở lại (idempotent, cùng `incidentId`) trước khi đóng; `pagehide` rồi blur (tải lại/đóng tab) không tính là rời bài.
+4. `exam.extended` qua SSE làm đồng hồ tăng.
+5. SSE đứt thì tự kết nối lại; `device.superseded` khóa đề, báo "đang được mở ở máy khác", ẩn nút quay lại, dừng heartbeat.
+6. Tự giám sát: banner luật "thoát quá N lần", đếm 1/2 theo phản hồi máy chủ, vượt giới hạn thì hiện thông báo tự nộp, sau đó không gửi sự cố nữa và trình duyệt không gọi `/attempts/submit` (máy chủ tự nộp).
+
+Kiểm tra đột biến (đều bị bắt, đã hoàn nguyên): bỏ `if (pageUnloading) return;`; bỏ cửa sổ gộp sự cố 2 giây; bỏ bước mở lại sự cố trước khi đóng.
+
+### Đối chiếu với các test đọc nguồn `index.html` (chuẩn bị bước chuyển test)
+
+`tests/exam-room-ui.test.mjs` hai test đầu khẳng định trên mã nội tuyến của `index.html` (đường prototype): `examReadyButton` xin toàn màn hình, `examFullscreenReenter`, `#examGuardReturn` gửi `return_click`, `command.type === 'request_fullscreen'`, đúng 3 lần `requestFullscreen()`, `fullscreenchange`, `exam-waiting-error`. Tương đương trong shell thật (`#examReadyBtn`, `#examFullscreenReenter`, `#examGuardReturn`, `#examWaitingError`): đã có hành vi cho nút sẵn sàng, lỗi sẵn sàng, quay lại bài thi, `fullscreenchange`; **chưa có** hành vi cho nút "Vào chế độ thi" (vào lại toàn màn hình ở phòng chờ) và lệnh `request_fullscreen` khi bấm quay lại (xin toàn màn hình, thất bại thì mở sự cố mới). Cần thêm hai ca này trước khi xóa các test đọc nguồn.
+
+### Chưa phủ
+Audio (kiểm tra loa, checkpoint, resume, tạm dừng khi rời bài), thiết bị iOS (bỏ qua tín hiệu focus), kết quả sau công bố (polling), Exam Mode với lượt làm lại (`exam.retake`), nộp bài trong Exam Mode.
