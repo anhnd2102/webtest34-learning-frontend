@@ -44,7 +44,7 @@ npm test
 npm ci && npm run typecheck   # JSDoc + tsc --noEmit cho api/client.js, api/teacher.js (typescript ghim trong package-lock.json)
 ```
 
-Smoke trình duyệt bấm thật (cần Chrome và Playwright cục bộ, chưa nằm trong CI): `node tests/browser/dashboard-actions-smoke.mjs`, `dashboard-grading-smoke.mjs`, `builder-actions-smoke.mjs`, `builder-import-smoke.mjs`, `builder-media-smoke.mjs`.
+Smoke trình duyệt bấm thật (Chrome + Playwright 1.63, API giả, không chạm production; chạy `node tests/browser/<tên>.mjs`, chưa nằm trong `npm test`; workflow `browser-smoke.yml` chạy tay hoặc hằng tuần, chưa kiểm trên Actions thật): dashboard (`dashboard-actions`, `dashboard-grading`, `dashboard-integration`, `dashboard-read-concurrency`, `exam-room-lifecycle`), builder (`builder-actions`, `builder-import`, `builder-media`, `builder-lifecycle`), học viên (`candidate-flow`, `candidate-exam-mode`, `candidate-entry-review`, `candidate-audio`, `candidate-mobile`). Shell học viên thật là `term-tests/webtest-34-demo/content-preview.mjs` cùng `candidate/*.js`; `index.html` chỉ chọn mount hoặc hiện hướng dẫn mở bằng link giáo viên.
 
 Khi thay đổi entry point, config, result mapping hoặc renderer, phải chạy test liên quan
 và kiểm tra static route/asset contract. Browser/live API/Pages deployment là các boundary

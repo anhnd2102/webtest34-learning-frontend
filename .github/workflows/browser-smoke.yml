@@ -1,0 +1,40 @@
+name: Browser smoke
+
+# Smoke bấm thật trên Chrome với API giả (không chạm production). Chạy tay hoặc hằng tuần; không nằm trong pages.yml
+# và không chặn deploy. Chưa kiểm trên GitHub Actions thật: phụ thuộc Google Chrome có sẵn trên ubuntu-latest (channel: chrome).
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PLAYWRIGHT_MODULE: ${{ github.workspace }}/node_modules/playwright/index.mjs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Ghim phiên bản Playwright dùng khi phát triển (1.63.0); không đưa vào package.json để lockfile của site tĩnh gọn.
+      - run: npm install --no-save playwright@1.63.0
+      - name: Chạy các smoke
+        shell: bash
+        run: |
+          failed=0
+          for smoke in \
+            dashboard-actions-smoke dashboard-grading-smoke dashboard-integration-smoke dashboard-read-concurrency-smoke \
+            exam-room-lifecycle-smoke builder-actions-smoke builder-import-smoke builder-media-smoke builder-lifecycle-smoke \
+            candidate-flow-smoke candidate-exam-mode-smoke candidate-entry-review-smoke candidate-audio-smoke candidate-mobile-smoke; do
+            echo "::group::$smoke"
+            if ! node "tests/browser/$smoke.mjs"; then echo "::error::$smoke thất bại"; failed=1; fi
+            echo "::endgroup::"
+          done
+          exit $failed
