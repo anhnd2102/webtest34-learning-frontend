@@ -112,3 +112,24 @@ Kiểm chứng: `npm test` 693/693; bốn smoke học viên pass (`candidate-flo
 - Bảy test đọc nguồn được chỉnh để đọc gộp `content-preview.mjs` với `intro-screen.js`/`review-screen.js` (`content-preview-review-wiring`, `review-intro-wiring`, `standalone-config`, `async-result`, `exam-switch-dashboard`).
 - Kiểm chứng: `npm test` 693/693; `candidate-entry-review-smoke` (roster, thông báo quyền làm lại, Xem kết quả), `candidate-flow-smoke`, `candidate-exam-mode-smoke`, `candidate-mobile-smoke` pass.
 - Còn trong `content-preview.mjs`: `renderExamInterface` (~850 dòng: bài thi, đồng hồ, nộp bài, nháp). Chưa tách vì cần thêm smoke audio trước (audio chưa được phủ).
+
+## Smoke âm thanh `tests/browser/candidate-audio-smoke.mjs` (13/11/2026)
+
+Thẻ `<audio>` thật với file WAV im lặng do test phục vụ (2 giây và 30 giây; không giả lập trình phát). Chạy: `node tests/browser/candidate-audio-smoke.mjs`.
+
+Phủ (shell thật: `dynamic-exam-renderer.mjs` khối nghe, `candidate/exam-mode.js` Exam Guard):
+1. Cổng âm thanh: phần có bài nghe hiện thông báo "đề đang được ẩn", ô trả lời bị ẩn cho tới khi bài nghe bắt đầu phát; hiện "Còn 1 lượt nghe".
+2. Bấm nghe: mở khóa đề (`data-audio-unlocked`), nút đổi "Tạm dừng", lượt đang nghe dở đã tính là dùng ("Còn 0 lượt nghe").
+3. Tạm dừng giữa chừng: nút "Tiếp tục nghe", vẫn còn 0 lượt; tiếp tục được.
+4. Nghe xong: khóa (nút ẩn, "Bài nghe đã khóa", `data-listens-count=1`), bấm lại qua DOM không phát lại.
+5. Chuyển phần rồi quay lại: giữ trạng thái đã mở khóa.
+6. Chỉ một bài phát cùng lúc (bài khác bị tạm dừng khi bài mới phát); file âm thanh lỗi (404) thì báo "Không thể phát file".
+7. Tự giám sát: rời bài tạm dừng âm thanh đang phát, "Quay lại bài thi" cho phát tiếp.
+
+Kiểm tra đột biến (bị bắt, đã hoàn nguyên): bỏ tạm dừng bài khác khi phát bài mới; bỏ tạm dừng âm thanh khi rời bài; bỏ mở khóa đề khi phát. Bỏ riêng điều kiện `listensCount >= maxListens` không làm smoke đỏ vì nút đã `disabled` sau khi nghe xong (hai lớp bảo vệ chồng nhau).
+
+### Khoảng trống phát hiện (chưa sửa, cần quyết định)
+
+**Tải lại trang làm mất khóa "chỉ nghe một lần".** Shell thật giữ số lượt nghe và trạng thái mở khóa trong bộ nhớ trang; không gọi `/attempts/audio/checkpoint` hay `/attempts/audio/resume` (chỉ đường prototype đã gỡ gọi hai điểm cuối này). Smoke nghe hết bài A, tải lại trang, vào lại lượt: bài A lại còn 1 lượt nghe (`knownGaps.audioListenLockSurvivesReload: false`, 0 lời gọi checkpoint/resume). Hệ quả: học viên có thể nghe lại bằng cách tải lại. Backend có sẵn hai điểm cuối; sửa cần nối chúng vào khối nghe và quyết định hành vi mong muốn (khóa theo máy chủ hay chỉ trình duyệt). Chưa kiểm hành vi backend thật.
+
+Điều kiện tiên quyết cho `renderExamInterface` đã đủ: ngoài smoke luồng học viên, Exam Mode, lối vào/xem kết quả, nay có smoke âm thanh.
