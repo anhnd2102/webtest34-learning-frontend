@@ -161,11 +161,12 @@ export async function mergeAudit(auditFiles, { minStates = 3 } = {}) {
   const observed = new Map();
   for (const file of auditFiles) {
     for (const entry of JSON.parse(readFileSync(file, 'utf8'))) {
-      const total = observed.get(entry.key) || { matched: 0, changed: 0, inline: 0, hidden: 0, statesMatched: 0, statesChanged: [], skipped: {} };
+      const total = observed.get(entry.key) || { matched: 0, changed: 0, inline: 0, hidden: 0, written: 0, statesMatched: 0, statesChanged: [], skipped: {} };
       total.matched += entry.matched;
       total.changed += entry.changed;
       total.inline += entry.inline;
       total.hidden += entry.hidden;
+      total.written += entry.written || 0;
       total.statesMatched += entry.statesMatched;
       for (const label of entry.statesChanged) if (total.statesChanged.length < 4 && !total.statesChanged.includes(label)) total.statesChanged.push(label);
       for (const [reason, count] of Object.entries(entry.skipped)) total.skipped[reason] = (total.skipped[reason] || 0) + count;
@@ -179,8 +180,8 @@ export async function mergeAudit(auditFiles, { minStates = 3 } = {}) {
     perRuleProperty.set(id, (perRuleProperty.get(id) || 0) + 1);
   }
   const classified = staticReport.classified.map(entry => {
-    const data = observed.get(entry.key) || { matched: 0, changed: 0, inline: 0, hidden: 0, statesMatched: 0, statesChanged: [], skipped: {} };
-    const result = { ...entry, staticClass: entry.class, matched: data.matched, changed: data.changed, inline: data.inline, hidden: data.hidden, statesMatched: data.statesMatched, statesChanged: data.statesChanged, skipped: data.skipped };
+    const data = observed.get(entry.key) || { matched: 0, changed: 0, inline: 0, hidden: 0, written: 0, statesMatched: 0, statesChanged: [], skipped: {} };
+    const result = { ...entry, staticClass: entry.class, matched: data.matched, changed: data.changed, inline: data.inline, hidden: data.hidden, written: data.written, statesMatched: data.statesMatched, statesChanged: data.statesChanged, skipped: data.skipped };
     const duplicates = perRuleProperty.get(entry.key.split('#').slice(0, 3).join('#')) > 1;
     if (entry.class === 'hard-excluded') result.final = 'keep:hard-excluded';
     else if (entry.class === 'inert-static') result.final = 'strip:inert-static';
@@ -188,7 +189,14 @@ export async function mergeAudit(auditFiles, { minStates = 3 } = {}) {
     else if (data.changed > 0) result.final = 'keep:load-bearing';
     else if (data.inline > 0) result.final = 'keep:beats-inline';
     else if (entry.class === 'animated') result.final = 'keep:animated';
-    else if (entry.class === 'beats-inline-or-js') result.final = data.matched ? 'keep:protected-property' : 'keep:unobserved';
+    else if (entry.class === 'beats-inline-or-js') {
+      // Bảo vệ theo phần tử: nếu trong mọi trạng thái đã đo không có phần tử khớp selector nào từng bị ghi inline cùng longhand
+      // (đo bằng MutationObserver suốt vòng đời trang), khai báo là ứng viên gỡ; vẫn cần lưới computed trước/sau để xác nhận.
+      if (!data.matched) result.final = 'keep:unobserved';
+      else if (data.written > 0) result.final = 'keep:written-inline';
+      else if (data.statesMatched < minStates) result.final = 'keep:weak-evidence';
+      else result.final = 'candidate:protected-no-writes';
+    }
     else if (entry.class === 'unresolved') result.final = 'keep:unresolved';
     else if (duplicates) result.final = 'keep:duplicate-in-rule';
     else if (!data.matched) result.final = 'keep:unobserved';
@@ -212,7 +220,8 @@ async function main([command, ...args]) {
     console.log(JSON.stringify({ files: files.length, counts }, null, 2));
     if (outIndex >= 0) writeFileSync(args[outIndex + 1], JSON.stringify(report, null, 2) + '\n');
     if (editsIndex >= 0) {
-      const edits = report.classified.filter(entry => entry.final.startsWith('strip:')).map(entry => ({ key: entry.key, action: 'strip-important' }));
+      const includeCandidates = args.includes('--include-candidates');
+      const edits = report.classified.filter(entry => entry.final.startsWith('strip:') || (includeCandidates && entry.final.startsWith('candidate:'))).map(entry => ({ key: entry.key, action: 'strip-important' }));
       writeFileSync(args[editsIndex + 1], JSON.stringify(edits, null, 2) + '\n');
       console.log(`edits: ${edits.length}`);
     }

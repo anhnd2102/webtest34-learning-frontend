@@ -78,6 +78,7 @@ try {
     server.stdout.on('data', data => { if (String(data).includes(`:${port}/`)) { clearTimeout(timer); resolve(); } });
   });
   browser = await chromium.launch({ channel: 'chrome', headless: true });
+  importantAudit?.attach(browser);
   for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
     const page = await browser.newPage({ viewport, reducedMotion: 'reduce', locale: 'vi-VN', timezoneId: 'Asia/Ho_Chi_Minh' });
     page.setDefaultTimeout(10000);

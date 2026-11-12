@@ -463,19 +463,19 @@
 .btn-preview-test,
 .btn-save-draft,
 .btn-publish-test {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
-  height: 40px !important;
+  height: 40px;
   min-height: 40px;
   max-height: 40px;
   line-height: 40px;
   padding: 0 16px;
   font-size: 0.88rem !important;
   font-weight: 700 !important;
-  border-radius: 10px !important;
-  width: auto !important;
+  border-radius: 10px;
+  width: auto;
   min-width: fit-content;
   flex-shrink: 0;
   white-space: nowrap;
@@ -490,7 +490,7 @@
 #btn-save-draft span,
 #btn-publish-test span {
   white-space: nowrap;
-  display: inline-block !important;
+  display: inline-block;
 }
 
 /* Test Studio: Live Score Breakdown Bar */
@@ -1323,7 +1323,7 @@
 .block-instructions-input,
 .block-reading-input,
 .item-prompt-input {
-  width: 100% !important;
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   font-family: inherit;
@@ -1341,7 +1341,7 @@
 }
 
 .item-prompt-input {
-  width: 100% !important;
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   min-height: 110px;
@@ -1500,10 +1500,10 @@
 .option-select-label input[type="radio"],
 .option-select-label input[type="checkbox"] {
   width: 18px !important;
-  min-width: 18px !important;
+  min-width: 18px;
   max-width: 18px;
   height: 18px !important;
-  margin: 0 !important;
+  margin: 0;
   padding: 0;
   flex: 0 0 18px;
   flex-shrink: 0;
@@ -1816,7 +1816,7 @@
 }
 
 .input-bulk-vocab-options {
-  width: 100% !important;
+  width: 100%;
   box-sizing: border-box;
   font-family: inherit;
   font-size: 0.9rem;

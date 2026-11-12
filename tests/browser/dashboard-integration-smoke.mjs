@@ -40,6 +40,7 @@ try {
     server.stdout.on('data', data => { if (String(data).includes(`:${port}/`)) { clearTimeout(timer); resolve(); } });
   });
   browser = await chromium.launch({ channel: 'chrome', headless: true });
+  importantAudit?.attach(browser);
   const report = [];
   const viewports = process.env.SMOKE_VIEWPORTS ? JSON.parse(process.env.SMOKE_VIEWPORTS) : [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }];
   for (const viewport of viewports) {

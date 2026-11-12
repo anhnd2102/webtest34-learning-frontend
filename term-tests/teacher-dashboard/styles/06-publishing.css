@@ -217,16 +217,16 @@
 .sr-only-radio,
 .purpose-radio-card input[type="radio"],
 .scope-radio-card input[type="radio"] {
-  position: absolute !important;
-  opacity: 0 !important;
-  width: 1px !important;
-  height: 1px !important;
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
   padding: 0;
   margin: -1px !important;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  border: 0 !important;
-  pointer-events: none !important;
+  border: 0;
+  pointer-events: none;
 }
 
 /* Tile Card Header layout */
@@ -610,8 +610,8 @@
 }
 
 #btn-final-publish.is-ready {
-  background: var(--izone-danger) !important;
-  border-color: #b91c1c !important;
+  background: var(--izone-danger);
+  border-color: #b91c1c;
   animation: pulse-ready 2s infinite ease-in-out;
 }
 

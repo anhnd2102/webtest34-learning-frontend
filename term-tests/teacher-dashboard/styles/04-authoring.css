@@ -337,8 +337,8 @@
 }
 
 .batch-radio-label {
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
   gap: 10px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -363,10 +363,10 @@
 }
 
 .batch-radio-label input[type="radio"] {
-  width: 16px !important;
-  height: 16px !important;
+  width: 16px;
+  height: 16px;
   min-width: 16px;
-  margin: 0 !important;
+  margin: 0;
   padding: 0;
   flex-shrink: 0;
   cursor: pointer;
@@ -395,21 +395,21 @@
 }
 
 .batch-checkbox-row {
-  display: inline-flex !important;
-  align-items: center !important;
+  display: inline-flex;
+  align-items: center;
   gap: 10px;
-  font-size: 0.875rem !important;
-  color: #334155 !important;
+  font-size: 0.875rem;
+  color: #334155;
   cursor: pointer;
   user-select: none;
-  margin: 0 !important;
+  margin: 0;
 }
 
 .batch-checkbox-row input[type="checkbox"] {
-  width: 16px !important;
-  height: 16px !important;
+  width: 16px;
+  height: 16px;
   min-width: 16px;
-  margin: 0 !important;
+  margin: 0;
   flex-shrink: 0;
   cursor: pointer;
   accent-color: #db0829;

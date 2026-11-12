@@ -1,58 +1,58 @@
 {
-  "baseline": "a61d04d",
-  "sourceSha256": "03cd17ccb09e7ea6d45ecbf5d1c709b5e129c1f60db5f15a62eb375ee7effb9b",
+  "baseline": "c2237ec",
+  "sourceSha256": "ec16c8ebe39fc05484ba1718feb7f1b512adf049df1d99e7ebfde0057ef561d1",
   "sourceLines": 12704,
   "fragments": [
     {
-      "href": "styles/01-foundation.css?rev=20261112-duplicates-a",
+      "href": "styles/01-foundation.css?rev=20261112-protected-a",
       "startLine": 1,
       "endLine": 1107,
-      "sha256": "a2e97a9db029c8ae323e8503c734729ed564b06c313dc5480b6a42a7e19a9663",
+      "sha256": "42b95c76e931da3ac38a81c7b64332a3fb7e977a332b140e04a7a9890e664970",
       "extractionStartLine": 1,
       "extractionEndLine": 1069
     },
     {
-      "href": "styles/02-dashboard-grading.css?rev=20261112-duplicates-a",
+      "href": "styles/02-dashboard-grading.css?rev=20261112-protected-a",
       "startLine": 1108,
       "endLine": 2747,
-      "sha256": "123b50a6e559266335b846967679029c3f3a33b7cf1565027b11596de84324c0",
+      "sha256": "c2ea5256b70ba84866c7c1aaead3ab356b293bb2d2b7e82ad8578509dc00bb92",
       "extractionStartLine": 1070,
       "extractionEndLine": 2726
     },
     {
-      "href": "styles/03-studio-builder.css?rev=20261112-duplicates-a",
+      "href": "styles/03-studio-builder.css?rev=20261112-protected-a",
       "startLine": 2748,
       "endLine": 4683,
-      "sha256": "6bf8517cc1bd3f59181608bd00249d40d370af4944437e127e9873a95b0010ed",
+      "sha256": "3981842880d8afe25fc2358816804aaf87aa98e5aeaa9373f703b68ab67d8d86",
       "extractionStartLine": 2727,
       "extractionEndLine": 4644
     },
     {
-      "href": "styles/04-authoring.css?rev=20261112-duplicates-a",
+      "href": "styles/04-authoring.css?rev=20261112-protected-a",
       "startLine": 4684,
       "endLine": 5347,
-      "sha256": "6594e7994d5140322bb5ac57cd9abdfa68f17b66e92e7ab73f6bc7884c6164f4",
+      "sha256": "b80af14f1f3c10ca7400af86995d5af3ff0818e1c07c70f0f55709465ca0805d",
       "extractionStartLine": 4645,
       "extractionEndLine": 5289
     },
     {
-      "href": "styles/05-simulation-questions.css?rev=20261112-duplicates-a",
+      "href": "styles/05-simulation-questions.css?rev=20261112-protected-a",
       "startLine": 5348,
       "endLine": 6215,
-      "sha256": "887ea5c141a33dc197c12a84c8f83c37ef8061bc83f07e7f693a837e0adcf167",
+      "sha256": "cd0dc4be60d4c3ef4fd3362030cbfaaf0199bbc29a1367d651a121d8700bdb31",
       "extractionStartLine": 5290,
       "extractionEndLine": 6204
     },
     {
-      "href": "styles/06-publishing.css?rev=20261112-duplicates-a",
+      "href": "styles/06-publishing.css?rev=20261112-protected-a",
       "startLine": 6216,
       "endLine": 7379,
-      "sha256": "deadff6e56fbccd7e5160741c611726feb44a065b9a426d24ff2dd1811efc766",
+      "sha256": "7ce7b2922eb224bcbd00f60ede6bbf37635b29206c1d4cf4dc205338f84416fc",
       "extractionStartLine": 6205,
       "extractionEndLine": 6829
     },
     {
-      "href": "styles/07-reports-and-question-layouts.css?rev=20261112-duplicates-a",
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261112-protected-a",
       "startLine": 7380,
       "endLine": 8959,
       "sha256": "8cb5cc911b13c9c5319067ac1f559f217fb407b02992a4a816bea3b6ba1739a6",
@@ -60,15 +60,15 @@
       "extractionEndLine": 7911
     },
     {
-      "href": "styles/08-studio-simulation-shell.css?rev=20261112-duplicates-a",
+      "href": "styles/08-studio-simulation-shell.css?rev=20261112-protected-a",
       "startLine": 8960,
       "endLine": 10032,
-      "sha256": "1867d1ebff6ddc4601aae91b9fa929cb36b9192e75520c7979a39c09a430268e",
+      "sha256": "80c667ef3d86958ece4fc90cf242bc561597583a06fe7d7bca5c6a3d4c088355",
       "extractionStartLine": 7912,
       "extractionEndLine": 8949
     },
     {
-      "href": "styles/09-editor-media.css?rev=20261112-duplicates-a",
+      "href": "styles/09-editor-media.css?rev=20261112-protected-a",
       "startLine": 10033,
       "endLine": 10583,
       "sha256": "bc8cf66528635916a8d6c48383ebde28595596a434a4196bc48e6d3015d99aeb",
@@ -76,15 +76,15 @@
       "extractionEndLine": 9535
     },
     {
-      "href": "styles/10-studio-overrides.css?rev=20261112-duplicates-a",
+      "href": "styles/10-studio-overrides.css?rev=20261112-protected-a",
       "startLine": 10584,
       "endLine": 11346,
-      "sha256": "d51a0727cf801781c1aa621c349df90fa1d42653e6ceaaa6dcdfd7c76038d56d",
+      "sha256": "daf0862790917e0f01f34f3637065b8729a61da21f6f0dd530039689cef80911",
       "extractionStartLine": 9536,
       "extractionEndLine": 10306
     },
     {
-      "href": "styles/11-analytics.css?rev=20261112-duplicates-a",
+      "href": "styles/11-analytics.css?rev=20261112-protected-a",
       "startLine": 11347,
       "endLine": 12214,
       "sha256": "090a8b29cd6c3777beebf1096df9f272717595d969cb75a033105750bbdda19e",
@@ -92,10 +92,10 @@
       "extractionEndLine": 11174
     },
     {
-      "href": "styles/12-context-and-assessment.css?rev=20261112-duplicates-a",
+      "href": "styles/12-context-and-assessment.css?rev=20261112-protected-a",
       "startLine": 12215,
       "endLine": 12704,
-      "sha256": "18b2954a1ea8519ae0aba1f84a5e421d46bb4ddb5eca86d16dd1df8511d4524d",
+      "sha256": "24d4ba3c53c75eb4ebfb33870743f44d73ddb96a91e6fe1d5bc359408c636768",
       "extractionStartLine": 11175,
       "extractionEndLine": 11527
     }
@@ -105,5 +105,5 @@
     "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
     "sourceLines": 11527
   },
-  "revision": "duplicates-a"
+  "revision": "protected-a"
 }

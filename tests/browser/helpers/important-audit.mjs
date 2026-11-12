@@ -23,9 +23,84 @@ export function importantAuditEnabled() {
 export function createImportantAudit() {
   const declarations = scanDeclarations().filter(declaration => declaration.important);
   const payload = declarations.map(({ key, order, property, value }) => ({ key, order, property, value }));
-  const totals = new Map(declarations.map(declaration => [declaration.key, { key: declaration.key, matched: 0, changed: 0, inline: 0, hidden: 0, statesChanged: [], statesMatched: 0, skipped: {} }]));
+  const totals = new Map(declarations.map(declaration => [declaration.key, { key: declaration.key, matched: 0, changed: 0, inline: 0, hidden: 0, written: 0, statesChanged: [], statesMatched: 0, skipped: {} }]));
+  // Ghi inline style trong suốt vòng đời trang: với mỗi khai báo, đếm số lần một phần tử khớp selector của nó
+  // được ghi inline cùng longhand (bất kể còn tồn tại ở thời điểm chụp hay không). attach(browser) cài vào mọi trang mới.
+  const installWriteLog = (argument) => {
+    const { entries } = argument;
+    const counts = {};
+    window.__importantWrites = counts;
+    const probe = document.createElement('div');
+    const longhandCache = new Map();
+    const longhandsOf = entry => {
+      const id = entry.property + '|' + entry.value;
+      if (!longhandCache.has(id)) { probe.style.cssText = ''; probe.style.setProperty(entry.property, entry.value); longhandCache.set(id, [...probe.style]); }
+      return longhandCache.get(id);
+    };
+    let rules = null;
+    const maxOrder = Math.max(...entries.map(entry => entry.order));
+    const pending = [];
+    const loadRules = () => {
+      const list = [];
+      const visit = rulesList => { for (const rule of rulesList) { if (rule.styleSheet) visit(rule.styleSheet.cssRules); else if (rule.selectorText) list.push(rule); else if (rule.constructor.name === 'CSSMediaRule') visit(rule.cssRules); } };
+      for (const sheet of document.styleSheets) { try { if (sheet.href && new URL(sheet.href).pathname.endsWith('/styles.css')) visit(sheet.cssRules); } catch { /* chưa tải */ } }
+      return list.length > maxOrder ? list : null; // @import chưa tải xong thì chưa dùng (chỉ số order sẽ lệch)
+    };
+    const record = element => {
+      if (!(element instanceof Element) || !element.hasAttribute('style')) return;
+      const inline = new Set([...element.style]);
+      if (!inline.size) return;
+      rules = rules || loadRules();
+      if (!rules) { pending.push(element); return; }
+      for (const entry of entries) {
+        const rule = rules[entry.order];
+        if (!rule) continue;
+        const longhands = longhandsOf(entry);
+        if (!longhands.some(name => inline.has(name))) continue;
+        let hit = false;
+        try { hit = element.matches(rule.selectorText); } catch { hit = false; }
+        if (hit) counts[entry.key] = (counts[entry.key] || 0) + 1;
+      }
+    };
+    const flush = () => {
+      rules = rules || loadRules();
+      if (!rules) return;
+      for (const element of pending.splice(0)) record(element);
+    };
+    const scan = node => {
+      if (!(node instanceof Element)) return;
+      record(node);
+      for (const child of node.querySelectorAll('[style]')) record(child);
+    };
+    const start = () => {
+      scan(document.documentElement);
+      new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+          if (mutation.type === 'attributes') record(mutation.target);
+          else for (const node of mutation.addedNodes) scan(node);
+        }
+      }).observe(document.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ['style'] });
+    };
+    window.addEventListener('load', flush);
+    for (const delay of [200, 600, 1500, 3000]) setTimeout(flush, delay);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  };
+  const drainWrites = async page => {
+    let drained = {};
+    try { drained = await page.evaluate(() => { const copy = { ...(window.__importantWrites || {}) }; for (const key of Object.keys(window.__importantWrites || {})) delete window.__importantWrites[key]; return copy; }); } catch { /* trang đã đóng */ }
+    for (const [key, count] of Object.entries(drained)) { const total = totals.get(key); if (total) total.written += count; }
+  };
   return {
+    attach(browser) {
+      const original = browser.newPage.bind(browser);
+      browser.newPage = async (...args) => {
+        const page = await original(...args);
+        await page.addInitScript(installWriteLog, { entries: payload });
+        return page;
+      };
+    },
     async observe(page, label) {
+      await drainWrites(page);
       const viewport = page.viewportSize();
       const stateLabel = `${viewport ? viewport.width : '?'}:${label}`;
       const results = await page.evaluate(entries => {

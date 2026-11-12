@@ -35,14 +35,14 @@
 
 /* Candidate Simulation & Test Studio Overlay & Floating Modals */
 .candidate-sim-overlay {
-  position: fixed !important;
+  position: fixed;
   inset: 0;
-  background: var(--izone-overlay-backdrop) !important;
+  background: var(--izone-overlay-backdrop);
   backdrop-filter: blur(4px);
   z-index: 10050;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
   animation: batchModalFadeIn 0.2s ease-out !important;
 }
@@ -50,15 +50,15 @@
 .candidate-sim-modal,
 .block-csv-modal,
 .quick-csv-guide-modal {
-  background: var(--izone-surface) !important;
+  background: var(--izone-surface);
   border: 1px solid var(--izone-slate-300) !important;
   border-radius: 12px !important;
   box-shadow: 0 25px 50px -12px var(--izone-shadow-modal-color) !important;
   max-height: 90vh !important;
-  display: flex !important;
+  display: flex;
   flex-direction: column;
   overflow: hidden;
-  position: relative !important;
+  position: relative;
   z-index: 10051;
 }
 
@@ -76,7 +76,7 @@
 .btn.btn-view-csv-guide,
 .btn-ghost-subtle.btn-view-csv-guide {
   width: auto !important;
-  height: auto !important;
+  height: auto;
   min-height: 32px;
   padding: 4px 12px;
   display: inline-flex !important;
@@ -87,7 +87,7 @@
   font-weight: 500 !important;
   border-radius: 6px !important;
   border: 1px solid var(--izone-slate-300) !important;
-  background: var(--izone-surface) !important;
+  background: var(--izone-surface);
   color: var(--izone-text-body) !important;
   transition: all 0.15s ease !important;
 }
@@ -102,28 +102,28 @@
 
 /* Quick CSV Guide Table styling with explicit crisp borders */
 .quick-guide-table {
-  width: 100% !important;
+  width: 100%;
   border-collapse: collapse;
-  font-size: 12px !important;
-  border: 1px solid var(--izone-slate-300) !important;
+  font-size: 12px;
+  border: 1px solid var(--izone-slate-300);
 }
 
 .quick-guide-table th {
-  background: var(--izone-slate-100) !important;
-  color: var(--izone-slate-900) !important;
-  font-weight: 700 !important;
+  background: var(--izone-slate-100);
+  color: var(--izone-slate-900);
+  font-weight: 700;
   padding: 8px 10px;
-  border: 1px solid var(--izone-slate-300) !important;
+  border: 1px solid var(--izone-slate-300);
 }
 
 .quick-guide-table td {
   padding: 8px 10px !important;
-  border: 1px solid var(--izone-slate-300) !important;
+  border: 1px solid var(--izone-slate-300);
   vertical-align: top;
 }
 
 .quick-guide-table tr:nth-child(even) td {
-  background: var(--izone-slate-bg) !important;
+  background: var(--izone-slate-bg);
 }
 
 
@@ -133,7 +133,7 @@
 
 /* Page Title Bar behavior */
 .page-title-bar[hidden] {
-  display: none !important;
+  display: none;
 }
 
 /* Compact Assessment Header */
@@ -270,7 +270,7 @@
 }
 
 .assessment-tab-panel[hidden] {
-  display: none !important;
+  display: none;
 }
 
 /* 6 KPI Cards Click-to-Filter Styling */

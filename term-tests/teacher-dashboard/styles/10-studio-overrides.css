@@ -28,7 +28,7 @@ button.btn-icon,
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
-  background: #ffffff !important;
+  background: #ffffff;
   color: #64748b !important;
   border: 1px solid var(--izone-border, #e2e8f0) !important;
   border-radius: 6px !important;
@@ -104,8 +104,8 @@ button.btn-icon:disabled,
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: transparent !important;
-  color: #64748b !important;
+  background: transparent;
+  color: #64748b;
   border: none !important;
   border-bottom: 3px solid transparent !important;
   border-radius: 8px 8px 0 0 !important;

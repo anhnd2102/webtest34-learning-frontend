@@ -61,5 +61,13 @@ Test cập nhật có chủ đích: `test-studio-inline-cloze.test.mjs` từng k
 ## Còn lại (chưa làm)
 
 - **116 khai báo chết do khai báo trùng thắng: ĐÃ GỠ** (12/11/2026, rev `20261112-duplicates-a`) cùng 13 rule rỗng còn lại; rule-map 1828 rule. Kiểm chứng: `npm test` 688/688; computed style của 195 snapshot (13 nhóm `toggle-visibility-parity`, 3 viewport) giống hệt HEAD.
-- Thu hẹp 139 khai báo `keep:protected-property` theo từng phần tử thay vì từng thuộc tính.
+- Thu hẹp 139 khai báo `keep:protected-property`: **ĐÃ LÀM MỘT PHẦN** (12/11/2026, rev `20261112-protected-a`), xem mục dưới.
 - `dynamic-test.css` (285 `!important`): thuộc bước 7.
+
+## Thu hẹp `keep:protected-property` theo từng phần tử (12/11/2026)
+
+- **Bằng chứng mới:** `tests/browser/helpers/important-audit.mjs` có `attach(browser)` cài `MutationObserver` vào mọi trang mới, ghi mỗi lần một phần tử khớp selector của khai báo bị ghi inline cùng longhand (kể cả ghi tạm thời, không còn ở thời điểm chụp). `css-important-audit.mjs merge` thêm lớp `candidate:protected-no-writes` (khớp phần tử ở ít nhất 3 trạng thái và không bao giờ bị ghi inline) và `keep:written-inline`; `--include-candidates` đưa ứng viên vào danh sách chỉnh sửa.
+- **Kết quả đo (20 lượt chụp):** cả 139 khai báo đều không có lần ghi inline nào trên phần tử khớp. Quét đồng xuất hiện trong mã (selector và lệnh ghi style cùng thuộc tính trong vài dòng) loại thêm 19 khai báo nghi ngờ; lọc anh em loại thêm 10 (xem dưới). Gỡ **116** khai báo; còn **123** `!important` ở `styles/01–12`.
+- **Hồi quy phát hiện nhờ lưới computed (và đã sửa trước khi commit):** lần đầu gỡ 126 khai báo, 30 snapshot ở `.modal-batch-tab-btn` lệch (`border-bottom` 43px thành 40px). Nguyên nhân: cùng rule có `border: none !important`; khi `border-bottom: ... !important` mất priority thì thua khai báo anh em `!important`. Phép đo từng khai báo (bỏ priority tại chỗ rồi đọc computed) **không phát hiện** tương tác này. Bài học: không gỡ `!important` của khai báo nếu cùng rule còn khai báo `!important` khác cùng họ thuộc tính (`border`, `font`...). 10 khai báo như vậy được giữ lại (`03#539`, `05#856`, `05#860`, `10#1523`, `12#1767`).
+- **Kiểm chứng sau khi sửa:** `npm test` 707/707; rule-map 1828 rule khớp; lưới computed 20 lượt (438 snapshot) trước/sau cùng Chrome: **434/438 giống hệt**. 4 snapshot lệch đều là nhiễu đã biết: 3 trạng thái `guide-default` (overlay có animation) và `builder-image-error` ở 1024 (focus đặt trễ). Chạy lại riêng `builder-image-error` 1024 trên cây CSS mới 3 lần: 2/3 giống baseline và hai lần chạy cùng một cây CSS cũng khác nhau, nên đó là nhiễu, không phải thay đổi.
+- **Giới hạn:** chỉ phủ trạng thái trong fixture (không hover/focus/disabled, không dữ liệu thật). Bằng chứng "không ghi inline" cũng chỉ trong fixture. Nếu có lỗi hiển thị về sau ở màn hình ít dùng, hoàn nguyên bằng `git revert` commit này (một commit, không migration).

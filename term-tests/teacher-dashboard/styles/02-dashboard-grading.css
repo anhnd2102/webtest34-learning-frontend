@@ -10,7 +10,7 @@
   transition: opacity 0.25s ease;
 }
 .drawer-backdrop[hidden] {
-  display: none !important;
+  display: none;
 }
 
 .sliding-drawer, #attempt-detail.sliding-drawer {
@@ -698,16 +698,16 @@
 }
 
 .modal-options-list li.is-correct-key {
-  background: #f0fdf4 !important;
-  border-color: #86efac !important;
-  color: #15803d !important;
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #15803d;
   font-weight: 700;
 }
 
 .modal-options-list li.is-wrong-selection {
-  background: #fef2f2 !important;
-  border-color: #fca5a5 !important;
-  color: #b91c1c !important;
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #b91c1c;
   font-weight: 700;
 }
 
@@ -1449,7 +1449,7 @@
 }
 
 .role-capabilities-popover[hidden] {
-  display: none !important;
+  display: none;
 }
 
 @keyframes popoverFadeIn {
@@ -1600,7 +1600,7 @@
   width: 100%;
 }
 .dashboard-view-container[hidden] {
-  display: none !important;
+  display: none;
 }
 
 /* Showcase Call-to-Action Bar */

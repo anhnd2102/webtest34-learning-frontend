@@ -223,7 +223,7 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shado
 }
 .showcase-panel:has(#selected-assignment-card:not([hidden])) .showcase-placeholder,
 #selected-assignment-card:not([hidden]) ~ .showcase-placeholder {
-  display: none !important;
+  display: none;
 }
 
 .showcase-header {
@@ -1028,7 +1028,7 @@ body.login-page .page-title-bar {
   display: none !important;
 }
 body:not(.login-page) #auth-panel {
-  display: none !important;
+  display: none;
 }
 
 @media (max-width: 900px) {
