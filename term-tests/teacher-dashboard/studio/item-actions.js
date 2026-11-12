@@ -287,6 +287,7 @@ export function bindItemActions({ container, draftState, markAsDirty, isBuilderD
             delete draftState.gradingKey.items[deletedItem.itemVersionId];
           }
           resequenceItemPositions();
+          markAsDirty();
           render();
         }
       });
