@@ -328,3 +328,53 @@ test('isKeyboardOpen phân biệt bàn phím với phóng to và thanh địa ch
   assert.equal(isKeyboardOpen({ height: 422, scale: 2 }, 844), false, 'phóng to 2 lần không phải bàn phím');
   assert.equal(isKeyboardOpen({ height: 780, scale: 1 }, 844), false, 'thanh địa chỉ co giãn không phải bàn phím');
 });
+
+test('dynamic-exam-renderer: câu điền chỗ trống không bị gom thành câu trả lời ngắn (#39)', () => {
+  const prompt = 'Fill in: The career (1) ........ and the money (2) ........ matter.';
+  for (const extra of [
+    { layoutType: 'table_completion' },
+    { pedagogicalTypeCode: 'table_completion' },
+    { pedagogicalTypeCode: 'inline_cloze' },
+    {}
+  ]) {
+    const container = { innerHTML: '', addEventListener: () => {}, querySelectorAll: () => [] };
+    const definition = { title: 'T', blocks: [{ title: 'Phần A', items: [
+      { itemVersionId: 'c1', position: 1, interactionType: 'short_text', prompt, ...extra }
+    ] }] };
+    renderDynamicExam(definition, container, { state: { answers: {} }, activeSection: 'Phần A', onAnswerChange: () => {} });
+    const html = container.innerHTML;
+    const label = JSON.stringify(extra);
+    assert.ok(html.includes('cbt-cloze-content'), `${label}: phải dựng thành điền chỗ trống`);
+    assert.ok(!html.includes('candidate-short-qa'), `${label}: không được gom vào nhóm câu trả lời ngắn`);
+    assert.equal(getItemSpanCount(definition.blocks[0].items[0]), 2, `${label}: đếm đúng số ô`);
+  }
+});
+
+test('dynamic-exam-renderer: bản nháp cũ dạng chuỗi chỉ vào ô trống đầu, không mất khi sửa ô khác (#39)', () => {
+  const item = { itemVersionId: 'c1', position: 1, interactionType: 'short_text', layoutType: 'table_completion',
+    prompt: 'The career (1) ........ and the money (2) ........ matter.' };
+  const html = renderQuestionCard(item, { c1: 'interesting' });
+  const values = [...html.matchAll(/data-position="(\d+)" placeholder="" value="([^"]*)"/g)].map(m => [m[1], m[2]]);
+  assert.deepEqual(values, [['1', 'interesting'], ['2', '']]);
+
+  // Học viên gõ vào ô (2): state phải giữ cả đáp án cũ ở ô (1).
+  const blank = (pos, value) => ({
+    value,
+    classList: { contains: () => false },
+    getAttribute: name => ({ 'data-item-id': 'c1', 'data-position': pos })[name] ?? null,
+    closest: sel => (sel === '.inline-blank-wrapper' ? { classList: { toggle() {} } } : null)
+  });
+  const inputs = [blank('1', 'interesting'), blank('2', 'money')];
+  const listeners = {};
+  const root = {
+    querySelectorAll: sel => (sel === '.inline-fill-input' ? inputs : []),
+    querySelector: () => null,
+    addEventListener: (name, fn) => { (listeners[name] ||= []).push(fn); }
+  };
+  const state = { answers: { c1: 'interesting' }, unlockedAudioBlocks: new Set() };
+  const changes = [];
+  initDynamicExamInteractions(root, { definition: { blocks: [] }, state, onAnswerChange: (id, v) => changes.push([id, v]) });
+  listeners.input.forEach(fn => fn({ target: inputs[1] }));
+  assert.deepEqual(state.answers.c1, { 1: 'interesting', 2: 'money' });
+  assert.deepEqual(changes.at(-1), ['c1', { 1: 'interesting', 2: 'money' }]);
+});

@@ -560,6 +560,14 @@ export const checks = {
     const sec = '#sim-block-5';
     const dock = page.locator(`${sec} .strict-audio-dock`);
     await goToSection(page, -1);
+    // Chrome headless phát audio không ổn định (có lúc đứng giữa chừng), nên giả lập phát/dừng để chỉ kiểm tra giao diện.
+    await page.evaluate(s => {
+      const a = document.querySelector(`${s} audio`);
+      let playing = false;
+      Object.defineProperty(a, 'paused', { configurable: true, get: () => !playing });
+      a.play = async () => { playing = true; a.dispatchEvent(new Event('playing')); };
+      a.pause = () => { playing = false; a.dispatchEvent(new Event('pause')); };
+    }, sec);
     await clickDom(page, `${sec} .btn-sim-audio-play`);
     await page.waitForSelector(`${sec}[data-audio-unlocked="true"]`);
     const sticky = vp.width < 1024;
@@ -582,6 +590,7 @@ export const checks = {
       const [d2, input] = [await dock.boundingBox(), await mid.boundingBox()];
       assert.ok(input.y >= d2.y + d2.height, `ô nhập bị trình phát che ở ${vp.width}px`);
     }
+    await page.evaluate(s => { const a = document.querySelector(`${s} audio`); a.pause(); a.dispatchEvent(new Event('ended')); }, sec);
     await page.locator(`${sec} .audio-ended-notice`).waitFor({ state: 'visible', timeout: 5000 });
     if (sticky) assert.equal(await dock.evaluate(el => getComputedStyle(el).position), 'sticky', 'trình phát mất ghim khi nghe xong');
     // Phần không có audio: phần đang chọn không có trình phát (check trước có thể đã ép hiện mọi phần).

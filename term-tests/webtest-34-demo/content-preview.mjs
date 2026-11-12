@@ -9,7 +9,7 @@ import {
   ICONS,
   ANSWER_TEXT_ATTRS,
   scrollBehavior
-} from './dynamic-exam-renderer.mjs?rev=20261112-exam-ux-v1';
+} from './dynamic-exam-renderer.mjs?rev=20261112-cloze-group-v3';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 

@@ -122,9 +122,9 @@ export function formatPedagogicalTypeLabel(item) {
   return 'Câu hỏi';
 }
 
-export function getItemSpanCount(item) {
-  if (!item) return 1;
-  const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
+// Câu điền chỗ trống (đoạn văn hoặc bảng). Mọi nơi dùng chung hàm này để màn làm bài, bảng câu hỏi và cách đếm số ô không lệch nhau.
+export function isInlineClozeItem(item) {
+  return item.pedagogicalTypeCode === 'inline_cloze' ||
     item.layoutType === 'inline_cloze' ||
     item.pedagogicalTypeCode === 'table_completion' ||
     item.layoutType === 'table_completion' ||
@@ -133,6 +133,11 @@ export function getItemSpanCount(item) {
       (item.prompt && (/(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
       (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
     ));
+}
+
+export function getItemSpanCount(item) {
+  if (!item) return 1;
+  const isInlineCloze = isInlineClozeItem(item);
   if (isInlineCloze) {
     const numPattern = /(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
     const matches = Array.from((item.prompt || '').matchAll(numPattern));
@@ -243,15 +248,7 @@ export function renderQuestionNavigator(definition, answers = {}) {
     const items = b.items || [];
     return items.flatMap(item => {
       const span = getItemSpanCount(item);
-      const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
-        item.layoutType === 'inline_cloze' ||
-        item.pedagogicalTypeCode === 'table_completion' ||
-        item.layoutType === 'table_completion' ||
-        item.layoutType === 'inline_dropdown_table' ||
-        (item.interactionType === 'short_text' && (
-          (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
-          (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
-        ));
+      const isInlineCloze = isInlineClozeItem(item);
       const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
         item.layoutType === 'timeline_sequence' ||
         item.graderType === 'ordered_sequence' ||
@@ -513,9 +510,14 @@ export function renderInlineCloze(item, answers = {}) {
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
   const containsHtml = /<[a-z][\s\S]*>/i.test(text);
 
+  // Đáp án chuỗi là bản nháp cũ từ khi câu này còn hiện thành ô trả lời ngắn (#39):
+  // chỉ đưa vào ô trống đầu tiên, không lặp lại ở mọi ô.
+  let legacyStringUsed = false;
   const renderBlank = (num) => {
     const rawVal = answers[item.itemVersionId];
-    const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
+    let val = '';
+    if (typeof rawVal === 'object' && rawVal !== null) val = rawVal[num] || '';
+    else if (typeof rawVal === 'string' && !legacyStringUsed) { val = rawVal; legacyStringUsed = true; }
     const isFilled = typeof val === 'string' && val.trim().length > 0;
     return `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
       `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
@@ -578,15 +580,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
   const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0));
   const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
   const isMultiGroup = item.interactionType === 'multi_choice_group';
-  const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
-    item.layoutType === 'inline_cloze' ||
-    item.pedagogicalTypeCode === 'table_completion' ||
-    item.layoutType === 'table_completion' ||
-    item.layoutType === 'inline_dropdown_table' ||
-    (item.interactionType === 'short_text' && (
-      (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
-      (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
-    ));
+  const isInlineCloze = isInlineClozeItem(item);
   const isRubricAsync = item.graderType === 'rubric_async' || item.interactionType === 'long_text';
 
   const rawAns = answers[item.itemVersionId];
@@ -901,7 +895,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
       const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0);
       const isVocab = item.interactionType === 'text_select_pair';
       const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
-      const isShortText = item.interactionType === 'short_text' && item.layoutType !== 'inline_cloze' && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching' && !isListeningOrder;
+      const isShortText = item.interactionType === 'short_text' && !isInlineClozeItem(item) && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching' && !isListeningOrder;
 
       const lastGroup = itemGroups[itemGroups.length - 1];
       if (isVocab) {
@@ -1435,7 +1429,14 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     if (blankWrap) {
       const pos = target.getAttribute('data-position');
       if (pos) {
-        const currentAnswers = typeof state.answers[itemId] === 'object' && state.answers[itemId] !== null ? state.answers[itemId] : {};
+        const raw = state.answers[itemId];
+        // Bản nháp cũ dạng chuỗi (#39): dựng lại từ các ô đang hiện để không mất đáp án ở ô khác.
+        const currentAnswers = typeof raw === 'object' && raw !== null
+          ? raw
+          : Object.fromEntries([...rootEl.querySelectorAll('.inline-fill-input')]
+            .filter(input => input.getAttribute('data-item-id') === itemId)
+            .map(input => [input.getAttribute('data-position'), input.value.trim()])
+            .filter(([, v]) => v));
         currentAnswers[pos] = target.value.trim();
         value = currentAnswers;
         state.answers[itemId] = value;
