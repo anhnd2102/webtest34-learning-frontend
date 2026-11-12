@@ -94,3 +94,13 @@ Kiểm chứng: `npm test` 693/693; bốn smoke học viên pass (`candidate-flo
 - `group-render.js` dùng `ICONS` của `dynamic-exam-renderer.mjs`; import cùng URL (kể cả rev) với `content-preview.mjs` để không nạp hai bản. Công cụ tìm phụ thuộc chỉ quét khai báo cấp module nên bỏ sót import; lỗi `ICONS is not defined` lộ ra ở 6 test và được sửa trước khi commit.
 - Kiểm chứng: `npm test` 693/693; bốn smoke học viên pass.
 - Tiếp theo: các khối trong `mount()` (Exam Mode, xem kết quả, nộp bài, nháp, đồng hồ) phụ thuộc biến đóng của `mount`, cần owner state như đã làm ở dashboard.
+
+### Đợt tách 2: Exam Mode ra `candidate/exam-mode.js` (13/11/2026)
+
+`createExamMode({ apiBase, learningState, deviceId, apiRequest, createUuid, renderExamInterface })` chứa nguyên văn 248 dòng: toàn màn hình, Wake Lock, heartbeat, luồng SSE (`consumeExamEvents`/`connectExamEvents`), phòng chờ, sự cố rời bài, lệnh Exam Guard, `dispatchExamGuard`, `mountExamGuard`. Trả về `requestFullscreen, requestWakeLock, stopExamConnections, connectExamEvents, renderExamWaitingRoom, dispatchExamGuard, mountExamGuard` cùng hai accessor cho biến mà shell đọc/ghi từ ngoài (`audioHold` đọc, `wantWakeLock` đọc/ghi). `content-preview.mjs` còn ~1.600 dòng.
+- `learningState` đổi từ `let` sang `const` (không bao giờ gán lại) để truyền thẳng làm phụ thuộc.
+- `apiRequest` gọi `dispatchExamGuard` khi gặp `EXAM_DEVICE_SUPERSEDED` và đứng trước chỗ khởi tạo `createExamMode`; vẫn an toàn vì lời gọi chỉ xảy ra sau khi mount khởi tạo xong (không cần wrapper lazy).
+- Đường import trong module mới sai lần đầu (`../teacher-dashboard/...` thay vì `../../teacher-dashboard/...`) làm chín file test không nạp được; công cụ tách chỉ sao chép đường import từ file nguồn nên không tự sửa đường tương đối.
+- Ba test đọc nguồn của `exam-guard-renderer-wiring.test.mjs` nay đọc gộp `content-preview.mjs` và `candidate/exam-mode.js`.
+- Kiểm chứng: `npm test` 693/693; `candidate-exam-mode-smoke` (toàn bộ Exam Mode), `candidate-flow-smoke`, `candidate-entry-review-smoke`, `candidate-mobile-smoke` pass.
+- Còn trong `content-preview.mjs`: khối `if (isLearningMode)` (~520 dòng: roster, bắt đầu lượt, xem kết quả) và `renderExamInterface` (~850 dòng: bài thi, đồng hồ, nộp bài, nháp). Hai khối này nằm sâu hơn một cấp thụt lề nên công cụ tách hiện có chưa xử lý được; cần tách thủ công hoặc mở rộng công cụ.
