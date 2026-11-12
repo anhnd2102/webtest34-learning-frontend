@@ -104,3 +104,11 @@ Kiểm chứng: `npm test` 693/693; bốn smoke học viên pass (`candidate-flo
 - Ba test đọc nguồn của `exam-guard-renderer-wiring.test.mjs` nay đọc gộp `content-preview.mjs` và `candidate/exam-mode.js`.
 - Kiểm chứng: `npm test` 693/693; `candidate-exam-mode-smoke` (toàn bộ Exam Mode), `candidate-flow-smoke`, `candidate-entry-review-smoke`, `candidate-mobile-smoke` pass.
 - Còn trong `content-preview.mjs`: khối `if (isLearningMode)` (~520 dòng: roster, bắt đầu lượt, xem kết quả) và `renderExamInterface` (~850 dòng: bài thi, đồng hồ, nộp bài, nháp). Hai khối này nằm sâu hơn một cấp thụt lề nên công cụ tách hiện có chưa xử lý được; cần tách thủ công hoặc mở rộng công cụ.
+
+### Đợt tách 3: màn đầu và màn xem kết quả (13/11/2026)
+
+`candidate/intro-screen.js` (`createIntroScreen`: mã lớp, tải roster, chọn học viên và thông báo quyền làm lại, kiểm tra âm thanh, nút bắt đầu lượt; trả về `handleLoadRoster`) và `candidate/review-screen.js` (`createReviewScreen`: Xem kết quả, polling, Thử lại, quay lại) chuyển nguyên văn từ khối `if (isLearningMode)` của `mount()`. Sáu phần tử DOM của màn đầu (`classInput`, `loadBtn`, `classStatus`, `studentSelect`, `studentStatus`, `startBtn`) vẫn được `mount()` truy vấn rồi truyền vào, vì cả hai màn dùng chung `studentSelect`. `content-preview.mjs` còn ~1.220 dòng.
+- Đường dẫn tương đối trong chuỗi `import()` của `review-module` đổi thành `../../34-shared/…` vì mã nay nằm trong `candidate/`; công cụ không tự sửa nên đã vá tay. Đây là loại lỗi mà smoke "Xem kết quả" bắt được (nó nạp `review-module` thật).
+- Bảy test đọc nguồn được chỉnh để đọc gộp `content-preview.mjs` với `intro-screen.js`/`review-screen.js` (`content-preview-review-wiring`, `review-intro-wiring`, `standalone-config`, `async-result`, `exam-switch-dashboard`).
+- Kiểm chứng: `npm test` 693/693; `candidate-entry-review-smoke` (roster, thông báo quyền làm lại, Xem kết quả), `candidate-flow-smoke`, `candidate-exam-mode-smoke`, `candidate-mobile-smoke` pass.
+- Còn trong `content-preview.mjs`: `renderExamInterface` (~850 dòng: bài thi, đồng hồ, nộp bài, nháp). Chưa tách vì cần thêm smoke audio trước (audio chưa được phủ).

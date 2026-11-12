@@ -87,7 +87,7 @@ test('dashboard nối thao tác chuyển, đọc lại từ server, và vẫn m�
 });
 
 test('học viên Learning trực tiếp lấy chế độ từ chính lượt do server trả, không giữ Exam Mode cũ trong trình duyệt', async () => {
-  const preview = await fs.readFile(new URL('../term-tests/webtest-34-demo/content-preview.mjs', import.meta.url), 'utf8');
+  const preview = await fs.readFile(new URL('../term-tests/webtest-34-demo/candidate/intro-screen.js', import.meta.url), 'utf8');
   assert.ok(preview.includes('learningState.exam = startRes.attempt.exam || null;'));
   assert.ok(preview.includes('learningState.selfProctoring = startRes.attempt.selfProctoring || null;'));
 });

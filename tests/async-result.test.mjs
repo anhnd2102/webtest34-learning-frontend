@@ -20,7 +20,7 @@ test('distinguishes complete and manual-review results', () => {
 });
 
 test('canonical renderer uses the asynchronous result view model', async () => {
-  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/content-preview.mjs', import.meta.url), 'utf8');
+  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/candidate/review-screen.js', import.meta.url), 'utf8');
   const reviewModule = await fs.readFile(new URL('../term-tests/34-shared/review-module.mjs', import.meta.url), 'utf8');
   assert.match(html, /reviewApi\.reviewViewModel\(/);
   assert.match(reviewModule, /resultViewModel\(result\)/);
