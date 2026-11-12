@@ -1,6 +1,6 @@
 import { parseSseChunk } from '../../teacher-dashboard/exam-room-sse.js';
-import { escape } from './text-utils.js?rev=20261113-split-a';
-import { selfProctoringBannerHtml } from './learning-api.js?rev=20261113-split-a';
+import { escape } from './text-utils.js?rev=20261113-audio-a';
+import { selfProctoringBannerHtml } from './learning-api.js?rev=20261113-audio-a';
 
 export function createExamMode({ apiBase, learningState, deviceId, apiRequest, createUuid, renderExamInterface }) {
   const ignoreFocusSignals = Boolean(globalThis.isIosDevice?.(navigator));
@@ -51,12 +51,12 @@ export function createExamMode({ apiBase, learningState, deviceId, apiRequest, c
     if (deadlineAt) learningState.expiresAt = Date.parse(deadlineAt);
   }
 
-  function enterRunningExam(payload) {
+  async function enterRunningExam(payload) {
     if (payload.exam?.status !== 'running' || !payload.definition || learningState.exam?.status === 'running') return;
     learningState.exam = { ...learningState.exam, ...payload.exam, enabled: true };
     learningState.definition = payload.definition;
     applyExamDeadline(payload.exam.deadlineAt);
-    renderExamInterface();
+    await renderExamInterface();
     mountExamGuard();
   }
 
@@ -77,7 +77,7 @@ export function createExamMode({ apiBase, learningState, deviceId, apiRequest, c
         if (event === 'snapshot' || event === 'exam.started') {
           const payload = event === 'exam.started' ? { exam: data, definition: data.definition } : data;
           if (learningState.exam?.status === 'running') applyExamDeadline(payload.exam?.deadlineAt);
-          else enterRunningExam(payload);
+          else await enterRunningExam(payload);
         } else if (event === 'exam.extended' && !learningState.exam?.retake) {
           applyExamDeadline(data.deadlineAt);
         } else if (event === 'device.superseded') {

@@ -128,9 +128,16 @@ Phủ (shell thật: `dynamic-exam-renderer.mjs` khối nghe, `candidate/exam-mo
 
 Kiểm tra đột biến (bị bắt, đã hoàn nguyên): bỏ tạm dừng bài khác khi phát bài mới; bỏ tạm dừng âm thanh khi rời bài; bỏ mở khóa đề khi phát. Bỏ riêng điều kiện `listensCount >= maxListens` không làm smoke đỏ vì nút đã `disabled` sau khi nghe xong (hai lớp bảo vệ chồng nhau).
 
-### Khoảng trống phát hiện (chưa sửa, cần quyết định)
+### Khoảng trống đã sửa (13/11/2026): tải lại trang làm mất khóa "chỉ nghe một lần"
 
-**Tải lại trang làm mất khóa "chỉ nghe một lần".** Shell thật giữ số lượt nghe và trạng thái mở khóa trong bộ nhớ trang; không gọi `/attempts/audio/checkpoint` hay `/attempts/audio/resume` (chỉ đường prototype đã gỡ gọi hai điểm cuối này). Smoke nghe hết bài A, tải lại trang, vào lại lượt: bài A lại còn 1 lượt nghe (`knownGaps.audioListenLockSurvivesReload: false`, 0 lời gọi checkpoint/resume). Hệ quả: học viên có thể nghe lại bằng cách tải lại. Backend có sẵn hai điểm cuối; sửa cần nối chúng vào khối nghe và quyết định hành vi mong muốn (khóa theo máy chủ hay chỉ trình duyệt). Chưa kiểm hành vi backend thật.
+Trước khi sửa, shell thật giữ lượt nghe trong bộ nhớ trang và không gọi `/attempts/audio/checkpoint` hay `/attempts/audio/resume` (chỉ đường prototype đã gỡ gọi); smoke tái hiện: nghe hết bài A, tải lại, vào lại lượt thì bài A lại còn 1 lượt. Đã nối tiến độ nghe vào backend có sẵn (không đổi backend):
+- Mỗi dock mang `data-audio-key` (`blockId` cho bài nghe của phần, `itemVersionId` cho bài nghe của câu), khớp `^[A-Za-z0-9_-]{1,64}$` của schema backend.
+- Khi phát, `dynamic-exam-renderer.mjs` báo mốc qua `onAudioProgress`: ngay lúc bắt đầu, mỗi 5 giây, khi tạm dừng, khi trang bị ẩn, và khi nghe xong (`completed: true`, vị trí = độ dài). `content-preview.mjs` gửi tuần tự theo từng bài nghe; lỗi chỉ ghi cảnh báo vì mốc sau sẽ thay thế.
+- Trước khi dựng bài thi (`openExamInterface`), shell gọi `/attempts/audio/resume`: bài đã nghe xong thì khóa (nút ẩn, "Bài nghe đã khóa", lượt = 0), bài nghe dở thì tua tới vị trí đã lưu, nút "Tiếp tục nghe" và vẫn tính là đã dùng lượt; đề của phần có mốc luôn mở khóa. Không tải được tiến độ thì vẫn vào bài và coi như chưa nghe (không chặn thí sinh).
+- Hai điểm cuối âm thanh dùng schema `.strict()` nên **không được kèm `deviceId`**: `learningRequestBody` bỏ `deviceId` cho `/attempts/audio/checkpoint` và `/attempts/audio/resume` (có test); mốc gửi với `keepalive` để sống sót khi trang bị ẩn.
+- `enterRunningExam` (Exam Mode vào đề qua SSE) và màn đầu nay `await` dựng giao diện, vì dựng giao diện giờ chờ tiến độ nghe; Exam Guard vẫn gắn sau khi giao diện dựng xong.
+- Smoke: kịch bản 8 (nghe xong, tải lại, vẫn khóa, đề còn mở, resume không kèm `deviceId`), 9 (nghe dở, tải lại, tiếp tục từ vị trí đã lưu), 10 (resume lỗi 500 vẫn vào được bài). Máy chủ giả của smoke áp đúng schema nghiêm ngặt và hỗ trợ Range như R2. Kiểm tra đột biến (bị bắt, đã hoàn nguyên): kèm lại `deviceId`, không nạp tiến độ, không báo mốc khi nghe xong.
+- Giới hạn: khóa theo **lượt làm bài** (cùng `attemptToken`), nên học viên được cấp quyền làm lại có lượt mới và nghe lại; chưa kiểm với backend và PostgreSQL thật. Rev module nâng lên `20261113-audio-a`.
 
 Điều kiện tiên quyết cho `renderExamInterface` đã đủ: ngoài smoke luồng học viên, Exam Mode, lối vào/xem kết quả, nay có smoke âm thanh.
 

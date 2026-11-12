@@ -1,8 +1,8 @@
 // Hộp thoại nộp bài, nộp bài lên máy chủ, hộp kết quả và theo dõi kết quả sau nộp (tách nguyên văn từ content-preview.mjs).
-import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261105-sticky-audio-v1';
-import { escape } from './text-utils.js?rev=20261113-split-a';
-import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261113-split-a';
-import { withLocalGroupLabels } from './group-render.js?rev=20261113-split-a';
+import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-audio-a';
+import { escape } from './text-utils.js?rev=20261113-audio-a';
+import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261113-audio-a';
+import { withLocalGroupLabels } from './group-render.js?rev=20261113-audio-a';
 
 export function createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic, examTimer, query, update, queueServerDraft, persist, clearDraftTimer }) {
   const timerDisplay = examTimer.display;

@@ -1,5 +1,5 @@
 // Draft, hợp đồng lời gọi Learning API và trạng thái lượt (tách nguyên văn từ content-preview.mjs).
-import { optionId } from './text-utils.js?rev=20261113-split-a';
+import { optionId } from './text-utils.js?rev=20261113-audio-a';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -28,9 +28,11 @@ export function learningRequestMethod(path) {
 }
 
 // Mọi request lượt làm gửi kèm mã thiết bị theo tab; Exam Mode dùng nó để chỉ cho một máy làm bài.
+const STRICT_BODY_PATHS = ['/attempts/review', '/attempts/result', '/attempts/audio/checkpoint', '/attempts/audio/resume'];
+
 export function learningRequestBody(path, body, deviceId) {
-  // /attempts/review và /attempts/result có schema strict, không nhận deviceId.
-  return path.startsWith('/attempts/') && !['/attempts/review', '/attempts/result'].includes(path) ? { ...body, deviceId } : body;
+  // /attempts/review, /attempts/result và hai điểm cuối âm thanh có schema strict, không nhận deviceId.
+  return path.startsWith('/attempts/') && !STRICT_BODY_PATHS.includes(path) ? { ...body, deviceId } : body;
 }
 
 // 'waiting' → phòng chờ (chưa có đề); 'running' → vào đề và bật Exam Guard; 'off' → luồng thường.

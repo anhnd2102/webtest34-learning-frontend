@@ -6,21 +6,21 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261105-sticky-audio-v1';
+} from './dynamic-exam-renderer.mjs?rev=20261113-audio-a';
 
-import { escape, words } from './candidate/text-utils.js?rev=20261113-split-a';
-import { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261113-split-a';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, sectionKey, sectionLabels, groupSections } from './candidate/group-render.js?rev=20261113-split-a';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261113-split-a';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261113-split-a';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261113-split-a';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261113-split-a';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261113-split-a';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261113-split-a';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261113-split-a';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261113-split-a';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261113-split-a';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, clozeSegments, choiceLayout, groupBody, CLOUDFLARE_R2_AUDIO_BASE, resolveAudioUrl, groupSections } from './candidate/group-render.js?rev=20261113-split-a';
+import { escape, words } from './candidate/text-utils.js?rev=20261113-audio-a';
+import { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261113-audio-a';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, sectionKey, sectionLabels, groupSections } from './candidate/group-render.js?rev=20261113-audio-a';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261113-audio-a';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261113-audio-a';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261113-audio-a';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261113-audio-a';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261113-audio-a';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261113-audio-a';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261113-audio-a';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261113-audio-a';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261113-audio-a';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, clozeSegments, choiceLayout, groupBody, CLOUDFLARE_R2_AUDIO_BASE, resolveAudioUrl, groupSections } from './candidate/group-render.js?rev=20261113-audio-a';
 
 export async function mount(course) {
   if (!['03','34','45'].includes(course)) throw new Error('Unknown demo course');
@@ -117,13 +117,45 @@ export async function mount(course) {
     }
   })();
 
+  // Tiến độ nghe lưu trên máy chủ theo lượt làm bài: nghe xong thì khóa, nghe dở thì tiếp tục từ vị trí đã lưu.
+  // Không tải được thì vẫn vào bài (không chặn thí sinh), khi đó bài nghe coi như chưa nghe.
+  async function loadAudioProgress() {
+    state.audioProgress = {};
+    if (!isLearningMode || !learningState.attemptToken) return;
+    try {
+      const { resume } = await apiRequest('/attempts/audio/resume', { attemptToken: learningState.attemptToken });
+      state.unlockedAudioBlocks = state.unlockedAudioBlocks instanceof Set ? state.unlockedAudioBlocks : new Set();
+      for (const checkpoint of resume?.checkpoints || []) {
+        state.audioProgress[checkpoint.audioKey] = { lastHeardSeconds: Number(checkpoint.lastHeardSeconds) || 0, completed: Boolean(checkpoint.completedAt) };
+        state.unlockedAudioBlocks.add(checkpoint.audioKey);
+      }
+    } catch (error) {
+      console.warn('Không tải được tiến độ nghe:', error);
+    }
+  }
+  // Mốc nghe gửi tuần tự theo từng bài nghe; lỗi chỉ ghi cảnh báo vì lần sau sẽ gửi lại mốc mới hơn.
+  const audioCheckpointChains = new Map();
+  function saveAudioProgress(audioKey, seconds, completed) {
+    if (!isLearningMode || !learningState.attemptToken || state.submittedAt) return;
+    state.audioProgress = state.audioProgress || {};
+    state.audioProgress[audioKey] = { lastHeardSeconds: seconds, completed: completed || Boolean(state.audioProgress[audioKey]?.completed) };
+    const body = { attemptToken: learningState.attemptToken, audioKey, lastHeardSeconds: Math.max(0, Math.min(86400, seconds)), completed };
+    const next = (audioCheckpointChains.get(audioKey) || Promise.resolve()).catch(() => {}).then(() => apiRequest('/attempts/audio/checkpoint', body)).catch(error => console.warn('Chưa lưu được mốc nghe:', error));
+    audioCheckpointChains.set(audioKey, next);
+  }
+  // Mở giao diện thi sau khi đã có tiến độ nghe để bài đã nghe xong không bị mở lại sau khi tải trang.
+  async function openExamInterface() {
+    await loadAudioProgress();
+    renderExamInterface();
+  }
+
   async function apiRequest(path, body) {
     const res = await fetch(`${apiBase}/api/learning${path}`, {
       method: learningRequestMethod(path),
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
       // iOS có thể hủy request ngay khi đổi app; thiếu dòng này lần rời bài có thể không được ghi.
-      keepalive: path.startsWith('/attempts/exam/incidents/'),
+      keepalive: path.startsWith('/attempts/exam/incidents/') || path === '/attempts/audio/checkpoint',
       body: JSON.stringify(learningRequestBody(path, body, deviceId))
     });
     const data = await res.json().catch(() => ({}));
@@ -143,7 +175,7 @@ export async function mount(course) {
   }
 
   // --- EXAM MODE: phòng chờ, SSE, tín hiệu kết nối và Exam Guard (reducer ở exam-guard.js) ---
-  const examMode = createExamMode({ apiBase, learningState, deviceId, apiRequest, createUuid, renderExamInterface });
+  const examMode = createExamMode({ apiBase, learningState, deviceId, apiRequest, createUuid, renderExamInterface: openExamInterface });
   const { requestFullscreen, requestWakeLock, stopExamConnections, connectExamEvents, renderExamWaitingRoom, dispatchExamGuard, mountExamGuard } = examMode;
 
   function buildResponsesPayload() {
@@ -367,7 +399,7 @@ export async function mount(course) {
     const studentSelect = document.querySelector('#studentSelectInput');
     const studentStatus = document.querySelector('#studentSelectStatus');
     const startBtn = document.querySelector('#startExamBtn');
-    const { handleLoadRoster } = createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn });
+    const { handleLoadRoster } = createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface: openExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn });
 
     createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect });
 
@@ -484,6 +516,7 @@ export async function mount(course) {
       dynamicExamControls = initDynamicExamInteractions(document.body, {
         definition: learningState.definition,
         state,
+        onAudioProgress: saveAudioProgress,
         onAnswerChange: () => {
           persist();
           update();

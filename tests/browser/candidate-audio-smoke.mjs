@@ -36,8 +36,17 @@ const definition = {
   ]
 };
 
+// Giống máy chủ âm thanh thật (R2): hỗ trợ Range để trình duyệt tua được tới vị trí đã lưu.
+function serveWav(route, body) {
+  const range = /bytes=(\d+)-(\d*)/.exec(route.request().headers().range || '');
+  if (!range) return route.fulfill({ status: 200, contentType: 'audio/wav', headers: { 'accept-ranges': 'bytes' }, body });
+  const start = Number(range[1]);
+  const end = range[2] ? Math.min(Number(range[2]), body.length - 1) : body.length - 1;
+  return route.fulfill({ status: 206, contentType: 'audio/wav', headers: { 'accept-ranges': 'bytes', 'content-range': `bytes ${start}-${end}/${body.length}` }, body: body.subarray(start, end + 1) });
+}
+
 function createApi(options = {}) {
-  const api = { calls: [], count(path) { return this.calls.filter(call => call.path === path).length; }, last(path) { return [...this.calls].reverse().find(call => call.path === path); } };
+  const api = { calls: [], checkpoints: {}, rejected: [], count(path) { return this.calls.filter(call => call.path === path).length; }, last(path) { return [...this.calls].reverse().find(call => call.path === path); } };
   api.handler = route => {
     const request = route.request();
     const path = new URL(request.url()).pathname.replace(/^.*\/api\/learning/, '');
@@ -45,6 +54,23 @@ function createApi(options = {}) {
     try { body = request.postDataJSON() || {}; } catch { body = {}; }
     api.calls.push({ path, body });
     let payload = {};
+    if (path === '/attempts/audio/checkpoint') {
+      // Giống audioCheckpointSchema(.strict()) của backend: chỉ nhận đúng bốn trường.
+      const keys = Object.keys(body).sort().join(',');
+      if (keys !== 'attemptToken,audioKey,completed,lastHeardSeconds') {
+        api.rejected.push(keys);
+        return route.fulfill({ status: 400, contentType: 'application/json', body: JSON.stringify({ error: 'INVALID_AUDIO_CHECKPOINT' }) });
+      }
+      api.checkpoints[body.audioKey] = { audioKey: body.audioKey, lastHeardSeconds: body.lastHeardSeconds, checkpointedAt: new Date().toISOString(), completedAt: body.completed ? new Date().toISOString() : (api.checkpoints[body.audioKey]?.completedAt || null) };
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, checkpoint: api.checkpoints[body.audioKey] }) });
+    }
+    if (path === '/attempts/audio/resume') {
+      if (Object.keys(body).join(',') !== 'attemptToken') {
+        api.rejected.push(Object.keys(body).sort().join(','));
+        return route.fulfill({ status: 400, contentType: 'application/json', body: JSON.stringify({ error: 'INVALID_AUDIO_RESUME' }) });
+      }
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, resume: { status: 'active', resumable: true, reason: 'active', checkpoints: Object.values(api.checkpoints) } }) });
+    }
     if (path === '/test-access/resolve') {
       payload = { assignment: { title: definition.title, class: { name: 'Lớp Audio' }, definition, roster: [{ studentRef: 's1', name: 'Học Viên Audio' }] } };
     } else if (path === '/attempts/start') {
@@ -64,8 +90,8 @@ async function openExam(browser, api) {
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     if (url.pathname.includes('/api/learning/')) return api.handler(route);
-    if (url.pathname === '/audio/short.wav') return route.fulfill({ status: 200, contentType: 'audio/wav', body: silentWav(2) });
-    if (url.pathname === '/audio/long.wav') return route.fulfill({ status: 200, contentType: 'audio/wav', body: silentWav(30) });
+    if (url.pathname === '/audio/short.wav') return serveWav(route, silentWav(2));
+    if (url.pathname === '/audio/long.wav') return serveWav(route, silentWav(30));
     if (url.pathname === '/audio/missing.wav') return route.fulfill({ status: 404, body: 'not found' });
     return url.origin === origin ? route.continue() : route.abort();
   });
@@ -180,22 +206,79 @@ try {
     await page.context().close();
   }
 
-  // 8. Khoảng trống đã biết (ghi lại, chưa sửa): shell thật không lưu tiến độ nghe. Tải lại trang rồi vào lại lượt thì bài nghe đã
-  // nghe xong lại còn 1 lượt. Đường prototype cũ có /attempts/audio/checkpoint và /resume để khóa lại; shell thật không gọi chúng.
+  // 8. Tiến độ nghe lưu trên máy chủ: nghe xong thì tải lại trang vẫn khóa (không nghe lại được), đề vẫn mở khóa
   {
     const api = createApi();
     const page = await openExam(browser, api);
     await goTo(page, 1);
     await dock(page, 'b2').locator('.btn-sim-audio-play').click();
     await waitFor(async () => (await audioState(page, 'b2')).ended, 'nghe hết bài nghe A', 8000);
+    await waitFor(() => api.checkpoints.b2?.completedAt, 'nghe xong thì gửi mốc hoàn thành lên máy chủ');
+    assert.deepEqual(api.rejected, [], 'mốc gửi đúng schema nghiêm ngặt (không kèm deviceId)');
+    const done = api.calls.filter(call => call.path === '/attempts/audio/checkpoint').map(call => call.body).at(-1);
+    assert.equal(done.audioKey, 'b2');
+    assert.equal(done.completed, true);
+    assert.equal(done.attemptToken, 'audio-attempt');
     await page.reload();
     await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
     await page.selectOption('#studentSelectInput', 's1');
     await page.click('#startExamBtn');
     await page.waitForSelector('.cbt-exam-shell');
     await goTo(page, 1);
-    const left = await dock(page, 'b2').locator('.audio-listens-left').textContent();
-    report.knownGaps = { audioListenLockSurvivesReload: !/Còn 1 lượt nghe/.test(left), serverAudioCheckpointCalls: api.count('/attempts/audio/checkpoint') + api.count('/attempts/audio/resume') };
+    assert.equal(await dock(page, 'b2').getAttribute('data-listens-count'), '1', 'đã nghe xong thì tải lại vẫn khóa');
+    assert.equal(await dock(page, 'b2').locator('.btn-sim-audio-play').isHidden(), true);
+    assert.match(await dock(page, 'b2').locator('.audio-ended-notice').textContent(), /Bài nghe đã khóa/);
+    assert.equal(await section(page, 'b2').getAttribute('data-audio-unlocked'), 'true', 'đề của phần đã nghe vẫn mở');
+    assert.equal(await section(page, 'b2').locator('input[data-item-id="it-2"]').isVisible(), true);
+    await page.evaluate(() => document.querySelector('.simulation-section-card[data-block-id="b2"] .btn-sim-audio-play').click());
+    await page.waitForTimeout(300);
+    assert.equal((await audioState(page, 'b2')).paused, true, 'không phát lại sau khi tải lại');
+    assert.ok(api.count('/attempts/audio/resume') >= 1);
+    assert.equal(Object.hasOwn(api.last('/attempts/audio/resume').body, 'deviceId'), false, '/attempts/audio/resume không mang deviceId (schema nghiêm ngặt)');
+    report.audioLockSurvivesReload = true;
+    await page.context().close();
+  }
+
+  // 9. Nghe dở: mốc được gửi định kỳ khi phát và khi tạm dừng; tải lại thì tiếp tục từ vị trí đã lưu, không nghe lại từ đầu
+  {
+    const api = createApi();
+    const page = await openExam(browser, api);
+    await goTo(page, 2);
+    await dock(page, 'b3').locator('.btn-sim-audio-play').click();
+    await waitFor(async () => (await audioState(page, 'b3')).currentTime > 1.2, 'bài nghe B phát được hơn 1 giây');
+    await dock(page, 'b3').locator('.btn-sim-audio-play').click();
+    await waitFor(() => api.checkpoints.b3?.lastHeardSeconds > 1, 'tạm dừng thì gửi mốc đúng vị trí đang nghe');
+    const saved = api.checkpoints.b3.lastHeardSeconds;
+    assert.ok(saved > 1, 'mốc lưu đúng vị trí đang nghe: ' + saved);
+    assert.equal(api.checkpoints.b3.completedAt, null, 'chưa nghe xong thì chưa hoàn thành');
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
+    await page.selectOption('#studentSelectInput', 's1');
+    await page.click('#startExamBtn');
+    await page.waitForSelector('.cbt-exam-shell');
+    await goTo(page, 2);
+    assert.match(await dock(page, 'b3').locator('.btn-sim-audio-play').textContent(), /Tiếp tục nghe/);
+    assert.match(await dock(page, 'b3').locator('.audio-listens-left').textContent(), /Còn 0 lượt nghe/, 'nghe dở vẫn tính là đã dùng lượt');
+    assert.equal(await section(page, 'b3').getAttribute('data-audio-unlocked'), 'true');
+    await waitFor(async () => Math.abs((await audioState(page, 'b3')).currentTime - saved) < 0.6, 'vị trí phát khôi phục về mốc đã lưu');
+    await dock(page, 'b3').locator('.btn-sim-audio-play').click();
+    await waitFor(async () => !(await audioState(page, 'b3')).paused, 'tiếp tục phát');
+    assert.ok((await audioState(page, 'b3')).currentTime >= saved - 0.6, 'tiếp tục từ vị trí đã lưu, không bắt đầu lại từ 0');
+    report.audioResumePosition = saved;
+    await page.context().close();
+  }
+
+  // 10. Không tải được tiến độ nghe: vẫn vào được bài (không chặn thí sinh)
+  {
+    const api = createApi();
+    const originalHandler = api.handler;
+    api.handler = route => (new URL(route.request().url()).pathname.endsWith('/attempts/audio/resume')
+      ? route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'down' }) })
+      : originalHandler(route));
+    const page = await openExam(browser, api);
+    await goTo(page, 1);
+    assert.match(await dock(page, 'b2').locator('.audio-listens-left').textContent(), /Còn 1 lượt nghe/);
+    assert.deepEqual(page.errors, []);
     await page.context().close();
   }
 

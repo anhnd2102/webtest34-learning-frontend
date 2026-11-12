@@ -1,5 +1,5 @@
 // Dựng kết quả bài làm cho học viên (tách nguyên văn từ content-preview.mjs).
-import { escape } from './text-utils.js?rev=20261113-split-a';
+import { escape } from './text-utils.js?rev=20261113-audio-a';
 
 export function resultViewModel(result) {
   const summary = result?.summary || {};

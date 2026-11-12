@@ -1,5 +1,5 @@
 // Lưu nháp lên máy chủ (gom 1,5 giây, thử lại khi lỗi tạm thời) và trạng thái lưu (tách nguyên văn từ content-preview.mjs).
-import { DRAFT_REJECTED_REASON } from './learning-api.js?rev=20261113-split-a';
+import { DRAFT_REJECTED_REASON } from './learning-api.js?rev=20261113-audio-a';
 
 export function createDraftSync({ query, isLearningMode, key, state, learningState, apiRequest, buildResponsesPayload }) {
     let draftDebounceTimer = null;
