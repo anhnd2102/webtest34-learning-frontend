@@ -8,7 +8,7 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
   const document = root.ownerDocument || root;
   const window = document.defaultView || globalThis.window;
   const currentLocation = window?.location;
-  const { fillIncidentTimeline, loadAttemptDetail, apiBase, authHeader, setUrl, loadResults } = actions;
+  const { fillIncidentTimeline, loadAttemptDetail, request, setUrl, loadResults } = actions;
   const attemptDetail = root.querySelector('#attempt-detail');
   const detailHeading = root.querySelector('#detail-heading');
   const detailMeta = root.querySelector('#detail-meta');
@@ -709,32 +709,26 @@ async function saveManualGradingDraft(silent = false) {
 
     if (draftStatusMsg) draftStatusMsg.textContent = 'Đang lưu nháp...';
     try {
-      const response = await fetch(`${apiBase()}${manualGradingDraftPath(state.classId, state.assignmentId, state.attemptId)}`, {
+      const payload = await request(manualGradingDraftPath(state.classId, state.assignmentId, state.attemptId), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader()
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           baseRevision: viewState.currentAttemptDetail.manualGrading?.revision ?? 0,
           items: itemsToSubmit,
           note: 'Lưu nháp từ Dashboard'
-        })
+        }),
+        errorMessage: 'Không thể lưu nháp.'
       });
-      const payload = await response.json();
-      if (response.status === 409) {
-        showConflictAlert(payload.message || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
-        return;
-      }
-      if (!response.ok) {
-        throw new Error(payload.message || 'Không thể lưu nháp.');
-      }
       viewState.currentAttemptDetail.manualGrading.revision = payload.revision;
       viewState.currentAttemptDetail.manualGrading.status = 'draft';
       if (draftStatusMsg) {
         draftStatusMsg.textContent = `Đã lưu nháp lúc ${formatCurrentTime()} (phiên bản ${payload.revision})`;
       }
     } catch (err) {
+      if (err.status === 409) {
+        showConflictAlert(err.apiMessage || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
+        return;
+      }
       if (draftStatusMsg) draftStatusMsg.textContent = `Lỗi lưu nháp: ${err.message}`;
     }
   }
@@ -800,29 +794,23 @@ async function completeManualGrading() {
 
     if (draftStatusMsg) draftStatusMsg.textContent = 'Đang hoàn tất chấm...';
     try {
-      const response = await fetch(`${apiBase()}${manualGradingCompletePath(state.classId, state.assignmentId, state.attemptId)}`, {
+      await request(manualGradingCompletePath(state.classId, state.assignmentId, state.attemptId), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader()
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           baseRevision: viewState.currentAttemptDetail.manualGrading?.revision ?? 0,
           items: itemsToSubmit,
           note: 'Xác nhận hoàn tất chấm'
-        })
+        }),
+        errorMessage: 'Không thể hoàn tất chấm.'
       });
-      const payload = await response.json();
-      if (response.status === 409) {
-        showConflictAlert(payload.message || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
-        return;
-      }
-      if (!response.ok) {
-        throw new Error(payload.message || 'Không thể hoàn tất chấm.');
-      }
       alert('Đã hoàn tất chấm bài thành công!');
       await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);
     } catch (err) {
+      if (err.status === 409) {
+        showConflictAlert(err.apiMessage || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
+        return;
+      }
       if (draftStatusMsg) draftStatusMsg.textContent = `Lỗi: ${err.message}`;
     }
   }
@@ -831,18 +819,12 @@ async function publishAttemptResult() {
     if (!state.classId || !state.assignmentId || !state.attemptId) return;
     if (draftStatusMsg) draftStatusMsg.textContent = 'Đang công bố kết quả…';
     try {
-      const response = await fetch(`${apiBase()}${attemptPublishPath(state.classId, state.assignmentId, state.attemptId)}`, {
+      await request(attemptPublishPath(state.classId, state.assignmentId, state.attemptId), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader()
-        },
-        body: JSON.stringify({ note: 'Công bố kết quả' })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note: 'Công bố kết quả' }),
+        errorMessage: 'Không thể công bố kết quả.'
       });
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.message || 'Không thể công bố kết quả.');
-      }
       alert('Đã công bố kết quả thành công!');
       if (draftStatusMsg) draftStatusMsg.textContent = `Đã công bố kết quả lúc ${formatCurrentTime()}`;
       await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);

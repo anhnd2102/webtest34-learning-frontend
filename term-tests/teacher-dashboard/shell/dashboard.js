@@ -25,6 +25,8 @@ import { createNavigation } from './navigation.js';
 import { createAssignmentSelection } from './assignment-selection.js';
 import { createShowcase } from './showcase.js';
 import { createAssignmentsLoader } from './assignments-loader.js';
+import { createPagination } from './pagination.js';
+import { createResultsFilters } from './results-filters.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -334,7 +336,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   };
 
-  const request = async (path, options = {}) => {
+  // options.errorMessage: thông báo dự phòng khi phản hồi lỗi không có message; không gửi xuống fetch.
+  const request = async (path, { errorMessage, ...options } = {}) => {
     const headers = { ...authHeader(), ...(options.headers || {}) };
     const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
     const payload = await response.json().catch(() => ({}));
@@ -346,8 +349,8 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
       throw new Error(payload.message || 'Yêu cầu đăng nhập.');
     }
     if (!response.ok) {
-      throw Object.assign(new Error(payload.message || 'Không tải được dữ liệu.'), {
-        code: payload.error, details: payload.details, status: response.status
+      throw Object.assign(new Error(payload.message || errorMessage || 'Không tải được dữ liệu.'), {
+        code: payload.error, details: payload.details, status: response.status, apiMessage: payload.message
       });
     }
     return payload;
@@ -355,7 +358,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   const { loadAndRenderTestStudio } = createStudioView({ root, queryCoordinator, authState, scopeState, form, viewExams, disposeOwnedBuilder, renderOwnedBuilder, request });
   // Phá vòng phụ thuộc: grant retake và view chỉ giữ wrapper lazy tới loadExamRoom/showExamRoomTimeline (khai báo sau).
-  const { openGrantRetakeModal } = createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, apiBase, loadExamRoom: (...args) => loadExamRoom(...args), loadAttemptDetail, loadResults });
+  const { openGrantRetakeModal } = createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, request, loadExamRoom: (...args) => loadExamRoom(...args), loadAttemptDetail, loadResults });
   const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline: student => showExamRoomTimeline(student), openGrantRetakeModal } });
 
   const { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents } = createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout: () => handleLogout() });
@@ -371,7 +374,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
 
 
-  const { renderAttemptDetail, showConflictAlert, saveManualGradingDraft, completeManualGrading, publishAttemptResult, closeAttemptDetail } = createAttemptReview({ root, lifecycle, state, viewState, queryCoordinator, actions: { fillIncidentTimeline, loadAttemptDetail, apiBase, authHeader, setUrl, loadResults } });
+  const { renderAttemptDetail, showConflictAlert, saveManualGradingDraft, completeManualGrading, publishAttemptResult, closeAttemptDetail } = createAttemptReview({ root, lifecycle, state, viewState, queryCoordinator, actions: { fillIncidentTimeline, loadAttemptDetail, request, setUrl, loadResults } });
 
   async function loadAttemptDetail(classId, assignmentId, attemptId) {
     if (!classId || !assignmentId || !attemptId) {
@@ -438,7 +441,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
-  const { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView } = createReports({ root, queryCoordinator, authState, document, window, status, viewReports, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab: (...args) => switchAssessmentTab(...args), statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange });
+  const { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView } = createReports({ root, queryCoordinator, authState, document, window, status, viewReports, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab: (...args) => switchAssessmentTab(...args), statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange: (...args) => applyFilterChange(...args) });
   const { syncAssessmentHeaderMeta, switchAssessmentTab, updateDashboardTab } = createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, viewReports, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView });
   const { renderSelectedAssignmentShowcase } = createShowcase({ root, lifecycle, viewState, scopeState, document, classSelect, selectedAssignmentCard, showcaseBadgeClass, showcaseTitle, showcaseBlockBadge, showcasePhaseBadge, showcaseStatusBadge, examSwitchControls, examRoomOpenButton, examRoom, showcaseLinkBar, showcaseStudentUrl, copyShowcaseLinkBtn, openShowcaseLinkBtn, currentLocation, apiBase, stopExamRoomEvents, updateExamModeUI, updateSelfProctoringUI, renderExamSwitch });
   const { renderAssignmentChips, selectAssignment } = createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, syncAssessmentHeaderMeta, switchAssessmentTab });
@@ -450,86 +453,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   const { loadClasses, renderFilteredClasses, setupClassFilterToolbar, updateFilterPillsUI } = createClassDirectory({ lifecycle, queryCoordinator, authState, scopeState, classFilterToolbar, adminCourseFilters, leadScopeFilters, classSearchInput, classStatusFilter, classCountBadge, classSelect, status, state, request, setUrl, loadAssignments });
 
-  // Filter and pagination event handlers
-  function applyFilterChange() {
-    state.page = 1;
-    setUrl();
-    loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
-  }
-
-  let searchTimeout = null;
-  if (searchInput) {
-    lifecycle.listen(searchInput, 'input', () => {
-      queryCoordinator.cancel('results');
-      state.q = searchInput.value.trim();
-      lifecycle.clearTimeout(searchTimeout);
-      searchTimeout = lifecycle.timeout(applyFilterChange, 300);
-    });
-  }
-
-  if (statusFilter) {
-    lifecycle.listen(statusFilter, 'change', () => {
-      state.status = statusFilter.value;
-      applyFilterChange();
-    });
-  }
-
-  if (skillFilter) {
-    lifecycle.listen(skillFilter, 'change', () => {
-      state.skill = skillFilter.value;
-      applyFilterChange();
-    });
-  }
-
-  if (minScoreInput) {
-    lifecycle.listen(minScoreInput, 'change', () => {
-      state.minScore = minScoreInput.value;
-      applyFilterChange();
-    });
-  }
-
-  if (maxScoreInput) {
-    lifecycle.listen(maxScoreInput, 'change', () => {
-      state.maxScore = maxScoreInput.value;
-      applyFilterChange();
-    });
-  }
-
-  if (sortBySelect) {
-    lifecycle.listen(sortBySelect, 'change', () => {
-      state.sortBy = sortBySelect.value;
-      applyFilterChange();
-    });
-  }
-
-  if (sortDirSelect) {
-    lifecycle.listen(sortDirSelect, 'change', () => {
-      state.sortDir = sortDirSelect.value;
-      applyFilterChange();
-    });
-  }
-
-  if (resetFiltersBtn) {
-    lifecycle.listen(resetFiltersBtn, 'click', () => {
-      state.q = '';
-      state.status = '';
-      state.minScore = '';
-      state.maxScore = '';
-      state.skill = '';
-      state.sortBy = '';
-      state.sortDir = 'asc';
-      state.page = 1;
-      if (searchInput) searchInput.value = '';
-      if (statusFilter) statusFilter.value = '';
-      if (skillFilter) skillFilter.value = '';
-      if (minScoreInput) minScoreInput.value = '';
-      if (maxScoreInput) maxScoreInput.value = '';
-      if (sortBySelect) sortBySelect.value = '';
-      if (sortDirSelect) sortDirSelect.value = 'asc';
-      setUrl();
-      loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
-    });
-  }
+  const { applyFilterChange } = createResultsFilters({ lifecycle, queryCoordinator, results, status, searchInput, statusFilter, skillFilter, minScoreInput, maxScoreInput, sortBySelect, sortDirSelect, resetFiltersBtn, state, setUrl, loadResults });
 
   let autoSaveTimeout = null;
 
@@ -608,27 +532,11 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     });
   }
 
-  createAddStudent({ authHeader, lifecycle, addStudentBtn, addStudentModal, addStudentForm, eligibleStudentSelect, addStudentRefInput, addStudentNameInput, addStudentDiscInput, addStudentError, cancelAddStudentBtn, state, apiBase, request, loadResults });
+  createAddStudent({ lifecycle, addStudentBtn, addStudentModal, addStudentForm, eligibleStudentSelect, addStudentRefInput, addStudentNameInput, addStudentDiscInput, addStudentError, cancelAddStudentBtn, state, request, loadResults });
 
 
 
-  if (prevPageBtn) {
-    lifecycle.listen(prevPageBtn, 'click', () => {
-      if ((state.page || 1) > 1) {
-        state.page = (state.page || 1) - 1;
-        setUrl();
-        loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
-      }
-    });
-  }
-
-  if (nextPageBtn) {
-    lifecycle.listen(nextPageBtn, 'click', () => {
-      state.page = (state.page || 1) + 1;
-      setUrl();
-      loadResults(state.classId, state.assignmentId).catch(error => { status.textContent = error.message; });
-    });
-  }
+  createPagination({ lifecycle, status, prevPageBtn, nextPageBtn, state, setUrl, loadResults });
 
   const { renderTeacherProfile, toggleRoleCapabilitiesPopover } = createProfilePanel({ root, lifecycle, authState, document, window, loadAndRenderTestStudio, loginForm, loginError, teacherProfile, teacherProfileName, teacherProfileMeta, teacherRoleBadge, roleBadgeWrap, roleInfoBtn, roleCapabilitiesPopover, closeRolePopoverBtn, setupClassFilterToolbar });
 

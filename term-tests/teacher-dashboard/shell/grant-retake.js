@@ -1,6 +1,6 @@
 import { grantRetakePath } from '../api/teacher.js';
 
-export function createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, apiBase, loadExamRoom, loadAttemptDetail, loadResults }) {
+export function createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, request, loadExamRoom, loadAttemptDetail, loadResults }) {
   function openGrantRetakeModal({ studentRef, studentName, discriminator }) {
     const classId = state.classId || scopeState.currentSelectedAssignment?.classId;
     const assignmentId = state.assignmentId || scopeState.currentSelectedAssignment?.id;
@@ -87,18 +87,12 @@ export function createGrantRetake({ lifecycle, viewState, scopeState, examRoom, 
       const expiresAt = new Date(expiresAtVal).toISOString();
 
       try {
-        const response = await fetch(`${apiBase()}${grantRetakePath(classId, assignmentId, studentRef)}`, {
+        await request(grantRetakePath(classId, assignmentId, studentRef), {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...authHeader()
-          },
-          body: JSON.stringify({ reason, availableFrom, expiresAt })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason, availableFrom, expiresAt }),
+          errorMessage: 'Không thể cấp quyền làm lại.'
         });
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload.message || 'Không thể cấp quyền làm lại.');
-        }
         if (typeof grantRetakeModal?.close === 'function') {
           grantRetakeModal.close();
         } else if (grantRetakeModal) {

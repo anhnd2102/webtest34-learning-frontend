@@ -1,6 +1,6 @@
 import { assignmentRosterPath, eligibleStudentsPath } from '../api/teacher.js';
 
-export function createAddStudent({ authHeader, lifecycle, addStudentBtn, addStudentModal, addStudentForm, eligibleStudentSelect, addStudentRefInput, addStudentNameInput, addStudentDiscInput, addStudentError, cancelAddStudentBtn, state, apiBase, request, loadResults }) {
+export function createAddStudent({ lifecycle, addStudentBtn, addStudentModal, addStudentForm, eligibleStudentSelect, addStudentRefInput, addStudentNameInput, addStudentDiscInput, addStudentError, cancelAddStudentBtn, state, request, loadResults }) {
   if (addStudentBtn) {
     lifecycle.listen(addStudentBtn, 'click', async () => {
       if (!state.classId || !state.assignmentId) return;
@@ -72,18 +72,12 @@ export function createAddStudent({ authHeader, lifecycle, addStudentBtn, addStud
         return;
       }
       try {
-        const response = await fetch(`${apiBase()}${assignmentRosterPath(state.classId, state.assignmentId)}`, {
+        await request(assignmentRosterPath(state.classId, state.assignmentId), {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...authHeader()
-          },
-          body: JSON.stringify({ studentRef, name, discriminator })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentRef, name, discriminator }),
+          errorMessage: 'Không thể thêm học viên.'
         });
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload.message || 'Không thể thêm học viên.');
-        }
         if (typeof addStudentModal?.close === 'function') {
           addStudentModal.close();
         } else if (addStudentModal) {

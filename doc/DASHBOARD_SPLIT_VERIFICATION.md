@@ -32,6 +32,8 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 | `assignment-selection.js` | chip và chọn bài được giao | `renderAssignmentChips`, `selectAssignment` |
 | `showcase.js` | thẻ bài được chọn, sao chép liên kết, mã QR | `renderSelectedAssignmentShowcase` |
 | `assignments-loader.js` | tải bài được giao của lớp và khôi phục bài/bài làm theo URL | `loadAssignments` (cụm điều khiển thi nhận qua wrapper lazy) |
+| `pagination.js` | nút trang trước/sau của bảng kết quả | `createPagination` |
+| `results-filters.js` | ô tìm kiếm, bộ lọc, sắp xếp, đặt lại bộ lọc | `applyFilterChange` (báo cáo nhận qua wrapper lazy) |
 | `class-directory.js` | lọc, danh sách và tải lớp | `loadClasses`, `renderFilteredClasses`, `setupClassFilterToolbar`, `updateFilterPillsUI` |
 
 ## An toàn
@@ -51,3 +53,12 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 - Còn trong `dashboard.js`: điều hướng/hash, chọn bài, showcase, `loadAssignments`, đăng nhập/đăng xuất, thêm học viên, phân trang, bootstrap.
 - Smoke tích hợp chỉ chạm báo cáo 1 lần (`reports`), chưa kiểm sâu chuyển tab phân bố/phân tích câu và công bố toàn bộ; chưa có test browser bấm thật cho phần cấp quyền làm lại.
 - `tests/browser/dashboard-lifecycle-smoke.mjs` vẫn lỗi `ERR_MODULE_NOT_FOUND` từ trước (chưa điều tra).
+
+## Thống nhất `request` cho thao tác ghi (12/11/2026)
+
+- `request` nhận thêm `errorMessage` (thông báo dự phòng, không gửi xuống fetch) và gắn `apiMessage` (message gốc của máy chủ) vào lỗi.
+- Chuyển sang `request`: chấm nháp, hoàn tất chấm, công bố kết quả (`grading/attempt-review.js`), cấp quyền làm lại (`shell/grant-retake.js`), thêm học viên (`shell/add-student.js`). Xung đột 409 vẫn hiện cảnh báo (`err.status === 409`). Mỗi thao tác đúng một request, không thử lại.
+- Thay đổi hành vi có chủ đích: phản hồi 401 giờ kết thúc phiên như các lời gọi đọc; lỗi không phải JSON hiện thông báo dự phòng thay vì lỗi cú pháp JSON.
+- Lỗi tiềm ẩn đã sửa: `grant-retake.js` dùng `authHeader` nhưng không được truyền vào khi tách (công cụ tách bỏ sót `...authHeader()`), sẽ gây ReferenceError khi cấp quyền làm lại. Việc chuyển sang `request` loại bỏ phụ thuộc này.
+- Chưa chuyển (có chủ đích): đăng nhập/đăng xuất/khôi phục phiên, SSE phòng thi, lời gọi studio dùng token/origin riêng.
+- `dashboard-lifecycle-smoke` lỗi vì thiếu gói `playwright` trong môi trường, không phải lỗi mã.
