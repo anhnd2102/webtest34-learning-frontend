@@ -68,3 +68,9 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 Chrome thật, API giả, 1440×900. Chạy: `node tests/browser/dashboard-actions-smoke.mjs`. Kiểm: tìm kiếm gửi `q`, trang sau gửi `page=2` và cập nhật URL; thêm học viên (lỗi 400 giữ modal, thành công đóng modal, mỗi lần đúng một POST, có Bearer); chuyển hash `#dashboard` ↔ `#grading` kể cả nút Back của trình duyệt; cấp quyền làm lại từ phòng thi (một POST, không lỗi); đăng xuất (xóa token, hiện form) rồi đăng nhập lại (lưu token, tải lại lớp).
 Kiểm tra đột biến: chèn lại lỗi `authHeader` chưa khai báo vào `grant-retake.js` thì smoke lỗi ở bước cấp quyền làm lại; đã hoàn nguyên.
 Chưa phủ: công bố toàn bộ, chuyển tab báo cáo, chấm nháp/hoàn tất chấm trên trình duyệt (mới có test đơn vị), handler builder.
+
+## Smoke bấm thật `tests/browser/dashboard-grading-smoke.mjs` (12/11/2026)
+
+Chrome thật, API giả, 1440×900. Chạy: `node tests/browser/dashboard-grading-smoke.mjs`. Kiểm: mở bài làm; chấm nháp gặp xung đột 409 (hiện cảnh báo, không gửi lại) rồi lưu thành công (body có `baseRevision` và điểm, có Bearer); hoàn tất chấm (một POST, tải lại chi tiết); công bố một bài (một POST); công bố toàn bộ đường batch (một POST, không công bố từng bài) và đường dự phòng khi batch trả 404 (công bố từng bài đã nộp đúng một lần, nút được bật lại); chuyển ba tab báo cáo (phổ điểm, phân tích câu hỏi, chi tiết) và quay lại tab đã tải không gọi lại API.
+Kiểm tra đột biến: đổi điều kiện `err.status === 409` của chấm nháp thì smoke lỗi; đã hoàn nguyên.
+Quan sát: sau khi hoàn tất chấm, bấm công bố làm ô điểm mất focus và kích hoạt thêm một lần lưu nháp tự động (hành vi có sẵn, không đổi).
