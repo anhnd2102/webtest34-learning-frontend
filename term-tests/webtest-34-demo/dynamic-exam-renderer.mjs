@@ -510,9 +510,14 @@ export function renderInlineCloze(item, answers = {}) {
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
   const containsHtml = /<[a-z][\s\S]*>/i.test(text);
 
+  // Đáp án chuỗi là bản nháp cũ từ khi câu này còn hiện thành ô trả lời ngắn (#39):
+  // chỉ đưa vào ô trống đầu tiên, không lặp lại ở mọi ô.
+  let legacyStringUsed = false;
   const renderBlank = (num) => {
     const rawVal = answers[item.itemVersionId];
-    const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
+    let val = '';
+    if (typeof rawVal === 'object' && rawVal !== null) val = rawVal[num] || '';
+    else if (typeof rawVal === 'string' && !legacyStringUsed) { val = rawVal; legacyStringUsed = true; }
     const isFilled = typeof val === 'string' && val.trim().length > 0;
     return `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
       `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
@@ -1424,7 +1429,14 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     if (blankWrap) {
       const pos = target.getAttribute('data-position');
       if (pos) {
-        const currentAnswers = typeof state.answers[itemId] === 'object' && state.answers[itemId] !== null ? state.answers[itemId] : {};
+        const raw = state.answers[itemId];
+        // Bản nháp cũ dạng chuỗi (#39): dựng lại từ các ô đang hiện để không mất đáp án ở ô khác.
+        const currentAnswers = typeof raw === 'object' && raw !== null
+          ? raw
+          : Object.fromEntries([...rootEl.querySelectorAll('.inline-fill-input')]
+            .filter(input => input.getAttribute('data-item-id') === itemId)
+            .map(input => [input.getAttribute('data-position'), input.value.trim()])
+            .filter(([, v]) => v));
         currentAnswers[pos] = target.value.trim();
         value = currentAnswers;
         state.answers[itemId] = value;
