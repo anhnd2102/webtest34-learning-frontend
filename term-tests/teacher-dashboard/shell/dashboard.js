@@ -21,6 +21,8 @@ import { createPublishAll } from './publish-all.js';
 import { createStudioView } from './studio-view.js';
 import { createClassDirectory } from './class-directory.js';
 import { createExamRoomActions } from './exam-room-actions.js';
+import { createAuthSession } from './auth-session.js';
+import { createAddStudent } from './add-student.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -753,7 +755,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const { openGrantRetakeModal } = createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, apiBase, loadExamRoom: (...args) => loadExamRoom(...args), loadAttemptDetail, loadResults });
   const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline: student => showExamRoomTimeline(student), openGrantRetakeModal } });
 
-  const { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents } = createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout });
+  const { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents } = createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout: () => handleLogout() });
 
   const { updateExamModeUI, updateSelfProctoringUI, renderExamSwitch } = createExamControls({ lifecycle, scopeState, examModeToggle, examModeStatusPill, selfProctoringToggle, examModeLockHint, selfProctoringLockHint, selfProctoringLimit, selfProctoringSave, examSwitchControls, examSwitchHint, examSwitchLimit, examSwitchButton, examSwitchMessage, examRoomOpenButton, examRoom, status, state, request, loadAssignments });
   const { ensurePortalPanel, resetPortal } = createPortalPanel({ root, lifecycle, state, request, document, window });
@@ -1086,103 +1088,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     });
   }
 
-  if (addStudentBtn) {
-    lifecycle.listen(addStudentBtn, 'click', async () => {
-      if (!state.classId || !state.assignmentId) return;
-      if (addStudentError) {
-        addStudentError.hidden = true;
-        addStudentError.textContent = '';
-      }
-      if (eligibleStudentSelect) {
-        eligibleStudentSelect.replaceChildren(new Option('-- Chọn học viên --', ''));
-        try {
-          const res = await request(eligibleStudentsPath(state.classId, state.assignmentId));
-          if (res.ok && Array.isArray(res.students)) {
-            for (const s of res.students) {
-              const opt = new Option(s.discriminator ? `${s.name} · ${s.discriminator}` : s.name, s.studentRef);
-              opt.dataset.name = s.name;
-              opt.dataset.discriminator = s.discriminator || '';
-              opt.dataset.contactId = s.erpStudentContactId || '';
-              eligibleStudentSelect.add(opt);
-            }
-          }
-        } catch {
-          // ignore error fetching eligible students
-        }
-      }
-      if (addStudentRefInput) addStudentRefInput.value = '';
-      if (addStudentNameInput) addStudentNameInput.value = '';
-      if (addStudentDiscInput) addStudentDiscInput.value = '';
-      if (typeof addStudentModal?.showModal === 'function') {
-        addStudentModal.showModal();
-      } else if (addStudentModal) {
-        addStudentModal.hidden = false;
-      }
-    });
-  }
-
-  if (eligibleStudentSelect) {
-    lifecycle.listen(eligibleStudentSelect, 'change', () => {
-      const selected = eligibleStudentSelect.selectedOptions[0];
-      if (selected && selected.value) {
-        if (addStudentRefInput) addStudentRefInput.value = selected.value;
-        if (addStudentNameInput) addStudentNameInput.value = selected.dataset.name || '';
-        if (addStudentDiscInput) addStudentDiscInput.value = selected.dataset.discriminator || '';
-      }
-    });
-  }
-
-  if (cancelAddStudentBtn) {
-    lifecycle.listen(cancelAddStudentBtn, 'click', () => {
-      if (typeof addStudentModal?.close === 'function') {
-        addStudentModal.close();
-      } else if (addStudentModal) {
-        addStudentModal.hidden = true;
-      }
-    });
-  }
-
-  if (addStudentForm) {
-    lifecycle.listen(addStudentForm, 'submit', async event => {
-      event.preventDefault();
-      if (!state.classId || !state.assignmentId) return;
-      const studentRef = addStudentRefInput?.value.trim();
-      const name = addStudentNameInput?.value.trim();
-      const discriminator = addStudentDiscInput?.value.trim();
-      if (!studentRef || !name) {
-        if (addStudentError) {
-          addStudentError.hidden = false;
-          addStudentError.textContent = 'Vui lòng nhập đầy đủ mã định danh và tên học viên.';
-        }
-        return;
-      }
-      try {
-        const response = await fetch(`${apiBase()}${assignmentRosterPath(state.classId, state.assignmentId)}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...authHeader()
-          },
-          body: JSON.stringify({ studentRef, name, discriminator })
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload.message || 'Không thể thêm học viên.');
-        }
-        if (typeof addStudentModal?.close === 'function') {
-          addStudentModal.close();
-        } else if (addStudentModal) {
-          addStudentModal.hidden = true;
-        }
-        await loadResults(state.classId, state.assignmentId);
-      } catch (err) {
-        if (addStudentError) {
-          addStudentError.hidden = false;
-          addStudentError.textContent = err.message;
-        }
-      }
-    });
-  }
+  createAddStudent({ authHeader, lifecycle, addStudentBtn, addStudentModal, addStudentForm, eligibleStudentSelect, addStudentRefInput, addStudentNameInput, addStudentDiscInput, addStudentError, cancelAddStudentBtn, state, apiBase, request, loadResults });
 
 
 
@@ -1206,149 +1112,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   const { renderTeacherProfile, toggleRoleCapabilitiesPopover } = createProfilePanel({ root, lifecycle, authState, document, window, loadAndRenderTestStudio, loginForm, loginError, teacherProfile, teacherProfileName, teacherProfileMeta, teacherRoleBadge, roleBadgeWrap, roleInfoBtn, roleCapabilitiesPopover, closeRolePopoverBtn, setupClassFilterToolbar });
 
-  function handleLogout() {
-    disposeOwnedBuilder();
-    for (const scope of ['sessionRestore', 'classes', 'assignments', 'results', 'attemptDetail', 'testStudio', 'testStudioBuilder', 'examRoom', 'examRoomTimeline', 'reports', 'itemAnalysis']) {
-      queryCoordinator.cancel(scope);
-    }
-    stopExamRoomEvents();
-    resetPortal();
-    if (roleCapabilitiesPopover) roleCapabilitiesPopover.hidden = true;
-    document.body.classList.add('login-page');
-    sessionToken = '';
-    currentTeacher = null;
-    rawClassesList = [];
-    if (classFilterToolbar) classFilterToolbar.hidden = true;
-    if (classSearchInput) classSearchInput.value = '';
-    if (classStatusFilter) classStatusFilter.value = '';
-    if (classCountBadge) classCountBadge.textContent = '0 lớp';
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.removeItem('izone_teacher_token');
-      sessionStorage.removeItem('izone_teacher_profile');
-    }
-    if (teacherProfile) teacherProfile.hidden = true;
-    if (loginForm) loginForm.hidden = false;
-    if (classSelect) classSelect.replaceChildren(new Option('-- Chọn lớp --', ''));
-    if (assignmentSelect) {
-      assignmentSelect.replaceChildren(new Option('-- Chọn bài test --', ''));
-      assignmentSelect.disabled = true;
-    }
-    if (selectedAssignmentCard) selectedAssignmentCard.hidden = true;
-    currentAssignmentsList = [];
-    if (results) results.hidden = true;
-    if (resultsContent) resultsContent.replaceChildren();
-    if (classSkillSummary) classSkillSummary.replaceChildren();
-    if (attemptDetail) {
-      attemptDetail.classList.remove('drawer-open');
-      attemptDetail.hidden = true;
-    }
-    if (drawerBackdrop) drawerBackdrop.hidden = true;
-    if (detailScores) detailScores.replaceChildren();
-    if (detailItemsBody) detailItemsBody.replaceChildren();
-    if (detailAttemptHistory) detailAttemptHistory.replaceChildren();
-    if (searchInput) searchInput.value = '';
-    if (statusFilter) statusFilter.value = '';
-    if (skillFilter) skillFilter.value = '';
-    if (minScoreInput) minScoreInput.value = '';
-    if (maxScoreInput) maxScoreInput.value = '';
-    if (sortBySelect) sortBySelect.value = 'submitted_at';
-    if (sortDirSelect) sortDirSelect.value = 'desc';
-
-    resetDashboardState(state);
-    setUrl();
-    if (status) status.textContent = 'Đã đăng xuất. Vui lòng đăng nhập lại.';
-  }
-
-  if (togglePasswordBtn && loginPhone) {
-    lifecycle.listen(togglePasswordBtn, 'click', () => {
-      const isPassword = loginPhone.type === 'password';
-      loginPhone.type = isPassword ? 'text' : 'password';
-      togglePasswordBtn.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
-      togglePasswordBtn.setAttribute('title', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
-      togglePasswordBtn.setAttribute('aria-pressed', String(isPassword));
-    });
-  }
-
-  if (loginPhone && loginForm) {
-    lifecycle.listen(loginPhone, 'keydown', event => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        if (typeof loginForm.requestSubmit === 'function') {
-          loginForm.requestSubmit();
-        } else {
-          loginForm.dispatchEvent(new Event('submit', { cancelable: true }));
-        }
-      }
-    });
-  }
-
-  if (loginForm) {
-    lifecycle.listen(loginForm, 'submit', async event => {
-      event.preventDefault();
-      if (loginBtn.disabled) return;
-      if (loginError) loginError.hidden = true;
-      const email = loginEmail?.value.trim() || '';
-      const phone = loginPhone?.value.trim() || '';
-      if (!email || !phone) {
-        if (loginError) {
-          loginError.hidden = false;
-          loginError.textContent = 'Vui lòng nhập đầy đủ Email và Số điện thoại.';
-        }
-        return;
-      }
-
-      loginBtn.disabled = true;
-      loginBtn.textContent = 'Đang đăng nhập…';
-      loginForm.setAttribute('aria-busy', 'true');
-      try {
-        if (status) status.textContent = 'Đang xác thực tài khoản…';
-        const response = await fetch(`${apiBase()}${authLoginPath()}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, phone })
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload.message || 'Email hoặc số điện thoại không chính xác.');
-        }
-
-        sessionToken = payload.token;
-        if (typeof sessionStorage !== 'undefined') {
-          sessionStorage.setItem('izone_teacher_token', payload.token);
-          sessionStorage.setItem('izone_teacher_profile', JSON.stringify(payload.teacher));
-        }
-
-        renderTeacherProfile(payload.teacher);
-        await loadClasses();
-      } catch (err) {
-        if (loginError) {
-          loginError.hidden = false;
-          loginError.textContent = err.message;
-        }
-        if (status) status.textContent = `Lỗi đăng nhập: ${err.message}`;
-      } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Đăng nhập';
-        loginForm.removeAttribute('aria-busy');
-      }
-    });
-  }
-
-  if (logoutBtn) {
-    lifecycle.listen(logoutBtn, 'click', async () => {
-      stopExamRoomEvents();
-      try {
-        if (sessionToken) {
-          await fetch(`${apiBase()}${authLogoutPath()}`, {
-            method: 'POST',
-            headers: { ...authHeader() }
-          }).catch(() => {});
-        }
-      } finally {
-        handleLogout();
-      }
-    });
-  }
+  const { handleLogout } = createAuthSession({ authHeader, lifecycle, queryCoordinator, authState, scopeState, document, classFilterToolbar, classSearchInput, classStatusFilter, classCountBadge, classSelect, assignmentSelect, selectedAssignmentCard, examRoom, assignments, results, resultsContent, status, classSkillSummary, disposeOwnedBuilder, searchInput, statusFilter, skillFilter, minScoreInput, maxScoreInput, sortBySelect, sortDirSelect, attemptDetail, drawerBackdrop, detailScores, detailAttemptHistory, detailItemsBody, state, loginForm, loginBtn, loginEmail, loginPhone, togglePasswordBtn, loginError, teacherProfile, roleCapabilitiesPopover, logoutBtn, apiBase, stopExamRoomEvents, resetPortal, setUrl, loadClasses, renderTeacherProfile });
 
   if (toggleFixtureBtn && form) {
     lifecycle.listen(toggleFixtureBtn, 'click', () => {

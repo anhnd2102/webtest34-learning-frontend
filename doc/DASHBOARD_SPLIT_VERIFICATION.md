@@ -26,6 +26,8 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 | `studio-view.js` | danh mục Test Studio | `loadAndRenderTestStudio` |
 | `publish-all.js` | công bố toàn bộ kết quả | `publishAllResults` |
 | `exam-room-actions.js` | phòng thi: timeline sự cố, tải phòng, phiên SSE, 4 nút | `fillIncidentTimeline`, `showExamRoomTimeline`, `loadExamRoom`, `stopExamRoomEvents` |
+| `add-student.js` | modal và form thêm học viên vào danh sách làm bài | `createAddStudent` (không trả giá trị) |
+| `auth-session.js` | đăng nhập, đăng xuất, hiện/ẩn mật khẩu | `handleLogout` (truyền cho cụm phòng thi qua wrapper lazy) |
 | `class-directory.js` | lọc, danh sách và tải lớp | `loadClasses`, `renderFilteredClasses`, `setupClassFilterToolbar`, `updateFilterPillsUI` |
 
 ## An toàn
