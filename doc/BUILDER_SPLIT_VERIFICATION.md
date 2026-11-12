@@ -38,4 +38,5 @@ Ngày 12/11/2026. Chỉ **di chuyển nguyên văn**, không đổi hành vi, AP
 
 - Test đơn vị dùng DOM giả; các handler chỉ được kiểm khi test có bấm đúng nút. Chưa có test browser bấm từng nút (thêm/xóa/di chuyển bài tập, kéo thả, sandbox thật).
 - Request của sandbox, publish, chấm vẫn là `fetch` trực tiếp; thống nhất client/lỗi/auth là commit riêng sau (không retry cho thao tác ghi).
-- `shell/dashboard.js` (2.863 dòng) chưa được tách.
+- `shell/dashboard.js`: mới tách khối đồng bộ Portal sang `shell/portal-panel.js` (`createPortalPanel({ root, lifecycle, state, request, document, window })` trả `{ ensurePortalPanel, resetPortal }`; 2.863 → 2.616 dòng). Phần còn lại (reports, grant retake, publish-all, exam switch, profile/role, loadClasses/loadAssignments) chưa tách vì dùng chung ~15 biến `let` bị gán lại; cần thiết kế owner state trước.
+- `tests/browser/dashboard-lifecycle-smoke.mjs` hiện lỗi `ERR_MODULE_NOT_FOUND` ngay cả trên bản trước thay đổi (đã kiểm với git stash); chưa điều tra, không do đợt này.
