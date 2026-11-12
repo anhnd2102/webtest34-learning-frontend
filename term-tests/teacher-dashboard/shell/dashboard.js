@@ -4,20 +4,14 @@ import { createExamRoomView } from '../exam-room/view.js';
 import { createLifecycle } from './lifecycle.js';
 import { createQueryCoordinator } from './query-coordinator.js';
 
-import { defaultApiBase, authLoginPath, authLogoutPath, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, assignmentExamModePath, assignmentSelfProctoringPath, assignmentExamRoomPath, assignmentExamEventsPath, assignmentExamStartPath, assignmentExamExtendPath, attemptDetailPath, attemptPublishPath, assignmentPublishAllPath, assignmentRosterPath, eligibleStudentsPath, grantRetakePath, courseTestCatalogPath, formDraftPath, formDetailPath, formPublishPath, formPublishPreviewPath } from '../api/teacher.js';
+import { defaultApiBase, authLoginPath, authLogoutPath, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, attemptDetailPath, assignmentRosterPath, eligibleStudentsPath } from '../api/teacher.js';
 
 import { ICONS } from '../ui/icons.js';
-import { localStudentUrl, readDashboardState, readDashboardTab, switchDashboardTab, assignmentUrl, resetDashboardState, filterClasses, formatClassFilterCountLabel, formatClassOptionLabel, extractPhase, formatAssignmentMeta, renderAssignmentChipsView } from './dashboard-state.js';
-import { teacherRoleLabel, getRoleCapabilities, formatIncidentTimeline } from '../results/presentation.js';
+import { localStudentUrl, readDashboardState, readDashboardTab, switchDashboardTab, assignmentUrl, resetDashboardState, extractPhase, formatAssignmentMeta, renderAssignmentChipsView } from './dashboard-state.js';
 import { downloadResultsXlsx } from '../results/export.js';
-import { examModeLockReason, selfProctoringLockReason, selfProctoringRequestBody, examSwitchRequestBody, examSwitchView, examSwitchErrorView, examSwitchSuccessText, applyExamProgress, applyExamIncident, applyExamConnection } from '../exam-room/presentation.js';
 import { hasActiveUnsavedChanges, clearActiveUnsavedChanges, openUnsavedChangesModal } from '../navigation/unsaved-changes.js';
-import { openCreateTestModal, renderCourseTestCatalogView, filterClassesForCourse } from '../studio/catalog.js';
 import { renderTestBuilderView } from '../studio/builder.js';
 
-import { createExamRoomSession } from './exam-room-session.js';
-import { reportApiPath, renderScoreDistributionView } from './analytics/score-distribution-view.js';
-import { itemAnalysisApiPath, renderReportModeSwitch, renderItemAnalysisView } from './analytics/item-analysis-view.js';
 import { createPortalPanel } from './portal-panel.js';
 import { createProfilePanel } from './profile-panel.js';
 import { createGrantRetake } from './grant-retake.js';
@@ -26,6 +20,7 @@ import { createExamControls } from './exam-controls.js';
 import { createPublishAll } from './publish-all.js';
 import { createStudioView } from './studio-view.js';
 import { createClassDirectory } from './class-directory.js';
+import { createExamRoomActions } from './exam-room-actions.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -694,7 +689,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   let sessionToken = typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('izone_teacher_token') || '') : '';
   let examRoomSession = null;
-  lifecycle.onDispose(stopExamRoomEvents);
+  lifecycle.onDispose(() => stopExamRoomEvents());
   let currentExamRoom = null;
 
   const currentLocation = typeof window !== 'undefined' ? window.location : null;
@@ -754,164 +749,11 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   };
 
   const { loadAndRenderTestStudio } = createStudioView({ root, queryCoordinator, authState, scopeState, form, viewExams, disposeOwnedBuilder, renderOwnedBuilder, request });
-  function fillIncidentTimeline(container, rawIncidents) {
-    container.replaceChildren();
-    const incidents = formatIncidentTimeline(rawIncidents || []);
-    if (!incidents.length) {
-      container.textContent = 'Không có sự cố được ghi nhận.';
-      return;
-    }
-    const table = document.createElement('table');
-    table.className = 'mini-table';
-    table.innerHTML = '<thead><tr><th>Loại</th><th>Bắt đầu</th><th>Kết thúc</th><th>Thời lượng</th></tr></thead>';
-    const body = document.createElement('tbody');
-    for (const incident of incidents) {
-      const row = document.createElement('tr');
-      for (const value of [incident.typeLabel, incident.startedAt, incident.endedAt, incident.duration]) {
-        const cell = document.createElement('td');
-        cell.textContent = value;
-        row.append(cell);
-      }
-      body.append(row);
-    }
-    table.append(body);
-    container.append(table);
-  }
+  // Phá vòng phụ thuộc: grant retake và view chỉ giữ wrapper lazy tới loadExamRoom/showExamRoomTimeline (khai báo sau).
+  const { openGrantRetakeModal } = createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, apiBase, loadExamRoom: (...args) => loadExamRoom(...args), loadAttemptDetail, loadResults });
+  const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline: student => showExamRoomTimeline(student), openGrantRetakeModal } });
 
-  async function showExamRoomTimeline(student) {
-    const panel = root.querySelector('#exam-room-timeline');
-    if (!panel || !student.attemptId || !currentSelectedAssignment) return;
-    const query = queryCoordinator?.begin?.('examRoomTimeline');
-    if (queryCoordinator && !query) return;
-
-    panel.hidden = false;
-    panel.querySelector('h3').textContent = `Timeline sự cố · ${student.name || 'Học viên'}`;
-    const content = panel.querySelector('div');
-    content.textContent = 'Đang tải timeline sự cố…';
-    try {
-      const payload = await request(attemptDetailPath(state.classId, currentSelectedAssignment.assignmentId, student.attemptId), {
-        signal: query?.signal
-      });
-      if (query && !query.isCurrent()) return;
-      fillIncidentTimeline(content, payload.incidents);
-    } catch (error) {
-      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
-      content.textContent = `Không tải được timeline sự cố: ${error.message}`;
-    }
-  }
-
-  const { openGrantRetakeModal } = createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, apiBase, loadExamRoom, loadAttemptDetail, loadResults });
-  const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline, openGrantRetakeModal } });
-
-  async function loadExamRoom(owner = examRoomSession) {
-    if (!currentSelectedAssignment || !state.classId || (owner && !owner.isCurrent())) return;
-    const query = queryCoordinator?.begin?.('examRoom');
-    if (queryCoordinator && !query) return;
-
-    if (examRoomMessage) examRoomMessage.textContent = 'Đang tải trạng thái Phòng thi…';
-    try {
-      const payload = await request(assignmentExamRoomPath(state.classId, currentSelectedAssignment.assignmentId), {
-        signal: query?.signal
-      });
-      if ((owner && !owner.isCurrent()) || (query && !query.isCurrent())) return;
-      renderExamRoom(payload.room);
-      if (examRoomMessage) examRoomMessage.textContent = '';
-    } catch (err) {
-      if ((owner && !owner.isCurrent()) || (query && (!query.isCurrent() || err.name === 'AbortError'))) return;
-      if (examRoomMessage) examRoomMessage.textContent = err.message || 'Lỗi tải trạng thái Phòng thi';
-    }
-  }
-
-  function stopExamRoomEvents() {
-    const previous = examRoomSession;
-    examRoomSession = null;
-    previous?.dispose();
-    queryCoordinator.cancel('examRoom');
-    queryCoordinator.cancel('examRoomTimeline');
-  }
-
-  function createCurrentRoomSession() {
-    stopExamRoomEvents();
-    const classId = state.classId;
-    const assignmentId = currentSelectedAssignment.assignmentId;
-    const path = assignmentExamEventsPath(classId, assignmentId);
-    const origin = apiBase();
-    const token = sessionToken;
-    const session = createExamRoomSession({
-      isScopeCurrent: () => !lifecycle.isDisposed() && examRoomSession === session
-        && state.classId === classId && currentSelectedAssignment?.assignmentId === assignmentId,
-      fetchStream: signal => fetch(`${origin}${path}`, {
-        headers: { Authorization: `Bearer ${token}`, Accept: 'text/event-stream' }, signal
-      }),
-      onUnauthorized: handleLogout,
-      refresh: () => loadExamRoom(session),
-      onMessage: async message => {
-        if (message.event === 'snapshot' && message.data.room) renderExamRoom(message.data.room);
-        else if (message.event === 'exam.incident.opened' || message.event === 'exam.incident.closed') {
-          currentExamRoom = applyExamIncident(currentExamRoom, message.data);
-          if (currentExamRoom) renderExamRoom(currentExamRoom);
-        } else if (message.event === 'exam.progress.updated') {
-          currentExamRoom = applyExamProgress(currentExamRoom, message.data);
-          if (currentExamRoom) renderExamRoom(currentExamRoom);
-        } else if (message.event === 'exam.connection.changed') {
-          currentExamRoom = applyExamConnection(currentExamRoom, message.data);
-          if (currentExamRoom) renderExamRoom(currentExamRoom);
-        } else if (message.event !== 'snapshot') await loadExamRoom(session);
-      }
-    });
-    examRoomSession = session;
-    return session;
-  }
-
-  lifecycle.listen(examRoomOpenButton, 'click', async () => {
-    if (!currentSelectedAssignment) return;
-    const session = createCurrentRoomSession();
-    examRoomReturnToResults = Boolean(results && !results.hidden);
-    if (results) results.hidden = true;
-    if (examRoom) examRoom.hidden = false;
-    await loadExamRoom(session);
-    if (session.isCurrent() && sessionToken) session.start();
-  });
-  lifecycle.listen(examRoomRefreshButton, 'click', () => {
-    loadExamRoom().catch(error => { if (examRoomMessage) examRoomMessage.textContent = error.message; });
-  });
-  lifecycle.listen(examRoomCloseButton, 'click', () => {
-    stopExamRoomEvents();
-    const panel = root.querySelector('#exam-room-timeline');
-    if (panel) panel.hidden = true;
-    if (examRoom) examRoom.hidden = true;
-    if (examRoomReturnToResults && results) results.hidden = false;
-  });
-  lifecycle.listen(examRoomStartButton, 'click', async () => {
-    if (!currentSelectedAssignment) return;
-    examRoomStartButton.disabled = true;
-    try {
-      await request(assignmentExamStartPath(state.classId, currentSelectedAssignment.assignmentId), {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
-      });
-      await loadExamRoom();
-    } catch (error) {
-      if (examRoomMessage) examRoomMessage.textContent = error.message;
-      examRoomStartButton.disabled = false;
-    }
-  });
-  lifecycle.listen(examRoomExtendButton, 'click', async () => {
-    if (!currentSelectedAssignment) return;
-    examRoomExtendButton.disabled = true;
-    try {
-      await request(assignmentExamExtendPath(state.classId, currentSelectedAssignment.assignmentId), {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ minutes: Number(examRoomExtensionMinutes?.value) })
-      });
-    } catch (error) {
-      if (examRoomMessage) examRoomMessage.textContent = error.message;
-      examRoomExtendButton.disabled = false;
-      return;
-    }
-    loadExamRoom().catch(error => {
-      if (examRoomMessage) examRoomMessage.textContent = `Đã gia hạn nhưng chưa tải lại được trạng thái: ${error.message}`;
-    });
-  });
+  const { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents } = createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout });
 
   const { updateExamModeUI, updateSelfProctoringUI, renderExamSwitch } = createExamControls({ lifecycle, scopeState, examModeToggle, examModeStatusPill, selfProctoringToggle, examModeLockHint, selfProctoringLockHint, selfProctoringLimit, selfProctoringSave, examSwitchControls, examSwitchHint, examSwitchLimit, examSwitchButton, examSwitchMessage, examRoomOpenButton, examRoom, status, state, request, loadAssignments });
   const { ensurePortalPanel, resetPortal } = createPortalPanel({ root, lifecycle, state, request, document, window });

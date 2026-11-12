@@ -1,6 +1,6 @@
 # Tách `shell/dashboard.js` theo owner state (bước 3, đợt dashboard)
 
-Ngày 12/11/2026. Chỉ **di chuyển nguyên văn** các cụm vào module; không đổi API, payload, CSS hay hành vi. `shell/dashboard.js`: **2.863 → 1.586 dòng**.
+Ngày 12/11/2026. Chỉ **di chuyển nguyên văn** các cụm vào module; không đổi API, payload, CSS hay hành vi. `shell/dashboard.js`: **2.863 → 1428 dòng**.
 
 ## Thiết kế owner state
 
@@ -25,6 +25,7 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 | `exam-controls.js` | chế độ thi, tự giám sát, chuyển bài thi | `updateExamModeUI`, `updateSelfProctoringUI`, `renderExamSwitch` |
 | `studio-view.js` | danh mục Test Studio | `loadAndRenderTestStudio` |
 | `publish-all.js` | công bố toàn bộ kết quả | `publishAllResults` |
+| `exam-room-actions.js` | phòng thi: timeline sự cố, tải phòng, phiên SSE, 4 nút | `fillIncidentTimeline`, `showExamRoomTimeline`, `loadExamRoom`, `stopExamRoomEvents` |
 | `class-directory.js` | lọc, danh sách và tải lớp | `loadClasses`, `renderFilteredClasses`, `setupClassFilterToolbar`, `updateFilterPillsUI` |
 
 ## An toàn
@@ -40,7 +41,7 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 
 ## Giới hạn và phần còn lại
 
-- **Cụm phòng thi** (`fillIncidentTimeline`, `showExamRoomTimeline`, `loadExamRoom`, `createCurrentRoomSession`, 4 listener) **chưa tách**: nó vòng phụ thuộc với `createExamRoomView` và `createGrantRetake` (view cần `openGrantRetakeModal`, modal cần `loadExamRoom`). Cần chọn cách phá vòng (tham số lazy) trước.
+- **Vòng phụ thuộc phòng thi đã phá**: view cần `openGrantRetakeModal`, modal cần `loadExamRoom`, phòng thi cần `renderExamRoom` của view. Hai cạnh ngược (`loadExamRoom` → grant retake, `showExamRoomTimeline` → view) đi qua wrapper lazy `(...args) => loadExamRoom(...args)` / `student => showExamRoomTimeline(student)`; `createExamRoomActions` được gọi sau cả hai. `lifecycle.onDispose(stopExamRoomEvents)` cũng thành wrapper lazy (nếu truyền giá trị sẽ TDZ). Hai test đọc mã nguồn (`exam-room-ui`) được cập nhật để chấp nhận `viewState.currentExamRoom`. Đã dọn 40 import thừa trong `dashboard.js`.
 - Còn trong `dashboard.js`: điều hướng/hash, chọn bài, showcase, `loadAssignments`, đăng nhập/đăng xuất, thêm học viên, phân trang, bootstrap.
 - Smoke tích hợp chỉ chạm báo cáo 1 lần (`reports`), chưa kiểm sâu chuyển tab phân bố/phân tích câu và công bố toàn bộ; chưa có test browser bấm thật cho phần cấp quyền làm lại.
 - `tests/browser/dashboard-lifecycle-smoke.mjs` vẫn lỗi `ERR_MODULE_NOT_FOUND` từ trước (chưa điều tra).
