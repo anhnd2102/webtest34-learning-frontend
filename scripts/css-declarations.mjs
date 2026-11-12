@@ -18,8 +18,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const defaultStylesDir = fileURLToPath(new URL('../term-tests/teacher-dashboard/styles/', import.meta.url));
 
-function fragmentNames(stylesDir) {
-  return readdirSync(stylesDir).filter(name => /^\d\d-.*\.css$/.test(name)).sort();
+const defaultFilter = /^\d\d-.*\.css$/;
+
+// `filter` (RegExp trên tên file) cho phép dùng cùng công cụ với một file CSS lẻ, ví dụ /^dynamic-test\.css$/.
+function fragmentNames(stylesDir, filter = defaultFilter) {
+  return readdirSync(stylesDir).filter(name => filter.test(name)).sort();
 }
 
 // Bỏ qua chuỗi và url(...) khi tìm dấu phân tách; trả về chỉ số ký tự cuối của comment/chuỗi.
@@ -116,10 +119,10 @@ function walkRules(text, onRule) {
   }
 }
 
-export function scanDeclarations(stylesDir = defaultStylesDir) {
+export function scanDeclarations(stylesDir = defaultStylesDir, { filter } = {}) {
   const result = [];
   let order = 0;
-  for (const source of fragmentNames(stylesDir)) {
+  for (const source of fragmentNames(stylesDir, filter)) {
     const text = readFileSync(join(stylesDir, source), 'utf8');
     const lineStarts = [0];
     for (let i = 0; i < text.length; i++) if (text[i] === '\n') lineStarts.push(i + 1);
@@ -144,8 +147,8 @@ export function ruleCount(stylesDir = defaultStylesDir) {
 }
 
 // Áp dụng danh sách chỉnh sửa. Trả về thống kê; chỉ ghi file khi dryRun = false.
-export function applyDeclarationEdits(edits, { stylesDir = defaultStylesDir, dryRun = false } = {}) {
-  const all = scanDeclarations(stylesDir);
+export function applyDeclarationEdits(edits, { stylesDir = defaultStylesDir, dryRun = false, filter } = {}) {
+  const all = scanDeclarations(stylesDir, { filter });
   const byKey = new Map(all.map(declaration => [declaration.key, declaration]));
   const perSource = new Map();
   const seen = new Set();
@@ -194,7 +197,7 @@ export function applyDeclarationEdits(edits, { stylesDir = defaultStylesDir, dry
   }
   if (!dryRun) {
     // Báo cáo rule bị rỗng sau khi xóa (người dùng quyết định có xóa rule hay không).
-    const after = scanDeclarations(stylesDir);
+    const after = scanDeclarations(stylesDir, { filter });
     const remaining = new Map();
     for (const declaration of after) remaining.set(`${declaration.source}#${declaration.selector}`, true);
     for (const edit of edits) {

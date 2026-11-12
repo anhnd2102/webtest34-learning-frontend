@@ -19,6 +19,14 @@ import { scanDeclarations } from './css-declarations.mjs';
 
 const dashboardDir = fileURLToPath(new URL('../term-tests/teacher-dashboard/', import.meta.url));
 const stylesDir = join(dashboardDir, 'styles');
+const studentDir = fileURLToPath(new URL('../term-tests/webtest-34-demo/', import.meta.url));
+
+// Hồ sơ phân tích: mặc định là Teacher Dashboard; `student` là dynamic-test.css của giao diện học viên.
+// codeDir: nơi tìm lệnh ghi style (JS/HTML); cssDir + cssFilter: file CSS được quét; skipDirs: thư mục bỏ qua.
+export const PROFILES = {
+  dashboard: { codeDir: dashboardDir, cssDir: stylesDir, cssFilter: undefined, skipDirs: ['vendor', 'styles'], hardExclusions: undefined },
+  student: { codeDir: studentDir, cssDir: studentDir, cssFilter: /^dynamic-test\.css$/, skipDirs: ['vendor', 'assets', 'demo-content'], hardExclusions: [] }
+};
 
 // Loại trừ cứng: khai báo mà vai trò là thắng inline/JS hoặc mô hình ẩn/hiện.
 export const HARD_EXCLUSIONS = [
@@ -39,7 +47,7 @@ function walkFiles(dir, extensions, skipDirs, found = []) {
 }
 
 // Thuộc tính bị inline/JS ghi: trả về Map(property kebab-case -> ['file:line', ...]).
-export function collectInlineWrites() {
+export function collectInlineWrites(profile = PROFILES.dashboard) {
   const writes = new Map();
   const add = (property, where) => {
     const name = property.trim().toLowerCase();
@@ -47,8 +55,8 @@ export function collectInlineWrites() {
     if (!writes.has(name)) writes.set(name, []);
     writes.get(name).push(where);
   };
-  for (const file of walkFiles(dashboardDir, ['.js', '.html'], ['vendor', 'styles'])) {
-    const where = relative(dashboardDir, file).replaceAll('\\', '/');
+  for (const file of walkFiles(profile.codeDir, ['.js', '.mjs', '.html'], profile.skipDirs)) {
+    const where = relative(profile.codeDir, file).replaceAll('\\', '/');
     readFileSync(file, 'utf8').split(/\r?\n/).forEach((line, index) => {
       const location = `${where}:${index + 1}`;
       for (const match of line.matchAll(/\.style\.([a-zA-Z]+)\s*=/g)) add(kebab(match[1]), location);
@@ -64,10 +72,10 @@ export function collectInlineWrites() {
 }
 
 // Longhand bị @keyframes trong các fragment animate.
-export function collectKeyframeProperties() {
+export function collectKeyframeProperties(profile = PROFILES.dashboard) {
   const properties = new Set();
-  for (const file of readdirSync(stylesDir).filter(name => name.endsWith('.css'))) {
-    const text = readFileSync(join(stylesDir, file), 'utf8');
+  for (const file of readdirSync(profile.cssDir).filter(name => (profile.cssFilter || /\.css$/).test(name))) {
+    const text = readFileSync(join(profile.cssDir, file), 'utf8');
     for (const match of text.matchAll(/@keyframes\s+[\w-]+\s*\{/g)) {
       let depth = 1;
       let index = match.index + match[0].length;
@@ -102,16 +110,16 @@ async function expansions(properties) {
   } finally { await browser.close(); }
 }
 
-export async function runStaticAudit() {
-  const declarations = scanDeclarations();
+export async function runStaticAudit(profile = PROFILES.dashboard) {
+  const declarations = profile === PROFILES.dashboard ? scanDeclarations() : scanDeclarations(profile.cssDir, { filter: profile.cssFilter });
   const samples = new Map();
   for (const declaration of declarations) {
     if (!samples.has(declaration.property)) samples.set(declaration.property, []);
     const list = samples.get(declaration.property);
     if (list.length < 6 && !list.includes(declaration.value)) list.push(declaration.value);
   }
-  const inline = collectInlineWrites();
-  const keyframes = collectKeyframeProperties();
+  const inline = collectInlineWrites(profile);
+  const keyframes = collectKeyframeProperties(profile);
   for (const property of [...inline.keys(), ...keyframes]) if (!samples.has(property)) samples.set(property, ['inherit', '0', '1', 'none', 'auto']);
   const expanded = await expansions([...samples.entries()]);
   const longhandsOf = property => expanded[property] || (property.startsWith('--') ? [property] : null);
@@ -137,7 +145,7 @@ export async function runStaticAudit() {
 
   const classified = [];
   for (const declaration of declarations.filter(item => item.important)) {
-    const exclusion = HARD_EXCLUSIONS.find(item => item.source === declaration.source && item.selector === declaration.selector && item.property === declaration.property);
+    const exclusion = (profile.hardExclusions || HARD_EXCLUSIONS).find(item => item.source === declaration.source && item.selector === declaration.selector && item.property === declaration.property);
     const longhands = longhandsOf(declaration.property);
     const entry = { key: declaration.key, source: declaration.source, line: declaration.line, selector: declaration.selector, conditions: declaration.conditions, property: declaration.property, value: declaration.value };
     if (exclusion) { classified.push({ ...entry, class: 'hard-excluded', reason: exclusion.reason }); continue; }
@@ -156,8 +164,8 @@ export async function runStaticAudit() {
 
 const PROTECTED_LAYER = new Set(['beats-inline-or-js', 'animated', 'hard-excluded', 'unresolved']);
 
-export async function mergeAudit(auditFiles, { minStates = 3 } = {}) {
-  const staticReport = await runStaticAudit();
+export async function mergeAudit(auditFiles, { minStates = 3, profile = PROFILES.dashboard } = {}) {
+  const staticReport = await runStaticAudit(profile);
   const observed = new Map();
   for (const file of auditFiles) {
     for (const entry of JSON.parse(readFileSync(file, 'utf8'))) {
@@ -212,9 +220,13 @@ async function main([command, ...args]) {
     const outIndex = args.indexOf('--out');
     const editsIndex = args.indexOf('--edits');
     const minIndex = args.indexOf('--min-states');
-    const skip = new Set([outIndex, outIndex + 1, editsIndex, editsIndex + 1, minIndex, minIndex + 1].filter(index => index >= 0));
+    const profileArg = args.indexOf('--profile');
+    const skip = new Set([outIndex, outIndex + 1, editsIndex, editsIndex + 1, minIndex, minIndex + 1, profileArg, profileArg + 1].filter(index => index >= 0));
     const files = args.filter((arg, index) => !skip.has(index) && arg.endsWith('.json'));
-    const report = await mergeAudit(files, { minStates: minIndex >= 0 ? Number(args[minIndex + 1]) : 3 });
+    const profileIndex = args.indexOf('--profile');
+    const profile = profileIndex >= 0 ? PROFILES[args[profileIndex + 1]] : PROFILES.dashboard;
+    if (!profile) throw new Error('profile phải là dashboard hoặc student');
+    const report = await mergeAudit(files, { minStates: minIndex >= 0 ? Number(args[minIndex + 1]) : 3, profile });
     const counts = {};
     for (const entry of report.classified) counts[entry.final] = (counts[entry.final] || 0) + 1;
     console.log(JSON.stringify({ files: files.length, counts }, null, 2));

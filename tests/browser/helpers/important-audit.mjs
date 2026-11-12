@@ -20,14 +20,16 @@ export function importantAuditEnabled() {
   return Boolean(process.env.IMPORTANT_AUDIT_OUT);
 }
 
-export function createImportantAudit() {
-  const declarations = scanDeclarations().filter(declaration => declaration.important);
+// Mặc định đo các fragment của Teacher Dashboard (styles.css). Với CSS khác, truyền { stylesDir, filter, sheetSuffix },
+// ví dụ dynamic-test.css của giao diện học viên: { stylesDir: <webtest-34-demo>, filter: /^dynamic-test\.css$/, sheetSuffix: '/dynamic-test.css' }.
+export function createImportantAudit({ stylesDir, filter, sheetSuffix = '/styles.css' } = {}) {
+  const declarations = (stylesDir ? scanDeclarations(stylesDir, { filter }) : scanDeclarations()).filter(declaration => declaration.important);
   const payload = declarations.map(({ key, order, property, value }) => ({ key, order, property, value }));
   const totals = new Map(declarations.map(declaration => [declaration.key, { key: declaration.key, matched: 0, changed: 0, inline: 0, hidden: 0, written: 0, statesChanged: [], statesMatched: 0, skipped: {} }]));
   // Ghi inline style trong suốt vòng đời trang: với mỗi khai báo, đếm số lần một phần tử khớp selector của nó
   // được ghi inline cùng longhand (bất kể còn tồn tại ở thời điểm chụp hay không). attach(browser) cài vào mọi trang mới.
   const installWriteLog = (argument) => {
-    const { entries } = argument;
+    const { entries, sheetSuffix } = argument;
     const counts = {};
     window.__importantWrites = counts;
     const probe = document.createElement('div');
@@ -43,7 +45,7 @@ export function createImportantAudit() {
     const loadRules = () => {
       const list = [];
       const visit = rulesList => { for (const rule of rulesList) { if (rule.styleSheet) visit(rule.styleSheet.cssRules); else if (rule.selectorText) list.push(rule); else if (rule.constructor.name === 'CSSMediaRule') visit(rule.cssRules); } };
-      for (const sheet of document.styleSheets) { try { if (sheet.href && new URL(sheet.href).pathname.endsWith('/styles.css')) visit(sheet.cssRules); } catch { /* chưa tải */ } }
+      for (const sheet of document.styleSheets) { try { if (sheet.href && new URL(sheet.href).pathname.endsWith(sheetSuffix)) visit(sheet.cssRules); } catch { /* chưa tải */ } }
       return list.length > maxOrder ? list : null; // @import chưa tải xong thì chưa dùng (chỉ số order sẽ lệch)
     };
     const record = element => {
@@ -95,7 +97,7 @@ export function createImportantAudit() {
       const original = browser.newPage.bind(browser);
       browser.newPage = async (...args) => {
         const page = await original(...args);
-        await page.addInitScript(installWriteLog, { entries: payload });
+        await page.addInitScript(installWriteLog, { entries: payload, sheetSuffix });
         return page;
       };
     },
@@ -103,7 +105,7 @@ export function createImportantAudit() {
       await drainWrites(page);
       const viewport = page.viewportSize();
       const stateLabel = `${viewport ? viewport.width : '?'}:${label}`;
-      const results = await page.evaluate(entries => {
+      const results = await page.evaluate(({ entries, sheetSuffix }) => {
         const rules = [];
         const visit = list => {
           for (const rule of list) {
@@ -112,7 +114,7 @@ export function createImportantAudit() {
             else if (rule.constructor.name === 'CSSMediaRule') visit(rule.cssRules);
           }
         };
-        for (const sheet of document.styleSheets) if (sheet.href && new URL(sheet.href).pathname.endsWith('/styles.css')) visit(sheet.cssRules);
+        for (const sheet of document.styleSheets) if (sheet.href && new URL(sheet.href).pathname.endsWith(sheetSuffix)) visit(sheet.cssRules);
         const probe = document.createElement('div');
         const longhandsOf = (property, value) => {
           probe.style.cssText = '';
@@ -145,7 +147,7 @@ export function createImportantAudit() {
           out[entry.key] = { matched: elements.length, changed, inline, hidden };
         }
         return out;
-      }, payload);
+      }, { entries: payload, sheetSuffix });
       for (const [key, result] of Object.entries(results)) {
         const total = totals.get(key);
         if (!total) continue;
