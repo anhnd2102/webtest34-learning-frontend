@@ -1,0 +1,93 @@
+import { readDashboardTab, extractPhase } from './dashboard-state.js';
+
+export function createAssignmentsLoader({ root, queryCoordinator, scopeState, window, classSelect, assignmentSelect, assignments, status, drawerBackdrop, state, loginError, request, setUrl, loadAttemptDetail, loadResults, getReportState, loadScoreDistributionReport, loadItemAnalysisReport, renderSelectedAssignmentShowcase, renderAssignmentChips }) {
+  async function loadAssignments(classId, selectedAssignmentId = '') {
+    const query = queryCoordinator?.begin?.('assignments');
+    if (queryCoordinator && !query) return;
+
+    assignments.replaceChildren();
+    if (assignmentSelect) {
+      assignmentSelect.replaceChildren(new Option('-- Chọn bài test --', ''));
+      assignmentSelect.disabled = !classId;
+    }
+    renderSelectedAssignmentShowcase(null);
+    scopeState.currentAssignmentsList = [];
+    await loadResults('', '');
+    if (!classId) return;
+
+    status.textContent = 'Đang tải bài được giao…';
+    try {
+      const payload = await request(`/api/teacher/classes/${encodeURIComponent(classId)}/assignments`, {
+        signal: query?.signal
+      });
+      if (query && !query.isCurrent()) return;
+      if (state.classId !== classId && classSelect?.value !== classId) return;
+
+      scopeState.currentAssignmentsList = payload.assignments || [];
+      scopeState.currentServerNow = payload.serverNow || null;
+      let selectedExists = false;
+
+      if (assignmentSelect) {
+        assignmentSelect.disabled = false;
+        for (const assignment of scopeState.currentAssignmentsList) {
+          const phaseLabel = extractPhase(assignment.phase, assignment.title);
+          const optLabel = phaseLabel ? `${assignment.title} (${phaseLabel})` : assignment.title;
+          const opt = new Option(optLabel, assignment.assignmentId);
+          if (assignment.assignmentId === selectedAssignmentId) {
+            opt.selected = true;
+            selectedExists = true;
+          }
+          assignmentSelect.add(opt);
+        }
+      }
+
+      renderAssignmentChips(selectedAssignmentId);
+
+      status.textContent = `${scopeState.currentAssignmentsList.length} bài được giao`;
+
+      const activeAssignment = scopeState.currentAssignmentsList.find(a => a.assignmentId === (selectedAssignmentId || state.assignmentId));
+      if (activeAssignment) {
+        renderSelectedAssignmentShowcase(activeAssignment);
+      } else {
+        renderSelectedAssignmentShowcase(null);
+      }
+
+      if (selectedExists) {
+        await loadResults(classId, selectedAssignmentId);
+        if (query && !query.isCurrent()) return;
+        const currentTab = readDashboardTab(window.location.hash);
+        if (currentTab === 'reports') {
+          if (getReportState().mode === 'item_analysis') {
+            await loadItemAnalysisReport(classId, selectedAssignmentId);
+          } else {
+            await loadScoreDistributionReport(classId, selectedAssignmentId);
+          }
+        }
+        if (state.attemptId) {
+          try {
+            await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
+          } catch (err) {
+            console.warn('Attempt detail not found:', err.message);
+            state.attemptId = '';
+            setUrl();
+            const attemptContainer = root.querySelector('#attempt-detail');
+            if (attemptContainer) {
+              attemptContainer.classList.remove('drawer-open');
+              attemptContainer.hidden = true;
+            }
+            if (drawerBackdrop) drawerBackdrop.hidden = true;
+            if (loginError && loginError.textContent.includes('Không tìm thấy bài làm')) {
+              loginError.hidden = true;
+              loginError.textContent = '';
+            }
+          }
+        }
+      }
+    } catch (error) {
+      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
+      status.textContent = error.message;
+    }
+  }
+
+  return { loadAssignments };
+}

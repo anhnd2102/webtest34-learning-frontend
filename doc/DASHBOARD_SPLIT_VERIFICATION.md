@@ -30,6 +30,8 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 | `auth-session.js` | đăng nhập, đăng xuất, hiện/ẩn mật khẩu | `handleLogout` (truyền cho cụm phòng thi qua wrapper lazy) |
 | `navigation.js` | tab dashboard, tab báo cáo, hash, cảnh báo thay đổi chưa lưu | `syncAssessmentHeaderMeta`, `switchAssessmentTab`, `updateDashboardTab` (owner `navState`) |
 | `assignment-selection.js` | chip và chọn bài được giao | `renderAssignmentChips`, `selectAssignment` |
+| `showcase.js` | thẻ bài được chọn, sao chép liên kết, mã QR | `renderSelectedAssignmentShowcase` |
+| `assignments-loader.js` | tải bài được giao của lớp và khôi phục bài/bài làm theo URL | `loadAssignments` (cụm điều khiển thi nhận qua wrapper lazy) |
 | `class-directory.js` | lọc, danh sách và tải lớp | `loadClasses`, `renderFilteredClasses`, `setupClassFilterToolbar`, `updateFilterPillsUI` |
 
 ## An toàn

@@ -6,8 +6,7 @@ import { createExamRoomView } from '../exam-room/view.js';
 
 import { defaultApiBase, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, attemptDetailPath } from '../api/teacher.js';
 
-import { ICONS } from '../ui/icons.js';
-import { localStudentUrl, readDashboardState, readDashboardTab, assignmentUrl, extractPhase, formatAssignmentMeta } from './dashboard-state.js';
+import { readDashboardState, assignmentUrl } from './dashboard-state.js';
 import { downloadResultsXlsx } from '../results/export.js';
 import { renderTestBuilderView } from '../studio/builder.js';
 
@@ -24,6 +23,8 @@ import { createAuthSession } from './auth-session.js';
 import { createAddStudent } from './add-student.js';
 import { createNavigation } from './navigation.js';
 import { createAssignmentSelection } from './assignment-selection.js';
+import { createShowcase } from './showcase.js';
+import { createAssignmentsLoader } from './assignments-loader.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -253,118 +254,6 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
   const conflictAlert = root.querySelector('#conflict-alert');
   const gradingActionsBar = root.querySelector('#grading-actions-bar');
 
-  if (copyShowcaseLinkBtn) {
-    lifecycle.listen(copyShowcaseLinkBtn, 'click', async () => {
-      const url = showcaseStudentUrl?.value;
-      if (!url) return;
-      try {
-        await navigator.clipboard.writeText(url);
-        const originalHtml = copyShowcaseLinkBtn.innerHTML;
-        copyShowcaseLinkBtn.innerHTML = `${ICONS.check} <span>Đã sao chép!</span>`;
-        lifecycle.timeout(() => { copyShowcaseLinkBtn.innerHTML = originalHtml; }, 2000);
-      } catch {
-        showcaseStudentUrl?.select();
-        document.execCommand('copy');
-      }
-    });
-  }
-
-  const showcaseQrBtn = root.querySelector('#showcase-qr-btn');
-  if (showcaseQrBtn) {
-    lifecycle.listen(showcaseQrBtn, 'click', () => {
-      const url = showcaseStudentUrl?.value;
-      if (!url) return;
-      let modal = root.querySelector('#qr-code-modal');
-      if (!modal) {
-        modal = document.createElement('dialog');
-        modal.id = 'qr-code-modal';
-        modal.className = 'qr-modal';
-        document.body.append(modal);
-      }
-      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=220x220&margin=10`;
-      modal.innerHTML = `
-        <div class="qr-modal-content">
-          <div class="qr-modal-header">
-            <h3>Mã QR phòng làm bài</h3>
-            <button type="button" class="btn-close-qr" onclick="this.closest('dialog').close()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-          </div>
-          <div class="qr-image-wrap">
-            <img src="${qrApiUrl}" alt="Mã QR bài thi" width="220" height="220" style="border-radius: 8px;">
-          </div>
-          <p class="qr-modal-hint">Học viên quét mã để truy cập ngay vào bài kiểm tra.</p>
-        </div>
-      `;
-      if (typeof modal.showModal === 'function') {
-        modal.showModal();
-      }
-    });
-  }
-
-  function renderSelectedAssignmentShowcase(assignment) {
-    stopExamRoomEvents();
-    const timelinePanel = root.querySelector('#exam-room-timeline');
-    if (timelinePanel) timelinePanel.hidden = true;
-    currentExamRoom = null;
-    const showcaseProgressText = root.querySelector('#showcase-progress-text');
-    const showcaseProgressBar = root.querySelector('#showcase-progress-bar');
-    if (!selectedAssignmentCard) return;
-    if (!assignment) {
-      currentSelectedAssignment = null;
-      selectedAssignmentCard.hidden = true;
-      if (showcaseProgressText) showcaseProgressText.textContent = '—';
-      if (showcaseProgressBar) showcaseProgressBar.style.width = '0%';
-      if (examRoom) examRoom.hidden = true;
-      if (showcaseStudentUrl) showcaseStudentUrl.value = '';
-      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = '#';
-      if (showcaseLinkBar) showcaseLinkBar.hidden = true;
-      if (examRoomOpenButton) examRoomOpenButton.hidden = true;
-      if (examSwitchControls) examSwitchControls.hidden = true;
-      return;
-    }
-
-    selectedAssignmentCard.hidden = false;
-    currentSelectedAssignment = assignment;
-    if (examRoom) examRoom.hidden = true;
-    // Phòng thi vẫn mở được sau khi đã chuyển chế độ để xem lại sự cố của phiên cũ.
-    if (examRoomOpenButton) examRoomOpenButton.hidden = !(assignment.examMode || assignment.examSession);
-    updateExamModeUI(assignment.examMode);
-    updateSelfProctoringUI(assignment.exitLimit, assignment.examMode);
-    renderExamSwitch(assignment);
-    const selectedClassOpt = classSelect?.selectedOptions?.[0];
-    const currentClassName = assignment.className || (selectedClassOpt ? selectedClassOpt.text.split(' · ')[0].replace(/^Lớp\s*/, '') : '');
-
-    const meta = formatAssignmentMeta({
-      className: currentClassName,
-      courseCode: assignment.courseCode,
-      phase: assignment.phase,
-      title: assignment.title
-    });
-
-    if (showcaseBadgeClass) showcaseBadgeClass.textContent = meta.classLabel;
-    if (showcaseTitle) showcaseTitle.textContent = assignment.title;
-    if (showcaseBlockBadge) showcaseBlockBadge.textContent = meta.courseLabel;
-    if (showcasePhaseBadge) {
-      if (meta.phaseLabel) {
-        showcasePhaseBadge.textContent = meta.phaseLabel;
-        showcasePhaseBadge.hidden = false;
-      } else {
-        showcasePhaseBadge.hidden = true;
-      }
-    }
-    if (showcaseStatusBadge) {
-      showcaseStatusBadge.textContent = assignment.status === 'published' ? 'Đang phát hành' : assignment.status;
-    }
-
-    const currentApi = typeof apiBase === 'function' ? apiBase() : '';
-    const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation, currentApi);
-    if (studentUrl) {
-      if (showcaseStudentUrl) showcaseStudentUrl.value = studentUrl;
-      if (openShowcaseLinkBtn) openShowcaseLinkBtn.href = studentUrl;
-      if (showcaseLinkBar) showcaseLinkBar.hidden = false;
-    } else {
-      if (showcaseLinkBar) showcaseLinkBar.hidden = true;
-    }
-  }
 
   let currentAttemptDetail = null;
 
@@ -471,7 +360,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   const { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents } = createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout: () => handleLogout() });
 
-  const { updateExamModeUI, updateSelfProctoringUI, renderExamSwitch } = createExamControls({ lifecycle, scopeState, examModeToggle, examModeStatusPill, selfProctoringToggle, examModeLockHint, selfProctoringLockHint, selfProctoringLimit, selfProctoringSave, examSwitchControls, examSwitchHint, examSwitchLimit, examSwitchButton, examSwitchMessage, examRoomOpenButton, examRoom, status, state, request, loadAssignments });
+  const { updateExamModeUI, updateSelfProctoringUI, renderExamSwitch } = createExamControls({ lifecycle, scopeState, examModeToggle, examModeStatusPill, selfProctoringToggle, examModeLockHint, selfProctoringLockHint, selfProctoringLimit, selfProctoringSave, examSwitchControls, examSwitchHint, examSwitchLimit, examSwitchButton, examSwitchMessage, examRoomOpenButton, examRoom, status, state, request, loadAssignments: (...args) => loadAssignments(...args) });
   const { ensurePortalPanel, resetPortal } = createPortalPanel({ root, lifecycle, state, request, document, window });
   const setUrl = () => history.replaceState(null, '', assignmentUrl(location.href, state));
 
@@ -551,95 +440,10 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
 
   const { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView } = createReports({ root, queryCoordinator, authState, document, window, status, viewReports, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab: (...args) => switchAssessmentTab(...args), statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange });
   const { syncAssessmentHeaderMeta, switchAssessmentTab, updateDashboardTab } = createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, viewReports, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView });
+  const { renderSelectedAssignmentShowcase } = createShowcase({ root, lifecycle, viewState, scopeState, document, classSelect, selectedAssignmentCard, showcaseBadgeClass, showcaseTitle, showcaseBlockBadge, showcasePhaseBadge, showcaseStatusBadge, examSwitchControls, examRoomOpenButton, examRoom, showcaseLinkBar, showcaseStudentUrl, copyShowcaseLinkBtn, openShowcaseLinkBtn, currentLocation, apiBase, stopExamRoomEvents, updateExamModeUI, updateSelfProctoringUI, renderExamSwitch });
   const { renderAssignmentChips, selectAssignment } = createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, syncAssessmentHeaderMeta, switchAssessmentTab });
 
-  async function loadAssignments(classId, selectedAssignmentId = '') {
-    const query = queryCoordinator?.begin?.('assignments');
-    if (queryCoordinator && !query) return;
-
-    assignments.replaceChildren();
-    if (assignmentSelect) {
-      assignmentSelect.replaceChildren(new Option('-- Chọn bài test --', ''));
-      assignmentSelect.disabled = !classId;
-    }
-    renderSelectedAssignmentShowcase(null);
-    currentAssignmentsList = [];
-    await loadResults('', '');
-    if (!classId) return;
-
-    status.textContent = 'Đang tải bài được giao…';
-    try {
-      const payload = await request(`/api/teacher/classes/${encodeURIComponent(classId)}/assignments`, {
-        signal: query?.signal
-      });
-      if (query && !query.isCurrent()) return;
-      if (state.classId !== classId && classSelect?.value !== classId) return;
-
-      currentAssignmentsList = payload.assignments || [];
-      currentServerNow = payload.serverNow || null;
-      let selectedExists = false;
-
-      if (assignmentSelect) {
-        assignmentSelect.disabled = false;
-        for (const assignment of currentAssignmentsList) {
-          const phaseLabel = extractPhase(assignment.phase, assignment.title);
-          const optLabel = phaseLabel ? `${assignment.title} (${phaseLabel})` : assignment.title;
-          const opt = new Option(optLabel, assignment.assignmentId);
-          if (assignment.assignmentId === selectedAssignmentId) {
-            opt.selected = true;
-            selectedExists = true;
-          }
-          assignmentSelect.add(opt);
-        }
-      }
-
-      renderAssignmentChips(selectedAssignmentId);
-
-      status.textContent = `${currentAssignmentsList.length} bài được giao`;
-
-      const activeAssignment = currentAssignmentsList.find(a => a.assignmentId === (selectedAssignmentId || state.assignmentId));
-      if (activeAssignment) {
-        renderSelectedAssignmentShowcase(activeAssignment);
-      } else {
-        renderSelectedAssignmentShowcase(null);
-      }
-
-      if (selectedExists) {
-        await loadResults(classId, selectedAssignmentId);
-        if (query && !query.isCurrent()) return;
-        const currentTab = readDashboardTab(window.location.hash);
-        if (currentTab === 'reports') {
-          if (getReportState().mode === 'item_analysis') {
-            await loadItemAnalysisReport(classId, selectedAssignmentId);
-          } else {
-            await loadScoreDistributionReport(classId, selectedAssignmentId);
-          }
-        }
-        if (state.attemptId) {
-          try {
-            await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);
-          } catch (err) {
-            console.warn('Attempt detail not found:', err.message);
-            state.attemptId = '';
-            setUrl();
-            const attemptContainer = root.querySelector('#attempt-detail');
-            if (attemptContainer) {
-              attemptContainer.classList.remove('drawer-open');
-              attemptContainer.hidden = true;
-            }
-            if (drawerBackdrop) drawerBackdrop.hidden = true;
-            if (loginError && loginError.textContent.includes('Không tìm thấy bài làm')) {
-              loginError.hidden = true;
-              loginError.textContent = '';
-            }
-          }
-        }
-      }
-    } catch (error) {
-      if (query && (!query.isCurrent() || error.name === 'AbortError')) return;
-      status.textContent = error.message;
-    }
-  }
+  const { loadAssignments } = createAssignmentsLoader({ root, queryCoordinator, scopeState, window, classSelect, assignmentSelect, assignments, status, drawerBackdrop, state, loginError, request, setUrl, loadAttemptDetail, loadResults, getReportState, loadScoreDistributionReport, loadItemAnalysisReport, renderSelectedAssignmentShowcase, renderAssignmentChips });
 
   rawClassesList = [];
   currentTeacher = null;
