@@ -1,9 +1,15 @@
-import { reorderBlockItem, moveItemToExercise } from './draft-model.js';
+import { reorderBlockItem, moveItemToExercise, parseClozeBlanks } from './draft-model.js';
+
+// Chữ ký tập ô trống của bài điền từ: chỉ khi đổi thì cần dựng lại các thẻ cấu hình từng ô.
+const blankSignature = prompt => parseClozeBlanks(prompt || '').map(blank => blank.number).join(',');
 
 export function bindItemActions({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, resequenceItemPositions, render, syncInputs }) {
     // Prompt change listener for inline cloze and real-time counter
     const promptInputs = container.querySelectorAll('.item-prompt-input');
     promptInputs.forEach(promptEl => {
+      // Tập ô trống tại thời điểm dựng giao diện; cập nhật mỗi khi dựng lại.
+      const initialItem = draftState.blocks[Number(promptEl.getAttribute('data-block-idx'))]?.items?.[Number(promptEl.getAttribute('data-item-idx'))];
+      let renderedBlanks = blankSignature(initialItem?.prompt);
       promptEl.addEventListener('input', () => {
         const bIdx = Number(promptEl.getAttribute('data-block-idx'));
         const iIdx = Number(promptEl.getAttribute('data-item-idx'));
@@ -25,8 +31,14 @@ export function bindItemActions({ container, draftState, markAsDirty, isBuilderD
         if (!item) return;
         syncInputs();
         if (item.layoutType === 'inline_cloze' || item.pedagogicalTypeCode === 'inline_cloze') {
-          resequenceItemPositions();
-          render();
+          // Không dựng lại khi tập ô trống không đổi: change xảy ra lúc ô mất focus (giữa mousedown và mouseup của
+          // nút khác), dựng lại ngay lúc đó thay thế nút vừa nhấn và cú nhấp bị nuốt.
+          const currentBlanks = blankSignature(item.prompt);
+          if (currentBlanks !== renderedBlanks) {
+            renderedBlanks = currentBlanks;
+            resequenceItemPositions();
+            render();
+          }
         }
       });
     });

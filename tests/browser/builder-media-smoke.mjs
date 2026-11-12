@@ -127,9 +127,7 @@ try {
   const code = page.locator('.rich-editor-code, .rich-html-editor-wrap textarea').first();
   await code.waitFor({ state: 'visible' });
   await code.fill('He (1) ____ to <b>work</b>.');
-  // Rời ô mã trước (blur kích hoạt change và dựng lại builder); bấm thẳng nút quay lại sẽ mất cú nhấp đầu, xem ghi chú trong tài liệu.
-  await page.keyboard.press('Tab');
-  await page.waitForTimeout(300);
+  // Nhấp thẳng vào nút quay lại khi ô mã còn focus: cú nhấp đầu phải hiện hộp thoại (blur không được dựng lại builder).
   assert.equal(await dirtyAfterBack(), true, 'sửa HTML làm bẩn bản nháp');
 
   // Rich editor: chèn bảng
