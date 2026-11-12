@@ -9,6 +9,7 @@ import {
   renderQuestionNavigator,
   renderSidePanel,
   renderDynamicExam,
+  renderQuestionCard,
   initDynamicExamInteractions
 } from '../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs';
 
@@ -162,6 +163,42 @@ test('dynamic-exam-renderer: renderDynamicExam outputs HTML containing question 
   assert.ok(container.innerHTML.includes('candidate-vocab-table'), 'Should include vocab table HTML');
   assert.ok(container.innerHTML.includes('candidate-pictorial-card'), 'Should include pictorial card HTML');
   assert.ok(container.innerHTML.includes('F_ _ _ _ _ _ _'), 'Should render letter hint');
+});
+
+test('dynamic-exam-renderer: mọi ô trả lời tắt kiểm tra chính tả và tự sửa/viết hoa', () => {
+  // Dạng theo block (bảng từ vựng, thẻ hình, nhóm câu ngắn) dựng qua renderDynamicExam, mỗi dạng một block;
+  // dạng từng câu gọi thẳng renderQuestionCard vì câu đứng một mình có thể bị gom vào nhóm câu ngắn.
+  const blockItems = [
+    { itemVersionId: 'v1', position: 1, interactionType: 'text_select_pair', options: [{ id: 'a', label: 'tháng hai' }] },
+    { itemVersionId: 'p1', position: 2, interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', letterHint: 'F_ _' },
+    { itemVersionId: 's1', position: 3, interactionType: 'short_text', prompt: 'Câu 3?' }
+  ];
+  const cardItems = [
+    { itemVersionId: 'c1', position: 5, interactionType: 'short_text', layoutType: 'inline_cloze', prompt: 'A (1) _____ b (2) _____.' },
+    { itemVersionId: 'r1', position: 7, interactionType: 'short_text', pedagogicalTypeCode: 'sentence_rewrite', prompt: 'Viết lại.' },
+    { itemVersionId: 'o1', position: 8, interactionType: 'short_text', pedagogicalTypeCode: 'sentence_reorder', prompt: 'a / b / c' },
+    { itemVersionId: 'e1', position: 9, interactionType: 'correction_pair', prompt: 'Tìm lỗi.' },
+    { itemVersionId: 'w1', position: 10, interactionType: 'long_text', prompt: 'Viết đoạn văn.' },
+    { itemVersionId: 'x1', position: 11, interactionType: 'short_text', graderType: 'exact', prompt: 'Câu 11?' }
+  ];
+  const html = [
+    ...blockItems.map(item => {
+      const container = { innerHTML: '', addEventListener: () => {}, querySelectorAll: () => [] };
+      renderDynamicExam({ title: 'Spellcheck', blocks: [{ title: 'A', items: [item] }] }, container, { state: { answers: {} }, activeSection: 'A', onAnswerChange: () => {} });
+      return container.innerHTML;
+    }),
+    ...cardItems.map(item => renderQuestionCard(item, {}))
+  ].join('');
+  const fields = html.match(/<(?:input type="text"|textarea)(?=[\s>])[^>]*>/g) || [];
+  for (const cls of ['candidate-vocab-text-input', 'candidate-pictorial-input', 'inline-fill-input', 'candidate-transformation-input',
+    'candidate-reorder-input', 'candidate-error-input', 'candidate-correction-input', 'candidate-open-textarea']) {
+    assert.ok(fields.some(f => f.includes(cls)), `thiếu ô ${cls} trong đề thử`);
+  }
+  for (const field of fields) {
+    for (const attr of ['spellcheck="false"', 'autocorrect="off"', 'autocapitalize="none"']) {
+      assert.ok(field.includes(attr), `thiếu ${attr}: ${field.slice(0, 80)}`);
+    }
+  }
 });
 
 test('dynamic-exam-renderer: convertGoogleDriveAudioUrl converts drive file link to stream endpoint', async () => {
