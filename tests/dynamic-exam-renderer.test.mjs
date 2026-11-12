@@ -291,3 +291,24 @@ test('isKeyboardOpen phân biệt bàn phím với phóng to và thanh địa ch
   assert.equal(isKeyboardOpen({ height: 422, scale: 2 }, 844), false, 'phóng to 2 lần không phải bàn phím');
   assert.equal(isKeyboardOpen({ height: 780, scale: 1 }, 844), false, 'thanh địa chỉ co giãn không phải bàn phím');
 });
+
+test('dynamic-exam-renderer: câu điền chỗ trống không bị gom thành câu trả lời ngắn (#39)', () => {
+  const prompt = 'Fill in: The career (1) ........ and the money (2) ........ matter.';
+  for (const extra of [
+    { layoutType: 'table_completion' },
+    { pedagogicalTypeCode: 'table_completion' },
+    { pedagogicalTypeCode: 'inline_cloze' },
+    {}
+  ]) {
+    const container = { innerHTML: '', addEventListener: () => {}, querySelectorAll: () => [] };
+    const definition = { title: 'T', blocks: [{ title: 'Phần A', items: [
+      { itemVersionId: 'c1', position: 1, interactionType: 'short_text', prompt, ...extra }
+    ] }] };
+    renderDynamicExam(definition, container, { state: { answers: {} }, activeSection: 'Phần A', onAnswerChange: () => {} });
+    const html = container.innerHTML;
+    const label = JSON.stringify(extra);
+    assert.ok(html.includes('cbt-cloze-content'), `${label}: phải dựng thành điền chỗ trống`);
+    assert.ok(!html.includes('candidate-short-qa'), `${label}: không được gom vào nhóm câu trả lời ngắn`);
+    assert.equal(getItemSpanCount(definition.blocks[0].items[0]), 2, `${label}: đếm đúng số ô`);
+  }
+});
