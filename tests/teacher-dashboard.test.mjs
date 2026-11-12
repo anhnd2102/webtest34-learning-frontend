@@ -197,13 +197,6 @@ test('teacher dashboard index.html provides required controls and result contain
   assert.doesNotMatch(html, /detail-grading-history/);
 });
 
-test('student exam page has a waiting room that displays no form content', async () => {
-  const fs = await import('node:fs/promises');
-  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.match(html, /id="examWaitingRoom"/);
-  assert.match(html, /id="exam-waiting-greeting"/);
-  assert.match(html, /Đề sẽ hiện khi giáo viên bắt đầu/);
-});
 
 test('attemptDetailPath builds canonical endpoint path', () => {
   assert.equal(
@@ -373,10 +366,7 @@ test('teacher dashboard styles.css and student runner provide retake expiry and 
   const css = await readDashboardCss();
   assert.match(css, /\.result-status\.retake_expired/);
 
-  const demoHtml = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.match(demoHtml, /id="studentNotice"/);
-  assert.match(demoHtml, /Quy\u1ec1n l\u00e0m l\u1ea1i \u0111\u00e3 h\u1ebft h\u1ea1n/);
-  assert.match(demoHtml, /Th\u1eddi gian l\u00e0m b\u00e0i th\u1ef1c t\u1ebf l\u00e0/);
+  // Th\u00f4ng b\u00e1o quy\u1ec1n l\u00e0m l\u1ea1i ph\u00eda h\u1ecdc vi\u00ean \u0111\u01b0\u1ee3c ki\u1ec3m b\u1eb1ng h\u00e0nh vi trong tests/browser/candidate-entry-review-smoke.mjs.
 });
 
 test('teacher dashboard auth endpoints and headers use canonical authorization', () => {

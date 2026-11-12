@@ -45,3 +45,27 @@ Kiểm tra đột biến (đều bị bắt, đã hoàn nguyên): bỏ `if (page
 
 ### Chưa phủ
 Audio (kiểm tra loa, checkpoint, resume, tạm dừng khi rời bài), thiết bị iOS (bỏ qua tín hiệu focus), kết quả sau công bố (polling), Exam Mode với lượt làm lại (`exam.retake`), nộp bài trong Exam Mode.
+
+## Bước 3: chuyển test đọc nguồn `index.html` sang hành vi (12/11/2026)
+
+Gỡ thử đường prototype (script nội tuyến và markup cũ) cho thấy 30 test đọc nguồn `index.html` phụ thuộc vào mã mà học viên thật không chạy. Mỗi test được xử lý như sau; bộ `npm test` còn 693 test, xanh trước và sau khi gỡ (trừ một test điều chỉnh ở bước 4).
+
+| Test cũ (đọc nguồn đường prototype) | Xử lý | Bằng chứng hành vi thay thế |
+| --- | --- | --- |
+| `review-wiring.test.mjs` (11 test: Xem kết quả, polling, lỗi và Thử lại, chế độ xem, trạng thái lạ…) | Xóa file | `candidate-entry-review-smoke.mjs` (hợp đồng `/attempts/review` không `deviceId`, chưa nộp/chưa công bố/lỗi/Thử lại/trạng thái lạ, nhịp 15 giây, dừng khi quay lại) và `content-preview-review-wiring.test.mjs` có sẵn |
+| `exam-mode-session.test.mjs` (3), `exam-device.test.mjs` (4) | Xóa file | `candidate-exam-mode-smoke.mjs` (SSE Bearer, `deviceId`, heartbeat, `exam.started/extended`, hết giờ tự nộp, thiết bị bị thay) và `candidate-flow-smoke.mjs` |
+| `exam-room-ui.test.mjs` 2 test đầu (toàn màn hình, Exam Guard) | Xóa | `candidate-exam-mode-smoke.mjs` (nút sẵn sàng, vào lại toàn màn hình, quay lại bài thi, sự cố mở/đóng) |
+| `teacher-dashboard.test.mjs` phòng chờ + thông báo quyền làm lại (phần HTML) | Xóa/rút gọn, giữ phần CSS | `candidate-exam-mode-smoke.mjs`, `candidate-entry-review-smoke.mjs` |
+| `standalone-config.test.mjs` hợp đồng truy cập | Chuyển sang `content-preview.mjs` | còn kiểm `/api/learning${path}` và `/test-access/resolve` trên mã thật |
+| `standalone-config.test.mjs` token dính ký tự thừa | Xóa | smoke lối vào (4 biến thể); **phát hiện lỗi thật, xem dưới** |
+| `async-result.test.mjs` | 1 test chuyển sang `content-preview.mjs`; 1 test xóa (khôi phục kết quả từ `localStorage` chỉ có ở đường prototype) | smoke luồng học viên (bản nháp lấy từ máy chủ) |
+| `candidate-audio-glyphs`, `course34-test2`, `exam-switch-dashboard` | Xóa phần chỉ kiểm đường prototype, giữ phần kiểm `content-preview.mjs` | — |
+
+### Lỗi thật phát hiện khi chuyển test
+
+Đường prototype làm sạch token bằng regex UUID (link dán qua chat hay dính `\`, `%5C`, `%20`); **shell thật không làm vậy**, nên học viên mở link như `#test=<uuid>\` gửi token sai lên `/test-access/resolve`. Smoke lối vào đỏ ở biến thể `\`, rồi sửa trong `content-preview.mjs` (giữ UUID khi có, nếu không giữ nguyên). Token không phải UUID (các token thử như `3401-…`) không đổi.
+
+### Chưa có tương đương trong shell thật (ghi nhận, không chặn)
+
+- Chặn chủ động mọi lời gọi `/attempts/*` sau khi thiết bị bị thay (`assertLearningAttemptNotSuperseded`): shell thật chỉ phản ứng khi máy chủ trả `EXAM_DEVICE_SUPERSEDED`, khóa đề và dừng heartbeat. Không mất dữ liệu.
+- Khôi phục trạng thái đã nộp từ `localStorage` khi tải lại: shell thật không giữ trạng thái học viên trong trình duyệt; vào lại lượt thì lấy từ máy chủ.

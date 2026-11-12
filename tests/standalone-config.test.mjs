@@ -30,18 +30,9 @@ test('Webtest 34 points to the generic Learning platform API', async () => {
 });
 
 test('Webtest 34 calls the stable Learning access contract', async () => {
-  const index = await read('term-tests/webtest-34-demo/index.html');
+  const index = await read('term-tests/webtest-34-demo/content-preview.mjs');
   assert.match(index, /\/api\/learning\$\{path\}/);
-  assert.match(index, /learningRequest\('\/test-access\/resolve'/);
+  assert.match(index, /apiRequest\('\/test-access\/resolve'/);
 });
 
-test('Webtest 34 reads a clean test token even when the shared link has trailing junk', async () => {
-  const index = await read('term-tests/webtest-34-demo/index.html');
-  const learningConfig = index.match(/function learningConfig\(\)\{[\s\S]*?\r?\n  \}\r?\n/)[0];
-  const token = '34010000-0000-4000-8000-000000000002';
-  for (const hash of [`#test=${token}`, `#test=${token}\\`, `#test=${token}%5C`, `#test=${token}%20`]) {
-    const window = { location: { hash }, WEBTEST_34_PREVIEW_CONFIG: { LEARNING_API_BASE_URL: 'https://webtest.ducanhdev.com' } };
-    const config = vm.runInNewContext(`${learningConfig}; learningConfig()`, { window, URLSearchParams });
-    assert.equal(config.testToken, token, hash);
-  }
-});
+
