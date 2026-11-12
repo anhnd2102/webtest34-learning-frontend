@@ -190,6 +190,35 @@ test('guard owner identity: late cleanup from disposed builder does not clear ne
   assert.equal(hasActiveUnsavedChanges(), false);
 });
 
+test('disposing one Builder preserves another Builder’s unsaved dialog and disposes only its own dialog', t => {
+  const previousDocument = globalThis.document;
+  const dialogs = [];
+  const body = {
+    appendChild(modal) { dialogs.push(modal); modal.parentNode = body; },
+    removeChild(modal) { dialogs.splice(dialogs.indexOf(modal), 1); modal.parentNode = null; }
+  };
+  globalThis.document = {
+    body,
+    addEventListener() {}, removeEventListener() {},
+    createElement() { return { setAttribute() {}, addEventListener() {}, querySelector() { return null; } }; },
+    querySelector() { return dialogs[0] || null; },
+    querySelectorAll() { return [...dialogs]; }
+  };
+  t.after(() => { globalThis.document = previousDocument; clearActiveUnsavedChanges(); });
+  const first = mountBuilder(createMockContainer(), createMockForm('dialog-owner-1'));
+  const secondRoot = createMockContainer();
+  const second = mountBuilder(secondRoot, createMockForm('dialog-owner-2'));
+  t.after(() => { first.dispose(); second.dispose(); });
+  secondRoot.dispatchEvent({ type: 'input', target: {} });
+  openUnsavedChangesModal();
+  assert.equal(dialogs.length, 1);
+  first.dispose();
+  assert.equal(dialogs.length, 1, 'foreign modal survives cleanup');
+  assert.equal(second.hasUnsavedChanges(), true);
+  second.dispose();
+  assert.equal(dialogs.length, 0, 'own modal is removed');
+});
+
 test('openUnsavedChangesModal prevents duplicate stacked dialogs when confirmation is pending', () => {
   const originalDoc = globalThis.document;
   let modalInstance = null;

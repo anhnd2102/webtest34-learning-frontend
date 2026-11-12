@@ -1,5 +1,21 @@
 // CSV parsing and templates for Test Studio authoring; no DOM or application startup.
 
+export function parseClozeBlanks(text) {
+  if (!text || typeof text !== 'string') return [];
+  const blanks = [];
+  const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{1,})|(?:\[(\d+)\]\s*[_\.\u2026]*)|(?:\{\{(\d+)\}\})|(?:\((\d+)\))/g;
+  for (const match of text.matchAll(pattern)) {
+    const num = Number(match[1] || match[2] || match[3] || match[4]);
+    blanks.push({
+      number: num,
+      index: match.index,
+      length: match[0].length,
+      rawMatch: match[0]
+    });
+  }
+  return blanks;
+}
+
 export function parseVocabPairCsv(rawText = '') {
   const result = {
     validRows: [],
@@ -799,20 +815,196 @@ export function parseRubricAsyncCsv(rawText = '', defaultPoints = 4) {
   return result;
 }
 
+export function generateInlineClozeTemplateCsv() {
+  const bom = '\uFEFF';
+  const header = 'Prompt,Answers,Points';
+  const rows = [
+    '"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,1',
+    '"Water boils at [1] degrees Celsius and freezes at [2] degrees.",100 | 0,1'
+  ];
+  return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
+}
+
+export function parseInlineClozeCsv(rawText = '', defaultPoints = 1) {
+  const rows = parseCsvRows(rawText);
+  const result = { items: [], invalidRows: [] };
+  if (!rows || rows.length === 0) return result;
+
+  let startIndex = 0;
+  const firstRow = rows[0].map(c => (c || '').toLowerCase().trim());
+  if (firstRow[0]?.includes('prompt') || firstRow[0]?.includes('câu hỏi') || firstRow[0]?.includes('đoạn văn') || firstRow[1]?.includes('answer') || firstRow[1]?.includes('đáp án') || firstRow[0]?.includes('exercise_title') || firstRow[2]?.includes('question_type')) {
+    startIndex = 1;
+  }
+
+  for (let i = startIndex; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row || row.length === 0 || (row.length === 1 && !row[0].trim())) continue;
+
+    let prompt = '';
+    let rawAnswer = '';
+    let rawScore = NaN;
+
+    if (row.length >= 5 && (row[2]?.toLowerCase().includes('cloze') || firstRow[2]?.includes('type') || firstRow[0]?.includes('exercise_title'))) {
+      prompt = (row[3] || '').trim();
+      rawAnswer = (row[4] || '').trim();
+      rawScore = parseFloat(row[6] || row[5]);
+    } else {
+      prompt = (row[0] || '').trim();
+      rawAnswer = (row[1] || '').trim();
+      rawScore = parseFloat(row[2]);
+    }
+
+    const score = !isNaN(rawScore) && rawScore > 0 ? rawScore : defaultPoints;
+
+    if (!prompt) {
+      result.invalidRows.push({ line: i + 1, rowIndex: i + 1, reason: 'Thiếu đoạn văn / Prompt chứa ô trống' });
+      continue;
+    }
+
+    const blanks = parseClozeBlanks(prompt);
+    if (blanks.length === 0) {
+      result.invalidRows.push({ line: i + 1, rowIndex: i + 1, reason: 'Không tìm thấy ký hiệu ô trống (1) _____ hoặc [1] trong Prompt' });
+      continue;
+    }
+
+    const answersList = rawAnswer ? rawAnswer.split(/[|;]/).map(a => a.trim()) : [];
+    const clozeAnswers = {};
+    const uniqueNums = [];
+    for (const b of blanks) {
+      if (!uniqueNums.includes(b.number)) uniqueNums.push(b.number);
+    }
+
+    uniqueNums.forEach((num, idx) => {
+      const rawAns = answersList[idx] || '';
+      const variants = rawAns ? rawAns.split(/[/]/).map(v => v.trim()).filter(Boolean) : [];
+      const mainAns = variants[0] || rawAns;
+      clozeAnswers[num] = {
+        targetWord: mainAns,
+        accepted: variants.length ? variants : (mainAns ? [mainAns] : [])
+      };
+    });
+
+    const firstTarget = clozeAnswers[uniqueNums[0]]?.targetWord || answersList[0] || '';
+    result.items.push({
+      prompt,
+      interactionType: 'short_text',
+      pedagogicalTypeCode: 'inline_cloze',
+      layoutType: 'inline_cloze',
+      graderType: 'inline_cloze',
+      clozeAnswers,
+      targetWord: firstTarget,
+      accepted: firstTarget ? [firstTarget] : [],
+      maxScore: uniqueNums.length * score
+    });
+  }
+
+  return result;
+}
+
+export function generateMultiGroupTemplateCsv() {
+  const bom = '\uFEFF';
+  const header = 'Question_Prompt,Correct_Options,All_Options,Score';
+  const rows = [
+    '"Which TWO activities are free of charge?","A, C","Swimming pool | Tennis court | Fitness center | Sauna | Yoga class",2',
+    '"Which TWO languages does the guide speak?","B, D","French | English | German | Spanish | Italian",2'
+  ];
+  return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
+}
+
+export function parseMultiGroupCsv(rawText = '', defaultPoints = 2) {
+  const rows = parseCsvRows(rawText);
+  const result = { items: [], invalidRows: [] };
+  if (!rows || rows.length === 0) return result;
+
+  let startIndex = 0;
+  const firstRow = rows[0].map(c => (c || '').toLowerCase().trim());
+  if (firstRow[0]?.includes('prompt') || firstRow[0]?.includes('câu hỏi') || firstRow[1]?.includes('correct') || firstRow[1]?.includes('đáp án')) {
+    startIndex = 1;
+  }
+
+  for (let i = startIndex; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row || row.length === 0 || (row.length === 1 && !row[0].trim())) continue;
+    const prompt = (row[0] || '').trim();
+    const rawAnswer = (row[1] || '').trim();
+    const rawDetails = (row[2] || '').trim();
+    const rawScore = parseFloat(row[3]);
+    const score = !isNaN(rawScore) && rawScore > 0 ? rawScore : defaultPoints;
+
+    if (!prompt) {
+      result.invalidRows.push({ rowIndex: i + 1, reason: 'Thiếu đề bài câu hỏi' });
+      continue;
+    }
+
+    const optsList = rawDetails ? rawDetails.split(/[|;]/).map(o => o.trim()).filter(Boolean) : [];
+    const options = optsList.length >= 2
+      ? optsList.map((opt, idx) => ({ id: String.fromCharCode(65 + idx), label: opt }))
+      : [
+          { id: 'A', label: 'Phương án A' },
+          { id: 'B', label: 'Phương án B' },
+          { id: 'C', label: 'Phương án C' },
+          { id: 'D', label: 'Phương án D' },
+          { id: 'E', label: 'Phương án E' }
+        ];
+
+    let correctLetters = [];
+    if (rawAnswer) {
+      const tokens = rawAnswer.split(/[,|;\s]+/).map(t => t.trim().toUpperCase()).filter(Boolean);
+      tokens.forEach(tok => {
+        if (/^[A-Z]$/.test(tok)) {
+          if (!correctLetters.includes(tok)) correctLetters.push(tok);
+        } else {
+          const matched = options.find(o => o.label.toLowerCase() === tok.toLowerCase());
+          if (matched && !correctLetters.includes(matched.id)) correctLetters.push(matched.id);
+        }
+      });
+    }
+    if (correctLetters.length === 0) {
+      correctLetters = ['A', 'C'];
+    }
+
+    const slotCount = Math.max(correctLetters.length, 2);
+    const groupId = `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+    const slotScore = score > 0 ? (score >= slotCount ? Math.round((score / slotCount) * 100) / 100 : score) : 1;
+
+    for (let sIdx = 0; sIdx < slotCount; sIdx++) {
+      result.items.push({
+        prompt: sIdx === 0 ? prompt : `Chọn đáp án chính xác (Vị trí ${sIdx + 1}):`,
+        interactionType: 'multi_choice_group',
+        pedagogicalTypeCode: 'multiple_choice_group',
+        layoutType: 'grid_3',
+        graderType: 'unordered_group_slot',
+        groupId,
+        options: JSON.parse(JSON.stringify(options)),
+        expectedOptionIds: correctLetters,
+        required: true,
+        maxScore: slotScore
+      });
+    }
+  }
+
+  return result;
+}
+
 export function generateBlockExercisesTemplateCsv() {
   const bom = '\uFEFF';
   const header = 'Exercise_Title,Exercise_Instructions,Question_Type,Prompt,Correct_Answer,Options_Or_Details,Score';
   const rows = [
-    'Part 1: Grammar & Vocabulary,Choose the correct option for each question,single_choice,The cruise departs ___ Miami every Monday.,B,at | from | on | in,1',
+    'Part 1: Grammar & Vocabulary,Chọn đáp án đúng nhất cho mỗi câu hỏi,single_choice,The cruise departs ___ Miami every Monday.,B,at | from | on | in,1',
     ',,single_choice,She is interested ___ marine biology.,A,in | at | on | with,1',
     ',,fitb,Water freezes at ___ degrees Celsius.,0,,1',
+    ',,vocabulary_pair,destination,điểm đến,,1',
+    ',,error_correction,We have two knife in the kitchen.,knife,knives,1',
+    ',,sentence_transformation,It is not necessary to book in advance.,HAVE,You ___ in advance. | do not have to book,1',
     ',,sentence_reorder,"She / has worked / here / for five years",She has worked here for five years.,,1',
-    'Part 2: Listening Sequence,Listen and arrange the events in chronological order,listening_order,Welcome aboard meeting at main lounge,1,,1',
+    'Part 2: Multiple Choice Group,Chọn các phương án chính xác,multi_select_group,Which TWO activities are free of charge?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga class,2',
+    'Part 3: Inline Cloze Passage,Điền từ thích hợp vào mỗi ô trống trong đoạn văn,inline_cloze,"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,,1',
+    'Part 4: Listening Sequence,Nghe và sắp xếp các sự kiện theo trình tự thời gian,listening_order,Welcome aboard meeting at main lounge,1,,1',
     ',,listening_order,Safety drill and lifeboat inspection,2,,1',
     ',,listening_order,Captain\'s dinner in dining hall,3,,1',
-    'Part 3: Reading Matching,Read the passage and choose the correct headings,reading_matching,Paragraph A,i,The spy in the sky | The spread of technology,1',
+    'Part 5: Reading Matching,Đọc đoạn văn và chọn tiêu đề phù hợp,reading_matching,Paragraph A,i,The spy in the sky | The spread of technology,1',
     ',,reading_matching,Paragraph B,ii,The spy in the sky | The spread of technology,1',
-    ',,rubric_async,Summarize the main idea of Paragraph A in 50 words.,,Ý chính đầy đủ (2đ) | Ngữ pháp chuẩn (2đ),4'
+    'Part 6: Writing Assessment,Viết đoạn văn ngắn theo yêu cầu,rubric_async,Summarize the main idea of Paragraph A in 50 words.,,Ý chính đầy đủ (2đ) | Ngữ pháp chuẩn (2đ),4'
   ];
   return `${bom}${header}\r\n${rows.join('\r\n')}\r\n`;
 }
@@ -820,14 +1012,17 @@ export function generateBlockExercisesTemplateCsv() {
 export function normalizeQuestionType(raw = '') {
   const str = String(raw || '').trim().toLowerCase().replace(/[_-]/g, ' ');
   if (!str) return 'single_choice';
+  if (str.includes('nhom') || str.includes('nhóm') || str.includes('multi group') || str.includes('multi select') || str.includes('multiple choice group') || str.includes('trac nghiem nhom') || str.includes('trắc nghiệm nhóm') || str.includes('chon nhieu') || str.includes('chọn nhiều')) {
+    return 'multi_select_group';
+  }
   if (str.includes('vocab') || str.includes('tu vung') || str.includes('từ vựng')) {
     if (str.includes('anh') || str.includes('ảnh') || str.includes('pictorial') || str.includes('image')) return 'pictorial_vocabulary';
     return 'vocabulary_pair';
   }
   if (str.includes('phat am') || str.includes('phát âm') || str.includes('pronun')) return 'pronunciation_choice';
   if (str.includes('matching') || str.includes('ghep noi') || str.includes('ghép nối') || str.includes('heading')) return 'reading_matching';
-  if (str.includes('trac nghiem') || str.includes('trắc nghiệm') || str.includes('choice') || str === 'mcq') return 'single_choice';
   if (str.includes('dien tu noi tuyen') || str.includes('điền từ nội tuyến') || str.includes('inline cloze') || str.includes('cloze')) return 'inline_cloze';
+  if (str.includes('trac nghiem') || str.includes('trắc nghiệm') || str.includes('choice') || str === 'mcq') return 'single_choice';
   if (str.includes('dien tu') || str.includes('điền từ') || str.includes('fitb') || str.includes('short text')) return 'fitb';
   if (str.includes('sua loi') || str.includes('sửa lỗi') || str.includes('error correction')) return 'error_correction';
   if (str.includes('viet lai') || str.includes('viết lại') || str.includes('rewrite') || str.includes('transformation')) return 'sentence_transformation';
@@ -858,9 +1053,17 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
     const rawExInst = (row[1] || '').trim();
     const rawType = (row[2] || '').trim();
     const rawPrompt = (row[3] || '').trim();
-    const rawAnswer = (row[4] || '').trim();
-    const rawDetails = (row[5] || '').trim();
-    const rawScore = parseFloat(row[6]);
+    let rawAnswer = (row[4] || '').trim();
+    let rawDetails = (row[5] || '').trim();
+    let rawScore = parseFloat(row[6]);
+
+    // Fault tolerance: If unquoted comma in answer caused split into 8 columns (e.g. A, C)
+    if (row.length >= 8 && /^[A-Za-z]$/.test(rawAnswer) && /^[A-Za-z]$/.test((row[5] || '').trim()) && (row[6] || '').includes('|')) {
+      rawAnswer = `${rawAnswer}, ${(row[5] || '').trim()}`;
+      rawDetails = (row[6] || '').trim();
+      rawScore = parseFloat(row[7]);
+    }
+
     const score = !isNaN(rawScore) && rawScore > 0 ? rawScore : (defaultPoints || 1);
 
     if (rawExTitle) {
@@ -948,6 +1151,52 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
         expectedOptionId: '',
         maxScore: score
       });
+    } else if (qType === 'multi_select_group') {
+      const optsList = rawDetails ? rawDetails.split(/[|;]/).map(o => o.trim()).filter(Boolean) : [];
+      const options = optsList.length >= 2
+        ? optsList.map((opt, idx) => ({ id: String.fromCharCode(65 + idx), label: opt }))
+        : [
+            { id: 'A', label: 'Phương án A' },
+            { id: 'B', label: 'Phương án B' },
+            { id: 'C', label: 'Phương án C' },
+            { id: 'D', label: 'Phương án D' },
+            { id: 'E', label: 'Phương án E' }
+          ];
+
+      let correctLetters = [];
+      if (rawAnswer) {
+        const tokens = rawAnswer.split(/[,|;\s]+/).map(t => t.trim().toUpperCase()).filter(Boolean);
+        tokens.forEach(tok => {
+          if (/^[A-Z]$/.test(tok)) {
+            if (!correctLetters.includes(tok)) correctLetters.push(tok);
+          } else {
+            const matched = options.find(o => o.label.toLowerCase() === tok.toLowerCase());
+            if (matched && !correctLetters.includes(matched.id)) correctLetters.push(matched.id);
+          }
+        });
+      }
+      if (correctLetters.length === 0) {
+        correctLetters = ['A', 'C'];
+      }
+
+      const slotCount = Math.max(correctLetters.length, 2);
+      const groupId = `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+      const slotScore = score > 0 ? (score >= slotCount ? Math.round((score / slotCount) * 100) / 100 : score) : 1;
+
+      for (let sIdx = 0; sIdx < slotCount; sIdx++) {
+        currentEx.items.push({
+          prompt: sIdx === 0 ? (rawPrompt || `Chọn ${slotCount} đáp án chính xác:`) : `Chọn đáp án chính xác (Vị trí ${sIdx + 1}):`,
+          interactionType: 'multi_choice_group',
+          pedagogicalTypeCode: 'multiple_choice_group',
+          layoutType: 'grid_3',
+          graderType: 'unordered_group_slot',
+          groupId,
+          options: JSON.parse(JSON.stringify(options)),
+          expectedOptionIds: correctLetters,
+          required: true,
+          maxScore: slotScore
+        });
+      }
     } else if (qType === 'inline_cloze') {
       const answersList = rawAnswer ? rawAnswer.split(/[|;]/).map(a => a.trim()) : [];
       const blanks = parseClozeBlanks(rawPrompt || '');
@@ -957,34 +1206,67 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
         if (!uniqueNums.includes(b.number)) uniqueNums.push(b.number);
       }
       uniqueNums.forEach((num, idx) => {
-        const ans = answersList[idx] || '';
+        const rawAns = answersList[idx] || '';
+        const variants = rawAns ? rawAns.split(/[/]/).map(v => v.trim()).filter(Boolean) : [];
+        const mainAns = variants[0] || rawAns;
         clozeAnswers[num] = {
-          targetWord: ans,
-          accepted: ans ? [ans] : []
+          targetWord: mainAns,
+          accepted: variants.length ? variants : (mainAns ? [mainAns] : [])
         };
       });
+      const firstTarget = clozeAnswers[uniqueNums[0]]?.targetWord || answersList[0] || '';
       currentEx.items.push({
         prompt: rawPrompt,
         interactionType: 'short_text',
-        pedagogicalTypeCode: 'table_completion',
+        pedagogicalTypeCode: 'inline_cloze',
         layoutType: 'inline_cloze',
         graderType: 'inline_cloze',
         clozeAnswers,
-        targetWord: answersList[0] || '',
-        accepted: answersList[0] ? [answersList[0]] : [],
+        targetWord: firstTarget,
+        accepted: firstTarget ? [firstTarget] : [],
         maxScore: uniqueNums.length ? uniqueNums.length * score : score
       });
     } else if (qType === 'error_correction') {
-      const errorPart = rawDetails || '';
-      const correction = rawAnswer;
+      let errorPart = rawAnswer;
+      let correction = rawDetails;
+
+      if (!correction && (rawAnswer.includes('->') || rawAnswer.includes('=>') || rawAnswer.includes('→'))) {
+        const arrowParts = rawAnswer.split(/->|=>|→/).map(p => p.trim());
+        errorPart = arrowParts[0] || '';
+        correction = arrowParts[1] || '';
+      } else if (!errorPart && (rawDetails.includes('->') || rawDetails.includes('=>') || rawDetails.includes('→'))) {
+        const arrowParts = rawDetails.split(/->|=>|→/).map(p => p.trim());
+        errorPart = arrowParts[0] || '';
+        correction = arrowParts[1] || '';
+      }
+
+      const promptLower = (rawPrompt || '').toLowerCase();
+      const ansLower = (errorPart || '').toLowerCase();
+      const detLower = (correction || '').toLowerCase();
+
+      // Smart Auto-Detect:
+      if (detLower && promptLower.includes(detLower) && !promptLower.includes(ansLower)) {
+        const tmp = errorPart;
+        errorPart = correction;
+        correction = tmp;
+      }
+
+      const correctionVariants = correction ? correction.split(/[|/]/).map(c => c.trim()).filter(Boolean) : [];
+      const mainCorrection = correctionVariants[0] || (correction ? correction.trim() : '');
+      const finalCorrections = correctionVariants.length ? correctionVariants : (mainCorrection ? [mainCorrection] : []);
+      const errorVariants = errorPart ? [errorPart.trim()] : [];
+
       currentEx.items.push({
         prompt: rawPrompt,
         interactionType: 'correction_pair',
         pedagogicalTypeCode: 'error_correction',
         layoutType: 'correction_inline',
-        graderType: 'accepted_text',
-        targetWord: errorPart,
-        accepted: [correction],
+        graderType: 'correction_pair',
+        targetWord: errorPart.trim(),
+        expectedErrors: errorVariants,
+        expectedCorrections: finalCorrections,
+        accepted: finalCorrections,
+        scoringRule: 'split_points',
         maxScore: score
       });
     } else if (qType === 'sentence_transformation') {

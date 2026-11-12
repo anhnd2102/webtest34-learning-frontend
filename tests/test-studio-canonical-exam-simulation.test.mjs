@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -44,7 +45,7 @@ test('Top bar action buttons have standardized sizing and white-space nowrap', (
 
   // Check CSS file for standardized button styling rules
   const cssPath = resolve('term-tests/teacher-dashboard/styles.css');
-  const css = readFileSync(cssPath, 'utf8');
+  const css = readDashboardCss();
 
   // Must enforce white-space nowrap and fixed height or min-height 38px
   assert.ok(

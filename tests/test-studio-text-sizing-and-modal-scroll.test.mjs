@@ -1,3 +1,5 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
+import { readDashboardSource } from './helpers/dashboard-source.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -10,7 +12,7 @@ const frontendDir = path.resolve(__dirname, '..');
 
 test('Test Studio: styles.css enforces full-width textarea reset and button proportions', () => {
   const cssPath = path.join(frontendDir, 'term-tests', 'teacher-dashboard', 'styles.css');
-  const cssContent = fs.readFileSync(cssPath, 'utf8');
+  const cssContent = readDashboardCss();
 
   // Verify textarea reset width 100% and box-sizing
   assert.ok(
@@ -60,8 +62,7 @@ test('Test Studio: index.html bumps cache buster for styles.css', () => {
 });
 
 test('Test Studio: app.js wraps top-bar buttons in .builder-actions-group and provides prompt textarea', () => {
-  const appJsPath = path.join(frontendDir, 'term-tests', 'teacher-dashboard', 'app.js');
-  const appJsContent = fs.readFileSync(appJsPath, 'utf8');
+  const appJsContent = readDashboardSource();
 
   assert.ok(
     appJsContent.includes('builder-actions-group'),

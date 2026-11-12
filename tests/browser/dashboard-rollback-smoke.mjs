@@ -8,7 +8,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const playwright = process.env.PLAYWRIGHT_MODULE || 'C:/Users/OS/.nuget/packages/microsoft.playwright/1.63.0/.playwright/package/index.mjs';
 const { chromium } = await import(pathToFileURL(playwright).href);
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const artifacts = path.resolve(root, '.git/verification/issue-24');
+const artifacts = path.resolve(execFileSync('git', [
+  'rev-parse', '--path-format=absolute', '--git-path', 'verification/issue-24'
+], { cwd: root, encoding: 'utf8' }).trim());
 const refs = ['a8c203c', '7ab2f3e', 'e263d26', '915bc91', 'ad358df'];
 const port = 18325;
 await mkdir(artifacts, { recursive: true });

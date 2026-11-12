@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -161,7 +162,7 @@ test('Issue 53: Candidate Simulation renders vocabulary pair questions in a unif
 
 test('Issue 53: styles.css contains compact table styles and responsive layout for vocabulary pairs', () => {
   const cssPath = resolve(new URL('.', import.meta.url).pathname.replace(/^\/([A-Z]:)/i, '$1'), '../term-tests/teacher-dashboard/styles.css');
-  const css = readFileSync(cssPath, 'utf8');
+  const css = readDashboardCss();
 
   assert.match(css, /\.candidate-vocab-table-container/, 'styles.css must style .candidate-vocab-table-container');
   assert.match(css, /\.candidate-vocab-table-row/, 'styles.css must style .candidate-vocab-table-row');

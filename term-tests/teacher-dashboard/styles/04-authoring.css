@@ -1,0 +1,664 @@
+/* ==========================================================================
+   Issue 53: Vocabulary Pair Compact Table Layout (Candidate Simulation)
+   ========================================================================== */
+.candidate-vocab-table-container {
+  background: #ffffff;
+  border: 1px solid var(--izone-border, #e2e8f0);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  margin-bottom: 20px;
+}
+
+.candidate-vocab-table-intro {
+  padding: 14px 18px;
+  background: var(--izone-slate-bg, #f8fafc);
+  border-bottom: 1px solid var(--izone-border, #e2e8f0);
+}
+
+.candidate-vocab-table-prompt {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--izone-navy, #174266);
+  line-height: 1.5;
+}
+
+.candidate-vocab-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.candidate-vocab-table-head {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 10px 18px;
+  background: #f1f5f9;
+  border-bottom: 1px solid var(--izone-border, #e2e8f0);
+  align-items: center;
+}
+
+.vocab-th {
+  font-family: 'Geologica', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.vocab-th-num {
+  text-align: center;
+}
+
+.candidate-vocab-table-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.candidate-vocab-table-row {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 10px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+  transition: background-color 0.15s ease;
+}
+
+.candidate-vocab-table-row:last-child {
+  border-bottom: none;
+}
+
+.candidate-vocab-table-row:hover {
+  background-color: #fafbfc;
+}
+
+.candidate-vocab-table-row:focus-within {
+  background-color: var(--izone-soft-red, #fff1f2);
+}
+
+.vocab-td-num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vocab-row-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #e2e8f0;
+  color: #1e293b;
+  font-family: 'Geologica', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.candidate-vocab-table-row:focus-within .vocab-row-num-badge {
+  background: var(--izone-primary, #db0829);
+  color: #ffffff;
+}
+
+.vocab-td-en,
+.vocab-td-vi {
+  min-width: 0;
+  width: 100%;
+}
+
+.candidate-vocab-table .candidate-vocab-text-input,
+.candidate-vocab-table .candidate-vocab-select {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 0.92rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.candidate-vocab-table .candidate-vocab-text-input:focus,
+.candidate-vocab-table .candidate-vocab-select:focus {
+  outline: none;
+  border-color: var(--izone-primary, #db0829);
+  box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.1);
+}
+
+@media (max-width: 768px) {
+  .candidate-vocab-table-head {
+    display: none;
+  }
+
+  .candidate-vocab-table-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  .vocab-td-num {
+    justify-content: flex-start;
+  }
+}
+
+/* Compact authoring UX for vocab pair */
+.vocab-compact-selector-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.select-vocab-correct-dropdown {
+  flex: 1;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.vocab-bank-collapsible {
+  margin-top: 10px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fafafa;
+}
+
+.vocab-bank-scrollable {
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Batch Vocab Pair Generator Modal */
+.modal-batch-vocab-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-batch-vocab-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: batchModalFadeIn 0.2s ease-out;
+}
+
+@keyframes batchModalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-batch-vocab-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+}
+
+.modal-batch-vocab-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.modal-batch-vocab-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-batch-vocab-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Generic Batch Question Creation Modal */
+.modal-generic-batch-card {
+  max-width: 520px;
+}
+
+.batch-count-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.batch-count-stepper-wrap {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.batch-count-stepper-wrap .btn-batch-step {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.batch-count-stepper-wrap .btn-batch-step:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.batch-count-stepper-wrap .btn-batch-step:active {
+  background: #cbd5e1;
+}
+
+.batch-count-stepper-wrap .input-batch-count {
+  border: none;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  border-radius: 0;
+  box-shadow: none;
+  height: 38px;
+  margin: 0;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.batch-count-stepper-wrap .input-batch-count::-webkit-outer-spin-button,
+.batch-count-stepper-wrap .input-batch-count::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.batch-extra-config {
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.batch-option-radios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .batch-option-radios {
+    grid-template-columns: 1fr;
+  }
+}
+
+.batch-radio-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  transition: all 0.15s ease-in-out;
+  user-select: none;
+  box-sizing: border-box !important;
+}
+
+.batch-radio-label:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.batch-radio-label:has(input[type="radio"]:checked) {
+  border-color: #db0829;
+  background: #fff1f2;
+  box-shadow: 0 0 0 1px #db0829;
+}
+
+.batch-radio-label input[type="radio"] {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  cursor: pointer;
+  accent-color: #db0829;
+}
+
+.batch-radio-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.batch-radio-title {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.batch-radio-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.batch-checkbox-row {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 0.875rem !important;
+  color: #334155 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  margin: 0 !important;
+}
+
+.batch-checkbox-row input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  accent-color: #db0829;
+}
+
+
+.item-kind-pill.text_select_pair {
+  background: #fdf2f8;
+  color: #9d174d;
+  border-color: #fbcfe8;
+}
+
+.item-kind-pill.rubric_async {
+  background: #ede9fe;
+  color: #6d28d9;
+  border-color: #ddd6fe;
+}
+
+/* AI Rubric Builder & Sandbox Styles */
+.template-rubric-async {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rubric-preset-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.preset-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.select-rubric-preset {
+  max-width: 320px;
+}
+
+.rubric-tabs-header {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 2px;
+}
+
+.btn-rubric-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -4px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-rubric-tab:hover {
+  color: #0f172a;
+}
+
+.btn-rubric-tab.active {
+  color: #6d28d9;
+  border-bottom-color: #7c3aed;
+}
+
+.rubric-tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rubric-criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rubric-criterion-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.criterion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.criterion-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.criterion-id-badge {
+  font-family: monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: #ede9fe;
+  color: #6d28d9;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.criterion-label-input {
+  flex: 1;
+  font-weight: 600;
+}
+
+.criterion-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.criterion-max-score-input {
+  width: 70px;
+  text-align: right;
+  font-weight: 700;
+}
+
+.criterion-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.criterion-concepts-input {
+  font-size: 0.8rem;
+}
+
+.rubric-sandbox-panel {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sandbox-desc {
+  font-size: 0.8rem;
+  color: #6b21a8;
+  margin: 0;
+}
+
+.sandbox-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-sandbox-sample {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.84rem;
+}
+
+.btn-trigger-sandbox {
+  background: #7c3aed;
+  color: #ffffff;
+  border-color: #6d28d9;
+  font-weight: 600;
+}
+
+.btn-trigger-sandbox:hover {
+  background: #6d28d9;
+}
+
+.sandbox-results-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sandbox-score-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sandbox-score-badge {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.sandbox-criteria-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sandbox-criterion-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+.sandbox-criterion-score {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+
+/* Vocabulary authoring: static values formerly supplied by inline attributes. */
+.template-vocab-pair .variant-chips-container { margin-top: 8px; }
+.template-vocab-pair .vocab-options-box { margin-top: 14px; }
+.template-vocab-pair .vocab-options-header-bar .form-label { margin: 0; }
+.template-vocab-pair .vocab-compact-selector-row > span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--izone-text-body);
+  white-space: nowrap;
+}
+.template-vocab-pair .vocab-options-tools-bar {
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.template-vocab-pair .vocab-bulk-paste-panel { margin-bottom: 10px; }
+.template-vocab-pair .options-actions { margin-top: 8px; }

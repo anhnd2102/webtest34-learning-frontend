@@ -1,6 +1,8 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
+import { readDashboardSource } from './helpers/dashboard-source.mjs';
 
 test('detail items table header renders "Thao tác" and dedicated column classes', async () => {
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
@@ -13,7 +15,7 @@ test('detail items table header renders "Thao tác" and dedicated column classes
 });
 
 test('CSS enforces nowrap on table score, action, verdict, and badge-manual-override', async () => {
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.grading-table th\.col-action[^}]*white-space:\s*nowrap/);
   assert.match(css, /\.grading-table th\.col-score[^}]*white-space:\s*nowrap/);
@@ -23,7 +25,7 @@ test('CSS enforces nowrap on table score, action, verdict, and badge-manual-over
 });
 
 test('dashboard logic supports inline editing, manual override badge, and modal score adjustment', async () => {
-  const js = await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8');
+  const js = readDashboardSource();
 
   assert.match(js, /btn-edit-score-inline/);
   assert.match(js, /btn-cancel-edit-inline/);

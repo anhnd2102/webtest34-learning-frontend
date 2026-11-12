@@ -1,3 +1,5 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
+import { readDashboardSource } from './helpers/dashboard-source.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -27,6 +29,7 @@ import {
   authMePath,
   authHeaders,
   teacherRoleLabel,
+  getRoleCapabilities,
   defaultApiBase,
   localStudentUrl,
   extractAttemptSkills,
@@ -366,7 +369,7 @@ test('teacher dashboard index.html provides grant retake modal and status filter
 
 test('teacher dashboard styles.css and student runner provide retake expiry and preflight notices', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
   assert.match(css, /\.result-status\.retake_expired/);
 
   const demoHtml = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
@@ -413,7 +416,7 @@ test('teacher dashboard index.html and styles.css provide database login and tea
   assert.match(html, /id="teacher-role-badge"/);
   assert.match(html, /id="logout-btn"/);
 
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
   assert.match(css, /#teacher-profile/);
   assert.match(css, /\.role-badge\.admin/);
   assert.match(css, /\.role-badge\.lead/);
@@ -471,7 +474,7 @@ test('teacher dashboard index.html and styles.css provide conflict alert element
   assert.match(html, /id="conflict-alert"/);
   assert.match(html, /class="conflict-alert"/);
 
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
   assert.match(css, /\.conflict-alert/);
 });
 
@@ -483,7 +486,7 @@ test('teacher dashboard index.html and styles.css provide student test link bar 
   assert.match(html, /id="copy-student-link-btn"/);
   assert.match(html, /id="open-student-link-btn"/);
 
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
   assert.match(css, /\.assignment-link-bar/);
   assert.match(css, /\.student-url-input/);
   assert.match(css, /\.card-copy-btn/);
@@ -584,7 +587,7 @@ test('teacher dashboard index.html provides table grading view containers and co
 
 test('teacher dashboard styles.css provides table grading and skill tab styles', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.grading-table/);
   assert.match(css, /\.skill-tabs/);
@@ -659,7 +662,7 @@ test('extractAttemptSkills groups sections with accurate titles, scores, and cor
 
 test('styles.css enforces table-layout fixed, white-space normal, and section header styling to prevent text collision', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   // Ensure table-layout: fixed is configured on grading-table
   assert.match(css, /\.grading-table\s*\{[^}]*table-layout:\s*fixed/);
@@ -765,7 +768,7 @@ test('teacher dashboard index.html removes % symbols from filters and provides c
 
 test('teacher dashboard styles.css provides class summary cards and tier colors without inline-block on td', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.tier-yellow/);
   assert.match(css, /\.tier-red/);
@@ -795,7 +798,7 @@ test('formatSubmissionTimestamp formats valid timestamps into separate time and 
 
 test('teacher dashboard styles.css provides .score-total, .score-skill, and .time-stamp-wrap styles', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.score-total/);
   assert.match(css, /\.score-total\.tier-yellow/);
@@ -809,7 +812,7 @@ test('teacher dashboard styles.css provides .score-total, .score-skill, and .tim
 
 test('teacher dashboard styles.css provides .th-score, .th-score-wrap, and table container fit styles', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.th-score/);
   assert.match(css, /\.th-score-wrap/);
@@ -867,7 +870,7 @@ test('teacher dashboard index.html and styles.css provide secure password input 
   assert.match(html, /<button[^>]*id="toggle-fixture-btn"[^>]*hidden/);
   assert.match(html, /<form[^>]*id="identity-form"[^>]*hidden/);
 
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   // Crucial [hidden] rule with display: none !important
   assert.match(css, /\[hidden\]\s*\{\s*display:\s*none\s*!important;\s*\}/);
@@ -942,7 +945,7 @@ test('teacher dashboard index.html provides #assignment-select and #selected-ass
 
 test('teacher dashboard styles.css provides .control-toolbar, .selected-assignment-card, and compact assignment chips styles', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.control-toolbar/);
   assert.match(css, /\.selected-assignment-card/);
@@ -983,6 +986,24 @@ test('filterClasses filters classes by course, scope, status, and search query',
   });
   assert.equal(myClassesByIds.length, 2);
   assert.deepEqual(myClassesByIds.map(c => c.classId), ['103', '104']);
+
+  // 2c. Lead scope when lead teaches 0 classes (supervised only)
+  const allSupervisedClasses = [
+    { classId: '201', name: 'IC34_1', courseCode: '34', status: 'on_going', isTeaching: false },
+    { classId: '202', name: 'IC34_2', courseCode: '34', status: 'on_going', isTeaching: false }
+  ];
+  const zeroTaught = filterClasses(allSupervisedClasses, {
+    userRole: 'lead',
+    scope: 'my_classes',
+    userClassIds: []
+  });
+  assert.equal(zeroTaught.length, 0);
+  assert.equal(formatClassFilterCountLabel({ count: zeroTaught.length, userRole: 'lead', scope: 'my_classes' }), '0 lớp bạn đang dạy');
+  const allCourseClasses = filterClasses(allSupervisedClasses, {
+    userRole: 'lead',
+    scope: 'all'
+  });
+  assert.equal(allCourseClasses.length, 2);
 
   // 3. Status filter
   const ongoing = filterClasses(sampleClasses, { classStatus: 'on_going' });
@@ -1043,7 +1064,7 @@ test('teacher dashboard index.html provides smart class filtering controls', asy
 
 test('teacher dashboard styles.css provides .class-filter-toolbar and filter pill styles', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.class-filter-toolbar/);
   assert.match(css, /\.filter-pill/);
@@ -1065,7 +1086,7 @@ test('teacher dashboard index.html provides global sticky top navbar and stitch 
 
 test('teacher dashboard styles.css provides .global-navbar sticky and responsive styling', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.global-navbar/);
   assert.match(css, /position:\s*sticky/);
@@ -1088,7 +1109,7 @@ test('teacher dashboard index.html provides .split-dashboard-grid with selector 
 
 test('teacher dashboard styles.css provides .split-dashboard-grid layout rules and responsive fallback', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.split-dashboard-grid/);
   assert.match(css, /grid-template-columns/);
@@ -1111,7 +1132,7 @@ test('teacher dashboard index.html provides sliding attempt-detail drawer and ba
 
 test('teacher dashboard styles.css provides .sliding-drawer and .drawer-backdrop off-canvas styling', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.sliding-drawer/);
   assert.match(css, /position:\s*fixed/);
@@ -1122,7 +1143,7 @@ test('teacher dashboard styles.css provides .sliding-drawer and .drawer-backdrop
 
 test('teacher dashboard app.js wires drawer backdrop, drawer-open class, and escape key handling', async () => {
   const fs = await import('node:fs/promises');
-  const code = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
+  const code = readDashboardSource();
 
   assert.match(code, /drawerBackdrop/);
   assert.match(code, /drawer-open/);
@@ -1132,7 +1153,7 @@ test('teacher dashboard app.js wires drawer backdrop, drawer-open class, and esc
 
 test('teacher dashboard styles.css provides sticky actions bar and audio waveform player styles', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.grading-actions-bar/);
   assert.match(css, /position:\s*sticky/);
@@ -1164,7 +1185,7 @@ test('getAvatarColor returns deterministic palette with bg, text, and border', a
 
 test('teacher dashboard styles.css provides .student-avatar, .student-code, and pill badge styling', async () => {
   const fs = await import('node:fs/promises');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.student-cell-wrap/);
   assert.match(css, /\.student-avatar/);
@@ -1193,7 +1214,7 @@ test('ICONS dictionary and renderSvgIcon provide minimalist monochromatic SVG li
 test('teacher dashboard index.html and styles.css provide minimalist line icon styling without emojis', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(css, /\.icon-inline/);
   assert.match(css, /\.search-icon/);
@@ -1208,7 +1229,7 @@ test('teacher dashboard index.html and styles.css provide minimalist line icon s
 test('teacher dashboard index.html and styles.css provide active test focus and compact switcher elements and styles', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(html, /id="assignment-chips"/);
   assert.match(html, /id="assignments"/);
@@ -1333,7 +1354,7 @@ test('renderAssignmentChipsView renders 1 focused card when selected, full list 
 test('teacher dashboard styles.css and index.html provide wide attempt-detail drawer and compact question column layout', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   // Drawer width should be min(1560px, 98vw)
   assert.match(css, /width:\s*min\(1560px,\s*98vw\)/);
@@ -1351,7 +1372,7 @@ test('teacher dashboard styles.css and index.html provide wide attempt-detail dr
 test('teacher dashboard provides modern exam-mode toggle switch, slider, and status pill', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
 
   assert.match(html, /id="exam-mode-toggle"/);
   assert.match(html, /class="toggle-slider"/);
@@ -1363,32 +1384,64 @@ test('teacher dashboard provides modern exam-mode toggle switch, slider, and sta
 test('teacher dashboard provides role capabilities popover and tooltip trigger', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
-  const code = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
+  const css = await readDashboardCss();
+  const code = readDashboardSource();
 
   assert.match(html, /id="role-capabilities-popover"/);
-  assert.match(html, /Kiểm tra toàn bộ các lớp/);
+  assert.match(html, /Quản lý lớp phụ trách|Kiểm tra toàn bộ các lớp/);
   assert.match(css, /\.role-capabilities-popover/);
   assert.match(code, /roleCapabilitiesPopover/);
+  assert.match(code, /getRoleCapabilities/);
+  assert.match(code, /roleCapsList\.replaceChildren/);
 });
 
-test('teacher dashboard role-capabilities-popover houses teacher-role-badge inside popover and lists exam editing & publication capabilities', async () => {
+test('getRoleCapabilities returns role-appropriate capabilities and scopes', () => {
+  // 1. Teacher role: class-scoped management, manual grading, retake grants, but NO exam editing & publishing
+  const teacherCaps = getRoleCapabilities('teacher');
+  assert.equal(teacherCaps.length, 3);
+  assert.equal(teacherCaps[0].title, 'Quản lý lớp phụ trách');
+  assert.match(teacherCaps[0].description, /phân công giảng dạy/);
+  assert.ok(!teacherCaps.some(cap => cap.title.includes('đề thi') || cap.description.includes('Test Studio')));
+  assert.ok(!teacherCaps.some(cap => cap.title.includes('toàn bộ khối') || cap.description.includes('toàn bộ các lớp trong khối')));
+
+  assert.equal(teacherCaps[1].title, 'Chấm thi & Phê duyệt điểm');
+  assert.equal(teacherCaps[2].title, 'Quản trị quyền làm bài');
+
+  // 2. Lead role: includes "Quản lý & Xuất bản đề thi", course-wide supervision with course codes
+  const leadCaps34 = getRoleCapabilities('lead', ['34']);
+  assert.equal(leadCaps34.length, 4);
+  assert.equal(leadCaps34[0].title, 'Quản lý & Xuất bản đề thi');
+  assert.match(leadCaps34[0].description, /Khối 34/);
+  assert.equal(leadCaps34[1].title, 'Giám sát toàn bộ khối');
+  assert.match(leadCaps34[1].description, /Khối 34/);
+  assert.match(leadCaps34[1].description, /Lớp tôi dạy/);
+  assert.match(leadCaps34[1].description, /Toàn bộ khối/);
+
+  // 3. Admin role: includes full system authority
+  const adminCaps = getRoleCapabilities('admin');
+  assert.equal(adminCaps.length, 4);
+  assert.equal(adminCaps[0].title, 'Quản lý & Xuất bản đề thi');
+  assert.equal(adminCaps[1].title, 'Giám sát toàn bộ hệ thống');
+  assert.match(adminCaps[1].description, /toàn hệ thống IZONE/);
+});
+
+test('teacher dashboard role-capabilities-popover houses teacher-role-badge inside popover and lists lead/admin exam editing & publication capabilities', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
+  const css = await readDashboardCss();
+  const code = readDashboardSource();
 
   // Verify role badge is inside the popover, not exposed directly outside on the navbar
   assert.match(html, /<div id="role-capabilities-popover"[^>]*>[\s\S]*id="teacher-role-badge"/);
-  assert.match(html, /Quản lý (&amp;|&) Xuất bản đề thi/);
-  assert.match(html, /xuất bản/i);
+  assert.match(code, /Quản lý & Xuất bản đề thi/);
   assert.match(css, /\.popover-user-summary/);
 });
 
 test('teacher dashboard lead-scope-filters provides 1-row nowrap layout and concise labels', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  const css = await fs.readFile(new URL('../term-tests/teacher-dashboard/styles.css', import.meta.url), 'utf8');
-  const code = (await fs.readFile(new URL('../term-tests/teacher-dashboard/app.js', import.meta.url), 'utf8')) + '\n' + (await fs.readFile(new URL('../term-tests/teacher-dashboard/shell/dashboard.js', import.meta.url), 'utf8'));
+  const css = await readDashboardCss();
+  const code = readDashboardSource();
 
   assert.match(html, /Lớp tôi dạy/);
   assert.match(css, /#lead-scope-filters[^{]*\{[^}]*flex-wrap:\s*nowrap/);
