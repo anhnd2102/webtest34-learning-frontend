@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -10,7 +11,7 @@ const __dirname = path.dirname(__filename);
 const stylesCssPath = path.resolve(__dirname, '../term-tests/teacher-dashboard/styles.css');
 
 test('Issue 59: styles.css defines compact padding and line-height for candidate-inline-cloze-wrap', () => {
-  const css = fs.readFileSync(stylesCssPath, 'utf8');
+  const css = readDashboardCss();
 
   assert.ok(css.includes('.candidate-inline-cloze-wrap'), 'styles.css must include .candidate-inline-cloze-wrap');
   assert.ok(css.includes('.candidate-short-qa-container'), 'styles.css must preserve .candidate-short-qa-container');

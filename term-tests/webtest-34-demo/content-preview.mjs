@@ -7,7 +7,7 @@ import {
   renderSidePanel,
   initDynamicExamInteractions,
   ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261106-cloze-group-v1';
+} from './dynamic-exam-renderer.mjs?rev=20261112-cloze-group-v2';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -618,7 +618,7 @@ export function groupSections(form, bypass = false) {
     const ownsAudio = gateId && !renderedAudio.has(gateId);
     if (ownsAudio) renderedAudio.add(gateId);
     const audioControl = ownsAudio
-      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">▶ Phát audio (nếu có)</button><audio preload="metadata" src="${escape(resolveAudioUrl(group.audioPath))}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">${bypass ? 'Đã mở khóa nội dung câu hỏi để kiểm tra.' : 'Nội dung bài nghe đang được khóa.'}</span></div>`
+      ? `<div class="demo-audio-gate" data-demo-audio-gate="${escape(gateId)}"><button type="button" class="btn btn-primary demo-audio-start" data-demo-audio-start="${escape(gateId)}">${ICONS.play} Phát audio (nếu có)</button><audio preload="metadata" src="${escape(resolveAudioUrl(group.audioPath))}" data-demo-audio-player="${escape(gateId)}"></audio><span class="demo-audio-status" data-demo-audio-status="${escape(gateId)}">${bypass ? 'Đã mở khóa nội dung câu hỏi để kiểm tra.' : 'Nội dung bài nghe đang được khóa.'}</span></div>`
       : gateId
         ? `<p class="demo-notice demo-audio-linked">${bypass ? 'Bài nghe này dùng chung audio ở phần trên.' : 'Nhóm này sẽ mở khi audio ở phần trên bắt đầu phát.'}</p>`
         : group.audioRequired
@@ -1321,7 +1321,7 @@ export async function mount(course) {
               timeZone: 'Asia/Ho_Chi_Minh'
             }).format(new Date(grant.expiresAt));
             studentStatus.textContent = `Quyền làm lại đã hết hạn (hạn chót: ${expTime}). Hãy liên hệ giáo viên để được cấp lại.`;
-            studentStatus.style.color = '#dc2626';
+            studentStatus.style.color = '#e11d48';
             return;
           } else if (availableFromMs && availableFromMs > now) {
             startBtn.disabled = true;
@@ -1331,7 +1331,7 @@ export async function mount(course) {
               timeZone: 'Asia/Ho_Chi_Minh'
             }).format(new Date(grant.availableFrom));
             studentStatus.textContent = `Quyền làm lại chưa tới thời gian mở (bắt đầu lúc: ${openTime}).`;
-            studentStatus.style.color = '#dc2626';
+            studentStatus.style.color = '#e11d48';
             return;
           } else {
             const defMinutes = Number(learningState.assignment?.definition?.timing?.totalMinutes) || 120;
@@ -1383,7 +1383,7 @@ export async function mount(course) {
             if (soundcheckStatus) {
               soundcheckStatus.textContent = 'Lỗi tải audio';
               soundcheckStatus.style.background = '#fee2e2';
-              soundcheckStatus.style.color = '#dc2626';
+              soundcheckStatus.style.color = '#e11d48';
             }
           });
         }

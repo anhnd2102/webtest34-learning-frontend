@@ -258,9 +258,29 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 
 ### Bước 4 — Tách CSS giữ cascade, rồi clean riêng (M–L)
 
-- [ ] Lập rule-order/selector map cho styles.css và inline style trong builder; lưu ảnh/computed styles trước.
-- [ ] Tách fragment giữ thứ tự; sửa entry styles.css hoặc link HTML có manifest kiểm được. Đảm bảo test đọc CSS chuyển sang kiểm artifact/rule contract thay vì xóa test cho pass.
+- [x] Lập rule-order/selector map cho styles.css và inline style trong builder; lưu ảnh/computed styles trước. Xem `CSS_EXTRACTION_VERIFICATION.md`.
+- [x] Tách fragment giữ thứ tự; sửa entry styles.css hoặc link HTML có manifest kiểm được. Đảm bảo test đọc CSS chuyển sang kiểm artifact/rule contract thay vì xóa test cho pass.
 - [ ] Cleanup token, override/!important và style trùng chỉ trong các commit sau, khi chứng minh thắng/thua tương đương.
+  - Đã hoàn thành đợt đầu cho fragment context/assessment: xem `CSS_CONTEXT_CLEANUP_VERIFICATION.md`. Các fragment còn lại, inline styles và cleanup override vẫn chưa hoàn tất.
+  - Đã chuyển nhóm inline styles tĩnh của audio controls, thanh thêm bài tập/footer và rich editor sang class: xem `BUILDER_INLINE_STYLES_VERIFICATION.md`. Các nhóm inline styles khác còn trong lộ trình.
+  - Đã chuyển 12 inline styles của editor phát âm/IPA sang class/token, kèm parity và kiểm caret/options/audio controller: xem `IPA_STYLES_VERIFICATION.md`.
+  - Đã chuyển nhóm style tĩnh Vocabulary Pair sang class/token, giữ trạng thái bank/bulk, kèm parity và kiểm chỉnh sửa: xem `VOCABULARY_STYLES_VERIFICATION.md`.
+  - Đã chuyển 23 inline styles của Sentence Transformation/Reorder sang class/token và kiểm kê phần còn lại: xem `SENTENCE_STYLES_VERIFICATION.md`.
+  - Đã chuyển styles tĩnh của modal CSV theo Phần và Quick Guide sang class/token, giữ hành vi import và kiểm parity ba viewport: xem `CSV_GUIDE_STYLES_VERIFICATION.md`.
+  - Đã chuyển styles tĩnh của modal nhập câu hỏi tổng quát (tab CSV/tạo nhanh và preview) sang class/token: xem `GENERIC_BATCH_STYLES_VERIFICATION.md`.
+  - Đã chuyển styles tĩnh của modal chuyển bài tập, kiểm thứ tự và bảo toàn câu hỏi/đáp án/điểm: xem `MOVE_EXERCISE_STYLES_VERIFICATION.md`.
+  - Đã chuyển styles tĩnh của khung Phần, audio/reading dock, progress/footer/results ban đầu trong mô phỏng: xem `SIMULATION_SHELL_STYLES_VERIFICATION.md`.
+  - Đã sửa grid một cột khiến bảng điều hướng che đáp án mô phỏng trên mobile, kiểm native mouse/touch và breakpoint: xem `SIMULATION_MOBILE_LAYOUT_FIX.md`.
+  - Đã chuyển 4 styles của Pronunciation/Sentence Transformation mô phỏng, ghi nhận giới hạn nút nghe IPA từ baseline: xem `SIMULATION_QUESTION_STYLES_VERIFICATION.md`.
+  - Đã bổ sung controller phát/dừng IPA, xử lý lỗi và cleanup theo vòng đời mô phỏng: xem `SIMULATION_IPA_AUDIO_FIX.md`.
+  - Đã chuyển 30 inline styles tĩnh của Question Renderer (Error Correction, Reading Matching, Listening Order, Inline Cloze, Pictorial, AI Rubric) sang class/token; giữ các `display` do JS bật/tắt: xem `QUESTION_RENDERER_STYLES_VERIFICATION.md`.
+  - Đã chuyển 15 inline styles tĩnh của modal nhập Cặp từ vựng (CSV/Excel) sang class/token, giữ `display` do JS bật/tắt: xem `VOCAB_BATCH_MODAL_STYLES_VERIFICATION.md`.
+  - Đã chuyển 7 inline styles tĩnh của Builder (khung ngữ cảnh Bài tập Đọc hiểu, lỗi sandbox chấm thử AI) sang class/token; loại có chủ đích các `display` do JS/dữ liệu điều khiển: xem `BUILDER_STATIC_STYLES_VERIFICATION.md`.
+  - Đã thay emoji màu bằng SVG đơn sắc ở nút sandbox và wizard Công bố, kèm fixture kiểm không còn emoji ở mọi trạng thái: xem `EMOJI_CLEANUP_VERIFICATION.md`.
+  - Đã chuyển 3 inline styles tĩnh của luồng Công bố (thêm token `--izone-danger-legacy`); `rich-editor.js` không có vị trí hợp lệ; phân loại 208 vị trí còn lại (46 tĩnh): xem `PUBLISHING_STATIC_STYLES_VERIFICATION.md`.
+  - Đã thống nhất màu Danger về `#e11d48`, bổ sung icon còn thiếu và sửa spinner, thay `▶/⏸` ở giao diện audio bằng SVG: xem `DANGER_COLOR_UNIFY_VERIFICATION.md`, `ICON_FIX_VERIFICATION.md`, `CANDIDATE_AUDIO_GLYPHS_VERIFICATION.md`.
+  - Đã chuyển 9 inline styles tĩnh của modal tạo hàng loạt AI Rubric và Single Choice; phát hiện `openBatchPictorialModal` là mã chết (rút 5 vị trí khỏi đợt này): xem `BATCH_MODALS_STYLES_VERIFICATION.md`.
+  - Metadata CSS (manifest, rule map, inventory inline style) tái tạo bằng `node scripts/css-metadata.mjs` (rule-map/manifest/inventory/check) thay vì sửa tay; `tests/css-metadata.test.mjs` chặn rule map lệch khỏi `styles/*.css`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
 - Rollback: revert nhóm fragment/link theo commit; không để entry trỏ fragment thiếu. Rủi ro chính: đổi cascade hoặc FOUC.

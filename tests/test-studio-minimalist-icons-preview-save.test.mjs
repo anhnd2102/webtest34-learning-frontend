@@ -1,3 +1,4 @@
+import { readDashboardCss } from './helpers/dashboard-css.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -173,7 +174,7 @@ test('Candidate Simulation Modal uses IZONE brand identity and monochromatic lin
 
 test('teacher dashboard styles.css includes IZONE brand color system tokens', () => {
   const cssPath = resolve('term-tests/teacher-dashboard/styles.css');
-  const css = readFileSync(cssPath, 'utf8');
+  const css = readDashboardCss();
 
   // Verify IZONE brand tokens
   assert.ok(css.includes('--izone-primary') || css.includes('#db0829'), 'Should include IZONE primary red #db0829');
