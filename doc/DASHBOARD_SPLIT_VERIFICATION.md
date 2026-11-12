@@ -62,3 +62,9 @@ Các biến `let` dùng chung vẫn nằm trong `initializeDashboard` (không c�
 - Lỗi tiềm ẩn đã sửa: `grant-retake.js` dùng `authHeader` nhưng không được truyền vào khi tách (công cụ tách bỏ sót `...authHeader()`), sẽ gây ReferenceError khi cấp quyền làm lại. Việc chuyển sang `request` loại bỏ phụ thuộc này.
 - Chưa chuyển (có chủ đích): đăng nhập/đăng xuất/khôi phục phiên, SSE phòng thi, lời gọi studio dùng token/origin riêng.
 - `dashboard-lifecycle-smoke` lỗi vì thiếu gói `playwright` trong môi trường, không phải lỗi mã.
+
+## Smoke bấm thật `tests/browser/dashboard-actions-smoke.mjs` (12/11/2026)
+
+Chrome thật, API giả, 1440×900. Chạy: `node tests/browser/dashboard-actions-smoke.mjs`. Kiểm: tìm kiếm gửi `q`, trang sau gửi `page=2` và cập nhật URL; thêm học viên (lỗi 400 giữ modal, thành công đóng modal, mỗi lần đúng một POST, có Bearer); chuyển hash `#dashboard` ↔ `#grading` kể cả nút Back của trình duyệt; cấp quyền làm lại từ phòng thi (một POST, không lỗi); đăng xuất (xóa token, hiện form) rồi đăng nhập lại (lưu token, tải lại lớp).
+Kiểm tra đột biến: chèn lại lỗi `authHeader` chưa khai báo vào `grant-retake.js` thì smoke lỗi ở bước cấp quyền làm lại; đã hoàn nguyên.
+Chưa phủ: công bố toàn bộ, chuyển tab báo cáo, chấm nháp/hoàn tất chấm trên trình duyệt (mới có test đơn vị), handler builder.
