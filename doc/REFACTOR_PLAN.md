@@ -326,6 +326,8 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 ### Bước 7 — Canonical renderer và kết thúc chuyển tiếp (L)
 
 > **Quyết định 12/11/2026 (người dùng giao cho agent chọn): chưa tách script của `webtest-34-demo/index.html` (2.600 dòng, 10 thẻ `<script>`) cho tới khi có lưới an toàn cho luồng học viên.** Lý do: hiện chỉ có `candidate-mobile-smoke.mjs` và `e2e-exam-switch.browser.mjs` chạy trình duyệt; các test khác (`exam-room-ui`, `candidate-*`, `exam-guard-renderer-wiring`...) đọc mã nguồn `index.html` bằng regex nên sẽ vỡ khi script chuyển file, và rủi ro cao hơn dashboard (đồng hồ làm bài, audio, SSE, fullscreen). Việc đầu tiên của bước 7 là **smoke luồng học viên trên Learning API giả**: mở bằng token trong fragment, chọn đáp án và khôi phục bản nháp sau reload, nộp (một lần), hết giờ, audio resume, mất kết nối và kết nối lại; chạy như `dashboard-actions-smoke`. Chỉ sau đó mới tách `runtime.js` từng khối, chuyển các test đọc mã sang kiểm hành vi trước khi di chuyển. Không dùng production để smoke.
+>
+> **Cập nhật cùng ngày:** smoke đã viết (`tests/browser/candidate-flow-smoke.mjs`, xem `CANDIDATE_FLOW_VERIFICATION.md`). Phát hiện quan trọng: link `#test=` chạy `content-preview.mjs` (2.465 dòng), **không** chạy script nội tuyến của `index.html`, nơi chỉ còn đường prototype cũ; mục tiêu tách thật là `content-preview.mjs`. Ghi nhận một khoảng trống: `submissionId` không ổn định khi nộp lại.
 
 - [ ] Sau khi dashboard ổn định, tách script `webtest-34-demo/index.html:599–2593` sang runtime.js giữ thứ tự config/globals; tiếp đó chia state/request/audio/exam lifecycle theo test.
 - [ ] Chỉ chia sẻ renderer public giữa simulation/canonical khi hai bên có parity tests; không truyền private grading material sang runtime học viên.
