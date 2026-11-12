@@ -194,7 +194,7 @@ test('Teacher Dashboard Assessment Tabs: hover and active styles use brand color
   // Verify dashboard.js renders assessmentTabItems and switches reportState.mode
   assert.match(
     dashboardJs,
-    /reportState\.mode = 'item_analysis';/,
+    /(?:reportState|getReportState\(\))\.mode = 'item_analysis';/,
     'switchAssessmentTab must switch reportState.mode to item_analysis'
   );
   assert.match(
