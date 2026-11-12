@@ -69,3 +69,18 @@ Gỡ thử đường prototype (script nội tuyến và markup cũ) cho thấy 
 
 - Chặn chủ động mọi lời gọi `/attempts/*` sau khi thiết bị bị thay (`assertLearningAttemptNotSuperseded`): shell thật chỉ phản ứng khi máy chủ trả `EXAM_DEVICE_SUPERSEDED`, khóa đề và dừng heartbeat. Không mất dữ liệu.
 - Khôi phục trạng thái đã nộp từ `localStorage` khi tải lại: shell thật không giữ trạng thái học viên trong trình duyệt; vào lại lượt thì lấy từ máy chủ.
+
+## Bước 4: gỡ đường prototype nội tuyến (12/11/2026)
+
+`term-tests/webtest-34-demo/index.html` từ 2.601 xuống ~475 dòng (−2.130): đã xóa script nội tuyến (~2.000 dòng: roster demo, kiểm tra âm thanh, đồng hồ, Exam Mode, nộp bài, xem kết quả của đường prototype) và toàn bộ markup chỉ script đó dùng (`#examHeader`, `#introScreen`, `#audioCheckScreen`, phần thi, `#submitModal`…). Shell thi thật không bị ảnh hưởng vì `content-preview.mjs` thay toàn bộ `document.body.innerHTML` khi mount.
+
+Hành vi mới của `index.html`:
+- Có token (`#test=…`) hoặc `?demoCourse=` / `?course=` (03, 34, 45): mount `content-preview.mjs` như trước (script đầu `<head>` bắt đầu nạp sớm; script cuối trang giữ nhánh báo lỗi "Không tải được đề demo…").
+- Không có token: hiện `#noTokenNotice` ("Hãy mở bài thi bằng link của giáo viên"), không gọi API, không dựng bài thi. Trước đây trang chạy prototype không dùng được cho học viên thật (không roster demo, không token).
+
+Kiểm chứng: `npm test` 693/693; bốn smoke học viên pass (`candidate-flow`, `candidate-exam-mode`, `candidate-entry-review`, `candidate-mobile`); smoke lối vào thêm ca "không token".
+
+### Còn lại sau bước 4 (ghi nhận, chưa làm)
+- Mã chết có thể gỡ tiếp: `config.test2.js` (`WEBTEST_34_TEST2_AUDIO`), `config.test4.js` (`WEBTEST_34_TEST4_AUDIO`), `test2-public.js` (`WEBTEST_34_TEST2_CONTENT`) chỉ do script đã gỡ đọc (không còn nơi nào tham chiếu các biến toàn cục này); các thẻ `<script>` vẫn nằm trong `<head>`, và `course34-test2.test.mjs` còn kiểm nội dung các file này. CSS của đường prototype trong thẻ `<style>` đầu `index.html` (`.intro`, `.topbar`, `.exam-*`…) chưa được lọc.
+- `tests/e2e-exam-switch.browser.mjs` (E2E cần backend và PostgreSQL thật, mặc định bị bỏ qua) vẫn dùng id của đường prototype (`#studentSelect`, `#continueToAudio`, `#soundcheckBtn`, `#startExam`, `#examWaitingRoom`); với link `#test=` nó đã chạy shell thật (id khác) nên **đã lỗi thời trước bước 4**. Cần viết lại theo id thật (`#studentSelectInput`, `#startExamBtn`, `#examReadyBtn`…) khi có môi trường chạy; chưa sửa vì không chạy được ở đây.
+- Mục tiêu tiếp theo của bước 7 là tách `content-preview.mjs` (2.465 dòng) từng khối, có bốn smoke học viên làm lưới an toàn.

@@ -90,6 +90,29 @@ try {
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const report = {};
 
+  // 0. Không có token và không có demoCourse: chỉ hiện hướng dẫn mở bằng link giáo viên, không gọi API, không dựng bài thi
+  {
+    const api = createApi();
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: 'vi-VN' });
+    const page = await context.newPage();
+    page.errors = [];
+    page.on('pageerror', error => page.errors.push(error.message));
+    await page.route('**/*', route => {
+      const url = new URL(route.request().url());
+      if (url.pathname.includes('/api/learning/')) return api.handler(route);
+      return url.origin === origin ? route.continue() : route.abort();
+    });
+    await page.goto(`${origin}/term-tests/webtest-34-demo/index.html`);
+    await page.locator('#noTokenNotice').waitFor({ state: 'visible' });
+    assert.match(await page.locator('#noTokenNotice').textContent(), /link của giáo viên/);
+    assert.equal(await page.locator('#studentSelectInput').count(), 0, 'không dựng màn chọn học viên');
+    assert.equal(await page.locator('#cbtMountingPlaceholder').isHidden(), true, 'placeholder đang nạp không hiện');
+    await page.waitForTimeout(300);
+    assert.equal(api.calls.length, 0, 'không gọi Learning API khi không có token');
+    assert.deepEqual(page.errors, []);
+    await context.close();
+  }
+
   // 1. Token sạch: link dán qua chat hay dính ký tự thừa sau token
   for (const [label, hash] of [['sạch', `#test=${UUID}`], ['dấu \\', `#test=${UUID}\\`], ['%5C', `#test=${UUID}%5C`], ['%20', `#test=${UUID}%20`]]) {
     const api = createApi();
