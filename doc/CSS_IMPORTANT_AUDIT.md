@@ -60,6 +60,6 @@ Test cập nhật có chủ đích: `test-studio-inline-cloze.test.mjs` từng k
 
 ## Còn lại (chưa làm)
 
-- **116 khai báo chết do khai báo trùng thắng: ĐÃ GỠ** (13/11/2026, rev `20261112-duplicates-a`) cùng 13 rule rỗng còn lại; rule-map 1828 rule. Kiểm chứng: `npm test` 688/688; computed style của 195 snapshot (13 nhóm `toggle-visibility-parity`, 3 viewport) giống hệt HEAD.
+- **116 khai báo chết do khai báo trùng thắng: ĐÃ GỠ** (12/11/2026, rev `20261112-duplicates-a`) cùng 13 rule rỗng còn lại; rule-map 1828 rule. Kiểm chứng: `npm test` 688/688; computed style của 195 snapshot (13 nhóm `toggle-visibility-parity`, 3 viewport) giống hệt HEAD.
 - Thu hẹp 139 khai báo `keep:protected-property` theo từng phần tử thay vì từng thuộc tính.
 - `dynamic-test.css` (285 `!important`): thuộc bước 7.

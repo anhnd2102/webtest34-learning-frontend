@@ -6,7 +6,7 @@
 - **Bước 1–2 đã hoàn tất** (#18, #20–#24, có báo cáo `ISSUE_*_VERIFICATION.md`): `app.js` còn 137 dòng, chỉ là facade; bootstrap ở `main.js`; `shell/`, `studio/`, `results/`, `grading/`, `exam-room/`, `api/`, `navigation/`, `ui/` đã tách.
 - **Bước 3 hoàn tất một phần**: `studio/builder.js` còn 3.272 dòng, `shell/dashboard.js` 2.894 dòng; đã tách content-import, draft-model, rich-editor, media, simulation, publishing, batch-import, question-renderer. Còn tách tiếp orchestration builder và dashboard controller.
 - **Bước 4**: tách CSS hoàn tất (12 fragment); cleanup inline style/token/!important đang tiến hành, kiểm kê lexical còn 28 vị trí (đều là style động như độ rộng %, màu avatar) (xem `CSS_INLINE_STYLE_INVENTORY.json`). Chưa mở bước 5–7.
-- Ba quyết định ở mục 8 vẫn chưa được duyệt.
+- **Quyết định mục 8 (12/11/2026):** (1) duyệt lộ trình A → B; (2) **không** làm pilot Vue — bước 6 bị hủy, phương án C loại khỏi lộ trình; (3) browser tối thiểu/base path/ngưỡng tải chưa chốt, chỉ chặn khi bước 5 đổi nội dung upload của Pages (xem mục 8).
 - Phần "30/10/2026" bên dưới là lịch sử.
 
 ## Cập nhật triển khai — 30/10/2026
@@ -293,7 +293,7 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã chuyển 8 vị trí của `studio/batch-import.js` (preview CSV, nút Chép mẫu) sang class/token; parity browser 15/15 giống baseline: xem `BATCH_IMPORT_STYLES_VERIFICATION.md`.
   - Rà lại `studio/question-renderer.js`: chuyển style tĩnh của ảnh xem trước Pictorial; 18 vị trí còn lại là `display` ban đầu do JS bật/tắt, giữ inline (đổi sang class/`hidden` là đổi mô hình ẩn/hiện, cần đợt riêng); parity 30/30: xem `QUESTION_RENDERER_REMAINING_STYLES_VERIFICATION.md`.
   - Mô hình ẩn/hiện (HOÀN TẤT: không còn `style.display` trong JS dashboard, kể cả đợt 6 cho thẻ khối, modal rubric hàng loạt, modal chuyển bài tập, mô phỏng và nhập hàng loạt): chuyển `display: none` inline ban đầu sang `hidden`, từng nhóm phần tử trọn gói (template + bật/tắt + đọc) vì `[hidden]` có `!important`; đợt 1 (Vocabulary bank/bulk) và đợt 2 (rubric panes, sandbox, ngữ cảnh AI) đợt 3 (Pictorial) và đợt 4 (Publishing, media, vocabulary batch) và đợt 5 (rich editor, có kiểm thử an toàn dữ liệu khi lưu) xong, parity computed 12/12, 21/21, 18/18 và 42/42 (riêng đợt 4 khác có chủ đích ở đường render lại bước 1 của wizard Công bố): xem `HIDDEN_MODEL_VERIFICATION.md` (có bảng các nhóm còn lại và rủi ro rich editor).
-  - Kiểm toán `!important` (12/11/2026): 332 → 239 ở `styles/01–12` (gỡ 93 chỗ đã đo là vô tác dụng; giữ 239 kèm lý do); bằng chứng và giới hạn trong `CSS_IMPORTANT_AUDIT.md`. Còn lại: 116 khai báo chết do trùng (đã phát hiện, chưa gỡ), thu hẹp 139 chỗ trùng thuộc tính với style JS/inline, và `dynamic-test.css` (bước 7).
+  - Kiểm toán `!important` (12/11/2026): 332 → 239 ở `styles/01–12` (gỡ 93 chỗ đã đo là vô tác dụng; giữ 239 kèm lý do); bằng chứng và giới hạn trong `CSS_IMPORTANT_AUDIT.md`. Còn lại: 116 khai báo chết do trùng **đã gỡ** (`e68d2e6`, kèm 13 rule rỗng; computed 195/195 giống HEAD). Còn lại: thu hẹp 139 chỗ trùng thuộc tính với style JS/inline, và `dynamic-test.css` (bước 7).
   - Metadata CSS (manifest, rule map, inventory inline style) tái tạo bằng `node scripts/css-metadata.mjs` (rule-map/manifest/inventory/check) thay vì sửa tay; `tests/css-metadata.test.mjs` chặn rule map lệch khỏi `styles/*.css`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
@@ -308,7 +308,9 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 - Nghiệm thu: strict pilot không any/ignore để né lỗi; test/typecheck/build tách riêng; JS consumers vẫn chạy; Node CI/version target được kiểm, clean checkout install từ lockfile tái lập được.
 - Rollback: revert tooling/source/CI cùng nhóm; khôi phục upload root nếu đã đổi; không để Pages nhận .ts thô. Rủi ro: dev chạy nhưng artifact thiếu entry/audio/config.
 
-### Bước 6 — Pilot Vue có giới hạn và quyết định tiếp tục (M–L)
+### Bước 6 — Pilot Vue có giới hạn (HỦY theo quyết định 12/11/2026)
+
+> Người dùng không duyệt ngân sách thử Vue. Giữ nội dung dưới đây làm tham khảo lịch sử; không thực hiện.
 
 - [ ] Sau khi B chứng minh ổn định, chọn một exercise editor trắc nghiệm trong Test Studio cho Vue + TS; không chuyển phòng thi hoặc toàn dashboard.
 - [ ] Dùng cùng draft commands, public data contract, CSS tokens. Legacy truyền snapshot/callback; Vue không sở hữu draft toàn cục. Chỉ render một implementation cho mỗi root.
