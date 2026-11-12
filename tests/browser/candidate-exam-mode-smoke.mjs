@@ -29,6 +29,7 @@ function createApi(options = {}) {
   const api = {
     calls: [],
     failNext: {},
+    exam: options.exam || null,
     incidentResponses: [],     // phản hồi lần lượt cho incidents/open (ví dụ có selfProctoring)
     count(path) { return this.calls.filter(call => call.path === path).length; },
     all(path) { return this.calls.filter(call => call.path === path); },
@@ -54,7 +55,7 @@ function createApi(options = {}) {
         attemptToken: 'exam-attempt', definitionHash: 'h', draftRevision: 0, status: 'active',
         expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
         // Phòng chờ chưa có đề; Tự giám sát chạy trên bài thường nên có đề ngay.
-        ...(options.exam ? { exam: options.exam } : { definition: examDefinition }),
+        ...(api.exam ? { exam: api.exam, ...(api.exam.status === 'running' ? { definition: examDefinition } : {}) } : { definition: examDefinition }),
         ...(options.selfProctoring ? { selfProctoring: options.selfProctoring } : {})
       } };
     } else if (path === '/attempts/exam/incidents/open') {
@@ -237,6 +238,80 @@ try {
     await page.waitForTimeout(500);
     assert.equal(api.count('/attempts/exam/heartbeat'), heartbeats);
     report.incidents = { opens: api.count('/attempts/exam/incidents/open'), closes: api.count('/attempts/exam/incidents/close') };
+    await page.context().close();
+  }
+
+  // 5b. Phòng chờ: thoát toàn màn hình hiện nút vào lại, không mở sự cố (chưa thi); vào lại thất bại thì báo
+  {
+    const api = createApi({ exam: { enabled: true, status: 'waiting' } });
+    const page = await openPage(browser, api);
+    await start(page);
+    await page.click('#examReadyBtn');
+    await waitFor(async () => /Đã sẵn sàng/.test(await page.locator('#examFullscreenStatus').textContent()), 'sẵn sàng');
+    assert.equal(await page.locator('#examFullscreenReenter').isHidden(), true, 'đang toàn màn hình thì ẩn nút vào lại');
+    await page.evaluate(() => document.exitFullscreen());
+    await waitFor(async () => !(await page.locator('#examFullscreenReenter').isHidden()), 'thoát toàn màn hình thì hiện nút vào lại');
+    assert.equal(api.count('/attempts/exam/incidents/open'), 0, 'chưa thi nên không mở sự cố');
+    const requests = await page.evaluate(() => window.__fullscreen.requests);
+    await page.click('#examFullscreenReenter');
+    await waitFor(() => page.evaluate(count => window.__fullscreen.requests > count, requests), 'nút vào lại xin toàn màn hình');
+    await waitFor(async () => await page.locator('#examFullscreenReenter').isHidden(), 'vào lại được thì ẩn nút');
+    await page.evaluate(() => { window.__fullscreen.fail = true; document.exitFullscreen(); });
+    await waitFor(async () => !(await page.locator('#examFullscreenReenter').isHidden()), 'hiện lại nút vào lại');
+    await page.click('#examFullscreenReenter');
+    await waitFor(async () => /Không thể bật toàn màn hình/.test(await page.locator('#examFullscreenStatus').textContent()), 'vào lại thất bại thì báo');
+    await page.context().close();
+  }
+
+  // 5c. Đang thi: "Quay lại bài thi" xin toàn màn hình; không bật được thì mở sự cố mới và giữ cảnh báo
+  {
+    const api = createApi({ exam: { enabled: true, status: 'waiting' } });
+    const page = await openPage(browser, api);
+    await start(page);
+    await page.locator('#examReadyBtn').waitFor();
+    await waitFor(() => page.evaluate(() => window.__streams.length >= 1), 'mở luồng SSE');
+    await sse(page, 0, 'exam.started', { status: 'running', deadlineAt: new Date(Date.now() + 3_600_000).toISOString(), definition: examDefinition });
+    await page.waitForSelector('.cbt-exam-shell');
+    await blur(page);
+    await waitFor(() => api.count('/attempts/exam/incidents/open') === 1, 'sự cố đầu');
+    const firstId = api.last('/attempts/exam/incidents/open').body.incidentId;
+    const requestsBefore = await page.evaluate(() => window.__fullscreen.requests);
+    await page.evaluate(() => { window.__fullscreen.fail = true; });
+    await page.click('#examGuardReturn');
+    await waitFor(() => page.evaluate(count => window.__fullscreen.requests > count, requestsBefore), 'quay lại bài thi xin toàn màn hình');
+    await waitFor(() => api.count('/attempts/exam/incidents/open') === 2, 'không bật được toàn màn hình thì mở sự cố mới');
+    assert.notEqual(api.last('/attempts/exam/incidents/open').body.incidentId, firstId);
+    await waitFor(() => api.count('/attempts/exam/incidents/close') === 1, 'sự cố cũ vẫn được đóng');
+    assert.equal(api.last('/attempts/exam/incidents/close').body.incidentId, firstId);
+    assert.equal(await guardVisible(page), true, 'cảnh báo còn đó vì chưa vào lại được toàn màn hình');
+    assert.match(await page.locator('#examGuardMessage').textContent(), /Không thể bật toàn màn hình/);
+    // vào lại được thì đóng sự cố và hết cảnh báo
+    await page.evaluate(() => { window.__fullscreen.fail = false; });
+    await page.click('#examGuardReturn');
+    await waitFor(async () => !(await guardVisible(page)), 'vào lại được thì hết cảnh báo');
+    await page.context().close();
+  }
+
+  // 5d. Tải lại trang giữa chừng: vào lại lượt đang chạy thì thẳng vào đề (không phòng chờ), kết nối SSE và heartbeat lại
+  {
+    const api = createApi({ exam: { enabled: true, status: 'waiting' } });
+    const page = await openPage(browser, api);
+    await start(page);
+    await page.locator('#examReadyBtn').waitFor();
+    await waitFor(() => page.evaluate(() => window.__streams.length >= 1), 'mở luồng SSE');
+    await sse(page, 0, 'exam.started', { status: 'running', deadlineAt: new Date(Date.now() + 3_600_000).toISOString(), definition: examDefinition });
+    await page.waitForSelector('.cbt-exam-shell');
+    api.exam = { enabled: true, status: 'running', deadlineAt: new Date(Date.now() + 3_000_000).toISOString() };
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
+    const heartbeatsBefore = api.count('/attempts/exam/heartbeat');
+    await start(page);
+    await page.waitForSelector('.cbt-exam-shell');
+    assert.equal(await page.locator('#examReadyBtn').count(), 0, 'lượt đang chạy không qua phòng chờ');
+    await waitFor(() => page.evaluate(() => window.__streams.length >= 1), 'kết nối lại SSE sau khi tải lại');
+    await waitFor(() => api.count('/attempts/exam/heartbeat') > heartbeatsBefore, 'heartbeat chạy lại sau khi tải lại');
+    await blur(page);
+    await waitFor(() => guardVisible(page), 'Exam Guard hoạt động ngay sau khi vào lại');
     await page.context().close();
   }
 
