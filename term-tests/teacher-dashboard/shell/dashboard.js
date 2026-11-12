@@ -1,3 +1,4 @@
+import { createApiRequest } from '../api/client.js';
 import { createLifecycle } from './lifecycle.js';
 import { createQueryCoordinator } from './query-coordinator.js';
 import { createResultsView } from '../results/view.js';
@@ -336,25 +337,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   };
 
-  // options.errorMessage: thông báo dự phòng khi phản hồi lỗi không có message; không gửi xuống fetch.
-  const request = async (path, { errorMessage, ...options } = {}) => {
-    const headers = { ...authHeader(), ...(options.headers || {}) };
-    const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
-    const payload = await response.json().catch(() => ({}));
-    if (options.signal?.aborted || lifecycle.isDisposed()) {
-      throw Object.assign(new Error('Request is no longer current.'), { name: 'AbortError' });
-    }
-    if (response.status === 401 && sessionToken) {
-      endSession();
-      throw new Error(payload.message || 'Yêu cầu đăng nhập.');
-    }
-    if (!response.ok) {
-      throw Object.assign(new Error(payload.message || errorMessage || 'Không tải được dữ liệu.'), {
-        code: payload.error, details: payload.details, status: response.status, apiMessage: payload.message
-      });
-    }
-    return payload;
-  };
+  const request = createApiRequest({ apiBase, authHeader, hasSession: () => Boolean(sessionToken), onUnauthorized: endSession, isDisposed: () => lifecycle.isDisposed() });
 
   const { loadAndRenderTestStudio } = createStudioView({ root, queryCoordinator, authState, scopeState, form, viewExams, disposeOwnedBuilder, renderOwnedBuilder, request });
   // Phá vòng phụ thuộc: grant retake và view chỉ giữ wrapper lazy tới loadExamRoom/showExamRoomTimeline (khai báo sau).
