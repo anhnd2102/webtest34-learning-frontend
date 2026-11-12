@@ -48,8 +48,8 @@ test('Dynamic Renderer: navigation uses currentActiveBlockIdx, onclick handlers,
     'Dynamic exam renderer must track currentActiveBlockIdx internally'
   );
   assert.ok(
-    code.includes("window.scrollTo({ top: 0, behavior: 'smooth' });"),
-    'Must smoothly scroll to top of exam section on section switch'
+    code.includes("window.scrollTo({ top: 0, behavior: scrollBehavior() });"),
+    'Must scroll to top of exam section on section switch (smooth unless reduced motion)'
   );
   assert.ok(
     code.includes('prevBtn.onclick = ') && code.includes('nextBtn.onclick = ') && code.includes('barPrev.onclick = ') && code.includes('barNext.onclick = '),
