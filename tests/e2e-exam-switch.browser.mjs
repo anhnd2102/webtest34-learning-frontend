@@ -16,7 +16,12 @@ import path from 'node:path';
 
 const platformDir = process.env.PLATFORM_BACKEND_DIR;
 const databaseUrl = process.env.LEARNING_TEST_DATABASE_URL;
-const skip = (!platformDir || !databaseUrl) && 'cần PLATFORM_BACKEND_DIR và LEARNING_TEST_DATABASE_URL';
+// ĐÃ LỖI THỜI (13/11/2026): kịch bản dùng id của đường prototype nội tuyến đã gỡ khỏi webtest-34-demo/index.html
+// (#studentSelect, #continueToAudio, #soundcheckBtn, #startExam, #examWaitingRoom). Link #test= luôn chạy shell thật (content-preview.mjs)
+// với id khác (#studentSelectInput, #startExamBtn, #examReadyBtn...). Cần viết lại theo shell thật khi có môi trường backend + PostgreSQL;
+// các hành vi Exam Mode phía trình duyệt đã có smoke riêng: tests/browser/candidate-exam-mode-smoke.mjs.
+const STALE = 'đã lỗi thời: dùng id của đường prototype đã gỡ, cần viết lại theo shell thật (xem ghi chú đầu file)';
+const skip = STALE;
 
 const API_PORT = 8788;
 const STATIC_PORT = 18034;
