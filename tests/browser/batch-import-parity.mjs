@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createImportantAudit, importantAuditEnabled } from './helpers/important-audit.mjs';
 
 const localPlaywright = 'C:/Users/OS/.nuget/packages/microsoft.playwright/1.63.0/.playwright/package/index.mjs';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || localPlaywright).href);
@@ -19,6 +20,7 @@ const server = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'],
 const multiGroupCsv = '"Which TWO activities are free of charge?","A, C","Swimming pool | Tennis court | Fitness center | Sauna | Yoga class",2';
 const clozeCsv = '"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,1';
 
+const importantAudit = importantAuditEnabled() ? createImportantAudit() : null;
 let browser;
 try {
   await mkdir(artifacts, { recursive: true });
@@ -62,12 +64,14 @@ try {
       await page.mouse.move(-1, -1);
       await page.evaluate(async () => { await document.fonts.ready; document.activeElement?.blur?.(); });
       const styles = await page.evaluate(sel => {
+        const allPropsHash = el => { const cs = getComputedStyle(el); let h = 2166136261; for (const name of [...cs].sort()) { const s = name + ':' + cs.getPropertyValue(name) + ';'; for (let j = 0; j < s.length; j++) { h ^= s.charCodeAt(j); h = Math.imul(h, 16777619); } } return (h >>> 0).toString(36); };
         const props = ['display', 'position', 'color', 'background-color', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'width', 'height', 'padding', 'margin', 'border', 'border-radius', 'overflow', 'white-space', 'text-transform', 'letter-spacing', 'justify-content', 'align-items', 'gap', 'text-align'];
         const host = document.querySelector(sel);
-        return [host, ...host.querySelectorAll('*')].map(el => ({ tag: el.tagName, class: el.getAttribute('class'), styles: Object.fromEntries(props.map(k => [k, getComputedStyle(el).getPropertyValue(k)])) }));
+        return [host, ...host.querySelectorAll('*')].map(el => ({ tag: el.tagName, class: el.getAttribute('class'), styles: Object.fromEntries(props.map(k => [k, getComputedStyle(el).getPropertyValue(k)])), hash: allPropsHash(el) }));
       }, selector);
       await writeFile(`${artifacts}/${viewport.width}-${name}-computed.json`, JSON.stringify(styles));
       await page.locator(selector).first().screenshot({ path: `${artifacts}/${viewport.width}-${name}.png`, animations: 'disabled', caret: 'hide' });
+      if (importantAudit) await importantAudit.observe(page, name);
     };
     for (const [name, opener, csv, expectText] of [
       ['preview-multigroup', 'openMultiGroupBatchModal', multiGroupCsv, 'Đ/A đúng'],
@@ -100,6 +104,7 @@ try {
     await page.close();
   }
   console.log(`captured to ${artifacts}`);
+  if (importantAudit) importantAudit.write(process.env.IMPORTANT_AUDIT_OUT);
 } finally {
   await browser?.close();
   server.kill();

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync, spawn } from 'node:child_process';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createImportantAudit, importantAuditEnabled } from './helpers/important-audit.mjs';
 
 const localPlaywright = 'C:/Users/OS/.nuget/packages/microsoft.playwright/1.63.0/.playwright/package/index.mjs';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || localPlaywright).href);
@@ -23,6 +24,7 @@ const form = id => ({
   }], gradingKey: { items: { i1: { graderType: 'exact_option', expectedOptionId: 'A' } }, groups: {} }
 });
 const room = { status: 'running', readyCount: 1, totalCount: 1, students: [{ studentRef: 's1', name: 'Synthetic student', status: 'in_progress', progress: { answered: 1, total: 2 }, connectionStatus: 'connected' }] };
+const importantAudit = importantAuditEnabled() ? createImportantAudit() : null;
 let browser;
 async function assertEventually(predicate, message) {
   const deadline = Date.now() + 3000;
@@ -141,8 +143,9 @@ try {
         await page.evaluate(async preserveFocus => { await document.fonts.ready; if (!preserveFocus) document.activeElement?.blur?.(); window.scrollTo(0, 0); }, preserveFocus);
         if (process.env.CAPTURE_COMPUTED === '1') {
           const styles = await page.evaluate(() => {
+            const allPropsHash = el => { const cs = getComputedStyle(el); let h = 2166136261; for (const name of [...cs].sort()) { const s = name + ':' + cs.getPropertyValue(name) + ';'; for (let j = 0; j < s.length; j++) { h ^= s.charCodeAt(j); h = Math.imul(h, 16777619); } } return (h >>> 0).toString(36); };
             const properties = ['display', 'position', 'color', 'background-color', 'font-family', 'font-size', 'font-weight', 'line-height', 'width', 'height', 'padding', 'margin', 'border', 'border-radius', 'overflow', 'z-index', 'box-shadow', 'fill', 'outline', 'outline-offset', 'transform', 'cursor', 'text-decoration'];
-            return Array.from(document.body.querySelectorAll('*')).map(el => ({ tag: el.tagName, id: el.id, class: el.getAttribute('class'), styles: Object.fromEntries(properties.map(key => [key, getComputedStyle(el).getPropertyValue(key)])) }));
+            return Array.from(document.body.querySelectorAll('*')).map(el => ({ tag: el.tagName, id: el.id, class: el.getAttribute('class'), styles: Object.fromEntries(properties.map(key => [key, getComputedStyle(el).getPropertyValue(key)])), hash: allPropsHash(el) }));
           });
           await writeFile(new URL(`${viewport.width}-${state}-computed.json`, artifacts), JSON.stringify(styles));
           if (viewport.width === 1440 && state === 'dashboard') {
@@ -162,6 +165,7 @@ try {
           }
         }
         await page.screenshot({ path: fileURLToPath(new URL(`${viewport.width}-${state}.png`, artifacts)), fullPage: true, animations: 'disabled', caret: 'hide' });
+        if (importantAudit) await importantAudit.observe(page, state);
       };
       // Optional close-up of one element (ELEMENT_SHOTS=1) for manual review at narrow widths.
       const elementShot = async (name, locator) => {
@@ -1424,6 +1428,7 @@ try {
       }
     }
   }
+  if (importantAudit) importantAudit.write(process.env.IMPORTANT_AUDIT_OUT);
   const result = { status: 'passed', captureOnly, browser: browser.version(), node: process.version, report, visualComparison, visualStatus: visualComparison.some(item => !item.identical) ? 'manual-review-required' : 'identical-or-not-compared' };
   await writeFile(new URL('report.json', artifacts), JSON.stringify(result, null, 2));
   process.stdout.write(JSON.stringify(result) + '\n');

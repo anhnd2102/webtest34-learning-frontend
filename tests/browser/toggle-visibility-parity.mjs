@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createImportantAudit, importantAuditEnabled } from './helpers/important-audit.mjs';
 
 const localPlaywright = 'C:/Users/OS/.nuget/packages/microsoft.playwright/1.63.0/.playwright/package/index.mjs';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || localPlaywright).href);
@@ -45,6 +46,7 @@ const vocabItems = () => ['v1', 'v2'].map((id, index) => ({
   options: ['one', 'two', 'three'].map((label, option) => ({ id: `opt_${option + 1}`, label: `Synthetic ${label}` }))
 }));
 
+const importantAudit = importantAuditEnabled() ? createImportantAudit() : null;
 let browser;
 try {
   await mkdir(artifacts, { recursive: true });
@@ -99,11 +101,13 @@ try {
       await page.evaluate(async () => { await document.fonts.ready; document.activeElement?.blur?.(); });
       const handle = await locator.elementHandle();
       const styles = await page.evaluate(host => {
+        const allPropsHash = el => { const cs = getComputedStyle(el); let h = 2166136261; for (const name of [...cs].sort()) { const s = name + ':' + cs.getPropertyValue(name) + ';'; for (let j = 0; j < s.length; j++) { h ^= s.charCodeAt(j); h = Math.imul(h, 16777619); } } return (h >>> 0).toString(36); };
         const props = ['display', 'position', 'color', 'background-color', 'font-family', 'font-size', 'font-weight', 'line-height', 'width', 'height', 'padding', 'margin', 'border', 'border-radius', 'overflow', 'visibility', 'flex-direction', 'justify-content', 'align-items', 'gap', 'text-align', 'object-fit'];
-        return [host, ...host.querySelectorAll('*')].map(el => ({ tag: el.tagName, class: el.getAttribute('class'), styles: Object.fromEntries(props.map(k => [k, getComputedStyle(el).getPropertyValue(k)])) }));
+        return [host, ...host.querySelectorAll('*')].map(el => ({ tag: el.tagName, class: el.getAttribute('class'), styles: Object.fromEntries(props.map(k => [k, getComputedStyle(el).getPropertyValue(k)])), hash: allPropsHash(el) }));
       }, handle);
       await writeFile(`${artifacts}/${viewport.width}-${name}-computed.json`, JSON.stringify(styles));
       await locator.screenshot({ path: `${artifacts}/${viewport.width}-${name}.png`, animations: 'disabled', caret: 'hide' });
+      if (importantAudit) await importantAudit.observe(page, name);
     };
     const expectVisible = async (locator, expected, message) => assert.equal(await locator.isVisible(), expected, message);
 
@@ -699,6 +703,7 @@ try {
     await page.close();
   }
   console.log(`captured to ${artifacts} (${groups.join(',')})`);
+  if (importantAudit) importantAudit.write(process.env.IMPORTANT_AUDIT_OUT);
 } finally {
   await browser?.close();
   server.kill();

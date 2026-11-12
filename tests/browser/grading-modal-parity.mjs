@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createImportantAudit, importantAuditEnabled } from './helpers/important-audit.mjs';
 
 if (process.argv[2] === '--compare') {
   const [a, b] = [process.argv[3], process.argv[4]];
@@ -20,6 +21,7 @@ if (process.argv[2] === '--compare') {
     if (left.length !== right.length) diffs.push(`length ${left.length} vs ${right.length}`);
     for (let i = 0; i < Math.min(left.length, right.length); i++) {
       if (left[i].tag !== right[i].tag) diffs.push(`#${i} tag ${left[i].tag} vs ${right[i].tag}`);
+      if (left[i].hash && right[i].hash && left[i].hash !== right[i].hash) diffs.push(`#${i} <${left[i].tag} class="${left[i].class}"> ALL-PROPERTIES hash ${left[i].hash} -> ${right[i].hash}`);
       for (const key of Object.keys(left[i].styles)) {
         if (left[i].styles[key] !== right[i].styles[key]) diffs.push(`#${i} <${left[i].tag} class="${left[i].class}"> ${key}: ${left[i].styles[key]} -> ${right[i].styles[key]}`);
       }
@@ -66,6 +68,7 @@ const results = {
   pagination: { page: 1, totalPages: 1, totalItems: 1, pageSize: 25 }
 };
 
+const importantAudit = importantAuditEnabled() ? createImportantAudit() : null;
 let browser;
 try {
   await mkdir(artifacts, { recursive: true });
@@ -105,13 +108,16 @@ try {
     const capture = async (name, selector) => {
       await page.mouse.move(-1, -1);
       await page.evaluate(async () => { await document.fonts.ready; document.activeElement?.blur?.(); });
+      if (process.env.CAPTURE_ALL_PROPS) await page.evaluate(() => { window.__ALL_PROPS = true; });
       const styles = await page.evaluate(sel => {
+        const allPropsHash = el => { const cs = getComputedStyle(el); let h = 2166136261; for (const name of [...cs].sort()) { const s = name + ':' + cs.getPropertyValue(name) + ';'; for (let j = 0; j < s.length; j++) { h ^= s.charCodeAt(j); h = Math.imul(h, 16777619); } } return (h >>> 0).toString(36); };
         const props = ['display', 'position', 'color', 'background-color', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'width', 'height', 'padding', 'margin', 'border', 'border-radius', 'overflow', 'white-space', 'text-transform', 'letter-spacing', 'justify-content', 'align-items', 'gap', 'text-align'];
         const host = document.querySelector(sel);
-        return [host, ...host.querySelectorAll('*')].map(el => ({ tag: el.tagName, class: el.getAttribute('class'), styles: Object.fromEntries(props.map(k => [k, getComputedStyle(el).getPropertyValue(k)])) }));
+        return [host, ...host.querySelectorAll('*')].map(el => ({ tag: el.tagName, class: el.getAttribute('class'), styles: Object.fromEntries(props.map(k => [k, getComputedStyle(el).getPropertyValue(k)])), hash: allPropsHash(el), all: window.__ALL_PROPS ? Object.fromEntries([...getComputedStyle(el)].map(n => [n, getComputedStyle(el).getPropertyValue(n)])) : undefined }));
       }, selector);
       await writeFile(`${artifacts}/${viewport.width}-${name}-computed.json`, JSON.stringify(styles));
       await page.locator(selector).first().screenshot({ path: `${artifacts}/${viewport.width}-${name}.png`, animations: 'disabled', caret: 'hide' });
+      if (importantAudit) await importantAudit.observe(page, name);
     };
     await page.evaluate(() => { location.hash = '#grading'; });
     await page.locator('.btn-view-attempt').first().click();
@@ -132,6 +138,7 @@ try {
     await page.close();
   }
   console.log(`captured to ${artifacts}`);
+  if (importantAudit) importantAudit.write(process.env.IMPORTANT_AUDIT_OUT);
 } finally {
   await browser?.close();
   server.kill();
