@@ -6,8 +6,10 @@ import {
   renderSectionNavPills,
   renderSidePanel,
   initDynamicExamInteractions,
-  ICONS
-} from './dynamic-exam-renderer.mjs?rev=20261105-sticky-audio-v1';
+  ICONS,
+  ANSWER_TEXT_ATTRS,
+  scrollBehavior
+} from './dynamic-exam-renderer.mjs?rev=20261112-exam-ux-v1';
 
 export const draftKey = form => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 
@@ -264,7 +266,7 @@ export function bindResultFilters(root) {
       const target = root.querySelector(`#${btn.dataset.resultJump}`);
       // Đang lọc mà phần đích bị ẩn thì quay về "Tất cả" để cuộn tới được.
       if (target?.hidden) root.querySelector('[data-result-filter="all"]')?.click();
-      target?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      target?.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
     });
   });
 }
@@ -343,8 +345,8 @@ function answerField(item, inline = false, cards = false) {
     return `<input type="hidden" ${attributes}><div class="demo-choice-grid" data-columns="${layout.columns}" data-compact="${layout.compact}" role="radiogroup" aria-label="${escape(item.prompt)}">${item.options.map((option,index)=>`<label class="demo-choice"><input type="radio" name="${escape(item.id)}" data-demo-choice="${escape(item.id)}" value="${escape(optionId(option))}"><span class="demo-choice-letter">${String.fromCharCode(65+index)}</span><span>${escape(cleanLabel(option))}</span></label>`).join('')}</div><button type="button" class="demo-clear-choice" data-demo-clear="${escape(item.id)}" aria-label="Bỏ chọn: ${escape(item.prompt)}">Bỏ chọn</button>`;
   }
   if (item.options) return `<select ${attributes}><option value="">— Chọn đáp án —</option>${item.options.map(option=>`<option value="${escape(optionId(option))}">${escape(typeof option === 'string' ? option : option.label)}</option>`).join('')}</select>`;
-  if (item.long) return `<textarea ${attributes} maxlength="12000" rows="4" placeholder="Viết câu trả lời"></textarea>`;
-  return `<input type="text" ${attributes} maxlength="12000" autocomplete="off" placeholder="${inline ? 'Điền đáp án' : 'Nhập câu trả lời'}">`;
+  if (item.long) return `<textarea ${attributes} maxlength="12000" rows="4" ${ANSWER_TEXT_ATTRS} placeholder="Viết câu trả lời"></textarea>`;
+  return `<input type="text" ${attributes} maxlength="12000" ${ANSWER_TEXT_ATTRS} placeholder="${inline ? 'Điền đáp án' : 'Nhập câu trả lời'}">`;
 }
 function clozeMarkup(segments, items, numbered = true) {
   return segments.map(segment => typeof segment === 'string' ? escape(segment) : `<span class="demo-question demo-inline">${numbered ? `<span class="demo-blank-number">(${segment.number})</span>` : ''}${answerField(items.find(item => item.id === segment.id), true)}</span>`).join('');
@@ -1164,6 +1166,7 @@ export async function mount(course) {
               <p id="longWritingHint" hidden>Đề có bài viết dài. Nên làm trên máy tính hoặc iPad có bàn phím để gõ thuận tiện hơn.</p>
             </div>
 
+            <p id="startExamError" style="color:#db0829" role="alert" hidden></p>
             <div class="cbt-intro-footer" style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;">
               <button type="button" class="btn btn-secondary" id="viewResultBtn" disabled style="min-height:46px;padding:0 24px;font-size:15px;font-weight:700">Xem kết quả</button>
               <button type="button" class="btn-start-exam" id="startExamBtn" disabled>Bắt đầu làm bài →</button>
@@ -1430,6 +1433,8 @@ export async function mount(course) {
       if (learningState.assignment?.exam?.enabled) requestFullscreen().catch(() => {});
       startBtn.disabled = true;
       startBtn.textContent = 'Đang mở đề thi…';
+      const startErrorEl = document.querySelector('#startExamError');
+      if (startErrorEl) startErrorEl.hidden = true;
       try {
         const startRes = await apiRequest('/attempts/start', {
           testToken,
@@ -1469,7 +1474,11 @@ export async function mount(course) {
       } catch (err) {
         startBtn.disabled = false;
         startBtn.textContent = 'Bắt đầu làm bài →';
-        alert(`Không mở được phiên làm bài: ${err.message}`);
+        const startError = document.querySelector('#startExamError');
+        if (startError) {
+          startError.textContent = `Không mở được phiên làm bài (${err.message}). Kiểm tra mạng rồi bấm Bắt đầu lại.`;
+          startError.hidden = false;
+        }
       }
     });
 
@@ -1693,6 +1702,7 @@ export async function mount(course) {
           <dialog id="demo-confirm">
             <h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2>
             <p id="demo-confirm-text"></p>
+            <p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p>
             <p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
               <button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button>
@@ -1743,7 +1753,7 @@ export async function mount(course) {
           <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
           <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${examSections.map(sec=>`<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span data-demo-section-count="${escape(sec)}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
           <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
-        </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
+        </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
       </div>`;
 
       document.querySelector('.demo-top').insertAdjacentHTML('beforeend',`<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${examDuration}:00</span></div>`);
@@ -1767,6 +1777,7 @@ export async function mount(course) {
 
     const timerDisplay = document.querySelector('#examTimerDisplay');
     let examTimerInterval = null;
+    let submitTimedOut = false;
 
     function tickExamTimer() {
       if (!timerDisplay) return;
@@ -1792,7 +1803,8 @@ export async function mount(course) {
       if (remainingSecs <= 0) {
         if (examTimerInterval) clearInterval(examTimerInterval);
         if (!state.submittedAt) {
-          alert('Đã hết giờ làm bài! Hệ thống sẽ tự động xác nhận nộp bài.');
+          // Nộp ngay, không alert(): alert chặn luồng JS nên bài chỉ được nộp sau khi học viên bấm OK.
+          submitTimedOut = true;
           const confirmSubmitBtn = document.querySelector('#demo-confirm-submit');
           if (confirmSubmitBtn) confirmSubmitBtn.click();
         }
@@ -2146,6 +2158,7 @@ export async function mount(course) {
     }));
 
     function handleOpenSubmitDialog() {
+      if (query('#demo-confirm-error')) query('#demo-confirm-error').hidden = true;
       if (isDynamic) {
         const total = getTotalItemCount(learningState.definition);
         const done = getAnsweredCount(learningState.definition, state.answers);
@@ -2354,7 +2367,7 @@ export async function mount(course) {
       if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
       query('#demo-result').hidden = false;
       query('#demo-result').textContent = text;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
     };
 
     query('#demo-confirm-submit').addEventListener('click', async () => {
@@ -2362,6 +2375,7 @@ export async function mount(course) {
       clearTimeout(draftDebounceTimer);
       query('#demo-confirm-submit').disabled = true;
       query('#demo-confirm-submit').textContent = 'Đang gửi…';
+      if (query('#demo-confirm-error')) query('#demo-confirm-error').hidden = true;
       try {
         if (isLearningMode && learningState.attemptToken) {
           const res = await apiRequest('/attempts/submit', {
@@ -2380,13 +2394,13 @@ export async function mount(course) {
           if (examTimerInterval) clearInterval(examTimerInterval);
           if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
           query('#demo-confirm').close();
-          window.scrollTo({top: 0, behavior: 'smooth'});
+          window.scrollTo({top: 0, behavior: scrollBehavior()});
 
           query('#demo-result').hidden = false;
           query('#demo-result').style.background = '#f0fdf4';
           query('#demo-result').style.borderColor = '#bbf7d0';
           query('#demo-result').style.color = '#166534';
-          query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
+          query('#demo-result').innerHTML = `${submitTimedOut ? 'Đã hết giờ làm bài. ' : ''}<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
 
           if (isDynamic) {
             document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
@@ -2413,10 +2427,17 @@ export async function mount(course) {
           persist();
           update();
           query('#demo-confirm').close();
-          window.scrollTo({top:0,behavior:'smooth'});
+          window.scrollTo({top:0,behavior:scrollBehavior()});
         }
       } catch (err) {
-        alert(`Nộp bài không thành công: ${err.message}`);
+        // Báo ngay trong hộp xác nhận; nút xác nhận được bật lại ở finally để thử lại.
+        // Nộp tự động lúc hết giờ chạy khi hộp đang đóng, nên mở hộp để học viên thấy lỗi.
+        const confirmError = query('#demo-confirm-error');
+        if (confirmError) {
+          confirmError.textContent = `${submitTimedOut ? 'Đã hết giờ làm bài nhưng chưa nộp được' : 'Nộp bài không thành công'} (${err.message}). Kiểm tra mạng rồi bấm xác nhận lại.`;
+          confirmError.hidden = false;
+        }
+        if (!query('#demo-confirm').open) query('#demo-confirm').showModal();
         queueServerDraft();
       } finally {
         query('#demo-confirm-submit').disabled = false;
@@ -2438,7 +2459,7 @@ export async function mount(course) {
         });
         query('#demo-prev').disabled=examSections.indexOf(section)===0;
         query('#demo-next').textContent=examSections.indexOf(section)===examSections.length-1?(isLearningMode?'Nộp bài':'Nộp thử'):'Phần tiếp →';
-        window.scrollTo({top:0,behavior:'smooth'});
+        window.scrollTo({top:0,behavior:scrollBehavior()});
       }
       document.querySelectorAll('[data-demo-go]').forEach(button=>button.addEventListener('click',()=>showSection(button.dataset.demoGo)));
       query('#demo-prev').addEventListener('click',()=>{
