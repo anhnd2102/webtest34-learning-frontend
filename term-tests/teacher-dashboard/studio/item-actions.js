@@ -49,6 +49,7 @@ export function bindItemActions({ container, draftState, markAsDirty, isBuilderD
           currentItem.exerciseTitle = prevItem.exerciseTitle;
         }
         resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });
@@ -71,6 +72,7 @@ export function bindItemActions({ container, draftState, markAsDirty, isBuilderD
           currentItem.exerciseTitle = nextItem.exerciseTitle;
         }
         resequenceItemPositions();
+        markAsDirty();
         render();
       });
     });

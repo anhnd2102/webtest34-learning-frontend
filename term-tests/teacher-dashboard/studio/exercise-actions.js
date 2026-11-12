@@ -23,6 +23,7 @@ export function bindExerciseActions({ container, builderOwner, draftState, markA
           readingPassage: null,
           itemIds: []
         });
+        markAsDirty();
         render();
       });
     });
@@ -76,6 +77,7 @@ export function bindExerciseActions({ container, builderOwner, draftState, markA
             it.position = pos++;
           }
         }
+        markAsDirty();
         render();
       });
     });
@@ -107,6 +109,7 @@ export function bindExerciseActions({ container, builderOwner, draftState, markA
             it.position = pos++;
           }
         }
+        markAsDirty();
         render();
       });
     });

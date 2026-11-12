@@ -47,4 +47,4 @@ Chrome thật, API giả, 1440×900. Chạy: `node tests/browser/builder-actions
 Kiểm tra đột biến: bỏ `return` khi người dùng từ chối xác nhận xóa bài tập thì smoke lỗi; đã hoàn nguyên.
 Chưa phủ: nhập CSV, từ vựng/rubric/biến thể lựa chọn, kịch bản cloze, xem trước âm thanh, sandbox, rich editor, kéo-thả câu hỏi.
 Đã sửa (12/11/2026): nút xóa câu hỏi (`.btn-delete-item`) không gọi `markAsDirty`, nên xóa câu hỏi rồi rời trang không hiện cảnh báo thay đổi chưa lưu. Test `tests/builder-delete-item-dirty.test.mjs`; kiểm trên trình duyệt: sau khi xóa, bấm quay lại danh mục hiện hộp thoại thay đổi chưa lưu.
-Còn tồn tại cùng lỗi (kiểm trên trình duyệt, chưa sửa): thêm bài tập (`.btn-add-exercise`), di chuyển câu hỏi lên/xuống và di chuyển bài tập lên/xuống không bật cờ thay đổi chưa lưu.
+Đã sửa tiếp (12/11/2026): thêm bài tập, di chuyển bài tập lên/xuống và di chuyển câu hỏi lên/xuống cũng không gọi `markAsDirty`; test `tests/builder-reorder-dirty.test.mjs`, kiểm trên trình duyệt cả năm thao tác (kể cả xóa câu hỏi) đều hiện hộp thoại thay đổi chưa lưu khi quay lại danh mục.
