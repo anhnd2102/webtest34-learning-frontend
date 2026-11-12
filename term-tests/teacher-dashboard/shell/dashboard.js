@@ -19,6 +19,8 @@ import { createExamRoomSession } from './exam-room-session.js';
 import { reportApiPath, renderScoreDistributionView } from './analytics/score-distribution-view.js';
 import { itemAnalysisApiPath, renderReportModeSwitch, renderItemAnalysisView } from './analytics/item-analysis-view.js';
 import { createPortalPanel } from './portal-panel.js';
+import { createProfilePanel } from './profile-panel.js';
+import { createGrantRetake } from './grant-retake.js';
 
 
 const mountedDashboards = new WeakMap();
@@ -57,6 +59,26 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     get currentSkillTab() { return currentSkillTab; }, set currentSkillTab(value) { currentSkillTab = value; },
     get autoSaveTimeout() { return autoSaveTimeout; }, set autoSaveTimeout(value) { autoSaveTimeout = value; },
     get currentExamRoom() { return currentExamRoom; }, set currentExamRoom(value) { currentExamRoom = value; }
+  };
+  // Owners của state dùng chung. Mỗi nhóm chỉ là accessor trên biến let của shell (không tạo store thứ hai);
+  // module tách ra nhận đúng owner cần dùng thay vì đọc/gán biến let trực tiếp.
+  //  - auth: phiên đăng nhập và giáo viên hiện tại.
+  //  - scope: lớp/bài được giao đang xem.
+  //  - examRoomState: phòng thi (phiên SSE, cờ quay lại kết quả; currentExamRoom nằm ở viewState).
+  const authState = {
+    get sessionToken() { return sessionToken; }, set sessionToken(value) { sessionToken = value; },
+    get currentTeacher() { return currentTeacher; }, set currentTeacher(value) { currentTeacher = value; }
+  };
+  const scopeState = {
+    get rawClassesList() { return rawClassesList; }, set rawClassesList(value) { rawClassesList = value; },
+    get currentAssignmentsList() { return currentAssignmentsList; }, set currentAssignmentsList(value) { currentAssignmentsList = value; },
+    get currentSelectedAssignment() { return currentSelectedAssignment; }, set currentSelectedAssignment(value) { currentSelectedAssignment = value; },
+    get currentServerNow() { return currentServerNow; }, set currentServerNow(value) { currentServerNow = value; },
+    get isSwitchingAssignment() { return isSwitchingAssignment; }, set isSwitchingAssignment(value) { isSwitchingAssignment = value; }
+  };
+  const examRoomState = {
+    get examRoomSession() { return examRoomSession; }, set examRoomSession(value) { examRoomSession = value; },
+    get examRoomReturnToResults() { return examRoomReturnToResults; }, set examRoomReturnToResults(value) { examRoomReturnToResults = value; }
   };
   const document = root.ownerDocument || root;
   const window = document.defaultView || globalThis.window;
@@ -997,6 +1019,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     }
   }
 
+  const { openGrantRetakeModal } = createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, apiBase, loadExamRoom, loadAttemptDetail, loadResults });
   const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline, openGrantRetakeModal } });
 
   async function loadExamRoom(owner = examRoomSession) {
@@ -2151,125 +2174,6 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     });
   }
 
-  function openGrantRetakeModal({ studentRef, studentName, discriminator }) {
-    const classId = state.classId || currentSelectedAssignment?.classId;
-    const assignmentId = state.assignmentId || currentSelectedAssignment?.id;
-    if (!classId || !assignmentId || !studentRef) return;
-    if (grantRetakeError) {
-      grantRetakeError.hidden = true;
-      grantRetakeError.textContent = '';
-    }
-    if (retakeStudentName) {
-      retakeStudentName.textContent = discriminator ? `${studentName} · ${discriminator}` : (studentName || studentRef);
-    }
-    if (retakeStudentRefInput) {
-      retakeStudentRefInput.value = studentRef;
-    }
-    if (retakeReasonInput) {
-      retakeReasonInput.value = '';
-    }
-    if (retakeAvailableFromInput) {
-      retakeAvailableFromInput.value = '';
-    }
-    if (retakeExpiresAtInput) {
-      const nowPlus24h = new Date(Date.now() + 24 * 60 * 60 * 1000);
-      const pad = n => String(n).padStart(2, '0');
-      const localIso = `${nowPlus24h.getFullYear()}-${pad(nowPlus24h.getMonth() + 1)}-${pad(nowPlus24h.getDate())}T${pad(nowPlus24h.getHours())}:${pad(nowPlus24h.getMinutes())}`;
-      retakeExpiresAtInput.value = localIso;
-    }
-    if (typeof grantRetakeModal?.showModal === 'function') {
-      grantRetakeModal.showModal();
-    } else if (grantRetakeModal) {
-      grantRetakeModal.hidden = false;
-    }
-  }
-
-  if (grantRetakeModal) {
-    lifecycle.listen(grantRetakeModal, 'click', (event) => {
-      if (event.target === grantRetakeModal) {
-        if (typeof grantRetakeModal.close === 'function') grantRetakeModal.close();
-        else grantRetakeModal.hidden = true;
-      }
-    });
-  }
-
-  if (grantRetakeBtn) {
-    lifecycle.listen(grantRetakeBtn, 'click', () => {
-      if (!currentAttemptDetail) return;
-      openGrantRetakeModal({
-        studentRef: currentAttemptDetail.student.studentRef,
-        studentName: currentAttemptDetail.student.name,
-        discriminator: currentAttemptDetail.student.discriminator
-      });
-    });
-  }
-
-  if (cancelGrantRetakeBtn) {
-    lifecycle.listen(cancelGrantRetakeBtn, 'click', () => {
-      if (typeof grantRetakeModal?.close === 'function') {
-        grantRetakeModal.close();
-      } else if (grantRetakeModal) {
-        grantRetakeModal.hidden = true;
-      }
-    });
-  }
-
-  if (grantRetakeForm) {
-    lifecycle.listen(grantRetakeForm, 'submit', async event => {
-      event.preventDefault();
-      const classId = state.classId || currentSelectedAssignment?.classId;
-      const assignmentId = state.assignmentId || currentSelectedAssignment?.id;
-      if (!classId || !assignmentId) return;
-      const studentRef = retakeStudentRefInput?.value.trim();
-      const reason = retakeReasonInput?.value.trim();
-      const availableFromVal = retakeAvailableFromInput?.value;
-      const expiresAtVal = retakeExpiresAtInput?.value;
-
-      if (!studentRef || !reason || !expiresAtVal) {
-        if (grantRetakeError) {
-          grantRetakeError.hidden = false;
-          grantRetakeError.textContent = 'Vui lòng điền đầy đủ lý do và hạn chót làm lại.';
-        }
-        return;
-      }
-
-      const availableFrom = availableFromVal ? new Date(availableFromVal).toISOString() : null;
-      const expiresAt = new Date(expiresAtVal).toISOString();
-
-      try {
-        const response = await fetch(`${apiBase()}${grantRetakePath(classId, assignmentId, studentRef)}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...authHeader()
-          },
-          body: JSON.stringify({ reason, availableFrom, expiresAt })
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload.message || 'Không thể cấp quyền làm lại.');
-        }
-        if (typeof grantRetakeModal?.close === 'function') {
-          grantRetakeModal.close();
-        } else if (grantRetakeModal) {
-          grantRetakeModal.hidden = true;
-        }
-        alert('Cấp quyền làm lại thành công!');
-        if (examRoom && !examRoom.hidden) {
-          await loadExamRoom();
-        }
-        await loadResults(classId, assignmentId);
-        if (state.attemptId) {
-          await loadAttemptDetail(classId, assignmentId, state.attemptId);
-        }
-      } catch (err) {
-        if (grantRetakeError) {
-          grantRetakeError.hidden = false;
-          grantRetakeError.textContent = err.message;
-        }
-      }
-    });
-  }
 
 
   if (prevPageBtn) {
@@ -2290,108 +2194,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     });
   }
 
-  function renderTeacherProfile(teacher) {
-    if (!teacher) return;
-    document.body.classList.remove('login-page');
-    currentTeacher = teacher;
-    setupClassFilterToolbar();
-    if (teacherProfileName) teacherProfileName.textContent = teacher.name || teacher.email;
-    const popoverUserName = root.querySelector('#popover-user-name');
-    if (popoverUserName) popoverUserName.textContent = teacher.name || teacher.email;
-    if (teacherProfileMeta) teacherProfileMeta.textContent = `${teacher.email} · SĐT: ${teacher.phone || '—'}`;
-    const teacherProfileAvatar = root.querySelector('#teacher-profile-avatar');
-    if (teacherProfileAvatar) {
-      const name = (teacher.name || teacher.email || '').trim();
-      const parts = name.split(/\s+/).filter(Boolean);
-      let initials = 'GV';
-      if (parts.length >= 2) {
-        initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-      } else if (parts.length === 1) {
-        initials = parts[0].slice(0, 2).toUpperCase();
-      }
-      teacherProfileAvatar.textContent = initials;
-    }
-    if (teacherRoleBadge) {
-      teacherRoleBadge.textContent = teacherRoleLabel(teacher.role, teacher.courseCodes);
-      teacherRoleBadge.className = `role-badge ${teacher.role || 'teacher'}`;
-    }
-    if (loginForm) loginForm.hidden = true;
-    if (teacherProfile) teacherProfile.hidden = false;
-    if (loginError) loginError.hidden = true;
-
-    const currentTab = readDashboardTab(window.location.hash);
-    if (currentTab === 'test-studio' || currentTab === 'exams') {
-      loadAndRenderTestStudio();
-    }
-  }
-
-  function toggleRoleCapabilitiesPopover(show) {
-    if (!roleCapabilitiesPopover) return;
-    const shouldShow = typeof show === 'boolean' ? show : roleCapabilitiesPopover.hidden;
-    roleCapabilitiesPopover.hidden = !shouldShow;
-    if (roleInfoBtn) roleInfoBtn.setAttribute('aria-expanded', String(shouldShow));
-    if (teacherRoleBadge) teacherRoleBadge.setAttribute('aria-expanded', String(shouldShow));
-    if (shouldShow && currentTeacher) {
-      const popoverUserName = root.querySelector('#popover-user-name');
-      if (popoverUserName) popoverUserName.textContent = currentTeacher.name || currentTeacher.email;
-      if (teacherRoleBadge) {
-        teacherRoleBadge.textContent = teacherRoleLabel(currentTeacher.role, currentTeacher.courseCodes);
-        teacherRoleBadge.className = `role-badge ${currentTeacher.role || 'teacher'}`;
-      }
-      const roleCapsList = root.querySelector('#role-caps-list');
-      if (roleCapsList) {
-        const caps = getRoleCapabilities(currentTeacher.role, currentTeacher.courseCodes);
-        roleCapsList.replaceChildren(...caps.map(cap => {
-          const li = document.createElement('li');
-          const strong = document.createElement('strong');
-          strong.textContent = `${cap.title}: `;
-          li.appendChild(strong);
-          li.appendChild(document.createTextNode(cap.description));
-          return li;
-        }));
-      }
-    }
-  }
-
-  if (roleInfoBtn) {
-    lifecycle.listen(roleInfoBtn, 'click', (e) => {
-      e.stopPropagation();
-      toggleRoleCapabilitiesPopover();
-    });
-  }
-
-  if (teacherRoleBadge) {
-    lifecycle.listen(teacherRoleBadge, 'click', (e) => {
-      e.stopPropagation();
-      toggleRoleCapabilitiesPopover();
-    });
-    lifecycle.listen(teacherRoleBadge, 'keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleRoleCapabilitiesPopover();
-      }
-    });
-  }
-
-  if (closeRolePopoverBtn) {
-    lifecycle.listen(closeRolePopoverBtn, 'click', () => {
-      toggleRoleCapabilitiesPopover(false);
-    });
-  }
-
-  lifecycle.listen(document, 'click', (e) => {
-    if (roleCapabilitiesPopover && !roleCapabilitiesPopover.hidden) {
-      if (!roleCapabilitiesPopover.contains(e.target) && !roleBadgeWrap?.contains(e.target)) {
-        toggleRoleCapabilitiesPopover(false);
-      }
-    }
-  });
-
-  lifecycle.listen(document, 'keydown', (e) => {
-    if (e.key === 'Escape' && roleCapabilitiesPopover && !roleCapabilitiesPopover.hidden) {
-      toggleRoleCapabilitiesPopover(false);
-    }
-  });
+  const { renderTeacherProfile, toggleRoleCapabilitiesPopover } = createProfilePanel({ root, lifecycle, authState, document, window, loadAndRenderTestStudio, loginForm, loginError, teacherProfile, teacherProfileName, teacherProfileMeta, teacherRoleBadge, roleBadgeWrap, roleInfoBtn, roleCapabilitiesPopover, closeRolePopoverBtn, setupClassFilterToolbar });
 
   function handleLogout() {
     disposeOwnedBuilder();
