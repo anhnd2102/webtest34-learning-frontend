@@ -301,7 +301,9 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 
 ### Bước 5 — Pilot TypeScript (M)
 
-- [ ] Thêm tooling đã pin, lockfile, tsconfig phạm vi hẹp; cập nhật scripts và CI theo phương án compile/test đã chọn. Nguồn `studio/content-import.js` sang `.ts` sau khi hợp đồng ổn định.
+> **Quyết định 12/11/2026 (người dùng giao cho agent chọn): kiểm kiểu bằng JSDoc + `tsc --noEmit`, không chuyển sang `.ts` và không thêm bước build.** Lý do: Pages hiện upload nguyên thư mục (`pages.yml`, `path: .`, không build) nên mọi phương án emit/Vite đổi nội dung artifact và cần chốt trình duyệt tối thiểu cùng ngưỡng tải (hai quyết định chưa có); `checkJs` cho đúng lợi ích của pilot (hợp đồng DTO/đường dẫn được kiểm bằng compiler) mà không đổi byte nào được phục vụ. Đã làm: `typescript@5.9.3` ghim chính xác + `package-lock.json`, `tsconfig.json` (strict, `allowJs`, `checkJs`, `noEmit`, phạm vi `api/client.js` và `api/teacher.js`), `npm run typecheck`, workflow riêng `.github/workflows/typecheck.yml` (`npm ci` + typecheck + test; tách khỏi `pages.yml` để `node_modules` không lọt vào artifact Pages), `node_modules/` vào `.gitignore`. Pilot không dùng `any`/`@ts-ignore`; typecheck bắt được hai chỗ `formDraftPath/formDetailPath(apiBase, undefined)` sinh URL `.../undefined`, nay ném `TypeError`. Mở rộng phạm vi từng module (ưu tiên `studio/content-import.js`, 1.465 dòng chưa có kiểu) là việc tiếp theo; chuyển `.ts` + emit vẫn chờ hai quyết định trên.
+
+- [x] (pilot kiểm kiểu, không emit — xem quyết định 12/11/2026) Thêm tooling đã pin, lockfile, tsconfig phạm vi hẹp; cập nhật scripts và CI theo phương án compile/test đã chọn. Nguồn `studio/content-import.js` sang `.ts` sau khi hợp đồng ổn định.
 - [ ] Thêm typed DTO/decoder cho một feature; không convert toàn app.js một lần. Vẫn validate runtime API.
 - [ ] Nếu Vite được chọn để emit: build MPA giữ mọi đường dẫn hiện hữu, copy config/assets có kiểm soát, giữ canonical nguyên trạng; artifact phải đầy đủ ngay khi workflow chuyển upload dist.
 - Interface: export pilot và output JS browser. Dependency: bước 1; mở rộng TS builder sau 3. Cập nhật AGENTS.md và runbook tooling trong chính bước triển khai được duyệt.
@@ -322,6 +324,8 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 - Rollback: unmount Vue, chọn lại legacy editor; revert dependency/build entry của pilot nếu bỏ. Giới hạn thí điểm một exercise giúp không có dữ liệu cần chuyển ngược.
 
 ### Bước 7 — Canonical renderer và kết thúc chuyển tiếp (L)
+
+> **Quyết định 12/11/2026 (người dùng giao cho agent chọn): chưa tách script của `webtest-34-demo/index.html` (2.600 dòng, 10 thẻ `<script>`) cho tới khi có lưới an toàn cho luồng học viên.** Lý do: hiện chỉ có `candidate-mobile-smoke.mjs` và `e2e-exam-switch.browser.mjs` chạy trình duyệt; các test khác (`exam-room-ui`, `candidate-*`, `exam-guard-renderer-wiring`...) đọc mã nguồn `index.html` bằng regex nên sẽ vỡ khi script chuyển file, và rủi ro cao hơn dashboard (đồng hồ làm bài, audio, SSE, fullscreen). Việc đầu tiên của bước 7 là **smoke luồng học viên trên Learning API giả**: mở bằng token trong fragment, chọn đáp án và khôi phục bản nháp sau reload, nộp (một lần), hết giờ, audio resume, mất kết nối và kết nối lại; chạy như `dashboard-actions-smoke`. Chỉ sau đó mới tách `runtime.js` từng khối, chuyển các test đọc mã sang kiểm hành vi trước khi di chuyển. Không dùng production để smoke.
 
 - [ ] Sau khi dashboard ổn định, tách script `webtest-34-demo/index.html:599–2593` sang runtime.js giữ thứ tự config/globals; tiếp đó chia state/request/audio/exam lifecycle theo test.
 - [ ] Chỉ chia sẻ renderer public giữa simulation/canonical khi hai bên có parity tests; không truyền private grading material sang runtime học viên.

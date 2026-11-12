@@ -68,3 +68,12 @@ test('đã hủy hoặc dashboard đã dispose thì ném AbortError, kể cả k
   const disposed = setup({ disposed: true, responses: [{ status: 200, body: {} }] });
   await assert.rejects(disposed.request('/x'), error => error.name === 'AbortError');
 });
+
+import { formDraftPath, formDetailPath } from '../term-tests/teacher-dashboard/api/teacher.js';
+
+test('đường dẫn form có apiBase mà thiếu versionId bị từ chối thay vì sinh ".../undefined"', () => {
+  assert.throws(() => formDraftPath('https://api.test', undefined), TypeError);
+  assert.throws(() => formDetailPath('https://api.test', undefined), TypeError);
+  assert.equal(formDraftPath('https://api.test', 'v1'), 'https://api.test/api/teacher/forms/draft/v1');
+  assert.equal(formDetailPath('v1'), '/api/teacher/forms/v1');
+});

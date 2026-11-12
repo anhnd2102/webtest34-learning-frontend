@@ -41,7 +41,10 @@ Chạy từ workspace này:
 
 ```bash
 npm test
+npm ci && npm run typecheck   # JSDoc + tsc --noEmit cho api/client.js, api/teacher.js (typescript ghim trong package-lock.json)
 ```
+
+Smoke trình duyệt bấm thật (cần Chrome và Playwright cục bộ, chưa nằm trong CI): `node tests/browser/dashboard-actions-smoke.mjs`, `dashboard-grading-smoke.mjs`, `builder-actions-smoke.mjs`, `builder-import-smoke.mjs`, `builder-media-smoke.mjs`.
 
 Khi thay đổi entry point, config, result mapping hoặc renderer, phải chạy test liên quan
 và kiểm tra static route/asset contract. Browser/live API/Pages deployment là các boundary
