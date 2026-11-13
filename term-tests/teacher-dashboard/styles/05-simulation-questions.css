@@ -176,20 +176,11 @@
 }
 
 .sim-reading-dock {
-  background: #fffbeb;
-  border: 1px solid #fef3c7;
-  border-radius: 8px;
-  padding: 14px 18px;
   font-size: 0.88rem;
   line-height: 1.6;
   color: #334155;
 }
 
-.reading-header {
-  font-weight: 700;
-  color: #92400e;
-  margin-bottom: 6px;
-}
 
 .sim-questions-list {
   display: flex;
@@ -198,25 +189,12 @@
 }
 
 .candidate-question-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: border-color 0.15s ease;
 }
 
-.candidate-question-card:hover {
-  border-color: #cbd5e1;
-}
 
-.candidate-question-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
 .question-num-badge {
   font-size: 0.76rem;
@@ -227,22 +205,9 @@
   border-radius: 4px;
 }
 
-.question-type-badge {
-  font-size: 0.72rem;
-  font-weight: 600;
-  background: #e2e8f0;
-  color: #475569;
-  padding: 2px 8px;
-  border-radius: 4px;
-}
 
 .candidate-question-prompt {
-  font-size: 0.92rem;
   font-weight: 600;
-  color: #1e293b;
-  line-height: 1.45;
-  white-space: pre-wrap;
-  word-break: break-word;
 }
 
 .candidate-options-grid {
@@ -283,20 +248,20 @@
 
 /* Canonical Choice Label Row (Matching Hardcoded Demo .choice-row) */
 .candidate-choice-label {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  text-align: left !important;
-  gap: 12px !important;
-  padding: 12px 16px !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 12px;
+  padding: 12px 16px;
   border: 1.5px solid #e2e8f0 !important;
   border-radius: 12px !important;
-  cursor: pointer !important;
-  background: #ffffff !important;
+  cursor: pointer;
+  background: #ffffff;
   transition: all 0.15s ease !important;
-  box-sizing: border-box !important;
-  min-height: 50px !important;
+  box-sizing: border-box;
+  min-height: 50px;
   user-select: none;
 }
 
@@ -311,15 +276,15 @@
 .candidate-choice-label input[type="checkbox"],
 .candidate-choice-label input {
   width: 18px !important;
-  min-width: 18px !important;
-  max-width: 18px !important;
+  min-width: 18px;
+  max-width: 18px;
   height: 18px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  flex: 0 0 18px !important;
-  flex-shrink: 0 !important;
-  cursor: pointer !important;
-  accent-color: var(--izone-primary, #db0829) !important;
+  margin: 0;
+  padding: 0;
+  flex: 0 0 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--izone-primary, #db0829);
 }
 
 .candidate-choice-label:has(input:checked) {
@@ -329,21 +294,21 @@
 }
 
 .choice-key {
-  width: 28px !important;
-  min-width: 28px !important;
-  max-width: 28px !important;
-  height: 28px !important;
-  flex: 0 0 28px !important;
-  flex-shrink: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 8px !important;
-  background: #f1f5f9 !important;
-  font-family: 'Geologica', sans-serif !important;
+  width: 28px;
+  min-width: 28px;
+  max-width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #f1f5f9;
+  font-family: 'Geologica', sans-serif;
   font-size: 0.82rem !important;
   font-weight: 700 !important;
-  color: #334155 !important;
+  color: #334155;
   transition: all 0.15s ease !important;
 }
 
@@ -354,13 +319,13 @@
 }
 
 .choice-text {
-  font-size: 0.94rem !important;
-  color: #1e293b !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  line-height: 1.5 !important;
-  word-break: break-word !important;
-  text-align: left !important;
+  font-size: 0.94rem;
+  color: #1e293b;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.5;
+  word-break: break-word;
+  text-align: left;
 }
 
 .candidate-choice-label input:checked ~ .choice-text {
@@ -583,11 +548,11 @@
 
 /* Inline Blank Widget Embedded in Sentences / Tables */
 .inline-blank-wrapper {
-  display: inline-flex !important;
-  align-items: center !important;
-  vertical-align: middle !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  flex-shrink: 0;
   margin: 0 4px;
   position: relative;
   background: #ffffff;
@@ -605,15 +570,15 @@
 
 .inline-blank-number,
 .inline-blank-badge {
-  min-width: max-content !important;
-  width: auto !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  white-space: nowrap !important;
-  word-break: keep-all !important;
-  overflow-wrap: normal !important;
-  flex-shrink: 0 !important;
+  min-width: max-content;
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  flex-shrink: 0;
   font-size: 0.78rem;
   font-weight: 700;
   color: #0284c7;
@@ -622,7 +587,7 @@
   border-radius: 4px;
   margin-right: 6px;
   user-select: none;
-  line-height: 1.2 !important;
+  line-height: 1.2;
 }
 
 .inline-fill-input {
@@ -899,17 +864,5 @@
   color: #64748b;
 }
 
-.simulation-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 24px;
-  background: #ffffff;
-  border-top: 1px solid #e2e8f0;
-}
 
-.footer-note {
-  font-size: 0.8rem;
-  color: #64748b;
-}
 

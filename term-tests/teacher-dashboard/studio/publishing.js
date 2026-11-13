@@ -2,7 +2,6 @@ import {
   trackBuilderModal
 } from '../navigation/unsaved-changes.js';
 import { filterClassesForCourse } from './catalog.js';
-import { formPublishPreviewPath, formPublishPath } from '../api/teacher.js';
 import {
   renderSvgIcon
 } from '../ui/icons.js';
@@ -142,7 +141,7 @@ function openPublishingModal() {
                     </div>
                   </label>
 
-                  <div class="purpose-subfields" id="replace-subfields" style="${purpose === 'replace_existing' ? '' : 'display:none;'}">
+                  <div class="purpose-subfields" id="replace-subfields"${purpose === 'replace_existing' ? '' : ' hidden'}>
                     <label class="subfield-label">Chọn bài test mục tiêu cần thay thế:</label>
                     <select class="form-control select-target-test" id="select-target-test">
                       ${catalogOptionsHtml}
@@ -161,7 +160,7 @@ function openPublishingModal() {
                     </div>
                   </label>
 
-                  <div class="purpose-subfields" id="add-subfields" style="${purpose === 'add_new' ? '' : 'display:none;'}">
+                  <div class="purpose-subfields" id="add-subfields"${purpose === 'add_new' ? '' : ' hidden'}>
                     <div class="add-subfields-grid">
                       <div class="field-item">
                         <label>Buổi học (Session):</label>
@@ -217,7 +216,7 @@ function openPublishingModal() {
                 </div>
               </div>
 
-              <div class="specific-classes-container" id="specific-classes-container" style="${scope === 'specific_classes' ? '' : 'display: none;'}">
+              <div class="specific-classes-container" id="specific-classes-container"${scope === 'specific_classes' ? '' : ' hidden'}>
                 <div class="classes-container-header">
                   <div class="classes-search-wrap">
                     <input type="text" class="form-control class-search-input" id="input-class-search" placeholder="Tìm kiếm mã lớp..." value="${escapeHtml(searchQuery)}" />
@@ -235,7 +234,7 @@ function openPublishingModal() {
                 </div>
               </div>
 
-              <div class="publishing-error-msg" id="publishing-error-msg" style="display:none;"></div>
+              <div class="publishing-error-msg" id="publishing-error-msg" hidden></div>
             </div>
 
             <footer class="publishing-footer">
@@ -255,7 +254,7 @@ function openPublishingModal() {
         const cancelBtn = modal.querySelector('#btn-cancel-publish');
         [closeBtn, cancelBtn].forEach(b => {
           b?.addEventListener('click', () => {
-            modal.style.display = 'none';
+            modal.hidden = true;
           });
         });
 
@@ -267,16 +266,16 @@ function openPublishingModal() {
 
         radioReplace?.addEventListener('change', () => {
           purpose = 'replace_existing';
-          if (replaceSubfields) replaceSubfields.style.display = 'block';
-          if (addSubfields) addSubfields.style.display = 'none';
+          if (replaceSubfields) replaceSubfields.hidden = false;
+          if (addSubfields) addSubfields.hidden = true;
           modal.querySelectorAll('.purpose-radio-card').forEach(c => c.classList.remove('is-selected'));
           radioReplace.closest('.purpose-radio-card')?.classList.add('is-selected');
         });
 
         radioAdd?.addEventListener('change', () => {
           purpose = 'add_new';
-          if (replaceSubfields) replaceSubfields.style.display = 'none';
-          if (addSubfields) addSubfields.style.display = 'block';
+          if (replaceSubfields) replaceSubfields.hidden = true;
+          if (addSubfields) addSubfields.hidden = false;
           modal.querySelectorAll('.purpose-radio-card').forEach(c => c.classList.remove('is-selected'));
           radioAdd.closest('.purpose-radio-card')?.classList.add('is-selected');
         });
@@ -306,14 +305,14 @@ function openPublishingModal() {
 
         radioWhole?.addEventListener('change', () => {
           scope = 'whole_course';
-          if (classesContainer) classesContainer.style.display = 'none';
+          if (classesContainer) classesContainer.hidden = true;
           modal.querySelectorAll('.scope-radio-card').forEach(c => c.classList.remove('is-selected'));
           radioWhole.closest('.scope-radio-card')?.classList.add('is-selected');
         });
 
         radioClasses?.addEventListener('change', () => {
           scope = 'specific_classes';
-          if (classesContainer) classesContainer.style.display = 'block';
+          if (classesContainer) classesContainer.hidden = false;
           modal.querySelectorAll('.scope-radio-card').forEach(c => c.classList.remove('is-selected'));
           radioClasses.closest('.scope-radio-card')?.classList.add('is-selected');
         });
@@ -363,12 +362,12 @@ function openPublishingModal() {
           if (scope === 'specific_classes' && selectedClassIds.length === 0) {
             if (errorMsgEl) {
               errorMsgEl.textContent = 'Vui lòng chọn ít nhất 1 lớp học để công bố đề thi.';
-              errorMsgEl.style.display = 'block';
+              errorMsgEl.hidden = false;
             }
             return;
           }
 
-          if (errorMsgEl) errorMsgEl.style.display = 'none';
+          if (errorMsgEl) errorMsgEl.hidden = true;
           nextBtn.disabled = true;
           nextBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang phân tích tác động...</span>`;
 
@@ -385,20 +384,6 @@ function openPublishingModal() {
 
             if (typeof options.onPublishPreview === 'function') {
               previewResult = await options.onPublishPreview(previewPayload);
-            } else {
-              try {
-                const prevRes = await fetch(formPublishPreviewPath(options.apiBase), {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {})
-                  },
-                  body: JSON.stringify(previewPayload)
-                });
-                if (prevRes.ok) {
-                  previewResult = await prevRes.json();
-                }
-              } catch (_) {}
             }
 
             currentStep = 2;
@@ -408,7 +393,7 @@ function openPublishingModal() {
             nextBtn.innerHTML = `<span>Tiếp tục</span> ${renderSvgIcon('arrowRight', 'icon-inline')}`;
             if (errorMsgEl) {
               errorMsgEl.textContent = 'Lỗi phân tích: ' + (err.message || 'Lỗi kết nối');
-              errorMsgEl.style.display = 'block';
+              errorMsgEl.hidden = false;
             }
           }
         });
@@ -521,7 +506,7 @@ function openPublishingModal() {
                 </div>
               </div>
 
-              <div class="publishing-error-msg" id="publishing-error-msg" style="display:none;"></div>
+              <div class="publishing-error-msg" id="publishing-error-msg" hidden></div>
             </div>
 
             <footer class="publishing-footer">
@@ -539,7 +524,7 @@ function openPublishingModal() {
       function bindStep2Events(targetTitleToMatch) {
         const closeBtn = modal.querySelector('#btn-close-publish-modal');
         closeBtn?.addEventListener('click', () => {
-          modal.style.display = 'none';
+          modal.hidden = true;
         });
 
         const backBtn = modal.querySelector('#btn-step2-back');
@@ -589,7 +574,7 @@ function openPublishingModal() {
           isPublishing = true;
           finalBtn.disabled = true;
           finalBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang công bố...</span>`;
-          if (errorMsgEl) errorMsgEl.style.display = 'none';
+          if (errorMsgEl) errorMsgEl.hidden = true;
 
           try {
             const publishPayload = {
@@ -602,20 +587,11 @@ function openPublishingModal() {
               classIds: scope === 'specific_classes' ? selectedClassIds : []
             };
 
-            let result;
-            if (typeof options.onPublish === 'function') {
-              result = await options.onPublish(publishPayload);
-            } else {
-              const res = await fetch(formPublishPath(options.apiBase), {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {})
-                },
-                body: JSON.stringify(publishPayload)
-              });
-              result = await res.json();
+            if (typeof options.onPublish !== 'function') {
+              throw new Error('Công bố đề thi chưa được cấu hình.');
             }
+            // Gọi qua client dùng chung của dashboard (gắn token phiên, xử lý 401), không fetch trực tiếp.
+            const result = await options.onPublish(publishPayload);
 
             if (!result || !result.ok) {
               throw new Error(result?.message || 'Không thể công bố đề thi');
@@ -623,7 +599,7 @@ function openPublishingModal() {
 
             draftState.status = 'published';
             markSaved();
-            modal.style.display = 'none';
+            modal.hidden = true;
             render();
             openPublishReportDialog(result);
           } catch (err) {
@@ -632,13 +608,13 @@ function openPublishingModal() {
             finalBtn.innerHTML = `${renderSvgIcon('publish', 'icon-inline')} <span>Xác nhận &amp; Công bố ngay</span>`;
             if (errorMsgEl) {
               errorMsgEl.textContent = 'Lỗi công bố: ' + (err.message || 'Lỗi mạng');
-              errorMsgEl.style.display = 'block';
+              errorMsgEl.hidden = false;
             }
           }
         });
       }
 
-      modal.style.display = 'flex';
+      modal.hidden = false;
       renderModalContent();
     }
 
@@ -726,12 +702,12 @@ function openPublishReportDialog(result = {}) {
         </div>
       `;
 
-      modal.style.display = 'flex';
+      modal.hidden = false;
 
       const closeBtns = modal.querySelectorAll('#btn-close-report-x, #btn-close-report');
       closeBtns.forEach(b => {
         b.addEventListener('click', () => {
-          modal.style.display = 'none';
+          modal.hidden = true;
         });
       });
     }

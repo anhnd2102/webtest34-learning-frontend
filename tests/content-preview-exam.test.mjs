@@ -25,6 +25,14 @@ test('/attempts/result không mang deviceId (schema backend strict)', () => {
   assert.deepEqual(learningRequestBody('/attempts/result', body, deviceId), body);
 });
 
+test('/attempts/audio/checkpoint và /attempts/audio/resume không mang deviceId (schema backend strict)', () => {
+  const checkpoint = { attemptToken: 'a', audioKey: 'b2', lastHeardSeconds: 3.5, completed: false };
+  assert.deepEqual(learningRequestBody('/attempts/audio/checkpoint', checkpoint, deviceId), checkpoint);
+  assert.deepEqual(learningRequestBody('/attempts/audio/resume', { attemptToken: 'a' }, deviceId), { attemptToken: 'a' });
+  // Các điểm cuối khác của lượt vẫn mang deviceId
+  assert.deepEqual(learningRequestBody('/attempts/draft', { revision: 1 }, deviceId), { revision: 1, deviceId });
+});
+
 test('examPhase sends waiting students to the lobby and guards running or retake attempts', () => {
   assert.equal(examPhase({ status: 'active' }), 'off');
   assert.equal(examPhase({ status: 'active', exam: { enabled: true, status: 'waiting' } }), 'waiting');

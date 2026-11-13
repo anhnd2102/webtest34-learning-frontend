@@ -5,6 +5,13 @@
   "scripts": {
     "start": "node serve.mjs 8034 127.0.0.1",
     "dev": "node serve.mjs 8034 127.0.0.1",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "build": "node scripts/build.mjs",
+    "build:check": "node scripts/build-check.mjs",
+    "stage:pages": "node scripts/stage-pages.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
   }
 }

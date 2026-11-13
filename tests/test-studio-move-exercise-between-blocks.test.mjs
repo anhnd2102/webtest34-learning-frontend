@@ -227,10 +227,11 @@ test('renderTestBuilderView renders tabbed blocks and move exercise buttons', as
   assert.ok(container.innerHTML.includes('data-block-idx="1"'));
 
   // Active block (idx 0) is visible, inactive block (idx 1) is hidden
-  assert.ok(container.innerHTML.includes('id="builder-block-0"'));
-  assert.ok(container.innerHTML.includes('style="display: block;"'));
-  assert.ok(container.innerHTML.includes('id="builder-block-1"'));
-  assert.ok(container.innerHTML.includes('style="display: none;"'));
+  const blockCardTag = index => container.innerHTML.match(new RegExp(`<div class="builder-block-card[^"]*" id="builder-block-${index}"[^>]*>`))?.[0] || '';
+  assert.ok(blockCardTag(0), 'renders block 0');
+  assert.doesNotMatch(blockCardTag(0), /\shidden[\s>]/, 'active block is visible');
+  assert.ok(blockCardTag(1), 'renders block 1');
+  assert.match(blockCardTag(1), /\shidden>/, 'inactive block is hidden through the hidden attribute');
 
   // Move exercise button is rendered with exercise id
   assert.ok(container.innerHTML.includes('btn-move-exercise-to-block'));

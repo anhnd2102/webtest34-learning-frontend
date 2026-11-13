@@ -197,12 +197,12 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
         if (previewImg) {
           if (converted) {
             previewImg.src = converted;
-            previewImg.style.display = 'inline-block';
-            if (previewErr) previewErr.style.display = 'none';
+            previewImg.hidden = false;
+            if (previewErr) previewErr.hidden = true;
           } else {
-            previewImg.src = '';
-            previewImg.style.display = 'none';
-            if (previewErr) previewErr.style.display = 'none';
+            previewImg.removeAttribute('src');
+            previewImg.hidden = true;
+            if (previewErr) previewErr.hidden = true;
           }
         }
       };
@@ -234,11 +234,11 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
           if (previewImg) {
             if (converted) {
               previewImg.src = converted;
-              previewImg.style.display = 'inline-block';
-              if (previewErr) previewErr.style.display = 'none';
+              previewImg.hidden = false;
+              if (previewErr) previewErr.hidden = true;
             } else {
-              previewImg.src = '';
-              previewImg.style.display = 'none';
+              previewImg.removeAttribute('src');
+              previewImg.hidden = true;
             }
           }
         }

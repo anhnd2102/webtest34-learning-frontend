@@ -126,7 +126,7 @@ function createSingleVocabItem(bIdx, targetEx) {
               <textarea class="form-control textarea-batch-vocab-csv" rows="8" placeholder="destination&#9;điểm đến&#10;itinerary&#9;lịch trình chuyến đi&#10;resilient&#9;kiên cường&#10;sustainable&#9;bền vững&#10;environment&#9;môi trường"></textarea>
             </div>
 
-            <div class="vocab-preview-summary" style="display: none;"></div>
+            <div class="vocab-preview-summary" hidden></div>
 
             <div class="vocab-batch-options">
               <label class="batch-checkbox-row">
@@ -154,7 +154,7 @@ function createSingleVocabItem(bIdx, targetEx) {
       `;
 
       const closeModal = () => {
-        modal.style.display = 'none';
+        modal.hidden = true;
       };
 
       const closeBtns = modal.querySelectorAll('.btn-close-batch-modal, .btn-close-batch-modal-btn');
@@ -187,11 +187,11 @@ function createSingleVocabItem(bIdx, targetEx) {
         if (!textarea || !previewBox) return;
         const val = textarea.value.trim();
         if (!val) {
-          previewBox.style.display = 'none';
+          previewBox.hidden = true;
           return;
         }
         const parsed = parseVocabPairCsv(val);
-        previewBox.style.display = 'block';
+        previewBox.hidden = false;
         if (parsed.validRows.length === 0) {
           previewBox.innerHTML = `<span class="vocab-batch-preview-error">Chưa tìm thấy cặp từ vựng hợp lệ nào. Vui lòng kiểm tra định dạng dữ liệu (mỗi dòng gồm 2 cột cách nhau bằng Tab hoặc phẩy).</span>`;
         } else {
@@ -313,7 +313,7 @@ function createSingleVocabItem(bIdx, targetEx) {
         });
       }
 
-      modal.style.display = 'flex';
+      modal.hidden = false;
     }
 
     // Add Vocabulary Pair Question

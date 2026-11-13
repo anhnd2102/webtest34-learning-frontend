@@ -71,6 +71,35 @@ test('renderTestBuilderView provides button to add pictorial vocabulary cards', 
   assert.ok(container.innerHTML.includes('input-pictorial-caption'), 'Renders Vietnamese meaning caption input');
   assert.ok(container.innerHTML.includes('input-pictorial-letter-hint'), 'Renders letter hint input field');
   assert.ok(container.innerHTML.includes('pictorial-thumb-preview'), 'Renders thumbnail preview when image is supplied');
+  // Ẩn/hiện của ảnh xem trước và huy hiệu lỗi dùng thuộc tính hidden; handler tải ảnh đảo bằng el.hidden.
+  assert.doesNotMatch(container.innerHTML, /class="pictorial-preview-img"[^>]* hidden[ >]/, 'preview image is visible when an image is supplied');
+  assert.match(container.innerHTML, /class="pictorial-preview-error[^"]*" hidden>/, 'error badge starts hidden');
+  assert.match(container.innerHTML, /onerror="this\.hidden = true;[^"]*err\.hidden = false;"/, 'onerror hides the image and shows the badge through hidden');
+  assert.match(container.innerHTML, /onload="[^"]*err\.hidden = true;[^"]*this\.hidden = false;"/, 'onload hides the badge and shows the image through hidden');
+  assert.doesNotMatch(container.innerHTML, /pictorial-preview-(img|error)[^>]*display:\s*none/, 'pictorial preview no longer relies on inline display');
+});
+
+test('pictorial preview omits src and stays hidden when the card has no image (an empty src would fire onerror)', () => {
+  const container = { innerHTML: '' };
+  const item = image => ({
+    itemFamilyId: 'f0802', itemVersionId: 'i0802', position: 1, prompt: 'Nhìn hình:', helpText: '', interactionType: 'short_text',
+    pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: 1, image, options: []
+  });
+  const form = (image, suffix = '1') => ({
+    id: `08020000-0000-4000-8000-00000000000${suffix}`, version: 1, status: 'draft', title: 'Pictorial empty', submissionCount: 0,
+    publicDefinition: { schemaVersion: 'FormDefinitionV1', formVersionId: `08020000-0000-4000-8000-00000000000${suffix}`, title: 'Pictorial empty', durationMinutes: 45, blocks: [{ blockId: 'b0802', checkpoint: 1, title: 'Pictorial', items: [item(image)] }] },
+    gradingKey: { items: { i0802: { graderType: 'accepted_text', accepted: ['x'] } } }
+  });
+
+  renderTestBuilderView(container, form(''));
+  assert.match(container.innerHTML, /<img class="pictorial-preview-img" hidden alt=/, 'empty card renders a hidden image without a src attribute');
+  assert.doesNotMatch(container.innerHTML, /pictorial-preview-img"[^>]* src=/, 'empty card has no src attribute');
+
+  renderTestBuilderView(container, form('assets/test 1/vocabulary/image3.png', '2'));
+  assert.ok(
+    container.innerHTML.includes('<img class="pictorial-preview-img" src="assets/test 1/vocabulary/image3.png" alt='),
+    'card with an image keeps its src and is not hidden'
+  );
 });
 
 test('generateHangmanHint handles single letters, numbers, and uppercase characters gracefully', () => {

@@ -1,0 +1,41 @@
+name: Typecheck and test
+
+# Tách khỏi pages.yml: job này chạy `npm ci` (tạo node_modules) nên không được nằm trong job upload artifact Pages.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - term-tests/**
+      - tests/**
+      - tsconfig.json
+      - package.json
+      - package-lock.json
+      - .github/workflows/typecheck.yml
+  push:
+    branches: [main]
+    paths:
+      - term-tests/**
+      - tests/**
+      - tsconfig.json
+      - tsconfig.build.json
+      - scripts/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/typecheck.yml
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build:check
+      - run: npm test

@@ -158,6 +158,13 @@ test('AI Rubric Builder renders hidden reference context textarea and pull scrip
   assert.ok(container.innerHTML.includes('btn-pull-cloze-script'), 'provides 1-click pull cloze script button');
   assert.ok(container.innerHTML.includes('Central Park is in New York. Its trees are green.'), 'populates reference context value');
   assert.ok(container.innerHTML.includes('Ẩn hoàn toàn với học viên'), 'informs teacher that context is hidden from students');
+  // Ẩn/hiện ban đầu dùng thuộc tính hidden (không dùng display inline) để JS đảo bằng el.hidden.
+  assert.doesNotMatch(container.innerHTML, /id="ai-ref-group-[^>]*hidden/, 'item context is visible when the item has its own context');
+  assert.match(container.innerHTML, /id="pane-guidance-\d+-\d+" hidden>/, 'guidance pane starts hidden');
+  assert.match(container.innerHTML, /id="pane-sandbox-\d+-\d+" hidden>/, 'sandbox pane starts hidden');
+  assert.doesNotMatch(container.innerHTML, /id="pane-criteria-[^>]*hidden/, 'criteria pane is the visible default tab');
+  assert.match(container.innerHTML, /class="sandbox-results-container"[^>]* hidden><\/div>/, 'sandbox results start hidden');
+  assert.doesNotMatch(container.innerHTML, /(ai-ref-group|pane-(guidance|sandbox))-[^>]*display:\s*(none|block)/, 'rubric panels no longer rely on inline display');
 });
 
 test('Interactive Sandbox sends reference context to previewSandbox handler', async () => {

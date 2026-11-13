@@ -8,14 +8,13 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
   const document = root.ownerDocument || root;
   const window = document.defaultView || globalThis.window;
   const currentLocation = window?.location;
-  const { fillIncidentTimeline, loadAttemptDetail, apiBase, authHeader, setUrl, loadResults } = actions;
+  const { fillIncidentTimeline, loadAttemptDetail, request, setUrl, loadResults } = actions;
   const attemptDetail = root.querySelector('#attempt-detail');
   const detailHeading = root.querySelector('#detail-heading');
   const detailMeta = root.querySelector('#detail-meta');
   const detailScores = root.querySelector('#detail-scores');
   const detailIncidents = root.querySelector('#detail-incidents');
   const detailAttemptHistory = root.querySelector('#detail-attempt-history');
-  const detailGradingHistory = root.querySelector('#detail-grading-history');
   const conflictAlert = root.querySelector('#conflict-alert');
   const draftStatusMsg = root.querySelector('#draft-status-msg');
   const saveDraftBtn = root.querySelector('#save-draft-btn');
@@ -73,9 +72,7 @@ function renderAttemptDetail(payload) {
 
       if (payload.retakeGrant) {
         const retakeBadge = document.createElement('span');
-        retakeBadge.className = 'meta-badge';
-        retakeBadge.style.background = '#f3e8ff';
-        retakeBadge.style.color = '#6b21a8';
+        retakeBadge.className = 'meta-badge badge-retake-grant';
         retakeBadge.textContent = `Quyền làm lại: ${resultStatusLabel(payload.retakeGrant.status)}`;
         detailMeta.append(retakeBadge);
       }
@@ -137,41 +134,6 @@ function renderAttemptDetail(payload) {
       }
     }
 
-    if (detailGradingHistory) {
-      detailGradingHistory.replaceChildren();
-      if (payload.gradingHistory && payload.gradingHistory.length > 0) {
-        const gTable = document.createElement('table');
-        gTable.className = 'mini-table';
-        gTable.innerHTML = `
-          <thead>
-            <tr>
-              <th>Lượt chấm</th>
-              <th>Phiên bản chấm</th>
-              <th>Trạng thái</th>
-              <th>Bắt đầu</th>
-              <th>Hoàn tất</th>
-            </tr>
-          </thead>
-        `;
-        const gBody = document.createElement('tbody');
-        for (const run of payload.gradingHistory) {
-          const gRow = document.createElement('tr');
-          gRow.innerHTML = `
-            <td>${run.gradingRunId.slice(0, 8)}…</td>
-            <td>v${run.graderVersion}</td>
-            <td><span class="result-status ${run.status}">${resultStatusLabel(run.status)}</span></td>
-            <td>${run.startedAt ? formatAssignmentWindow(run.startedAt, null).split(' → ')[0] : '—'}</td>
-            <td>${run.completedAt ? formatAssignmentWindow(run.completedAt, null).split(' → ')[0] : '—'}</td>
-          `;
-          gBody.append(gRow);
-        }
-        gTable.append(gBody);
-        detailGradingHistory.append(gTable);
-      } else {
-        detailGradingHistory.textContent = 'Chưa có thông tin lượt chấm.';
-      }
-    }
-
     viewState.currentAttemptDetail = payload;
     if (conflictAlert) {
       conflictAlert.hidden = true;
@@ -209,8 +171,8 @@ function renderAttemptDetail(payload) {
       promptBlock.className = 'modal-ctx-block';
       promptBlock.innerHTML = `
         <h4>Đề bài / Yêu cầu chi tiết</h4>
-        <div style="font-size: 0.95rem; line-height: 1.5; color: #1e293b; white-space: pre-wrap;">${escapeHtml(item.prompt || '—')}</div>
-        ${item.helpText ? `<p style="margin: 6px 0 0; font-size: 0.88rem; color: #64748b; font-style: italic;">${escapeHtml(item.helpText)}</p>` : ''}
+        <div class="modal-ctx-prompt">${escapeHtml(item.prompt || '—')}</div>
+        ${item.helpText ? `<p class="modal-ctx-help">${escapeHtml(item.helpText)}</p>` : ''}
       `;
       modalItemContent.append(promptBlock);
 
@@ -260,7 +222,7 @@ function renderAttemptDetail(payload) {
       const ansStudent = resolveStudentAnswerDisplay(item);
       ansBlock.innerHTML = `
         <h4>Bài làm của học viên</h4>
-        <div style="font-size: 0.95rem; font-weight: 600; color: #0f172a;">${escapeHtml(ansStudent)}</div>
+        <div class="modal-ctx-answer">${escapeHtml(ansStudent)}</div>
       `;
       modalItemContent.append(ansBlock);
 
@@ -277,8 +239,8 @@ function renderAttemptDetail(payload) {
       }
       expBlock.innerHTML = `
         <h4>Đáp án mẫu & Tiêu chí Rubric</h4>
-        <div style="font-size: 0.95rem; font-weight: 600; color: #0369a1; margin-bottom: 6px;">${escapeHtml(ansExpected)}</div>
-        ${fbLines.length > 0 ? `<p style="margin: 0; font-size: 0.88rem; color: #92400e; background: #fffbeb; padding: 8px 12px; border-radius: 6px;">${escapeHtml(fbLines.join(' · '))}</p>` : ''}
+        <div class="modal-ctx-answer modal-ctx-answer-expected">${escapeHtml(ansExpected)}</div>
+        ${fbLines.length > 0 ? `<p class="modal-ctx-feedback">${escapeHtml(fbLines.join(' · '))}</p>` : ''}
       `;
       modalItemContent.append(expBlock);
 
@@ -293,20 +255,20 @@ function renderAttemptDetail(payload) {
         : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
 
       overrideBlock.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-          <h4 style="margin:0;">Chấm điểm / Điều chỉnh điểm</h4>
+        <div class="modal-override-head">
+          <h4>Chấm điểm / Điều chỉnh điểm</h4>
           ${item.isOverridden ? '<span class="badge-manual-override">Đã sửa tay</span>' : ''}
         </div>
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom: 10px;">
-          <label style="font-weight: 700; font-size: 0.88rem; color: #1e293b;">Điểm số:</label>
-          <input type="number" step="any" min="0" max="${item.maxScore}" class="modal-override-score-input table-grade-input" style="width: 75px;" value="${curScore !== null && curScore !== undefined ? curScore : ''}" placeholder="0-${item.maxScore}">
-          <span style="font-weight: 700; color: #475569;">/ ${item.maxScore} điểm</span>
+        <div class="modal-override-score-row">
+          <label class="modal-override-label">Điểm số:</label>
+          <input type="number" step="any" min="0" max="${item.maxScore}" class="modal-override-score-input table-grade-input" value="${curScore !== null && curScore !== undefined ? curScore : ''}" placeholder="0-${item.maxScore}">
+          <span class="modal-override-max">/ ${item.maxScore} điểm</span>
         </div>
-        <div style="margin-bottom: 12px;">
-          <label style="font-weight: 700; font-size: 0.88rem; color: #1e293b; display:block; margin-bottom: 4px;">Nhận xét của giáo viên:</label>
+        <div class="modal-override-feedback-row">
+          <label class="modal-override-label modal-override-label-block">Nhận xét của giáo viên:</label>
           <textarea class="modal-override-feedback-input table-feedback-input" placeholder="Nhập nhận xét hoặc ghi chú sửa điểm...">${escapeHtml(curFeedback || '')}</textarea>
         </div>
-        <div style="display:flex; gap:8px; align-items:center;">
+        <div class="modal-override-actions">
           <button type="button" class="btn btn-sm btn-primary btn-modal-save-grade">${renderSvgIcon('check', 'icon-inline')} <span>Lưu điểm</span></button>
           ${item.isOverridden ? `<button type="button" class="btn btn-sm btn-outline-secondary btn-modal-reset-grade">${renderSvgIcon('rotate', 'icon-inline')} <span>Khôi phục điểm gốc (${item.originalScore !== null && item.originalScore !== undefined ? item.originalScore : item.scoreEarned}/${item.maxScore})</span></button>` : ''}
         </div>
@@ -403,7 +365,7 @@ function renderAttemptDetail(payload) {
           tdPrompt.innerHTML = `
             <div class="prompt-compact">
               <div class="prompt-preview-text" title="${escapeHtml(compactPrompt.text)}">${escapeHtml(compactPrompt.text)}</div>
-              ${item.helpText ? `<small style="color:#64748b; display:block;">${escapeHtml(item.helpText)}</small>` : ''}
+              ${item.helpText ? `<small class="prompt-help-text">${escapeHtml(item.helpText)}</small>` : ''}
               ${optBtnHtml}
             </div>
           `;
@@ -747,32 +709,26 @@ async function saveManualGradingDraft(silent = false) {
 
     if (draftStatusMsg) draftStatusMsg.textContent = 'Đang lưu nháp...';
     try {
-      const response = await fetch(`${apiBase()}${manualGradingDraftPath(state.classId, state.assignmentId, state.attemptId)}`, {
+      const payload = await request(manualGradingDraftPath(state.classId, state.assignmentId, state.attemptId), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader()
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           baseRevision: viewState.currentAttemptDetail.manualGrading?.revision ?? 0,
           items: itemsToSubmit,
           note: 'Lưu nháp từ Dashboard'
-        })
+        }),
+        errorMessage: 'Không thể lưu nháp.'
       });
-      const payload = await response.json();
-      if (response.status === 409) {
-        showConflictAlert(payload.message || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
-        return;
-      }
-      if (!response.ok) {
-        throw new Error(payload.message || 'Không thể lưu nháp.');
-      }
       viewState.currentAttemptDetail.manualGrading.revision = payload.revision;
       viewState.currentAttemptDetail.manualGrading.status = 'draft';
       if (draftStatusMsg) {
         draftStatusMsg.textContent = `Đã lưu nháp lúc ${formatCurrentTime()} (phiên bản ${payload.revision})`;
       }
     } catch (err) {
+      if (err.status === 409) {
+        showConflictAlert(err.apiMessage || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
+        return;
+      }
       if (draftStatusMsg) draftStatusMsg.textContent = `Lỗi lưu nháp: ${err.message}`;
     }
   }
@@ -838,29 +794,23 @@ async function completeManualGrading() {
 
     if (draftStatusMsg) draftStatusMsg.textContent = 'Đang hoàn tất chấm...';
     try {
-      const response = await fetch(`${apiBase()}${manualGradingCompletePath(state.classId, state.assignmentId, state.attemptId)}`, {
+      await request(manualGradingCompletePath(state.classId, state.assignmentId, state.attemptId), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader()
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           baseRevision: viewState.currentAttemptDetail.manualGrading?.revision ?? 0,
           items: itemsToSubmit,
           note: 'Xác nhận hoàn tất chấm'
-        })
+        }),
+        errorMessage: 'Không thể hoàn tất chấm.'
       });
-      const payload = await response.json();
-      if (response.status === 409) {
-        showConflictAlert(payload.message || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
-        return;
-      }
-      if (!response.ok) {
-        throw new Error(payload.message || 'Không thể hoàn tất chấm.');
-      }
       alert('Đã hoàn tất chấm bài thành công!');
       await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);
     } catch (err) {
+      if (err.status === 409) {
+        showConflictAlert(err.apiMessage || 'Xung đột: Bài làm đã được cập nhật bởi người khác.');
+        return;
+      }
       if (draftStatusMsg) draftStatusMsg.textContent = `Lỗi: ${err.message}`;
     }
   }
@@ -869,18 +819,12 @@ async function publishAttemptResult() {
     if (!state.classId || !state.assignmentId || !state.attemptId) return;
     if (draftStatusMsg) draftStatusMsg.textContent = 'Đang công bố kết quả…';
     try {
-      const response = await fetch(`${apiBase()}${attemptPublishPath(state.classId, state.assignmentId, state.attemptId)}`, {
+      await request(attemptPublishPath(state.classId, state.assignmentId, state.attemptId), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeader()
-        },
-        body: JSON.stringify({ note: 'Công bố kết quả' })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note: 'Công bố kết quả' }),
+        errorMessage: 'Không thể công bố kết quả.'
       });
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.message || 'Không thể công bố kết quả.');
-      }
       alert('Đã công bố kết quả thành công!');
       if (draftStatusMsg) draftStatusMsg.textContent = `Đã công bố kết quả lúc ${formatCurrentTime()}`;
       await loadAttemptDetail(state.classId, state.assignmentId, state.attemptId);

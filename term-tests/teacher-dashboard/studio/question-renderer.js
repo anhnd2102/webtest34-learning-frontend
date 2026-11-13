@@ -488,7 +488,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     <button type="button" class="btn btn-secondary btn-sm btn-editor-action btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
                       ${renderSvgIcon('table', 'icon-inline')} <span>Chèn bảng</span> ${renderSvgIcon('chevronDown', 'icon-inline')}
                     </button>
-                    <div class="rich-editor__popup table-presets-menu" style="display: none;">
+                    <div class="rich-editor__popup table-presets-menu" hidden>
                       <strong>Tạo bảng nhanh</strong>
                       <div class="rich-editor__table-options">
                         <button type="button" class="btn-table-grid" data-rows="2" data-cols="2">2 cột × 2 dòng</button>
@@ -509,13 +509,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
                       ${renderSvgIcon('image', 'icon-inline')} <span>Chèn ảnh</span>
                     </button>
-                    <div class="rich-editor__popup image-insert-popup" style="display: none;">
+                    <div class="rich-editor__popup image-insert-popup" hidden>
                       <label>
                         Link ảnh
                         <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
                       </label>
                       <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
-                      <div class="rich-editor__error popup-image-error" style="display: none;"></div>
+                      <div class="rich-editor__error popup-image-error" hidden></div>
                       <div class="rich-editor__actions">
                         <button type="button" class="btn-confirm-insert-image">Chèn</button>
                       </div>
@@ -532,10 +532,10 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
 
               <div class="rich-editor__content-area">
                 <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">${sanitizeRichContent(passageText)}</div>
-                <textarea class="rich-editor__code rich-editor-code form-control input-reading-passage" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="8" style="display: none;" placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
+                <textarea class="rich-editor__code rich-editor-code form-control input-reading-passage" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="8" hidden placeholder="Nhập văn bản bài đọc tại đây (Hỗ trợ nhãn Paragraph A:, [B], Section C...)...">${escapeHtml(passageText)}</textarea>
               </div>
 
-              <div class="rich-editor__error general-editor-error" style="display: none;" role="alert"></div>
+              <div class="rich-editor__error general-editor-error" hidden role="alert"></div>
 
               <div class="rich-editor__footer">
                 Enter để xuống dòng. Shift+Enter để ngắt dòng mềm. Nhấp vào ô bảng để chỉnh sửa.
@@ -828,8 +828,8 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   </button>
                 </div>
                 <div class="pictorial-preview-wrap pictorial-thumb-preview">
-                  <img class="pictorial-preview-img" src="${escapeHtml(imgSrc)}" alt="Image Preview" style="${imgSrc ? 'max-height: 180px; max-width: 100%; border-radius: 6px; border: 1px solid #e2e8f0; object-fit: contain;' : 'display: none;'}" onerror="this.style.display='none'; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='inline-block';" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.style.display='none'; this.style.display='inline-block';" />
-                  <span class="pictorial-preview-error badge badge-warning" style="display: none;">${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
+                  <img class="pictorial-preview-img"${imgSrc ? ` src="${escapeHtml(imgSrc)}"` : ' hidden'} alt="Image Preview" onerror="this.hidden = true; const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.hidden = false;" onload="const err = this.parentElement?.querySelector('.pictorial-preview-error'); if (err) err.hidden = true; this.hidden = false;" />
+                  <span class="pictorial-preview-error badge badge-warning" hidden>${renderSvgIcon('alert', 'icon-inline')} Không thể tải ảnh. Hãy kiểm tra lại link ảnh hoặc quyền chia sẻ công khai (Anyone with the link).</span>
                 </div>
               </div>
 
@@ -995,7 +995,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
 
               <!-- Collapsible Bank Details -->
-              <div class="vocab-bank-collapsible" id="vocab-bank-${blockIdx}-${itemIdx}" style="display: none;">
+              <div class="vocab-bank-collapsible" id="vocab-bank-${blockIdx}-${itemIdx}" hidden>
                 <div class="vocab-options-tools-bar">
                   <button type="button" class="btn btn-secondary btn-sm btn-bulk-paste-vocab-options" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Dán nhanh nhiều nghĩa từ Excel hoặc Word">
                     ${renderSvgIcon('copy', 'icon-inline')} Dán nhanh danh sách nghĩa
@@ -1013,7 +1013,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                 </div>
 
                 <!-- Collapsible Bulk Paste Box -->
-                <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="vocab-bulk-paste-panel" id="vocab-bulk-paste-${blockIdx}-${itemIdx}" hidden>
                   <div class="bulk-paste-caption">
                     <span>Nhập hoặc dán danh sách nghĩa tiếng Việt (Mỗi dòng là một nghĩa):</span>
                   </div>
@@ -1090,7 +1090,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             ` : ''}
 
-            <div class="ai-reference-context-group" id="ai-ref-group-${blockIdx}-${itemIdx}" style="display: ${showItemContextInitially ? 'block' : 'none'};">
+            <div class="ai-reference-context-group" id="ai-ref-group-${blockIdx}-${itemIdx}"${showItemContextInitially ? '' : ' hidden'}>
               <div class="ai-reference-context-header">
                 <label class="form-label">
                   ${renderSvgIcon('book', 'icon-inline')} Ngữ cảnh bài đọc / Script tham chiếu cho AI:
@@ -1139,12 +1139,12 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                   </div>
                 </div>
 
-                <div class="rubric-tab-pane pane-guidance" id="pane-guidance-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="rubric-tab-pane pane-guidance" id="pane-guidance-${blockIdx}-${itemIdx}" hidden>
                   <label class="form-label">Chỉ dẫn nâng cao dành cho AI Grader (Custom Prompt Instructions):</label>
                   <textarea class="form-control input-rubric-guidance" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" placeholder="Ví dụ: Chấp nhận các cách diễn đạt đồng nghĩa cho từ 'thành công'; trừ điểm nếu thiếu liên từ nối...">${escapeHtml(promptGuidance)}</textarea>
                 </div>
 
-                <div class="rubric-tab-pane pane-sandbox" id="pane-sandbox-${blockIdx}-${itemIdx}" style="display: none;">
+                <div class="rubric-tab-pane pane-sandbox" id="pane-sandbox-${blockIdx}-${itemIdx}" hidden>
                   <div class="rubric-sandbox-panel">
                     <p class="sandbox-desc">Nhập câu trả lời mẫu của học sinh để chạy thử nghiệm bộ chấm qua AI Gateway ngay lập tức (không lưu bài thi):</p>
                     <div class="sandbox-input-group">
@@ -1153,7 +1153,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                         ${renderSvgIcon('zap', 'icon-inline')} Chấm thử AI
                       </button>
                     </div>
-                    <div class="sandbox-results-container" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" style="display: none;"></div>
+                    <div class="sandbox-results-container" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" hidden></div>
                   </div>
                 </div>
               </div>
@@ -1307,7 +1307,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     <button type="button" class="btn btn-secondary btn-sm btn-editor-action btn-rich-insert-table" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn Bảng dữ liệu">
                       ${renderSvgIcon('table', 'icon-inline')} <span>Chèn bảng</span> ${renderSvgIcon('chevronDown', 'icon-inline')}
                     </button>
-                    <div class="rich-editor__popup table-presets-menu" style="display: none;">
+                    <div class="rich-editor__popup table-presets-menu" hidden>
                       <strong>Tạo bảng nhanh</strong>
                       <div class="rich-editor__table-options">
                         <button type="button" class="btn-table-grid" data-rows="2" data-cols="2">2 cột × 2 dòng</button>
@@ -1329,13 +1329,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
                     <button type="button" class="btn btn-secondary btn-sm btn-rich-insert-image" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ảnh (URL HTTPS hoặc Google Drive)">
                       ${renderSvgIcon('image', 'icon-inline')} <span>Chèn ảnh</span>
                     </button>
-                    <div class="rich-editor__popup image-insert-popup" style="display: none;">
+                    <div class="rich-editor__popup image-insert-popup" hidden>
                       <label>
                         Link ảnh
                         <input type="url" class="input-image-link" placeholder="https://drive.google.com/file/d/..." />
                       </label>
                       <small>Ảnh Drive cần chia sẻ “Bất kỳ ai có đường liên kết”.</small>
-                      <div class="rich-editor__error popup-image-error" style="display: none;"></div>
+                      <div class="rich-editor__error popup-image-error" hidden></div>
                       <div class="rich-editor__actions">
                         <button type="button" class="btn-confirm-insert-image">Chèn</button>
                       </div>
@@ -1357,10 +1357,10 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
 
               <div class="rich-editor__content-area">
                 <div class="rich-editor__content rich-editor-visual" contenteditable="true" spellcheck="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}">${sanitizeRichContent(item.prompt || '')}</div>
-                <textarea class="rich-editor__code rich-editor-code form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" style="display: none;" placeholder="Nhập đề bài hoặc đoạn văn chứa token (1) __________...">${escapeHtml(item.prompt || '')}</textarea>
+                <textarea class="rich-editor__code rich-editor-code form-control item-prompt-input" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" rows="4" hidden placeholder="Nhập đề bài hoặc đoạn văn chứa token (1) __________...">${escapeHtml(item.prompt || '')}</textarea>
               </div>
 
-              <div class="rich-editor__error general-editor-error" style="display: none;" role="alert"></div>
+              <div class="rich-editor__error general-editor-error" hidden role="alert"></div>
 
               <div class="rich-editor__footer">
                 Enter để xuống dòng. Shift+Enter để ngắt dòng mềm. Nhấp vào ô bảng để chỉnh sửa.

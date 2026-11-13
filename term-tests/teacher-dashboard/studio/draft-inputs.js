@@ -22,7 +22,7 @@ function syncInputs() {
       activeVisuals.forEach(wrap => {
         const vEl = wrap.querySelector ? wrap.querySelector('.rich-editor-visual') : null;
         const cEl = wrap.querySelector ? wrap.querySelector('.rich-editor-code, textarea') : null;
-        if (vEl && cEl && vEl.style && vEl.style.display !== 'none') {
+        if (vEl && cEl && !vEl.hidden) {
           cEl.value = sanitizeRichContent(vEl.innerHTML || '');
         }
       });

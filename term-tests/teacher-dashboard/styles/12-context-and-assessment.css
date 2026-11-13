@@ -35,31 +35,31 @@
 
 /* Candidate Simulation & Test Studio Overlay & Floating Modals */
 .candidate-sim-overlay {
-  position: fixed !important;
-  inset: 0 !important;
-  background: var(--izone-overlay-backdrop) !important;
-  backdrop-filter: blur(4px) !important;
-  z-index: 10050 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 20px !important;
+  position: fixed;
+  inset: 0;
+  background: var(--izone-overlay-backdrop);
+  backdrop-filter: blur(4px);
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
   animation: batchModalFadeIn 0.2s ease-out !important;
 }
 
 .candidate-sim-modal,
 .block-csv-modal,
 .quick-csv-guide-modal {
-  background: var(--izone-surface) !important;
+  background: var(--izone-surface);
   border: 1px solid var(--izone-slate-300) !important;
   border-radius: 12px !important;
   box-shadow: 0 25px 50px -12px var(--izone-shadow-modal-color) !important;
   max-height: 90vh !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-  position: relative !important;
-  z-index: 10051 !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 10051;
 }
 
 .block-csv-modal {
@@ -69,25 +69,25 @@
 
 .quick-csv-guide-modal {
   width: 100% !important;
-  max-width: 820px !important;
+  max-width: 820px;
 }
 
 /* Button 'Xem hướng dẫn điền' reset overflow & compact styling */
 .btn.btn-view-csv-guide,
 .btn-ghost-subtle.btn-view-csv-guide {
   width: auto !important;
-  height: auto !important;
-  min-height: 32px !important;
-  padding: 4px 12px !important;
+  height: auto;
+  min-height: 32px;
+  padding: 4px 12px;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
-  white-space: nowrap !important;
+  gap: 6px;
+  white-space: nowrap;
   font-size: 0.82rem !important;
   font-weight: 500 !important;
   border-radius: 6px !important;
   border: 1px solid var(--izone-slate-300) !important;
-  background: var(--izone-surface) !important;
+  background: var(--izone-surface);
   color: var(--izone-text-body) !important;
   transition: all 0.15s ease !important;
 }
@@ -102,28 +102,28 @@
 
 /* Quick CSV Guide Table styling with explicit crisp borders */
 .quick-guide-table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  font-size: 12px !important;
-  border: 1px solid var(--izone-slate-300) !important;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  border: 1px solid var(--izone-slate-300);
 }
 
 .quick-guide-table th {
-  background: var(--izone-slate-100) !important;
-  color: var(--izone-slate-900) !important;
-  font-weight: 700 !important;
-  padding: 8px 10px !important;
-  border: 1px solid var(--izone-slate-300) !important;
+  background: var(--izone-slate-100);
+  color: var(--izone-slate-900);
+  font-weight: 700;
+  padding: 8px 10px;
+  border: 1px solid var(--izone-slate-300);
 }
 
 .quick-guide-table td {
   padding: 8px 10px !important;
-  border: 1px solid var(--izone-slate-300) !important;
-  vertical-align: top !important;
+  border: 1px solid var(--izone-slate-300);
+  vertical-align: top;
 }
 
 .quick-guide-table tr:nth-child(even) td {
-  background: var(--izone-slate-bg) !important;
+  background: var(--izone-slate-bg);
 }
 
 
@@ -133,12 +133,7 @@
 
 /* Page Title Bar behavior */
 .page-title-bar[hidden] {
-  display: none !important;
-}
-
-/* Hide assignment-link-bar in grading center */
-#view-grading .assignment-link-bar {
-  display: none !important;
+  display: none;
 }
 
 /* Compact Assessment Header */
@@ -275,7 +270,7 @@
 }
 
 .assessment-tab-panel[hidden] {
-  display: none !important;
+  display: none;
 }
 
 /* 6 KPI Cards Click-to-Filter Styling */
@@ -350,4 +345,146 @@
   background: var(--izone-border);
   border-color: var(--izone-slate-400);
   color: var(--izone-primary-ruby);
+}
+
+/* Modal chi tiết câu (grading/attempt-review.js): thay inline style tĩnh bằng class/token. */
+.meta-badge.badge-retake-grant {
+  background: var(--izone-retake-grant-bg);
+  color: var(--izone-retake-grant-text);
+}
+
+.prompt-help-text {
+  display: block;
+  color: var(--izone-text-muted);
+}
+
+.modal-ctx-prompt {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--izone-slate);
+  white-space: pre-wrap;
+}
+
+.modal-ctx-help {
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  color: var(--izone-text-muted);
+  font-style: italic;
+}
+
+.modal-ctx-answer {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--izone-slate-900);
+}
+
+.modal-ctx-answer.modal-ctx-answer-expected {
+  color: var(--izone-expected-answer-text);
+  margin-bottom: 6px;
+}
+
+.modal-ctx-feedback {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--izone-retake-active-text);
+  background: var(--izone-warning-bg);
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.modal-override-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modal-override-head h4 {
+  margin: 0;
+}
+
+.modal-override-score-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-override-block input.modal-override-score-input {
+  width: 75px;
+}
+
+.modal-override-label {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--izone-slate);
+}
+
+.modal-override-label.modal-override-label-block {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.modal-override-max {
+  font-weight: 700;
+  color: var(--izone-slate-600);
+}
+
+.modal-override-feedback-row {
+  margin-bottom: 12px;
+}
+
+.modal-override-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Preview CSV và nút Chép mẫu (studio/batch-import.js): thay inline style tĩnh bằng class/token. */
+.batch-preview-row-text {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.batch-preview-row-meta {
+  color: var(--izone-context-action-hover);
+  font-weight: 600;
+}
+
+.btn.btn-copy-sample.is-copied {
+  color: var(--izone-context-action);
+  font-weight: 600;
+}
+
+/* Ảnh xem trước Pictorial (studio/question-renderer.js): phần tĩnh của inline style cũ; display ban đầu vẫn do template/JS quyết định. */
+.pictorial-thumb-preview .pictorial-preview-img {
+  max-height: 180px;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--izone-border);
+  object-fit: contain;
+}
+
+/* Huy hiệu lỗi ảnh Pictorial: trước đây JS đặt inline display:inline-block khi hiện (thắng inline-flex ở fragment 09).
+   Sau khi chuyển sang thuộc tính hidden, giữ nguyên giá trị đó để bố cục không đổi. */
+.pictorial-thumb-preview .pictorial-preview-error:not([hidden]) {
+  display: inline-block;
+}
+
+/* Danh sách lớp trong wizard Công bố: trước đây JS bật bằng inline display:block (thắng display:flex ở fragment 06).
+   Sau khi chuyển sang thuộc tính hidden, giữ nguyên bố cục block mà giáo viên đang thấy khi bật bằng nút radio. */
+.specific-classes-container:not([hidden]) {
+  display: block;
+}
+
+/* Rich editor: trước đây JS bật các phần tử này bằng inline display (block). Sau khi chuyển sang thuộc tính hidden,
+   giữ nguyên giá trị đó: ô mã HTML là block (textarea mặc định inline-block làm cao thêm 4px), lỗi ảnh là block
+   (CSS gốc của .rich-editor__error là flex). Popup (grid) và lỗi chung (flex) đã trùng CSS nên không cần rule. */
+.rich-editor__code:not([hidden]),
+.rich-editor-code:not([hidden]) {
+  display: block;
+}
+
+.rich-editor__error.popup-image-error:not([hidden]) {
+  display: block;
 }

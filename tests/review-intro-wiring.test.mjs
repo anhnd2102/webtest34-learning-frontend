@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
 
-const source = await fs.readFile(new URL('../term-tests/webtest-34-demo/content-preview.mjs', import.meta.url), 'utf8');
+// Markup ở content-preview.mjs, logic màn kết quả ở candidate/review-screen.js (tách từ content-preview.mjs).
+const readSource = name => fs.readFile(new URL(`../term-tests/webtest-34-demo/${name}`, import.meta.url), 'utf8');
+const source = (await readSource('content-preview.mjs')) + '\n' + (await readSource('candidate/review-screen.js'));
 
 test('introMain trỏ đúng thẻ <main> chứa nút Xem kết quả, để openReview không ném lỗi null', () => {
   const selector = source.match(/const introMain = document\.querySelector\('main\.([\w-]+)/)?.[1];

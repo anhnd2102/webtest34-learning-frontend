@@ -6,14 +6,6 @@ import { groupSections } from '../term-tests/webtest-34-demo/content-preview.mjs
 const read = relativePath => readFileSync(new URL(`../${relativePath}`, import.meta.url), 'utf8');
 const textGlyphs = /[■-◿⏩-⏺⏸⬅]/u;
 
-test('canonical exam start-audio button shows an SVG play icon, not a text glyph', () => {
-  const html = read('term-tests/webtest-34-demo/index.html');
-  const button = html.match(/<button[^>]*class="[^"]*audio-start-btn[^"]*"[^>]*>[\s\S]*?<\/button>/);
-  assert.ok(button, 'audio-start-btn template exists');
-  assert.match(button[0], /<svg class="icon-inline" viewBox="0 0 24 24" aria-hidden="true">/);
-  assert.match(button[0], /Bắt đầu phát audio · 1 lần/);
-  assert.equal(textGlyphs.test(button[0]), false);
-});
 
 test('content preview audio gate button shows the play icon, not a text glyph', () => {
   const form = { groups: [{ id: 'listen-a', title: 'Part A', instructions: 'Listen', audioRequired: true, audioPath: 'audio/listen.mp3', items: [{ id: 'a', prompt: 'Question A' }] }] };

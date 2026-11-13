@@ -1,12 +1,29 @@
 # Phương án tái cấu trúc frontend Webtest34
 
+## Tóm tắt trạng thái — 13/11/2026
+
+- **Bước 3 hoàn tất**; **bước 5**: pilot kiểm kiểu JSDoc + `tsc --noEmit` (không emit, không đổi Pages); **bước 6** hủy; **bước 7 đang tiến hành**.
+- **Bước 7 (canonical renderer):** đã gỡ đường prototype nội tuyến của `webtest-34-demo/index.html` (2.601 → ~470 dòng) sau khi có năm smoke học viên và chuyển 30 test đọc nguồn sang hành vi; tách `content-preview.mjs` 2.468 → 855 dòng sang `candidate/` (`text-utils`, `learning-api`, `result-view`, `group-render`, `exam-mode`, `intro-screen`, `review-screen`, `exam-timer`, `draft-sync`, `submit-flow`). Phần còn lại là điều phối `mount()` và dựng giao diện thi động (~470 dòng), chủ yếu là dựng DOM gắn chặt nên dừng ở đây.
+- **Lỗi thật tìm thấy và sửa nhờ lưới smoke (shell học viên):** token dính ký tự thừa khi dán link; bài nghe mở lại sau khi tải trang (nay lưu tiến độ nghe trên máy chủ); nộp lại dùng `submissionId` mới và báo lỗi sai khi bài đã nộp. Phía giáo viên: chấm thử AI không gửi token; nhiều thao tác builder không bật cảnh báo thay đổi chưa lưu; `grant-retake` thiếu `authHeader`; cú nhấp đầu vào "Quay lại danh mục" bị nuốt.
+- **Smoke trình duyệt (bấm thật, API giả):** 14 file trong `tests/browser/`, chạy tay hoặc qua `browser-smoke.yml` (chưa kiểm trên Actions thật); `npm test` 693 test; `typecheck.yml` cho kiểm kiểu.
+- **Còn mở:** `!important` còn 123 ở dashboard và 230 dòng ở `dynamic-test.css` (phần lớn là kiểm chứng chưa đủ bằng chứng hoặc bị nhiễu đo, xem `CSS_IMPORTANT_AUDIT.md`); `e2e-exam-switch.browser.mjs` lỗi thời; khóa nghe theo lượt làm bài (cấp quyền làm lại sinh lượt mới); chưa kiểm với backend và PostgreSQL thật; chuyển `.ts` + emit chờ quyết định về trình duyệt tối thiểu và ngưỡng tải.
+
+## Cập nhật trạng thái — 11/11/2026
+
+- Nhánh làm việc hiện tại: `feature/test-studio` (các nhánh `refactor/*` đã tích hợp). 671/671 frontend tests pass.
+- **Bước 1–2 đã hoàn tất** (#18, #20–#24, có báo cáo `ISSUE_*_VERIFICATION.md`): `app.js` còn 137 dòng, chỉ là facade; bootstrap ở `main.js`; `shell/`, `studio/`, `results/`, `grading/`, `exam-room/`, `api/`, `navigation/`, `ui/` đã tách.
+- **Bước 3 hoàn tất**: `studio/builder.js` còn ~1.000 dòng (12/11/2026: 20 nhóm handler đã chuyển sang module `bindXxx`, xem `BUILDER_SPLIT_VERIFICATION.md`); `shell/dashboard.js` còn 619 dòng (12/11/2026: đã thiết kế owner `authState`/`scopeState`/`examRoomState` và tách 15 module, kể cả cụm phòng thi, thêm học viên, đăng nhập/đăng xuất, xem `DASHBOARD_SPLIT_VERIFICATION.md`; đã có owner `navState`; còn loadResults, request, bộ lọc, bootstrap). Đã tách content-import, draft-model, rich-editor, media, simulation, publishing, batch-import, question-renderer.
+- **Bước 4**: tách CSS hoàn tất (12 fragment); cleanup inline style/token/!important đang tiến hành, kiểm kê lexical còn 28 vị trí (đều là style động như độ rộng %, màu avatar) (xem `CSS_INLINE_STYLE_INVENTORY.json`). Chưa mở bước 5–7.
+- **Quyết định mục 8 (12/11/2026):** (1) duyệt lộ trình A → B; (2) **không** làm pilot Vue — bước 6 bị hủy, phương án C loại khỏi lộ trình; (3) base path đã chốt: Pages chạy ở `https://anhnd2102.github.io/webtest34-learning-frontend/` (có tiền tố repo); browser tối thiểu và ngưỡng tải chưa chốt, chỉ chặn khi bước 5 đổi nội dung upload của Pages (xem mục 8).
+- Phần "30/10/2026" bên dưới là lịch sử.
+
 ## Cập nhật triển khai — 30/10/2026
 
 - Nhánh `refactor/frontend-architecture-plan`: #18 và #20 đã đóng; #21 đã có implementation commit, issue vẫn mở.
 - #22 đã triển khai và kiểm chứng local: 521/521 frontend tests pass; browser smoke 3 viewport pass. Xem [báo cáo #22](ISSUE_22_READ_CONCURRENCY_VERIFICATION.md) để biết phạm vi, review và giới hạn kiểm chứng.
 - #23 đã triển khai local: owner cho SSE/reader/reconnect và REST fallback; 542/542 frontend tests pass, browser smoke 3 viewport pass. Xem [báo cáo #23](ISSUE_23_EXAM_ROOM_LIFECYCLE_VERIFICATION.md).
-- Tiếp theo: #24 (tích hợp lifecycle và rollback). Chưa merge vào main.
-- Nội dung khảo sát và checklist bên dưới là baseline ban đầu; không coi toàn bộ bước 0–2 hoàn tất trước khi nghiệm thu #24.
+- #24 (tích hợp lifecycle và rollback) đã có báo cáo `ISSUE_24_INTEGRATION_VERIFICATION.md`. Chưa merge vào main.
+- Nội dung khảo sát (mục 1–5) là baseline ngày 28/10; số dòng/mốc code ở đó không còn đúng sau refactor.
 
 Ngày khảo sát: 28/10/2026, Asia/Ho_Chi_Minh. Trạng thái: đề xuất để review, chưa triển khai.
 
@@ -231,27 +248,27 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 
 ### Bước 1 — Pilot tách module content import giữ behavior (S–M)
 
-- [ ] Chuyển CSV/parser/template và biến thể nội dung từ `app.js:12`, `:565–1022` vào `studio/content-import.js`; chọn phạm vi CSV trước nếu variant phụ thuộc nhiều hơn dự kiến.
-- [ ] app.js import nội bộ và re-export cùng named exports; không đổi return shape, ID generation, quy tắc normalization hoặc điểm.
-- [ ] Test hành vi module mới; giữ test import facade để kiểm tương thích, sau đó chuyển consumer có kiểm soát.
+- [x] Chuyển CSV/parser/template (#18, `studio/content-import.js`) và biến thể nội dung từ `app.js:12`, `:565–1022` vào `studio/content-import.js`; chọn phạm vi CSV trước nếu variant phụ thuộc nhiều hơn dự kiến.
+- [x] app.js import nội bộ và re-export cùng named exports; không đổi return shape, ID generation, quy tắc normalization hoặc điểm.
+- [x] Test hành vi module mới; giữ test import facade để kiểm tương thích, sau đó chuyển consumer có kiểm soát.
 - Interface: tên hiện tại parseCsvRows/parseSingleChoiceCsv/parseVocabPairCsv…; không tạo interface mới không cần thiết.
 - Dependency: bước 0. Nghiệm thu: frontend suite xanh, bulk import thực tế bằng dữ liệu tổng hợp đúng, không có import ngược/cycle, module import được khi không có document.
 - Rollback: revert commit di chuyển; không có API/schema change. Rủi ro: closure dependency ẩn; kiểm hết free variables trước khi cắt.
 
 ### Bước 2 — Entry và lifecycle rõ ràng (M)
 
-- [ ] Tách bootstrap từ app.js sang `main.js`, cập nhật `teacher-dashboard/index.html:728`; tạo `shell/dashboard.js` và `navigation/unsaved-changes.js` khi chuyển owner tương ứng.
-- [ ] Bước đầu giữ hành vi bằng mount wrapper; sửa lifecycle tích lũy listener/timer ở commit riêng sau khi có test tái hiện, không lẫn với relocation.
-- [ ] Builder mount trả dispose; guard đóng/hủy đúng owner; exam room SSE/timer được hủy theo scope.
+- [x] Tách bootstrap từ app.js sang `main.js`, cập nhật `teacher-dashboard/index.html:728`; tạo `shell/dashboard.js` và `navigation/unsaved-changes.js` khi chuyển owner tương ứng.
+- [x] Bước đầu giữ hành vi bằng mount wrapper (#20–#22); sửa lifecycle tích lũy listener/timer ở commit riêng sau khi có test tái hiện, không lẫn với relocation.
+- [x] Builder mount trả dispose (#21, #23, #24); guard đóng/hủy đúng owner; exam room SSE/timer được hủy theo scope.
 - Interface: mountDashboard/mountBuilder và disposer; export cũ được facade giữ đến khi chuyển xong consumers.
 - Dependency: 0–1. Nghiệm thu: import facade không bootstrap kể cả có document; mount/dispose lặp 10 lần không tăng handler/timer còn hoạt động; đổi scope không nhận response cũ; dirty confirmation giữ đúng hành vi.
 - Rollback: revert entry và lifecycle commits tương ứng, kiểm index tải app cũ đúng. Rủi ro: mất khởi tạo hoặc listener; static route và browser smoke bắt buộc.
 
 ### Bước 3 — Chia builder theo workflow (L, chia commit con)
 
-- [ ] Từ `app.js:4127–12888`, lần lượt chuyển draft operations → rich editor/media → simulation → publishing sang các file ở cây đích; builder orchestration chuyển cuối.
-- [ ] Giữ request/payload hiện tại khi chuyển; thống nhất client/error/auth ở commit sau với test contract.
-- [ ] Chuyển results/grading và exam-room khỏi startDashboard sau builder, giữ portal-sync-view/exam-room-sse làm module hiện có.
+- [x] (xem cập nhật 11/11 và 12/11) Từ `app.js:4127–12888`, lần lượt chuyển draft operations → rich editor/media → simulation → publishing sang các file ở cây đích; builder orchestration chuyển cuối.
+- [x] Giữ request/payload hiện tại khi chuyển; thống nhất client/lỗi/auth (12/11/2026): mọi lời gọi API của dashboard và studio đi qua `request` của `api/client.js` (gắn token, 401 kết thúc phiên, lỗi chuẩn hóa, không thử lại): chấm nháp, hoàn tất chấm, công bố, cấp quyền làm lại, thêm học viên, đăng nhập (`anonymous`), đăng xuất và khôi phục phiên (`handleUnauthorized: false`), chấm thử AI, xem trước và công bố đề thi. Ngoại lệ có chủ đích duy nhất: luồng SSE phòng thi (`exam-room-actions.js`, fetch dạng stream có Bearer riêng). Test: `tests/api-client.test.mjs`, `tests/dashboard-write-request.test.mjs`, smoke `dashboard-actions-smoke`, `builder-media-smoke`.
+- [x] Chuyển results/grading và exam-room khỏi startDashboard sau builder, giữ portal-sync-view/exam-room-sse làm module hiện có.
 - Interface: draft commands, mount editor/simulation, client injection; root owner không chồng lấn.
 - Dependency: 2. Nghiệm thu từng commit: suite liên quan và toàn frontend xanh, không mất input/selection khi render/drag, thứ tự câu giữ, save/publish preview và cancel đúng; không đổi API hay quyền.
 - Rollback: từng commit theo thứ tự ngược; không có migration dữ liệu. Rủi ro: closure state ngầm và private/public data lẫn; test payload/public rendering và browser smoke.
@@ -280,6 +297,11 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
   - Đã chuyển 3 inline styles tĩnh của luồng Công bố (thêm token `--izone-danger-legacy`); `rich-editor.js` không có vị trí hợp lệ; phân loại 208 vị trí còn lại (46 tĩnh): xem `PUBLISHING_STATIC_STYLES_VERIFICATION.md`.
   - Đã thống nhất màu Danger về `#e11d48`, bổ sung icon còn thiếu và sửa spinner, thay `▶/⏸` ở giao diện audio bằng SVG: xem `DANGER_COLOR_UNIFY_VERIFICATION.md`, `ICON_FIX_VERIFICATION.md`, `CANDIDATE_AUDIO_GLYPHS_VERIFICATION.md`.
   - Đã chuyển 9 inline styles tĩnh của modal tạo hàng loạt AI Rubric và Single Choice; phát hiện `openBatchPictorialModal` là mã chết (rút 5 vị trí khỏi đợt này): xem `BATCH_MODALS_STYLES_VERIFICATION.md`.
+  - Đã chuyển 17 inline styles tĩnh của modal chi tiết câu/chấm điểm (`grading/attempt-review.js`) sang class/token; parity browser 12/12 giống baseline, xem `GRADING_MODAL_STYLES_VERIFICATION.md`.
+  - Đã chuyển 8 vị trí của `studio/batch-import.js` (preview CSV, nút Chép mẫu) sang class/token; parity browser 15/15 giống baseline: xem `BATCH_IMPORT_STYLES_VERIFICATION.md`.
+  - Rà lại `studio/question-renderer.js`: chuyển style tĩnh của ảnh xem trước Pictorial; 18 vị trí còn lại là `display` ban đầu do JS bật/tắt, giữ inline (đổi sang class/`hidden` là đổi mô hình ẩn/hiện, cần đợt riêng); parity 30/30: xem `QUESTION_RENDERER_REMAINING_STYLES_VERIFICATION.md`.
+  - Mô hình ẩn/hiện (HOÀN TẤT: không còn `style.display` trong JS dashboard, kể cả đợt 6 cho thẻ khối, modal rubric hàng loạt, modal chuyển bài tập, mô phỏng và nhập hàng loạt): chuyển `display: none` inline ban đầu sang `hidden`, từng nhóm phần tử trọn gói (template + bật/tắt + đọc) vì `[hidden]` có `!important`; đợt 1 (Vocabulary bank/bulk) và đợt 2 (rubric panes, sandbox, ngữ cảnh AI) đợt 3 (Pictorial) và đợt 4 (Publishing, media, vocabulary batch) và đợt 5 (rich editor, có kiểm thử an toàn dữ liệu khi lưu) xong, parity computed 12/12, 21/21, 18/18 và 42/42 (riêng đợt 4 khác có chủ đích ở đường render lại bước 1 của wizard Công bố): xem `HIDDEN_MODEL_VERIFICATION.md` (có bảng các nhóm còn lại và rủi ro rich editor).
+  - Kiểm toán `!important` (12/11/2026): 332 → 239 ở `styles/01–12` (gỡ 93 chỗ đã đo là vô tác dụng; giữ 239 kèm lý do); bằng chứng và giới hạn trong `CSS_IMPORTANT_AUDIT.md`. Còn lại: 116 khai báo chết do trùng **đã gỡ** (`e68d2e6`, kèm 13 rule rỗng; computed 195/195 giống HEAD). Còn lại: thu hẹp 139 chỗ trùng thuộc tính với style JS/inline, và `dynamic-test.css` (bước 7).
   - Metadata CSS (manifest, rule map, inventory inline style) tái tạo bằng `node scripts/css-metadata.mjs` (rule-map/manifest/inventory/check) thay vì sửa tay; `tests/css-metadata.test.mjs` chặn rule map lệch khỏi `styles/*.css`.
 - Interface: selector/class/DOM hiện tại. Dependency: 0 và owner DOM đã ổn định từ 2–3.
 - Nghiệm thu: ảnh so sánh đủ viewport/states, typography/focus/scroll/audio dock không đổi, Pages paths đúng. Không dùng giảm số !important làm tiêu chí duy nhất.
@@ -287,14 +309,21 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 
 ### Bước 5 — Pilot TypeScript (M)
 
-- [ ] Thêm tooling đã pin, lockfile, tsconfig phạm vi hẹp; cập nhật scripts và CI theo phương án compile/test đã chọn. Nguồn `studio/content-import.js` sang `.ts` sau khi hợp đồng ổn định.
+> **Quyết định 12/11/2026 (người dùng giao cho agent chọn): kiểm kiểu bằng JSDoc + `tsc --noEmit`, không chuyển sang `.ts` và không thêm bước build.** Lý do: Pages hiện upload nguyên thư mục (`pages.yml`, `path: .`, không build) nên mọi phương án emit/Vite đổi nội dung artifact và cần chốt trình duyệt tối thiểu cùng ngưỡng tải (hai quyết định chưa có); `checkJs` cho đúng lợi ích của pilot (hợp đồng DTO/đường dẫn được kiểm bằng compiler) mà không đổi byte nào được phục vụ. Đã làm: `typescript@5.9.3` ghim chính xác + `package-lock.json`, `tsconfig.json` (strict, `allowJs`, `checkJs`, `noEmit`, phạm vi `api/client.js` và `api/teacher.js`), `npm run typecheck`, workflow riêng `.github/workflows/typecheck.yml` (`npm ci` + typecheck + test; tách khỏi `pages.yml` để `node_modules` không lọt vào artifact Pages), `node_modules/` vào `.gitignore`. Pilot không dùng `any`/`@ts-ignore`; typecheck bắt được hai chỗ `formDraftPath/formDetailPath(apiBase, undefined)` sinh URL `.../undefined`, nay ném `TypeError`. Phạm vi kiểm kiểu nay gồm thêm `candidate/text-utils.js` và `globals.d.ts` (khai báo `selfProctoringNotice` do `exam-guard.js` gắn vào `globalThis`); `candidate/learning-api.js` đã có JSDoc kiểu strict nhưng **chưa nằm trong `tsconfig`** vì tsc không phân giải được import có chuỗi cache-bust (`./text-utils.js?rev=…`); đã kiểm riêng bằng bản sao đã bỏ `?rev=` và sạch lỗi. `studio/content-import.js` (1.465 dòng) đã vào phạm vi kiểm kiểu ngày 13/11/2026: 67 lỗi tsc được xử lý bằng JSDoc (`ImportCard`, `ImportResult`, `InvalidRow`) và một hàm `ensureExercise` thay cho chuỗi `exerciseMap.get(...)` có thể `undefined` (hành vi giữ nguyên, 693 test pass); thẻ import là bản ghi mở `Record<string, any>` vì hình dạng khác nhau theo loại bài, đây là chỗ `any` duy nhất và có chú thích. Mở rộng phạm vi các module khác là việc tiếp theo; chuyển `.ts` + emit vẫn chờ hai quyết định trên.
+
+- [x] (pilot kiểm kiểu, không emit — xem quyết định 12/11/2026) Thêm tooling đã pin, lockfile, tsconfig phạm vi hẹp; cập nhật scripts và CI theo phương án compile/test đã chọn. Nguồn `studio/content-import.js` sang `.ts` sau khi hợp đồng ổn định.
 - [ ] Thêm typed DTO/decoder cho một feature; không convert toàn app.js một lần. Vẫn validate runtime API.
+- [x] (13/11/2026) Đo baseline tải: `tests/browser/load-baseline.mjs`, số liệu trong `LOAD_BASELINE.json` và mục 8. Việc emit/đổi artifact còn lại phải đo lại bằng cùng script và so với baseline.
+- [x] (13/11/2026) **Pilot emit `.ts`: `candidate/text-utils.ts`.** Chọn emit tại chỗ thay vì thư mục `dist/` riêng: `tsc -p tsconfig.build.json` (`npm run build`) sinh `text-utils.js` cạnh nguồn, file `.js` được commit nên `pages.yml` (upload `.`, không build, không `npm ci`) và mọi import `?rev=` giữ nguyên, artifact Pages không đổi cấu trúc. `npm run build:check` emit ra thư mục tạm và so với bản đã commit (đã thử: sửa tay `.js` thì lệch và thoát lỗi); chạy trong `typecheck.yml`, không nằm trong `npm test` vì `pages.yml` không cài `node_modules`. Đánh đổi: Pages cũng phục vụ `text-utils.ts` thô nhưng không có import nào trỏ tới nó; cần đổi sang thư mục `dist/` nếu muốn loại hẳn. Đo lại baseline sau pilot: học viên JS 266 KB gốc / 80 KB nén (trước 267 / 80), 4G chậm vào màn làm bài 1,29 s (trước 1,27 s) — không vượt mốc; `candidate-flow-smoke` pass, 693 test pass. Chưa đổi `pages.yml` ở thời điểm pilot.
+- [x] (13/11/2026) **Mở rộng emit và đổi artifact Pages.** (1) `candidate/learning-api.ts` chuyển sang `.ts` theo cùng cách (kiểu thay cho JSDoc; `.js` sinh ra khác `.js` cũ chỉ ở định dạng, cùng logic). tsc không phân giải được import có `?rev=`, nên nguồn `.ts` import `./text-utils.js` thuần và `scripts/build-lib.mjs` thêm `?rev=<rev>` vào import nội bộ khi emit, rev lấy từ `content-preview.mjs` (quy trình nâng rev bằng sed giữ nguyên, sed sửa cả `.js` đã commit lẫn nguồn đọc rev nên `build:check` vẫn khớp). (2) `scripts/stage-pages.mjs` (`npm run stage:pages`) dựng `_site/` = repo như trước trừ `node_modules`, `.git`, `.github`, mọi `.ts`; kiểm không còn `.ts` và có đủ entry; `pages.yml` nay `npm ci` + typecheck + `build:check` + test + stage rồi upload `_site` (trước là `.`). Đã chạy local: 623 file trong `_site` khớp 623 file nguồn không phải `.ts`; đo `load-baseline` trên chính `_site` (`LOAD_ROOT=_site`): học viên 258 KB gốc / 76 KB nén, 4G chậm vào màn làm bài 1,29 s, dashboard không đổi (1.125 KB / 382 KB) — dưới mốc baseline. 693 test, typecheck, `build:check`, ba smoke học viên (`candidate-flow`, `candidate-exam-mode`, `candidate-entry-review`) pass. **Chưa chạy `pages.yml` mới trên GitHub Actions thật** (rủi ro còn lại: `npm ci`/cache trên runner, quyền, đường dẫn artifact); nên chạy `workflow_dispatch` trên nhánh trước khi merge main.
 - [ ] Nếu Vite được chọn để emit: build MPA giữ mọi đường dẫn hiện hữu, copy config/assets có kiểm soát, giữ canonical nguyên trạng; artifact phải đầy đủ ngay khi workflow chuyển upload dist.
 - Interface: export pilot và output JS browser. Dependency: bước 1; mở rộng TS builder sau 3. Cập nhật AGENTS.md và runbook tooling trong chính bước triển khai được duyệt.
 - Nghiệm thu: strict pilot không any/ignore để né lỗi; test/typecheck/build tách riêng; JS consumers vẫn chạy; Node CI/version target được kiểm, clean checkout install từ lockfile tái lập được.
 - Rollback: revert tooling/source/CI cùng nhóm; khôi phục upload root nếu đã đổi; không để Pages nhận .ts thô. Rủi ro: dev chạy nhưng artifact thiếu entry/audio/config.
 
-### Bước 6 — Pilot Vue có giới hạn và quyết định tiếp tục (M–L)
+### Bước 6 — Pilot Vue có giới hạn (HỦY theo quyết định 12/11/2026)
+
+> Người dùng không duyệt ngân sách thử Vue. Giữ nội dung dưới đây làm tham khảo lịch sử; không thực hiện.
 
 - [ ] Sau khi B chứng minh ổn định, chọn một exercise editor trắc nghiệm trong Test Studio cho Vue + TS; không chuyển phòng thi hoặc toàn dashboard.
 - [ ] Dùng cùng draft commands, public data contract, CSS tokens. Legacy truyền snapshot/callback; Vue không sở hữu draft toàn cục. Chỉ render một implementation cho mỗi root.
@@ -306,6 +335,12 @@ Mọi bước dưới đây chưa được thực hiện. Công sức S/M/L là 
 - Rollback: unmount Vue, chọn lại legacy editor; revert dependency/build entry của pilot nếu bỏ. Giới hạn thí điểm một exercise giúp không có dữ liệu cần chuyển ngược.
 
 ### Bước 7 — Canonical renderer và kết thúc chuyển tiếp (L)
+
+> **Quyết định 12/11/2026 (người dùng giao cho agent chọn): chưa tách script của `webtest-34-demo/index.html` (2.600 dòng, 10 thẻ `<script>`) cho tới khi có lưới an toàn cho luồng học viên.** Lý do: hiện chỉ có `candidate-mobile-smoke.mjs` và `e2e-exam-switch.browser.mjs` chạy trình duyệt; các test khác (`exam-room-ui`, `candidate-*`, `exam-guard-renderer-wiring`...) đọc mã nguồn `index.html` bằng regex nên sẽ vỡ khi script chuyển file, và rủi ro cao hơn dashboard (đồng hồ làm bài, audio, SSE, fullscreen). Việc đầu tiên của bước 7 là **smoke luồng học viên trên Learning API giả**: mở bằng token trong fragment, chọn đáp án và khôi phục bản nháp sau reload, nộp (một lần), hết giờ, audio resume, mất kết nối và kết nối lại; chạy như `dashboard-actions-smoke`. Chỉ sau đó mới tách `runtime.js` từng khối, chuyển các test đọc mã sang kiểm hành vi trước khi di chuyển. Không dùng production để smoke.
+>
+> **Cập nhật cùng ngày:** smoke đã viết (`tests/browser/candidate-flow-smoke.mjs`, xem `CANDIDATE_FLOW_VERIFICATION.md`). Phát hiện quan trọng: link `#test=` chạy `content-preview.mjs` (2.465 dòng), **không** chạy script nội tuyến của `index.html`, nơi chỉ còn đường prototype cũ; mục tiêu tách thật là `content-preview.mjs`. Ghi nhận một khoảng trống: `submissionId` không ổn định khi nộp lại.
+>
+> **Tiến độ (12/11/2026):** đã gỡ đường prototype nội tuyến của `webtest-34-demo/index.html` (2.601 → ~475 dòng) sau khi có bốn smoke học viên (`candidate-flow`, `candidate-exam-mode`, `candidate-entry-review`, `candidate-mobile`) và chuyển 30 test đọc nguồn sang hành vi; phát hiện và sửa lỗi token dính ký tự thừa của shell thật. Chi tiết trong `CANDIDATE_FLOW_VERIFICATION.md`. Tiếp theo: tách `content-preview.mjs`.
 
 - [ ] Sau khi dashboard ổn định, tách script `webtest-34-demo/index.html:599–2593` sang runtime.js giữ thứ tự config/globals; tiếp đó chia state/request/audio/exam lifecycle theo test.
 - [ ] Chỉ chia sẻ renderer public giữa simulation/canonical khi hai bên có parity tests; không truyền private grading material sang runtime học viên.
@@ -356,3 +391,19 @@ Các quyết định cần review ở giai đoạn tiếp theo:
 3. Trước chuyển artifact/deploy, chốt browser tối thiểu, base path thực tế và ngưỡng tải được chấp nhận.
 
 Không có quyết định nào trong ba mục này được coi là người dùng đã duyệt. Công việc lượt này dừng ở tài liệu; chưa triển khai refactor.
+
+### Quyết định 13/11/2026 — trình duyệt tối thiểu và ngưỡng tải (người dùng duyệt mặc định đề xuất)
+
+- **Trình duyệt tối thiểu:** Chrome, Edge, Firefox, Safari trong 2 năm gần đây (bản mới nhất trừ 2 phiên bản). Hệ quả: `target` ES2022 của `tsconfig` là phù hợp, không cần hạ cú pháp. Nếu phòng thi thật có máy cũ hơn thì phải mở lại quyết định này trước khi emit.
+- **Ngưỡng tải:** vào được màn hình làm bài dưới 3 giây trên 4G; tổng JS ban đầu không vượt mức hiện tại. Chưa có baseline đo thật, nên cần đo trước khi chuyển artifact Pages (xem checklist bước 5).
+- **Baseline tải đo ngày 13/11/2026** (`tests/browser/load-baseline.mjs`, Chrome headless, viewport 390×844, cache lạnh, trung vị 5 lượt, API giả, có nén gzip như Pages; số đầy đủ ở `LOAD_BASELINE.json`):
+
+  | Màn | Request (không tính API) | JS ban đầu (nén / gốc) | CSS (nén) | Thời gian, 4G nhanh (9 Mbps, 60 ms) | Thời gian, 4G chậm (1,6 Mbps, 150 ms) |
+  | --- | ---: | ---: | ---: | ---: | ---: |
+  | Học viên: link → chọn học viên → vào màn làm bài | 23 | 21 file, 80 KB / 267 KB | 13 KB | 0,53 s → 0,61 s | 1,20 s → 1,27 s |
+  | Dashboard giáo viên: tải xong / mạng rảnh | 43 | 28 file, 382 KB / 1.125 KB | 56 KB | 0,68 s / 1,57 s | 2,59 s / 3,96 s |
+
+  - Ngưỡng "dưới 3 giây trên 4G" áp cho màn làm bài của học viên: **đạt** ở cả 4G nhanh và chậm (1,27 s ở 4G chậm). Nếu host không nén, 4G chậm vào màn làm bài mất 2,5 s, vẫn dưới ngưỡng; dashboard không nén mất 6,8 s tải xong (ngưỡng không áp cho dashboard, ghi lại để theo dõi).
+  - Mốc "tổng JS ban đầu không vượt mức hiện tại" = 267 KB gốc / 80 KB nén (học viên) và 1.125 KB gốc / 382 KB nén (dashboard). Đây là mốc so sánh cho bước emit.
+  - Giới hạn: máy dev, không phải thiết bị học viên (không giới hạn CPU); API giả không bị giả lập độ trễ; mạng giả lập chỉ chặn băng thông và độ trễ ở tầng Chrome; chưa đo trên Pages thật.
+- Hai quyết định này mở khóa việc chuyển `.ts` + emit nhưng **không** tự động cho phép đổi artifact Pages: vẫn cần baseline tải, kiểm artifact đầy đủ và rollback theo bước 5.

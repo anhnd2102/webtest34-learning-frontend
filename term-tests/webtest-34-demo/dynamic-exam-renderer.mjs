@@ -688,7 +688,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
       <div class="candidate-listening-order-wrap cbt-listening-order-wrap" data-item-id="${escape(item.itemVersionId)}">
         ${audioSrc ? `
           <div class="candidate-audio-dock cbt-audio-dock">
-            ${renderAudioDockHtml(audioSrc, 'Đoạn ghi âm câu hỏi', 1)}
+            ${renderAudioDockHtml(audioSrc, 'Đoạn ghi âm câu hỏi', 1, item.itemVersionId || '')}
           </div>
         ` : ''}
 
@@ -823,11 +823,12 @@ export function convertGoogleDriveAudioUrl(rawUrl) {
   return trimmed;
 }
 
-export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', maxListens = 1) {
+// audioKey: khóa tiến độ nghe gửi lên máy chủ (/attempts/audio/checkpoint); chỉ gồm chữ, số, _ và -.
+export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', maxListens = 1, audioKey = '') {
   const convertedUrl = convertGoogleDriveAudioUrl(audioSrc);
   if (!convertedUrl) return '';
   return `
-    <div class="strict-audio-dock candidate-audio-dock" data-audio-src="${escape(convertedUrl)}" data-listens-count="0" data-max-listens="${maxListens}">
+    <div class="strict-audio-dock candidate-audio-dock" data-audio-src="${escape(convertedUrl)}" data-listens-count="0" data-max-listens="${maxListens}"${audioKey ? ` data-audio-key="${escape(audioKey)}"` : ''}>
       <div class="strict-audio-header">
         <span class="audio-badge">${ICONS.volume} ${escape(label)}</span>
         <div class="audio-meta-right">
@@ -968,7 +969,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             <span class="points">${items.length} câu hỏi</span>
           </div>
 
-          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 1) : ''}
+          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 1, blockId) : ''}
 
           <div class="split-pane-mobile-toggle" role="tablist" aria-label="Bài đọc và câu hỏi">
             <button type="button" role="tab" class="btn btn-secondary btn-sm active toggle-pane-btn" data-pane="reading" data-section="${bIdx}" aria-selected="true">${ICONS.book} Bài đọc</button>
@@ -1025,7 +1026,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             <span class="points">${items.length} câu hỏi</span>
           </div>
 
-          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 1) : ''}
+          ${audioSrc ? renderAudioDockHtml(audioSrc, `Bài nghe: ${block.title || `Phần ${bIdx + 1}`}`, 1, blockId) : ''}
 
           ${reading ? `
             <div class="sim-reading-dock cbt-reading-dock">
@@ -1098,7 +1099,7 @@ export function isKeyboardOpen(viewport, layoutHeight) {
   return layoutHeight - viewport.height * viewport.scale > 120;
 }
 
-export function initDynamicExamInteractions(rootEl, { definition, state = { answers: {} }, onAnswerChange, onSectionChange }) {
+export function initDynamicExamInteractions(rootEl, { definition, state = { answers: {} }, onAnswerChange, onSectionChange, onAudioProgress }) {
   if (!rootEl || !definition) return;
 
   const blocks = definition.blocks || [];
@@ -1578,7 +1579,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   }
 
   // Initialize Strict Audio Docks (max 2 listens)
-  initStrictAudioDocks(rootEl, { state });
+  initStrictAudioDocks(rootEl, { state, onAudioProgress });
 
   return {
     activateSection,
@@ -1587,7 +1588,8 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
   };
 }
 
-export function initStrictAudioDocks(rootEl, { state } = {}) {
+// state.audioProgress[audioKey] = { lastHeardSeconds, completed } khôi phục từ máy chủ; onAudioProgress(audioKey, seconds, completed) báo mốc mới.
+export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
   if (!rootEl) return;
   const docks = rootEl.querySelectorAll('.strict-audio-dock');
   docks.forEach(dock => {
@@ -1697,6 +1699,45 @@ export function initStrictAudioDocks(rootEl, { state } = {}) {
           liveStatus.style.display = 'inline-flex';
         }
       });
+    }
+
+    // Tiến độ nghe lưu trên máy chủ: nghe xong thì khóa; nghe dở thì tiếp tục từ vị trí đã lưu (vẫn tính là đã dùng lượt).
+    const audioKey = dock.getAttribute('data-audio-key') || '';
+    const saved = audioKey ? state?.audioProgress?.[audioKey] : null;
+    if (saved) {
+      const savedCard = dock.closest('.simulation-section-card');
+      if (savedCard && savedCard.getAttribute('data-has-audio') === 'true') savedCard.setAttribute('data-audio-unlocked', 'true');
+      if (saved.completed) {
+        listensCount = maxListens;
+        dock.setAttribute('data-listens-count', String(listensCount));
+        playBtn.disabled = true;
+        playBtn.style.display = 'none';
+        if (endedNotice) endedNotice.style.display = 'inline-flex';
+        syncListensLeft();
+      } else if (saved.lastHeardSeconds > 0) {
+        maxPlayedTime = saved.lastHeardSeconds;
+        const seekToSaved = () => {
+          if (Number.isFinite(audioEl.duration) && audioEl.duration > 0) audioEl.currentTime = Math.min(saved.lastHeardSeconds, Math.max(0, audioEl.duration - 0.25));
+        };
+        audioEl.addEventListener('loadedmetadata', seekToSaved, { once: true });
+        if (audioEl.readyState >= 1) seekToSaved();
+        playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
+        syncListensLeft();
+      }
+    }
+    if (audioKey && typeof onAudioProgress === 'function' && typeof audioEl.addEventListener === 'function') {
+      let lastReportAt = 0;
+      const report = completed => {
+        const seconds = completed && Number.isFinite(audioEl.duration) ? audioEl.duration : audioEl.currentTime;
+        onAudioProgress(audioKey, Math.round(seconds * 10) / 10, completed);
+      };
+      audioEl.addEventListener('timeupdate', () => {
+        const now = Date.now();
+        if (!audioEl.paused && now - lastReportAt >= 5000) { lastReportAt = now; report(false); }
+      });
+      audioEl.addEventListener('pause', () => { if (!audioEl.ended) report(false); });
+      audioEl.addEventListener('ended', () => report(true));
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && !audioEl.paused) report(false); });
     }
 
     playBtn.addEventListener('click', async () => {

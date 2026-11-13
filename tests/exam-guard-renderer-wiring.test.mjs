@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
 
-const renderer = await fs.readFile(new URL('../term-tests/webtest-34-demo/content-preview.mjs', import.meta.url), 'utf8');
+// Exam Mode nằm ở candidate/exam-mode.js (tách từ content-preview.mjs); gộp hai file để kiểm dây nối của renderer.
+const read = path => fs.readFile(new URL(path, import.meta.url), 'utf8');
+const renderer = (await read('../term-tests/webtest-34-demo/content-preview.mjs')) + '\n' + (await read('../term-tests/webtest-34-demo/candidate/exam-mode.js'));
 
 test('the canonical renderer tells the reducer why the student appears to have left', () => {
   assert.match(renderer, /window\.addEventListener\('blur', \(\) => leave\('blur'\)\)/);

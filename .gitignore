@@ -2,3 +2,5 @@
 Thumbs.db
 # Local copies of supplied source recordings; publish reviewed assets separately.
 term-tests/webtest-34-demo/assets/demo-audio/
+node_modules/
+_site/

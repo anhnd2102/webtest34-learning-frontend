@@ -349,7 +349,7 @@ test('Submitting simulation evaluates multi-item span questions, formatting scor
     }
   };
 
-  const mockResultsModal = { style: { display: 'none' } };
+  const mockResultsModal = { hidden: true };
   const mockResultsBody = { innerHTML: '' };
 
   const mockForm = {
@@ -445,7 +445,7 @@ test('Submitting simulation evaluates multi-item span questions, formatting scor
   assert.equal(qnav56.classList.contains('is-correct'), true, 'Câu 56 should be marked is-correct');
 
   // Verify results breakdown was rendered
-  assert.equal(mockResultsModal.style.display, 'flex', 'Results modal must be shown');
+  assert.equal(mockResultsModal.hidden, false, 'Results modal must be shown');
   assert.ok(mockResultsBody.innerHTML.includes('2/2đ'), 'Total score must be formatted as 2/2đ');
   assert.ok(!mockResultsBody.innerHTML.includes('%'), 'Score must strictly never contain percentage symbol %');
   assert.ok(mockResultsBody.innerHTML.includes('Câu 51'), 'Breakdown includes Câu 51');

@@ -10,6 +10,10 @@ on:
       - tests/**
       - .nojekyll
       - package.json
+      - package-lock.json
+      - tsconfig.json
+      - tsconfig.build.json
+      - scripts/**
       - .github/workflows/pages.yml
 
 permissions:
@@ -32,10 +36,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build:check
       - run: npm test
+      # Artifact là thư mục _site (không phải `.`): loại node_modules và nguồn .ts, giữ .js đã commit.
+      - run: npm run stage:pages
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -162,7 +162,7 @@ test('Teacher Dashboard Redesign: styles.css contains required design system sty
   assert.match(css, /\.clickable-kpi-card/, 'Must define .clickable-kpi-card');
   assert.match(css, /\.retake-badge\.active/, 'Must define .retake-badge.active');
   assert.match(css, /\.btn-retake-renew/, 'Must define .btn-retake-renew');
-  assert.match(css, /#view-grading\s+\.assignment-link-bar\s*\{\s*display:\s*none\s*!important;?\s*\}/, 'Must hide assignment-link-bar in view-grading');
+  assert.doesNotMatch(css, /#view-grading\s+\.assignment-link-bar/, 'The legacy link bar is gone, so no rule hides it in view-grading');
 });
 
 
@@ -194,7 +194,7 @@ test('Teacher Dashboard Assessment Tabs: hover and active styles use brand color
   // Verify dashboard.js renders assessmentTabItems and switches reportState.mode
   assert.match(
     dashboardJs,
-    /reportState\.mode = 'item_analysis';/,
+    /(?:reportState|getReportState\(\))\.mode = 'item_analysis';/,
     'switchAssessmentTab must switch reportState.mode to item_analysis'
   );
   assert.match(

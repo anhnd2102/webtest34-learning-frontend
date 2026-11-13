@@ -1,101 +1,101 @@
 {
-  "baseline": "5b06753",
-  "sourceSha256": "c60cbccbad7803757f3a52ec3ad64d511bcada175765087d3d71668c0a49e78c",
-  "sourceLines": 12711,
+  "baseline": "c2237ec",
+  "sourceSha256": "ec16c8ebe39fc05484ba1718feb7f1b512adf049df1d99e7ebfde0057ef561d1",
+  "sourceLines": 12704,
   "fragments": [
     {
-      "href": "styles/01-foundation.css?rev=20261110-batch-modals1",
+      "href": "styles/01-foundation.css?rev=20261112-protected-a",
       "startLine": 1,
-      "endLine": 1110,
-      "sha256": "4a632512fa2fb1ed83443a5ed35be53c5aed695461ece4d0f786109efe20f79c",
+      "endLine": 1107,
+      "sha256": "42b95c76e931da3ac38a81c7b64332a3fb7e977a332b140e04a7a9890e664970",
       "extractionStartLine": 1,
       "extractionEndLine": 1069
     },
     {
-      "href": "styles/02-dashboard-grading.css?rev=20261110-batch-modals1",
-      "startLine": 1111,
-      "endLine": 2767,
-      "sha256": "c5b8ed78598860eeaaa1e8c10dd746a3181c2dc8126f60d17ade0f95bdb0a668",
+      "href": "styles/02-dashboard-grading.css?rev=20261112-protected-a",
+      "startLine": 1108,
+      "endLine": 2747,
+      "sha256": "c2ea5256b70ba84866c7c1aaead3ab356b293bb2d2b7e82ad8578509dc00bb92",
       "extractionStartLine": 1070,
       "extractionEndLine": 2726
     },
     {
-      "href": "styles/03-studio-builder.css?rev=20261110-batch-modals1",
-      "startLine": 2768,
-      "endLine": 4716,
-      "sha256": "ba22a5f9d543b92daf39770b9bf91a9a7e5d472b2d5132ce1196a6a4f3373671",
+      "href": "styles/03-studio-builder.css?rev=20261112-protected-a",
+      "startLine": 2748,
+      "endLine": 4683,
+      "sha256": "3981842880d8afe25fc2358816804aaf87aa98e5aeaa9373f703b68ab67d8d86",
       "extractionStartLine": 2727,
       "extractionEndLine": 4644
     },
     {
-      "href": "styles/04-authoring.css?rev=20261110-batch-modals1",
-      "startLine": 4717,
-      "endLine": 5380,
-      "sha256": "29201654065856f93de3778075cb86e5d929d69a717106af47375ffc83717532",
+      "href": "styles/04-authoring.css?rev=20261112-protected-a",
+      "startLine": 4684,
+      "endLine": 5347,
+      "sha256": "b80af14f1f3c10ca7400af86995d5af3ff0818e1c07c70f0f55709465ca0805d",
       "extractionStartLine": 4645,
       "extractionEndLine": 5289
     },
     {
-      "href": "styles/05-simulation-questions.css?rev=20261110-batch-modals1",
-      "startLine": 5381,
-      "endLine": 6295,
-      "sha256": "22311374bd167b5e2d40127967b50fab434487f6e58ec351578ea8b9f72d5a9a",
+      "href": "styles/05-simulation-questions.css?rev=20261112-protected-a",
+      "startLine": 5348,
+      "endLine": 6215,
+      "sha256": "cd0dc4be60d4c3ef4fd3362030cbfaaf0199bbc29a1367d651a121d8700bdb31",
       "extractionStartLine": 5290,
       "extractionEndLine": 6204
     },
     {
-      "href": "styles/06-publishing.css?rev=20261110-batch-modals1",
-      "startLine": 6296,
-      "endLine": 7463,
-      "sha256": "71273bfe56ff53200a541ef35e04446ef748179a0a1f6d439366ef8ffe782996",
+      "href": "styles/06-publishing.css?rev=20261112-protected-a",
+      "startLine": 6216,
+      "endLine": 7379,
+      "sha256": "7ce7b2922eb224bcbd00f60ede6bbf37635b29206c1d4cf4dc205338f84416fc",
       "extractionStartLine": 6205,
       "extractionEndLine": 6829
     },
     {
-      "href": "styles/07-reports-and-question-layouts.css?rev=20261110-batch-modals1",
-      "startLine": 7464,
-      "endLine": 9048,
-      "sha256": "d4e134bb9ffcf300d97943113da6fb1424ce34ab590f17642331a631298bb75d",
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261112-protected-a",
+      "startLine": 7380,
+      "endLine": 8959,
+      "sha256": "8cb5cc911b13c9c5319067ac1f559f217fb407b02992a4a816bea3b6ba1739a6",
       "extractionStartLine": 6830,
       "extractionEndLine": 7911
     },
     {
-      "href": "styles/08-studio-simulation-shell.css?rev=20261110-batch-modals1",
-      "startLine": 9049,
-      "endLine": 10125,
-      "sha256": "ee74984b1f7fe94166ca8d0408db4597a779c025ab4ee2d9919f6242a21bdf41",
+      "href": "styles/08-studio-simulation-shell.css?rev=20261112-protected-a",
+      "startLine": 8960,
+      "endLine": 10032,
+      "sha256": "80c667ef3d86958ece4fc90cf242bc561597583a06fe7d7bca5c6a3d4c088355",
       "extractionStartLine": 7912,
       "extractionEndLine": 8949
     },
     {
-      "href": "styles/09-editor-media.css?rev=20261110-batch-modals1",
-      "startLine": 10126,
-      "endLine": 10719,
-      "sha256": "b2b74c5786313f48080a1c9d81b686642c256656fefc306a5f3fe1b4d7eda5e9",
+      "href": "styles/09-editor-media.css?rev=20261112-protected-a",
+      "startLine": 10033,
+      "endLine": 10583,
+      "sha256": "bc8cf66528635916a8d6c48383ebde28595596a434a4196bc48e6d3015d99aeb",
       "extractionStartLine": 8950,
       "extractionEndLine": 9535
     },
     {
-      "href": "styles/10-studio-overrides.css?rev=20261110-batch-modals1",
-      "startLine": 10720,
-      "endLine": 11490,
-      "sha256": "37b90dbc5549c50a7fee5aba033afdf039008f367da861852bce6f07fb051957",
+      "href": "styles/10-studio-overrides.css?rev=20261112-protected-a",
+      "startLine": 10584,
+      "endLine": 11346,
+      "sha256": "daf0862790917e0f01f34f3637065b8729a61da21f6f0dd530039689cef80911",
       "extractionStartLine": 9536,
       "extractionEndLine": 10306
     },
     {
-      "href": "styles/11-analytics.css?rev=20261110-batch-modals1",
-      "startLine": 11491,
-      "endLine": 12358,
+      "href": "styles/11-analytics.css?rev=20261112-protected-a",
+      "startLine": 11347,
+      "endLine": 12214,
       "sha256": "090a8b29cd6c3777beebf1096df9f272717595d969cb75a033105750bbdda19e",
       "extractionStartLine": 10307,
       "extractionEndLine": 11174
     },
     {
-      "href": "styles/12-context-and-assessment.css?rev=20261110-batch-modals1",
-      "startLine": 12359,
-      "endLine": 12711,
-      "sha256": "c9bb9bc16309f066ca61e574b3d6664e88ce894a7390dddb874365597eb86823",
+      "href": "styles/12-context-and-assessment.css?rev=20261112-protected-a",
+      "startLine": 12215,
+      "endLine": 12704,
+      "sha256": "24d4ba3c53c75eb4ebfb33870743f44d73ddb96a91e6fe1d5bc359408c636768",
       "extractionStartLine": 11175,
       "extractionEndLine": 11527
     }
@@ -105,5 +105,5 @@
     "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
     "sourceLines": 11527
   },
-  "revision": "batch-modals1"
+  "revision": "protected-a"
 }

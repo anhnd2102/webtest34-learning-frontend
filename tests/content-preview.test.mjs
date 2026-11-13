@@ -191,7 +191,10 @@ test('demo entries delegate to the canonical page and branch before Learning ini
     assert.match(entry, /location\.hash/);
   }
   const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.ok(html.indexOf("import('./content-preview.mjs?rev=") < html.indexOf('const STORAGE_KEY'));
+  assert.ok(html.includes("import('./content-preview.mjs?rev="), 'trang nạp content-preview.mjs');
+  // Đường prototype nội tuyến đã gỡ: không còn logic thi trong index.html, chỉ còn bước chọn mount hoặc hiện hướng dẫn.
+  assert.ok(!html.includes('const STORAGE_KEY'), 'index.html không còn script prototype');
+  assert.ok(html.includes('id="noTokenNotice"'), 'không có token thì hiện hướng dẫn mở bằng link giáo viên');
 });
 
 test('choice answers are translated between visible labels and stable definition option IDs', () => {

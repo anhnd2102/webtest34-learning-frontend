@@ -50,6 +50,9 @@
   --izone-retake-active-bg: #fef3c7;
   --izone-retake-active-text: #92400e;
   --izone-retake-active-border: #fde68a;
+  --izone-retake-grant-bg: #f3e8ff;
+  --izone-retake-grant-text: #6b21a8;
+  --izone-expected-answer-text: #0369a1;
   --izone-overlay-backdrop: rgba(15, 23, 42, 0.65);
   --izone-shadow-modal-color: rgba(15, 23, 42, 0.25);
   --izone-shadow-assessment-color: rgba(15, 23, 42, 0.04);
@@ -68,9 +71,9 @@ h2 { margin-top: 0; font-weight: 700; letter-spacing: -0.01em; color: #0f172a; }
 .exam-room-clickable { cursor: pointer; }
 #exam-room-timeline { margin-top: 16px; }
 label { display: grid; gap: 6px; font-weight: 600; font-size: 0.9rem; color: #334155; }
-input, select, textarea, button, .form-control { box-sizing: border-box !important; font-family: inherit; }
+input, select, textarea, button, .form-control { box-sizing: border-box; font-family: inherit; }
 input:not([type="checkbox"]):not([type="radio"]), select, textarea { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-input[type="checkbox"], input[type="radio"] { width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important; cursor: pointer; accent-color: #db0829; }
+input[type="checkbox"], input[type="radio"] { width: 16px !important; height: 16px !important; min-width: 16px; min-height: 16px; margin: 0 !important; padding: 0; flex-shrink: 0; cursor: pointer; accent-color: #db0829; }
 input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus { outline: none; border-color: #db0829; box-shadow: 0 0 0 3px rgba(219, 8, 41, 0.12); }
 button { border-color: #db0829; background: #db0829; color: white; font-weight: 700; cursor: pointer; border-radius: 10px; box-shadow: 0 2px 8px rgba(219, 8, 41, 0.22); transition: all 0.15s ease; }
 button:hover:not(:disabled) { background: #b80521; border-color: #b80521; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(219, 8, 41, 0.28); }
@@ -151,12 +154,6 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shado
   box-shadow: 0 1px 3px rgba(25, 28, 30, 0.04), 0 4px 14px rgba(25, 28, 30, 0.03);
   margin-bottom: 0;
 }
-.showcase-exam-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
 .showcase-progress-wrap {
   padding: 12px 16px;
   background: #f8fafc;
@@ -226,7 +223,7 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shado
 }
 .showcase-panel:has(#selected-assignment-card:not([hidden])) .showcase-placeholder,
 #selected-assignment-card:not([hidden]) ~ .showcase-placeholder {
-  display: none !important;
+  display: none;
 }
 
 .showcase-header {
@@ -571,7 +568,7 @@ tr:hover td { background: #fafbfc; }
 .feedback-box p { margin: 4px 0 0; color: #7b341e; }
 
 /* Manual Grading Styles */
-.conflict-alert { margin-bottom: 16px; padding: 14px 18px; border-left: 5px solid #e53e3e; background: #fff5f5; color: #9b2c2c; border-radius: 8px; font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.conflict-alert { border-left: 5px solid #e53e3e; font-size: 0.95rem; }
 .conflict-alert button { width: auto; padding: 6px 14px; font-size: 0.85rem; }
 
 .grading-actions-bar { position: sticky; bottom: 20px; z-index: 10; margin-top: 24px; padding: 16px 20px; background: #ffffff; border: 1px solid #d9dee5; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
@@ -1031,7 +1028,7 @@ body.login-page .page-title-bar {
   display: none !important;
 }
 body:not(.login-page) #auth-panel {
-  display: none !important;
+  display: none;
 }
 
 @media (max-width: 900px) {

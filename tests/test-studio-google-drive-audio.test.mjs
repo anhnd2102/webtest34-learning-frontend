@@ -94,6 +94,8 @@ test('renderStrictCandidateAudioDock creates strict candidate listening player w
   assert.ok(mockContainer.innerHTML.includes('strict-audio-dock'), 'Expected strict-audio-dock container');
   assert.ok(mockContainer.innerHTML.includes('audio-volume-control'), 'Expected volume control slider');
   assert.ok(mockContainer.innerHTML.includes('btn-start-listening'), 'Expected start listening button');
+  assert.ok(mockContainer.innerHTML.includes('class="audio-live-status" hidden>'), 'Live status starts hidden through the hidden attribute');
+  assert.ok(mockContainer.innerHTML.includes('class="audio-ended-notice" hidden>'), 'Ended notice starts hidden through the hidden attribute');
 
   // Strictly verify: NO <audio controls>, NO pause button, NO seek scrubber
   assert.equal(mockContainer.innerHTML.includes('<audio controls'), false, 'Candidate dock must NEVER render default audio controls');

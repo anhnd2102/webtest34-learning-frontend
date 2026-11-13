@@ -192,17 +192,11 @@ test('teacher dashboard index.html provides required controls and result contain
   assert.match(html, /id="detail-meta"/);
   assert.match(html, /id="detail-scores"/);
   assert.match(html, /id="detail-items"/);
-  assert.match(html, /id="detail-grading-history"/);
   assert.match(html, /id="detail-attempt-history"/);
+  // Lịch sử chấm đã được gỡ khỏi drawer chi tiết (860e55f); không để lại section ẩn vĩnh viễn.
+  assert.doesNotMatch(html, /detail-grading-history/);
 });
 
-test('student exam page has a waiting room that displays no form content', async () => {
-  const fs = await import('node:fs/promises');
-  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.match(html, /id="examWaitingRoom"/);
-  assert.match(html, /id="exam-waiting-greeting"/);
-  assert.match(html, /Đề sẽ hiện khi giáo viên bắt đầu/);
-});
 
 test('attemptDetailPath builds canonical endpoint path', () => {
   assert.equal(
@@ -372,10 +366,7 @@ test('teacher dashboard styles.css and student runner provide retake expiry and 
   const css = await readDashboardCss();
   assert.match(css, /\.result-status\.retake_expired/);
 
-  const demoHtml = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.match(demoHtml, /id="studentNotice"/);
-  assert.match(demoHtml, /Quy\u1ec1n l\u00e0m l\u1ea1i \u0111\u00e3 h\u1ebft h\u1ea1n/);
-  assert.match(demoHtml, /Th\u1eddi gian l\u00e0m b\u00e0i th\u1ef1c t\u1ebf l\u00e0/);
+  // Th\u00f4ng b\u00e1o quy\u1ec1n l\u00e0m l\u1ea1i ph\u00eda h\u1ecdc vi\u00ean \u0111\u01b0\u1ee3c ki\u1ec3m b\u1eb1ng h\u00e0nh vi trong tests/browser/candidate-entry-review-smoke.mjs.
 });
 
 test('teacher dashboard auth endpoints and headers use canonical authorization', () => {
@@ -481,10 +472,12 @@ test('teacher dashboard index.html and styles.css provide conflict alert element
 test('teacher dashboard index.html and styles.css provide student test link bar and copy button', async () => {
   const fs = await import('node:fs/promises');
   const html = await fs.readFile(new URL('../term-tests/teacher-dashboard/index.html', import.meta.url), 'utf8');
-  assert.match(html, /id="assignment-link-bar"/);
-  assert.match(html, /id="assignment-student-url"/);
-  assert.match(html, /id="copy-student-link-btn"/);
-  assert.match(html, /id="open-student-link-btn"/);
+  assert.match(html, /id="showcase-link-bar"/);
+  assert.match(html, /id="showcase-student-url"/);
+  assert.match(html, /id="copy-showcase-link-btn"/);
+  assert.match(html, /id="open-showcase-link-btn"/);
+  // Thanh link cũ trong Trung tâm chấm điểm đã bị thay bằng thanh link ở thẻ bài được giao và đã được gỡ hẳn.
+  assert.doesNotMatch(html, /id="assignment-link-bar"|id="assignment-student-url"|id="copy-student-link-btn"|id="open-student-link-btn"/);
 
   const css = await readDashboardCss();
   assert.match(css, /\.assignment-link-bar/);

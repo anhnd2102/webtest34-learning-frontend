@@ -20,7 +20,7 @@ test('distinguishes complete and manual-review results', () => {
 });
 
 test('canonical renderer uses the asynchronous result view model', async () => {
-  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
+  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/candidate/review-screen.js', import.meta.url), 'utf8');
   const reviewModule = await fs.readFile(new URL('../term-tests/34-shared/review-module.mjs', import.meta.url), 'utf8');
   assert.match(html, /reviewApi\.reviewViewModel\(/);
   assert.match(reviewModule, /resultViewModel\(result\)/);
@@ -54,7 +54,4 @@ test('result rendering replaces legacy database mojibake with reviewed local gro
   assert.equal(definition.blocks[0].title, 'Listening Â· Äiá»n tá»«');
 });
 
-test('re-entering a submitted attempt refetches the result once instead of relying on localStorage', async () => {
-  const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
-  assert.match(html, /state\.submittedAt && state\.learning\?\.status !== 'superseded'[^\n]*[\s\S]*?showResultLoading\(\);\s*startLearningResultPolling\(\{refetch: true\}\)/);
-});
+

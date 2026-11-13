@@ -282,11 +282,13 @@ test('Test Studio: Inline Cloze preserves clozeAnswers during onSaveDraft', asyn
 
 test('inline cloze badge styles enforce nowrap and prevent line breaks on brackets and index numbers', () => {
   const stylesCss = readDashboardCss();
-  assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*white-space:\s*nowrap\s*!important;/i, 'Wrapper must have white-space: nowrap !important');
-  assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*flex-shrink:\s*0\s*!important;/i, 'Wrapper must have flex-shrink: 0 !important');
-  assert.match(stylesCss, /\.inline-blank-number,[^}]*white-space:\s*nowrap\s*!important;/i, 'Badge must have white-space: nowrap !important');
-  assert.match(stylesCss, /\.inline-blank-number,[^}]*word-break:\s*keep-all\s*!important;/i, 'Badge must have word-break: keep-all !important');
-  assert.match(stylesCss, /\.inline-blank-number,[^}]*flex-shrink:\s*0\s*!important;/i, 'Badge must have flex-shrink: 0 !important');
+  // Dashboard: không còn thuộc tính nào cạnh tranh với các khai báo này nên !important đã được gỡ (xem doc/CSS_IMPORTANT_AUDIT.md);
+  // hành vi (nowrap, không co, không ngắt từ) vẫn phải còn.
+  assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*white-space:\s*nowrap\s*;/i, 'Wrapper must have white-space: nowrap');
+  assert.match(stylesCss, /\.inline-blank-wrapper\s*\{[^}]*flex-shrink:\s*0\s*;/i, 'Wrapper must have flex-shrink: 0');
+  assert.match(stylesCss, /\.inline-blank-number,[^}]*white-space:\s*nowrap\s*;/i, 'Badge must have white-space: nowrap');
+  assert.match(stylesCss, /\.inline-blank-number,[^}]*word-break:\s*keep-all\s*;/i, 'Badge must have word-break: keep-all');
+  assert.match(stylesCss, /\.inline-blank-number,[^}]*flex-shrink:\s*0\s*;/i, 'Badge must have flex-shrink: 0');
 
   const dynamicCss = fs.readFileSync('term-tests/webtest-34-demo/dynamic-test.css', 'utf8');
   assert.match(dynamicCss, /\.inline-blank-wrapper,[^}]*white-space:\s*nowrap\s*!important;/i, 'Dynamic wrapper must have white-space: nowrap !important');
