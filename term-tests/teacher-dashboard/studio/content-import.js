@@ -1,7 +1,19 @@
 // CSV parsing and templates for Test Studio authoring; no DOM or application startup.
 
+/**
+ * Thẻ câu hỏi do importer sinh ra. Hình dạng khác nhau theo từng loại bài nên chỉ
+ * khai báo là bản ghi mở; hợp đồng chi tiết nằm ở test từng parser.
+ * @typedef {Record<string, any>} ImportCard
+ */
+/**
+ * @typedef {{ line?: number, rowIndex?: number, row?: string[], raw?: string, reason: string }} InvalidRow
+ */
+/** @typedef {{ items: ImportCard[], invalidRows: InvalidRow[] }} ImportResult */
+
+/** @param {string} [text] */
 export function parseClozeBlanks(text) {
   if (!text || typeof text !== 'string') return [];
+  /** @type {{ number: number, [key: string]: any }[]} */
   const blanks = [];
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{1,})|(?:\[(\d+)\]\s*[_\.\u2026]*)|(?:\{\{(\d+)\}\})|(?:\((\d+)\))/g;
   for (const match of text.matchAll(pattern)) {
@@ -17,6 +29,7 @@ export function parseClozeBlanks(text) {
 }
 
 export function parseVocabPairCsv(rawText = '') {
+  /** @type {{ validRows: ImportCard[], invalidRows: InvalidRow[] }} */
   const result = {
     validRows: [],
     invalidRows: []
@@ -142,6 +155,7 @@ export function generateSingleChoiceTemplateCsv() {
 
 export function parseSingleChoiceCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -176,6 +190,7 @@ export function parseSingleChoiceCsv(rawText = '', defaultPoints = 1) {
     if (optD) options.push({ id: 'opt_d', label: optD });
 
     const layoutType = options.length === 2 ? 'grid_2' : (options.length === 3 ? 'grid_3' : 'grid_4');
+    /** @type {Record<string, string>} */
     const letterMap = { A: 'opt_a', B: 'opt_b', C: 'opt_c', D: 'opt_d' };
     const expectedOptionId = letterMap[correctLetter] || 'opt_a';
 
@@ -209,6 +224,7 @@ export function generateFitbTemplateCsv() {
 
 export function parseFitbCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -252,6 +268,7 @@ export function generateErrorCorrectionTemplateCsv() {
 
 export function parseErrorCorrectionCsv(rawText = '') {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -307,6 +324,7 @@ export function generateSentenceTransformationTemplateCsv() {
 
 export function parseSentenceTransformationCsv(rawText = '') {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -364,6 +382,7 @@ export function generateListeningOrderTemplateCsv() {
 
 export function parseListeningOrderCsv(rawText = '') {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -379,6 +398,7 @@ export function parseListeningOrderCsv(rawText = '') {
   const isLegacy = firstRow[0]?.includes('section') || (rows[startIndex] && rows[startIndex].length >= 3 && !isNaN(parseInt(rows[startIndex][2], 10)) && isNaN(parseInt(rows[startIndex][1], 10)));
 
   if (isLegacy) {
+    /** @type {Map<string, { text: string, correctRank: number }[]>} */
     const groups = new Map();
     for (let i = startIndex; i < rows.length; i++) {
       const row = rows[i];
@@ -391,10 +411,12 @@ export function parseListeningOrderCsv(rawText = '') {
         continue;
       }
 
-      if (!groups.has(title)) {
-        groups.set(title, []);
+      let group = groups.get(title);
+      if (!group) {
+        group = [];
+        groups.set(title, group);
       }
-      groups.get(title).push({ text, correctRank: rank });
+      group.push({ text, correctRank: rank });
     }
 
     groups.forEach((events, title) => {
@@ -488,6 +510,7 @@ export function generateSentenceReorderTemplateCsv() {
 
 export function parseSentenceReorderCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -554,6 +577,7 @@ export function generatePronunciationTemplateCsv() {
 
 export function parsePronunciationCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -621,6 +645,7 @@ export function generatePictorialVocabTemplateCsv() {
 
 export function parsePictorialVocabCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -685,6 +710,7 @@ export function generateReadingMatchingTemplateCsv() {
 
 export function parseReadingMatchingCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -763,6 +789,7 @@ export function generateRubricAsyncTemplateCsv() {
 
 export function parseRubricAsyncCsv(rawText = '', defaultPoints = 4) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -827,6 +854,7 @@ export function generateInlineClozeTemplateCsv() {
 
 export function parseInlineClozeCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -868,7 +896,9 @@ export function parseInlineClozeCsv(rawText = '', defaultPoints = 1) {
     }
 
     const answersList = rawAnswer ? rawAnswer.split(/[|;]/).map(a => a.trim()) : [];
+    /** @type {Record<number, { targetWord: string, accepted: string[] }>} */
     const clozeAnswers = {};
+    /** @type {number[]} */
     const uniqueNums = [];
     for (const b of blanks) {
       if (!uniqueNums.includes(b.number)) uniqueNums.push(b.number);
@@ -913,6 +943,7 @@ export function generateMultiGroupTemplateCsv() {
 
 export function parseMultiGroupCsv(rawText = '', defaultPoints = 2) {
   const rows = parseCsvRows(rawText);
+  /** @type {ImportResult} */
   const result = { items: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -946,6 +977,8 @@ export function parseMultiGroupCsv(rawText = '', defaultPoints = 2) {
           { id: 'D', label: 'Phương án D' },
           { id: 'E', label: 'Phương án E' }
         ];
+
+    /** @type {string[]} */
 
     let correctLetters = [];
     if (rawAnswer) {
@@ -1035,6 +1068,7 @@ export function normalizeQuestionType(raw = '') {
 
 export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
   const rows = parseCsvRows(rawText);
+  /** @type {{ exercises: ImportCard[], invalidRows: InvalidRow[] }} */
   const result = { exercises: [], invalidRows: [] };
   if (!rows || rows.length === 0) return result;
 
@@ -1044,7 +1078,18 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
     startIndex = 1;
   }
 
+  /** @type {Map<string, { instructions?: string, items: ImportCard[], [key: string]: any }>} */
   const exerciseMap = new Map();
+  /** @type {(key: string, instructions: string) => { instructions?: string, items: ImportCard[], [key: string]: any }} */
+  const ensureExercise = (key, instructions) => {
+    let exercise = exerciseMap.get(key);
+    if (!exercise) {
+      exercise = { title: key, instructions: instructions || '', items: [] };
+      exerciseMap.set(key, exercise);
+    }
+    return exercise;
+  };
+  /** @type {string | null} */
   let currentExKey = null;
 
   for (let i = startIndex; i < rows.length; i++) {
@@ -1068,29 +1113,13 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
 
     if (rawExTitle) {
       currentExKey = rawExTitle;
-      if (!exerciseMap.has(currentExKey)) {
-        exerciseMap.set(currentExKey, {
-          title: rawExTitle,
-          instructions: rawExInst || '',
-          items: []
-        });
-      } else if (rawExInst && !exerciseMap.get(currentExKey).instructions) {
-        exerciseMap.get(currentExKey).instructions = rawExInst;
-      }
+      const titled = ensureExercise(currentExKey, rawExInst);
+      if (rawExInst && !titled.instructions) titled.instructions = rawExInst;
     }
 
-    if (!currentExKey) {
-      currentExKey = 'Bài tập 1';
-      if (!exerciseMap.has(currentExKey)) {
-        exerciseMap.set(currentExKey, {
-          title: currentExKey,
-          instructions: rawExInst || '',
-          items: []
-        });
-      }
-    }
+    if (!currentExKey) currentExKey = 'Bài tập 1';
 
-    const currentEx = exerciseMap.get(currentExKey);
+    const currentEx = ensureExercise(currentExKey, rawExInst);
 
     if (!rawPrompt && !rawAnswer) {
       continue;
@@ -1163,6 +1192,8 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
             { id: 'E', label: 'Phương án E' }
           ];
 
+      /** @type {string[]} */
+
       let correctLetters = [];
       if (rawAnswer) {
         const tokens = rawAnswer.split(/[,|;\s]+/).map(t => t.trim().toUpperCase()).filter(Boolean);
@@ -1200,7 +1231,9 @@ export function parseBlockExercisesCsv(rawText = '', defaultPoints = 1) {
     } else if (qType === 'inline_cloze') {
       const answersList = rawAnswer ? rawAnswer.split(/[|;]/).map(a => a.trim()) : [];
       const blanks = parseClozeBlanks(rawPrompt || '');
+      /** @type {Record<number, { targetWord: string, accepted: string[] }>} */
       const clozeAnswers = {};
+      /** @type {number[]} */
       const uniqueNums = [];
       for (const b of blanks) {
         if (!uniqueNums.includes(b.number)) uniqueNums.push(b.number);
