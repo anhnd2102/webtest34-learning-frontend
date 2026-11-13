@@ -14,6 +14,23 @@
     "term-tests/webtest-34-demo/candidate/review-screen.ts",
     "term-tests/webtest-34-demo/candidate/motion.ts",
     "term-tests/webtest-34-demo/candidate/exam-mode.ts",
+    "term-tests/webtest-34-demo/candidate/intro-screen.ts",
+    "term-tests/webtest-34-demo/candidate/submit-flow.ts",
+    "term-tests/webtest-34-demo/candidate/group-render.ts",
+    "term-tests/teacher-dashboard/ui/presentation.ts",
+    "term-tests/teacher-dashboard/shell/pagination.ts",
+    "term-tests/teacher-dashboard/studio/block-jump-chips.ts",
+    "term-tests/teacher-dashboard/results/export.ts",
+    "term-tests/teacher-dashboard/shell/lifecycle.ts",
+    "term-tests/teacher-dashboard/shell/query-coordinator.ts",
+    "term-tests/teacher-dashboard/ui/icons.ts",
+    "term-tests/teacher-dashboard/navigation/unsaved-changes.ts",
+    "term-tests/teacher-dashboard/shell/dashboard-state.ts",
+    "term-tests/teacher-dashboard/exam-room/presentation.ts",
+    "term-tests/teacher-dashboard/shell/results-filters.ts",
+    "term-tests/teacher-dashboard/shell/class-directory.ts",
+    "term-tests/teacher-dashboard/shell/assignments-loader.ts",
+    "term-tests/teacher-dashboard/shell/auth-session.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }

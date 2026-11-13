@@ -19,6 +19,7 @@ export interface ResultPayload {
   gradingStatus?: string;
   answerRelease?: string;
   summary?: { scoreFinal?: boolean, pendingItemCount?: number, scoreEarned?: number, maxScore?: number };
+  publication?: { published?: boolean };
   items?: ResultItem[];
 }
 export interface DefinitionItem { itemVersionId: string, pedagogicalTypeCode?: string, interactionType?: string }

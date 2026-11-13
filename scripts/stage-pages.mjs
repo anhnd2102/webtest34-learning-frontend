@@ -1,5 +1,5 @@
 // Dựng thư mục `_site/` là artifact Pages: chỉ những gì trang cần chạy (index.html, term-tests/, .nojekyll).
-// Loại tài liệu, test, script, công cụ và mọi nguồn .ts; .js sinh từ .ts đã được commit và vẫn có trong artifact.
+// Loại tài liệu, test, script, công cụ và mọi nguồn .ts và khai báo .d.mts; .js sinh từ .ts đã được commit và vẫn có trong artifact.
 // Chạy sau `npm run build:check` để đảm bảo .js khớp .ts. Dùng: npm run stage:pages
 import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
 import path from 'node:path';
@@ -20,7 +20,7 @@ function copyTree(from, to, depth = 0) {
     const target = path.join(to, entry.name);
     if (entry.isDirectory()) {
       if (!(depth === 0 && excludedTopLevel.has(entry.name))) copyTree(source, target, depth + 1);
-    } else if (entry.isFile() && !entry.name.endsWith('.ts') && (depth > 0 || rootFiles.has(entry.name))) {
+    } else if (entry.isFile() && !/\.m?ts$/.test(entry.name) && (depth > 0 || rootFiles.has(entry.name))) {
       copyFileSync(source, target);
     }
   }
@@ -34,7 +34,7 @@ const walk = dir => readdirSync(dir).flatMap(name => {
   return statSync(p).isDirectory() ? walk(p) : [p];
 });
 const staged = walk(site);
-const leaked = staged.filter(file => file.endsWith('.ts'));
+const leaked = staged.filter(file => /\.m?ts$/.test(file));
 if (leaked.length) throw new Error(`Artifact còn file .ts: ${leaked.join(', ')}`);
 for (const required of ['index.html', 'term-tests/webtest-34-demo/candidate/learning-api.js', 'term-tests/webtest-34-demo/candidate/text-utils.js']) {
   if (!existsSync(path.join(site, required))) throw new Error(`Artifact thiếu ${required}`);
