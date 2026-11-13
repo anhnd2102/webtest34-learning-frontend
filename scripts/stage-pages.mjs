@@ -1,5 +1,5 @@
-// Dựng thư mục `_site/` là artifact Pages: toàn bộ repo như trước đây, trừ file không được phục vụ
-// (node_modules, .git, .github, _site và mọi nguồn .ts; .js sinh từ .ts đã được commit và vẫn có trong artifact).
+// Dựng thư mục `_site/` là artifact Pages: chỉ những gì trang cần chạy (index.html, term-tests/, .nojekyll).
+// Loại tài liệu, test, script, công cụ và mọi nguồn .ts; .js sinh từ .ts đã được commit và vẫn có trong artifact.
 // Chạy sau `npm run build:check` để đảm bảo .js khớp .ts. Dùng: npm run stage:pages
 import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
 import path from 'node:path';
@@ -7,17 +7,20 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const site = path.join(root, '_site');
-const excludedDirs = new Set(['node_modules', '.git', '.github', '_site']);
+// Thư mục gốc không phục vụ: công cụ, tài liệu, test. Không file nào của site tham chiếu tới chúng (đã grep).
+const excludedTopLevel = new Set(['node_modules', '.git', '.github', '_site', 'doc', 'docs', 'scripts', 'test', 'tests']);
 
+// File ở gốc repo được phục vụ (còn lại như package.json, AGENTS.md, serve.mjs, tsconfig không thuộc site).
+const rootFiles = new Set(['index.html', '.nojekyll']);
 // Tự duyệt cây thay cho cpSync (cpSync từ chối chép thư mục vào thư mục con của chính nó).
-function copyTree(from, to) {
+function copyTree(from, to, depth = 0) {
   mkdirSync(to, { recursive: true });
   for (const entry of readdirSync(from, { withFileTypes: true })) {
     const source = path.join(from, entry.name);
     const target = path.join(to, entry.name);
     if (entry.isDirectory()) {
-      if (!excludedDirs.has(entry.name)) copyTree(source, target);
-    } else if (entry.isFile() && !entry.name.endsWith('.ts')) {
+      if (!(depth === 0 && excludedTopLevel.has(entry.name))) copyTree(source, target, depth + 1);
+    } else if (entry.isFile() && !entry.name.endsWith('.ts') && (depth > 0 || rootFiles.has(entry.name))) {
       copyFileSync(source, target);
     }
   }
