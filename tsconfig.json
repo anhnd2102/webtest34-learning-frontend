@@ -47,6 +47,9 @@
     "term-tests/teacher-dashboard/shell/publish-all.ts",
     "term-tests/teacher-dashboard/shell/exam-room-session.ts",
     "term-tests/teacher-dashboard/shell/add-student.ts",
+    "term-tests/teacher-dashboard/shell/exam-controls.ts",
+    "term-tests/teacher-dashboard/shell/grant-retake.ts",
+    "term-tests/teacher-dashboard/shell/assignment-selection.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }

@@ -3,6 +3,7 @@
 import { renderSvgIcon } from '../ui/icons.js';
 import { escapeHtml } from '../ui/presentation.js';
 import type { ApiRequestOptions } from '../api/client.js';
+import type { ExamSession } from '../exam-room/presentation.js';
 
 export type DashboardState = {
   classId?: string;
@@ -36,7 +37,14 @@ export interface ClassRecord {
 
 export interface AssignmentChip { assignmentId: string, title: string, phase?: unknown, status: string }
 
-export interface AssignmentRecord extends AssignmentChip { [key: string]: unknown }
+export interface AssignmentRecord extends AssignmentChip {
+  id?: string;
+  classId?: string;
+  examMode?: boolean;
+  exitLimit?: number | null;
+  examSession?: ExamSession | null;
+  [key: string]: unknown;
+}
 
 // Giáo viên đang đăng nhập (payload `actor` của /api/teacher/classes hoặc `teacher` của đăng nhập).
 export interface TeacherActor { role?: string, classIds?: string[], courseCodes?: string[], [key: string]: unknown }
@@ -48,7 +56,7 @@ export interface ScopeState {
   currentAssignmentsList: AssignmentRecord[];
   currentServerNow: string | null;
   isSwitchingAssignment: boolean;
-  currentSelectedAssignment?: unknown;
+  currentSelectedAssignment?: AssignmentRecord | null;
 }
 
 export type DashboardRequest = (path: string, options?: ApiRequestOptions) => Promise<any>;
