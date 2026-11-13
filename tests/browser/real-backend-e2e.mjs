@@ -5,7 +5,8 @@
 // Chạy: LEARNING_E2E_DATABASE_URL=postgres://... PLAYWRIGHT_MODULE=<playwright/index.mjs> node tests/browser/real-backend-e2e.mjs
 // Biến: BACKEND_DIR (mặc định ../webtest34-learning-platform/backend), E2E_FRONTEND_PORT (mặc định 18350).
 // Kiểm: học viên mở link, tải roster theo mã lớp, vào bài, bản nháp lưu lên DB, tải lại thì khôi phục, tiến độ nghe
-// lưu theo lượt (attempt_id + audio_key), nộp đúng một lần và DB ghi trạng thái submitted.
+// lưu theo lượt (attempt_id + audio_key), nộp đúng một lần và DB ghi trạng thái submitted; rồi giáo viên (đăng nhập thật)
+// xem kết quả, cấp quyền làm lại: lượt cũ bị thay thế, lượt mới không kế thừa mốc nghe.
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
@@ -28,6 +29,8 @@ const apiPort = 8788; // cố định: config.js của frontend chọn http://12
 const ids = { template: crypto.randomUUID(), version: crypto.randomUUID(), link: crypto.randomUUID(), token: crypto.randomUUID(), assignment: crypto.randomUUID() };
 const className = `ICE${ids.link.slice(0, 5).toUpperCase()}`;
 const student = { ref: crypto.randomUUID(), contactId: 910001, name: 'Học Viên E2E' };
+// Giáo viên tổng hợp (vai trò admin: không cần ánh xạ lớp); đăng nhập thật bằng email + số điện thoại.
+const teacher = { id: 990000 + Math.floor(Math.random() * 9000), name: 'GV E2E', email: `gv-e2e-${crypto.randomUUID().slice(0, 8)}@example.test`, phone: '0900000001' };
 const itemIds = { text: crypto.randomUUID(), choice: crypto.randomUUID() };
 const blockId = crypto.randomUUID();
 const publicDefinition = {
@@ -48,6 +51,7 @@ async function seed() {
   await pool.query(`INSERT INTO learning.form_grading_key (form_version_id, grader_version, private_definition, content_hash) VALUES ($1, 1, $2::jsonb, $3)`,
     [ids.version, JSON.stringify({ schemaVersion: 'FormGradingKeyV1', formVersionId: ids.version, graderVersion: 1, groups: {},
       items: { [itemIds.text]: { graderType: 'accepted_text', accepted: ['xin chao'] }, [itemIds.choice]: { graderType: 'exact_option', expectedOptionId: 'a' } } }), 'c'.repeat(64)]);
+  await pool.query(`INSERT INTO learning.teachers (teacher_id, teacher_name, teacher_email, teacher_phone, khoi_id, role) VALUES ($1, $2, $3, $4, 2, 'admin')`, [teacher.id, teacher.name, teacher.email, teacher.phone]);
   await pool.query(`INSERT INTO learning.test_access_link (id, public_token, course_key, test_number, title) VALUES ($1, $2, $3, 1, 'E2E')`, [ids.link, ids.token, `e2e-${ids.link}`]);
   await pool.query(`INSERT INTO learning.form_assignment (id, test_link_id, form_version_id, organization_key, course_code, erp_course_class_id, class_name_snapshot, session_number, title, status, created_by_email)
     VALUES ($1, $2, $3, 'izone', '34', 910000, $4, 1, $5, 'published', 'e2e@izone')`, [ids.assignment, ids.link, ids.version, className, `E2E · ${className}`]);
@@ -160,8 +164,46 @@ try {
   const againBody = await again.json();
   assert.equal(againBody.attempt?.status, 'submitted', `bắt đầu lại trả lượt đã nộp, nhận ${JSON.stringify(againBody).slice(0, 200)}`);
   assert.equal((await dbOne(`SELECT count(*)::int AS n FROM learning.attempt WHERE assignment_id = $1 AND student_ref = $2`, [ids.assignment, student.ref])).n, 1, 'không sinh lượt mới khi chưa cấp quyền làm lại');
+  // 7. Giáo viên đăng nhập thật và thấy bài đã nộp trong kết quả của bài được giao
+  const teacherApi = `http://127.0.0.1:${apiPort}/api/teacher`;
+  const teacherCall = (method, route, body, token) => fetch(`${teacherApi}${route}`, { method, headers: { 'content-type': 'application/json', origin: frontendOrigin, ...(token ? { authorization: `Bearer ${token}` } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+  const badLogin = await teacherCall('POST', '/auth/login', { email: teacher.email, phoneNumber: '0911111111' });
+  assert.equal(badLogin.status, 401, 'sai số điện thoại thì không đăng nhập được');
+  const login = await teacherCall('POST', '/auth/login', { email: teacher.email, phoneNumber: teacher.phone });
+  assert.equal(login.status, 200, `đăng nhập giáo viên thật: ${await login.clone().text()}`);
+  const { token: teacherToken } = await login.json();
+  assert.ok(teacherToken, 'có token phiên giáo viên');
+  const noAuth = await teacherCall('GET', `/classes/910000/assignments`);
+  assert.equal(noAuth.status, 401, 'không có phiên thì không đọc được danh sách bài được giao');
+  const assignments = await teacherCall('GET', '/classes/910000/assignments', null, teacherToken);
+  assert.equal(assignments.status, 200, `danh sách bài được giao: ${await assignments.clone().text()}`);
+  assert.match(JSON.stringify(await assignments.json()), new RegExp(ids.assignment), 'bài được giao hiện trong danh sách của lớp');
+  const results = await teacherCall('GET', `/classes/910000/assignments/${ids.assignment}/results`, null, teacherToken);
+  assert.equal(results.status, 200, `kết quả bài được giao: ${await results.clone().text()}`);
+  assert.match(JSON.stringify(await results.json()), /Học Viên E2E/, 'học viên đã nộp hiện trong kết quả');
+
+  // 8. Cấp quyền làm lại: lượt cũ bị thay thế, lượt mới có token mới, khóa nghe theo lượt (mốc nghe lượt cũ không sang lượt mới)
+  const noReason = await teacherCall('POST', `/classes/910000/assignments/${ids.assignment}/students/${student.ref}/retake`, { expiresAt: new Date(Date.now() + 3600_000).toISOString() }, teacherToken);
+  assert.equal(noReason.status, 400, 'cấp quyền làm lại bắt buộc có lý do');
+  const grant = await teacherCall('POST', `/classes/910000/assignments/${ids.assignment}/students/${student.ref}/retake`, { reason: 'E2E kiểm chứng', expiresAt: new Date(Date.now() + 3600_000).toISOString() }, teacherToken);
+  assert.equal(grant.status, 200, `cấp quyền làm lại: ${await grant.clone().text()}`);
+  const retakeStart = await post('/attempts/start', { testToken: ids.token, courseCode: className, studentRef: student.ref, clientIdempotencyKey: crypto.randomUUID(), identityConfirmed: true });
+  assert.equal(retakeStart.status, 201, `bắt đầu lượt làm lại: ${await retakeStart.clone().text()}`);
+  const retakeAttempt = (await retakeStart.json()).attempt;
+  assert.equal(retakeAttempt.status, 'active');
+  assert.notEqual(retakeAttempt.attemptToken, attemptToken, 'lượt làm lại có token mới');
+  const attemptRows = (await pool.query(`SELECT status FROM learning.attempt WHERE assignment_id = $1 AND student_ref = $2 ORDER BY created_at`, [ids.assignment, student.ref])).rows.map(row => row.status);
+  assert.deepEqual(attemptRows, ['superseded', 'active'], `lượt cũ bị thay thế, lượt mới đang làm: ${attemptRows}`);
+  const resume2 = await (await post('/attempts/audio/resume', { attemptToken: retakeAttempt.attemptToken })).json();
+  assert.equal(resume2.resume.checkpoints.length, 0, 'lượt làm lại bắt đầu không có mốc nghe nào (khóa nghe theo lượt)');
+  const checkpoint2 = await post('/attempts/audio/checkpoint', { attemptToken: retakeAttempt.attemptToken, audioKey: 'b2', lastHeardSeconds: 3, completed: false });
+  assert.equal(checkpoint2.status, 200, 'lượt mới ghi mốc nghe được dù lượt cũ đã nghe xong cùng audioKey');
+  assert.equal((await pool.query(`SELECT count(*)::int AS n FROM learning.attempt_audio_checkpoint WHERE audio_key = 'b2' AND attempt_id IN (SELECT id FROM learning.attempt WHERE assignment_id = $1)`, [ids.assignment])).rows[0].n, 2, 'mỗi lượt có mốc nghe riêng (attempt_id + audio_key)');
+  const oldResume = await post('/attempts/audio/resume', { attemptToken });
+  assert.equal((await oldResume.json()).resume?.reason, 'superseded', 'lượt cũ báo đã bị thay thế');
+
   assert.deepEqual(pageErrors, [], `không có lỗi JS trên trang: ${pageErrors.join('; ')}`);
-  console.log(JSON.stringify({ status: 'passed', attemptStatus: done.status, audioKey: audioRow.audio_key, startAgainStatus: againBody.attempt?.status }));
+  console.log(JSON.stringify({ status: 'passed', attemptStatus: done.status, audioKey: audioRow.audio_key, startAgainStatus: againBody.attempt?.status, teacherLogin: true, retake: 'superseded->active', audioPerAttempt: true }));
 } catch (error) {
   console.error(error);
   console.error('--- backend output ---\n' + (backend?.output || '').slice(-1500));
