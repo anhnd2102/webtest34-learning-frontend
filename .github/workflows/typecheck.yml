@@ -17,6 +17,8 @@ on:
       - term-tests/**
       - tests/**
       - tsconfig.json
+      - tsconfig.build.json
+      - scripts/**
       - package.json
       - package-lock.json
       - .github/workflows/typecheck.yml
@@ -35,4 +37,5 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      - run: npm run build:check
       - run: npm test

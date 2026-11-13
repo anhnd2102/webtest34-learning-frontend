@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "term-tests",
+    "removeComments": false
+  },
+  "include": [
+    "term-tests/webtest-34-demo/candidate/text-utils.ts",
+    "term-tests/webtest-34-demo/candidate/learning-api.ts",
+    "term-tests/webtest-34-demo/globals.d.ts"
+  ]
+}
