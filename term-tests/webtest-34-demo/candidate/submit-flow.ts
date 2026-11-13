@@ -5,7 +5,7 @@ import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-rend
 import { scrollBehavior } from './motion.js';
 import { escape } from './text-utils.js';
 import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters, type ResultDefinition, type ResultPayload } from './result-view.js';
-import { withLocalGroupLabels } from './group-render.js';
+import { withLocalGroupLabels, type LocalGroupLabelsForm } from './group-render.js';
 import type { IntroLearningState } from './intro-screen.js';
 
 // Trạng thái lượt làm do shell sở hữu; luồng nộp bài ghi kết quả và bộ đếm giờ theo dõi kết quả sau nộp.
@@ -18,7 +18,7 @@ export interface SubmitLearningState extends IntroLearningState {
 
 export interface SubmitFlowParams {
   isLearningMode: boolean;
-  form: unknown;
+  form: LocalGroupLabelsForm | null | undefined;
   items: { id: string }[];
   title: string;
   state: { answers: Record<string, unknown>, submittedAt: number | null };
