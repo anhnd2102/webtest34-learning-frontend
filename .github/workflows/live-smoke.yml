@@ -1,0 +1,62 @@
+name: Live site smoke
+
+# Chạy 5 smoke học viên trên chính site Pages đã deploy (API vẫn là API giả, chỉ file tĩnh lấy từ site thật), để bắt lỗi
+# của artifact sau deploy (thiếu file, sai MIME, rev lệch) mà smoke trên server cục bộ không thấy.
+# Tự chạy sau khi pages.yml thành công trên main; chạy tay được; chạy trên PR khi đổi chính workflow này hoặc helper.
+# Không chặn deploy (chạy sau deploy) và không chạm production API.
+on:
+  workflow_run:
+    workflows: ["Publish Webtest 34 Learning frontend"]
+    types: [completed]
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/live-smoke.yml
+      - tests/browser/helpers/smoke-server.mjs
+
+permissions:
+  contents: read
+
+jobs:
+  live-smoke:
+    # workflow_run chỉ khi deploy thành công; các trigger khác luôn chạy.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SMOKE_ORIGIN: https://anhnd2102.github.io/webtest34-learning-frontend
+      PLAYWRIGHT_MODULE: ${{ github.workspace }}/node_modules/playwright/index.mjs
+    steps:
+      # Smoke lấy đúng commit vừa deploy (workflow_run) để khớp với bản đang phục vụ.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Ghim phiên bản Playwright dùng khi phát triển (1.63.0); không đưa vào package.json để lockfile của site tĩnh gọn.
+      - run: npm install --no-save playwright@1.63.0
+      - name: Chờ site phục vụ bản mới
+        shell: bash
+        run: |
+          # CDN của Pages có thể trễ vài chục giây sau deploy; chờ tối đa ~3 phút để file chính trả 200.
+          for attempt in $(seq 1 18); do
+            if curl -fsS -o /dev/null "$SMOKE_ORIGIN/term-tests/webtest-34-demo/candidate/text-utils.js" \
+              && curl -fsS -o /dev/null "$SMOKE_ORIGIN/term-tests/webtest-34-demo/index.html"; then
+              echo "site sẵn sàng (lần thử $attempt)"; exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::site không phản hồi sau ~3 phút"; exit 1
+      - name: Smoke học viên trên site thật
+        shell: bash
+        run: |
+          failed=0
+          for smoke in candidate-flow-smoke candidate-exam-mode-smoke candidate-entry-review-smoke candidate-audio-smoke candidate-mobile-smoke; do
+            echo "::group::$smoke ($SMOKE_ORIGIN)"
+            if ! node "tests/browser/$smoke.mjs"; then echo "::error::$smoke thất bại trên site thật"; failed=1; fi
+            echo "::endgroup::"
+          done
+          exit $failed
