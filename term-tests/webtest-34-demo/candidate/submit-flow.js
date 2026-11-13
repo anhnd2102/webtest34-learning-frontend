@@ -1,84 +1,79 @@
 // Hộp thoại nộp bài, nộp bài lên máy chủ, hộp kết quả và theo dõi kết quả sau nộp (tách nguyên văn từ content-preview.mjs).
-import { getTotalItemCount, getAnsweredCount, ICONS, scrollBehavior } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
+// NGUỒN: file .ts này; submit-flow.js do `npm run build` sinh ra (xem text-utils.ts). Import nội bộ viết
+// không có `?rev=`, bước build tự thêm rev dùng chung của shell học viên.
+import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
+import { scrollBehavior } from './motion.js?rev=20261113-submit-a';
 import { escape } from './text-utils.js?rev=20261113-submit-a';
 import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261113-submit-a';
 import { withLocalGroupLabels } from './group-render.js?rev=20261113-submit-a';
-
 export function createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic, examTimer, query, update, queueServerDraft, persist, clearDraftTimer }) {
-  const timerDisplay = examTimer.display;
+    const timerDisplay = examTimer.display;
     function handleOpenSubmitDialog() {
-      if (query('#demo-confirm-error')) query('#demo-confirm-error').hidden = true;
-      if (isDynamic) {
-        const total = getTotalItemCount(learningState.definition);
-        const done = getAnsweredCount(learningState.definition, state.answers);
-        const missing = total - done;
-        query('#demo-confirm-text').textContent = missing > 0
-          ? `Còn ${missing} câu chưa trả lời (đã làm ${done}/${total} câu). Bạn có chắc chắn muốn nộp bài?`
-          : `Bạn đã trả lời đầy đủ ${total}/${total} câu. Bạn có chắc chắn muốn nộp bài?`;
+        if (query('#demo-confirm-error'))
+            query('#demo-confirm-error').hidden = true;
+        if (isDynamic) {
+            const total = getTotalItemCount(learningState.definition);
+            const done = getAnsweredCount(learningState.definition, state.answers);
+            const missing = total - done;
+            query('#demo-confirm-text').textContent = missing > 0
+                ? `Còn ${missing} câu chưa trả lời (đã làm ${done}/${total} câu). Bạn có chắc chắn muốn nộp bài?`
+                : `Bạn đã trả lời đầy đủ ${total}/${total} câu. Bạn có chắc chắn muốn nộp bài?`;
+            query('#demo-confirm').showModal();
+            return;
+        }
+        const missing = items.filter(item => !String(state.answers[item.id] || '').trim()).length;
+        query('#demo-confirm-text').textContent = `Còn ${missing} ô chưa trả lời. Bạn có chắc chắn muốn nộp bài?`;
         query('#demo-confirm').showModal();
-        return;
-      }
-      const missing=items.filter(item=>!String(state.answers[item.id]||'').trim()).length;
-      query('#demo-confirm-text').textContent=`Còn ${missing} ô chưa trả lời. Bạn có chắc chắn muốn nộp bài?`;
-      query('#demo-confirm').showModal();
     }
-
     if (query('#demo-submit')) {
-      query('#demo-submit').addEventListener('click', handleOpenSubmitDialog);
+        query('#demo-submit').addEventListener('click', handleOpenSubmitDialog);
     }
     if (query('#demo-submit-top')) {
-      query('#demo-submit-top').addEventListener('click', handleOpenSubmitDialog);
+        query('#demo-submit-top').addEventListener('click', handleOpenSubmitDialog);
     }
-    query('#demo-cancel').addEventListener('click',()=>query('#demo-confirm').close());
-
+    query('#demo-cancel').addEventListener('click', () => query('#demo-confirm').close());
     function openDynamicResultsModal(result) {
-      const summary = result?.summary || {};
-      const scoreFinal = summary.scoreFinal === true && result.gradingStatus === 'complete';
-      const items = result?.items || [];
-      const definition = learningState.definition || {};
-
-      // Mark question navigator buttons with is-correct / is-incorrect
-      items.forEach(it => {
-        const qnavBtn = document.querySelector(`.btn-qnav[data-item-id="${it.itemVersionId}"]`);
-        if (qnavBtn) {
-          qnavBtn.classList.remove('is-correct', 'is-incorrect');
-          if (it.verdict === 'correct') {
-            qnavBtn.classList.add('is-correct');
-          } else if (it.verdict === 'incorrect' || it.verdict === 'partial') {
-            qnavBtn.classList.add('is-incorrect');
-          }
+        const summary = result?.summary || {};
+        const scoreFinal = summary.scoreFinal === true && result.gradingStatus === 'complete';
+        const items = result?.items || [];
+        const definition = learningState.definition || {};
+        // Mark question navigator buttons with is-correct / is-incorrect
+        items.forEach(it => {
+            const qnavBtn = document.querySelector(`.btn-qnav[data-item-id="${it.itemVersionId}"]`);
+            if (qnavBtn) {
+                qnavBtn.classList.remove('is-correct', 'is-incorrect');
+                if (it.verdict === 'correct') {
+                    qnavBtn.classList.add('is-correct');
+                }
+                else if (it.verdict === 'incorrect' || it.verdict === 'partial') {
+                    qnavBtn.classList.add('is-incorrect');
+                }
+            }
+        });
+        const existingModal = document.querySelector('#simulation-results-modal');
+        const modal = existingModal ?? document.createElement('div');
+        if (!existingModal) {
+            modal.id = 'simulation-results-modal';
+            modal.className = 'simulation-results-modal';
+            document.body.appendChild(modal);
         }
-      });
-
-      let modal = document.querySelector('#simulation-results-modal');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'simulation-results-modal';
-        modal.className = 'simulation-results-modal';
-        document.body.appendChild(modal);
-      }
-
-      modal.innerHTML = studentResultsHtml({ result, definition, studentName: learningState.studentName, className: learningState.className });
-
-      modal.style.display = 'flex';
-
-      bindResultFilters(modal);
-
-      const closeHandler = () => {
-        modal.style.display = 'none';
-      };
-      modal.querySelectorAll('#btn-close-sim-results, #btn-retest-simulation, #btn-done-simulation-results').forEach(b => {
-        b.addEventListener('click', closeHandler);
-      });
-
-      // Show persistent reopening card in #demo-result
-      const resBanner = query('#demo-result');
-      if (resBanner) {
-        resBanner.hidden = false;
-        resBanner.style.background = '#f0fdf4';
-        resBanner.style.borderColor = '#bbf7d0';
-        resBanner.style.color = '#166534';
-        resBanner.innerHTML = `
+        modal.innerHTML = studentResultsHtml({ result, definition, studentName: learningState.studentName, className: learningState.className });
+        modal.style.display = 'flex';
+        bindResultFilters(modal);
+        const closeHandler = () => {
+            modal.style.display = 'none';
+        };
+        modal.querySelectorAll('#btn-close-sim-results, #btn-retest-simulation, #btn-done-simulation-results').forEach(b => {
+            b.addEventListener('click', closeHandler);
+        });
+        // Show persistent reopening card in #demo-result
+        const resBanner = query('#demo-result');
+        if (resBanner) {
+            resBanner.hidden = false;
+            resBanner.style.background = '#f0fdf4';
+            resBanner.style.borderColor = '#bbf7d0';
+            resBanner.style.color = '#166534';
+            resBanner.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
             <div>
               <strong>Đã hoàn tất chấm điểm!</strong> Tổng điểm đạt được: <strong>${summary.scoreEarned ?? 0}/${summary.maxScore ?? 0}đ</strong> (${scoreFinal ? 'Điểm chính thức' : 'Điểm tạm tính'}).
@@ -88,23 +83,21 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
             </button>
           </div>
         `;
-        const reOpenBtn = resBanner.querySelector('#btn-open-results-modal');
-        if (reOpenBtn) {
-          reOpenBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-          });
+            const reOpenBtn = resBanner.querySelector('#btn-open-results-modal');
+            if (reOpenBtn) {
+                reOpenBtn.addEventListener('click', () => {
+                    modal.style.display = 'flex';
+                });
+            }
         }
-      }
     }
-
     function renderAiResultCard(result) {
-      const isPublished = Boolean(result?.publication?.published);
-      const card = query('#demo-ai-card');
-      card.hidden = false;
-
-      if (isDynamic) {
-        if (!isPublished) {
-          card.innerHTML = `
+        const isPublished = Boolean(result?.publication?.published);
+        const card = query('#demo-ai-card');
+        card.hidden = false;
+        if (isDynamic) {
+            if (!isPublished) {
+                card.innerHTML = `
             <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:24px;text-align:center;color:#166534">
               <div style="font-size:32px;margin-bottom:6px">✓</div>
               <h3 style="color:#15803d;margin:0 0 8px 0;font-size:19px;font-weight:700">Bài làm đã được nộp thành công!</h3>
@@ -114,16 +107,14 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
               </p>
             </div>
           `;
-          return;
+                return;
+            }
+            // isPublished is true -> Show Candidate Simulation Results Modal
+            openDynamicResultsModal(result);
+            return;
         }
-
-        // isPublished is true -> Show Candidate Simulation Results Modal
-        openDynamicResultsModal(result);
-        return;
-      }
-
-      if (!isPublished) {
-        card.innerHTML = `
+        if (!isPublished) {
+            card.innerHTML = `
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:28px 24px;text-align:center;color:#166534">
             <div style="font-size:36px;margin-bottom:8px">✓</div>
             <h3 style="color:#15803d;margin:0 0 10px 0;font-size:20px;font-weight:700">Bài làm đã được nộp thành công!</h3>
@@ -133,12 +124,12 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
             </p>
           </div>
         `;
-        return;
-      }
-      const vm = resultViewModel(result);
-      const isComplete = vm.scoreFinal;
-      const isManualReview = result.gradingStatus === 'manual_review';
-      card.innerHTML = `
+            return;
+        }
+        const vm = resultViewModel(result);
+        const isComplete = vm.scoreFinal;
+        const isManualReview = result.gradingStatus === 'manual_review';
+        card.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;border-bottom:1px solid #f1f5f9;padding-bottom:16px;margin-bottom:16px">
           <div>
             <div style="font-size:12px;font-weight:700;color:${isComplete ? '#16a34a' : isManualReview ? '#ea580c' : '#d97706'};letter-spacing:1px;text-transform:uppercase">
@@ -176,52 +167,55 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
         `}
         <div class="learning-result-grid">${resultDetailsHtml(result, withLocalGroupLabels(learningState.definition, form))}</div>
       `;
-      card.querySelectorAll('[data-result-details]').forEach(button => button.addEventListener('click', () => {
-        const details = card.querySelector(`#${button.dataset.resultDetails}`);
-        const expanded = button.getAttribute('aria-expanded') === 'true';
-        button.setAttribute('aria-expanded', String(!expanded));
-        button.textContent = expanded ? 'Xem chi tiết' : 'Ẩn chi tiết';
-        if (details) details.hidden = expanded;
-      }));
+        card.querySelectorAll('[data-result-details]').forEach(button => button.addEventListener('click', () => {
+            const details = card.querySelector(`#${button.dataset.resultDetails}`);
+            const expanded = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', String(!expanded));
+            button.textContent = expanded ? 'Xem chi tiết' : 'Ẩn chi tiết';
+            if (details)
+                details.hidden = expanded;
+        }));
     }
-
     async function pollLearningResult() {
-      if (!isLearningMode || !learningState.attemptToken) return;
-      try {
-        const res = await apiRequest('/attempts/result', { attemptToken: learningState.attemptToken });
-        if (res.result) {
-          learningState.result = res.result;
-          renderAiResultCard(res.result);
-          if (!res.result.publication?.published) {
-            if (learningState.pollTimer) {
-              clearInterval(learningState.pollTimer);
-              learningState.pollTimer = null;
+        if (!isLearningMode || !learningState.attemptToken)
+            return;
+        try {
+            const res = await apiRequest('/attempts/result', { attemptToken: learningState.attemptToken });
+            if (res.result) {
+                learningState.result = res.result;
+                renderAiResultCard(res.result);
+                if (!res.result.publication?.published) {
+                    if (learningState.pollTimer) {
+                        clearInterval(learningState.pollTimer);
+                        learningState.pollTimer = null;
+                    }
+                }
+                else if (res.result.gradingStatus === 'complete' || res.result.gradingStatus === 'manual_review' || res.result.summary?.scoreFinal) {
+                    if (learningState.pollTimer) {
+                        clearInterval(learningState.pollTimer);
+                        learningState.pollTimer = null;
+                    }
+                }
             }
-          } else if (res.result.gradingStatus === 'complete' || res.result.gradingStatus === 'manual_review' || res.result.summary?.scoreFinal) {
-            if (learningState.pollTimer) {
-              clearInterval(learningState.pollTimer);
-              learningState.pollTimer = null;
-            }
-          }
         }
-      } catch {}
+        catch { }
     }
-
     learningState.onAutoSubmitted = text => {
-      state.submittedAt = Date.now();
-      stopExamConnections();
-      persist();
-      update();
-      examTimer.stop();
-      if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
-      query('#demo-result').hidden = false;
-      query('#demo-result').textContent = text;
-      window.scrollTo({ top: 0, behavior: scrollBehavior() });
+        state.submittedAt = Date.now();
+        stopExamConnections();
+        persist();
+        update();
+        examTimer.stop();
+        if (timerDisplay) {
+            timerDisplay.textContent = 'Đã nộp';
+            timerDisplay.classList.remove('warn');
+        }
+        query('#demo-result').hidden = false;
+        query('#demo-result').textContent = text;
+        window.scrollTo({ top: 0, behavior: scrollBehavior() });
     };
-
     // Một mã nộp cho cả lượt: nộp lại sau khi mất phản hồi không bị máy chủ coi là bản nộp khác.
     let submissionId = null;
-
     // Dùng chung cho nộp thành công và cho trường hợp bài đã được ghi nhận từ lần nộp trước (mất phản hồi).
     function acceptSubmission(res) {
         state.submittedAt = Date.now();
@@ -231,86 +225,90 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
         persist();
         update();
         examTimer.stop();
-        if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
+        if (timerDisplay) {
+            timerDisplay.textContent = 'Đã nộp';
+            timerDisplay.classList.remove('warn');
+        }
         query('#demo-confirm').close();
-        window.scrollTo({top: 0, behavior: scrollBehavior()});
-
+        window.scrollTo({ top: 0, behavior: scrollBehavior() });
         query('#demo-result').hidden = false;
         query('#demo-result').style.background = '#f0fdf4';
         query('#demo-result').style.borderColor = '#bbf7d0';
         query('#demo-result').style.color = '#166534';
         query('#demo-result').innerHTML = `${learningState.submitTimedOut ? 'Đã hết giờ làm bài. ' : ''}<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
-
         if (isDynamic) {
-          document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
-            if (el.id !== 'demo-prev' && el.id !== 'demo-next') {
-              el.disabled = true;
+            document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
+                if (el.id !== 'demo-prev' && el.id !== 'demo-next') {
+                    el.disabled = true;
+                }
+            });
+            const topSubmit = query('#demo-submit-top');
+            if (topSubmit) {
+                topSubmit.disabled = true;
+                topSubmit.textContent = 'Đã nộp bài';
             }
-          });
-          const topSubmit = query('#demo-submit-top');
-          if (topSubmit) {
-            topSubmit.disabled = true;
-            topSubmit.textContent = 'Đã nộp bài';
-          }
         }
-
         if (res.result) {
-          renderAiResultCard(res.result);
+            renderAiResultCard(res.result);
         }
         if (res.result?.publication?.published && !learningState.pollTimer) {
-          learningState.pollTimer = setInterval(pollLearningResult, 3500);
-          void pollLearningResult();
+            learningState.pollTimer = setInterval(pollLearningResult, 3500);
+            void pollLearningResult();
         }
     }
-
     query('#demo-confirm-submit').addEventListener('click', async () => {
-      // Lệnh nộp đã mang đủ câu trả lời; bản nháp gửi chen vào sẽ làm lệch revision của lệnh nộp.
-      clearDraftTimer();
-      query('#demo-confirm-submit').disabled = true;
-      query('#demo-confirm-submit').textContent = 'Đang gửi…';
-      if (query('#demo-confirm-error')) query('#demo-confirm-error').hidden = true;
-      try {
-        if (isLearningMode && learningState.attemptToken) {
-          const res = await apiRequest('/attempts/submit', {
-            attemptToken: learningState.attemptToken,
-            submissionId: (submissionId ||= createUuid()),
-            definitionHash: learningState.definitionHash,
-            draftRevision: Number(learningState.draftRevision || 0),
-            responses: buildResponsesPayload()
-          });
-          acceptSubmission(res);
-        } else {
-          state.submittedAt=Date.now();
-          persist();
-          update();
-          query('#demo-confirm').close();
-          window.scrollTo({top:0,behavior:scrollBehavior()});
+        // Lệnh nộp đã mang đủ câu trả lời; bản nháp gửi chen vào sẽ làm lệch revision của lệnh nộp.
+        clearDraftTimer();
+        query('#demo-confirm-submit').disabled = true;
+        query('#demo-confirm-submit').textContent = 'Đang gửi…';
+        if (query('#demo-confirm-error'))
+            query('#demo-confirm-error').hidden = true;
+        try {
+            if (isLearningMode && learningState.attemptToken) {
+                const res = await apiRequest('/attempts/submit', {
+                    attemptToken: learningState.attemptToken,
+                    submissionId: (submissionId ||= createUuid()),
+                    definitionHash: learningState.definitionHash,
+                    draftRevision: Number(learningState.draftRevision || 0),
+                    responses: buildResponsesPayload()
+                });
+                acceptSubmission(res);
+            }
+            else {
+                state.submittedAt = Date.now();
+                persist();
+                update();
+                query('#demo-confirm').close();
+                window.scrollTo({ top: 0, behavior: scrollBehavior() });
+            }
         }
-      } catch (err) {
-        // Bài đã được ghi nhận từ lần nộp trước (phản hồi bị mất) nhưng bản nộp lại khác nội dung: lấy kết quả thay vì báo lỗi.
-        if (isLearningMode && learningState.attemptToken && ['SUBMISSION_ALREADY_FINAL', 'ATTEMPT_ALREADY_SUBMITTED'].includes(err.code)) {
-          try {
-            acceptSubmission(await apiRequest('/attempts/result', { attemptToken: learningState.attemptToken }));
-            return;
-          } catch (resultError) {
-            alert(`Bài đã được nộp trước đó. Chưa tải được kết quả: ${resultError.message}`);
-            return;
-          }
+        catch (err) {
+            // Bài đã được ghi nhận từ lần nộp trước (phản hồi bị mất) nhưng bản nộp lại khác nội dung: lấy kết quả thay vì báo lỗi.
+            if (isLearningMode && learningState.attemptToken && ['SUBMISSION_ALREADY_FINAL', 'ATTEMPT_ALREADY_SUBMITTED'].includes(err.code ?? '')) {
+                try {
+                    acceptSubmission(await apiRequest('/attempts/result', { attemptToken: learningState.attemptToken }));
+                    return;
+                }
+                catch (resultError) {
+                    alert(`Bài đã được nộp trước đó. Chưa tải được kết quả: ${resultError.message}`);
+                    return;
+                }
+            }
+            // Báo ngay trong hộp xác nhận; nút xác nhận được bật lại ở finally để thử lại.
+            // Nộp tự động lúc hết giờ chạy khi hộp đang đóng, nên mở hộp để học viên thấy lỗi.
+            const confirmError = query('#demo-confirm-error');
+            if (confirmError) {
+                confirmError.textContent = `${learningState.submitTimedOut ? 'Đã hết giờ làm bài nhưng chưa nộp được' : 'Nộp bài không thành công'} (${err.message}). Kiểm tra mạng rồi bấm xác nhận lại.`;
+                confirmError.hidden = false;
+            }
+            if (!query('#demo-confirm').open)
+                query('#demo-confirm').showModal();
+            queueServerDraft();
         }
-        // Báo ngay trong hộp xác nhận; nút xác nhận được bật lại ở finally để thử lại.
-        // Nộp tự động lúc hết giờ chạy khi hộp đang đóng, nên mở hộp để học viên thấy lỗi.
-        const confirmError = query('#demo-confirm-error');
-        if (confirmError) {
-          confirmError.textContent = `${learningState.submitTimedOut ? 'Đã hết giờ làm bài nhưng chưa nộp được' : 'Nộp bài không thành công'} (${err.message}). Kiểm tra mạng rồi bấm xác nhận lại.`;
-          confirmError.hidden = false;
+        finally {
+            query('#demo-confirm-submit').disabled = false;
+            query('#demo-confirm-submit').textContent = isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử';
         }
-        if (!query('#demo-confirm').open) query('#demo-confirm').showModal();
-        queueServerDraft();
-      } finally {
-        query('#demo-confirm-submit').disabled = false;
-        query('#demo-confirm-submit').textContent = isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử';
-      }
     });
-
-  return { pollLearningResult };
+    return { pollLearningResult };
 }
