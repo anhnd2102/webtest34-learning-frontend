@@ -40,10 +40,10 @@ export const ICONS = {
 // Ô trả lời bài thi: tắt gợi ý chính tả và tự sửa/viết hoa của trình duyệt, bàn phím điện thoại.
 export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
 
-// Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động.
-// 'instant' chứ không phải 'auto', vì 'auto' theo CSS scroll-behavior của trang.
-export const scrollBehavior = () =>
-  globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+// Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
+// không phải import file này).
+export { scrollBehavior } from './candidate/motion.js?rev=20261113-submit-a';
+import { scrollBehavior } from './candidate/motion.js?rev=20261113-submit-a';
 
 function escape(str) {
   return String(str ?? '')
