@@ -25,6 +25,9 @@
     "term-tests/teacher-dashboard/shell/query-coordinator.ts",
     "term-tests/teacher-dashboard/ui/icons.ts",
     "term-tests/teacher-dashboard/navigation/unsaved-changes.ts",
+    "term-tests/teacher-dashboard/shell/dashboard-state.ts",
+    "term-tests/teacher-dashboard/exam-room/presentation.ts",
+    "term-tests/teacher-dashboard/shell/results-filters.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
