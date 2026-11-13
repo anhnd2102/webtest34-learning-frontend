@@ -46,6 +46,9 @@
     "term-tests/teacher-dashboard/studio/media.ts",
     "term-tests/teacher-dashboard/results/view.ts",
     "term-tests/teacher-dashboard/shell/navigation.ts",
+    "term-tests/teacher-dashboard/shell/analytics/item-analysis.ts",
+    "term-tests/teacher-dashboard/shell/analytics/score-distribution.ts",
+    "term-tests/teacher-dashboard/portal-sync-view.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
