@@ -53,6 +53,7 @@
     "term-tests/teacher-dashboard/shell/profile-panel.ts",
     "term-tests/teacher-dashboard/shell/showcase.ts",
     "term-tests/teacher-dashboard/shell/exam-room-actions.ts",
+    "term-tests/teacher-dashboard/results/presentation.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
