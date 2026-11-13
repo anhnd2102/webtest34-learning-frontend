@@ -31,6 +31,9 @@
     "term-tests/teacher-dashboard/shell/class-directory.ts",
     "term-tests/teacher-dashboard/shell/assignments-loader.ts",
     "term-tests/teacher-dashboard/shell/auth-session.ts",
+    "term-tests/teacher-dashboard/shell/publish-all.ts",
+    "term-tests/teacher-dashboard/shell/exam-room-session.ts",
+    "term-tests/teacher-dashboard/shell/add-student.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }

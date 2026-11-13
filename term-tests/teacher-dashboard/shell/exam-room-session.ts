@@ -1,0 +1,95 @@
+// NGUỒN: file .ts này; exam-room-session.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
+// không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
+import { parseSseChunk } from '../exam-room-sse.js';
+
+// One open room owns its stream, reader and reconnect delay.
+export interface ExamRoomSessionParams {
+  isScopeCurrent: () => boolean;
+  fetchStream: (signal: AbortSignal) => Promise<Pick<Response, 'status' | 'ok' | 'body'>>;
+  onMessage: (message: ReturnType<typeof parseSseChunk>['events'][number]) => unknown;
+  refresh: () => unknown;
+  onUnauthorized: () => void;
+}
+
+export function createExamRoomSession({ isScopeCurrent, fetchStream, onMessage, refresh, onUnauthorized }: ExamRoomSessionParams) {
+  const controller = new AbortController();
+  let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+  let started = false;
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let finishDelay: (() => void) | null = null;
+  const isCurrent = () => !controller.signal.aborted && isScopeCurrent();
+
+  function cancelReader() {
+    if (!reader) return;
+    const current = reader;
+    reader = null;
+    try { Promise.resolve(current.cancel()).catch(() => {}); } catch { /* already closed */ }
+  }
+
+  function dispose() {
+    controller.abort();
+    cancelReader();
+    if (timer !== null) clearTimeout(timer);
+    timer = null;
+    finishDelay?.();
+    finishDelay = null;
+  }
+
+  function delayReconnect() {
+    if (!isCurrent()) return Promise.resolve();
+    return new Promise<void>(resolve => {
+      finishDelay = resolve;
+      timer = setTimeout(() => {
+        timer = null;
+        finishDelay = null;
+        resolve();
+      }, 1000);
+    });
+  }
+
+  async function start() {
+    if (started || !isCurrent()) return;
+    started = true;
+    while (isCurrent()) {
+      let connectionReader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+      try {
+        const response = await fetchStream(controller.signal);
+        if (response.body) {
+          connectionReader = response.body.getReader();
+          reader = connectionReader;
+        }
+        // A transport may resolve after abort; finally closes its unread body.
+        if (!isCurrent()) return;
+        if (response.status === 401) {
+          onUnauthorized();
+          dispose();
+          return;
+        }
+        if (!response.ok || !connectionReader) throw new Error('Không kết nối được luồng Phòng thi.');
+        const decoder = new TextDecoder();
+        let buffer = '';
+        while (isCurrent()) {
+          const { done, value } = await connectionReader.read();
+          if (!isCurrent() || done) break;
+          const parsed = parseSseChunk(buffer, decoder.decode(value, { stream: true }));
+          buffer = parsed.buffer;
+          for (const message of parsed.events) {
+            if (!isCurrent()) break;
+            await onMessage(message);
+          }
+        }
+      } catch {
+        // Current owners refresh through REST before retrying the stream.
+      } finally {
+        cancelReader();
+        try { connectionReader?.releaseLock(); } catch { /* pending transport read */ }
+      }
+      if (!isCurrent()) break;
+      try { await refresh(); } catch { /* REST may recover on the next connection */ }
+      if (!isCurrent()) break;
+      await delayReconnect();
+    }
+  }
+
+  return { start, dispose, isCurrent };
+}
