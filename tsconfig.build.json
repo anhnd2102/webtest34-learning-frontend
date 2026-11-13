@@ -37,6 +37,9 @@
     "term-tests/teacher-dashboard/shell/exam-controls.ts",
     "term-tests/teacher-dashboard/shell/grant-retake.ts",
     "term-tests/teacher-dashboard/shell/assignment-selection.ts",
+    "term-tests/teacher-dashboard/shell/profile-panel.ts",
+    "term-tests/teacher-dashboard/shell/showcase.ts",
+    "term-tests/teacher-dashboard/shell/exam-room-actions.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
