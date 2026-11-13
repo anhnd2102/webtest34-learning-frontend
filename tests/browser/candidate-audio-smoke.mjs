@@ -6,13 +6,14 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { smokeOrigin, smokeServerArgs } from './helpers/smoke-server.mjs';
 
 process.env.PLAYWRIGHT_MODULE ||= 'C:/Users/OS/.nuget/packages/microsoft.playwright/1.63.0/.playwright/package/index.mjs';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const port = Number(process.env.SMOKE_PORT) || 18334;
-const origin = `http://127.0.0.1:${port}`;
+const origin = smokeOrigin(port);
 const TOKEN = '3401-audio-smoke-token';
 
 // WAV 8 kHz, 8-bit, mono, im lặng.
@@ -46,7 +47,9 @@ function serveWav(route, body) {
 }
 
 function createApi(options = {}) {
-  const api = { calls: [], checkpoints: {}, rejected: [], count(path) { return this.calls.filter(call => call.path === path).length; }, last(path) { return [...this.calls].reverse().find(call => call.path === path); } };
+  const api = { calls: [], checkpoints: {}, token: 'audio-attempt', stored: {}, rejected: [],
+    // Cấp quyền làm lại: máy chủ sinh lượt mới, mốc nghe lưu theo lượt (khóa chính attempt_id + audio_key), lượt mới bắt đầu trống.
+    newAttempt(token) { this.stored[this.token] = this.checkpoints; this.token = token; this.checkpoints = this.stored[token] || {}; }, count(path) { return this.calls.filter(call => call.path === path).length; }, last(path) { return [...this.calls].reverse().find(call => call.path === path); } };
   api.handler = route => {
     const request = route.request();
     const path = new URL(request.url()).pathname.replace(/^.*\/api\/learning/, '');
@@ -74,7 +77,7 @@ function createApi(options = {}) {
     if (path === '/test-access/resolve') {
       payload = { assignment: { title: definition.title, class: { name: 'Lớp Audio' }, definition, roster: [{ studentRef: 's1', name: 'Học Viên Audio' }] } };
     } else if (path === '/attempts/start') {
-      payload = { attempt: { attemptToken: 'audio-attempt', definitionHash: 'h', draftRevision: 0, status: 'active', expiresAt: new Date(Date.now() + 3_600_000).toISOString(), definition, ...(options.selfProctoring ? { selfProctoring: options.selfProctoring } : {}) } };
+      payload = { attempt: { attemptToken: api.token, definitionHash: 'h', draftRevision: 0, status: 'active', expiresAt: new Date(Date.now() + 3_600_000).toISOString(), definition, ...(options.selfProctoring ? { selfProctoring: options.selfProctoring } : {}) } };
     }
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(payload) });
   };
@@ -90,10 +93,10 @@ async function openExam(browser, api) {
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     if (url.pathname.includes('/api/learning/')) return api.handler(route);
-    if (url.pathname === '/audio/short.wav') return serveWav(route, silentWav(2));
-    if (url.pathname === '/audio/long.wav') return serveWav(route, silentWav(30));
-    if (url.pathname === '/audio/missing.wav') return route.fulfill({ status: 404, body: 'not found' });
-    return url.origin === origin ? route.continue() : route.abort();
+    if (url.pathname.endsWith('/audio/short.wav')) return serveWav(route, silentWav(2));
+    if (url.pathname.endsWith('/audio/long.wav')) return serveWav(route, silentWav(30));
+    if (url.pathname.endsWith('/audio/missing.wav')) return route.fulfill({ status: 404, body: 'not found' });
+    return url.origin === new URL(origin).origin ? route.continue() : route.abort();
   });
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
   await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
@@ -116,7 +119,7 @@ const waitFor = async (predicate, message, timeout = 9000) => {
   assert.ok(await predicate(), message);
 };
 
-const child = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+const child = spawn(process.execPath, smokeServerArgs(port), { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
 let browser;
 try {
   await new Promise((resolve, reject) => {
@@ -236,6 +239,34 @@ try {
     assert.ok(api.count('/attempts/audio/resume') >= 1);
     assert.equal(Object.hasOwn(api.last('/attempts/audio/resume').body, 'deviceId'), false, '/attempts/audio/resume không mang deviceId (schema nghiêm ngặt)');
     report.audioLockSurvivesReload = true;
+    await page.context().close();
+  }
+
+  // 8b. Cấp quyền làm lại sinh lượt mới: khóa nghe theo lượt, nên lượt mới nghe lại được và không đụng mốc của lượt cũ
+  {
+    const api = createApi();
+    const page = await openExam(browser, api);
+    await goTo(page, 1);
+    await dock(page, 'b2').locator('.btn-sim-audio-play').click();
+    await waitFor(async () => (await audioState(page, 'b2')).ended, 'lượt 1 nghe hết bài nghe A', 8000);
+    await waitFor(() => api.checkpoints.b2?.completedAt, 'lượt 1 gửi mốc hoàn thành');
+    api.newAttempt('audio-attempt-2');
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
+    await page.selectOption('#studentSelectInput', 's1');
+    await page.click('#startExamBtn');
+    await page.waitForSelector('.cbt-exam-shell');
+    assert.equal(api.last('/attempts/audio/resume').body.attemptToken, 'audio-attempt-2', 'tiến độ nghe hỏi theo lượt mới');
+    await goTo(page, 1);
+    assert.equal(await dock(page, 'b2').getAttribute('data-listens-count'), '0', 'lượt mới không kế thừa khóa nghe của lượt cũ');
+    assert.equal(await dock(page, 'b2').locator('.btn-sim-audio-play').isVisible(), true, 'lượt mới nghe lại được');
+    await dock(page, 'b2').locator('.btn-sim-audio-play').click();
+    await waitFor(async () => (await audioState(page, 'b2')).ended, 'lượt 2 nghe hết bài nghe A', 8000);
+    await waitFor(() => api.checkpoints.b2?.completedAt, 'lượt 2 gửi mốc hoàn thành');
+    const last = api.calls.filter(call => call.path === '/attempts/audio/checkpoint').at(-1).body;
+    assert.equal(last.attemptToken, 'audio-attempt-2', 'mốc lượt 2 gửi kèm token của lượt 2');
+    assert.ok(api.stored['audio-attempt'].b2.completedAt, 'mốc của lượt 1 không bị đổi');
+    report.audioLockPerAttempt = true;
     await page.context().close();
   }
 

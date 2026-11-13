@@ -6,13 +6,14 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { smokeOrigin, smokeServerArgs } from './helpers/smoke-server.mjs';
 
 process.env.PLAYWRIGHT_MODULE ||= 'C:/Users/OS/.nuget/packages/microsoft.playwright/1.63.0/.playwright/package/index.mjs';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const port = Number(process.env.SMOKE_PORT) || 18333;
-const origin = `http://127.0.0.1:${port}`;
+const origin = smokeOrigin(port);
 const UUID = '34010000-0000-4000-8000-000000000002';
 
 const definition = {
@@ -66,7 +67,7 @@ async function openPage(browser, api, { hash = `#test=${UUID}`, clock = false } 
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     if (url.pathname.includes('/api/learning/')) return api.handler(route);
-    return url.origin === origin ? route.continue() : route.abort();
+    return url.origin === new URL(origin).origin ? route.continue() : route.abort();
   });
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34${hash}`);
   return page;
@@ -79,7 +80,7 @@ const waitFor = async (predicate, message, timeout = 9000) => {
 };
 const text = (page, selector) => page.locator(selector).first().textContent().then(value => value || '').catch(() => '');
 
-const child = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+const child = spawn(process.execPath, smokeServerArgs(port), { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
 let browser;
 try {
   await new Promise((resolve, reject) => {
@@ -100,7 +101,7 @@ try {
     await page.route('**/*', route => {
       const url = new URL(route.request().url());
       if (url.pathname.includes('/api/learning/')) return api.handler(route);
-      return url.origin === origin ? route.continue() : route.abort();
+      return url.origin === new URL(origin).origin ? route.continue() : route.abort();
     });
     await page.goto(`${origin}/term-tests/webtest-34-demo/index.html`);
     await page.locator('#noTokenNotice').waitFor({ state: 'visible' });
