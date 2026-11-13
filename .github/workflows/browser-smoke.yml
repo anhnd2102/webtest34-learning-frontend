@@ -1,9 +1,14 @@
 name: Browser smoke
 
-# Smoke bấm thật trên Chrome với API giả (không chạm production). Chạy tay hoặc hằng tuần; không nằm trong pages.yml
+# Smoke bấm thật trên Chrome với API giả (không chạm production). Chạy tay, hằng tuần hoặc khi PR đổi smoke; không nằm trong pages.yml
 # và không chặn deploy. Chưa kiểm trên GitHub Actions thật: phụ thuộc Google Chrome có sẵn trên ubuntu-latest (channel: chrome).
 on:
   workflow_dispatch:
+  # Chỉ khi đổi chính workflow này hoặc các smoke, để kiểm được trên Pull Request trước khi workflow có mặt ở main.
+  pull_request:
+    paths:
+      - tests/browser/**
+      - .github/workflows/browser-smoke.yml
   schedule:
     - cron: '0 2 * * 1'
 
