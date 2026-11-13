@@ -418,6 +418,8 @@ export const checks = {
     await page.mouse.click(vp.width / 2, 2);
     assert.equal(await isOpen(), false, 'chạm nền không đóng bảng');
     // Đóng xong, các nút mượn về đúng chỗ cũ.
+    // Sự kiện `close` của <dialog> chạy bất đồng bộ (sheet.onclose trả các nút về chỗ cũ), nên chờ thay vì kiểm ngay; kiểm ngay là chạy đua trên máy chậm.
+    await page.waitForFunction(() => document.querySelector('#demo-submit-top').parentElement.className.includes('cbt-top-actions'), null, { timeout: 5000 }).catch(() => {});
     assert.equal(await page.evaluate(() => document.querySelector('#demo-submit-top').parentElement.className.includes('cbt-top-actions')), true, 'Nộp bài không về thanh trên');
     // Lưới có cả đề và phân biệt đã làm, kể cả câu một ô nhiều số.
     await goToSection(page, 2);
