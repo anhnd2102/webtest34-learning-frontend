@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
 
-// Màn đầu và màn kết quả nằm ở candidate/intro-screen.js và candidate/review-screen.js (tách từ content-preview.mjs); gộp để kiểm dây nối.
+// Màn đầu và màn kết quả nằm ở candidate/intro-screen.ts và candidate/review-screen.js (tách từ content-preview.mjs); gộp để kiểm dây nối.
 const readSrc = name => fs.readFile(new URL(`../term-tests/webtest-34-demo/${name}`, import.meta.url), 'utf8');
-const src = (await readSrc('content-preview.mjs')) + '\n' + (await readSrc('candidate/intro-screen.js')) + '\n' + (await readSrc('candidate/review-screen.js'));
+const src = (await readSrc('content-preview.mjs')) + '\n' + (await readSrc('candidate/intro-screen.ts')) + '\n' + (await readSrc('candidate/review-screen.js'));
 const flow = src.match(/async function openReview\(\) \{[\s\S]*?\r?\n    \}\r?\n/)?.[0] ?? '';
 
 test('intro có nút Xem kết quả, bật cùng nút Bắt đầu khi chọn tên', () => {
