@@ -1,0 +1,144 @@
+{
+  "generatedAt": "2026-11-13T05:08:11.156Z",
+  "runs": 5,
+  "gzip": true,
+  "profiles": {
+    "none": null,
+    "fast4g": {
+      "latency": 60,
+      "downloadThroughput": 1125000,
+      "uploadThroughput": 187500
+    },
+    "slow4g": {
+      "latency": 150,
+      "downloadThroughput": 200000,
+      "uploadThroughput": 93750
+    }
+  },
+  "results": {
+    "candidate": {
+      "none": {
+        "requests": 23,
+        "wireTotal": 105104,
+        "jsRequests": 21,
+        "jsWire": 81858,
+        "jsDecoded": 272961,
+        "cssRequests": 1,
+        "cssWire": 13823,
+        "cssDecoded": 75068,
+        "marksMs": {
+          "startScreenReady": {
+            "median": 134,
+            "max": 143
+          },
+          "examShellReady": {
+            "median": 216,
+            "max": 301
+          }
+        }
+      },
+      "fast4g": {
+        "requests": 23,
+        "wireTotal": 105104,
+        "jsRequests": 21,
+        "jsWire": 81858,
+        "jsDecoded": 272961,
+        "cssRequests": 1,
+        "cssWire": 13823,
+        "cssDecoded": 75068,
+        "marksMs": {
+          "startScreenReady": {
+            "median": 527,
+            "max": 555
+          },
+          "examShellReady": {
+            "median": 607,
+            "max": 644
+          }
+        }
+      },
+      "slow4g": {
+        "requests": 23,
+        "wireTotal": 101672,
+        "jsRequests": 21,
+        "jsWire": 78426,
+        "jsDecoded": 264862,
+        "cssRequests": 1,
+        "cssWire": 13823,
+        "cssDecoded": 75068,
+        "marksMs": {
+          "startScreenReady": {
+            "median": 1197,
+            "max": 1207
+          },
+          "examShellReady": {
+            "median": 1271,
+            "max": 1325
+          }
+        }
+      }
+    },
+    "dashboard": {
+      "none": {
+        "requests": 43,
+        "wireTotal": 457786,
+        "jsRequests": 28,
+        "jsWire": 390833,
+        "jsDecoded": 1151885,
+        "cssRequests": 13,
+        "cssWire": 57173,
+        "cssDecoded": 281998,
+        "marksMs": {
+          "load": {
+            "median": 131,
+            "max": 145
+          },
+          "networkIdle": {
+            "median": 669,
+            "max": 681
+          }
+        }
+      },
+      "fast4g": {
+        "requests": 43,
+        "wireTotal": 457786,
+        "jsRequests": 28,
+        "jsWire": 390833,
+        "jsDecoded": 1151885,
+        "cssRequests": 13,
+        "cssWire": 57173,
+        "cssDecoded": 281998,
+        "marksMs": {
+          "load": {
+            "median": 676,
+            "max": 693
+          },
+          "networkIdle": {
+            "median": 1572,
+            "max": 1590
+          }
+        }
+      },
+      "slow4g": {
+        "requests": 43,
+        "wireTotal": 457786,
+        "jsRequests": 28,
+        "jsWire": 390833,
+        "jsDecoded": 1151885,
+        "cssRequests": 13,
+        "cssWire": 57173,
+        "cssDecoded": 281998,
+        "marksMs": {
+          "load": {
+            "median": 2588,
+            "max": 2608
+          },
+          "networkIdle": {
+            "median": 3958,
+            "max": 3973
+          }
+        }
+      }
+    }
+  }
+}
