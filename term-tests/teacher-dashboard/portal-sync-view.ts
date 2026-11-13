@@ -120,7 +120,7 @@ export const shouldReloadPreviewAfterSyncError = (error?: { code?: string, statu
 
 export const scaleWarningText = (w?: { linkedMaxScore: number, currentMaxScore: number } | null) => (w ? `Thang điểm Portal đã đổi từ ${w.linkedMaxScore} thành ${w.currentMaxScore} kể từ lúc gắn bài test; điểm vẫn được quy đổi theo thang cũ (${w.linkedMaxScore}). Hãy gỡ gắn và gắn lại nếu cần dùng thang mới.` : '');
 
-export const linkedPortalTest = <T extends { linkedAssignmentId?: string }>(tests: T[] | null | undefined, assignmentId: string) => (tests || []).find(t => t.linkedAssignmentId === assignmentId) || null;
+export const linkedPortalTest = <T extends { linkedAssignmentId?: string | null }>(tests: T[] | null | undefined, assignmentId: string) => (tests || []).find(t => t.linkedAssignmentId === assignmentId) || null;
 
 export function syncSummaryText(summary: Record<string, number | undefined> = {}) {
   const parts = [`Đã đồng bộ ${summary.synced || 0}`];

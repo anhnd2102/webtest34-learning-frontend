@@ -51,6 +51,8 @@
     "term-tests/teacher-dashboard/portal-sync-view.ts",
     "term-tests/teacher-dashboard/shell/analytics/item-analysis-view.ts",
     "term-tests/teacher-dashboard/shell/analytics/score-distribution-view.ts",
+    "term-tests/teacher-dashboard/shell/portal-panel.ts",
+    "term-tests/teacher-dashboard/shell/reports.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
