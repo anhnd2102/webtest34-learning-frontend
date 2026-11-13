@@ -2,6 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { renderSvgIcon } from '../ui/icons.js';
 import { escapeHtml } from '../ui/presentation.js';
+import type { ApiRequestOptions } from '../api/client.js';
 
 export type DashboardState = {
   classId?: string;
@@ -34,6 +35,23 @@ export interface ClassRecord {
 }
 
 export interface AssignmentChip { assignmentId: string, title: string, phase?: unknown, status: string }
+
+export interface AssignmentRecord extends AssignmentChip { [key: string]: unknown }
+
+// Giáo viên đang đăng nhập (payload `actor` của /api/teacher/classes hoặc `teacher` của đăng nhập).
+export interface TeacherActor { role?: string, classIds?: string[], courseCodes?: string[], [key: string]: unknown }
+
+export interface AuthState { sessionToken: string, currentTeacher: TeacherActor | null }
+
+export interface ScopeState {
+  rawClassesList: ClassRecord[];
+  currentAssignmentsList: AssignmentRecord[];
+  currentServerNow: string | null;
+  isSwitchingAssignment: boolean;
+  currentSelectedAssignment?: unknown;
+}
+
+export type DashboardRequest = (path: string, options?: ApiRequestOptions) => Promise<any>;
 
 export function localStudentUrl(studentUrl: string | null | undefined, location: { hostname?: string, origin: string } | null | undefined, apiBase = ''): string | null | undefined {
   if (!studentUrl || !location || !['localhost', '127.0.0.1', '[::1]', '::1'].includes(location?.hostname || '')) return studentUrl;

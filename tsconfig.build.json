@@ -28,6 +28,9 @@
     "term-tests/teacher-dashboard/shell/dashboard-state.ts",
     "term-tests/teacher-dashboard/exam-room/presentation.ts",
     "term-tests/teacher-dashboard/shell/results-filters.ts",
+    "term-tests/teacher-dashboard/shell/class-directory.ts",
+    "term-tests/teacher-dashboard/shell/assignments-loader.ts",
+    "term-tests/teacher-dashboard/shell/auth-session.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
