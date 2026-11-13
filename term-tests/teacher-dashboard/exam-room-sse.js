@@ -1,7 +1,12 @@
+/**
+ * @param {string} buffer phần còn dở của lần đọc trước
+ * @param {string} chunk dữ liệu mới vừa đọc
+ * @returns {{ buffer: string, events: { event: string, data: any }[] }}
+ */
 export function parseSseChunk(buffer, chunk) {
   const input = buffer + chunk.replace(/\r\n/g, '\n');
   const frames = input.split('\n\n');
-  const remainder = frames.pop();
+  const remainder = frames.pop() ?? '';
   const events = frames.flatMap(frame => {
     let event = 'message';
     const data = [];

@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import test from 'node:test';
 
-// Exam Mode nằm ở candidate/exam-mode.js (tách từ content-preview.mjs); gộp hai file để kiểm dây nối của renderer.
+// Exam Mode nằm ở candidate/exam-mode.ts (tách từ content-preview.mjs); gộp hai file để kiểm dây nối của renderer.
 const read = path => fs.readFile(new URL(path, import.meta.url), 'utf8');
-const renderer = (await read('../term-tests/webtest-34-demo/content-preview.mjs')) + '\n' + (await read('../term-tests/webtest-34-demo/candidate/exam-mode.js'));
+const renderer = (await read('../term-tests/webtest-34-demo/content-preview.mjs')) + '\n' + (await read('../term-tests/webtest-34-demo/candidate/exam-mode.ts'));
 
 test('the canonical renderer tells the reducer why the student appears to have left', () => {
   assert.match(renderer, /window\.addEventListener\('blur', \(\) => leave\('blur'\)\)/);
@@ -26,5 +26,5 @@ test('incident requests survive the page moving to the background', () => {
 test('a page being reloaded or closed is not reported as leaving, and detection resumes when bfcache restores it', () => {
   assert.match(renderer, /window\.addEventListener\('pagehide', \(\) => \{ pageUnloading = true; \}\)/);
   assert.match(renderer, /window\.addEventListener\('pageshow', \(\) => \{ pageUnloading = false; \}\)/);
-  assert.match(renderer, /const leave = reason => \{\s*if \(pageUnloading\) return;/);
+  assert.match(renderer, /const leave = \(reason[^)]*\) => \{\s*if \(pageUnloading\) return;/);
 });
