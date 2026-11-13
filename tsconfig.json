@@ -34,6 +34,10 @@
     "term-tests/teacher-dashboard/shell/pagination.ts",
     "term-tests/teacher-dashboard/studio/block-jump-chips.ts",
     "term-tests/teacher-dashboard/results/export.ts",
+    "term-tests/teacher-dashboard/shell/lifecycle.ts",
+    "term-tests/teacher-dashboard/shell/query-coordinator.ts",
+    "term-tests/teacher-dashboard/ui/icons.ts",
+    "term-tests/teacher-dashboard/navigation/unsaved-changes.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
