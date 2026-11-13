@@ -43,11 +43,14 @@ export interface AssignmentRecord extends AssignmentChip {
   examMode?: boolean;
   exitLimit?: number | null;
   examSession?: ExamSession | null;
+  className?: string;
+  courseCode?: string;
+  studentUrl?: string;
   [key: string]: unknown;
 }
 
 // Giáo viên đang đăng nhập (payload `actor` của /api/teacher/classes hoặc `teacher` của đăng nhập).
-export interface TeacherActor { role?: string, classIds?: string[], courseCodes?: string[], [key: string]: unknown }
+export interface TeacherActor { role?: string, classIds?: string[], courseCodes?: string[], name?: string, email?: string, phone?: string, [key: string]: unknown }
 
 export interface AuthState { sessionToken: string, currentTeacher: TeacherActor | null }
 
