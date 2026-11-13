@@ -3,3 +3,4 @@
 export declare const ICONS: Record<string, string>;
 export declare function getTotalItemCount(definition: unknown): number;
 export declare function getAnsweredCount(definition: unknown, answers?: Record<string, unknown>): number;
+export declare const ANSWER_TEXT_ATTRS: string;
