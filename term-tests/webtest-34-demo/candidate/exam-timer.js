@@ -42,7 +42,8 @@ export function createExamTimer({ course, examDuration, testToken, isLearningMod
       if (remainingSecs <= 0) {
         if (examTimerInterval) clearInterval(examTimerInterval);
         if (!state.submittedAt) {
-          alert('Đã hết giờ làm bài! Hệ thống sẽ tự động xác nhận nộp bài.');
+          // Nộp ngay, không alert(): alert chặn luồng JS nên bài chỉ được nộp sau khi học viên bấm OK.
+          learningState.submitTimedOut = true;
           const confirmSubmitBtn = document.querySelector('#demo-confirm-submit');
           if (confirmSubmitBtn) confirmSubmitBtn.click();
         }

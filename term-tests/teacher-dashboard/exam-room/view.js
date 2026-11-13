@@ -1,6 +1,6 @@
 import { ICONS } from '../ui/icons.js';
 import { formatAssignmentWindow } from '../results/presentation.js';
-import { formatExamReadyCount, formatExamRoomStatus, formatExamProgress, formatExamConnectionStatus } from './presentation.js';
+import { formatExamReadyCount, formatExamRoomStatus, formatExamProgress, formatExamConnectionStatus, formatExamDevice } from './presentation.js';
 
 export function createExamRoomView({ root, lifecycle, viewState, actions }) {
   const document = root.ownerDocument || root;
@@ -34,7 +34,7 @@ function renderExamRoom(room) {
         const incidentCount = Number(student.incidentCount) || 0;
         const openIncident = (student.openIncidents || []).length > 0;
         incidents.textContent = student.status === 'not_entered' ? '—' : `${incidentCount}${openIncident ? ' · đang rời bài' : ''}`;
-        device.textContent = student.fullscreenUnsupported === true ? 'Không hỗ trợ toàn màn hình' : '—';
+        device.textContent = formatExamDevice(student);
 
         // 7. Retake Action column in Exam Room
         const retake = document.createElement('td');

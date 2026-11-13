@@ -37,6 +37,14 @@ export const ICONS = {
   pause: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
 };
 
+// Ô trả lời bài thi: tắt gợi ý chính tả và tự sửa/viết hoa của trình duyệt, bàn phím điện thoại.
+export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
+
+// Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động.
+// 'instant' chứ không phải 'auto', vì 'auto' theo CSS scroll-behavior của trang.
+export const scrollBehavior = () =>
+  globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+
 function escape(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;')
@@ -114,9 +122,9 @@ export function formatPedagogicalTypeLabel(item) {
   return 'Câu hỏi';
 }
 
-export function getItemSpanCount(item) {
-  if (!item) return 1;
-  const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
+// Câu điền chỗ trống (đoạn văn hoặc bảng). Mọi nơi dùng chung hàm này để màn làm bài, bảng câu hỏi và cách đếm số ô không lệch nhau.
+export function isInlineClozeItem(item) {
+  return item.pedagogicalTypeCode === 'inline_cloze' ||
     item.layoutType === 'inline_cloze' ||
     item.pedagogicalTypeCode === 'table_completion' ||
     item.layoutType === 'table_completion' ||
@@ -125,6 +133,11 @@ export function getItemSpanCount(item) {
       (item.prompt && (/(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
       (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
     ));
+}
+
+export function getItemSpanCount(item) {
+  if (!item) return 1;
+  const isInlineCloze = isInlineClozeItem(item);
   if (isInlineCloze) {
     const numPattern = /(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
     const matches = Array.from((item.prompt || '').matchAll(numPattern));
@@ -235,15 +248,7 @@ export function renderQuestionNavigator(definition, answers = {}) {
     const items = b.items || [];
     return items.flatMap(item => {
       const span = getItemSpanCount(item);
-      const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
-        item.layoutType === 'inline_cloze' ||
-        item.pedagogicalTypeCode === 'table_completion' ||
-        item.layoutType === 'table_completion' ||
-        item.layoutType === 'inline_dropdown_table' ||
-        (item.interactionType === 'short_text' && (
-          (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
-          (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
-        ));
+      const isInlineCloze = isInlineClozeItem(item);
       const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
         item.layoutType === 'timeline_sequence' ||
         item.graderType === 'ordered_sequence' ||
@@ -411,7 +416,7 @@ function renderSimVocabPairTable(vocabItems, answers = {}) {
                   <span class="vocab-row-num-badge qnum" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 14px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">Câu ${escape(item.position)}</span>
                 </div>
                 <div class="vocab-td vocab-td-en">
-                  <input type="text" class="candidate-vocab-text-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập từ nghe được..." value="${escape(enVal)}" autocomplete="off" />
+                  <input type="text" class="candidate-vocab-text-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập từ nghe được..." value="${escape(enVal)}" ${ANSWER_TEXT_ATTRS} />
                 </div>
                 <div class="vocab-td vocab-td-vi">
                   <select class="candidate-vocab-select" data-item-id="${escape(item.itemVersionId)}">
@@ -457,7 +462,7 @@ function renderSimPictorialGroup(pictorialItems, answers = {}) {
                 ${item.captionHint ? `<div class="pictorial-caption-hint">${escape(item.captionHint)}</div>` : ''}
               </div>
               <div class="candidate-pictorial-input-wrap">
-                <input type="text" class="candidate-pictorial-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập từ hoàn chỉnh..." value="${escape(val)}" autocomplete="off" />
+                <input type="text" class="candidate-pictorial-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập từ hoàn chỉnh..." value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />
               </div>
             </div>
           `;
@@ -491,7 +496,7 @@ function renderSimShortQaGroup(shortItems, answers = {}) {
               <div class="candidate-short-prompt-text">${renderFormattedContent(item.prompt || '')}</div>
             </div>
             <div class="candidate-short-input-wrap">
-              <input type="text" class="candidate-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập câu trả lời của bạn..." value="${escape(val)}" autocomplete="off" />
+              <input type="text" class="candidate-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập câu trả lời của bạn..." value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />
             </div>
           </div>
         `;
@@ -505,13 +510,18 @@ export function renderInlineCloze(item, answers = {}) {
   const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
   const containsHtml = /<[a-z][\s\S]*>/i.test(text);
 
+  // Đáp án chuỗi là bản nháp cũ từ khi câu này còn hiện thành ô trả lời ngắn (#39):
+  // chỉ đưa vào ô trống đầu tiên, không lặp lại ở mọi ô.
+  let legacyStringUsed = false;
   const renderBlank = (num) => {
     const rawVal = answers[item.itemVersionId];
-    const val = typeof rawVal === 'object' && rawVal !== null ? (rawVal[num] || '') : (typeof rawVal === 'string' ? rawVal : '');
+    let val = '';
+    if (typeof rawVal === 'object' && rawVal !== null) val = rawVal[num] || '';
+    else if (typeof rawVal === 'string' && !legacyStringUsed) { val = rawVal; legacyStringUsed = true; }
     const isFilled = typeof val === 'string' && val.trim().length > 0;
     return `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
       `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
-      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" autocomplete="off" />` +
+      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />` +
     `</span>`;
   };
 
@@ -570,15 +580,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
   const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0));
   const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
   const isMultiGroup = item.interactionType === 'multi_choice_group';
-  const isInlineCloze = item.pedagogicalTypeCode === 'inline_cloze' ||
-    item.layoutType === 'inline_cloze' ||
-    item.pedagogicalTypeCode === 'table_completion' ||
-    item.layoutType === 'table_completion' ||
-    item.layoutType === 'inline_dropdown_table' ||
-    (item.interactionType === 'short_text' && (
-      (item.prompt && (/(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
-      (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
-    ));
+  const isInlineCloze = isInlineClozeItem(item);
   const isRubricAsync = item.graderType === 'rubric_async' || item.interactionType === 'long_text';
 
   const rawAns = answers[item.itemVersionId];
@@ -628,7 +630,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         </div>
         <div class="candidate-frame-box cbt-frame-box">
           <span class="frame-prefix-text cbt-frame-text">${escape(item.framePrefix || '')}</span>
-          <input type="text" class="candidate-transformation-input cbt-transformation-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập cụm từ khuyết..." value="${escape(val)}" autocomplete="off" />
+          <input type="text" class="candidate-transformation-input cbt-transformation-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Nhập cụm từ khuyết..." value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />
           <span class="frame-suffix-text cbt-frame-text">${escape(item.frameSuffix || '')}</span>
         </div>
       </div>
@@ -644,7 +646,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
           `).join('')}
         </div>
         <div class="assembly-input-wrap cbt-assembly-wrap">
-          <input type="text" class="candidate-reorder-input cbt-reorder-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Bấm thẻ từ hoặc gõ câu..." value="${escape(val)}" autocomplete="off" />
+          <input type="text" class="candidate-reorder-input cbt-reorder-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Bấm thẻ từ hoặc gõ câu..." value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />
           <button type="button" class="btn-clear-assembly cbt-btn-clear" data-item-id="${escape(item.itemVersionId)}">Xóa</button>
         </div>
       </div>
@@ -656,11 +658,11 @@ export function renderQuestionCard(item, answers = {}, block = null) {
       <div class="candidate-error-correction-grid cbt-correction-grid" data-item-id="${escape(item.itemVersionId)}">
         <div class="candidate-dual-box cbt-dual-box">
           <label class="cbt-error-label">1. Từ/cụm từ sai:</label>
-          <input type="text" class="candidate-error-input cbt-input-field" data-item-id="${escape(item.itemVersionId)}" placeholder="Lỗi sai..." value="${escape(errVal)}" autocomplete="off" />
+          <input type="text" class="candidate-error-input cbt-input-field" data-item-id="${escape(item.itemVersionId)}" placeholder="Lỗi sai..." value="${escape(errVal)}" ${ANSWER_TEXT_ATTRS} />
         </div>
         <div class="candidate-dual-box cbt-dual-box">
           <label class="cbt-corr-label">2. Sửa lại thành:</label>
-          <input type="text" class="candidate-correction-input cbt-input-field" data-item-id="${escape(item.itemVersionId)}" placeholder="Sửa đúng..." value="${escape(corrVal)}" autocomplete="off" />
+          <input type="text" class="candidate-correction-input cbt-input-field" data-item-id="${escape(item.itemVersionId)}" placeholder="Sửa đúng..." value="${escape(corrVal)}" ${ANSWER_TEXT_ATTRS} />
         </div>
       </div>
     `;
@@ -744,7 +746,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
     const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
     interactiveHtml = `
       <div class="candidate-open-wrap cbt-open-wrap">
-        <textarea class="candidate-open-textarea cbt-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
+        <textarea class="candidate-open-textarea cbt-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" ${ANSWER_TEXT_ATTRS} placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
         <div class="candidate-open-meta cbt-open-meta">
           <span class="word-count-badge cbt-chip">Số từ: <strong>${wordCount}</strong></span>
           <span class="scoring-info-badge cbt-chip-score">Điểm tối đa: ${item.maxScore || 4} điểm</span>
@@ -754,7 +756,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
   } else {
     const val = typeof rawAns === 'string' ? rawAns : '';
     interactiveHtml = `
-      <input type="text" class="candidate-short-input cbt-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Gõ câu trả lời của bạn..." value="${escape(val)}" autocomplete="off" />
+      <input type="text" class="candidate-short-input cbt-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Gõ câu trả lời của bạn..." value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />
     `;
   }
 
@@ -894,7 +896,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
       const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0);
       const isVocab = item.interactionType === 'text_select_pair';
       const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
-      const isShortText = item.interactionType === 'short_text' && item.layoutType !== 'inline_cloze' && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching' && !isListeningOrder;
+      const isShortText = item.interactionType === 'short_text' && !isInlineClozeItem(item) && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching' && !isListeningOrder;
 
       const lastGroup = itemGroups[itemGroups.length - 1];
       if (isVocab) {
@@ -1175,7 +1177,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
 
     // Luôn cuộn mượt lên đầu phần thi khi chuyển phần
     if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
     }
   };
 
@@ -1271,7 +1273,7 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
           setPane(splitPane.id.replace('split-pane-', ''), targetEl.closest('[data-pane-type]')?.getAttribute('data-pane-type') || 'questions', { restoreScroll: false });
         }
         if (typeof targetEl.scrollIntoView === 'function') {
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetEl.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
         }
         // Trên cảm ứng, focus() bật bàn phím che mất câu vừa nhảy tới.
         if (typeof targetEl.focus === 'function' && !window.matchMedia?.('(pointer: coarse)').matches) {
@@ -1428,7 +1430,14 @@ export function initDynamicExamInteractions(rootEl, { definition, state = { answ
     if (blankWrap) {
       const pos = target.getAttribute('data-position');
       if (pos) {
-        const currentAnswers = typeof state.answers[itemId] === 'object' && state.answers[itemId] !== null ? state.answers[itemId] : {};
+        const raw = state.answers[itemId];
+        // Bản nháp cũ dạng chuỗi (#39): dựng lại từ các ô đang hiện để không mất đáp án ở ô khác.
+        const currentAnswers = typeof raw === 'object' && raw !== null
+          ? raw
+          : Object.fromEntries([...rootEl.querySelectorAll('.inline-fill-input')]
+            .filter(input => input.getAttribute('data-item-id') === itemId)
+            .map(input => [input.getAttribute('data-position'), input.value.trim()])
+            .filter(([, v]) => v));
         currentAnswers[pos] = target.value.trim();
         value = currentAnswers;
         state.answers[itemId] = value;

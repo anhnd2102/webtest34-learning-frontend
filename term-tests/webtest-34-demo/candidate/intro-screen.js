@@ -213,6 +213,8 @@ export function createIntroScreen({ config, testToken, paramClassCode, state, le
       if (learningState.assignment?.exam?.enabled) requestFullscreen().catch(() => {});
       startBtn.disabled = true;
       startBtn.textContent = 'Đang mở đề thi…';
+      const startErrorEl = document.querySelector('#startExamError');
+      if (startErrorEl) startErrorEl.hidden = true;
       try {
         const startRes = await apiRequest('/attempts/start', {
           testToken,
@@ -252,7 +254,11 @@ export function createIntroScreen({ config, testToken, paramClassCode, state, le
       } catch (err) {
         startBtn.disabled = false;
         startBtn.textContent = 'Bắt đầu làm bài →';
-        alert(`Không mở được phiên làm bài: ${err.message}`);
+        const startError = document.querySelector('#startExamError');
+        if (startError) {
+          startError.textContent = `Không mở được phiên làm bài (${err.message}). Kiểm tra mạng rồi bấm Bắt đầu lại.`;
+          startError.hidden = false;
+        }
       }
     });
 

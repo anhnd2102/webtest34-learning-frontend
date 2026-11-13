@@ -1,4 +1,5 @@
 // Dựng kết quả bài làm cho học viên (tách nguyên văn từ content-preview.mjs).
+import { scrollBehavior } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
 import { escape } from './text-utils.js?rev=20261113-submit-a';
 
 export function resultViewModel(result) {
@@ -192,7 +193,7 @@ export function bindResultFilters(root) {
       const target = root.querySelector(`#${btn.dataset.resultJump}`);
       // Đang lọc mà phần đích bị ẩn thì quay về "Tất cả" để cuộn tới được.
       if (target?.hidden) root.querySelector('[data-result-filter="all"]')?.click();
-      target?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      target?.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
     });
   });
 }

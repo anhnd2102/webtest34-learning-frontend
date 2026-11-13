@@ -11,8 +11,18 @@ import {
   applyExamConnection,
   applyExamIncident,
   formatExamConnectionStatus,
+  formatExamDevice,
   formatExamProgress
 } from '../term-tests/teacher-dashboard/app.js';
+
+test('exam device formatter shows device type, OS, browser and the fullscreen warning', () => {
+  assert.equal(formatExamDevice({ device: { type: 'tablet', os: 'iPadOS', browser: 'Safari' }, fullscreenUnsupported: true }),
+    'Máy tính bảng · iPadOS · Safari · Không hỗ trợ toàn màn hình');
+  assert.equal(formatExamDevice({ device: { type: 'mobile', os: 'Android', browser: 'Chrome' } }), 'Điện thoại · Android · Chrome');
+  assert.equal(formatExamDevice({ device: { type: 'desktop', os: 'other', browser: 'other' } }), 'Máy tính');
+  assert.equal(formatExamDevice({ device: null, fullscreenUnsupported: true }), 'Không hỗ trợ toàn màn hình');
+  assert.equal(formatExamDevice({ device: null }), '—');
+});
 
 test('exam room status formatter covers all participation states', () => {
   assert.equal(formatExamRoomStatus('not_entered'), 'Chưa vào');

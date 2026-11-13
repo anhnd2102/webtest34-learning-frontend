@@ -1,7 +1,7 @@
 // Dựng các nhóm câu hỏi và âm thanh của bài thi (tách nguyên văn từ content-preview.mjs).
 import { escape, words, optionId } from './text-utils.js?rev=20261113-submit-a';
 // Cùng URL (kể cả rev) với import trong content-preview.mjs để dùng chung một thể hiện module.
-import { ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
+import { ICONS, ANSWER_TEXT_ATTRS } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
 
 export function withLocalGroupLabels(definition, form) {
   if (!definition || !Array.isArray(definition.blocks) || !Array.isArray(form?.groups)) return definition;
@@ -77,8 +77,8 @@ export function answerField(item, inline = false, cards = false) {
     return `<input type="hidden" ${attributes}><div class="demo-choice-grid" data-columns="${layout.columns}" data-compact="${layout.compact}" role="radiogroup" aria-label="${escape(item.prompt)}">${item.options.map((option,index)=>`<label class="demo-choice"><input type="radio" name="${escape(item.id)}" data-demo-choice="${escape(item.id)}" value="${escape(optionId(option))}"><span class="demo-choice-letter">${String.fromCharCode(65+index)}</span><span>${escape(cleanLabel(option))}</span></label>`).join('')}</div><button type="button" class="demo-clear-choice" data-demo-clear="${escape(item.id)}" aria-label="Bỏ chọn: ${escape(item.prompt)}">Bỏ chọn</button>`;
   }
   if (item.options) return `<select ${attributes}><option value="">— Chọn đáp án —</option>${item.options.map(option=>`<option value="${escape(optionId(option))}">${escape(typeof option === 'string' ? option : option.label)}</option>`).join('')}</select>`;
-  if (item.long) return `<textarea ${attributes} maxlength="12000" rows="4" placeholder="Viết câu trả lời"></textarea>`;
-  return `<input type="text" ${attributes} maxlength="12000" autocomplete="off" placeholder="${inline ? 'Điền đáp án' : 'Nhập câu trả lời'}">`;
+  if (item.long) return `<textarea ${attributes} maxlength="12000" rows="4" ${ANSWER_TEXT_ATTRS} placeholder="Viết câu trả lời"></textarea>`;
+  return `<input type="text" ${attributes} maxlength="12000" ${ANSWER_TEXT_ATTRS} placeholder="${inline ? 'Điền đáp án' : 'Nhập câu trả lời'}">`;
 }
 export function clozeMarkup(segments, items, numbered = true) {
   return segments.map(segment => typeof segment === 'string' ? escape(segment) : `<span class="demo-question demo-inline">${numbered ? `<span class="demo-blank-number">(${segment.number})</span>` : ''}${answerField(items.find(item => item.id === segment.id), true)}</span>`).join('');

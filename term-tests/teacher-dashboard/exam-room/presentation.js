@@ -137,3 +137,12 @@ export function applyExamConnection(room, { studentRef, status } = {}) {
 export function formatExamConnectionStatus(status) {
   return ({ connected: 'Đang kết nối', disconnected: 'Mất kết nối' })[status] || '—';
 }
+
+export function formatExamDevice({ device, fullscreenUnsupported } = {}) {
+  const parts = device ? [
+    ({ mobile: 'Điện thoại', tablet: 'Máy tính bảng', desktop: 'Máy tính' })[device.type] || 'Thiết bị khác',
+    ...[device.os, device.browser].filter(value => value && value !== 'other')
+  ] : [];
+  if (fullscreenUnsupported === true) parts.push('Không hỗ trợ toàn màn hình');
+  return parts.join(' · ') || '—';
+}

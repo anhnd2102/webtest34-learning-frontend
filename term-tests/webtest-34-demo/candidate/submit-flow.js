@@ -1,5 +1,5 @@
 // Hộp thoại nộp bài, nộp bài lên máy chủ, hộp kết quả và theo dõi kết quả sau nộp (tách nguyên văn từ content-preview.mjs).
-import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
+import { getTotalItemCount, getAnsweredCount, ICONS, scrollBehavior } from '../dynamic-exam-renderer.mjs?rev=20261113-submit-a';
 import { escape } from './text-utils.js?rev=20261113-submit-a';
 import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261113-submit-a';
 import { withLocalGroupLabels } from './group-render.js?rev=20261113-submit-a';
@@ -7,6 +7,7 @@ import { withLocalGroupLabels } from './group-render.js?rev=20261113-submit-a';
 export function createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic, examTimer, query, update, queueServerDraft, persist, clearDraftTimer }) {
   const timerDisplay = examTimer.display;
     function handleOpenSubmitDialog() {
+      if (query('#demo-confirm-error')) query('#demo-confirm-error').hidden = true;
       if (isDynamic) {
         const total = getTotalItemCount(learningState.definition);
         const done = getAnsweredCount(learningState.definition, state.answers);
@@ -215,7 +216,7 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
       if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
       query('#demo-result').hidden = false;
       query('#demo-result').textContent = text;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
     };
 
     // Một mã nộp cho cả lượt: nộp lại sau khi mất phản hồi không bị máy chủ coi là bản nộp khác.
@@ -232,13 +233,13 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
         examTimer.stop();
         if (timerDisplay) { timerDisplay.textContent = 'Đã nộp'; timerDisplay.classList.remove('warn'); }
         query('#demo-confirm').close();
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo({top: 0, behavior: scrollBehavior()});
 
         query('#demo-result').hidden = false;
         query('#demo-result').style.background = '#f0fdf4';
         query('#demo-result').style.borderColor = '#bbf7d0';
         query('#demo-result').style.color = '#166534';
-        query('#demo-result').innerHTML = `<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
+        query('#demo-result').innerHTML = `${learningState.submitTimedOut ? 'Đã hết giờ làm bài. ' : ''}<strong>Nộp bài thành công!</strong> Bài làm của bạn đã được ghi nhận an toàn trên hệ thống.`;
 
         if (isDynamic) {
           document.querySelectorAll('#examMainViewport input, #examMainViewport select, #examMainViewport textarea, #examMainViewport button').forEach(el => {
@@ -267,6 +268,7 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
       clearDraftTimer();
       query('#demo-confirm-submit').disabled = true;
       query('#demo-confirm-submit').textContent = 'Đang gửi…';
+      if (query('#demo-confirm-error')) query('#demo-confirm-error').hidden = true;
       try {
         if (isLearningMode && learningState.attemptToken) {
           const res = await apiRequest('/attempts/submit', {
@@ -282,7 +284,7 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
           persist();
           update();
           query('#demo-confirm').close();
-          window.scrollTo({top:0,behavior:'smooth'});
+          window.scrollTo({top:0,behavior:scrollBehavior()});
         }
       } catch (err) {
         // Bài đã được ghi nhận từ lần nộp trước (phản hồi bị mất) nhưng bản nộp lại khác nội dung: lấy kết quả thay vì báo lỗi.
@@ -295,7 +297,14 @@ export function createSubmitFlow({ isLearningMode, form, items, title, state, le
             return;
           }
         }
-        alert(`Nộp bài không thành công: ${err.message}`);
+        // Báo ngay trong hộp xác nhận; nút xác nhận được bật lại ở finally để thử lại.
+        // Nộp tự động lúc hết giờ chạy khi hộp đang đóng, nên mở hộp để học viên thấy lỗi.
+        const confirmError = query('#demo-confirm-error');
+        if (confirmError) {
+          confirmError.textContent = `${learningState.submitTimedOut ? 'Đã hết giờ làm bài nhưng chưa nộp được' : 'Nộp bài không thành công'} (${err.message}). Kiểm tra mạng rồi bấm xác nhận lại.`;
+          confirmError.hidden = false;
+        }
+        if (!query('#demo-confirm').open) query('#demo-confirm').showModal();
         queueServerDraft();
       } finally {
         query('#demo-confirm-submit').disabled = false;

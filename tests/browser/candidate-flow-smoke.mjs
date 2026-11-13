@@ -215,7 +215,8 @@ try {
     await page.locator('input[data-item-id="it-2"]').fill('retry me');
     api.failNext['/attempts/submit'] = 'abort';
     await submitAll(page);
-    await waitFor(() => page.dialogs.some(message => /Nộp bài không thành công/.test(message)), 'lỗi nộp được báo cho học viên');
+    await waitFor(async () => /Nộp bài không thành công/.test(await text(page, '#demo-confirm-error')), 'lỗi nộp được báo trong hộp xác nhận (không dùng alert)');
+    assert.equal(page.dialogs.length, 0, 'báo lỗi nộp không chặn bằng alert');
     await page.waitForTimeout(500);
     assert.equal(api.count('/attempts/submit'), 1, 'không tự nộp lại');
     assert.equal(await page.locator('#demo-confirm-submit').isEnabled(), true, 'nút xác nhận được bật lại để thử lần nữa');
@@ -259,7 +260,8 @@ try {
     await page.waitForTimeout(300);
     assert.equal(api.count('/attempts/submit'), 1, 'hết giờ chỉ tự nộp một lần');
     assert.match(JSON.stringify(api.last('/attempts/submit').body.responses), /before deadline/);
-    assert.ok(page.dialogs.some(message => /hết giờ/i.test(message)), 'báo hết giờ cho học viên');
+    assert.match(await text(page, '#demo-result'), /Đã hết giờ làm bài/, 'báo hết giờ cho học viên trong kết quả');
+    assert.equal(page.dialogs.length, 0, 'hết giờ không chặn bằng alert');
     await page.context().close();
   }
 

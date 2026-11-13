@@ -9,6 +9,7 @@ import {
   renderQuestionNavigator,
   renderSidePanel,
   renderDynamicExam,
+  renderQuestionCard,
   initDynamicExamInteractions
 } from '../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs';
 
@@ -164,6 +165,42 @@ test('dynamic-exam-renderer: renderDynamicExam outputs HTML containing question 
   assert.ok(container.innerHTML.includes('F_ _ _ _ _ _ _'), 'Should render letter hint');
 });
 
+test('dynamic-exam-renderer: mọi ô trả lời tắt kiểm tra chính tả và tự sửa/viết hoa', () => {
+  // Dạng theo block (bảng từ vựng, thẻ hình, nhóm câu ngắn) dựng qua renderDynamicExam, mỗi dạng một block;
+  // dạng từng câu gọi thẳng renderQuestionCard vì câu đứng một mình có thể bị gom vào nhóm câu ngắn.
+  const blockItems = [
+    { itemVersionId: 'v1', position: 1, interactionType: 'text_select_pair', options: [{ id: 'a', label: 'tháng hai' }] },
+    { itemVersionId: 'p1', position: 2, interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', letterHint: 'F_ _' },
+    { itemVersionId: 's1', position: 3, interactionType: 'short_text', prompt: 'Câu 3?' }
+  ];
+  const cardItems = [
+    { itemVersionId: 'c1', position: 5, interactionType: 'short_text', layoutType: 'inline_cloze', prompt: 'A (1) _____ b (2) _____.' },
+    { itemVersionId: 'r1', position: 7, interactionType: 'short_text', pedagogicalTypeCode: 'sentence_rewrite', prompt: 'Viết lại.' },
+    { itemVersionId: 'o1', position: 8, interactionType: 'short_text', pedagogicalTypeCode: 'sentence_reorder', prompt: 'a / b / c' },
+    { itemVersionId: 'e1', position: 9, interactionType: 'correction_pair', prompt: 'Tìm lỗi.' },
+    { itemVersionId: 'w1', position: 10, interactionType: 'long_text', prompt: 'Viết đoạn văn.' },
+    { itemVersionId: 'x1', position: 11, interactionType: 'short_text', graderType: 'exact', prompt: 'Câu 11?' }
+  ];
+  const html = [
+    ...blockItems.map(item => {
+      const container = { innerHTML: '', addEventListener: () => {}, querySelectorAll: () => [] };
+      renderDynamicExam({ title: 'Spellcheck', blocks: [{ title: 'A', items: [item] }] }, container, { state: { answers: {} }, activeSection: 'A', onAnswerChange: () => {} });
+      return container.innerHTML;
+    }),
+    ...cardItems.map(item => renderQuestionCard(item, {}))
+  ].join('');
+  const fields = html.match(/<(?:input type="text"|textarea)(?=[\s>])[^>]*>/g) || [];
+  for (const cls of ['candidate-vocab-text-input', 'candidate-pictorial-input', 'inline-fill-input', 'candidate-transformation-input',
+    'candidate-reorder-input', 'candidate-error-input', 'candidate-correction-input', 'candidate-open-textarea']) {
+    assert.ok(fields.some(f => f.includes(cls)), `thiếu ô ${cls} trong đề thử`);
+  }
+  for (const field of fields) {
+    for (const attr of ['spellcheck="false"', 'autocorrect="off"', 'autocapitalize="none"']) {
+      assert.ok(field.includes(attr), `thiếu ${attr}: ${field.slice(0, 80)}`);
+    }
+  }
+});
+
 test('dynamic-exam-renderer: convertGoogleDriveAudioUrl converts drive file link to stream endpoint', async () => {
   const { convertGoogleDriveAudioUrl } = await import('../term-tests/webtest-34-demo/dynamic-exam-renderer.mjs');
   const driveUrl = 'https://drive.google.com/file/d/1a2b3c4d5e6f/view?usp=sharing';
@@ -290,4 +327,54 @@ test('isKeyboardOpen phân biệt bàn phím với phóng to và thanh địa ch
   assert.equal(isKeyboardOpen({ height: 500, scale: 1 }, 844), true, 'bàn phím che hơn 120px');
   assert.equal(isKeyboardOpen({ height: 422, scale: 2 }, 844), false, 'phóng to 2 lần không phải bàn phím');
   assert.equal(isKeyboardOpen({ height: 780, scale: 1 }, 844), false, 'thanh địa chỉ co giãn không phải bàn phím');
+});
+
+test('dynamic-exam-renderer: câu điền chỗ trống không bị gom thành câu trả lời ngắn (#39)', () => {
+  const prompt = 'Fill in: The career (1) ........ and the money (2) ........ matter.';
+  for (const extra of [
+    { layoutType: 'table_completion' },
+    { pedagogicalTypeCode: 'table_completion' },
+    { pedagogicalTypeCode: 'inline_cloze' },
+    {}
+  ]) {
+    const container = { innerHTML: '', addEventListener: () => {}, querySelectorAll: () => [] };
+    const definition = { title: 'T', blocks: [{ title: 'Phần A', items: [
+      { itemVersionId: 'c1', position: 1, interactionType: 'short_text', prompt, ...extra }
+    ] }] };
+    renderDynamicExam(definition, container, { state: { answers: {} }, activeSection: 'Phần A', onAnswerChange: () => {} });
+    const html = container.innerHTML;
+    const label = JSON.stringify(extra);
+    assert.ok(html.includes('cbt-cloze-content'), `${label}: phải dựng thành điền chỗ trống`);
+    assert.ok(!html.includes('candidate-short-qa'), `${label}: không được gom vào nhóm câu trả lời ngắn`);
+    assert.equal(getItemSpanCount(definition.blocks[0].items[0]), 2, `${label}: đếm đúng số ô`);
+  }
+});
+
+test('dynamic-exam-renderer: bản nháp cũ dạng chuỗi chỉ vào ô trống đầu, không mất khi sửa ô khác (#39)', () => {
+  const item = { itemVersionId: 'c1', position: 1, interactionType: 'short_text', layoutType: 'table_completion',
+    prompt: 'The career (1) ........ and the money (2) ........ matter.' };
+  const html = renderQuestionCard(item, { c1: 'interesting' });
+  const values = [...html.matchAll(/data-position="(\d+)" placeholder="" value="([^"]*)"/g)].map(m => [m[1], m[2]]);
+  assert.deepEqual(values, [['1', 'interesting'], ['2', '']]);
+
+  // Học viên gõ vào ô (2): state phải giữ cả đáp án cũ ở ô (1).
+  const blank = (pos, value) => ({
+    value,
+    classList: { contains: () => false },
+    getAttribute: name => ({ 'data-item-id': 'c1', 'data-position': pos })[name] ?? null,
+    closest: sel => (sel === '.inline-blank-wrapper' ? { classList: { toggle() {} } } : null)
+  });
+  const inputs = [blank('1', 'interesting'), blank('2', 'money')];
+  const listeners = {};
+  const root = {
+    querySelectorAll: sel => (sel === '.inline-fill-input' ? inputs : []),
+    querySelector: () => null,
+    addEventListener: (name, fn) => { (listeners[name] ||= []).push(fn); }
+  };
+  const state = { answers: { c1: 'interesting' }, unlockedAudioBlocks: new Set() };
+  const changes = [];
+  initDynamicExamInteractions(root, { definition: { blocks: [] }, state, onAnswerChange: (id, v) => changes.push([id, v]) });
+  listeners.input.forEach(fn => fn({ target: inputs[1] }));
+  assert.deepEqual(state.answers.c1, { 1: 'interesting', 2: 'money' });
+  assert.deepEqual(changes.at(-1), ['c1', { 1: 'interesting', 2: 'money' }]);
 });
