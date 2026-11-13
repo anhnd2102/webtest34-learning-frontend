@@ -4,12 +4,13 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { smokeOrigin, smokeServerArgs } from './helpers/smoke-server.mjs';
 
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const port = Number(process.env.SMOKE_PORT) || 18322;
-const origin = `http://127.0.0.1:${port}`;
+const origin = smokeOrigin(port);
 const TOKEN = '3401-smoke-test-token';
 
 export const VIEWPORTS = [
@@ -125,9 +126,9 @@ export async function openStartScreen(browser, viewport, contextOptions = {}, at
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     if (url.pathname.includes('/api/learning/')) return route.fallback();
-    if (url.pathname === '/smoke-audio.wav') return route.fulfill({ status: 200, contentType: 'audio/wav', body: silentWav() });
+    if (url.pathname.endsWith('/smoke-audio.wav')) return route.fulfill({ status: 200, contentType: 'audio/wav', body: silentWav() });
     // Chặn mạng ngoài (font, ...), chỉ cho static server cục bộ.
-    return url.origin === origin ? route.continue() : route.abort();
+    return url.origin === new URL(origin).origin ? route.continue() : route.abort();
   });
   await mockLearningApi(page, attemptExtra);
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
@@ -620,7 +621,7 @@ export const checks = {
 
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const child = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(process.execPath, smokeServerArgs(port), { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
   let browser;
   try {
     await new Promise((resolve, reject) => {

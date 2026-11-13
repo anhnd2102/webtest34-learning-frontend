@@ -8,13 +8,14 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { smokeOrigin, smokeServerArgs } from './helpers/smoke-server.mjs';
 
 process.env.PLAYWRIGHT_MODULE ||= 'C:/Users/OS/.nuget/packages/microsoft.playwright/1.63.0/.playwright/package/index.mjs';
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const port = Number(process.env.SMOKE_PORT) || 18331;
-const origin = `http://127.0.0.1:${port}`;
+const origin = smokeOrigin(port);
 const TOKEN = '3401-flow-smoke-token';
 
 // Đề rút gọn: 2 phần, đủ câu chọn, câu điền ngắn và câu viết.
@@ -87,7 +88,7 @@ async function openPage(browser, api, { clock = false, context: existingContext 
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     if (url.pathname.includes('/api/learning/')) return api.handler(route);
-    return url.origin === origin ? route.continue() : route.abort();
+    return url.origin === new URL(origin).origin ? route.continue() : route.abort();
   });
   await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
   await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
@@ -114,7 +115,7 @@ const submitAll = async page => {
   await clickDom(page, '#demo-confirm-submit');
 };
 
-const child = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+const child = spawn(process.execPath, smokeServerArgs(port), { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
 let browser;
 try {
   await new Promise((resolve, reject) => {
