@@ -13,6 +13,7 @@
     "term-tests/webtest-34-demo/candidate/result-view.ts",
     "term-tests/webtest-34-demo/candidate/review-screen.ts",
     "term-tests/webtest-34-demo/candidate/motion.ts",
+    "term-tests/webtest-34-demo/candidate/exam-mode.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
