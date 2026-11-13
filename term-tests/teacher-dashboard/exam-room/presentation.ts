@@ -4,6 +4,12 @@ export interface ExamSession { status?: string, deadlineAt?: string }
 
 export interface ExamRoomStudent {
   studentRef?: string;
+  name?: string;
+  status?: string;
+  discriminator?: string;
+  retakeGrant?: { status?: string } | null;
+  device?: { type?: string, os?: string, browser?: string } | null;
+  fullscreenUnsupported?: boolean;
   attemptId?: string;
   incidentCount?: number;
   exitLimit?: number | null;
@@ -14,7 +20,7 @@ export interface ExamRoomStudent {
   [key: string]: unknown;
 }
 
-export interface ExamRoom { students: ExamRoomStudent[], [key: string]: unknown }
+export interface ExamRoom { students: ExamRoomStudent[], status?: string, deadlineAt?: string, readyCount?: number, totalCount?: number, [key: string]: unknown }
 
 export function examModeLockReason({ exitLimit, examMode, examSession }: { exitLimit?: number | null, examMode?: boolean, examSession?: ExamSession | null } = {}): string {
   // Server từ chối đổi Exam Mode khi phiên không còn ở trạng thái chờ (EXAM_SESSION_ALREADY_STARTED).
