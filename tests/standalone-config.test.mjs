@@ -30,7 +30,7 @@ test('Webtest 34 points to the generic Learning platform API', async () => {
 });
 
 test('Webtest 34 calls the stable Learning access contract', async () => {
-  const index = (await read('term-tests/webtest-34-demo/content-preview.mjs')) + '\n' + (await read('term-tests/webtest-34-demo/candidate/intro-screen.js'));
+  const index = (await read('term-tests/webtest-34-demo/content-preview.mjs')) + '\n' + (await read('term-tests/webtest-34-demo/candidate/intro-screen.ts'));
   assert.match(index, /\/api\/learning\$\{path\}/);
   assert.match(index, /apiRequest\('\/test-access\/resolve'/);
 });
