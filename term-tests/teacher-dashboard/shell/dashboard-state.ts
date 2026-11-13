@@ -62,6 +62,15 @@ export interface ScopeState {
   currentSelectedAssignment?: AssignmentRecord | null;
 }
 
+export interface ReportState {
+  mode?: string;
+  reportData: unknown;
+  itemAnalysisData: unknown;
+  expandedItemIds: Set<string>;
+  isLoading?: boolean;
+  itemAnalysisLoading?: boolean;
+}
+
 export type DashboardRequest = (path: string, options?: ApiRequestOptions) => Promise<any>;
 
 export function localStudentUrl(studentUrl: string | null | undefined, location: { hostname?: string, origin: string } | null | undefined, apiBase = ''): string | null | undefined {

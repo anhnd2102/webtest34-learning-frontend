@@ -57,6 +57,8 @@
     "term-tests/teacher-dashboard/ui/rich-content.ts",
     "term-tests/teacher-dashboard/exam-room/view.ts",
     "term-tests/teacher-dashboard/studio/media.ts",
+    "term-tests/teacher-dashboard/results/view.ts",
+    "term-tests/teacher-dashboard/shell/navigation.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }

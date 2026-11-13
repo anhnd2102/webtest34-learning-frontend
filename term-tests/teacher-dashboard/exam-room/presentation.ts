@@ -95,7 +95,7 @@ export function examSwitchSuccessText(payload: { exitLimit?: number, switched?: 
   return `${lead}: thoát quá ${limit} lần thì bài tự nộp. Chế độ mới chỉ áp dụng cho lượt làm bắt đầu từ bây giờ; điểm, lịch sử phiên thi và quyền làm lại được giữ nguyên, học viên đã nộp vẫn cần được cấp làm lại.`;
 }
 
-export function incidentCellText(student: ExamRoomStudent): string {
+export function incidentCellText(student: Pick<ExamRoomStudent, 'attemptId' | 'incidentCount' | 'exitLimit' | 'autoSubmitted'>): string {
   if (!student.attemptId) return '—';
   const count = student.incidentCount ?? 0;
   if (student.exitLimit === null || student.exitLimit === undefined) return String(count);
