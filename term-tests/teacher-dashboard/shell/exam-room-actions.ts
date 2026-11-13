@@ -8,6 +8,7 @@ import type { AuthState, DashboardRequest, DashboardState, ScopeState } from './
 import type { Lifecycle } from './lifecycle.js';
 import type { QueryHandle } from './query-coordinator.js';
 import type { ExamRoom } from '../exam-room/presentation.js';
+import type { IncidentRecord } from '../results/presentation.js';
 
 type RoomSession = ReturnType<typeof createExamRoomSession>;
 
@@ -37,7 +38,7 @@ export interface ExamRoomActionsParams {
 }
 
 export function createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout }: ExamRoomActionsParams) {
-  function fillIncidentTimeline(container: HTMLElement, rawIncidents?: unknown[]) {
+  function fillIncidentTimeline(container: HTMLElement, rawIncidents?: IncidentRecord[]) {
     container.replaceChildren();
     const incidents = formatIncidentTimeline(rawIncidents || []);
     if (!incidents.length) {
