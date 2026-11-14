@@ -67,6 +67,8 @@
     "term-tests/teacher-dashboard/studio/draft-inputs.ts",
     "term-tests/teacher-dashboard/studio/question-renderer.ts",
     "term-tests/teacher-dashboard/studio/simulation.ts",
+    "term-tests/teacher-dashboard/studio/publishing.ts",
+    "term-tests/teacher-dashboard/studio/builder.ts",
     "term-tests/teacher-dashboard/studio/block-actions.ts",
     "term-tests/teacher-dashboard/studio/sandbox-actions.ts",
     "term-tests/teacher-dashboard/studio/collapse-actions.ts",

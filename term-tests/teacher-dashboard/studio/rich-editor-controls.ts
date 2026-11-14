@@ -5,7 +5,7 @@ import { escapeHtml } from '../ui/presentation.js';
 import { sanitizeRichContent, renderInlineClozeMarkup, generateTableHtml } from '../ui/rich-content.js';
 import { convertGoogleDriveImageUrl, validateImageUrl } from './media.js';
 
-export function bindRichEditorControls({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, render }: BinderBase & {
+export function bindRichEditorControls({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, render }: Pick<BinderBase, 'container' | 'draftState' | 'markAsDirty' | 'render'> & {
   isBuilderDisposed: () => boolean;
   addCleanup: (cleanup: () => void) => void;
 }) {

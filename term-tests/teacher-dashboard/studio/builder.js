@@ -1,3 +1,5 @@
+// NGUỒN: file .ts này; builder.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
+// không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { bindChoiceAuthoring } from './authoring/choice.js';
 import { bindShortAnswerAuthoring } from './authoring/short-answer.js';
 import { bindReadingMatchingAuthoring } from './authoring/reading-matching.js';
@@ -16,7 +18,7 @@ import { bindDraftSaving } from './draft-saving.js';
 import { mountedBuilders, registerUnsavedChangesGuard, openUnsavedChangesModal, unregisterUnsavedChangesGuard, disposeBuilderModals } from '../navigation/unsaved-changes.js';
 import { generateUuid } from './draft-model.js';
 import { renderSvgIcon } from '../ui/icons.js';
-import { updatePromptPosition, isComprehensionExercise, pruneOrphanClozeKeys, getItemSpanCount, computeTestBuilderScoreSummary, scaleRubricCriteriaScores, resequenceItemPositions } from './draft-model.js';
+import { updatePromptPosition, isComprehensionExercise, pruneOrphanClozeKeys, getItemSpanCount, computeTestBuilderScoreSummary, scaleRubricCriteriaScores } from './draft-model.js';
 import { escapeHtml } from '../ui/presentation.js';
 import { renderScoreBreakdownBarHtml, renderBlocksNavCardHtml, renderScoreSkillChipsHtml, renderBlockJumpTagsHtml } from './builder-summary.js';
 import { bindBlockJumpChips } from './block-jump-chips.js';
@@ -35,337 +37,326 @@ import { bindBlockReorderActions } from './block-actions.js';
 import { bindToolbarActions } from './toolbar-actions.js';
 import { bindRichEditorControls } from './rich-editor-controls.js';
 import { bindExerciseActions } from './exercise-actions.js';
-
-
-export function mountBuilder(container, formVersionData = {}, options = {}) {
-  if (!container) return { dispose() {}, hasUnsavedChanges: () => false, getDraft: () => null };
-
-  const currentFormVersionId = formVersionData.id || formVersionData.formVersionId;
-  const currentSubCount = Number(formVersionData.submissionCount || 0);
-  const currentVersion = Number(formVersionData.version || 1);
-  const currentStatus = formVersionData.status || 'draft';
-
-  const existing = mountedBuilders.get(container);
-  if (existing && !existing.isDisposed) {
-    const isSameData = existing.formVersionData === formVersionData || (
-      existing.formVersionId === currentFormVersionId &&
-      existing.submissionCount === currentSubCount &&
-      existing.version === currentVersion &&
-      existing.status === currentStatus
-    );
-    if (isSameData) {
-      return existing.handle;
-    }
-    existing.handle.dispose();
-  }
-
-  let isDisposed = false;
-  let isDirty = false;
-  let dirtyVersion = 0;
-  const builderOwner = { id: generateUuid(), formVersionId: currentFormVersionId };
-  const timeouts = new Set();
-  let renderCycleCleanups = [];
-
-  const matchedCatalogItem = Array.isArray(options.catalog)
-    ? options.catalog.find(it => it.formVersionId === (formVersionData.id || formVersionData.formVersionId))
-    : null;
-
-  const draftState = {
-    formVersionId: formVersionData.id || formVersionData.formVersionId || generateUuid(),
-    formTemplateId: formVersionData.formTemplateId || '',
-    version: Number(formVersionData.version || 1),
-    status: formVersionData.status || 'draft',
-    title: formVersionData.title || formVersionData.publicDefinition?.title || matchedCatalogItem?.title || 'Đề thi mới',
-    phase: formVersionData.phase !== undefined
-      ? formVersionData.phase
-      : (formVersionData.publicDefinition?.phase !== undefined ? formVersionData.publicDefinition.phase : (matchedCatalogItem?.phase || null)),
-    sessionNumber: formVersionData.sessionNumber || formVersionData.publicDefinition?.sessionNumber || matchedCatalogItem?.sessionNumber || null,
-    durationMinutes: Number(formVersionData.durationMinutes || formVersionData.publicDefinition?.durationMinutes || 60),
-    answerReleasePolicy: formVersionData.answerReleasePolicy || formVersionData.publicDefinition?.answerReleasePolicy || 'teacher_release',
-    submissionCount: Number(formVersionData.submissionCount || 0),
-    blocks: JSON.parse(JSON.stringify(formVersionData.publicDefinition?.blocks || formVersionData.blocks || [])),
-    gradingKey: {
-      items: JSON.parse(JSON.stringify(formVersionData.gradingKey?.items || {})),
-      groups: JSON.parse(JSON.stringify(formVersionData.gradingKey?.groups || {}))
-    }
-  };
-
-  if (!draftState.blocks.length) {
-    const initialItemId = generateUuid();
-    const initialExId = generateUuid();
-    draftState.blocks.push({
-      blockId: generateUuid(),
-      checkpoint: 1,
-      title: 'Phần 1: Khởi động',
-      instructions: '',
-      audioUrl: '',
-      readingPassage: '',
-      exercises: [
-        {
-          exerciseId: initialExId,
-          exerciseNumber: 1,
-          title: 'Bài tập 1: Khởi động',
-          instructions: '',
-          audioUrl: null,
-          readingPassage: null,
-          itemIds: [initialItemId]
+export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
+    if (!containerArg)
+        return { dispose() { }, hasUnsavedChanges: () => false, getDraft: () => null };
+    const container = containerArg;
+    const currentFormVersionId = formVersionData.id || formVersionData.formVersionId;
+    const currentSubCount = Number(formVersionData.submissionCount || 0);
+    const currentVersion = Number(formVersionData.version || 1);
+    const currentStatus = formVersionData.status || 'draft';
+    const existing = mountedBuilders.get(container);
+    if (existing && !existing.isDisposed) {
+        const isSameData = existing.formVersionData === formVersionData || (existing.formVersionId === currentFormVersionId &&
+            existing.submissionCount === currentSubCount &&
+            existing.version === currentVersion &&
+            existing.status === currentStatus);
+        if (isSameData) {
+            return existing.handle;
         }
-      ],
-      items: [
-        {
-          itemFamilyId: generateUuid(),
-          itemVersionId: initialItemId,
-          position: 1,
-          exerciseId: initialExId,
-          exerciseTitle: 'Bài tập 1: Khởi động',
-          prompt: 'Câu hỏi 1:',
-          helpText: '',
-          interactionType: 'single_choice',
-          pedagogicalTypeCode: 'multiple_choice',
-          layoutType: 'grid_4',
-          graderType: 'exact_option',
-          required: true,
-          maxScore: 1,
-          options: [
-            { id: 'A', label: 'Phương án A' },
-            { id: 'B', label: 'Phương án B' },
-            { id: 'C', label: 'Phương án C' },
-            { id: 'D', label: 'Phương án D' }
-          ],
-          skillCodes: [],
-          releasePolicy: 'inherit'
+        existing.handle.dispose();
+    }
+    let isDisposed = false;
+    let isDirty = false;
+    let dirtyVersion = 0;
+    const builderOwner = { id: generateUuid(), formVersionId: currentFormVersionId };
+    const timeouts = new Set();
+    let renderCycleCleanups = [];
+    const matchedCatalogItem = Array.isArray(options.catalog)
+        ? options.catalog.find(it => it.formVersionId === (formVersionData.id || formVersionData.formVersionId))
+        : null;
+    const draftState = {
+        formVersionId: formVersionData.id || formVersionData.formVersionId || generateUuid(),
+        formTemplateId: formVersionData.formTemplateId || '',
+        version: Number(formVersionData.version || 1),
+        status: formVersionData.status || 'draft',
+        title: formVersionData.title || formVersionData.publicDefinition?.title || matchedCatalogItem?.title || 'Đề thi mới',
+        phase: formVersionData.phase !== undefined
+            ? formVersionData.phase
+            : (formVersionData.publicDefinition?.phase !== undefined ? formVersionData.publicDefinition.phase : (matchedCatalogItem?.phase || null)),
+        sessionNumber: formVersionData.sessionNumber || formVersionData.publicDefinition?.sessionNumber || matchedCatalogItem?.sessionNumber || null,
+        durationMinutes: Number(formVersionData.durationMinutes || formVersionData.publicDefinition?.durationMinutes || 60),
+        answerReleasePolicy: formVersionData.answerReleasePolicy || formVersionData.publicDefinition?.answerReleasePolicy || 'teacher_release',
+        submissionCount: Number(formVersionData.submissionCount || 0),
+        blocks: JSON.parse(JSON.stringify(formVersionData.publicDefinition?.blocks || formVersionData.blocks || [])),
+        gradingKey: {
+            items: JSON.parse(JSON.stringify(formVersionData.gradingKey?.items || {})),
+            groups: JSON.parse(JSON.stringify(formVersionData.gradingKey?.groups || {}))
         }
-      ]
-    });
-    draftState.gradingKey.items[initialItemId] = {
-      graderType: 'exact_option',
-      expectedOptionId: 'A'
     };
-  }
-
-  // Normalize exercises in each block for 3-level hierarchy (Block -> Exercise -> Item)
-  for (const block of draftState.blocks) {
-    if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
-      const defaultExId = generateUuid();
-      block.exercises = [
-        {
-          exerciseId: defaultExId,
-          exerciseNumber: 1,
-          title: block.title ? `${block.title}` : 'Exercise 1',
-          instructions: block.instructions || '',
-          audioUrl: block.audioUrl || null,
-          readingPassage: block.readingPassage || null,
-          itemIds: (block.items || []).map(it => it.itemVersionId)
-        }
-      ];
-    } else {
-      block.exercises.forEach((ex, idx) => {
-        ex.exerciseNumber = idx + 1;
-        if (!ex.exerciseId) ex.exerciseId = generateUuid();
-        if (!ex.title) ex.title = `Exercise ${idx + 1}`;
-      });
-    }
-
-    const exIdMap = new Map(block.exercises.map(e => [e.exerciseId, e]));
-    const firstEx = block.exercises[0];
-
-    for (const itm of block.items || []) {
-      if (!itm.exerciseId || !exIdMap.has(itm.exerciseId)) {
-        itm.exerciseId = firstEx.exerciseId;
-        itm.exerciseTitle = itm.exerciseTitle || firstEx.title;
-      } else {
-        itm.exerciseTitle = itm.exerciseTitle || exIdMap.get(itm.exerciseId)?.title;
-      }
-    }
-
-    for (const ex of block.exercises) {
-      ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
-    }
-  }
-
-  function markAsDirty() {
-    if (isDisposed) return;
-    dirtyVersion++;
-    isDirty = true;
-    if (typeof container?.querySelector === 'function') {
-      const statusMsg = container.querySelector('#builder-status-msg');
-      if (statusMsg && !statusMsg.classList.contains('saving') && !statusMsg.classList.contains('forked')) {
-        statusMsg.className = 'builder-status-pill unsaved';
-        statusMsg.innerHTML = `${renderSvgIcon('edit', 'icon-inline')} <span>Có thay đổi chưa lưu</span>`;
-      }
-    }
-  }
-
-  const unsavedGuardChecker = () => !isDisposed && isDirty;
-  registerUnsavedChangesGuard(unsavedGuardChecker, builderOwner);
-
-  const markSaved = () => { isDirty = false; };
-  const hasUnsavedChanges = () => !isDisposed && isDirty;
-  const workflowLifecycle = { isDisposed: () => isDisposed, getDirtyVersion: () => dirtyVersion };
-  const collapsedCardKeys = new Set();
-  let activeBlockIdx = 0;
-  const setActiveBlockIdx = (value) => { activeBlockIdx = value; };
-  const getActiveBlockIdx = () => activeBlockIdx;
-  const isBuilderDisposed = () => isDisposed;
-  const addCleanup = (cleanup) => { renderCycleCleanups.push(cleanup); };
-
-  function resolveTargetExercise(block, btn) {
-    if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
-      const defaultExId = generateUuid();
-      block.exercises = [
-        {
-          exerciseId: defaultExId,
-          exerciseNumber: 1,
-          title: block.title ? `${block.title}` : 'Exercise 1',
-          instructions: block.instructions || '',
-          audioUrl: block.audioUrl || null,
-          readingPassage: block.readingPassage || null,
-          itemIds: (block.items || []).map(it => it.itemVersionId)
-        }
-      ];
-    }
-    const exId = btn ? btn.getAttribute('data-exercise-id') : null;
-    const exIdxStr = btn ? btn.getAttribute('data-exercise-idx') : null;
-    const exIdx = exIdxStr !== null && exIdxStr !== undefined && exIdxStr !== '' ? Number(exIdxStr) : null;
-    if (exId) {
-      const found = block.exercises.find(e => e.exerciseId === exId);
-      if (found) return found;
-    }
-    if (exIdx !== null && block.exercises[exIdx]) {
-      return block.exercises[exIdx];
-    }
-    return block.exercises[0];
-  }
-
-  function updatePromptPositionLocal(prompt, newPos, span = 1) {
-    return updatePromptPosition(prompt, newPos, span);
-  }
-
-  function resequenceItemPositions(options = {}) {
-    const forceStartAtOne = options.forceStartAtOne ?? false;
-    const firstPos = draftState.blocks[0]?.items?.[0]?.position;
-    let pos = (!forceStartAtOne && typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
-    for (const b of draftState.blocks) {
-      for (const itm of b.items || []) {
-        pruneOrphanClozeKeys(itm, draftState.gradingKey?.items?.[itm.itemVersionId]);
-        const span = getItemSpanCount(itm);
-        itm.spanCount = span;
-        itm.position = pos;
-        if (itm.prompt) {
-          itm.prompt = updatePromptPositionLocal(itm.prompt, pos, span);
-        }
-        pos += span;
-      }
-      for (const ex of b.exercises || []) {
-        ex.itemIds = (b.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
-      }
-    }
-  }
-
-  // Ensure initial grading key entries exist
-  for (const block of draftState.blocks) {
-    for (const itm of block.items || []) {
-      if (itm.interactionType === 'single_choice' && !draftState.gradingKey.items[itm.itemVersionId]) {
-        draftState.gradingKey.items[itm.itemVersionId] = {
-          graderType: 'exact_option',
-          expectedOptionId: itm.options?.[0]?.id || 'A'
-        };
-      } else if (itm.interactionType === 'short_text') {
-        const initialWord = itm.targetWord || ((itm.prompt && !/^Câu \d+/i.test(itm.prompt) && !/^Từ vựng qua ảnh \d+/i.test(itm.prompt)) ? itm.prompt : '');
-        if (!draftState.gradingKey.items[itm.itemVersionId]) {
-          draftState.gradingKey.items[itm.itemVersionId] = {
-            graderType: 'accepted_text',
-            accepted: initialWord ? [initialWord] : [],
-            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-          };
-        } else {
-          const currentKey = draftState.gradingKey.items[itm.itemVersionId];
-          if (Array.isArray(currentKey.accepted)) {
-            currentKey.accepted = currentKey.accepted.filter(v => v !== 'answer' && v !== 'draft_placeholder');
-            if (!currentKey.accepted.length && initialWord) {
-              currentKey.accepted = [initialWord];
-            }
-          }
-        }
-      } else if (itm.interactionType === 'text_select_pair') {
-        const initialWord = itm.targetWord || ((itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? itm.prompt : '');
-        if (!draftState.gradingKey.items[itm.itemVersionId]) {
-          draftState.gradingKey.items[itm.itemVersionId] = {
-            graderType: 'accepted_text_exact_option',
-            accepted: initialWord ? [initialWord] : [],
-            expectedOptionId: itm.options?.[0]?.id || 'opt_1',
-            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
-          };
-        } else {
-          const currentKey = draftState.gradingKey.items[itm.itemVersionId];
-          if (Array.isArray(currentKey.accepted)) {
-            currentKey.accepted = currentKey.accepted.filter(v => v !== 'answer' && v !== 'draft_placeholder');
-            if (!currentKey.accepted.length && initialWord) {
-              currentKey.accepted = [initialWord];
-            }
-          }
-        }
-      } else if (itm.graderType === 'rubric_async' && !draftState.gradingKey.items[itm.itemVersionId]) {
-        draftState.gradingKey.items[itm.itemVersionId] = {
-          graderType: 'rubric_async',
-          rubricCode: 'rubric_translation_v1',
-          rubricVersion: 1,
-          rubric: {
-            scoringVersion: 'rubric-translation-v1',
-            maxScore: itm.maxScore || 4,
-            criteria: [
-              { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: (itm.maxScore || 4) / 2, requiredConcepts: [] },
-              { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: (itm.maxScore || 4) / 2, requiredConcepts: [] }
+    if (!draftState.blocks.length) {
+        const initialItemId = generateUuid();
+        const initialExId = generateUuid();
+        draftState.blocks.push({
+            blockId: generateUuid(),
+            checkpoint: 1,
+            title: 'Phần 1: Khởi động',
+            instructions: '',
+            audioUrl: '',
+            readingPassage: '',
+            exercises: [
+                {
+                    exerciseId: initialExId,
+                    exerciseNumber: 1,
+                    title: 'Bài tập 1: Khởi động',
+                    instructions: '',
+                    audioUrl: null,
+                    readingPassage: null,
+                    itemIds: [initialItemId]
+                }
+            ],
+            items: [
+                {
+                    itemFamilyId: generateUuid(),
+                    itemVersionId: initialItemId,
+                    position: 1,
+                    exerciseId: initialExId,
+                    exerciseTitle: 'Bài tập 1: Khởi động',
+                    prompt: 'Câu hỏi 1:',
+                    helpText: '',
+                    interactionType: 'single_choice',
+                    pedagogicalTypeCode: 'multiple_choice',
+                    layoutType: 'grid_4',
+                    graderType: 'exact_option',
+                    required: true,
+                    maxScore: 1,
+                    options: [
+                        { id: 'A', label: 'Phương án A' },
+                        { id: 'B', label: 'Phương án B' },
+                        { id: 'C', label: 'Phương án C' },
+                        { id: 'D', label: 'Phương án D' }
+                    ],
+                    skillCodes: [],
+                    releasePolicy: 'inherit'
+                }
             ]
-          }
+        });
+        draftState.gradingKey.items[initialItemId] = {
+            graderType: 'exact_option',
+            expectedOptionId: 'A'
         };
-      } else if (itm.graderType === 'unordered_group_slot' && itm.groupId && !draftState.gradingKey.groups[itm.groupId]) {
-        draftState.gradingKey.groups[itm.groupId] = {
-          graderType: 'unordered_group_slot',
-          expectedOptionIds: (itm.options || []).slice(0, 2).map(o => o.id)
-        };
-      }
     }
-  }
-
-  const renderItemCard = createQuestionRenderer({ draftState, collapsedCardKeys });
-
-  function renderExerciseItems(block, blockIdx, exercise, exIdx) {
-    const items = (block.items || []).filter(it => {
-      if (it.exerciseId === exercise.exerciseId) return true;
-      if (!it.exerciseId && exIdx === 0) {
-        it.exerciseId = exercise.exerciseId;
-        it.exerciseTitle = exercise.title || `Exercise ${exercise.exerciseNumber || 1}`;
-        return true;
-      }
-      return false;
-    });
-    if (!items.length) {
-      return `<div class="empty-items-notice">Chưa có câu hỏi nào trong bài tập này. Chọn một dạng câu hỏi bên dưới để thêm.</div>`;
+    // Normalize exercises in each block for 3-level hierarchy (Block -> Exercise -> Item)
+    for (const block of draftState.blocks) {
+        if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
+            const defaultExId = generateUuid();
+            block.exercises = [
+                {
+                    exerciseId: defaultExId,
+                    exerciseNumber: 1,
+                    title: block.title ? `${block.title}` : 'Exercise 1',
+                    instructions: block.instructions || '',
+                    audioUrl: block.audioUrl || null,
+                    readingPassage: block.readingPassage || null,
+                    itemIds: (block.items || []).map(it => it.itemVersionId)
+                }
+            ];
+        }
+        else {
+            block.exercises.forEach((ex, idx) => {
+                ex.exerciseNumber = idx + 1;
+                if (!ex.exerciseId)
+                    ex.exerciseId = generateUuid();
+                if (!ex.title)
+                    ex.title = `Exercise ${idx + 1}`;
+            });
+        }
+        const exIdMap = new Map(block.exercises.map(e => [e.exerciseId, e]));
+        const firstEx = block.exercises[0];
+        for (const itm of block.items || []) {
+            if (!itm.exerciseId || !exIdMap.has(itm.exerciseId)) {
+                itm.exerciseId = firstEx.exerciseId;
+                itm.exerciseTitle = itm.exerciseTitle || firstEx.title;
+            }
+            else {
+                itm.exerciseTitle = itm.exerciseTitle || exIdMap.get(itm.exerciseId)?.title;
+            }
+        }
+        for (const ex of block.exercises) {
+            ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
+        }
     }
-    return items.map(item => {
-      const itemIdx = block.items.indexOf(item);
-      return renderItemCard(item, itemIdx, block, blockIdx);
-    }).join('');
-  }
-
-  function renderBlockExercises(block, blockIdx) {
-    const exercises = block.exercises || [];
-    return exercises.map((ex, exIdx) => {
-      const exItems = (block.items || []).filter(it => it.exerciseId === ex.exerciseId);
-      const exQuestionsCount = exItems.reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
-      const hasVariantItems = exItems.some(it => {
-        const type = it.pedagogicalTypeCode || it.itemType;
-        return ['vocabulary_pair', 'error_correction', 'sentence_transformation', 'sentence_reorder'].includes(type);
-      });
-      const isFirst = exIdx === 0;
-      const isLast = exIdx === exercises.length - 1;
-      const isOnly = exercises.length <= 1;
-
-      const exCardKey = ex.exerciseId || `ex-${blockIdx}-${exIdx}`;
-      const isExCollapsed = collapsedCardKeys.has(exCardKey);
-
-      return `
+    function markAsDirty() {
+        if (isDisposed)
+            return;
+        dirtyVersion++;
+        isDirty = true;
+        if (typeof container?.querySelector === 'function') {
+            const statusMsg = container.querySelector('#builder-status-msg');
+            if (statusMsg && !statusMsg.classList.contains('saving') && !statusMsg.classList.contains('forked')) {
+                statusMsg.className = 'builder-status-pill unsaved';
+                statusMsg.innerHTML = `${renderSvgIcon('edit', 'icon-inline')} <span>Có thay đổi chưa lưu</span>`;
+            }
+        }
+    }
+    const unsavedGuardChecker = () => !isDisposed && isDirty;
+    registerUnsavedChangesGuard(unsavedGuardChecker, builderOwner);
+    const markSaved = () => { isDirty = false; };
+    const hasUnsavedChanges = () => !isDisposed && isDirty;
+    const workflowLifecycle = { isDisposed: () => isDisposed, getDirtyVersion: () => dirtyVersion };
+    const collapsedCardKeys = new Set();
+    let activeBlockIdx = 0;
+    const setActiveBlockIdx = (value) => { activeBlockIdx = value; };
+    const getActiveBlockIdx = () => activeBlockIdx;
+    const isBuilderDisposed = () => isDisposed;
+    const addCleanup = (cleanup) => { renderCycleCleanups.push(cleanup); };
+    function resolveTargetExercise(block, btn) {
+        if (!Array.isArray(block.exercises) || block.exercises.length === 0) {
+            const defaultExId = generateUuid();
+            block.exercises = [
+                {
+                    exerciseId: defaultExId,
+                    exerciseNumber: 1,
+                    title: block.title ? `${block.title}` : 'Exercise 1',
+                    instructions: block.instructions || '',
+                    audioUrl: block.audioUrl || null,
+                    readingPassage: block.readingPassage || null,
+                    itemIds: (block.items || []).map(it => it.itemVersionId)
+                }
+            ];
+        }
+        const exId = btn ? btn.getAttribute('data-exercise-id') : null;
+        const exIdxStr = btn ? btn.getAttribute('data-exercise-idx') : null;
+        const exIdx = exIdxStr !== null && exIdxStr !== undefined && exIdxStr !== '' ? Number(exIdxStr) : null;
+        if (exId) {
+            const found = block.exercises.find(e => e.exerciseId === exId);
+            if (found)
+                return found;
+        }
+        if (exIdx !== null && block.exercises[exIdx]) {
+            return block.exercises[exIdx];
+        }
+        return block.exercises[0];
+    }
+    function updatePromptPositionLocal(prompt, newPos, span = 1) {
+        return updatePromptPosition(prompt, newPos, span);
+    }
+    function resequenceItemPositions(options = {}) {
+        const forceStartAtOne = options.forceStartAtOne ?? false;
+        const firstPos = draftState.blocks[0]?.items?.[0]?.position;
+        let pos = (!forceStartAtOne && typeof firstPos === 'number' && firstPos > 2) ? firstPos : 1;
+        for (const b of draftState.blocks) {
+            for (const itm of b.items || []) {
+                pruneOrphanClozeKeys(itm, draftState.gradingKey?.items?.[itm.itemVersionId]);
+                const span = getItemSpanCount(itm);
+                itm.spanCount = span;
+                itm.position = pos;
+                if (itm.prompt) {
+                    itm.prompt = updatePromptPositionLocal(itm.prompt, pos, span);
+                }
+                pos += span;
+            }
+            for (const ex of b.exercises || []) {
+                ex.itemIds = (b.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
+            }
+        }
+    }
+    // Ensure initial grading key entries exist
+    for (const block of draftState.blocks) {
+        for (const itm of block.items || []) {
+            if (itm.interactionType === 'single_choice' && !draftState.gradingKey.items[itm.itemVersionId]) {
+                draftState.gradingKey.items[itm.itemVersionId] = {
+                    graderType: 'exact_option',
+                    expectedOptionId: itm.options?.[0]?.id || 'A'
+                };
+            }
+            else if (itm.interactionType === 'short_text') {
+                const initialWord = itm.targetWord || ((itm.prompt && !/^Câu \d+/i.test(itm.prompt) && !/^Từ vựng qua ảnh \d+/i.test(itm.prompt)) ? itm.prompt : '');
+                if (!draftState.gradingKey.items[itm.itemVersionId]) {
+                    draftState.gradingKey.items[itm.itemVersionId] = {
+                        graderType: 'accepted_text',
+                        accepted: initialWord ? [initialWord] : [],
+                        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                    };
+                }
+                else {
+                    const currentKey = draftState.gradingKey.items[itm.itemVersionId];
+                    if (Array.isArray(currentKey.accepted)) {
+                        currentKey.accepted = currentKey.accepted.filter(v => v !== 'answer' && v !== 'draft_placeholder');
+                        if (!currentKey.accepted.length && initialWord) {
+                            currentKey.accepted = [initialWord];
+                        }
+                    }
+                }
+            }
+            else if (itm.interactionType === 'text_select_pair') {
+                const initialWord = itm.targetWord || ((itm.prompt && !/^Từ vựng câu \d+/i.test(itm.prompt)) ? itm.prompt : '');
+                if (!draftState.gradingKey.items[itm.itemVersionId]) {
+                    draftState.gradingKey.items[itm.itemVersionId] = {
+                        graderType: 'accepted_text_exact_option',
+                        accepted: initialWord ? [initialWord] : [],
+                        expectedOptionId: itm.options?.[0]?.id || 'opt_1',
+                        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                    };
+                }
+                else {
+                    const currentKey = draftState.gradingKey.items[itm.itemVersionId];
+                    if (Array.isArray(currentKey.accepted)) {
+                        currentKey.accepted = currentKey.accepted.filter(v => v !== 'answer' && v !== 'draft_placeholder');
+                        if (!currentKey.accepted.length && initialWord) {
+                            currentKey.accepted = [initialWord];
+                        }
+                    }
+                }
+            }
+            else if (itm.graderType === 'rubric_async' && !draftState.gradingKey.items[itm.itemVersionId]) {
+                draftState.gradingKey.items[itm.itemVersionId] = {
+                    graderType: 'rubric_async',
+                    rubricCode: 'rubric_translation_v1',
+                    rubricVersion: 1,
+                    rubric: {
+                        scoringVersion: 'rubric-translation-v1',
+                        maxScore: itm.maxScore || 4,
+                        criteria: [
+                            { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: (itm.maxScore || 4) / 2, requiredConcepts: [] },
+                            { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: (itm.maxScore || 4) / 2, requiredConcepts: [] }
+                        ]
+                    }
+                };
+            }
+            else if (itm.graderType === 'unordered_group_slot' && itm.groupId && !draftState.gradingKey.groups[itm.groupId]) {
+                draftState.gradingKey.groups[itm.groupId] = {
+                    graderType: 'unordered_group_slot',
+                    expectedOptionIds: (itm.options || []).slice(0, 2).map((o) => o.id)
+                };
+            }
+        }
+    }
+    const renderItemCard = createQuestionRenderer({ draftState, collapsedCardKeys });
+    function renderExerciseItems(block, blockIdx, exercise, exIdx) {
+        const items = (block.items || []).filter((it) => {
+            if (it.exerciseId === exercise.exerciseId)
+                return true;
+            if (!it.exerciseId && exIdx === 0) {
+                it.exerciseId = exercise.exerciseId;
+                it.exerciseTitle = exercise.title || `Exercise ${exercise.exerciseNumber || 1}`;
+                return true;
+            }
+            return false;
+        });
+        if (!items.length) {
+            return `<div class="empty-items-notice">Chưa có câu hỏi nào trong bài tập này. Chọn một dạng câu hỏi bên dưới để thêm.</div>`;
+        }
+        return items.map((item) => {
+            const itemIdx = block.items.indexOf(item);
+            return renderItemCard(item, itemIdx, block, blockIdx);
+        }).join('');
+    }
+    function renderBlockExercises(block, blockIdx) {
+        const exercises = block.exercises || [];
+        return exercises.map((ex, exIdx) => {
+            const exItems = (block.items || []).filter((it) => it.exerciseId === ex.exerciseId);
+            const exQuestionsCount = exItems.reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
+            const hasVariantItems = exItems.some((it) => {
+                const type = it.pedagogicalTypeCode || it.itemType;
+                return ['vocabulary_pair', 'error_correction', 'sentence_transformation', 'sentence_reorder'].includes(type);
+            });
+            const isFirst = exIdx === 0;
+            const isLast = exIdx === exercises.length - 1;
+            const isOnly = exercises.length <= 1;
+            const exCardKey = ex.exerciseId || `ex-${blockIdx}-${exIdx}`;
+            const isExCollapsed = collapsedCardKeys.has(exCardKey);
+            return `
         <div class="builder-exercise-card${isExCollapsed ? ' is-collapsed' : ''}" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
           <div class="builder-exercise-header">
             <div class="exercise-header-left">
@@ -452,42 +443,40 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           </div>
         </div>
       `;
-    }).join('');
-  }
-
-  function renderBlockItems(block, blockIdx) {
-    return renderBlockExercises(block, blockIdx);
-  }
-
-  function render() {
-    if (isDisposed) return;
-    for (const cleanup of renderCycleCleanups) {
-      try { cleanup(); } catch (_) {}
+        }).join('');
     }
-    renderCycleCleanups = [];
-    const isImmutable = draftState.submissionCount > 0;
-    const isPublished = draftState.status === 'published';
-    const statusBadgeClass = isPublished ? 'badge-published' : 'badge-draft';
-    const statusBadgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
-
-    const totalExamQuestions = draftState.blocks.reduce((sum, b) => {
-      return sum + (b.items || []).reduce((s, itm) => s + getItemSpanCount(itm), 0);
-    }, 0);
-
-    activeBlockIdx = Math.max(0, Math.min(activeBlockIdx, draftState.blocks.length - 1));
-
-    const blocksHtml = draftState.blocks.map((block, index) => {
-      const isFirst = index === 0;
-      const isLast = index === draftState.blocks.length - 1;
-      const isOnly = draftState.blocks.length <= 1;
-      const audioVal = block.audioUrl || block.stimulusAudioUrl || '';
-      const readingVal = block.readingPassage || block.stimulusReadingPassage || '';
-      const itemsCount = (block.items || []).reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
-      const blockCardKey = block.blockId || `b-${index}`;
-      const isBlockCollapsed = collapsedCardKeys.has(blockCardKey);
-      const isActiveBlock = index === activeBlockIdx;
-
-      return `
+    function renderBlockItems(block, blockIdx) {
+        return renderBlockExercises(block, blockIdx);
+    }
+    function render() {
+        if (isDisposed)
+            return;
+        for (const cleanup of renderCycleCleanups) {
+            try {
+                cleanup();
+            }
+            catch (_) { }
+        }
+        renderCycleCleanups = [];
+        const isImmutable = draftState.submissionCount > 0;
+        const isPublished = draftState.status === 'published';
+        const statusBadgeClass = isPublished ? 'badge-published' : 'badge-draft';
+        const statusBadgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
+        const totalExamQuestions = draftState.blocks.reduce((sum, b) => {
+            return sum + (b.items || []).reduce((s, itm) => s + getItemSpanCount(itm), 0);
+        }, 0);
+        activeBlockIdx = Math.max(0, Math.min(activeBlockIdx, draftState.blocks.length - 1));
+        const blocksHtml = draftState.blocks.map((block, index) => {
+            const isFirst = index === 0;
+            const isLast = index === draftState.blocks.length - 1;
+            const isOnly = draftState.blocks.length <= 1;
+            const audioVal = block.audioUrl || block.stimulusAudioUrl || '';
+            const readingVal = block.readingPassage || block.stimulusReadingPassage || '';
+            const itemsCount = (block.items || []).reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
+            const blockCardKey = block.blockId || `b-${index}`;
+            const isBlockCollapsed = collapsedCardKeys.has(blockCardKey);
+            const isActiveBlock = index === activeBlockIdx;
+            return `
         <div class="builder-block-card${isBlockCollapsed ? ' is-collapsed' : ''}${isActiveBlock ? ' active-block-tab' : ''}" id="builder-block-${index}" data-block-id="${block.blockId}" data-index="${index}"${isActiveBlock ? '' : ' hidden'}>
           <div class="builder-block-header">
             <button type="button" class="btn btn-icon btn-sm btn-toggle-block-collapse" data-index="${index}" title="Thu gọn / Mở rộng phần thi" aria-label="Thu gọn hoặc mở rộng phần thi" aria-expanded="${isBlockCollapsed ? 'false' : 'true'}">${isBlockCollapsed ? renderSvgIcon('chevronRight', 'icon-inline') : renderSvgIcon('chevronDown', 'icon-inline')}</button>
@@ -556,14 +545,12 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
           </div>
         </div>
       `;
-    }).join('');
-
-    const savedWindowScrollY = (typeof window !== 'undefined')
-      ? (window.scrollY ?? window.pageYOffset ?? (typeof document !== 'undefined' ? document.documentElement?.scrollTop : 0) ?? 0)
-      : 0;
-    const savedContainerScrollTop = container ? (container.scrollTop || 0) : 0;
-
-    container.innerHTML = `
+        }).join('');
+        const savedWindowScrollY = (typeof window !== 'undefined')
+            ? (window.scrollY ?? window.pageYOffset ?? (typeof document !== 'undefined' ? document.documentElement?.scrollTop : 0) ?? 0)
+            : 0;
+        const savedContainerScrollTop = container ? (container.scrollTop || 0) : 0;
+        container.innerHTML = `
       <div class="test-builder-workspace">
         <div class="test-builder-top-bar">
           <div class="builder-top-left">
@@ -575,9 +562,8 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
               <span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span>
               <span class="total-questions-tag">Tổng cộng: <strong>${totalExamQuestions} câu hỏi</strong></span>
               ${isImmutable
-                ? `<span class="immutability-badge warning" title="Đã có học viên nộp bài — Chỉnh sửa sẽ tạo bản nháp mới v${draftState.version + 1}">${renderSvgIcon('lock', 'icon-inline')} Đã có ${draftState.submissionCount} bài nộp</span>`
-                : `<span class="immutability-badge mutable" title="Chưa có học viên nộp bài — Sẽ lưu trực tiếp trên bản nháp v${draftState.version}">${renderSvgIcon('edit', 'icon-inline')} Chưa có bài nộp</span>`
-              }
+            ? `<span class="immutability-badge warning" title="Đã có học viên nộp bài — Chỉnh sửa sẽ tạo bản nháp mới v${draftState.version + 1}">${renderSvgIcon('lock', 'icon-inline')} Đã có ${draftState.submissionCount} bài nộp</span>`
+            : `<span class="immutability-badge mutable" title="Chưa có học viên nộp bài — Sẽ lưu trực tiếp trên bản nháp v${draftState.version}">${renderSvgIcon('edit', 'icon-inline')} Chưa có bài nộp</span>`}
             </div>
           </div>
           <div class="builder-top-right">
@@ -674,322 +660,292 @@ export function mountBuilder(container, formVersionData = {}, options = {}) {
         </div>
       </div>
     `;
-
-    bindEvents();
-
-    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
-      window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
-    }
-    if (container && typeof savedContainerScrollTop === 'number') {
-      container.scrollTop = savedContainerScrollTop;
-    }
-  }
-
-  function jumpToBlock(bIdx) {
-    if (typeof bIdx !== 'number' || isNaN(bIdx)) return;
-    if (typeof container.querySelector !== 'function') return;
-
-    if (activeBlockIdx !== bIdx) {
-      syncInputs();
-      activeBlockIdx = Math.max(0, Math.min(bIdx, Math.max(0, draftState.blocks.length - 1)));
-      render();
-    }
-
-    const card = container.querySelector(`#builder-block-${activeBlockIdx}`) ||
-                 container.querySelector(`.builder-block-card[data-index="${activeBlockIdx}"]`);
-    if (!card) return;
-
-    const block = draftState.blocks[activeBlockIdx];
-    const blockCardKey = (block && block.blockId) || (card.getAttribute && card.getAttribute('data-block-id')) || `b-${activeBlockIdx}`;
-
-    // 1. If block is collapsed, expand it so teacher can view/edit immediately
-    if (card.classList && card.classList.contains('is-collapsed')) {
-      card.classList.remove('is-collapsed');
-      collapsedCardKeys.delete(blockCardKey);
-      const toggleBtn = card.querySelector('.btn-toggle-block-collapse');
-      if (toggleBtn) {
-        toggleBtn.innerHTML = renderSvgIcon('chevronDown', 'icon-inline');
-        if (typeof toggleBtn.setAttribute === 'function') {
-          toggleBtn.setAttribute('aria-expanded', 'true');
+        bindEvents();
+        if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+            window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
         }
-      }
-    }
-
-    // 2. Smoothly scroll into view
-    if (typeof card.scrollIntoView === 'function') {
-      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    // 3. Highlight animation pulse
-    if (card.classList) {
-      card.classList.remove('block-target-highlight');
-      if (typeof card.offsetWidth === 'number') {
-        void card.offsetWidth;
-      }
-      card.classList.add('block-target-highlight');
-      setTimeout(() => {
-        if (card.classList) card.classList.remove('block-target-highlight');
-      }, 1600);
-    }
-  }
-
-  function updateScoreBreakdownBar() {
-    const barEl = container.querySelector('#builder-score-breakdown-bar');
-    const summary = computeTestBuilderScoreSummary(draftState.blocks);
-    if (barEl) {
-      const scoreValEl = barEl.querySelector('.score-total-val');
-      if (scoreValEl) scoreValEl.textContent = summary.totalScore;
-      const qValEl = barEl.querySelector('.score-total-questions');
-      if (qValEl) qValEl.textContent = `${summary.totalQuestions} câu hỏi`;
-
-      const chipsWrap = barEl.querySelector('.score-skills-chips');
-      if (chipsWrap) {
-        chipsWrap.innerHTML = renderScoreSkillChipsHtml(summary.skills);
-      }
-
-      const newSkillChips = barEl.querySelectorAll('.score-skill-chip[data-first-block-idx]');
-      if (newSkillChips && typeof newSkillChips.forEach === 'function') {
-        newSkillChips.forEach(chip => {
-          if (typeof chip.addEventListener === 'function') {
-            chip.addEventListener('click', (e) => {
-              e.preventDefault();
-              const bIdx = Number(chip.getAttribute('data-first-block-idx'));
-              if (!isNaN(bIdx)) jumpToBlock(bIdx);
-            });
-          }
-        });
-      }
-    }
-
-    const navCardEl = container.querySelector('#builder-blocks-nav-card');
-    if (navCardEl) {
-      const chipsWrap = navCardEl.querySelector('.blocks-nav-chips');
-      if (chipsWrap) {
-        chipsWrap.innerHTML = renderBlockJumpTagsHtml(draftState.blocks, activeBlockIdx);
-      }
-      const newJumpChips = navCardEl.querySelectorAll('.btn-block-jump-chip');
-      if (newJumpChips && typeof newJumpChips.forEach === 'function') {
-        newJumpChips.forEach(chip => {
-          if (typeof chip.addEventListener === 'function') {
-            chip.addEventListener('click', (e) => {
-              e.preventDefault();
-              const bIdx = Number(chip.getAttribute('data-block-idx'));
-              if (!isNaN(bIdx)) jumpToBlock(bIdx);
-            });
-          }
-        });
-      }
-    }
-
-    const totalQTag = container.querySelector('.total-questions-tag strong');
-    if (totalQTag) totalQTag.textContent = `${summary.totalQuestions} câu hỏi`;
-  }
-
-  const syncInputs = createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges });
-
-  function getNextPosition() {
-    let nextPos = 1;
-    for (const b of draftState.blocks) {
-      for (const itm of b.items || []) {
-        const span = getItemSpanCount(itm);
-        const endPos = (typeof itm.position === 'number') ? (itm.position + span) : nextPos;
-        if (endPos >= nextPos) {
-          nextPos = endPos;
+        if (container && typeof savedContainerScrollTop === 'number') {
+            container.scrollTop = savedContainerScrollTop;
         }
-      }
     }
-    return nextPos;
-  }
-
-  function bindEvents() {
-    const authoringHost = { container, draftState, builderOwner, actions: { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } };
-    if (typeof container.querySelector !== 'function') return;
-
-    // Live update Score Breakdown Bar and mark dirty when question or rubric criterion score changes
-    if (typeof container.addEventListener === 'function') {
-      const onContainerInput = (e) => {
-        if (isDisposed) return;
-        markAsDirty();
-        if (e?.target?.classList?.contains('item-max-score-input')) {
-          const iCard = e.target.closest ? e.target.closest('.builder-item-card') : null;
-          const bIdx = Number(e.target.getAttribute('data-block-idx'));
-          const iIdx = Number(e.target.getAttribute('data-item-idx'));
-          const item = draftState.blocks[bIdx]?.items?.[iIdx];
-          if (item && item.graderType === 'rubric_async') {
-            const currentKey = draftState.gradingKey.items[item.itemVersionId];
-            const newScore = parseFloat(e.target.value);
-            if (currentKey && currentKey.rubric && Number.isFinite(newScore) && newScore > 0) {
-              const scaled = scaleRubricCriteriaScores(currentKey.rubric.criteria || [], newScore);
-              currentKey.rubric.criteria = scaled;
-              currentKey.rubric.maxScore = newScore;
-              item.maxScore = newScore;
-              if (iCard) {
-                const critInputs = iCard.querySelectorAll('.criterion-max-score-input');
-                critInputs.forEach((inp, idx) => {
-                  if (scaled[idx]) inp.value = scaled[idx].maxScore;
+    function jumpToBlock(bIdx) {
+        if (typeof bIdx !== 'number' || isNaN(bIdx))
+            return;
+        if (typeof container.querySelector !== 'function')
+            return;
+        if (activeBlockIdx !== bIdx) {
+            syncInputs();
+            activeBlockIdx = Math.max(0, Math.min(bIdx, Math.max(0, draftState.blocks.length - 1)));
+            render();
+        }
+        const card = container.querySelector(`#builder-block-${activeBlockIdx}`) ||
+            container.querySelector(`.builder-block-card[data-index="${activeBlockIdx}"]`);
+        if (!card)
+            return;
+        const block = draftState.blocks[activeBlockIdx];
+        const blockCardKey = (block && block.blockId) || (card.getAttribute && card.getAttribute('data-block-id')) || `b-${activeBlockIdx}`;
+        // 1. If block is collapsed, expand it so teacher can view/edit immediately
+        if (card.classList && card.classList.contains('is-collapsed')) {
+            card.classList.remove('is-collapsed');
+            collapsedCardKeys.delete(blockCardKey);
+            const toggleBtn = card.querySelector('.btn-toggle-block-collapse');
+            if (toggleBtn) {
+                toggleBtn.innerHTML = renderSvgIcon('chevronDown', 'icon-inline');
+                if (typeof toggleBtn.setAttribute === 'function') {
+                    toggleBtn.setAttribute('aria-expanded', 'true');
+                }
+            }
+        }
+        // 2. Smoothly scroll into view
+        if (typeof card.scrollIntoView === 'function') {
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        // 3. Highlight animation pulse
+        if (card.classList) {
+            card.classList.remove('block-target-highlight');
+            if (typeof card.offsetWidth === 'number') {
+                void card.offsetWidth;
+            }
+            card.classList.add('block-target-highlight');
+            setTimeout(() => {
+                if (card.classList)
+                    card.classList.remove('block-target-highlight');
+            }, 1600);
+        }
+    }
+    function updateScoreBreakdownBar() {
+        const barEl = container.querySelector('#builder-score-breakdown-bar');
+        const summary = computeTestBuilderScoreSummary(draftState.blocks);
+        if (barEl) {
+            const scoreValEl = barEl.querySelector('.score-total-val');
+            if (scoreValEl)
+                scoreValEl.textContent = summary.totalScore;
+            const qValEl = barEl.querySelector('.score-total-questions');
+            if (qValEl)
+                qValEl.textContent = `${summary.totalQuestions} câu hỏi`;
+            const chipsWrap = barEl.querySelector('.score-skills-chips');
+            if (chipsWrap) {
+                chipsWrap.innerHTML = renderScoreSkillChipsHtml(summary.skills);
+            }
+            const newSkillChips = barEl.querySelectorAll('.score-skill-chip[data-first-block-idx]');
+            if (newSkillChips && typeof newSkillChips.forEach === 'function') {
+                newSkillChips.forEach(chip => {
+                    if (typeof chip.addEventListener === 'function') {
+                        chip.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const bIdx = Number(chip.getAttribute('data-first-block-idx'));
+                            if (!isNaN(bIdx))
+                                jumpToBlock(bIdx);
+                        });
+                    }
                 });
-              }
             }
-          }
-          syncInputs();
-        } else if (e?.target?.classList?.contains('criterion-max-score-input')) {
-          syncInputs();
         }
-        if (e?.target?.classList?.contains('block-audio-input')) {
-          const val = e.target.value || '';
-          const parent = e.target.closest ? e.target.closest('.block-field') : null;
-          const warningEl = parent && parent.querySelector ? parent.querySelector('.audio-drive-warning') : null;
-          if (warningEl) {
-            const hasDrive = val.includes('drive.google.com') || val.includes('docs.google.com');
-            warningEl.hidden = !hasDrive;
-          }
-        }
-      };
-      const onContainerChange = () => {
-        if (isDisposed) return;
-        markAsDirty();
-      };
-      container.addEventListener('input', onContainerInput);
-      container.addEventListener('change', onContainerChange);
-      renderCycleCleanups.push(() => {
-        container.removeEventListener?.('input', onContainerInput);
-        container.removeEventListener?.('change', onContainerChange);
-      });
-    }
-
-    const backBtn = container.querySelector('#btn-back-to-catalog');
-    if (backBtn && typeof backBtn.addEventListener === 'function') {
-      backBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (isDirty) {
-          openUnsavedChangesModal({ owner: builderOwner,
-            onDiscard: () => {
-              isDirty = false;
-              handle?.dispose();
-              if (typeof options.onBack === 'function') options.onBack();
-            },
-            onStay: () => {
-              // User chooses to stay and continue editing
+        const navCardEl = container.querySelector('#builder-blocks-nav-card');
+        if (navCardEl) {
+            const chipsWrap = navCardEl.querySelector('.blocks-nav-chips');
+            if (chipsWrap) {
+                chipsWrap.innerHTML = renderBlockJumpTagsHtml(draftState.blocks, activeBlockIdx);
             }
-          });
-          return;
+            const newJumpChips = navCardEl.querySelectorAll('.btn-block-jump-chip');
+            if (newJumpChips && typeof newJumpChips.forEach === 'function') {
+                newJumpChips.forEach(chip => {
+                    if (typeof chip.addEventListener === 'function') {
+                        chip.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const bIdx = Number(chip.getAttribute('data-block-idx'));
+                            if (!isNaN(bIdx))
+                                jumpToBlock(bIdx);
+                        });
+                    }
+                });
+            }
         }
-        handle?.dispose();
-        if (typeof options.onBack === 'function') options.onBack();
-      });
+        const totalQTag = container.querySelector('.total-questions-tag strong');
+        if (totalQTag)
+            totalQTag.textContent = `${summary.totalQuestions} câu hỏi`;
     }
-    bindBlockJumpChips({ container, jumpToBlock });
-
-    bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options });
-
-    bindExerciseActions({ container, builderOwner, draftState, markAsDirty, setActiveBlockIdx, resolveTargetExercise, resequenceItemPositions, render, syncInputs });
-
-    bindAudioPreviewActions({ container, render });
-
-    bindBlockNavigationActions({ container, draftState, markAsDirty, setActiveBlockIdx, render, jumpToBlock, syncInputs, getNextPosition, options });
-
-    bindChoiceAuthoring(authoringHost);
-
-    bindShortAnswerAuthoring(authoringHost);
-
-    bindReadingMatchingAuthoring(authoringHost);
-
-    bindListeningOrderAuthoring(authoringHost);
-
-    bindErrorCorrectionAuthoring(authoringHost);
-
-    bindSentenceAuthoring(authoringHost);
-
-    bindPronunciationAuthoring(authoringHost);
-
-    bindPictorialAuthoring(authoringHost);
-
-    bindVocabularyAuthoring(authoringHost);
-
-    bindRubricAuthoring(authoringHost);
-
-    bindCollapseActions({ container, draftState, collapsedCardKeys, render });
-
-    bindItemActions({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, resequenceItemPositions, render, syncInputs });
-
-    bindChoiceVariantActions({ container, draftState, markAsDirty, render, syncInputs });
-
-    bindVocabularyActions({ container, draftState, markAsDirty, render, syncInputs, options });
-
-    bindVariantInputActions({ container, draftState, markAsDirty, render, syncInputs });
-
-    bindRubricActions({ container, draftState, markAsDirty, render, syncInputs });
-
-    bindClozeScriptActions({ container, draftState, markAsDirty, render, syncInputs });
-
-    bindSandboxActions({ container, draftState, render, syncInputs, options });
-
-    bindBlockReorderActions({ container, draftState, markAsDirty, setActiveBlockIdx, getActiveBlockIdx, resequenceItemPositions, render, syncInputs });
-
-    bindDraftSaving({ container, draftState, options, syncInputs, render, markSaved, lifecycle: workflowLifecycle });
-
-    const openCandidateSimulationModal = createSimulation({ draftState, builderOwner, syncInputs });
-
-    // Smart Publishing Modal (2-Step Wizard & Safe Double-Check)
-    const openPublishingModal = createPublishing({ draftState, builderOwner, syncInputs, options, render, markSaved });
-
-    // Execution Report Dialog
-
-
-    bindToolbarActions({ container, builderOwner, draftState, markSaved, handle, openCandidateSimulationModal, openPublishingModal, formVersionData, options });
-
-    bindRichEditorControls({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, render });
-  }
-
-  const handle = {
-    dispose() {
-      if (isDisposed) return;
-      isDisposed = true;
-      for (const cleanup of renderCycleCleanups) {
-        try { cleanup(); } catch (_) {}
-      }
-      renderCycleCleanups = [];
-      unregisterUnsavedChangesGuard(unsavedGuardChecker, builderOwner);
-      if (mountedBuilders.get(container)?.handle === handle) {
-        mountedBuilders.delete(container);
-      }
-      for (const t of timeouts) clearTimeout(t);
-      timeouts.clear();
-
-      disposeBuilderModals(builderOwner);
-
-      if (typeof container?.querySelectorAll === 'function') {
-        const audios = container.querySelectorAll('audio');
-        if (audios && audios.forEach) {
-          audios.forEach(a => {
-            try { a.pause?.(); a.src = ''; } catch (_) {}
-          });
+    const syncInputs = createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges });
+    function getNextPosition() {
+        let nextPos = 1;
+        for (const b of draftState.blocks) {
+            for (const itm of b.items || []) {
+                const span = getItemSpanCount(itm);
+                const endPos = (typeof itm.position === 'number') ? (itm.position + span) : nextPos;
+                if (endPos >= nextPos) {
+                    nextPos = endPos;
+                }
+            }
         }
-      }
-    },
-    hasUnsavedChanges() {
-      return !isDisposed && isDirty;
-    },
-    getDraft() {
-      return draftState;
+        return nextPos;
     }
-  };
-
-  mountedBuilders.set(container, {
-    formVersionId: draftState.formVersionId,
-    formVersionData,
-    options,
-    submissionCount: Number(draftState.submissionCount || 0),
-    version: Number(draftState.version || 1),
-    status: draftState.status || 'draft',
-    handle,
-    isDisposed: false
-  });
-
-  render();
-  return handle;
+    function bindEvents() {
+        const authoringHost = { container, draftState, builderOwner, actions: { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } };
+        if (typeof container.querySelector !== 'function')
+            return;
+        // Live update Score Breakdown Bar and mark dirty when question or rubric criterion score changes
+        if (typeof container.addEventListener === 'function') {
+            const onContainerInput = (e) => {
+                if (isDisposed)
+                    return;
+                markAsDirty();
+                if (e?.target?.classList?.contains('item-max-score-input')) {
+                    const iCard = e.target.closest ? e.target.closest('.builder-item-card') : null;
+                    const bIdx = Number(e.target.getAttribute('data-block-idx'));
+                    const iIdx = Number(e.target.getAttribute('data-item-idx'));
+                    const item = draftState.blocks[bIdx]?.items?.[iIdx];
+                    if (item && item.graderType === 'rubric_async') {
+                        const currentKey = draftState.gradingKey.items[item.itemVersionId];
+                        const newScore = parseFloat(e.target.value);
+                        if (currentKey && currentKey.rubric && Number.isFinite(newScore) && newScore > 0) {
+                            const scaled = scaleRubricCriteriaScores(currentKey.rubric.criteria || [], newScore);
+                            currentKey.rubric.criteria = scaled;
+                            currentKey.rubric.maxScore = newScore;
+                            item.maxScore = newScore;
+                            if (iCard) {
+                                const critInputs = iCard.querySelectorAll('.criterion-max-score-input');
+                                critInputs.forEach((inp, idx) => {
+                                    if (scaled[idx])
+                                        inp.value = scaled[idx].maxScore;
+                                });
+                            }
+                        }
+                    }
+                    syncInputs();
+                }
+                else if (e?.target?.classList?.contains('criterion-max-score-input')) {
+                    syncInputs();
+                }
+                if (e?.target?.classList?.contains('block-audio-input')) {
+                    const val = e.target.value || '';
+                    const parent = e.target.closest ? e.target.closest('.block-field') : null;
+                    const warningEl = parent && parent.querySelector ? parent.querySelector('.audio-drive-warning') : null;
+                    if (warningEl) {
+                        const hasDrive = val.includes('drive.google.com') || val.includes('docs.google.com');
+                        warningEl.hidden = !hasDrive;
+                    }
+                }
+            };
+            const onContainerChange = () => {
+                if (isDisposed)
+                    return;
+                markAsDirty();
+            };
+            container.addEventListener('input', onContainerInput);
+            container.addEventListener('change', onContainerChange);
+            renderCycleCleanups.push(() => {
+                container.removeEventListener?.('input', onContainerInput);
+                container.removeEventListener?.('change', onContainerChange);
+            });
+        }
+        const backBtn = container.querySelector('#btn-back-to-catalog');
+        if (backBtn && typeof backBtn.addEventListener === 'function') {
+            backBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (isDirty) {
+                    openUnsavedChangesModal({ owner: builderOwner,
+                        onDiscard: () => {
+                            isDirty = false;
+                            handle?.dispose();
+                            if (typeof options.onBack === 'function')
+                                options.onBack();
+                        },
+                        onStay: () => {
+                            // User chooses to stay and continue editing
+                        }
+                    });
+                    return;
+                }
+                handle?.dispose();
+                if (typeof options.onBack === 'function')
+                    options.onBack();
+            });
+        }
+        bindBlockJumpChips({ container, jumpToBlock });
+        bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options });
+        bindExerciseActions({ container, builderOwner, draftState, markAsDirty, setActiveBlockIdx, resolveTargetExercise, resequenceItemPositions, render, syncInputs });
+        bindAudioPreviewActions({ container, render });
+        bindBlockNavigationActions({ container, draftState, markAsDirty, setActiveBlockIdx, render, jumpToBlock, syncInputs, getNextPosition, options });
+        bindChoiceAuthoring(authoringHost);
+        bindShortAnswerAuthoring(authoringHost);
+        bindReadingMatchingAuthoring(authoringHost);
+        bindListeningOrderAuthoring(authoringHost);
+        bindErrorCorrectionAuthoring(authoringHost);
+        bindSentenceAuthoring(authoringHost);
+        bindPronunciationAuthoring(authoringHost);
+        bindPictorialAuthoring(authoringHost);
+        bindVocabularyAuthoring(authoringHost);
+        bindRubricAuthoring(authoringHost);
+        bindCollapseActions({ container, draftState, collapsedCardKeys, render });
+        bindItemActions({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, resequenceItemPositions, render, syncInputs });
+        bindChoiceVariantActions({ container, draftState, markAsDirty, render, syncInputs });
+        bindVocabularyActions({ container, draftState, markAsDirty, render, syncInputs, options });
+        bindVariantInputActions({ container, draftState, markAsDirty, render, syncInputs });
+        bindRubricActions({ container, draftState, markAsDirty, render, syncInputs });
+        bindClozeScriptActions({ container, draftState, markAsDirty, render, syncInputs });
+        bindSandboxActions({ container, draftState, render, syncInputs, options });
+        bindBlockReorderActions({ container, draftState, markAsDirty, setActiveBlockIdx, getActiveBlockIdx, resequenceItemPositions, render, syncInputs });
+        bindDraftSaving({ container, draftState, options, syncInputs, render, markSaved, lifecycle: workflowLifecycle });
+        const openCandidateSimulationModal = createSimulation({ draftState, builderOwner, syncInputs });
+        // Smart Publishing Modal (2-Step Wizard & Safe Double-Check)
+        const openPublishingModal = createPublishing({ draftState, builderOwner, syncInputs, options, render, markSaved });
+        // Execution Report Dialog
+        bindToolbarActions({ container, builderOwner, draftState, markSaved, handle, openCandidateSimulationModal, openPublishingModal, formVersionData, options });
+        bindRichEditorControls({ container, draftState, markAsDirty, isBuilderDisposed, addCleanup, render });
+    }
+    const handle = {
+        dispose() {
+            if (isDisposed)
+                return;
+            isDisposed = true;
+            for (const cleanup of renderCycleCleanups) {
+                try {
+                    cleanup();
+                }
+                catch (_) { }
+            }
+            renderCycleCleanups = [];
+            unregisterUnsavedChangesGuard(unsavedGuardChecker, builderOwner);
+            if (mountedBuilders.get(container)?.handle === handle) {
+                mountedBuilders.delete(container);
+            }
+            for (const t of timeouts)
+                clearTimeout(t);
+            timeouts.clear();
+            disposeBuilderModals(builderOwner);
+            if (typeof container?.querySelectorAll === 'function') {
+                const audios = container.querySelectorAll('audio');
+                if (audios && audios.forEach) {
+                    audios.forEach(a => {
+                        try {
+                            a.pause?.();
+                            a.src = '';
+                        }
+                        catch (_) { }
+                    });
+                }
+            }
+        },
+        hasUnsavedChanges() {
+            return !isDisposed && isDirty;
+        },
+        getDraft() {
+            return draftState;
+        }
+    };
+    mountedBuilders.set(container, {
+        formVersionId: draftState.formVersionId,
+        formVersionData,
+        options,
+        submissionCount: Number(draftState.submissionCount || 0),
+        version: Number(draftState.version || 1),
+        status: draftState.status || 'draft',
+        handle,
+        isDisposed: false
+    });
+    render();
+    return handle;
 }
-
 export function renderTestBuilderView(container, formVersionData = {}, options = {}) {
-  return mountBuilder(container, formVersionData, options);
+    return mountBuilder(container, formVersionData, options);
 }
