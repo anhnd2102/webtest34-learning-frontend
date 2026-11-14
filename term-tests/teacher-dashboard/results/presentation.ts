@@ -47,8 +47,8 @@ export interface ClassSkillPayload {
   students?: {
     status?: string;
     attemptId?: string;
-    total?: { earned?: number, maximum?: number };
-    skills?: Record<string, { earned?: number, maximum?: number } | undefined>;
+    total?: ReportScore;
+    skills?: Record<string, ReportScore | undefined>;
   }[];
   skills?: { code: string, maximum: number }[];
 }
