@@ -55,6 +55,8 @@
     "term-tests/teacher-dashboard/shell/reports.ts",
     "term-tests/teacher-dashboard/studio/question-content.ts",
     "term-tests/teacher-dashboard/studio/draft-model.ts",
+    "term-tests/teacher-dashboard/studio/content-import.ts",
+    "term-tests/teacher-dashboard/studio/batch-import.ts",
     "term-tests/teacher-dashboard/studio/block-actions.ts",
     "term-tests/teacher-dashboard/studio/sandbox-actions.ts",
     "term-tests/teacher-dashboard/studio/collapse-actions.ts",
