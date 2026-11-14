@@ -15,7 +15,7 @@ export interface DraftExercise {
   title?: string;
   exerciseNumber?: number;
   exerciseType?: string;
-  referenceContext?: string;
+  referenceContext?: string | null;
   audioUrl?: string | null;
   readingPassage?: string | null;
   itemIds?: (string | undefined)[];
