@@ -65,6 +65,16 @@
     "term-tests/teacher-dashboard/studio/cloze-script-actions.ts",
     "term-tests/teacher-dashboard/studio/builder-summary.ts",
     "term-tests/teacher-dashboard/studio/authoring/variant-input-actions.ts",
+    "term-tests/teacher-dashboard/studio/authoring/choice.ts",
+    "term-tests/teacher-dashboard/studio/authoring/short-answer.ts",
+    "term-tests/teacher-dashboard/studio/authoring/reading-matching.ts",
+    "term-tests/teacher-dashboard/studio/authoring/listening-order.ts",
+    "term-tests/teacher-dashboard/studio/authoring/error-correction.ts",
+    "term-tests/teacher-dashboard/studio/authoring/sentence.ts",
+    "term-tests/teacher-dashboard/studio/authoring/pronunciation.ts",
+    "term-tests/teacher-dashboard/studio/authoring/pictorial.ts",
+    "term-tests/teacher-dashboard/studio/authoring/vocabulary.ts",
+    "term-tests/teacher-dashboard/studio/authoring/rubric.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
