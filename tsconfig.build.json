@@ -65,6 +65,7 @@
     "term-tests/teacher-dashboard/studio/toolbar-actions.ts",
     "term-tests/teacher-dashboard/studio/rich-editor-controls.ts",
     "term-tests/teacher-dashboard/studio/draft-inputs.ts",
+    "term-tests/teacher-dashboard/studio/question-renderer.ts",
     "term-tests/teacher-dashboard/studio/block-actions.ts",
     "term-tests/teacher-dashboard/studio/sandbox-actions.ts",
     "term-tests/teacher-dashboard/studio/collapse-actions.ts",

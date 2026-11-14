@@ -28,6 +28,7 @@
     "term-tests/teacher-dashboard/studio/toolbar-actions.ts",
     "term-tests/teacher-dashboard/studio/rich-editor-controls.ts",
     "term-tests/teacher-dashboard/studio/draft-inputs.ts",
+    "term-tests/teacher-dashboard/studio/question-renderer.ts",
     "term-tests/webtest-34-demo/candidate/text-utils.ts",
     "term-tests/webtest-34-demo/candidate/learning-api.ts",
     "term-tests/webtest-34-demo/candidate/exam-timer.ts",
