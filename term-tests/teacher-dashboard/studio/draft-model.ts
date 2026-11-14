@@ -95,6 +95,17 @@ export interface AuthoringHost {
   actions: AuthoringActions;
 }
 
+// Tùy chọn do dashboard truyền vào builder (callback gọi API, catalog, courseId...): hợp đồng nằm ở shell/studio-view.
+export type BuilderOptions = Record<string, any>;
+
+// Tay cầm trả về từ mountBuilder.
+export interface BuilderHandle {
+  dispose(): void;
+  hasUnsavedChanges(): boolean;
+  getDraft(): unknown;
+  [key: string]: any;
+}
+
 interface SkillAggregate { code: string, label: string, score: number, count: number, firstBlockIdx: number | null }
 
 export function pruneOrphanClozeKeys(item?: DraftItem | null, itemKey: GradingKeyItem | null | undefined = null) {
