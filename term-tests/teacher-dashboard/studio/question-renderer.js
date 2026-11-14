@@ -1,82 +1,59 @@
-import {
-  parseClozeBlanks,
-  getItemSpanCount
-} from './draft-model.js';
-import {
-  COMMON_IPA_SYMBOLS,
-  formatIpaTranscription,
-  tokenizeSentence,
-  scrambleTokens,
-  extractParagraphLabels,
-  validateListeningOrderUniqueness,
-  formatOptionDisplayLetter
-} from './question-content.js';
-import {
-  escapeHtml
-} from '../ui/presentation.js';
-import {
-  renderSvgIcon
-} from '../ui/icons.js';
-import {
-  sanitizeRichContent,
-  renderInlineClozeMarkup
-} from '../ui/rich-content.js';
-
+// NGUỒN: file .ts này; question-renderer.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
+// không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
+import { parseClozeBlanks, getItemSpanCount } from './draft-model.js';
+import { COMMON_IPA_SYMBOLS, formatIpaTranscription, tokenizeSentence, scrambleTokens, extractParagraphLabels, validateListeningOrderUniqueness, formatOptionDisplayLetter } from './question-content.js';
+import { escapeHtml } from '../ui/presentation.js';
+import { renderSvgIcon } from '../ui/icons.js';
+import { sanitizeRichContent, renderInlineClozeMarkup } from '../ui/rich-content.js';
 export function createQuestionRenderer({ draftState, collapsedCardKeys }) {
-function renderItemCard(item, itemIdx, block, blockIdx) {
-      const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
-      const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
-      const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
-      const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
-      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isInlineCloze = (item.pedagogicalTypeCode === 'inline_cloze' || item.layoutType === 'inline_cloze' || (item.interactionType === 'short_text' && item.layoutType === 'inline_cloze')) && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
-      const isVocabPair = item.interactionType === 'text_select_pair';
-      const isRubricAsync = item.graderType === 'rubric_async';
-      const hasRedundantPrompt = isVocabPair || isPictorial || isPronunciation || isSentenceRewrite || isSentenceReorder || isReadingMatching || isListeningOrder;
-
-      let nextBlankNum = 1;
-      if (isInlineCloze) {
-        const detectedBlanks = parseClozeBlanks(item.prompt || '');
-        const uniqueBlankNums = [];
-        for (const b of detectedBlanks) {
-          if (!uniqueBlankNums.includes(b.number)) uniqueBlankNums.push(b.number);
+    function renderItemCard(item, itemIdx, block, blockIdx) {
+        const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
+        const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
+        const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
+        const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+        const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching' || block.layoutType === 'split_pane_matching') && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+        const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence') && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+        const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+        const isMultiGroup = item.interactionType === 'multi_choice_group' && item.graderType === 'unordered_group_slot';
+        const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary') && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+        const isInlineCloze = (item.pedagogicalTypeCode === 'inline_cloze' || item.layoutType === 'inline_cloze' || (item.interactionType === 'short_text' && item.layoutType === 'inline_cloze')) && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+        const isShortText = item.interactionType === 'short_text' && item.graderType !== 'rubric_async' && !isInlineCloze && !isPictorial && !isListeningOrder && !isReadingMatching && !isErrorCorrection && !isSentenceReorder && !isSentenceRewrite && !isPronunciation;
+        const isVocabPair = item.interactionType === 'text_select_pair';
+        const isRubricAsync = item.graderType === 'rubric_async';
+        const hasRedundantPrompt = isVocabPair || isPictorial || isPronunciation || isSentenceRewrite || isSentenceReorder || isReadingMatching || isListeningOrder;
+        let nextBlankNum = 1;
+        if (isInlineCloze) {
+            const detectedBlanks = parseClozeBlanks(item.prompt || '');
+            const uniqueBlankNums = [];
+            for (const b of detectedBlanks) {
+                if (!uniqueBlankNums.includes(b.number))
+                    uniqueBlankNums.push(b.number);
+            }
+            const maxBlankNum = uniqueBlankNums.length ? Math.max(...uniqueBlankNums) : (item.position || 1);
+            nextBlankNum = uniqueBlankNums.length ? maxBlankNum + 1 : (item.position || 1);
         }
-        const maxBlankNum = uniqueBlankNums.length ? Math.max(...uniqueBlankNums) : (item.position || 1);
-        nextBlankNum = uniqueBlankNums.length ? maxBlankNum + 1 : (item.position || 1);
-      }
-
-      const hasLongOption = (item.options || []).some(o => (o.label || '').length > 25);
-      const layout = item.layoutType || (hasLongOption ? 'grid_1' : (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2')));
-      const colsClass = layout === 'grid_1' ? 'grid-cols-1' : (layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2'));
-
-      const itemKey = draftState.gradingKey.items[item.itemVersionId] || {};
-      const groupKey = item.groupId ? (draftState.gradingKey.groups[item.groupId] || {}) : {};
-
-      let specificHtml = '';
-
-      if (isPronunciation) {
-        const targetWord = item.targetWord || itemKey.targetWord || 'camera';
-        const ipaTranscription = item.ipaTranscription || itemKey.ipaTranscription || '/ˈkæm.ər.ə/';
-        const audioUrl = item.audioUrl || itemKey.audioUrl || '';
-        const optionsList = item.options && item.options.length ? item.options : [
-          { id: 'A', label: '/ˈkæm.ər.ə/' },
-          { id: 'B', label: '/kəˈmɪər.ə/' },
-          { id: 'C', label: '/ˈkæm.eɪ.rə/' }
-        ];
-        const expectedOptionId = itemKey.expectedOptionId || optionsList[0]?.id || 'A';
-
-        const ipaButtonsHtml = COMMON_IPA_SYMBOLS.map(sym => `
+        const hasLongOption = (item.options || []).some((o) => (o.label || '').length > 25);
+        const layout = item.layoutType || (hasLongOption ? 'grid_1' : (item.options?.length === 3 ? 'grid_3' : (item.options?.length >= 4 ? 'grid_4' : 'grid_2')));
+        const colsClass = layout === 'grid_1' ? 'grid-cols-1' : (layout === 'grid_3' ? 'grid-cols-3' : (layout === 'grid_4' ? 'grid-cols-4' : 'grid-cols-2'));
+        const itemKey = draftState.gradingKey.items[item.itemVersionId] || {};
+        const groupKey = item.groupId ? (draftState.gradingKey.groups[item.groupId] || {}) : {};
+        let specificHtml = '';
+        if (isPronunciation) {
+            const targetWord = item.targetWord || itemKey.targetWord || 'camera';
+            const ipaTranscription = item.ipaTranscription || itemKey.ipaTranscription || '/ˈkæm.ər.ə/';
+            const audioUrl = item.audioUrl || itemKey.audioUrl || '';
+            const optionsList = item.options && item.options.length ? item.options : [
+                { id: 'A', label: '/ˈkæm.ər.ə/' },
+                { id: 'B', label: '/kəˈmɪər.ə/' },
+                { id: 'C', label: '/ˈkæm.eɪ.rə/' }
+            ];
+            const expectedOptionId = itemKey.expectedOptionId || optionsList[0]?.id || 'A';
+            const ipaButtonsHtml = COMMON_IPA_SYMBOLS.map(sym => `
           <button type="button" class="btn btn-secondary btn-sm btn-ipa-symbol" data-symbol="${escapeHtml(sym)}" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" title="Chèn ký tự phiên âm ${escapeHtml(sym)}">
             ${escapeHtml(sym)}
           </button>
         `).join('');
-
-        const optionsHtml = optionsList.map(opt => `
+            const optionsHtml = optionsList.map((opt) => `
           <div class="pronunciation-option-row">
             <label class="option-select-label" title="Chọn làm đáp án đúng">
               <input type="radio" name="pron_correct_${item.itemVersionId}" class="radio-pron-correct" value="${opt.id}" ${opt.id === expectedOptionId ? 'checked' : ''} data-correct="${opt.id}" />
@@ -86,8 +63,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-pronunciation-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này" aria-label="Xóa phương án này">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
-
-        specificHtml = `
+            specificHtml = `
           <div class="template-section template-pronunciation-ipa">
             <div class="template-header-bar">
               <span class="section-sublabel"><strong>Cấu hình câu hỏi Phát âm & Phiên âm IPA (Pronunciation):</strong></span>
@@ -148,21 +124,20 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isSentenceRewrite) {
-        const keyword = item.keyword || itemKey.keyword || 'PREVENTED';
-        const framePrefix = item.framePrefix ?? itemKey.framePrefix ?? 'His severe illness';
-        const frameSuffix = item.frameSuffix ?? itemKey.frameSuffix ?? 'from going to the conference.';
-        const targetAnswer = item.targetAnswer || (itemKey.accepted && itemKey.accepted[0]) || 'prevented him';
-        const acceptedList = itemKey.accepted || [targetAnswer];
-
-        const chipsHtml = acceptedList.map((v) => `
+        }
+        else if (isSentenceRewrite) {
+            const keyword = item.keyword || itemKey.keyword || 'PREVENTED';
+            const framePrefix = item.framePrefix ?? itemKey.framePrefix ?? 'His severe illness';
+            const frameSuffix = item.frameSuffix ?? itemKey.frameSuffix ?? 'from going to the conference.';
+            const targetAnswer = item.targetAnswer || (itemKey.accepted && itemKey.accepted[0]) || 'prevented him';
+            const acceptedList = itemKey.accepted || [targetAnswer];
+            const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
             <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        specificHtml = `
+            specificHtml = `
           <div class="template-section template-sentence-transformation">
             <div class="template-header-bar">
               <span class="section-sublabel"><strong>Cấu hình câu biến đổi (Keyword Transformation):</strong></span>
@@ -218,33 +193,30 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isSentenceReorder) {
-        const tokens = item.tokens || itemKey.tokens || tokenizeSentence(item.targetSentence || 'She / has worked / at the company / for five years');
-        const distractors = item.distractors || itemKey.distractors || [];
-        const targetSentence = item.targetSentence || (itemKey.accepted && itemKey.accepted[0]) || tokens.join(' ');
-        const rawTokensStr = tokens.join(' / ');
-        const scrambled = scrambleTokens(tokens);
-
-        const acceptedList = itemKey.accepted || [targetSentence];
-        const chipsHtml = acceptedList.map((v) => `
+        }
+        else if (isSentenceReorder) {
+            const tokens = item.tokens || itemKey.tokens || tokenizeSentence(item.targetSentence || 'She / has worked / at the company / for five years');
+            const distractors = item.distractors || itemKey.distractors || [];
+            const targetSentence = item.targetSentence || (itemKey.accepted && itemKey.accepted[0]) || tokens.join(' ');
+            const rawTokensStr = tokens.join(' / ');
+            const scrambled = scrambleTokens(tokens);
+            const acceptedList = itemKey.accepted || [targetSentence];
+            const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
             <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        const distractorChipsHtml = distractors.map((d, dIdx) => `
+            const distractorChipsHtml = distractors.map((d, dIdx) => `
           <span class="distractor-chip" data-distractor="${escapeHtml(d)}" data-distractor-idx="${dIdx}">
             <span class="chip-text"><span class="distractor-symbol">×</span> ${escapeHtml(d)}</span>
             <button type="button" class="btn-remove-distractor-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-distractor-idx="${dIdx}" title="Xóa từ gây nhiễu" aria-label="Xóa từ gây nhiễu">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        const scrambledPreviewChips = [...scrambled, ...distractors].map((tok) => `
+            const scrambledPreviewChips = [...scrambled, ...distractors].map((tok) => `
           <span class="token-chip ${distractors.includes(tok) ? 'token-distractor' : ''}">${escapeHtml(tok)}</span>
         `).join('');
-
-        specificHtml = `
+            specificHtml = `
           <div class="template-section template-sentence-reorder">
             <div class="template-header-bar">
               <span class="section-sublabel"><strong>Cấu hình câu cần sắp xếp (Token Scramble):</strong></span>
@@ -311,41 +283,38 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isErrorCorrection) {
-        const rawErrors = (itemKey.expectedErrors && itemKey.expectedErrors.length)
-          ? itemKey.expectedErrors
-          : (item.expectedErrors && item.expectedErrors.length)
-            ? item.expectedErrors
-            : (itemKey.targetWord ? [itemKey.targetWord] : (item.targetWord ? [item.targetWord] : []));
-        const expectedErrors = rawErrors.filter(v => v != null && String(v).trim().length > 0);
-
-        const rawCorrections = (itemKey.expectedCorrections && itemKey.expectedCorrections.length)
-          ? itemKey.expectedCorrections
-          : (itemKey.accepted && itemKey.accepted.length)
-            ? itemKey.accepted
-            : (item.expectedCorrections && item.expectedCorrections.length)
-              ? item.expectedCorrections
-              : (item.accepted && item.accepted.length)
-                ? item.accepted
-                : [];
-        const expectedCorrections = rawCorrections.filter(v => v != null && String(v).trim().length > 0);
-        const scoringRule = itemKey.scoringRule || item.scoringRule || 'split_points';
-
-        const errorChipsHtml = expectedErrors.map(v => `
+        }
+        else if (isErrorCorrection) {
+            const rawErrors = (itemKey.expectedErrors && itemKey.expectedErrors.length)
+                ? itemKey.expectedErrors
+                : (item.expectedErrors && item.expectedErrors.length)
+                    ? item.expectedErrors
+                    : (itemKey.targetWord ? [itemKey.targetWord] : (item.targetWord ? [item.targetWord] : []));
+            const expectedErrors = rawErrors.filter((v) => v != null && String(v).trim().length > 0);
+            const rawCorrections = (itemKey.expectedCorrections && itemKey.expectedCorrections.length)
+                ? itemKey.expectedCorrections
+                : (itemKey.accepted && itemKey.accepted.length)
+                    ? itemKey.accepted
+                    : (item.expectedCorrections && item.expectedCorrections.length)
+                        ? item.expectedCorrections
+                        : (item.accepted && item.accepted.length)
+                            ? item.accepted
+                            : [];
+            const expectedCorrections = rawCorrections.filter((v) => v != null && String(v).trim().length > 0);
+            const scoringRule = itemKey.scoringRule || item.scoringRule || 'split_points';
+            const errorChipsHtml = expectedErrors.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
             <button type="button" class="btn-remove-error-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        const correctionChipsHtml = expectedCorrections.map(v => `
+            const correctionChipsHtml = expectedCorrections.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
             <button type="button" class="btn-remove-correction-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        specificHtml = `
+            specificHtml = `
           <div class="template-section template-error-correction">
             <div class="template-header-bar">
               <span class="section-sublabel"><strong>Cặp dữ liệu tìm lỗi sai và sửa lại:</strong></span>
@@ -401,13 +370,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isReadingMatching) {
-        const passageText = block.readingPassage || block.stimulusReadingPassage || item.readingPassage || '';
-        const detectedParagraphs = extractParagraphLabels(passageText);
-        const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || '';
-        const optionsList = item.options || [];
-
-        const optionsHtml = optionsList.map(opt => `
+        }
+        else if (isReadingMatching) {
+            const passageText = block.readingPassage || block.stimulusReadingPassage || item.readingPassage || '';
+            const detectedParagraphs = extractParagraphLabels(passageText);
+            const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || '';
+            const optionsList = item.options || [];
+            const optionsHtml = optionsList.map((opt) => `
           <div class="matching-heading-row" data-option-id="${opt.id}">
             <label class="option-select-label" title="Chọn làm tiêu đề/đáp án đúng cho câu này">
               <input type="radio" name="radio_matching_correct_${item.itemVersionId}" class="radio-matching-correct" value="${opt.id}" ${opt.id === expectedId ? 'checked' : ''} data-correct="${opt.id}">
@@ -417,8 +386,7 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-matching-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án này" aria-label="Xóa phương án này">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
-
-        specificHtml = `
+            specificHtml = `
           <div class="template-section template-reading-matching">
             <div class="split-pane-header-bar">
               <span class="badge badge-info split-pane-preview-badge">${renderSvgIcon('book', 'icon-inline')} Bố cục chia đôi màn hình (Split-Pane 2 cột: Bài đọc bên trái, Câu hỏi bên phải)</span>
@@ -557,19 +525,19 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isListeningOrder) {
-        const events = item.events || [
-          { label: 'A', rank: 1, text: 'Sự kiện A' },
-          { label: 'B', rank: 2, text: 'Sự kiện B' },
-          { label: 'C', rank: 3, text: 'Sự kiện C' },
-          { label: 'D', rank: 4, text: 'Sự kiện D' },
-          { label: 'E', rank: 5, text: 'Sự kiện E' }
-        ];
-        const audioUrl = item.audioUrl || block.audioUrl || '';
-        const orderValidation = validateListeningOrderUniqueness(events);
-        const sortedByRank = [...events].sort((a, b) => (Number(a.rank) || 0) - (Number(b.rank) || 0));
-
-        const eventsHtml = events.map((ev, eIdx) => `
+        }
+        else if (isListeningOrder) {
+            const events = item.events || [
+                { label: 'A', rank: 1, text: 'Sự kiện A' },
+                { label: 'B', rank: 2, text: 'Sự kiện B' },
+                { label: 'C', rank: 3, text: 'Sự kiện C' },
+                { label: 'D', rank: 4, text: 'Sự kiện D' },
+                { label: 'E', rank: 5, text: 'Sự kiện E' }
+            ];
+            const audioUrl = item.audioUrl || block.audioUrl || '';
+            const orderValidation = validateListeningOrderUniqueness(events);
+            const sortedByRank = [...events].sort((a, b) => (Number(a.rank) || 0) - (Number(b.rank) || 0));
+            const eventsHtml = events.map((ev, eIdx) => `
           <div class="listening-event-row" data-event-idx="${eIdx}">
             <div class="event-badge">${escapeHtml(ev.label || String.fromCharCode(65 + eIdx))}</div>
             <input type="text" class="form-control form-control-sm input-event-text" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" value="${escapeHtml(ev.text || '')}" placeholder="Nội dung sự kiện ${ev.label}..." />
@@ -584,15 +552,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-event" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-event-idx="${eIdx}" title="Xóa sự kiện" aria-label="Xóa sự kiện">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
-
-        const previewBadges = sortedByRank.map(ev => `
+            const previewBadges = sortedByRank.map(ev => `
           <div class="timeline-step">
             <span class="step-num">#${ev.rank || '?'}</span>
             <span class="step-card"><strong class="step-label">${ev.label}:</strong> ${escapeHtml(ev.text ? (ev.text.length > 28 ? ev.text.substring(0, 28) + '...' : ev.text) : '---')}</span>
           </div>
         `).join('');
-
-        specificHtml = `
+            specificHtml = `
           <div class="template-section template-listening-order">
             <div class="form-group audio-input-group">
               <label class="form-label"><strong>File ghi âm Audio (URL / Path):</strong></label>
@@ -608,8 +574,8 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               <span class="section-sublabel"><strong>Danh sách chuỗi sự kiện & Thứ tự chuẩn:</strong></span>
               <div class="validation-status-wrap">
                 ${orderValidation.isValid
-                  ? `<span class="badge badge-success">${renderSvgIcon('check', 'icon-inline')} Thứ tự hợp lệ (${events.length} bước)</span>`
-                  : `<span class="badge badge-warning">${renderSvgIcon('alert', 'icon-inline')} Trùng hoặc thiếu thứ tự: ${orderValidation.duplicates.length ? `Trùng [#${orderValidation.duplicates.join(', ')}]` : ''} ${orderValidation.missingRanks.length ? `Thiếu [#${orderValidation.missingRanks.join(', ')}]` : ''}</span>`}
+                ? `<span class="badge badge-success">${renderSvgIcon('check', 'icon-inline')} Thứ tự hợp lệ (${events.length} bước)</span>`
+                : `<span class="badge badge-warning">${renderSvgIcon('alert', 'icon-inline')} Trùng hoặc thiếu thứ tự: ${orderValidation.duplicates.length ? `Trùng [#${orderValidation.duplicates.join(', ')}]` : ''} ${orderValidation.missingRanks.length ? `Thiếu [#${orderValidation.missingRanks.join(', ')}]` : ''}</span>`}
               </div>
             </div>
 
@@ -631,11 +597,12 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isSingleChoice) {
-        const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || 'A';
-        const optionsHtml = (item.options || []).map((opt, optIdx) => {
-          const letter = formatOptionDisplayLetter(opt.id, optIdx);
-          return `
+        }
+        else if (isSingleChoice) {
+            const expectedId = itemKey.expectedOptionId || item.options?.[0]?.id || 'A';
+            const optionsHtml = (item.options || []).map((opt, optIdx) => {
+                const letter = formatOptionDisplayLetter(opt.id, optIdx);
+                return `
           <div class="option-item-row" data-option-id="${opt.id}">
             <label class="option-select-label" title="Chọn làm đáp án đúng">
               <input type="radio" name="radio_correct_${item.itemVersionId}" class="radio-correct" value="${opt.id}" ${opt.id === expectedId ? 'checked' : ''} data-correct="${opt.id}">
@@ -645,9 +612,8 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án" aria-label="Xóa phương án">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `;
-        }).join('');
-
-        specificHtml = `
+            }).join('');
+            specificHtml = `
           <div class="template-section template-single-choice">
             <div class="template-header-bar">
               <span class="section-sublabel">Các phương án lựa chọn (Tích tròn chọn đáp án đúng):</span>
@@ -671,12 +637,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isMultiGroup) {
-        const expectedIds = groupKey.expectedOptionIds || ['A', 'B'];
-        const groupIdVal = item.groupId || `group_${blockIdx + 1}`;
-        const optionsHtml = (item.options || []).map((opt, optIdx) => {
-          const letter = formatOptionDisplayLetter(opt.id, optIdx);
-          return `
+        }
+        else if (isMultiGroup) {
+            const expectedIds = groupKey.expectedOptionIds || ['A', 'B'];
+            const groupIdVal = item.groupId || `group_${blockIdx + 1}`;
+            const optionsHtml = (item.options || []).map((opt, optIdx) => {
+                const letter = formatOptionDisplayLetter(opt.id, optIdx);
+                return `
           <div class="option-item-row" data-option-id="${opt.id}">
             <label class="option-select-label" title="Tích chọn đáp án đúng cho nhóm">
               <input type="checkbox" class="checkbox-correct" value="${opt.id}" ${expectedIds.includes(opt.id) ? 'checked' : ''} data-correct="${opt.id}">
@@ -686,9 +653,8 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             <button type="button" class="btn btn-icon btn-sm btn-ghost-subtle btn-del-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa phương án" aria-label="Xóa phương án">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `;
-        }).join('');
-
-        specificHtml = `
+            }).join('');
+            specificHtml = `
           <div class="template-section template-multi-group">
             <div class="template-header-bar">
               <div class="group-config-wrap">
@@ -718,44 +684,39 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isInlineCloze) {
-        const detectedBlanks = parseClozeBlanks(item.prompt || '');
-        const uniqueBlankNums = [];
-        for (const b of detectedBlanks) {
-          if (!uniqueBlankNums.includes(b.number)) {
-            uniqueBlankNums.push(b.number);
-          }
         }
-        if (!uniqueBlankNums.length) {
-          uniqueBlankNums.push(item.position || 1);
-        }
-
-        item.clozeAnswers = item.clozeAnswers || {};
-
-        const blanksConfigHtml = uniqueBlankNums.map((bNum, idx) => {
-          const bAnswer = item.clozeAnswers[bNum] || item.clozeAnswers[String(bNum)];
-          let targetWord = bAnswer?.targetWord || (bAnswer?.accepted?.[0] || '');
-          let accepted = bAnswer?.accepted || [];
-
-          if (!targetWord && (uniqueBlankNums.length === 1 || idx === 0 || bNum === item.position)) {
-            targetWord = item.targetWord || (itemKey.accepted?.[0] || '');
-          }
-          if (!accepted.length && (uniqueBlankNums.length === 1 || idx === 0 || bNum === item.position)) {
-            accepted = itemKey.accepted || [];
-          }
-
-          const filteredAccepted = accepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder');
-          const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
-          const blankTargetVal = targetWord || (acceptedList[0] || '');
-
-          const chipsHtml = acceptedList.map((v) => `
+        else if (isInlineCloze) {
+            const detectedBlanks = parseClozeBlanks(item.prompt || '');
+            const uniqueBlankNums = [];
+            for (const b of detectedBlanks) {
+                if (!uniqueBlankNums.includes(b.number)) {
+                    uniqueBlankNums.push(b.number);
+                }
+            }
+            if (!uniqueBlankNums.length) {
+                uniqueBlankNums.push(item.position || 1);
+            }
+            item.clozeAnswers = item.clozeAnswers || {};
+            const blanksConfigHtml = uniqueBlankNums.map((bNum, idx) => {
+                const bAnswer = item.clozeAnswers[bNum] || item.clozeAnswers[String(bNum)];
+                let targetWord = bAnswer?.targetWord || (bAnswer?.accepted?.[0] || '');
+                let accepted = bAnswer?.accepted || [];
+                if (!targetWord && (uniqueBlankNums.length === 1 || idx === 0 || bNum === item.position)) {
+                    targetWord = item.targetWord || (itemKey.accepted?.[0] || '');
+                }
+                if (!accepted.length && (uniqueBlankNums.length === 1 || idx === 0 || bNum === item.position)) {
+                    accepted = itemKey.accepted || [];
+                }
+                const filteredAccepted = accepted.filter((v) => v && v !== 'answer' && v !== 'draft_placeholder');
+                const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
+                const blankTargetVal = targetWord || (acceptedList[0] || '');
+                const chipsHtml = acceptedList.map((v) => `
             <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
               <span class="chip-text">${escapeHtml(v)}</span>
               <button type="button" class="btn-remove-chip btn-remove-cloze-blank-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-blank-num="${bNum}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
             </span>
           `).join('');
-
-          return `
+                return `
             <div class="cloze-blank-config-card" data-blank-num="${bNum}">
               <div class="cloze-blank-header">
                 <span class="cloze-blank-badge">
@@ -781,13 +742,11 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
               </div>
             </div>
           `;
-        }).join('');
-
-        const maxBlankNum = uniqueBlankNums.length ? Math.max(...uniqueBlankNums) : (item.position || 1);
-        const nextBlankNum = uniqueBlankNums.length ? maxBlankNum + 1 : (item.position || 1);
-        const livePreviewHtml = renderInlineClozeMarkup(item.prompt || '', [item], {}, { disabled: true });
-
-        specificHtml = `
+            }).join('');
+            const maxBlankNum = uniqueBlankNums.length ? Math.max(...uniqueBlankNums) : (item.position || 1);
+            const nextBlankNum = uniqueBlankNums.length ? maxBlankNum + 1 : (item.position || 1);
+            const livePreviewHtml = renderInlineClozeMarkup(item.prompt || '', [item], {}, { disabled: true });
+            specificHtml = `
           <div class="template-section template-inline-cloze">
             <div class="cloze-live-preview-box">
               <span class="preview-mini-label">Xem trước hiển thị nội tuyến:</span>
@@ -802,21 +761,20 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isPictorial) {
-        const rawAccepted = itemKey.accepted || [];
-        const filteredAccepted = rawAccepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder' && !/^Từ vựng qua ảnh \d+/i.test(v));
-        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
-        const chipsHtml = acceptedList.map((v) => `
+        }
+        else if (isPictorial) {
+            const rawAccepted = itemKey.accepted || [];
+            const filteredAccepted = rawAccepted.filter((v) => v && v !== 'answer' && v !== 'draft_placeholder' && !/^Từ vựng qua ảnh \d+/i.test(v));
+            const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
+            const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
             <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        const rawTargetVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Từ vựng qua ảnh \d+/i.test(item.prompt) ? item.prompt : '');
-        const imgSrc = item.image || item.stimulusImageUrl || '';
-
-        specificHtml = `
+            const rawTargetVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Từ vựng qua ảnh \d+/i.test(item.prompt) ? item.prompt : '');
+            const imgSrc = item.image || item.stimulusImageUrl || '';
+            specificHtml = `
           <div class="template-section template-pictorial-vocab">
             <div class="pictorial-meta-grid">
               <div class="form-group pictorial-image-group">
@@ -871,20 +829,19 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isShortText) {
-        const rawAccepted = itemKey.accepted || [];
-        const filteredAccepted = rawAccepted.filter(v => v && v !== 'answer' && v !== 'draft_placeholder');
-        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
-        const chipsHtml = acceptedList.map((v) => `
+        }
+        else if (isShortText) {
+            const rawAccepted = itemKey.accepted || [];
+            const filteredAccepted = rawAccepted.filter((v) => v && v !== 'answer' && v !== 'draft_placeholder');
+            const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
+            const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
             <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        const rawFitbVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Câu \d+/i.test(item.prompt) ? item.prompt : '');
-
-        specificHtml = `
+            const rawFitbVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Câu \d+/i.test(item.prompt) ? item.prompt : '');
+            specificHtml = `
           <div class="template-section template-fitb">
             <div class="fitb-raw-box">
               <label class="form-label">Đáp án gốc (Nhập từ/câu mẫu để tự động mở rộng biến thể dấu câu, viết tắt, nháy đơn):</label>
@@ -908,32 +865,30 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isVocabPair) {
-        const rawAccepted = itemKey.accepted || [];
-        const filteredAccepted = rawAccepted.filter(v => v && !/^Từ vựng câu \d+/i.test(v) && v !== 'answer' && v !== 'draft_placeholder');
-        const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
-        const chipsHtml = acceptedList.map((v) => `
+        }
+        else if (isVocabPair) {
+            const rawAccepted = itemKey.accepted || [];
+            const filteredAccepted = rawAccepted.filter((v) => v && !/^Từ vựng câu \d+/i.test(v) && v !== 'answer' && v !== 'draft_placeholder');
+            const acceptedList = Array.from(new Set(filteredAccepted)).slice(0, 40);
+            const chipsHtml = acceptedList.map((v) => `
           <span class="variant-chip accepted-chip" data-variant="${escapeHtml(v)}">
             <span class="chip-text">${escapeHtml(v)}</span>
             <button type="button" class="btn-remove-chip" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-variant="${escapeHtml(v)}" title="Xóa biến thể này" aria-label="Xóa biến thể này">${renderSvgIcon('close', 'icon-inline')}</button>
           </span>
         `).join('');
-
-        const expectedOptId = itemKey.expectedOptionId || item.options?.[0]?.id || 'opt_1';
-        const optionsList = item.options && item.options.length ? item.options : [
-          { id: 'opt_1', label: 'Nghĩa phương án 1' },
-          { id: 'opt_2', label: 'Nghĩa phương án 2' },
-          { id: 'opt_3', label: 'Nghĩa phương án 3' },
-          { id: 'opt_4', label: 'Nghĩa phương án 4' }
-        ];
-
-        const dropdownOptionsHtml = optionsList.map(opt => `
+            const expectedOptId = itemKey.expectedOptionId || item.options?.[0]?.id || 'opt_1';
+            const optionsList = item.options && item.options.length ? item.options : [
+                { id: 'opt_1', label: 'Nghĩa phương án 1' },
+                { id: 'opt_2', label: 'Nghĩa phương án 2' },
+                { id: 'opt_3', label: 'Nghĩa phương án 3' },
+                { id: 'opt_4', label: 'Nghĩa phương án 4' }
+            ];
+            const dropdownOptionsHtml = optionsList.map((opt) => `
           <option value="${opt.id}" ${opt.id === expectedOptId ? 'selected' : ''}>
             [${opt.id}] ${escapeHtml(opt.label || '(Chưa nhập nghĩa)')}
           </option>
         `).join('');
-
-        const optionsHtml = optionsList.map((opt) => `
+            const optionsHtml = optionsList.map((opt) => `
           <div class="vocab-meaning-row ${opt.id === expectedOptId ? 'is-correct' : ''}" data-option-id="${opt.id}">
             <label class="option-select-label" title="Chọn làm nghĩa tiếng Việt đúng">
               <input type="radio" name="radio_vocab_correct_${item.itemVersionId}" class="radio-vocab-correct" value="${opt.id}" ${opt.id === expectedOptId ? 'checked' : ''} data-correct="${opt.id}">
@@ -943,19 +898,16 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             <button type="button" class="btn btn-icon btn-sm btn-del-vocab-option" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-option-id="${opt.id}" title="Xóa nghĩa này" aria-label="Xóa nghĩa này">${renderSvgIcon('close', 'icon-inline')}</button>
           </div>
         `).join('');
-
-        let hasPrevVocabItem = false;
-        for (let p = itemIdx - 1; p >= 0; p--) {
-          if (block.items[p] && block.items[p].interactionType === 'text_select_pair') {
-            hasPrevVocabItem = true;
-            break;
-          }
-        }
-        const totalVocabItemsInBlock = (block.items || []).filter(it => it.interactionType === 'text_select_pair').length;
-
-        const rawVocabVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Từ vựng câu \d+/i.test(item.prompt) ? item.prompt : '');
-
-        specificHtml = `
+            let hasPrevVocabItem = false;
+            for (let p = itemIdx - 1; p >= 0; p--) {
+                if (block.items[p] && block.items[p].interactionType === 'text_select_pair') {
+                    hasPrevVocabItem = true;
+                    break;
+                }
+            }
+            const totalVocabItemsInBlock = (block.items || []).filter(it => it.interactionType === 'text_select_pair').length;
+            const rawVocabVal = item.targetWord || (acceptedList[0] || '') || (item.prompt && !/^Từ vựng câu \d+/i.test(item.prompt) ? item.prompt : '');
+            specificHtml = `
           <div class="template-section template-vocab-pair">
             <div class="vocab-english-box">
               <label class="form-label"><strong>1. Từ tiếng Anh chuẩn (50% điểm):</strong></label>
@@ -1042,18 +994,19 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      } else if (isRubricAsync) {
-        const rubricObj = itemKey.rubric || {
-          scoringVersion: 'rubric-translation-v1',
-          maxScore: item.maxScore || 4,
-          criteria: [
-            { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: (item.maxScore || 4) / 2, requiredConcepts: [] },
-            { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: (item.maxScore || 4) / 2, requiredConcepts: [] }
-          ]
-        };
-        const scoringVer = rubricObj.scoringVersion || 'rubric-translation-v1';
-        const criteriaList = rubricObj.criteria || [];
-        const criteriaHtml = criteriaList.map((crit, cIdx) => `
+        }
+        else if (isRubricAsync) {
+            const rubricObj = itemKey.rubric || {
+                scoringVersion: 'rubric-translation-v1',
+                maxScore: item.maxScore || 4,
+                criteria: [
+                    { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: (item.maxScore || 4) / 2, requiredConcepts: [] },
+                    { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: (item.maxScore || 4) / 2, requiredConcepts: [] }
+                ]
+            };
+            const scoringVer = rubricObj.scoringVersion || 'rubric-translation-v1';
+            const criteriaList = rubricObj.criteria || [];
+            const criteriaHtml = criteriaList.map((crit, cIdx) => `
           <div class="rubric-criterion-card" data-criterion-idx="${cIdx}">
             <div class="criterion-card-header">
               <div class="criterion-header-left">
@@ -1072,16 +1025,13 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `).join('');
-
-        const promptGuidance = rubricObj.promptGuidance || '';
-
-        const parentEx = block?.exercises?.find(e => e.exerciseId === item.exerciseId);
-        const hasExContext = Boolean(parentEx && parentEx.referenceContext && parentEx.referenceContext.trim());
-        const hasItemCustomContext = Boolean(item.referenceContext && item.referenceContext.trim());
-        const isComprehension = scoringVer.includes('comprehension') || item.rubricCode === 'rubric_comprehension_v1';
-        const showItemContextInitially = hasItemCustomContext || (!hasExContext && isComprehension);
-
-        specificHtml = `
+            const promptGuidance = rubricObj.promptGuidance || '';
+            const parentEx = block?.exercises?.find(e => e.exerciseId === item.exerciseId);
+            const hasExContext = Boolean(parentEx && parentEx.referenceContext && parentEx.referenceContext.trim());
+            const hasItemCustomContext = Boolean(item.referenceContext && item.referenceContext.trim());
+            const isComprehension = scoringVer.includes('comprehension') || item.rubricCode === 'rubric_comprehension_v1';
+            const showItemContextInitially = hasItemCustomContext || (!hasExContext && isComprehension);
+            specificHtml = `
           <div class="template-section template-rubric-async">
             ${hasExContext ? `
               <div class="ai-inherited-context-notice">
@@ -1160,68 +1110,64 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
             </div>
           </div>
         `;
-      }
-
-      const typeLabel = isPronunciation
-        ? 'Phát âm (Pronunciation)'
-        : (isSentenceRewrite
-          ? 'Biến đổi câu (Transformation)'
-          : (isSentenceReorder
-            ? 'Sắp xếp câu (Sentence Reorder)'
-            : (isErrorCorrection
-              ? 'Tìm và sửa lỗi (Error Correction)'
-              : (isReadingMatching
-                ? 'Ghép nối (Reading Matching)'
-                : (isListeningOrder
-                  ? 'Sắp xếp thứ tự nghe (Listening Order)'
-                  : (isSingleChoice
-                    ? 'Trắc nghiệm 1 đáp án (Single Choice)'
-                    : (isMultiGroup
-                      ? 'Nhóm chọn nhiều (Multi-Select Group)'
-                      : (isVocabPair
-                        ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
-                        : (isRubricAsync
-                          ? 'Tự luận chấm AI (AI-Graded Rubric)'
-                          : (isPictorial
-                            ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
-                            : (isInlineCloze
-                              ? 'Điền từ nội tuyến (Inline Cloze)'
-                              : 'Điền ô trống (Short Text)')))))))))));
-
-      const kindClass = isListeningOrder
-        ? 'listening_order'
-        : (isReadingMatching
-          ? 'reading_matching'
-          : (isPictorial
-            ? 'pictorial_vocabulary'
-            : (isInlineCloze
-              ? 'inline_cloze'
-              : item.interactionType)));
-
-      const spanCount = getItemSpanCount(item);
-      item.spanCount = spanCount;
-      let itemPosLabel = `Câu ${item.position}`;
-      if (spanCount > 1) {
-        const endPos = item.position + spanCount - 1;
-        if (isListeningOrder) {
-          itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} bước sự kiện)`;
-        } else if (isInlineCloze) {
-          itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} chỗ trống)`;
-        } else {
-          itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} câu)`;
         }
-      }
-
-      const itemDisplayScore = isListeningOrder
-        ? ((!item.maxScore || item.maxScore === 1) && item.events?.length ? item.events.length : (item.maxScore || 1))
-        : (isInlineCloze
-            ? ((!item.maxScore || item.maxScore === 1) && spanCount > 1 ? spanCount : (item.maxScore || 1))
-            : (item.maxScore || 1));
-
-      const itemCardKey = item.itemVersionId || `item-${blockIdx}-${itemIdx}`;
-      const isItemCollapsed = collapsedCardKeys.has(itemCardKey);
-
-      return `
+        const typeLabel = isPronunciation
+            ? 'Phát âm (Pronunciation)'
+            : (isSentenceRewrite
+                ? 'Biến đổi câu (Transformation)'
+                : (isSentenceReorder
+                    ? 'Sắp xếp câu (Sentence Reorder)'
+                    : (isErrorCorrection
+                        ? 'Tìm và sửa lỗi (Error Correction)'
+                        : (isReadingMatching
+                            ? 'Ghép nối (Reading Matching)'
+                            : (isListeningOrder
+                                ? 'Sắp xếp thứ tự nghe (Listening Order)'
+                                : (isSingleChoice
+                                    ? 'Trắc nghiệm 1 đáp án (Single Choice)'
+                                    : (isMultiGroup
+                                        ? 'Nhóm chọn nhiều (Multi-Select Group)'
+                                        : (isVocabPair
+                                            ? 'Cặp từ vựng (Vocabulary Pair - 50/50 Partial)'
+                                            : (isRubricAsync
+                                                ? 'Tự luận chấm AI (AI-Graded Rubric)'
+                                                : (isPictorial
+                                                    ? 'Thẻ từ vựng qua ảnh (Pictorial Card)'
+                                                    : (isInlineCloze
+                                                        ? 'Điền từ nội tuyến (Inline Cloze)'
+                                                        : 'Điền ô trống (Short Text)')))))))))));
+        const kindClass = isListeningOrder
+            ? 'listening_order'
+            : (isReadingMatching
+                ? 'reading_matching'
+                : (isPictorial
+                    ? 'pictorial_vocabulary'
+                    : (isInlineCloze
+                        ? 'inline_cloze'
+                        : item.interactionType)));
+        const spanCount = getItemSpanCount(item);
+        item.spanCount = spanCount;
+        let itemPosLabel = `Câu ${item.position}`;
+        if (spanCount > 1) {
+            const endPos = item.position + spanCount - 1;
+            if (isListeningOrder) {
+                itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} bước sự kiện)`;
+            }
+            else if (isInlineCloze) {
+                itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} chỗ trống)`;
+            }
+            else {
+                itemPosLabel = `Câu ${item.position} – ${endPos} (${spanCount} câu)`;
+            }
+        }
+        const itemDisplayScore = isListeningOrder
+            ? ((!item.maxScore || item.maxScore === 1) && item.events?.length ? item.events.length : (item.maxScore || 1))
+            : (isInlineCloze
+                ? ((!item.maxScore || item.maxScore === 1) && spanCount > 1 ? spanCount : (item.maxScore || 1))
+                : (item.maxScore || 1));
+        const itemCardKey = item.itemVersionId || `item-${blockIdx}-${itemIdx}`;
+        const isItemCollapsed = collapsedCardKeys.has(itemCardKey);
+        return `
         <div class="builder-item-card${isItemCollapsed ? ' is-collapsed' : ''}" draggable="false" data-block-idx="${blockIdx}" data-item-idx="${itemIdx}" data-item-id="${item.itemVersionId}" data-exercise-id="${item.exerciseId || ''}">
           <div class="builder-item-header">
             <div class="item-title-info">
@@ -1379,6 +1325,6 @@ function renderItemCard(item, itemIdx, block, blockIdx) {
           </div>
         </div>
       `;
-  }
-  return renderItemCard;
+    }
+    return renderItemCard;
 }

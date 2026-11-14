@@ -1,33 +1,24 @@
-import {
-  getActiveUnsavedChangesOwner,
-  trackBuilderModal,
-  mountedBuilders
-} from '../navigation/unsaved-changes.js';
-import {
-  renderSvgIcon
-} from '../ui/icons.js';
-import {
-  escapeHtml
-} from '../ui/presentation.js';
-
+// NGUỒN: file .ts này; catalog.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
+// không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
+import { getActiveUnsavedChangesOwner, trackBuilderModal, mountedBuilders } from '../navigation/unsaved-changes.js';
+import { renderSvgIcon } from '../ui/icons.js';
+import { escapeHtml } from '../ui/presentation.js';
 export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sessionNumber, phase, courseName, onConfirm, owner = getActiveUnsavedChangesOwner() }) {
-  if (typeof document === 'undefined') return;
-  let modal = document.querySelector('#modal-confirm-delete-test');
-  if (modal && modal.parentNode) {
-    modal.parentNode.removeChild(modal);
-  }
-
-  modal = document.createElement('div');
-  modal.id = 'modal-confirm-delete-test';
-  modal.className = 'izone-modal-overlay';
-  modal.setAttribute('role', 'dialog');
-  modal.setAttribute('aria-modal', 'true');
-  modal.setAttribute('aria-labelledby', 'modal-delete-title');
-
-  const phaseText = phase ? `Phase ${phase}` : '—';
-  const sessionText = sessionNumber ? `Buổi ${sessionNumber}` : '—';
-
-  modal.innerHTML = `
+    if (typeof document === 'undefined')
+        return;
+    let modal = document.querySelector('#modal-confirm-delete-test');
+    if (modal && modal.parentNode) {
+        modal.parentNode.removeChild(modal);
+    }
+    modal = document.createElement('div');
+    modal.id = 'modal-confirm-delete-test';
+    modal.className = 'izone-modal-overlay';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'modal-delete-title');
+    const phaseText = phase ? `Phase ${phase}` : '—';
+    const sessionText = sessionNumber ? `Buổi ${sessionNumber}` : '—';
+    modal.innerHTML = `
     <div class="izone-modal-dialog modal-danger-dialog">
       <div class="izone-modal-header danger-header">
         <div class="modal-header-icon-danger">
@@ -74,84 +65,76 @@ export function openConfirmDeleteTestModal({ testKey, formVersionId, title, sess
       </div>
     </div>
   `;
-
-  trackBuilderModal(modal, owner);
-  document.body.appendChild(modal);
-
-  const inputKw = modal.querySelector('#input-confirm-keyword');
-  const submitBtn = modal.querySelector('#btn-submit-delete');
-  const cancelBtn = modal.querySelector('#btn-cancel-delete');
-  const closeBtn = modal.querySelector('#btn-close-delete-modal');
-
-  const closeModal = () => {
-    if (modal && modal.parentNode) {
-      modal.parentNode.removeChild(modal);
+    trackBuilderModal(modal, owner);
+    document.body.appendChild(modal);
+    const inputKw = modal.querySelector('#input-confirm-keyword');
+    const submitBtn = modal.querySelector('#btn-submit-delete');
+    const cancelBtn = modal.querySelector('#btn-cancel-delete');
+    const closeBtn = modal.querySelector('#btn-close-delete-modal');
+    const closeModal = () => {
+        if (modal && modal.parentNode) {
+            modal.parentNode.removeChild(modal);
+        }
+    };
+    if (inputKw && submitBtn) {
+        inputKw.addEventListener('input', () => {
+            const val = inputKw.value.trim().toUpperCase();
+            const isValid = (val === 'XÓA' || val === 'XOA');
+            submitBtn.disabled = !isValid;
+        });
+        inputKw.focus();
     }
-  };
-
-  if (inputKw && submitBtn) {
-    inputKw.addEventListener('input', () => {
-      const val = inputKw.value.trim().toUpperCase();
-      const isValid = (val === 'XÓA' || val === 'XOA');
-      submitBtn.disabled = !isValid;
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            closeModal();
+            if (typeof onConfirm === 'function') {
+                onConfirm({ formVersionId, testKey, title });
+            }
+        });
+    }
+    if (cancelBtn)
+        cancelBtn.addEventListener('click', closeModal);
+    if (closeBtn)
+        closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal)
+            closeModal();
     });
-    inputKw.focus();
-  }
-
-  if (submitBtn) {
-    submitBtn.addEventListener('click', () => {
-      closeModal();
-      if (typeof onConfirm === 'function') {
-        onConfirm({ formVersionId, testKey, title });
-      }
-    });
-  }
-
-  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
 }
-
 export function openCreateTestModal({ courseId, catalog = [], onSubmit, onCancel, owner = getActiveUnsavedChangesOwner() }) {
-  if (typeof document === 'undefined') return;
-  let modal = document.querySelector('#modal-create-test');
-  if (modal && modal.parentNode) {
-    modal.parentNode.removeChild(modal);
-  }
-
-  modal = document.createElement('div');
-  modal.id = 'modal-create-test';
-  modal.className = 'izone-modal-overlay';
-  modal.setAttribute('role', 'dialog');
-  modal.setAttribute('aria-modal', 'true');
-  modal.setAttribute('aria-labelledby', 'modal-create-title');
-
-  const cid = Number(courseId || 1);
-  const courseNames = { 1: '03', 2: '34', 3: '45' };
-  const courseCode = courseNames[cid] || '34';
-
-  const computeSuggested = (targetPhase) => {
-    const list = Array.isArray(catalog) ? catalog : [];
-    let relevant = list;
-    if (targetPhase === 1) relevant = list.filter(it => Number(it.phase) === 1);
-    else if (targetPhase === 2) relevant = list.filter(it => Number(it.phase) === 2);
-
-    const maxSess = relevant.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
-    const overallMaxSess = list.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
-    const nextSess = maxSess > 0 ? (maxSess + 1) : (overallMaxSess + 1);
-    const nextTestNum = relevant.length + 1;
-    const phaseLabel = targetPhase ? ` (Phase ${targetPhase})` : '';
-    const suggestedTitle = `IZONE · Khối ${courseCode}${phaseLabel} · Test ${nextTestNum}`;
-    return { nextSess, suggestedTitle, nextTestNum };
-  };
-
-  const initialPhase = (cid === 2 || cid === 3) ? 1 : null;
-  const initialData = computeSuggested(initialPhase);
-
-  modal.innerHTML = `
+    if (typeof document === 'undefined')
+        return;
+    let modal = document.querySelector('#modal-create-test');
+    if (modal && modal.parentNode) {
+        modal.parentNode.removeChild(modal);
+    }
+    modal = document.createElement('div');
+    modal.id = 'modal-create-test';
+    modal.className = 'izone-modal-overlay';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'modal-create-title');
+    const cid = Number(courseId || 1);
+    const courseNames = { 1: '03', 2: '34', 3: '45' };
+    const courseCode = courseNames[cid] || '34';
+    const computeSuggested = (targetPhase) => {
+        const list = Array.isArray(catalog) ? catalog : [];
+        let relevant = list;
+        if (targetPhase === 1)
+            relevant = list.filter(it => Number(it.phase) === 1);
+        else if (targetPhase === 2)
+            relevant = list.filter(it => Number(it.phase) === 2);
+        const maxSess = relevant.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
+        const overallMaxSess = list.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
+        const nextSess = maxSess > 0 ? (maxSess + 1) : (overallMaxSess + 1);
+        const nextTestNum = relevant.length + 1;
+        const phaseLabel = targetPhase ? ` (Phase ${targetPhase})` : '';
+        const suggestedTitle = `IZONE · Khối ${courseCode}${phaseLabel} · Test ${nextTestNum}`;
+        return { nextSess, suggestedTitle, nextTestNum };
+    };
+    const initialPhase = (cid === 2 || cid === 3) ? 1 : null;
+    const initialData = computeSuggested(initialPhase);
+    modal.innerHTML = `
     <div class="izone-modal-dialog modal-create-dialog">
       <div class="izone-modal-header">
         <div class="modal-header-icon-primary">
@@ -214,83 +197,78 @@ export function openCreateTestModal({ courseId, catalog = [], onSubmit, onCancel
       </div>
     </div>
   `;
-
-  trackBuilderModal(modal, owner);
-  document.body.appendChild(modal);
-
-  const phaseSelect = modal.querySelector('#create-phase-select');
-  const sessionInput = modal.querySelector('#create-session-input');
-  const titleInput = modal.querySelector('#create-title-input');
-  const durationInput = modal.querySelector('#create-duration-input');
-  const submitBtn = modal.querySelector('#btn-submit-create');
-  const cancelBtn = modal.querySelector('#btn-cancel-create');
-  const closeBtn = modal.querySelector('#btn-close-create-modal');
-
-  const closeModal = () => {
-    if (modal && modal.parentNode) {
-      modal.parentNode.removeChild(modal);
-    }
-  };
-
-  if (phaseSelect) {
-    phaseSelect.addEventListener('change', () => {
-      const pVal = phaseSelect.value ? Number(phaseSelect.value) : null;
-      const data = computeSuggested(pVal);
-      if (sessionInput) sessionInput.value = data.nextSess;
-      if (titleInput) titleInput.value = data.suggestedTitle;
-    });
-  }
-
-  if (submitBtn) {
-    submitBtn.addEventListener('click', () => {
-      const title = (titleInput?.value || '').trim();
-      const sess = Number(sessionInput?.value);
-      const dur = Number(durationInput?.value) || 60;
-      const phase = phaseSelect?.value ? Number(phaseSelect.value) : null;
-
-      if (!title) {
-        alert('Vui lòng nhập tên bài thi.');
-        titleInput?.focus();
-        return;
-      }
-      if (!sess || sess <= 0) {
-        alert('Vui lòng nhập số buổi học hợp lệ.');
-        sessionInput?.focus();
-        return;
-      }
-
-      closeModal();
-      if (typeof onSubmit === 'function') {
-        onSubmit({
-          courseId: cid,
-          phase,
-          sessionNumber: sess,
-          title,
-          durationMinutes: dur
+    trackBuilderModal(modal, owner);
+    document.body.appendChild(modal);
+    const phaseSelect = modal.querySelector('#create-phase-select');
+    const sessionInput = modal.querySelector('#create-session-input');
+    const titleInput = modal.querySelector('#create-title-input');
+    const durationInput = modal.querySelector('#create-duration-input');
+    const submitBtn = modal.querySelector('#btn-submit-create');
+    const cancelBtn = modal.querySelector('#btn-cancel-create');
+    const closeBtn = modal.querySelector('#btn-close-create-modal');
+    const closeModal = () => {
+        if (modal && modal.parentNode) {
+            modal.parentNode.removeChild(modal);
+        }
+    };
+    if (phaseSelect) {
+        phaseSelect.addEventListener('change', () => {
+            const pVal = phaseSelect.value ? Number(phaseSelect.value) : null;
+            const data = computeSuggested(pVal);
+            if (sessionInput)
+                sessionInput.value = data.nextSess;
+            if (titleInput)
+                titleInput.value = data.suggestedTitle;
         });
-      }
+    }
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            const title = (titleInput?.value || '').trim();
+            const sess = Number(sessionInput?.value);
+            const dur = Number(durationInput?.value) || 60;
+            const phase = phaseSelect?.value ? Number(phaseSelect.value) : null;
+            if (!title) {
+                alert('Vui lòng nhập tên bài thi.');
+                titleInput?.focus();
+                return;
+            }
+            if (!sess || sess <= 0) {
+                alert('Vui lòng nhập số buổi học hợp lệ.');
+                sessionInput?.focus();
+                return;
+            }
+            closeModal();
+            if (typeof onSubmit === 'function') {
+                onSubmit({
+                    courseId: cid,
+                    phase,
+                    sessionNumber: sess,
+                    title,
+                    durationMinutes: dur
+                });
+            }
+        });
+    }
+    if (cancelBtn)
+        cancelBtn.addEventListener('click', closeModal);
+    if (closeBtn)
+        closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal)
+            closeModal();
     });
-  }
-
-  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
 }
-
 export function renderCourseTestCatalogView(container, catalog = [], options = {}) {
-  if (!container) return;
-  const existingBuilder = mountedBuilders.get(container);
-  if (existingBuilder) {
-    existingBuilder.handle?.dispose();
-  }
-  const teacherRole = options.teacherRole || 'teacher';
-  const selectedCourseId = Number(options.courseId || 1);
-
-  if (teacherRole !== 'lead' && teacherRole !== 'admin') {
-    container.innerHTML = `
+    if (!container)
+        return;
+    const existingBuilder = mountedBuilders.get(container);
+    if (existingBuilder) {
+        existingBuilder.handle?.dispose();
+    }
+    const teacherRole = options.teacherRole || 'teacher';
+    const selectedCourseId = Number(options.courseId || 1);
+    if (teacherRole !== 'lead' && teacherRole !== 'admin') {
+        container.innerHTML = `
       <div class="panel showcase-placeholder unauthorized-card">
         <div class="placeholder-icon">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -301,24 +279,21 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
         <p>Chỉ Khối trưởng (Lead) hoặc Quản trị viên (Admin) mới có quyền truy cập Quản lý đề thi.</p>
       </div>
     `;
-    return;
-  }
-
-  const courses = [
-    { id: 1, name: 'Khối 03' },
-    { id: 2, name: 'Khối 34' },
-    { id: 3, name: 'Khối 45' }
-  ];
-
-  const courseButtons = courses.map(c => `
+        return;
+    }
+    const courses = [
+        { id: 1, name: 'Khối 03' },
+        { id: 2, name: 'Khối 34' },
+        { id: 3, name: 'Khối 45' }
+    ];
+    const courseButtons = courses.map(c => `
     <button type="button" class="btn-course-tab ${c.id === selectedCourseId ? 'active' : ''}" data-course-id="${c.id}">
       ${c.name}
     </button>
   `).join('');
-
-  let cardsHtml = '';
-  if (!catalog || catalog.length === 0) {
-    cardsHtml = `
+    let cardsHtml = '';
+    if (!catalog || catalog.length === 0) {
+        cardsHtml = `
       <div class="empty-catalog-state">
         <svg class="empty-catalog-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -329,19 +304,19 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
         <p>Chưa có bài thi nào trong danh mục của khối này.</p>
       </div>
     `;
-  } else {
-    const renderTestRows = (items) => {
-      return items.map(item => {
-        const isPublished = item.status === 'published';
-        const badgeClass = isPublished ? 'badge-published' : 'badge-draft';
-        const badgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
-        const sessionLabel = `Buổi ${item.sessionNumber}`;
-        const phaseBadge = item.phase ? `<span class="phase-pill">Phase ${item.phase}</span>` : '<span class="text-muted">—</span>';
-        const subCount = Number(item.submissionCount || 0);
-        // Allow delete if 0 submissions (both drafts and published tests without submissions)
-        const canDelete = subCount === 0;
-
-        return `
+    }
+    else {
+        const renderTestRows = (items) => {
+            return items.map((item) => {
+                const isPublished = item.status === 'published';
+                const badgeClass = isPublished ? 'badge-published' : 'badge-draft';
+                const badgeText = isPublished ? 'Đã công bố' : 'Bản nháp';
+                const sessionLabel = `Buổi ${item.sessionNumber}`;
+                const phaseBadge = item.phase ? `<span class="phase-pill">Phase ${item.phase}</span>` : '<span class="text-muted">—</span>';
+                const subCount = Number(item.submissionCount || 0);
+                // Allow delete if 0 submissions (both drafts and published tests without submissions)
+                const canDelete = subCount === 0;
+                return `
           <div class="test-card test-row" data-test-key="${item.testKey || ''}" data-test-id="${item.id || ''}">
             <div class="col-session">
               <span class="session-badge">${sessionLabel}</span>
@@ -384,17 +359,16 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
             </div>
           </div>
         `;
-      }).join('');
-    };
-
-    const phase1Items = catalog.filter(it => Number(it.phase) === 1);
-    const phase2Items = catalog.filter(it => Number(it.phase) === 2);
-    const otherItems = catalog.filter(it => !it.phase || (Number(it.phase) !== 1 && Number(it.phase) !== 2));
-    const hasPhases = phase1Items.length > 0 || phase2Items.length > 0;
-
-    const renderPhaseTableGroup = (groupTitle, phaseTag, items) => {
-      if (!items || items.length === 0) return '';
-      return `
+            }).join('');
+        };
+        const phase1Items = catalog.filter(it => Number(it.phase) === 1);
+        const phase2Items = catalog.filter(it => Number(it.phase) === 2);
+        const otherItems = catalog.filter(it => !it.phase || (Number(it.phase) !== 1 && Number(it.phase) !== 2));
+        const hasPhases = phase1Items.length > 0 || phase2Items.length > 0;
+        const renderPhaseTableGroup = (groupTitle, phaseTag, items) => {
+            if (!items || items.length === 0)
+                return '';
+            return `
         <div class="test-phase-group">
           <div class="test-phase-header">
             <div class="phase-title-badge">
@@ -418,26 +392,25 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
           </div>
         </div>
       `;
-    };
-
-    if (hasPhases) {
-      cardsHtml = `
+        };
+        if (hasPhases) {
+            cardsHtml = `
         <div class="test-catalog-tables">
           ${renderPhaseTableGroup('Giai đoạn 1 · Nền tảng & Kỹ năng', 'Phase 1', phase1Items)}
           ${renderPhaseTableGroup('Giai đoạn 2 · Tăng tốc & Luyện thi', 'Phase 2', phase2Items)}
           ${renderPhaseTableGroup('Đề thi chung & Tổng hợp', (phase1Items.length > 0 || phase2Items.length > 0) ? 'Tổng hợp' : '', otherItems)}
         </div>
       `;
-    } else {
-      cardsHtml = `
+        }
+        else {
+            cardsHtml = `
         <div class="test-catalog-tables">
           ${renderPhaseTableGroup('Lộ trình các bài thi theo buổi', '', catalog)}
         </div>
       `;
+        }
     }
-  }
-
-  container.innerHTML = `
+    container.innerHTML = `
     <div class="test-studio-header">
       <div class="studio-title-wrap">
         <h2>Quản lý Đề thi (Test Studio)</h2>
@@ -460,76 +433,71 @@ export function renderCourseTestCatalogView(container, catalog = [], options = {
       ${cardsHtml}
     </div>
   `;
-
-  if (typeof options.onCourseChange === 'function' && typeof container.querySelectorAll === 'function') {
-    const courseBtns = container.querySelectorAll('.btn-course-tab');
-    courseBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cid = Number(btn.getAttribute('data-course-id'));
-        options.onCourseChange(cid);
-      });
-    });
-  }
-
-  if (typeof options.onAddTest === 'function' && typeof container.querySelector === 'function') {
-    const addBtn = container.querySelector('#btn-add-test');
-    if (addBtn) {
-      addBtn.addEventListener('click', options.onAddTest);
-    }
-  }
-
-  if (typeof options.onEditTest === 'function' && typeof container.querySelectorAll === 'function') {
-    const editBtns = container.querySelectorAll('.btn-edit-test');
-    editBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const testKey = btn.getAttribute('data-test-key');
-        const formVersionId = btn.getAttribute('data-form-version-id');
-        options.onEditTest({ testKey, formVersionId });
-      });
-    });
-  }
-
-  if (typeof options.onDeleteDraft === 'function' && typeof container.querySelectorAll === 'function') {
-    const delBtns = container.querySelectorAll('.btn-delete-test-draft, .btn-delete-test');
-    delBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const testKey = btn.getAttribute('data-test-key');
-        const formVersionId = btn.getAttribute('data-form-version-id');
-        const title = btn.getAttribute('data-title');
-        const sessionNumber = btn.getAttribute('data-session');
-        const phase = btn.getAttribute('data-phase');
-        if (!formVersionId) return;
-
-        openConfirmDeleteTestModal({
-          testKey,
-          formVersionId,
-          title,
-          sessionNumber,
-          phase,
-          courseName: selectedCourseId === 1 ? 'Khối 03' : (selectedCourseId === 3 ? 'Khối 45' : 'Khối 34'),
-          onConfirm: () => {
-            options.onDeleteDraft({ testKey, formVersionId, title });
-          }
+    if (typeof options.onCourseChange === 'function' && typeof container.querySelectorAll === 'function') {
+        const courseBtns = container.querySelectorAll('.btn-course-tab');
+        courseBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cid = Number(btn.getAttribute('data-course-id'));
+                options.onCourseChange(cid);
+            });
         });
-      });
-    });
-  }
+    }
+    if (typeof options.onAddTest === 'function' && typeof container.querySelector === 'function') {
+        const addBtn = container.querySelector('#btn-add-test');
+        if (addBtn) {
+            addBtn.addEventListener('click', options.onAddTest);
+        }
+    }
+    if (typeof options.onEditTest === 'function' && typeof container.querySelectorAll === 'function') {
+        const editBtns = container.querySelectorAll('.btn-edit-test');
+        editBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const testKey = btn.getAttribute('data-test-key');
+                const formVersionId = btn.getAttribute('data-form-version-id');
+                options.onEditTest({ testKey, formVersionId });
+            });
+        });
+    }
+    if (typeof options.onDeleteDraft === 'function' && typeof container.querySelectorAll === 'function') {
+        const delBtns = container.querySelectorAll('.btn-delete-test-draft, .btn-delete-test');
+        delBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const testKey = btn.getAttribute('data-test-key');
+                const formVersionId = btn.getAttribute('data-form-version-id');
+                const title = btn.getAttribute('data-title');
+                const sessionNumber = btn.getAttribute('data-session');
+                const phase = btn.getAttribute('data-phase');
+                if (!formVersionId)
+                    return;
+                openConfirmDeleteTestModal({
+                    testKey,
+                    formVersionId,
+                    title,
+                    sessionNumber,
+                    phase,
+                    courseName: selectedCourseId === 1 ? 'Khối 03' : (selectedCourseId === 3 ? 'Khối 45' : 'Khối 34'),
+                    onConfirm: () => {
+                        options.onDeleteDraft({ testKey, formVersionId, title });
+                    }
+                });
+            });
+        });
+    }
 }
-
-
 export function getCourseCodeFromCourseId(courseId) {
-  const cid = Number(courseId);
-  if (cid === 1 || courseId === '03' || courseId === 'course-03') return '03';
-  if (cid === 3 || courseId === '45' || courseId === 'course-45') return '45';
-  return '34';
+    const cid = Number(courseId);
+    if (cid === 1 || courseId === '03' || courseId === 'course-03')
+        return '03';
+    if (cid === 3 || courseId === '45' || courseId === 'course-45')
+        return '45';
+    return '34';
 }
-
 export function filterClassesForCourse(classes = [], courseId) {
-  const targetCode = getCourseCodeFromCourseId(courseId);
-  const targetNum = targetCode === '03' ? 1 : (targetCode === '45' ? 3 : 2);
-  return (classes || []).filter(c => {
-    const rawCourse = String(c.courseCode || c.course_code || '').toLowerCase().replace(/^course-/, '');
-    const cId = Number(c.courseId || c.course_id || 0);
-    return rawCourse === targetCode || cId === targetNum || rawCourse.includes(targetCode);
-  });
+    const targetCode = getCourseCodeFromCourseId(courseId);
+    const targetNum = targetCode === '03' ? 1 : (targetCode === '45' ? 3 : 2);
+    return (classes || []).filter(c => {
+        const rawCourse = String(c.courseCode || c.course_code || '').toLowerCase().replace(/^course-/, '');
+        const cId = Number(c.courseId || c.course_id || 0);
+        return rawCourse === targetCode || cId === targetNum || rawCourse.includes(targetCode);
+    });
 }
