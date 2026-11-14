@@ -16,6 +16,8 @@ export interface DraftExercise {
   exerciseNumber?: number;
   exerciseType?: string;
   referenceContext?: string;
+  audioUrl?: string | null;
+  readingPassage?: string | null;
   itemIds?: (string | undefined)[];
   [key: string]: any;
 }
@@ -46,8 +48,10 @@ export interface DraftBlock {
   checkpoint?: number;
   items?: DraftItem[];
   exercises?: DraftExercise[];
-  readingPassage?: string;
-  stimulusReadingPassage?: string;
+  audioUrl?: string | null;
+  stimulusAudioUrl?: string | null;
+  readingPassage?: string | null;
+  stimulusReadingPassage?: string | null;
   [key: string]: any;
 }
 
@@ -63,6 +67,15 @@ export interface DraftState {
   blocks: DraftBlock[];
   gradingKey?: DraftGradingKey;
   [key: string]: any;
+}
+
+// Ngữ cảnh chung của các hàm bind* trong Test Studio builder.
+export interface BinderBase {
+  container: HTMLElement;
+  draftState: DraftState;
+  markAsDirty: () => void;
+  render: () => void;
+  syncInputs: () => void;
 }
 
 interface SkillAggregate { code: string, label: string, score: number, count: number, firstBlockIdx: number | null }

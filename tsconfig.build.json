@@ -55,6 +55,12 @@
     "term-tests/teacher-dashboard/shell/reports.ts",
     "term-tests/teacher-dashboard/studio/question-content.ts",
     "term-tests/teacher-dashboard/studio/draft-model.ts",
+    "term-tests/teacher-dashboard/studio/block-actions.ts",
+    "term-tests/teacher-dashboard/studio/sandbox-actions.ts",
+    "term-tests/teacher-dashboard/studio/collapse-actions.ts",
+    "term-tests/teacher-dashboard/studio/item-actions.ts",
+    "term-tests/teacher-dashboard/studio/block-navigation-actions.ts",
+    "term-tests/teacher-dashboard/studio/simulation-pronunciation-audio.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
