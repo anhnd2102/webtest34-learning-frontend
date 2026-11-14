@@ -66,6 +66,8 @@
     "term-tests/teacher-dashboard/shell/analytics/score-distribution-view.ts",
     "term-tests/teacher-dashboard/shell/portal-panel.ts",
     "term-tests/teacher-dashboard/shell/reports.ts",
+    "term-tests/teacher-dashboard/studio/question-content.ts",
+    "term-tests/teacher-dashboard/studio/draft-model.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
