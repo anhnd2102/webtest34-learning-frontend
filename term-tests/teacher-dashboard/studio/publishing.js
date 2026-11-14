@@ -1,77 +1,65 @@
-import {
-  trackBuilderModal
-} from '../navigation/unsaved-changes.js';
+import { trackBuilderModal } from '../navigation/unsaved-changes.js';
 import { filterClassesForCourse } from './catalog.js';
-import {
-  renderSvgIcon
-} from '../ui/icons.js';
-import {
-  escapeHtml
-} from '../ui/presentation.js';
-
+import { renderSvgIcon } from '../ui/icons.js';
+import { escapeHtml } from '../ui/presentation.js';
 export function createPublishing({ draftState, builderOwner, syncInputs, options, render, markSaved }) {
-function openPublishingModal() {
-      syncInputs();
-      let modal = document.querySelector('#smart-publishing-modal');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'smart-publishing-modal';
-        modal.className = 'publishing-modal-overlay';
-        document.body.appendChild(modal);
-      }
-      trackBuilderModal(modal, builderOwner);
-
-      let currentStep = 1;
-      let purpose = 'replace_existing';
-      const catalog = Array.isArray(options.catalog) ? options.catalog : [];
-      let targetTestKey = draftState.testKey || (catalog[0] ? catalog[0].testKey : '');
-
-      const courseNames = { 1: '03', 2: '34', 3: '45' };
-      const currentCid = options.courseId || 2;
-      const courseCode = courseNames[currentCid] || '34';
-      const maxSession = catalog.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
-      const nextSession = maxSession + 1;
-      const defaultNewTitle = `IZONE · Khối ${courseCode} · Test ${nextSession}`;
-
-      let newCatalogMeta = {
-        sessionNumber: nextSession,
-        phase: 1,
-        testNumber: nextSession,
-        title: draftState.title || defaultNewTitle
-      };
-
-      let scope = 'whole_course';
-      const availableClasses = filterClassesForCourse(options.classes || [], currentCid);
-      let selectedClassIds = availableClasses.map(c => String(c.classId || c.id));
-      let searchQuery = '';
-      let previewResult = null;
-      let isPublishing = false;
-
-      function renderModalContent() {
-        if (currentStep === 1) {
-          renderStep1();
-        } else {
-          renderStep2();
+    function openPublishingModal() {
+        syncInputs();
+        let modal = document.querySelector('#smart-publishing-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'smart-publishing-modal';
+            modal.className = 'publishing-modal-overlay';
+            document.body.appendChild(modal);
         }
-      }
-
-      function renderStep1() {
-        const filteredClasses = availableClasses.filter(cls => {
-          if (!searchQuery) return true;
-          const q = searchQuery.toLowerCase();
-          const name = String(cls.name || cls.className || `Lớp ${cls.classId}`).toLowerCase();
-          const code = String(cls.classId || cls.id || '').toLowerCase();
-          return name.includes(q) || code.includes(q);
-        });
-
-        const classesListHtml = filteredClasses.length > 0 ? filteredClasses.map((cls) => {
-          const cid = String(cls.classId || cls.id);
-          const isChecked = selectedClassIds.includes(cid);
-          const subCount = Number(cls.submissionCount || cls.submission_count || 0);
-          const statusBadge = subCount > 0
-            ? `<span class="badge-status-pill warning">${renderSvgIcon('lock', 'icon-inline')} Đã có bài nộp (${subCount})</span>`
-            : `<span class="badge-status-pill neutral">Chưa thi</span>`;
-          return `
+        trackBuilderModal(modal, builderOwner);
+        let currentStep = 1;
+        let purpose = 'replace_existing';
+        const catalog = Array.isArray(options.catalog) ? options.catalog : [];
+        let targetTestKey = draftState.testKey || (catalog[0] ? catalog[0].testKey : '');
+        const courseNames = { 1: '03', 2: '34', 3: '45' };
+        const currentCid = options.courseId || 2;
+        const courseCode = courseNames[currentCid] || '34';
+        const maxSession = catalog.reduce((max, it) => Math.max(max, Number(it.sessionNumber) || 0), 0);
+        const nextSession = maxSession + 1;
+        const defaultNewTitle = `IZONE · Khối ${courseCode} · Test ${nextSession}`;
+        let newCatalogMeta = {
+            sessionNumber: nextSession,
+            phase: 1,
+            testNumber: nextSession,
+            title: draftState.title || defaultNewTitle
+        };
+        let scope = 'whole_course';
+        const availableClasses = filterClassesForCourse(options.classes || [], currentCid);
+        let selectedClassIds = availableClasses.map(c => String(c.classId || c.id));
+        let searchQuery = '';
+        let previewResult = null;
+        let isPublishing = false;
+        function renderModalContent() {
+            if (currentStep === 1) {
+                renderStep1();
+            }
+            else {
+                renderStep2();
+            }
+        }
+        function renderStep1() {
+            const filteredClasses = availableClasses.filter(cls => {
+                if (!searchQuery)
+                    return true;
+                const q = searchQuery.toLowerCase();
+                const name = String(cls.name || cls.className || `Lớp ${cls.classId}`).toLowerCase();
+                const code = String(cls.classId || cls.id || '').toLowerCase();
+                return name.includes(q) || code.includes(q);
+            });
+            const classesListHtml = filteredClasses.length > 0 ? filteredClasses.map((cls) => {
+                const cid = String(cls.classId || cls.id);
+                const isChecked = selectedClassIds.includes(cid);
+                const subCount = Number(cls.submissionCount || cls.submission_count || 0);
+                const statusBadge = subCount > 0
+                    ? `<span class="badge-status-pill warning">${renderSvgIcon('lock', 'icon-inline')} Đã có bài nộp (${subCount})</span>`
+                    : `<span class="badge-status-pill neutral">Chưa thi</span>`;
+                return `
             <label class="class-picker-row ${isChecked ? 'is-selected' : ''}">
               <input type="checkbox" class="cb-publish-class" value="${cid}" ${isChecked ? 'checked' : ''} />
               <div class="class-picker-info">
@@ -81,19 +69,17 @@ function openPublishingModal() {
               <div class="class-picker-meta">${statusBadge}</div>
             </label>
           `;
-        }).join('') : `
+            }).join('') : `
           <div class="empty-classes-notice">Không tìm thấy lớp học nào phù hợp${searchQuery ? ` với từ khóa "${escapeHtml(searchQuery)}"` : ''}.</div>
         `;
-
-        const catalogOptionsHtml = catalog.length > 0 ? catalog.map(it => `
+            const catalogOptionsHtml = catalog.length > 0 ? catalog.map(it => `
           <option value="${it.testKey}" ${it.testKey === targetTestKey ? 'selected' : ''}>
             ${escapeHtml(it.title || `Test ${it.sessionNumber}`)} (Buổi ${it.sessionNumber}${it.phase ? ` · Phase ${it.phase}` : ''})
           </option>
         `).join('') : `
           <option value="">${escapeHtml(draftState.title || 'Đề thi hiện tại')}</option>
         `;
-
-        modal.innerHTML = `
+            modal.innerHTML = `
           <div class="publishing-dialog publishing-wizard-dialog">
             <header class="publishing-header">
               <div class="publishing-title-area">
@@ -245,173 +231,161 @@ function openPublishingModal() {
             </footer>
           </div>
         `;
-
-        bindStep1Events();
-      }
-
-      function bindStep1Events() {
-        const closeBtn = modal.querySelector('#btn-close-publish-modal');
-        const cancelBtn = modal.querySelector('#btn-cancel-publish');
-        [closeBtn, cancelBtn].forEach(b => {
-          b?.addEventListener('click', () => {
-            modal.hidden = true;
-          });
-        });
-
-        // Purpose radio toggle
-        const radioReplace = modal.querySelector('#radio-purpose-replace');
-        const radioAdd = modal.querySelector('#radio-purpose-add');
-        const replaceSubfields = modal.querySelector('#replace-subfields');
-        const addSubfields = modal.querySelector('#add-subfields');
-
-        radioReplace?.addEventListener('change', () => {
-          purpose = 'replace_existing';
-          if (replaceSubfields) replaceSubfields.hidden = false;
-          if (addSubfields) addSubfields.hidden = true;
-          modal.querySelectorAll('.purpose-radio-card').forEach(c => c.classList.remove('is-selected'));
-          radioReplace.closest('.purpose-radio-card')?.classList.add('is-selected');
-        });
-
-        radioAdd?.addEventListener('change', () => {
-          purpose = 'add_new';
-          if (replaceSubfields) replaceSubfields.hidden = true;
-          if (addSubfields) addSubfields.hidden = false;
-          modal.querySelectorAll('.purpose-radio-card').forEach(c => c.classList.remove('is-selected'));
-          radioAdd.closest('.purpose-radio-card')?.classList.add('is-selected');
-        });
-
-        const targetSelect = modal.querySelector('#select-target-test');
-        targetSelect?.addEventListener('change', () => {
-          targetTestKey = targetSelect.value;
-        });
-
-        modal.querySelector('#input-new-session')?.addEventListener('input', (e) => {
-          newCatalogMeta.sessionNumber = Number(e.target.value) || 1;
-        });
-        modal.querySelector('#select-new-phase')?.addEventListener('change', (e) => {
-          newCatalogMeta.phase = Number(e.target.value) || 1;
-        });
-        modal.querySelector('#input-new-testnum')?.addEventListener('input', (e) => {
-          newCatalogMeta.testNumber = Number(e.target.value) || 1;
-        });
-        modal.querySelector('#input-new-title')?.addEventListener('input', (e) => {
-          newCatalogMeta.title = e.target.value;
-        });
-
-        // Scope toggle
-        const radioWhole = modal.querySelector('#radio-scope-whole');
-        const radioClasses = modal.querySelector('#radio-scope-classes');
-        const classesContainer = modal.querySelector('#specific-classes-container');
-
-        radioWhole?.addEventListener('change', () => {
-          scope = 'whole_course';
-          if (classesContainer) classesContainer.hidden = true;
-          modal.querySelectorAll('.scope-radio-card').forEach(c => c.classList.remove('is-selected'));
-          radioWhole.closest('.scope-radio-card')?.classList.add('is-selected');
-        });
-
-        radioClasses?.addEventListener('change', () => {
-          scope = 'specific_classes';
-          if (classesContainer) classesContainer.hidden = false;
-          modal.querySelectorAll('.scope-radio-card').forEach(c => c.classList.remove('is-selected'));
-          radioClasses.closest('.scope-radio-card')?.classList.add('is-selected');
-        });
-
-        // Search classes
-        const searchInput = modal.querySelector('#input-class-search');
-        searchInput?.addEventListener('input', (e) => {
-          searchQuery = e.target.value;
-          renderStep1();
-          const newSearch = modal.querySelector('#input-class-search');
-          if (newSearch) {
-            newSearch.focus();
-            newSearch.selectionStart = newSearch.selectionEnd = newSearch.value.length;
-          }
-        });
-
-        // Class selection
-        modal.querySelector('#btn-select-all-classes')?.addEventListener('click', () => {
-          selectedClassIds = availableClasses.map(c => String(c.classId || c.id));
-          renderStep1();
-        });
-        modal.querySelector('#btn-deselect-all-classes')?.addEventListener('click', () => {
-          selectedClassIds = [];
-          renderStep1();
-        });
-
-        modal.querySelectorAll('.cb-publish-class').forEach(cb => {
-          cb.addEventListener('change', () => {
-            const cid = cb.value;
-            if (cb.checked) {
-              if (!selectedClassIds.includes(cid)) selectedClassIds.push(cid);
-              cb.closest('.class-picker-row')?.classList.add('is-selected');
-            } else {
-              selectedClassIds = selectedClassIds.filter(id => id !== cid);
-              cb.closest('.class-picker-row')?.classList.remove('is-selected');
-            }
-            const counter = modal.querySelector('.classes-selection-counter');
-            if (counter) counter.innerHTML = `Đã chọn <strong>${selectedClassIds.length}</strong> / ${availableClasses.length} lớp học.`;
-          });
-        });
-
-        // Next to Step 2
-        const nextBtn = modal.querySelector('#btn-step1-next');
-        const errorMsgEl = modal.querySelector('#publishing-error-msg');
-
-        nextBtn?.addEventListener('click', async () => {
-          if (scope === 'specific_classes' && selectedClassIds.length === 0) {
-            if (errorMsgEl) {
-              errorMsgEl.textContent = 'Vui lòng chọn ít nhất 1 lớp học để công bố đề thi.';
-              errorMsgEl.hidden = false;
-            }
-            return;
-          }
-
-          if (errorMsgEl) errorMsgEl.hidden = true;
-          nextBtn.disabled = true;
-          nextBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang phân tích tác động...</span>`;
-
-          try {
-            const previewPayload = {
-              formVersionId: draftState.formVersionId,
-              courseId: currentCid,
-              purpose,
-              targetTestKey: purpose === 'replace_existing' ? targetTestKey : null,
-              newCatalogMeta: purpose === 'add_new' ? newCatalogMeta : null,
-              scope,
-              classIds: scope === 'specific_classes' ? selectedClassIds : []
-            };
-
-            if (typeof options.onPublishPreview === 'function') {
-              previewResult = await options.onPublishPreview(previewPayload);
-            }
-
-            currentStep = 2;
-            renderModalContent();
-          } catch (err) {
-            nextBtn.disabled = false;
-            nextBtn.innerHTML = `<span>Tiếp tục</span> ${renderSvgIcon('arrowRight', 'icon-inline')}`;
-            if (errorMsgEl) {
-              errorMsgEl.textContent = 'Lỗi phân tích: ' + (err.message || 'Lỗi kết nối');
-              errorMsgEl.hidden = false;
-            }
-          }
-        });
-      }
-
-      function renderStep2() {
-        const targetCatalogItem = catalog.find(c => c.testKey === targetTestKey);
-        const targetTitle = purpose === 'replace_existing'
-          ? (previewResult?.targetTestTitle || targetCatalogItem?.title || draftState.title || 'Đề thi')
-          : (newCatalogMeta.title || draftState.title || 'Đề thi mới');
-
-        const totalChecked = previewResult?.totalChecked ?? (scope === 'whole_course' ? availableClasses.length : selectedClassIds.length);
-        const updatedCount = previewResult?.updatedCount ?? (purpose === 'add_new' ? totalChecked : selectedClassIds.length);
-        const skippedCount = previewResult?.skippedCount ?? 0;
-
-        const targetTitleToMatch = targetTitle.trim();
-
-        modal.innerHTML = `
+            bindStep1Events();
+        }
+        function bindStep1Events() {
+            const closeBtn = modal.querySelector('#btn-close-publish-modal');
+            const cancelBtn = modal.querySelector('#btn-cancel-publish');
+            [closeBtn, cancelBtn].forEach(b => {
+                b?.addEventListener('click', () => {
+                    modal.hidden = true;
+                });
+            });
+            // Purpose radio toggle
+            const radioReplace = modal.querySelector('#radio-purpose-replace');
+            const radioAdd = modal.querySelector('#radio-purpose-add');
+            const replaceSubfields = modal.querySelector('#replace-subfields');
+            const addSubfields = modal.querySelector('#add-subfields');
+            radioReplace?.addEventListener('change', () => {
+                purpose = 'replace_existing';
+                if (replaceSubfields)
+                    replaceSubfields.hidden = false;
+                if (addSubfields)
+                    addSubfields.hidden = true;
+                modal.querySelectorAll('.purpose-radio-card').forEach(c => c.classList.remove('is-selected'));
+                radioReplace.closest('.purpose-radio-card')?.classList.add('is-selected');
+            });
+            radioAdd?.addEventListener('change', () => {
+                purpose = 'add_new';
+                if (replaceSubfields)
+                    replaceSubfields.hidden = true;
+                if (addSubfields)
+                    addSubfields.hidden = false;
+                modal.querySelectorAll('.purpose-radio-card').forEach(c => c.classList.remove('is-selected'));
+                radioAdd.closest('.purpose-radio-card')?.classList.add('is-selected');
+            });
+            const targetSelect = modal.querySelector('#select-target-test');
+            targetSelect?.addEventListener('change', () => {
+                targetTestKey = targetSelect.value;
+            });
+            modal.querySelector('#input-new-session')?.addEventListener('input', (e) => {
+                newCatalogMeta.sessionNumber = Number(e.target.value) || 1;
+            });
+            modal.querySelector('#select-new-phase')?.addEventListener('change', (e) => {
+                newCatalogMeta.phase = Number(e.target.value) || 1;
+            });
+            modal.querySelector('#input-new-testnum')?.addEventListener('input', (e) => {
+                newCatalogMeta.testNumber = Number(e.target.value) || 1;
+            });
+            modal.querySelector('#input-new-title')?.addEventListener('input', (e) => {
+                newCatalogMeta.title = e.target.value;
+            });
+            // Scope toggle
+            const radioWhole = modal.querySelector('#radio-scope-whole');
+            const radioClasses = modal.querySelector('#radio-scope-classes');
+            const classesContainer = modal.querySelector('#specific-classes-container');
+            radioWhole?.addEventListener('change', () => {
+                scope = 'whole_course';
+                if (classesContainer)
+                    classesContainer.hidden = true;
+                modal.querySelectorAll('.scope-radio-card').forEach(c => c.classList.remove('is-selected'));
+                radioWhole.closest('.scope-radio-card')?.classList.add('is-selected');
+            });
+            radioClasses?.addEventListener('change', () => {
+                scope = 'specific_classes';
+                if (classesContainer)
+                    classesContainer.hidden = false;
+                modal.querySelectorAll('.scope-radio-card').forEach(c => c.classList.remove('is-selected'));
+                radioClasses.closest('.scope-radio-card')?.classList.add('is-selected');
+            });
+            // Search classes
+            const searchInput = modal.querySelector('#input-class-search');
+            searchInput?.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderStep1();
+                const newSearch = modal.querySelector('#input-class-search');
+                if (newSearch) {
+                    newSearch.focus();
+                    newSearch.selectionStart = newSearch.selectionEnd = newSearch.value.length;
+                }
+            });
+            // Class selection
+            modal.querySelector('#btn-select-all-classes')?.addEventListener('click', () => {
+                selectedClassIds = availableClasses.map(c => String(c.classId || c.id));
+                renderStep1();
+            });
+            modal.querySelector('#btn-deselect-all-classes')?.addEventListener('click', () => {
+                selectedClassIds = [];
+                renderStep1();
+            });
+            modal.querySelectorAll('.cb-publish-class').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    const cid = cb.value;
+                    if (cb.checked) {
+                        if (!selectedClassIds.includes(cid))
+                            selectedClassIds.push(cid);
+                        cb.closest('.class-picker-row')?.classList.add('is-selected');
+                    }
+                    else {
+                        selectedClassIds = selectedClassIds.filter(id => id !== cid);
+                        cb.closest('.class-picker-row')?.classList.remove('is-selected');
+                    }
+                    const counter = modal.querySelector('.classes-selection-counter');
+                    if (counter)
+                        counter.innerHTML = `Đã chọn <strong>${selectedClassIds.length}</strong> / ${availableClasses.length} lớp học.`;
+                });
+            });
+            // Next to Step 2
+            const nextBtn = modal.querySelector('#btn-step1-next');
+            const errorMsgEl = modal.querySelector('#publishing-error-msg');
+            nextBtn?.addEventListener('click', async () => {
+                if (scope === 'specific_classes' && selectedClassIds.length === 0) {
+                    if (errorMsgEl) {
+                        errorMsgEl.textContent = 'Vui lòng chọn ít nhất 1 lớp học để công bố đề thi.';
+                        errorMsgEl.hidden = false;
+                    }
+                    return;
+                }
+                if (errorMsgEl)
+                    errorMsgEl.hidden = true;
+                nextBtn.disabled = true;
+                nextBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang phân tích tác động...</span>`;
+                try {
+                    const previewPayload = {
+                        formVersionId: draftState.formVersionId,
+                        courseId: currentCid,
+                        purpose,
+                        targetTestKey: purpose === 'replace_existing' ? targetTestKey : null,
+                        newCatalogMeta: purpose === 'add_new' ? newCatalogMeta : null,
+                        scope,
+                        classIds: scope === 'specific_classes' ? selectedClassIds : []
+                    };
+                    if (typeof options.onPublishPreview === 'function') {
+                        previewResult = await options.onPublishPreview(previewPayload);
+                    }
+                    currentStep = 2;
+                    renderModalContent();
+                }
+                catch (err) {
+                    nextBtn.disabled = false;
+                    nextBtn.innerHTML = `<span>Tiếp tục</span> ${renderSvgIcon('arrowRight', 'icon-inline')}`;
+                    if (errorMsgEl) {
+                        errorMsgEl.textContent = 'Lỗi phân tích: ' + (err.message || 'Lỗi kết nối');
+                        errorMsgEl.hidden = false;
+                    }
+                }
+            });
+        }
+        function renderStep2() {
+            const targetCatalogItem = catalog.find(c => c.testKey === targetTestKey);
+            const targetTitle = purpose === 'replace_existing'
+                ? (previewResult?.targetTestTitle || targetCatalogItem?.title || draftState.title || 'Đề thi')
+                : (newCatalogMeta.title || draftState.title || 'Đề thi mới');
+            const totalChecked = previewResult?.totalChecked ?? (scope === 'whole_course' ? availableClasses.length : selectedClassIds.length);
+            const updatedCount = previewResult?.updatedCount ?? (purpose === 'add_new' ? totalChecked : selectedClassIds.length);
+            const skippedCount = previewResult?.skippedCount ?? 0;
+            const targetTitleToMatch = targetTitle.trim();
+            modal.innerHTML = `
           <div class="publishing-dialog publishing-wizard-dialog">
             <header class="publishing-header">
               <div class="publishing-title-area">
@@ -446,16 +420,16 @@ function openPublishingModal() {
                     <span class="impact-label">Mục tiêu công bố:</span>
                     <span class="impact-value">
                       ${purpose === 'replace_existing'
-                        ? `Thay thế bài test: <strong>${escapeHtml(targetTitle)}</strong>`
-                        : `Bổ sung bài test mới: <strong>${escapeHtml(targetTitle)}</strong> (Buổi ${newCatalogMeta.sessionNumber})`}
+                ? `Thay thế bài test: <strong>${escapeHtml(targetTitle)}</strong>`
+                : `Bổ sung bài test mới: <strong>${escapeHtml(targetTitle)}</strong> (Buổi ${newCatalogMeta.sessionNumber})`}
                     </span>
                   </div>
                   <div class="impact-row">
                     <span class="impact-label">Phạm vi áp dụng:</span>
                     <span class="impact-value">
                       ${scope === 'whole_course'
-                        ? `Toàn bộ khối (Tổng số: <strong>${totalChecked}</strong> lớp)`
-                        : `Chỉ áp dụng cho <strong>${selectedClassIds.length}</strong> lớp được chọn`}
+                ? `Toàn bộ khối (Tổng số: <strong>${totalChecked}</strong> lớp)`
+                : `Chỉ áp dụng cho <strong>${selectedClassIds.length}</strong> lớp được chọn`}
                     </span>
                   </div>
                   <div class="impact-row">
@@ -476,8 +450,8 @@ function openPublishingModal() {
                     <span class="impact-label">Danh mục lộ trình khối:</span>
                     <span class="impact-value text-info">
                       ${scope === 'whole_course'
-                        ? `Cập nhật lộ trình chuẩn của Khối ${courseCode}`
-                        : `Chỉ gán bài riêng cho các lớp được chỉ định`}
+                ? `Cập nhật lộ trình chuẩn của Khối ${courseCode}`
+                : `Chỉ gán bài riêng cho các lớp được chỉ định`}
                     </span>
                   </div>
                 </div>
@@ -517,125 +491,115 @@ function openPublishingModal() {
             </footer>
           </div>
         `;
-
-        bindStep2Events(targetTitleToMatch);
-      }
-
-      function bindStep2Events(targetTitleToMatch) {
-        const closeBtn = modal.querySelector('#btn-close-publish-modal');
-        closeBtn?.addEventListener('click', () => {
-          modal.hidden = true;
-        });
-
-        const backBtn = modal.querySelector('#btn-step2-back');
-        backBtn?.addEventListener('click', () => {
-          currentStep = 1;
-          renderModalContent();
-        });
-
-        const inputEl = modal.querySelector('#input-confirm-title');
-        const autoFillBtn = modal.querySelector('#btn-auto-fill-confirm');
-        const statusEl = modal.querySelector('#confirm-match-status');
-        const finalBtn = modal.querySelector('#btn-final-publish');
-        const errorMsgEl = modal.querySelector('#publishing-error-msg');
-
-        function checkMatch() {
-          const val = (inputEl?.value || '').trim().toLowerCase();
-          const target = targetTitleToMatch.toLowerCase();
-          const isMatched = val === target && val.length > 0;
-          if (isMatched) {
-            if (statusEl) statusEl.innerHTML = `<span class="status-matched">${renderSvgIcon('check', 'icon-inline')} Tên bài test đã khớp chính xác. Bạn có thể tiến hành công bố.</span>`;
-            if (finalBtn) {
-              finalBtn.disabled = false;
-              finalBtn.classList.add('is-ready');
-            }
-          } else {
-            if (statusEl) statusEl.innerHTML = `<span class="status-unmatched">${renderSvgIcon('alert', 'icon-inline')} Chưa khớp tên bài test (nút công bố đang khóa)</span>`;
-            if (finalBtn) {
-              finalBtn.disabled = true;
-              finalBtn.classList.remove('is-ready');
-            }
-          }
+            bindStep2Events(targetTitleToMatch);
         }
-
-        inputEl?.addEventListener('input', checkMatch);
-        autoFillBtn?.addEventListener('click', () => {
-          if (inputEl) {
-            inputEl.value = targetTitleToMatch;
+        function bindStep2Events(targetTitleToMatch) {
+            const closeBtn = modal.querySelector('#btn-close-publish-modal');
+            closeBtn?.addEventListener('click', () => {
+                modal.hidden = true;
+            });
+            const backBtn = modal.querySelector('#btn-step2-back');
+            backBtn?.addEventListener('click', () => {
+                currentStep = 1;
+                renderModalContent();
+            });
+            const inputEl = modal.querySelector('#input-confirm-title');
+            const autoFillBtn = modal.querySelector('#btn-auto-fill-confirm');
+            const statusEl = modal.querySelector('#confirm-match-status');
+            const finalBtn = modal.querySelector('#btn-final-publish');
+            const errorMsgEl = modal.querySelector('#publishing-error-msg');
+            function checkMatch() {
+                const val = (inputEl?.value || '').trim().toLowerCase();
+                const target = targetTitleToMatch.toLowerCase();
+                const isMatched = val === target && val.length > 0;
+                if (isMatched) {
+                    if (statusEl)
+                        statusEl.innerHTML = `<span class="status-matched">${renderSvgIcon('check', 'icon-inline')} Tên bài test đã khớp chính xác. Bạn có thể tiến hành công bố.</span>`;
+                    if (finalBtn) {
+                        finalBtn.disabled = false;
+                        finalBtn.classList.add('is-ready');
+                    }
+                }
+                else {
+                    if (statusEl)
+                        statusEl.innerHTML = `<span class="status-unmatched">${renderSvgIcon('alert', 'icon-inline')} Chưa khớp tên bài test (nút công bố đang khóa)</span>`;
+                    if (finalBtn) {
+                        finalBtn.disabled = true;
+                        finalBtn.classList.remove('is-ready');
+                    }
+                }
+            }
+            inputEl?.addEventListener('input', checkMatch);
+            autoFillBtn?.addEventListener('click', () => {
+                if (inputEl) {
+                    inputEl.value = targetTitleToMatch;
+                    checkMatch();
+                }
+            });
+            // Initialize state on render
             checkMatch();
-          }
-        });
-
-        // Initialize state on render
-        checkMatch();
-
-        finalBtn?.addEventListener('click', async () => {
-          if (finalBtn.disabled || isPublishing) return;
-          isPublishing = true;
-          finalBtn.disabled = true;
-          finalBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang công bố...</span>`;
-          if (errorMsgEl) errorMsgEl.hidden = true;
-
-          try {
-            const publishPayload = {
-              formVersionId: draftState.formVersionId,
-              courseId: currentCid,
-              purpose,
-              targetTestKey: purpose === 'replace_existing' ? targetTestKey : null,
-              newCatalogMeta: purpose === 'add_new' ? newCatalogMeta : null,
-              scope,
-              classIds: scope === 'specific_classes' ? selectedClassIds : []
-            };
-
-            if (typeof options.onPublish !== 'function') {
-              throw new Error('Công bố đề thi chưa được cấu hình.');
-            }
-            // Gọi qua client dùng chung của dashboard (gắn token phiên, xử lý 401), không fetch trực tiếp.
-            const result = await options.onPublish(publishPayload);
-
-            if (!result || !result.ok) {
-              throw new Error(result?.message || 'Không thể công bố đề thi');
-            }
-
-            draftState.status = 'published';
-            markSaved();
-            modal.hidden = true;
-            render();
-            openPublishReportDialog(result);
-          } catch (err) {
-            isPublishing = false;
-            finalBtn.disabled = false;
-            finalBtn.innerHTML = `${renderSvgIcon('publish', 'icon-inline')} <span>Xác nhận &amp; Công bố ngay</span>`;
-            if (errorMsgEl) {
-              errorMsgEl.textContent = 'Lỗi công bố: ' + (err.message || 'Lỗi mạng');
-              errorMsgEl.hidden = false;
-            }
-          }
-        });
-      }
-
-      modal.hidden = false;
-      renderModalContent();
+            finalBtn?.addEventListener('click', async () => {
+                if (finalBtn.disabled || isPublishing)
+                    return;
+                isPublishing = true;
+                finalBtn.disabled = true;
+                finalBtn.innerHTML = `${renderSvgIcon('rotate', 'icon-inline spin')} <span>Đang công bố...</span>`;
+                if (errorMsgEl)
+                    errorMsgEl.hidden = true;
+                try {
+                    const publishPayload = {
+                        formVersionId: draftState.formVersionId,
+                        courseId: currentCid,
+                        purpose,
+                        targetTestKey: purpose === 'replace_existing' ? targetTestKey : null,
+                        newCatalogMeta: purpose === 'add_new' ? newCatalogMeta : null,
+                        scope,
+                        classIds: scope === 'specific_classes' ? selectedClassIds : []
+                    };
+                    if (typeof options.onPublish !== 'function') {
+                        throw new Error('Công bố đề thi chưa được cấu hình.');
+                    }
+                    // Gọi qua client dùng chung của dashboard (gắn token phiên, xử lý 401), không fetch trực tiếp.
+                    const result = await options.onPublish(publishPayload);
+                    if (!result || !result.ok) {
+                        throw new Error(result?.message || 'Không thể công bố đề thi');
+                    }
+                    draftState.status = 'published';
+                    markSaved();
+                    modal.hidden = true;
+                    render();
+                    openPublishReportDialog(result);
+                }
+                catch (err) {
+                    isPublishing = false;
+                    finalBtn.disabled = false;
+                    finalBtn.innerHTML = `${renderSvgIcon('publish', 'icon-inline')} <span>Xác nhận &amp; Công bố ngay</span>`;
+                    if (errorMsgEl) {
+                        errorMsgEl.textContent = 'Lỗi công bố: ' + (err.message || 'Lỗi mạng');
+                        errorMsgEl.hidden = false;
+                    }
+                }
+            });
+        }
+        modal.hidden = false;
+        renderModalContent();
     }
-
-function openPublishReportDialog(result = {}) {
-      let modal = document.querySelector('#publish-report-dialog');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'publish-report-dialog';
-        modal.className = 'publish-report-overlay';
-        document.body.appendChild(modal);
-      }
-      trackBuilderModal(modal, builderOwner);
-
-      const updated = result.updatedClasses || [];
-      const skipped = result.skippedClasses || [];
-
-      const updatedListHtml = updated.length > 0 ? `
+    function openPublishReportDialog(result = {}) {
+        let modal = document.querySelector('#publish-report-dialog');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'publish-report-dialog';
+            modal.className = 'publish-report-overlay';
+            document.body.appendChild(modal);
+        }
+        trackBuilderModal(modal, builderOwner);
+        const updated = result.updatedClasses || [];
+        const skipped = result.skippedClasses || [];
+        const updatedListHtml = updated.length > 0 ? `
         <div class="report-section-block success-block">
           <h4 class="report-block-title">${renderSvgIcon('check', 'icon-inline')} Các lớp đã cập nhật đề thi mới (${updated.length} lớp):</h4>
           <ul class="report-classes-list">
-            ${updated.map(c => `
+            ${updated.map((c) => `
               <li class="report-class-item updated-item">
                 <span class="class-name"><strong>${escapeHtml(c.className || `Lớp ${c.classId}`)}</strong></span>
                 <span class="badge-status-pill success">Đã cập nhật</span>
@@ -648,13 +612,12 @@ function openPublishReportDialog(result = {}) {
           <p class="empty-note">Không có lớp nào cần cập nhật đề thi.</p>
         </div>
       `;
-
-      const skippedListHtml = skipped.length > 0 ? `
+        const skippedListHtml = skipped.length > 0 ? `
         <div class="report-section-block warning-block">
           <h4 class="report-block-title">${renderSvgIcon('lock', 'icon-inline')} Các lớp được bảo vệ & đóng băng (${skipped.length} lớp):</h4>
           <p class="skipped-help">Các lớp dưới đây đã có học sinh làm bài thi nên được bảo toàn nguyên vẹn đề gốc.</p>
           <ul class="report-classes-list">
-            ${skipped.map(c => `
+            ${skipped.map((c) => `
               <li class="report-class-item frozen-item">
                 <span class="class-name"><strong>${escapeHtml(c.className || `Lớp ${c.classId}`)}</strong></span>
                 <span class="badge-status-pill warning">Đóng băng (${c.submissionCount} bài nộp)</span>
@@ -663,8 +626,7 @@ function openPublishReportDialog(result = {}) {
           </ul>
         </div>
       ` : '';
-
-      modal.innerHTML = `
+        modal.innerHTML = `
         <div class="publish-report-dialog">
           <header class="report-header">
             <div class="report-title-area">
@@ -701,15 +663,13 @@ function openPublishReportDialog(result = {}) {
           </footer>
         </div>
       `;
-
-      modal.hidden = false;
-
-      const closeBtns = modal.querySelectorAll('#btn-close-report-x, #btn-close-report');
-      closeBtns.forEach(b => {
-        b.addEventListener('click', () => {
-          modal.hidden = true;
+        modal.hidden = false;
+        const closeBtns = modal.querySelectorAll('#btn-close-report-x, #btn-close-report');
+        closeBtns.forEach(b => {
+            b.addEventListener('click', () => {
+                modal.hidden = true;
+            });
         });
-      });
     }
-  return openPublishingModal;
+    return openPublishingModal;
 }
