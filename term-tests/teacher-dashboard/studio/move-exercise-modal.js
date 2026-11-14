@@ -1,64 +1,43 @@
-import {
-  getActiveUnsavedChangesOwner,
-  trackBuilderModal,
-  releaseBuilderModal
-} from '../navigation/unsaved-changes.js';
-import {
-  renderSvgIcon
-} from '../ui/icons.js';
-import {
-  escapeHtml
-} from '../ui/presentation.js';
-import {
-  getItemSpanCount
-} from './draft-model.js';
-
+// NGUỒN: file .ts này; move-exercise-modal.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
+// không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
+import { getActiveUnsavedChangesOwner, trackBuilderModal, releaseBuilderModal } from '../navigation/unsaved-changes.js';
+import { renderSvgIcon } from '../ui/icons.js';
+import { escapeHtml } from '../ui/presentation.js';
+import { getItemSpanCount } from './draft-model.js';
 export function openMoveExerciseModal(opts = {}) {
-  const {
-    draftState,
-    sourceBlockIdx,
-    exerciseId,
-    owner = getActiveUnsavedChangesOwner(),
-    onConfirm = () => {}
-  } = opts;
-
-  if (typeof document === 'undefined' || !draftState || !Array.isArray(draftState.blocks)) {
-    return null;
-  }
-
-  const sourceBlock = draftState.blocks[sourceBlockIdx];
-  if (!sourceBlock) return null;
-
-  const exercise = (sourceBlock.exercises || []).find(e => e.exerciseId === exerciseId);
-  if (!exercise) return null;
-
-  const exerciseItems = (sourceBlock.items || []).filter(it => it.exerciseId === exerciseId);
-  const exerciseQuestionCount = exerciseItems.reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
-
-  // Remove existing modal if open
-  const existingModal = document.getElementById('modal-move-exercise');
-  if (existingModal) {
-    releaseBuilderModal(existingModal);
-    existingModal.remove();
-  }
-
-  const modal = document.createElement('div');
-  modal.id = 'modal-move-exercise';
-  modal.className = 'candidate-sim-overlay move-exercise-modal-overlay';
-
-  // Build target block options
-  const targetBlockOptionsHtml = draftState.blocks.map((block, idx) => {
-    const isCurrent = idx === sourceBlockIdx;
-    const title = (block.title || `Phần ${idx + 1}`).trim();
-    const exCount = (block.exercises || []).length;
-    return `
+    const { draftState, sourceBlockIdx, exerciseId, owner = getActiveUnsavedChangesOwner(), onConfirm = () => { } } = opts;
+    if (typeof document === 'undefined' || !draftState || !Array.isArray(draftState.blocks)) {
+        return null;
+    }
+    const sourceBlock = draftState.blocks[sourceBlockIdx];
+    if (!sourceBlock)
+        return null;
+    const exercise = (sourceBlock.exercises || []).find((e) => e.exerciseId === exerciseId);
+    if (!exercise)
+        return null;
+    const exerciseItems = (sourceBlock.items || []).filter((it) => it.exerciseId === exerciseId);
+    const exerciseQuestionCount = exerciseItems.reduce((sum, itm) => sum + getItemSpanCount(itm), 0);
+    // Remove existing modal if open
+    const existingModal = document.getElementById('modal-move-exercise');
+    if (existingModal) {
+        releaseBuilderModal(existingModal);
+        existingModal.remove();
+    }
+    const modal = document.createElement('div');
+    modal.id = 'modal-move-exercise';
+    modal.className = 'candidate-sim-overlay move-exercise-modal-overlay';
+    // Build target block options
+    const targetBlockOptionsHtml = draftState.blocks.map((block, idx) => {
+        const isCurrent = idx === sourceBlockIdx;
+        const title = (block.title || `Phần ${idx + 1}`).trim();
+        const exCount = (block.exercises || []).length;
+        return `
       <option value="${idx}" ${isCurrent ? 'selected' : ''}>
         Phần ${idx + 1}: ${escapeHtml(title)} (${exCount} bài tập)${isCurrent ? ' [Phần hiện tại]' : ''}
       </option>
     `;
-  }).join('');
-
-  modal.innerHTML = `
+    }).join('');
+    modal.innerHTML = `
     <div class="candidate-sim-modal move-exercise-modal move-layout-dialog" role="dialog" aria-modal="true">
       <div class="candidate-sim-header move-layout-header">
         <div>
@@ -120,99 +99,90 @@ export function openMoveExerciseModal(opts = {}) {
       </div>
     </div>
   `;
-
-  trackBuilderModal(modal, owner);
-  document.body.appendChild(modal);
-
-  const closeBtn = modal.querySelector('.btn-close-move-modal');
-  const cancelBtn = modal.querySelector('.btn-cancel-move-modal');
-  const targetBlockSelect = modal.querySelector('.select-target-block');
-  const targetPosSelect = modal.querySelector('.select-target-position');
-  const targetExRow = modal.querySelector('.target-exercise-row');
-  const targetExSelect = modal.querySelector('.select-target-exercise');
-  const confirmBtn = modal.querySelector('.btn-confirm-move-modal');
-
-  const closeModal = () => {
-    releaseBuilderModal(modal);
-    modal.remove();
-  };
-
-  closeBtn?.addEventListener('click', closeModal);
-  cancelBtn?.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  function updateTargetExercisesDropdown() {
-    const targetIdx = Number(targetBlockSelect.value);
-    const targetBlock = draftState.blocks[targetIdx];
-    const exercises = (targetBlock?.exercises || []).filter(e => e.exerciseId !== exerciseId);
-
-    if (exercises.length === 0) {
-      targetExRow.hidden = true;
-      if (targetPosSelect.value === 'before_ex' || targetPosSelect.value === 'after_ex') {
-        targetPosSelect.value = 'end';
-      }
-      return;
-    }
-
-    let optsHtml = '';
-    exercises.forEach((ex, idx) => {
-      optsHtml += `<option value="${idx}">Bài tập ${ex.exerciseNumber || (idx + 1)}: ${escapeHtml(ex.title || '')}</option>`;
+    trackBuilderModal(modal, owner);
+    document.body.appendChild(modal);
+    const closeBtn = modal.querySelector('.btn-close-move-modal');
+    const cancelBtn = modal.querySelector('.btn-cancel-move-modal');
+    const targetBlockSelect = modal.querySelector('.select-target-block');
+    const targetPosSelect = modal.querySelector('.select-target-position');
+    const targetExRow = modal.querySelector('.target-exercise-row');
+    const targetExSelect = modal.querySelector('.select-target-exercise');
+    const confirmBtn = modal.querySelector('.btn-confirm-move-modal');
+    const closeModal = () => {
+        releaseBuilderModal(modal);
+        modal.remove();
+    };
+    closeBtn?.addEventListener('click', closeModal);
+    cancelBtn?.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal)
+            closeModal();
     });
-    targetExSelect.innerHTML = optsHtml;
-
-    const pos = targetPosSelect.value;
-    if (pos === 'before_ex' || pos === 'after_ex') {
-      targetExRow.hidden = false;
-    } else {
-      targetExRow.hidden = true;
+    function updateTargetExercisesDropdown() {
+        const targetIdx = Number(targetBlockSelect.value);
+        const targetBlock = draftState.blocks[targetIdx];
+        const exercises = (targetBlock?.exercises || []).filter((e) => e.exerciseId !== exerciseId);
+        if (exercises.length === 0) {
+            targetExRow.hidden = true;
+            if (targetPosSelect.value === 'before_ex' || targetPosSelect.value === 'after_ex') {
+                targetPosSelect.value = 'end';
+            }
+            return;
+        }
+        let optsHtml = '';
+        exercises.forEach((ex, idx) => {
+            optsHtml += `<option value="${idx}">Bài tập ${ex.exerciseNumber || (idx + 1)}: ${escapeHtml(ex.title || '')}</option>`;
+        });
+        targetExSelect.innerHTML = optsHtml;
+        const pos = targetPosSelect.value;
+        if (pos === 'before_ex' || pos === 'after_ex') {
+            targetExRow.hidden = false;
+        }
+        else {
+            targetExRow.hidden = true;
+        }
     }
-  }
-
-  targetBlockSelect?.addEventListener('change', updateTargetExercisesDropdown);
-  targetPosSelect?.addEventListener('change', () => {
-    const pos = targetPosSelect.value;
-    if (pos === 'before_ex' || pos === 'after_ex') {
-      targetExRow.hidden = false;
-      updateTargetExercisesDropdown();
-    } else {
-      targetExRow.hidden = true;
-    }
-  });
-
-  updateTargetExercisesDropdown();
-
-  confirmBtn?.addEventListener('click', () => {
-    const targetBlockIdx = Number(targetBlockSelect.value);
-    const pos = targetPosSelect.value;
-    const targetBlock = draftState.blocks[targetBlockIdx];
-    const availableExercises = (targetBlock?.exercises || []).filter(e => e.exerciseId !== exerciseId);
-
-    let insertIndex = -1; // default end
-    if (pos === 'start') {
-      insertIndex = 0;
-    } else if (pos === 'end') {
-      insertIndex = targetBlock?.exercises?.length || 0;
-    } else if (pos === 'before_ex') {
-      const selectedExIdx = Number(targetExSelect.value);
-      insertIndex = Math.max(0, selectedExIdx);
-    } else if (pos === 'after_ex') {
-      const selectedExIdx = Number(targetExSelect.value);
-      insertIndex = selectedExIdx + 1;
-    }
-
-    closeModal();
-    if (typeof onConfirm === 'function') {
-      onConfirm({
-        sourceBlockIdx,
-        exerciseId,
-        targetBlockIdx,
-        insertIndex
-      });
-    }
-  });
-
-  return modal;
+    targetBlockSelect?.addEventListener('change', updateTargetExercisesDropdown);
+    targetPosSelect?.addEventListener('change', () => {
+        const pos = targetPosSelect.value;
+        if (pos === 'before_ex' || pos === 'after_ex') {
+            targetExRow.hidden = false;
+            updateTargetExercisesDropdown();
+        }
+        else {
+            targetExRow.hidden = true;
+        }
+    });
+    updateTargetExercisesDropdown();
+    confirmBtn?.addEventListener('click', () => {
+        const targetBlockIdx = Number(targetBlockSelect.value);
+        const pos = targetPosSelect.value;
+        const targetBlock = draftState.blocks[targetBlockIdx];
+        const availableExercises = (targetBlock?.exercises || []).filter((e) => e.exerciseId !== exerciseId);
+        let insertIndex = -1; // default end
+        if (pos === 'start') {
+            insertIndex = 0;
+        }
+        else if (pos === 'end') {
+            insertIndex = targetBlock?.exercises?.length || 0;
+        }
+        else if (pos === 'before_ex') {
+            const selectedExIdx = Number(targetExSelect.value);
+            insertIndex = Math.max(0, selectedExIdx);
+        }
+        else if (pos === 'after_ex') {
+            const selectedExIdx = Number(targetExSelect.value);
+            insertIndex = selectedExIdx + 1;
+        }
+        closeModal();
+        if (typeof onConfirm === 'function') {
+            onConfirm({
+                sourceBlockIdx,
+                exerciseId,
+                targetBlockIdx,
+                insertIndex
+            });
+        }
+    });
+    return modal;
 }
-

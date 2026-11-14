@@ -208,4 +208,4 @@ export function openUnsavedChangesModal({
   btnStay?.focus();
 }
 
-export const mountedBuilders = new WeakMap<object, unknown>();
+export const mountedBuilders = new WeakMap<object, any>();
