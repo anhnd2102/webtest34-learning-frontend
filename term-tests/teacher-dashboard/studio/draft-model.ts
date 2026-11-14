@@ -37,7 +37,7 @@ export interface DraftItem {
   rubricCode?: string;
   primarySkill?: string;
   skillCodes?: string[];
-  events?: unknown[];
+  events?: any[];
   clozeAnswers?: Record<string, any>;
   [key: string]: any;
 }
@@ -61,11 +61,11 @@ export interface GradingKeyItem {
   [key: string]: any;
 }
 
-export interface DraftGradingKey { items?: Record<string, GradingKeyItem> }
+export interface DraftGradingKey { items: Record<string, GradingKeyItem>, [key: string]: any }
 
 export interface DraftState {
   blocks: DraftBlock[];
-  gradingKey?: DraftGradingKey;
+  gradingKey: DraftGradingKey;
   [key: string]: any;
 }
 
@@ -76,6 +76,23 @@ export interface BinderBase {
   markAsDirty: () => void;
   render: () => void;
   syncInputs: () => void;
+}
+
+// Các thao tác builder cấp cho từng module authoring (xem builder.js, `authoringHost`).
+export interface AuthoringActions {
+  syncInputs: () => void;
+  getNextPosition: () => number;
+  resolveTargetExercise: (block: DraftBlock, button: HTMLElement) => DraftExercise;
+  resequenceItemPositions: () => void;
+  markAsDirty: () => void;
+  render: () => void;
+}
+
+export interface AuthoringHost {
+  container: HTMLElement;
+  draftState: DraftState;
+  builderOwner: unknown;
+  actions: AuthoringActions;
 }
 
 interface SkillAggregate { code: string, label: string, score: number, count: number, firstBlockIdx: number | null }
