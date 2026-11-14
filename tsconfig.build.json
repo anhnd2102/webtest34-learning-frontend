@@ -53,6 +53,18 @@
     "term-tests/teacher-dashboard/shell/analytics/score-distribution-view.ts",
     "term-tests/teacher-dashboard/shell/portal-panel.ts",
     "term-tests/teacher-dashboard/shell/reports.ts",
+    "term-tests/teacher-dashboard/studio/question-content.ts",
+    "term-tests/teacher-dashboard/studio/draft-model.ts",
+    "term-tests/teacher-dashboard/studio/block-actions.ts",
+    "term-tests/teacher-dashboard/studio/sandbox-actions.ts",
+    "term-tests/teacher-dashboard/studio/collapse-actions.ts",
+    "term-tests/teacher-dashboard/studio/item-actions.ts",
+    "term-tests/teacher-dashboard/studio/block-navigation-actions.ts",
+    "term-tests/teacher-dashboard/studio/simulation-pronunciation-audio.ts",
+    "term-tests/teacher-dashboard/studio/audio-preview-actions.ts",
+    "term-tests/teacher-dashboard/studio/cloze-script-actions.ts",
+    "term-tests/teacher-dashboard/studio/builder-summary.ts",
+    "term-tests/teacher-dashboard/studio/authoring/variant-input-actions.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
