@@ -88,6 +88,9 @@
     "term-tests/teacher-dashboard/studio/authoring/pictorial.ts",
     "term-tests/teacher-dashboard/studio/authoring/vocabulary.ts",
     "term-tests/teacher-dashboard/studio/authoring/rubric.ts",
+    "term-tests/teacher-dashboard/studio/authoring/rubric-actions.ts",
+    "term-tests/teacher-dashboard/studio/authoring/vocabulary-actions.ts",
+    "term-tests/teacher-dashboard/studio/authoring/choice-variant-actions.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
