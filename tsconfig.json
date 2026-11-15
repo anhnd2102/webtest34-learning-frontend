@@ -60,6 +60,7 @@
     "term-tests/teacher-dashboard/shell/auth-session.ts",
     "term-tests/teacher-dashboard/shell/studio-view.ts",
     "term-tests/teacher-dashboard/shell/dashboard.ts",
+    "term-tests/teacher-dashboard/grading/attempt-review.ts",
     "term-tests/teacher-dashboard/shell/publish-all.ts",
     "term-tests/teacher-dashboard/shell/exam-room-session.ts",
     "term-tests/teacher-dashboard/shell/add-student.ts",
