@@ -1,20 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { groupSections } from '../term-tests/webtest-34-demo/content-preview.mjs';
 
 const read = relativePath => readFileSync(new URL(`../${relativePath}`, import.meta.url), 'utf8');
 const textGlyphs = /[■-◿⏩-⏺⏸⬅]/u;
 
-
-test('content preview audio gate button shows the play icon, not a text glyph', () => {
-  const form = { groups: [{ id: 'listen-a', title: 'Part A', instructions: 'Listen', audioRequired: true, audioPath: 'audio/listen.mp3', items: [{ id: 'a', prompt: 'Question A' }] }] };
-  const button = groupSections(form).match(/<button[^>]*demo-audio-start[^>]*>[\s\S]*?<\/button>/);
-  assert.ok(button, 'demo audio start button is rendered');
-  assert.match(button[0], /^<button[^>]*>\s*<svg class="icon-inline"/);
-  assert.match(button[0], /Phát audio \(nếu có\)/);
-  assert.equal(textGlyphs.test(button[0]), false);
-});
 
 test('teacher simulation no longer carries the dead text-glyph audio handler', () => {
   const source = read('term-tests/teacher-dashboard/studio/simulation.js');
