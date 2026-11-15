@@ -133,9 +133,8 @@ const server = http.createServer((req, res) => {
 server.listen(port, bind, () => {
   console.log(`\nDemo server đang chạy tại http://${bind}:${port}/`);
   console.log('');
-  console.log('  Khối 03:  http://' + bind + ':' + port + '/term-tests/webtest-34-demo/index.html?demoCourse=03');
-  console.log('  Khối 34:  http://' + bind + ':' + port + '/term-tests/webtest-34-demo/index.html?demoCourse=34');
-  console.log('  Khối 45:  http://' + bind + ':' + port + '/term-tests/webtest-34-demo/index.html?demoCourse=45');
+  console.log('  Giáo viên: http://' + bind + ':' + port + '/term-tests/teacher-dashboard/index.html');
+  console.log('  Học viên:  http://' + bind + ':' + port + '/term-tests/webtest-34-demo/index.html?demoCourse=<03|34|45>#test=<token>');
   console.log('');
   console.log('Nhấn Ctrl+C để dừng.\n');
 });
