@@ -1,29 +1,14 @@
-import {
-  sanitizeRichContent,
-  generateTableHtml
-} from '../ui/rich-content.js';
-import {
-  renderSvgIcon
-} from '../ui/icons.js';
-import {
-  escapeHtml
-} from '../ui/presentation.js';
-import {
-  convertGoogleDriveImageUrl,
-  validateImageUrl
-} from './media.js';
-
-export function renderRichHtmlEditor(container, {
-  value = '',
-  onChange = null,
-  placeholder = '',
-  onInsertBlankToken = null
-} = {}) {
-  if (!container) return null;
-
-  const sanitized = sanitizeRichContent(value || '');
-
-  container.innerHTML = `
+// NGUỒN: file .ts này; rich-editor.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
+// không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
+import { sanitizeRichContent, generateTableHtml } from '../ui/rich-content.js';
+import { renderSvgIcon } from '../ui/icons.js';
+import { escapeHtml } from '../ui/presentation.js';
+import { convertGoogleDriveImageUrl, validateImageUrl } from './media.js';
+export function renderRichHtmlEditor(container, { value = '', onChange = null, placeholder = '', onInsertBlankToken = null } = {}) {
+    if (!container)
+        return null;
+    const sanitized = sanitizeRichContent(value || '');
+    container.innerHTML = `
     <div class="rich-editor rich-html-editor-wrap">
       <div class="rich-editor__toolbar rich-editor-toolbar">
         <div class="rich-editor__toolbar-left toolbar-group">
@@ -152,391 +137,384 @@ export function renderRichHtmlEditor(container, {
       </div>
     </div>
   `;
-
-  const visualEl = container.querySelector ? container.querySelector('.rich-editor-visual') : null;
-  const codeEl = container.querySelector ? container.querySelector('.rich-editor-code') : null;
-  const toggleBtn = container.querySelector ? container.querySelector('.btn-toggle-html-mode') : null;
-  const tableBtn = container.querySelector ? container.querySelector('.btn-rich-insert-table') : null;
-  const tableMenu = container.querySelector ? container.querySelector('.table-presets-menu') : null;
-  const imageBtn = container.querySelector ? container.querySelector('.btn-rich-insert-image') : null;
-  const imagePopup = container.querySelector ? container.querySelector('.image-insert-popup') : null;
-  const imageLinkInput = container.querySelector ? container.querySelector('.input-image-link') : null;
-  const confirmImageBtn = container.querySelector ? container.querySelector('.btn-confirm-insert-image') : null;
-  const imageErrorEl = container.querySelector ? container.querySelector('.popup-image-error') : null;
-  const generalErrorEl = container.querySelector ? container.querySelector('.general-editor-error') : null;
-  const blankBtn = container.querySelector ? container.querySelector('.btn-rich-insert-blank') : null;
-
-  // New Rich Text Controls
-  const headingSelect = container.querySelector ? container.querySelector('.select-format-heading') : null;
-  const boldBtn = container.querySelector ? container.querySelector('.btn-format-bold') : null;
-  const italicBtn = container.querySelector ? container.querySelector('.btn-format-italic') : null;
-  const underlineBtn = container.querySelector ? container.querySelector('.btn-format-underline') : null;
-  const strikeBtn = container.querySelector ? container.querySelector('.btn-format-strike') : null;
-  const ulBtn = container.querySelector ? container.querySelector('.btn-format-ul') : null;
-  const olBtn = container.querySelector ? container.querySelector('.btn-format-ol') : null;
-  const alignLeftBtn = container.querySelector ? container.querySelector('.btn-format-align-left') : null;
-  const alignCenterBtn = container.querySelector ? container.querySelector('.btn-format-align-center') : null;
-  const alignRightBtn = container.querySelector ? container.querySelector('.btn-format-align-right') : null;
-  const clearBtn = container.querySelector ? container.querySelector('.btn-format-clear') : null;
-
-  let savedRange = null;
-
-  const saveSelection = () => {
-    if (typeof window !== 'undefined' && window.getSelection) {
-      const sel = window.getSelection();
-      if (!visualEl || !sel?.rangeCount) return;
-      const range = sel.getRangeAt(0);
-      if (visualEl.contains && visualEl.contains(range.commonAncestorContainer)) {
-        savedRange = range.cloneRange();
-      }
-    }
-  };
-
-  const closeAllPopups = () => {
-    if (tableMenu) tableMenu.hidden = true;
-    if (imagePopup) {
-      imagePopup.hidden = true;
-      if (imageErrorEl) imageErrorEl.hidden = true;
-    }
-  };
-
-  const showError = (msg) => {
-    if (generalErrorEl) {
-      generalErrorEl.textContent = msg;
-      if (generalErrorEl) generalErrorEl.hidden = false;
-      setTimeout(() => {
-        if (generalErrorEl) generalErrorEl.hidden = true;
-      }, 5000);
-    }
-  };
-
-  const clearError = () => {
-    if (generalErrorEl) generalErrorEl.hidden = true;
-    if (imageErrorEl) imageErrorEl.hidden = true;
-  };
-
-  const syncToCode = () => {
-    if (!visualEl) return;
-    const raw = visualEl.innerHTML || '';
-    const clean = sanitizeRichContent(raw);
-    if (codeEl) codeEl.value = clean;
-    if (typeof onChange === 'function') onChange(clean);
-  };
-
-  const syncToVisual = () => {
-    if (!codeEl) return;
-    const raw = codeEl.value || '';
-    const clean = sanitizeRichContent(raw);
-    if (visualEl) visualEl.innerHTML = clean;
-    if (typeof onChange === 'function') onChange(clean);
-  };
-
-  const insertHtmlAtCursor = (htmlToInsert) => {
-    if (!htmlToInsert) return;
-
-    if (isCodeMode && codeEl) {
-      const start = codeEl.selectionStart || codeEl.value.length;
-      const end = codeEl.selectionEnd || codeEl.value.length;
-      codeEl.value = codeEl.value.substring(0, start) + htmlToInsert + codeEl.value.substring(end);
-      syncToVisual();
-      return;
-    }
-
-    if (visualEl) {
-      visualEl.focus?.();
-      let range = savedRange;
-      if (!range || (visualEl.contains && !visualEl.contains(range.commonAncestorContainer))) {
-        if (typeof document !== 'undefined' && document.createRange) {
-          range = document.createRange();
-          range.selectNodeContents(visualEl);
-          range.collapse(false);
-        }
-      }
-
-      if (range && range.createContextualFragment) {
-        range.deleteContents?.();
-        const fragment = range.createContextualFragment(htmlToInsert);
-        const lastNode = fragment.lastChild;
-        range.insertNode?.(fragment);
-        if (lastNode && range.setStartAfter) {
-          range.setStartAfter(lastNode);
-          range.collapse?.(true);
-        }
+    const visualEl = container.querySelector ? container.querySelector('.rich-editor-visual') : null;
+    const codeEl = container.querySelector ? container.querySelector('.rich-editor-code') : null;
+    const toggleBtn = container.querySelector ? container.querySelector('.btn-toggle-html-mode') : null;
+    const tableBtn = container.querySelector ? container.querySelector('.btn-rich-insert-table') : null;
+    const tableMenu = container.querySelector ? container.querySelector('.table-presets-menu') : null;
+    const imageBtn = container.querySelector ? container.querySelector('.btn-rich-insert-image') : null;
+    const imagePopup = container.querySelector ? container.querySelector('.image-insert-popup') : null;
+    const imageLinkInput = container.querySelector ? container.querySelector('.input-image-link') : null;
+    const confirmImageBtn = container.querySelector ? container.querySelector('.btn-confirm-insert-image') : null;
+    const imageErrorEl = container.querySelector ? container.querySelector('.popup-image-error') : null;
+    const generalErrorEl = container.querySelector ? container.querySelector('.general-editor-error') : null;
+    const blankBtn = container.querySelector ? container.querySelector('.btn-rich-insert-blank') : null;
+    // New Rich Text Controls
+    const headingSelect = container.querySelector ? container.querySelector('.select-format-heading') : null;
+    const boldBtn = container.querySelector ? container.querySelector('.btn-format-bold') : null;
+    const italicBtn = container.querySelector ? container.querySelector('.btn-format-italic') : null;
+    const underlineBtn = container.querySelector ? container.querySelector('.btn-format-underline') : null;
+    const strikeBtn = container.querySelector ? container.querySelector('.btn-format-strike') : null;
+    const ulBtn = container.querySelector ? container.querySelector('.btn-format-ul') : null;
+    const olBtn = container.querySelector ? container.querySelector('.btn-format-ol') : null;
+    const alignLeftBtn = container.querySelector ? container.querySelector('.btn-format-align-left') : null;
+    const alignCenterBtn = container.querySelector ? container.querySelector('.btn-format-align-center') : null;
+    const alignRightBtn = container.querySelector ? container.querySelector('.btn-format-align-right') : null;
+    const clearBtn = container.querySelector ? container.querySelector('.btn-format-clear') : null;
+    let savedRange = null;
+    const saveSelection = () => {
         if (typeof window !== 'undefined' && window.getSelection) {
-          const sel = window.getSelection();
-          sel.removeAllRanges?.();
-          sel.addRange?.(range);
-          savedRange = range.cloneRange ? range.cloneRange() : range;
+            const sel = window.getSelection();
+            if (!visualEl || !sel?.rangeCount)
+                return;
+            const range = sel.getRangeAt(0);
+            if (visualEl.contains && visualEl.contains(range.commonAncestorContainer)) {
+                savedRange = range.cloneRange();
+            }
         }
-      } else {
-        visualEl.innerHTML += htmlToInsert;
-      }
-      syncToCode();
-    }
-  };
-
-  let isCodeMode = false;
-
-  if (toggleBtn) {
-    toggleBtn.addEventListener?.('click', () => {
-      isCodeMode = !isCodeMode;
-      closeAllPopups();
-      if (isCodeMode) {
-        syncToCode();
-        if (visualEl) visualEl.hidden = true;
-        if (codeEl) codeEl.hidden = false;
-        toggleBtn.classList?.add?.('active');
-        toggleBtn.textContent = 'Trực quan';
-      } else {
-        syncToVisual();
-        if (codeEl) codeEl.hidden = true;
-        if (visualEl) visualEl.hidden = false;
-        toggleBtn.classList?.remove?.('active');
-        toggleBtn.textContent = '</> Mã HTML';
-      }
-    });
-  }
-
-  if (visualEl && visualEl.addEventListener) {
-    visualEl.addEventListener('keyup', saveSelection);
-    visualEl.addEventListener('mouseup', saveSelection);
-    visualEl.addEventListener('input', syncToCode);
-    visualEl.addEventListener('blur', syncToCode);
-
-    // Advanced paste handler with DOMParser
-    visualEl.addEventListener('paste', (event) => {
-      const cd = event.clipboardData;
-      if (!cd) return;
-
-      const html = cd.getData?.('text/html');
-      if (html && typeof DOMParser !== 'undefined') {
-        const parsed = new DOMParser().parseFromString(html, 'text/html');
-        const embeddedImages = Array.from(parsed.body.querySelectorAll('img')).filter(
-          img => !/^https:/i.test(img.getAttribute('src') || '')
-        );
-        const hasImageFile = Array.from(cd.files || []).some(
-          file => file.type && file.type.startsWith('image/')
-        );
-
-        if (embeddedImages.length || hasImageFile) {
-          event.preventDefault?.();
-          saveSelection();
-          embeddedImages.forEach(img => img.remove());
-          if (html) {
-            insertHtmlAtCursor(parsed.body.innerHTML);
-          } else {
-            insertHtmlAtCursor(escapeHtml(cd.getData?.('text/plain') || ''));
-          }
-          showError('Hãy tải ảnh lên Google Drive rồi dùng nút “Chèn ảnh”.');
-          return;
-        }
-      }
-
-      if (cd.items) {
-        for (let i = 0; i < cd.items.length; i++) {
-          if (cd.items[i].type && cd.items[i].type.indexOf('image') !== -1) {
-            event.preventDefault?.();
-            showError('Hệ thống không hỗ trợ dán ảnh trực tiếp base64. Vui lòng dùng Google Drive.');
-            return;
-          }
-        }
-      }
-    });
-
-    visualEl.addEventListener('drop', (event) => {
-      const hasImage = Array.from(event.dataTransfer?.files || []).some(
-        file => file.type && file.type.startsWith('image/')
-      );
-      if (hasImage) {
-        event.preventDefault?.();
-        showError('Hãy dùng nút “Chèn ảnh” để nhập link ảnh.');
-      }
-    });
-  }
-
-  if (codeEl && codeEl.addEventListener) {
-    codeEl.addEventListener('input', syncToVisual);
-    codeEl.addEventListener('change', syncToVisual);
-  }
-
-  if (tableBtn && tableMenu) {
-    tableBtn.addEventListener?.('mousedown', saveSelection);
-    tableBtn.addEventListener?.('click', (e) => {
-      e.stopPropagation?.();
-      saveSelection();
-      const isVisible = !tableMenu.hidden;
-      closeAllPopups();
-      if (tableMenu) tableMenu.hidden = isVisible;
-    });
-
-    const gridBtns = tableMenu.querySelectorAll?.('.btn-table-grid') || [];
-    gridBtns.forEach?.(btn => {
-      btn.addEventListener?.('click', (e) => {
-        e.stopPropagation?.();
-        const r = Number(btn.getAttribute('data-rows')) || 2;
-        const c = Number(btn.getAttribute('data-cols')) || 2;
-        closeAllPopups();
-        const tblHtml = generateTableHtml(r, c) + '<p><br></p>';
-        insertHtmlAtCursor(tblHtml);
-      });
-    });
-
-    const presetBtns = tableMenu.querySelectorAll?.('.btn-table-preset') || [];
-    presetBtns.forEach?.(btn => {
-      btn.addEventListener?.('click', (e) => {
-        e.stopPropagation?.();
-        const preset = btn.getAttribute('data-preset');
-        closeAllPopups();
-        const tblHtml = generateTableHtml(null, null, preset) + '<p><br></p>';
-        insertHtmlAtCursor(tblHtml);
-      });
-    });
-  }
-
-  if (imageBtn && imagePopup) {
-    imageBtn.addEventListener?.('mousedown', saveSelection);
-    imageBtn.addEventListener?.('click', (e) => {
-      e.stopPropagation?.();
-      saveSelection();
-      const isVisible = !imagePopup.hidden;
-      closeAllPopups();
-      if (imagePopup) {
-        imagePopup.hidden = isVisible;
-        if (!isVisible && imageLinkInput) {
-          imageLinkInput.value = '';
-          clearError();
-          setTimeout(() => imageLinkInput.focus?.(), 50);
-        }
-      }
-    });
-
-    const executeInsertImage = () => {
-      const urlVal = imageLinkInput?.value?.trim() || '';
-      if (!urlVal) {
-        if (imageErrorEl) {
-          imageErrorEl.textContent = 'Vui lòng nhập đường dẫn ảnh.';
-          if (imageErrorEl) imageErrorEl.hidden = false;
-        }
-        return;
-      }
-      const converted = convertGoogleDriveImageUrl(urlVal);
-      if (!validateImageUrl(converted)) {
-        if (imageErrorEl) {
-          imageErrorEl.textContent = 'Link không hợp lệ. Hãy dùng link HTTPS hoặc Google Drive.';
-          if (imageErrorEl) imageErrorEl.hidden = false;
-        }
-        return;
-      }
-      const imgTag = `<img src="${escapeHtml(converted)}" alt="" />`;
-      insertHtmlAtCursor(imgTag);
-      closeAllPopups();
     };
-
-    confirmImageBtn?.addEventListener?.('click', (e) => {
-      e.stopPropagation?.();
-      executeInsertImage();
-    });
-
-    imageLinkInput?.addEventListener?.('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault?.();
-        executeInsertImage();
-      }
-    });
-  }
-
-  if (blankBtn && typeof onInsertBlankToken === 'function') {
-    blankBtn.addEventListener?.('mousedown', saveSelection);
-    blankBtn.addEventListener?.('click', () => {
-      saveSelection();
-      onInsertBlankToken(insertHtmlAtCursor);
-    });
-  }
-
-  // Formatting commands execution
-  const executeFormatCommand = (command, value = null) => {
-    closeAllPopups();
-
-    if (isCodeMode && codeEl) {
-      const start = codeEl.selectionStart || 0;
-      const end = codeEl.selectionEnd || 0;
-      const selected = codeEl.value.substring(start, end);
-      let replacement = selected;
-
-      if (command === 'bold') replacement = `<strong>${selected}</strong>`;
-      else if (command === 'italic') replacement = `<em>${selected}</em>`;
-      else if (command === 'underline') replacement = `<u>${selected}</u>`;
-      else if (command === 'strikeThrough') replacement = `<s>${selected}</s>`;
-      else if (command === 'insertUnorderedList') replacement = `\n<ul>\n  <li>${selected || 'Mục danh sách'}</li>\n</ul>\n`;
-      else if (command === 'insertOrderedList') replacement = `\n<ol>\n  <li>${selected || 'Mục danh sách'}</li>\n</ol>\n`;
-      else if (command === 'formatBlock' && value) replacement = `\n<${value}>${selected}</${value}>\n`;
-      else if (command === 'justifyLeft') replacement = `<div style="text-align: left;">${selected}</div>`;
-      else if (command === 'justifyCenter') replacement = `<div style="text-align: center;">${selected}</div>`;
-      else if (command === 'justifyRight') replacement = `<div style="text-align: right;">${selected}</div>`;
-      else if (command === 'removeFormat') replacement = selected.replace(/<[^>]+>/g, '');
-
-      codeEl.value = codeEl.value.substring(0, start) + replacement + codeEl.value.substring(end);
-      syncToVisual();
-      return;
+    const closeAllPopups = () => {
+        if (tableMenu)
+            tableMenu.hidden = true;
+        if (imagePopup) {
+            imagePopup.hidden = true;
+            if (imageErrorEl)
+                imageErrorEl.hidden = true;
+        }
+    };
+    const showError = (msg) => {
+        if (generalErrorEl) {
+            generalErrorEl.textContent = msg;
+            if (generalErrorEl)
+                generalErrorEl.hidden = false;
+            setTimeout(() => {
+                if (generalErrorEl)
+                    generalErrorEl.hidden = true;
+            }, 5000);
+        }
+    };
+    const clearError = () => {
+        if (generalErrorEl)
+            generalErrorEl.hidden = true;
+        if (imageErrorEl)
+            imageErrorEl.hidden = true;
+    };
+    const syncToCode = () => {
+        if (!visualEl)
+            return;
+        const raw = visualEl.innerHTML || '';
+        const clean = sanitizeRichContent(raw);
+        if (codeEl)
+            codeEl.value = clean;
+        if (typeof onChange === 'function')
+            onChange(clean);
+    };
+    const syncToVisual = () => {
+        if (!codeEl)
+            return;
+        const raw = codeEl.value || '';
+        const clean = sanitizeRichContent(raw);
+        if (visualEl)
+            visualEl.innerHTML = clean;
+        if (typeof onChange === 'function')
+            onChange(clean);
+    };
+    const insertHtmlAtCursor = (htmlToInsert) => {
+        if (!htmlToInsert)
+            return;
+        if (isCodeMode && codeEl) {
+            const start = codeEl.selectionStart || codeEl.value.length;
+            const end = codeEl.selectionEnd || codeEl.value.length;
+            codeEl.value = codeEl.value.substring(0, start) + htmlToInsert + codeEl.value.substring(end);
+            syncToVisual();
+            return;
+        }
+        if (visualEl) {
+            visualEl.focus?.();
+            let range = savedRange;
+            if (!range || (visualEl.contains && !visualEl.contains(range.commonAncestorContainer))) {
+                if (typeof document !== 'undefined' && document.createRange) {
+                    range = document.createRange();
+                    range.selectNodeContents(visualEl);
+                    range.collapse(false);
+                }
+            }
+            if (range && range.createContextualFragment) {
+                range.deleteContents?.();
+                const fragment = range.createContextualFragment(htmlToInsert);
+                const lastNode = fragment.lastChild;
+                range.insertNode?.(fragment);
+                if (lastNode && range.setStartAfter) {
+                    range.setStartAfter(lastNode);
+                    range.collapse?.(true);
+                }
+                if (typeof window !== 'undefined' && window.getSelection) {
+                    const sel = window.getSelection();
+                    sel.removeAllRanges?.();
+                    sel.addRange?.(range);
+                    savedRange = range.cloneRange ? range.cloneRange() : range;
+                }
+            }
+            else {
+                visualEl.innerHTML += htmlToInsert;
+            }
+            syncToCode();
+        }
+    };
+    let isCodeMode = false;
+    if (toggleBtn) {
+        toggleBtn.addEventListener?.('click', () => {
+            isCodeMode = !isCodeMode;
+            closeAllPopups();
+            if (isCodeMode) {
+                syncToCode();
+                if (visualEl)
+                    visualEl.hidden = true;
+                if (codeEl)
+                    codeEl.hidden = false;
+                toggleBtn.classList?.add?.('active');
+                toggleBtn.textContent = 'Trực quan';
+            }
+            else {
+                syncToVisual();
+                if (codeEl)
+                    codeEl.hidden = true;
+                if (visualEl)
+                    visualEl.hidden = false;
+                toggleBtn.classList?.remove?.('active');
+                toggleBtn.textContent = '</> Mã HTML';
+            }
+        });
     }
-
-    if (visualEl) {
-      visualEl.focus?.();
-      if (typeof document !== 'undefined' && document.execCommand) {
-        document.execCommand(command, false, value);
-      }
-      saveSelection();
-      syncToCode();
+    if (visualEl && visualEl.addEventListener) {
+        visualEl.addEventListener('keyup', saveSelection);
+        visualEl.addEventListener('mouseup', saveSelection);
+        visualEl.addEventListener('input', syncToCode);
+        visualEl.addEventListener('blur', syncToCode);
+        // Advanced paste handler with DOMParser
+        visualEl.addEventListener('paste', (event) => {
+            const cd = event.clipboardData;
+            if (!cd)
+                return;
+            const html = cd.getData?.('text/html');
+            if (html && typeof DOMParser !== 'undefined') {
+                const parsed = new DOMParser().parseFromString(html, 'text/html');
+                const embeddedImages = Array.from(parsed.body.querySelectorAll('img')).filter(img => !/^https:/i.test(img.getAttribute('src') || ''));
+                const hasImageFile = Array.from(cd.files || []).some(file => file.type && file.type.startsWith('image/'));
+                if (embeddedImages.length || hasImageFile) {
+                    event.preventDefault?.();
+                    saveSelection();
+                    embeddedImages.forEach(img => img.remove());
+                    if (html) {
+                        insertHtmlAtCursor(parsed.body.innerHTML);
+                    }
+                    else {
+                        insertHtmlAtCursor(escapeHtml(cd.getData?.('text/plain') || ''));
+                    }
+                    showError('Hãy tải ảnh lên Google Drive rồi dùng nút “Chèn ảnh”.');
+                    return;
+                }
+            }
+            if (cd.items) {
+                for (let i = 0; i < cd.items.length; i++) {
+                    if (cd.items[i].type && cd.items[i].type.indexOf('image') !== -1) {
+                        event.preventDefault?.();
+                        showError('Hệ thống không hỗ trợ dán ảnh trực tiếp base64. Vui lòng dùng Google Drive.');
+                        return;
+                    }
+                }
+            }
+        });
+        visualEl.addEventListener('drop', (event) => {
+            const hasImage = Array.from(event.dataTransfer?.files || []).some(file => file.type && file.type.startsWith('image/'));
+            if (hasImage) {
+                event.preventDefault?.();
+                showError('Hãy dùng nút “Chèn ảnh” để nhập link ảnh.');
+            }
+        });
     }
-  };
-
-  const bindFormatButton = (btn, command, value = null) => {
-    if (!btn || typeof btn.addEventListener !== 'function') return;
-    btn.addEventListener('mousedown', (e) => {
-      e?.preventDefault?.();
-    });
-    btn.addEventListener('click', (e) => {
-      e?.preventDefault?.();
-      executeFormatCommand(command, value);
-    });
-  };
-
-  bindFormatButton(boldBtn, 'bold');
-  bindFormatButton(italicBtn, 'italic');
-  bindFormatButton(underlineBtn, 'underline');
-  bindFormatButton(strikeBtn, 'strikeThrough');
-  bindFormatButton(ulBtn, 'insertUnorderedList');
-  bindFormatButton(olBtn, 'insertOrderedList');
-  bindFormatButton(alignLeftBtn, 'justifyLeft');
-  bindFormatButton(alignCenterBtn, 'justifyCenter');
-  bindFormatButton(alignRightBtn, 'justifyRight');
-  bindFormatButton(clearBtn, 'removeFormat');
-
-  if (headingSelect && typeof headingSelect.addEventListener === 'function') {
-    headingSelect.addEventListener('mousedown', (e) => {
-      saveSelection();
-    });
-    headingSelect.addEventListener('change', () => {
-      const tag = headingSelect.value || 'p';
-      executeFormatCommand('formatBlock', tag);
-    });
-  }
-
-  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
-    document.addEventListener('click', (e) => {
-      if (!container.contains?.(e.target)) {
+    if (codeEl && codeEl.addEventListener) {
+        codeEl.addEventListener('input', syncToVisual);
+        codeEl.addEventListener('change', syncToVisual);
+    }
+    if (tableBtn && tableMenu) {
+        tableBtn.addEventListener?.('mousedown', saveSelection);
+        tableBtn.addEventListener?.('click', (e) => {
+            e.stopPropagation?.();
+            saveSelection();
+            const isVisible = !tableMenu.hidden;
+            closeAllPopups();
+            if (tableMenu)
+                tableMenu.hidden = isVisible;
+        });
+        const gridBtns = tableMenu.querySelectorAll?.('.btn-table-grid') || [];
+        gridBtns.forEach?.(btn => {
+            btn.addEventListener?.('click', (e) => {
+                e.stopPropagation?.();
+                const r = Number(btn.getAttribute('data-rows')) || 2;
+                const c = Number(btn.getAttribute('data-cols')) || 2;
+                closeAllPopups();
+                const tblHtml = generateTableHtml(r, c) + '<p><br></p>';
+                insertHtmlAtCursor(tblHtml);
+            });
+        });
+        const presetBtns = tableMenu.querySelectorAll?.('.btn-table-preset') || [];
+        presetBtns.forEach?.(btn => {
+            btn.addEventListener?.('click', (e) => {
+                e.stopPropagation?.();
+                const preset = btn.getAttribute('data-preset');
+                closeAllPopups();
+                const tblHtml = generateTableHtml(null, null, preset) + '<p><br></p>';
+                insertHtmlAtCursor(tblHtml);
+            });
+        });
+    }
+    if (imageBtn && imagePopup) {
+        imageBtn.addEventListener?.('mousedown', saveSelection);
+        imageBtn.addEventListener?.('click', (e) => {
+            e.stopPropagation?.();
+            saveSelection();
+            const isVisible = !imagePopup.hidden;
+            closeAllPopups();
+            if (imagePopup) {
+                imagePopup.hidden = isVisible;
+                if (!isVisible && imageLinkInput) {
+                    imageLinkInput.value = '';
+                    clearError();
+                    setTimeout(() => imageLinkInput.focus?.(), 50);
+                }
+            }
+        });
+        const executeInsertImage = () => {
+            const urlVal = imageLinkInput?.value?.trim() || '';
+            if (!urlVal) {
+                if (imageErrorEl) {
+                    imageErrorEl.textContent = 'Vui lòng nhập đường dẫn ảnh.';
+                    if (imageErrorEl)
+                        imageErrorEl.hidden = false;
+                }
+                return;
+            }
+            const converted = convertGoogleDriveImageUrl(urlVal);
+            if (!validateImageUrl(converted)) {
+                if (imageErrorEl) {
+                    imageErrorEl.textContent = 'Link không hợp lệ. Hãy dùng link HTTPS hoặc Google Drive.';
+                    if (imageErrorEl)
+                        imageErrorEl.hidden = false;
+                }
+                return;
+            }
+            const imgTag = `<img src="${escapeHtml(converted)}" alt="" />`;
+            insertHtmlAtCursor(imgTag);
+            closeAllPopups();
+        };
+        confirmImageBtn?.addEventListener?.('click', (e) => {
+            e.stopPropagation?.();
+            executeInsertImage();
+        });
+        imageLinkInput?.addEventListener?.('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault?.();
+                executeInsertImage();
+            }
+        });
+    }
+    if (blankBtn && typeof onInsertBlankToken === 'function') {
+        blankBtn.addEventListener?.('mousedown', saveSelection);
+        blankBtn.addEventListener?.('click', () => {
+            saveSelection();
+            onInsertBlankToken(insertHtmlAtCursor);
+        });
+    }
+    // Formatting commands execution
+    const executeFormatCommand = (command, value = null) => {
         closeAllPopups();
-      }
-    });
-  }
-
-  return {
-    getValue: () => (isCodeMode && codeEl ? sanitizeRichContent(codeEl.value) : sanitizeRichContent(visualEl?.innerHTML || '')),
-    setValue: (val) => {
-      const clean = sanitizeRichContent(val || '');
-      if (visualEl) visualEl.innerHTML = clean;
-      if (codeEl) codeEl.value = clean;
-    },
-    insertHtml: insertHtmlAtCursor
-  };
+        if (isCodeMode && codeEl) {
+            const start = codeEl.selectionStart || 0;
+            const end = codeEl.selectionEnd || 0;
+            const selected = codeEl.value.substring(start, end);
+            let replacement = selected;
+            if (command === 'bold')
+                replacement = `<strong>${selected}</strong>`;
+            else if (command === 'italic')
+                replacement = `<em>${selected}</em>`;
+            else if (command === 'underline')
+                replacement = `<u>${selected}</u>`;
+            else if (command === 'strikeThrough')
+                replacement = `<s>${selected}</s>`;
+            else if (command === 'insertUnorderedList')
+                replacement = `\n<ul>\n  <li>${selected || 'Mục danh sách'}</li>\n</ul>\n`;
+            else if (command === 'insertOrderedList')
+                replacement = `\n<ol>\n  <li>${selected || 'Mục danh sách'}</li>\n</ol>\n`;
+            else if (command === 'formatBlock' && value)
+                replacement = `\n<${value}>${selected}</${value}>\n`;
+            else if (command === 'justifyLeft')
+                replacement = `<div style="text-align: left;">${selected}</div>`;
+            else if (command === 'justifyCenter')
+                replacement = `<div style="text-align: center;">${selected}</div>`;
+            else if (command === 'justifyRight')
+                replacement = `<div style="text-align: right;">${selected}</div>`;
+            else if (command === 'removeFormat')
+                replacement = selected.replace(/<[^>]+>/g, '');
+            codeEl.value = codeEl.value.substring(0, start) + replacement + codeEl.value.substring(end);
+            syncToVisual();
+            return;
+        }
+        if (visualEl) {
+            visualEl.focus?.();
+            if (typeof document !== 'undefined' && document.execCommand) {
+                document.execCommand(command, false, value);
+            }
+            saveSelection();
+            syncToCode();
+        }
+    };
+    const bindFormatButton = (btn, command, value = null) => {
+        if (!btn || typeof btn.addEventListener !== 'function')
+            return;
+        btn.addEventListener('mousedown', (e) => {
+            e?.preventDefault?.();
+        });
+        btn.addEventListener('click', (e) => {
+            e?.preventDefault?.();
+            executeFormatCommand(command, value);
+        });
+    };
+    bindFormatButton(boldBtn, 'bold');
+    bindFormatButton(italicBtn, 'italic');
+    bindFormatButton(underlineBtn, 'underline');
+    bindFormatButton(strikeBtn, 'strikeThrough');
+    bindFormatButton(ulBtn, 'insertUnorderedList');
+    bindFormatButton(olBtn, 'insertOrderedList');
+    bindFormatButton(alignLeftBtn, 'justifyLeft');
+    bindFormatButton(alignCenterBtn, 'justifyCenter');
+    bindFormatButton(alignRightBtn, 'justifyRight');
+    bindFormatButton(clearBtn, 'removeFormat');
+    if (headingSelect && typeof headingSelect.addEventListener === 'function') {
+        headingSelect.addEventListener('mousedown', (e) => {
+            saveSelection();
+        });
+        headingSelect.addEventListener('change', () => {
+            const tag = headingSelect.value || 'p';
+            executeFormatCommand('formatBlock', tag);
+        });
+    }
+    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+        document.addEventListener('click', (e) => {
+            if (!container.contains?.(e.target)) {
+                closeAllPopups();
+            }
+        });
+    }
+    return {
+        getValue: () => (isCodeMode && codeEl ? sanitizeRichContent(codeEl.value) : sanitizeRichContent(visualEl?.innerHTML || '')),
+        setValue: (val) => {
+            const clean = sanitizeRichContent(val || '');
+            if (visualEl)
+                visualEl.innerHTML = clean;
+            if (codeEl)
+                codeEl.value = clean;
+        },
+        insertHtml: insertHtmlAtCursor
+    };
 }
