@@ -1,5 +1,5 @@
 // Dựng thư mục `_site/` là artifact Pages: chỉ những gì trang cần chạy (index.html, term-tests/, .nojekyll).
-// Loại tài liệu, test, script, công cụ và mọi nguồn .ts và khai báo .d.mts; .js sinh từ .ts đã được commit và vẫn có trong artifact.
+// Loại tài liệu, test, script, công cụ và mọi nguồn .ts/.mts và khai báo .d.ts/.d.mts; .js sinh từ .ts đã được commit và vẫn có trong artifact.
 // Chạy sau `npm run build:check` để đảm bảo .js khớp .ts. Dùng: npm run stage:pages
 import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
 import path from 'node:path';
