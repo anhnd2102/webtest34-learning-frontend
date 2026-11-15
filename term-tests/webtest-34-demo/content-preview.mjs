@@ -2,7 +2,7 @@
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
 import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS, scrollBehavior } from './dynamic-exam-renderer.mjs?rev=20261113-submit-a';
 import { escape, words } from './candidate/text-utils.js?rev=20261113-submit-a';
-import { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261113-submit-a';
+import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261113-submit-a';
 import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, sectionKey, sectionLabels, groupSections } from './candidate/group-render.js?rev=20261113-submit-a';
 import { createExamMode } from './candidate/exam-mode.js?rev=20261113-submit-a';
 import { createIntroScreen } from './candidate/intro-screen.js?rev=20261113-submit-a';
@@ -26,27 +26,12 @@ export async function mount(course) {
     const rawTestToken = (hashToken?.includes('-') ? hashToken : '') || rawTestTokenParam || config.LEARNING_TEST_TOKEN || '';
     // Link chia sẻ qua chat hay dính ký tự thừa (vd. ``, %5C, %20) sau token; chỉ giữ đúng UUID khi có.
     const testToken = rawTestToken.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i)?.[0] || rawTestToken;
-    const explicitTest = Number(queryParams.get('testNum')) || Number(queryParams.get('demoTest')) || (!queryParams.get('test')?.includes('-') ? Number(queryParams.get('test')) : 0);
-    let testNum = explicitTest || 1;
-    const phaseParam = queryParams.get('phase');
-    if ((course === '34' || course === '45') && phaseParam === '2' && testNum <= 2) {
-        testNum = testNum + 4;
-    }
-    if (!explicitTest) {
-        const prefixMatch = testToken.match(/^(\d{2})(\d{2})/);
-        if (prefixMatch && prefixMatch[1] === course && Number(prefixMatch[2]) <= 6) {
-            testNum = Number(prefixMatch[2]);
-        }
-        else {
-            const tokenMatch = testToken.match(/-0*([1-9]\d*)$/);
-            if (tokenMatch && Number(tokenMatch[1]) <= 6) {
-                testNum = Number(tokenMatch[1]);
-            }
-        }
-    }
     const isProd = queryParams.get('prod') === '1' || queryParams.get('apiEnv') === 'production';
     const apiBase = (isProd ? 'https://webtest.ducanhdev.com' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhdev.com')).replace(/\/$/, '');
-    const isLearningMode = Boolean(testToken);
+    // Shell chỉ mở bằng link có token (chế độ xem thử bằng đề dựng sẵn đã bỏ); `isLearningMode` giữ lại làm tham số cho các module `candidate/`.
+    if (!testToken)
+        throw new Error('Thiếu mã bài thi: hãy mở bài thi bằng link do giáo viên cung cấp.');
+    const isLearningMode = true;
     // form, state và learningState dùng chung cho nhiều module `candidate/` có kiểu riêng (hợp đồng nằm ở từng module); ở đây giữ `any`
     // vì đề và đáp án là JSON động từ Learning API.
     let form = { course, groups: [], durationMinutes: 60 };
@@ -56,33 +41,6 @@ export async function mount(course) {
     let activeSection = '';
     let key = `izone_learning_${testToken || course}`;
     let state = { answers: {}, submittedAt: null };
-    if (!isLearningMode) {
-        let formUrl = new URL(`./demo-content/${course}-test-${testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
-        let response = await fetch(formUrl);
-        if (!response.ok && phaseParam === '2') {
-            formUrl = new URL(`./demo-content/${course}-p2-test-${testNum > 4 ? testNum - 4 : testNum}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
-            response = await fetch(formUrl);
-        }
-        if (!response.ok) {
-            formUrl = new URL(`./demo-content/${course}.json?rev=20261026-c34t4-spk-v2`, import.meta.url);
-            response = await fetch(formUrl);
-        }
-        if (!response.ok)
-            throw new Error('Content unavailable');
-        form = await response.json();
-        key = draftKey(form);
-        try {
-            state = sanitizeDraft(form, JSON.parse(localStorage.getItem(key)));
-        }
-        catch {
-            state = sanitizeDraft(form, null);
-        }
-        items = form.groups.flatMap((group) => group.items);
-        const displayTestNum = form.phase === 2 && (form.testNumber > 4 || testNum > 4) ? (form.testNumber > 4 ? form.testNumber - 4 : testNum - 4) : (form.testNumber || testNum);
-        title = `Khóa ${course}${form.phase ? ` · Phase ${form.phase}` : ''} · Test ${displayTestNum}`;
-        sections = [...new Set(form.groups.map(sectionKey))];
-        activeSection = sections[0];
-    }
     const paramClassCode = (queryParams.get('class') || queryParams.get('classCode') || '').trim().toUpperCase();
     const learningState = {
         testToken,
@@ -117,7 +75,7 @@ export async function mount(course) {
     // Không tải được thì vẫn vào bài (không chặn thí sinh), khi đó bài nghe coi như chưa nghe.
     async function loadAudioProgress() {
         state.audioProgress = {};
-        if (!isLearningMode || !learningState.attemptToken)
+        if (!learningState.attemptToken)
             return;
         try {
             const { resume } = await apiRequest('/attempts/audio/resume', { attemptToken: learningState.attemptToken });
@@ -134,7 +92,7 @@ export async function mount(course) {
     // Mốc nghe gửi tuần tự theo từng bài nghe; lỗi chỉ ghi cảnh báo vì lần sau sẽ gửi lại mốc mới hơn.
     const audioCheckpointChains = new Map();
     function saveAudioProgress(audioKey, seconds, completed) {
-        if (!isLearningMode || !learningState.attemptToken || state.submittedAt)
+        if (!learningState.attemptToken || state.submittedAt)
             return;
         state.audioProgress = state.audioProgress || {};
         state.audioProgress[audioKey] = { lastHeardSeconds: seconds, completed: completed || Boolean(state.audioProgress[audioKey]?.completed) };
@@ -267,10 +225,9 @@ export async function mount(course) {
         }
     }
     // --- RENDER MÀN HÌNH ĐỊNH DANH (IDENTITY SCREEN) KHI CÓ TEST TOKEN ---
-    if (isLearningMode) {
-        const initialTitle = course === '34' ? 'Minh hoạ đề thi 34' : `IZONE · Khóa ${course}`;
-        document.title = `IZONE · Thi CBT · ${initialTitle}`;
-        document.body.innerHTML = `
+    const initialTitle = course === '34' ? 'Minh hoạ đề thi 34' : `IZONE · Khóa ${course}`;
+    document.title = `IZONE · Thi CBT · ${initialTitle}`;
+    document.body.innerHTML = `
       <div class="content-demo">
         <header class="topbar cbt-topbar simulation-topbar">
           <div class="topbar-inner demo-top">
@@ -350,9 +307,9 @@ export async function mount(course) {
         </main>
       </div>
     `;
-        document.documentElement.classList.remove('cbt-mounting');
-        const canonicalStyle = document.createElement('style');
-        canonicalStyle.textContent = `
+    document.documentElement.classList.remove('cbt-mounting');
+    const canonicalStyle = document.createElement('style');
+    canonicalStyle.textContent = `
       .content-demo{color:#404040;background:#f3f4f6;min-height:100vh;font-family:Inter,system-ui,-apple-system,sans-serif}
       .demo-top{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:white;border-bottom:1px solid #e5e7eb}
       .brand{display:flex;align-items:center;gap:12px}
@@ -385,20 +342,18 @@ export async function mount(course) {
       .review-retry{margin-top:12px;min-height:44px;padding:0 20px;border-radius:10px;border:0;background:#db0829;color:#fff;font-weight:700;cursor:pointer}
       @media(max-width:520px){.content-demo main.demo-width>div{padding:20px!important}.demo-top{padding:10px 12px}.timer{display:none}#viewResultBtn,#startExamBtn{width:100%;margin:0!important}#loadRosterBtn{min-width:0!important;padding:0 12px!important}}
     `;
-        document.head.append(canonicalStyle);
-        const classInput = document.querySelector('#classCodeInput');
-        const loadBtn = document.querySelector('#loadRosterBtn');
-        const classStatus = document.querySelector('#classCodeStatus');
-        const studentSelect = document.querySelector('#studentSelectInput');
-        const studentStatus = document.querySelector('#studentSelectStatus');
-        const startBtn = document.querySelector('#startExamBtn');
-        const { handleLoadRoster } = createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface: openExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn });
-        createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect });
-        void handleLoadRoster();
-        return;
-    }
-    // --- RENDER GIAO DIỆN BÀI THI CHÍNH THỨC / PREVIEW ---
-    renderExamInterface();
+    document.head.append(canonicalStyle);
+    const classInput = document.querySelector('#classCodeInput');
+    const loadBtn = document.querySelector('#loadRosterBtn');
+    const classStatus = document.querySelector('#classCodeStatus');
+    const studentSelect = document.querySelector('#studentSelectInput');
+    const studentStatus = document.querySelector('#studentSelectStatus');
+    const startBtn = document.querySelector('#startExamBtn');
+    const { handleLoadRoster } = createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface: openExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn });
+    createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect });
+    void handleLoadRoster();
+    return;
+    // --- RENDER GIAO DIỆN BÀI THI CHÍNH THỨC ---
     function renderExamInterface() {
         const isDynamic = Boolean(learningState.definition?.blocks?.length);
         const examTitle = isDynamic ? (learningState.definition.title || learningState.assignment?.title || title) : title;
@@ -411,16 +366,9 @@ export async function mount(course) {
         if (!examSections.includes(activeSection)) {
             activeSection = examSections[0];
         }
-        document.title = `IZONE · ${isLearningMode ? 'Thi CBT' : 'Demo'} · ${examTitle}`;
-        const headerSub = isLearningMode
-            ? `Thí sinh: <strong>${escape(learningState.studentName)}</strong> · Lớp: <strong>${escape(learningState.className)}</strong>`
-            : `Bài thi demo · ${examDuration} phút theo đề`;
-        const noticeBanner = isLearningMode
-            ? selfProctoringBannerHtml(learningState.selfProctoring)
-            : `<div class="demo-notice">
-          Bản xem thử để duyệt đề. Câu trả lời chỉ lưu trên trình duyệt này; nộp thử chưa chấm điểm hoặc gửi lên hệ thống.
-          Dùng link thi có token do người phụ trách cung cấp để mở phiên chấm điểm.
-        </div>`;
+        document.title = `IZONE · Thi CBT · ${examTitle}`;
+        const headerSub = `Thí sinh: <strong>${escape(learningState.studentName)}</strong> · Lớp: <strong>${escape(learningState.className)}</strong>`;
+        const noticeBanner = selfProctoringBannerHtml(learningState.selfProctoring);
         let dynamicExamControls = null;
         if (isDynamic) {
             document.body.innerHTML = `
@@ -445,7 +393,7 @@ export async function mount(course) {
                   <span class="cbt-timer-icon">${ICONS.clock}</span>
                   <span class="cbt-timer" id="examTimerDisplay">${examDuration}:00</span>
                 </div>
-                <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${isLearningMode ? (state.submittedAt ? 'Đã nộp bài' : 'Nộp bài') : 'Nộp thử'}</button>
+                <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${state.submittedAt ? 'Đã nộp bài' : 'Nộp bài'}</button>
               </div>
             </div>
             <div class="section-nav-wrap cbt-section-nav-wrap">
@@ -470,13 +418,13 @@ export async function mount(course) {
           </main>
 
           <dialog id="demo-confirm">
-            <h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2>
+            <h2>Xác nhận nộp bài thi?</h2>
             <p id="demo-confirm-text"></p>
             <p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p>
-            <p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p>
+            <p>Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.</p>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
               <button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button>
-              <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button>
+              <button type="button" class="btn btn-primary" id="demo-confirm-submit">Xác nhận nộp bài</button>
             </div>
           </dialog>
         </div>
@@ -516,13 +464,13 @@ export async function mount(course) {
           <div class="demo-toolbar">
             <span id="demo-progress" aria-live="polite"></span>
             <span id="demo-save" role="status"></span>
-            <button type="button" class="btn btn-primary" id="demo-submit">${isLearningMode ? 'Nộp bài' : 'Nộp thử'}</button>
+            <button type="button" class="btn btn-primary" id="demo-submit">Nộp bài</button>
           </div>
           <div id="demo-result" class="demo-notice" hidden></div>
           <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
           <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${examSections.map((sec) => `<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span data-demo-section-count="${escape(sec)}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
           <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
-        </main><dialog id="demo-confirm"><h2>${isLearningMode ? 'Xác nhận nộp bài thi?' : 'Nộp bài thử?'}</h2><p id="demo-confirm-text"></p><p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p><p>${isLearningMode ? 'Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.' : 'Bạn có thể xem lại câu trả lời. Demo chưa chấm điểm.'}</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">${isLearningMode ? 'Xác nhận nộp bài' : 'Xác nhận nộp thử'}</button></dialog>
+        </main><dialog id="demo-confirm"><h2>Xác nhận nộp bài thi?</h2><p id="demo-confirm-text"></p><p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p><p>Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">Xác nhận nộp bài</button></dialog>
       </div>`;
             document.querySelector('.demo-top').insertAdjacentHTML('beforeend', `<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${examDuration}:00</span></div>`);
             document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
@@ -802,9 +750,6 @@ export async function mount(course) {
                 button.disabled = Boolean(state.submittedAt) || !state.answers[button.dataset.demoClear];
             });
             query('#demo-result').hidden = !state.submittedAt;
-            if (!isLearningMode) {
-                query('#demo-result').textContent = state.submittedAt ? `Đã nộp thử lúc ${new Date(state.submittedAt).toLocaleString('vi-VN')}. Câu trả lời bên dưới được giữ để xem lại; chưa có điểm chấm.` : '';
-            }
         }
         for (const field of fields) {
             field.value = state.answers[field.dataset.demoAnswer] || '';
@@ -850,7 +795,7 @@ export async function mount(course) {
                         button.removeAttribute('aria-current');
                 });
                 query('#demo-prev').disabled = examSections.indexOf(section) === 0;
-                query('#demo-next').textContent = examSections.indexOf(section) === examSections.length - 1 ? (isLearningMode ? 'Nộp bài' : 'Nộp thử') : 'Phần tiếp →';
+                query('#demo-next').textContent = examSections.indexOf(section) === examSections.length - 1 ? 'Nộp bài' : 'Phần tiếp →';
                 window.scrollTo({ top: 0, behavior: scrollBehavior() });
             }
             document.querySelectorAll('[data-demo-go]').forEach(button => button.addEventListener('click', () => showSection(button.dataset.demoGo)));
@@ -876,7 +821,7 @@ export async function mount(course) {
                 dynamicExamControls.activateSection('sim-block-' + initialIdx);
             }
         }
-        if (isLearningMode && state.submittedAt) {
+        if (state.submittedAt) {
             void pollLearningResult();
         }
     }

@@ -91,8 +91,8 @@ try {
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const report = {};
 
-  // 0. Không có token và không có demoCourse: chỉ hiện hướng dẫn mở bằng link giáo viên, không gọi API, không dựng bài thi
-  {
+  // 0. Không có token (có hoặc không có demoCourse): chỉ hiện hướng dẫn mở bằng link giáo viên, không gọi API, không dựng bài thi
+  for (const search of ['', '?demoCourse=34', '?demoCourse=03&test=1']) {
     const api = createApi();
     const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: 'vi-VN' });
     const page = await context.newPage();
@@ -103,7 +103,7 @@ try {
       if (url.pathname.includes('/api/learning/')) return api.handler(route);
       return url.origin === new URL(origin).origin ? route.continue() : route.abort();
     });
-    await page.goto(`${origin}/term-tests/webtest-34-demo/index.html`);
+    await page.goto(`${origin}/term-tests/webtest-34-demo/index.html${search}`);
     await page.locator('#noTokenNotice').waitFor({ state: 'visible' });
     assert.match(await page.locator('#noTokenNotice').textContent(), /link của giáo viên/);
     assert.equal(await page.locator('#studentSelectInput').count(), 0, 'không dựng màn chọn học viên');

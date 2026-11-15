@@ -25,68 +25,6 @@ test('Cloze maps numbered blanks to stable answer IDs and preserves surrounding 
   assert.deepEqual(clozeSegments('I ____ TV.', ['a'], false), ['I ', { id: 'a', number: 1 }, ' TV.']);
 });
 
-const load = course => fs.readFile(new URL(`../term-tests/webtest-34-demo/demo-content/${course}.json`, import.meta.url), 'utf8').then(JSON.parse);
-
-test('03 picture questions use exact source anchors and exclude the Writing prompt image', async () => {
-  const form=await load('03');
-  const items=form.groups.find(g=>g.id==='vocabulary-picture').items;
-  assert.equal(items.length,10);
-  assert.equal(items[0].image,undefined);
-  assert.ok(items[0].prompt.includes('BUI QUANG HUNG'));
-  const files=['image5.png','image9.jpg','image4.png','image1.png','image8.png','image3.png','image7.png','image2.png','image6.png'];
-  items.slice(1).forEach((item,index)=>assert.ok(item.image.endsWith(files[index])));
-  assert.ok(!items.some(item=>item.image?.includes('image10')));
-  const writing=form.groups.find(g=>g.id==='writing');
-  assert.equal(writing.items.length,5);
-  assert.ok(writing.items[0].prompt.includes('Hoa 17 tuổi'));
-  assert.ok(writing.items.every(item=>!item.promptMissing));
-});
-
-test('Speaking 34 exposes questions and student notes without adjacent teacher criteria or model answers', async () => {
-  const form=await load('34');
-  const items=form.groups.find(group=>group.id==='speaking').items;
-  assert.equal(items.length,3);
-  for(const item of items) {
-    const lines=item.prompt.split('\n').filter(Boolean);
-    assert.match(lines[0],/^[123]\. .*\?/);
-    assert.ok(lines.slice(1).every(line=>line.startsWith('Note:')));
-  }
-  assert.ok(items[1].prompt.includes('Note: a long coach trip/bus ride'));
-});
-
-test('rendering every course retains every response field once, including actual Cloze source passages', async () => {
-  for (const course of ['03','34','45']) {
-    const form=await load(course);
-    for (const group of form.groups) {
-      const html=groupBody(group);
-      const ids=[...html.matchAll(/data-demo-answer="([^"]+)"/g)].map(match=>match[1]);
-      assert.deepEqual(ids.slice().sort(),group.items.map(item=>item.id).sort());
-      if (['listening-gap','listening-notes','grammar-present','grammar-past','grammar-perfect','grammar-verb'].includes(group.id)) {
-        assert.ok(html.includes('demo-cloze'),`${course}/${group.id} must render inline`);
-      }
-    }
-  }
-  const html=groupBody({id:'ordinary',items:[{id:'x',prompt:'<script>alert(1)</script>'}]});
-  assert.ok(!html.includes('<script>'));
-});
-
-test('demo uses selected Phase 1 forms and contains no private grading data', async () => {
-  for (const course of ['03', '34', '45']) {
-    const form = await load(course);
-    assert.equal(form.course, course);
-    assert.equal(form.testNumber, 1);
-    assert.equal(form.phase, course !== '03' ? 1 : null);
-    if (course === '45') assert.equal(form.sourceSheet, 'TEST MỚI');
-    assert.doesNotMatch(JSON.stringify(form), /correctOptionId|acceptedWord|privateGrading|IMPORTRANGE|DUMMYFUNCTION/);
-    const items = form.groups.flatMap(group => group.items);
-    assert.equal(new Set(items.map(item => item.id)).size, items.length);
-    assert.ok(items.length > 50);
-    for (const group of form.groups) for (const item of group.items) {
-      if (item.image) await fs.access(new URL(`../term-tests/webtest-34-demo/${item.image}`, import.meta.url));
-    }
-  }
-});
-
 test('drafts are isolated by course/version and discard unknown or invalid responses', () => {
   const form = { course: '03', sourceHash: 'abc', groups: [{ items: [{ id: 'a' }, { id: 'b', options: ['A', 'B'] }] }] };
   assert.notEqual(draftKey(form), draftKey({ ...form, course: '45' }));
@@ -95,21 +33,17 @@ test('drafts are isolated by course/version and discard unknown or invalid respo
   assert.deepEqual(sanitizeDraft(form, null).answers, {});
 });
 
-test('choice cards preserve stored option values and Vocabulary meanings remain dropdowns', async () => {
-  const form=await load('34');
-  const pronunciation=form.groups.find(group=>group.id==='pronunciation-choice');
-  const html=groupBody(pronunciation);
-  assert.equal([...html.matchAll(/type="radio"/g)].length,30);
+test('choice cards preserve stored option values and Vocabulary meanings remain dropdowns', () => {
+  const choice = { id: 'pronunciation-choice', items: [1, 2, 3].map(n => ({ id: `p${n}`, prompt: `${n}. Chọn từ có phần gạch chân phát âm khác`, options: [`opt-${n}-a`, `opt-${n}-b`, `opt-${n}-c`] })) };
+  const html = groupBody(choice);
+  assert.equal([...html.matchAll(/type="radio"/g)].length, 9);
   assert.ok(html.includes('class="qnum">1</span>'));
-  assert.ok(html.includes('class="qnum">10</span>'));
-  assert.ok(html.includes(`value="${pronunciation.items[0].options[0]}"`));
-  const vocabulary=groupBody(form.groups.find(group=>group.id==='vocabulary-listen'));
-  assert.equal([...vocabulary.matchAll(/<select /g)].length,25);
-  assert.ok(!vocabulary.includes('type="radio"'));
-  const course03=await load('03');
-  const vocabulary03=groupBody(course03.groups.find(group=>group.id==='vocabulary-listen'));
-  assert.equal([...vocabulary03.matchAll(/<select /g)].length,15);
-  assert.equal(course03.groups.find(group=>group.id==='vocabulary-listen').items.filter(item=>item.options).length,15);
+  assert.ok(html.includes('class="qnum">3</span>'));
+  assert.ok(html.includes(`value="${choice.items[0].options[0]}"`));
+  const vocabulary = { id: 'vocabulary-listen', items: [1, 2].map(n => ({ id: `v${n}`, prompt: `${n}. word`, options: ['nghĩa 1', 'nghĩa 2', 'nghĩa 3'] })) };
+  const vocabularyHtml = groupBody(vocabulary);
+  assert.equal([...vocabularyHtml.matchAll(/<select /g)].length, 2);
+  assert.ok(!vocabularyHtml.includes('type="radio"'));
 });
 
 test('starting a server attempt clears answers and submission state from another student', () => {
@@ -131,27 +65,13 @@ test('audio exercises stay hidden until their shared recording starts', () => {
   assert.match(html, /data-demo-audio-content=""/);
 });
 
-test('all production audio paths resolve to supplied files', async () => {
-  for (const course of ['03', '34', '45']) {
-    const form = await load(course);
-    for (const path of new Set(form.groups.map(group => group.audioPath).filter(Boolean))) {
-      await fs.access(new URL(`../term-tests/webtest-34-demo/${path}`, import.meta.url));
-    }
-  }
-  for (let t = 1; t <= 4; t++) {
-    const form = await fs.readFile(new URL(`../term-tests/webtest-34-demo/demo-content/34-test-${t}.json`, import.meta.url), 'utf8').then(JSON.parse);
-    for (const path of new Set(form.groups.map(group => group.audioPath).filter(Boolean))) {
-      await fs.access(new URL(`../term-tests/webtest-34-demo/${path}`, import.meta.url));
-    }
-  }
-});
-
-test('Course 34 listening-gap renders exam table grid layout', async () => {
-  const form = await fs.readFile(new URL('../term-tests/webtest-34-demo/demo-content/34-test-2.json', import.meta.url), 'utf8').then(JSON.parse);
-  const gapGroup = form.groups.find(g => g.id === 'listening-gap');
-  assert.ok(gapGroup.table);
-  assert.equal(gapGroup.table.title, 'The Active Leisure Center');
-  assert.equal(gapGroup.table.rows.length, 4);
+test('listening-gap with a table renders the exam table grid layout', () => {
+  const gapGroup = {
+    id: 'listening-gap',
+    title: 'Listening gap',
+    items: [{ id: 'g1', prompt: '(1) ____' }, { id: 'g2', prompt: '(2) ____' }],
+    table: { title: 'The Active Leisure Center', rows: [{ header: 'Outdoor facility', content: 'Name: (1) ______' }, { header: 'Opening hours', content: 'Opens at (2) ______' }] }
+  };
   const rendered = groupBody(gapGroup, '34');
   assert.match(rendered, /demo-table-wrapper/);
   assert.match(rendered, /demo-cloze-table/);
@@ -159,9 +79,13 @@ test('Course 34 listening-gap renders exam table grid layout', async () => {
   assert.match(rendered, /data-demo-answer=/);
 });
 
-test('Course 34 listening-order renders sentence cards and sequence dropdowns', async () => {
-  const form = await fs.readFile(new URL('../term-tests/webtest-34-demo/demo-content/34-test-1.json', import.meta.url), 'utf8').then(JSON.parse);
-  const orderGroup = form.groups.find(g => g.id === 'listening-order');
+test('listening-order renders sentence cards and sequence dropdowns', () => {
+  const orderGroup = {
+    id: 'listening-order',
+    title: 'Listening order',
+    context: 'A. First sentence\nB. Second sentence\nC. Third sentence',
+    items: [1, 2, 3].map(n => ({ id: `o${n}`, prompt: `Vị trí ${n}`, options: ['A', 'B', 'C'] }))
+  };
   const rendered = groupBody(orderGroup, '34');
   assert.match(rendered, /demo-order-container/);
   assert.match(rendered, /demo-order-sentence-card/);
@@ -169,22 +93,21 @@ test('Course 34 listening-order renders sentence cards and sequence dropdowns', 
   assert.match(rendered, /Vị trí 1/);
 });
 
-test('Course 34 Test 4 listening-choice renders MCQ radio options without prompt collisions', async () => {
-  const form = await fs.readFile(new URL('../term-tests/webtest-34-demo/demo-content/34-test-4.json', import.meta.url), 'utf8').then(JSON.parse);
-  const mcqGroup = form.groups.find(g => g.id === 'listening-choice');
-  assert.equal(mcqGroup.items.length, 5);
-  assert.equal(mcqGroup.items[0].prompt, '1. What does Debra Garrel consider as an adventure?');
-  assert.deepEqual(mcqGroup.items[0].options, [
-    'A. Studying communications at university',
-    'B. Making friends with people every day',
-    'C. Seeing new people daily while studying at university'
-  ]);
+test('listening-choice renders MCQ radio options without prompt collisions', () => {
+  const mcqGroup = {
+    id: 'listening-choice',
+    items: [{
+      id: 'q1',
+      prompt: '1. What does the speaker consider as an adventure?',
+      options: ['A. Studying communications at university', 'B. Making friends with people every day', 'C. Seeing new people daily while studying']
+    }]
+  };
   const rendered = groupBody(mcqGroup, '34');
   assert.match(rendered, /demo-choice/);
   assert.match(rendered, /Studying communications at university/);
 });
 
-test('demo entries delegate to the canonical page and branch before Learning initialization', async () => {
+test('course entries delegate to the canonical page and keep the token fragment', async () => {
   for (const course of ['03', '45']) {
     const entry = await fs.readFile(new URL(`../term-tests/webtest-${course}/test-1/index.html`, import.meta.url), 'utf8');
     assert.match(entry, new RegExp(`searchParams\\.set\\('demoCourse', '${course}'\\)`));
@@ -207,7 +130,7 @@ test('choice answers are translated between visible labels and stable definition
   assert.equal(mapAnswerToDefinitionValue({}, {}, 'free text'), 'free text');
 });
 
-test('canonical demo cache-busts the content renderer after text fixes', async () => {
+test('canonical page cache-busts the content renderer after text fixes', async () => {
   const html = await fs.readFile(new URL('../term-tests/webtest-34-demo/index.html', import.meta.url), 'utf8');
   assert.match(html, /import\('\.\/content-preview\.mjs\?rev=[a-z0-9-]+'\)/i);
 });
