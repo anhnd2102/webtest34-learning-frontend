@@ -70,14 +70,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Handle relative assets requested from teacher-dashboard
-  let targetPath = filePath;
-  if (!fs.existsSync(targetPath) && urlPath.startsWith('/term-tests/teacher-dashboard/assets/')) {
-    const fallbackPath = path.join(root, urlPath.replace('/term-tests/teacher-dashboard/assets/', '/term-tests/webtest-34-demo/assets/'));
-    if (fs.existsSync(fallbackPath)) {
-      targetPath = fallbackPath;
-    }
-  }
+  const targetPath = filePath;
 
   fs.stat(targetPath, (err, stat) => {
     if (err || !stat.isFile()) {

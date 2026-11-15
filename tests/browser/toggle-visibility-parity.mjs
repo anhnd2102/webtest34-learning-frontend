@@ -38,7 +38,7 @@ const rubricForm = () => {
 };
 const pictorialForm = () => {
   const item = (id, position, image) => ({ itemVersionId: id, exerciseId: 'ex1', position, prompt: 'Synthetic picture', interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: 1, options: [], targetWord: 'synthetic', ...(image ? { image } : {}) });
-  return baseForm([item('p1', 1, '../webtest-34-demo/assets/03/test-1/pic-2.png'), item('p2', 2, null)]);
+  return baseForm([item('p1', 1, '../../tests/browser/fixtures/pixel.png'), item('p2', 2, null)]);
 };
 const vocabItems = () => ['v1', 'v2'].map((id, index) => ({
   itemVersionId: id, exerciseId: 'ex1', position: index + 1, prompt: 'Synthetic vocabulary', targetWord: index ? 'second-word' : 'full-time',
@@ -182,8 +182,8 @@ try {
     }
     if (groups.includes('pictorial')) {
       const host = await mount('toggle-pictorial', pictorialForm());
-      const good = '../webtest-34-demo/assets/03/test-1/pic-2.png';
-      const bad = '../webtest-34-demo/assets/03/test-1/missing-image.png';
+      const good = '../../tests/browser/fixtures/pixel.png';
+      const bad = '../../tests/browser/fixtures/missing-image.png';
       const settled = locator => locator.evaluate(img => img.complete || new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true }); }));
       const p1 = host.locator('[data-item-id="p1"]');
       const p2 = host.locator('[data-item-id="p2"]');
@@ -384,7 +384,7 @@ try {
     if (groups.includes('simulation')) {
       const form = multiBlockForm([['e1'], ['e2']]);
       const picture = (id, position, image) => ({ itemVersionId: id, exerciseId: 'e1', position, prompt: 'Synthetic picture', interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: 1, options: [], targetWord: 'synthetic', image });
-      form.blocks[0].items.push(picture('p-good', 90, '../webtest-34-demo/assets/03/test-1/pic-2.png'), picture('p-bad', 91, '../webtest-34-demo/assets/03/test-1/missing-image.png'));
+      form.blocks[0].items.push(picture('p-good', 90, '../../tests/browser/fixtures/pixel.png'), picture('p-bad', 91, '../../tests/browser/fixtures/missing-image.png'));
       form.blocks[0].exercises[0].itemIds.push('p-good', 'p-bad');
       form.gradingKey.items['p-good'] = { graderType: 'accepted_text', accepted: ['synthetic'] };
       form.gradingKey.items['p-bad'] = { graderType: 'accepted_text', accepted: ['synthetic'] };
