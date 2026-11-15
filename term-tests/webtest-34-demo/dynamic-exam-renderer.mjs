@@ -1,3 +1,5 @@
+// NGUỒN: file .mts này; dynamic-exam-renderer.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
+// không có `?rev=`; build tự thêm rev lấy từ content-preview.mjs (tree webtest-34-demo/).
 /**
  * dynamic-exam-renderer.mjs
  * Renders dynamic test definitions (from Test Studio / DB) in the Candidate CBT Exam interface.
@@ -23,304 +25,307 @@
  *     - writing / speaking (long_text / rubric_async)
  *     - short_text
  */
-
 export const ICONS = {
-  barChart: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>`,
-  compass: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
-  lightbulb: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/></svg>`,
-  volume: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`,
-  zap: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-  book: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
-  clock: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
-  check: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
-  play: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
-  pause: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+    barChart: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>`,
+    compass: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
+    lightbulb: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/></svg>`,
+    volume: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`,
+    zap: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    book: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+    clock: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    check: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    play: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+    pause: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
 };
-
 // Ô trả lời bài thi: tắt gợi ý chính tả và tự sửa/viết hoa của trình duyệt, bàn phím điện thoại.
 export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
-
 // Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
 // không phải import file này).
 export { scrollBehavior } from './candidate/motion.js?rev=20261113-submit-a';
 import { scrollBehavior } from './candidate/motion.js?rev=20261113-submit-a';
-
 function escape(str) {
-  return String(str ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
-
 export function sanitizeRichContent(html) {
-  if (!html || typeof html !== 'string') return '';
-  let clean = html;
-  clean = clean.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-  clean = clean.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
-  clean = clean.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
-  clean = clean.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, '');
-  clean = clean.replace(/<link\b[^>]*>/gi, '');
-  clean = clean.replace(/<meta\b[^>]*>/gi, '');
-  clean = clean.replace(/\s+on[a-zA-Z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
-  clean = clean.replace(/(?:href|src)\s*=\s*["']\s*javascript:[^"']*["']/gi, '');
-  return clean;
+    if (!html || typeof html !== 'string')
+        return '';
+    let clean = html;
+    clean = clean.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    clean = clean.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+    clean = clean.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+    clean = clean.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, '');
+    clean = clean.replace(/<link\b[^>]*>/gi, '');
+    clean = clean.replace(/<meta\b[^>]*>/gi, '');
+    clean = clean.replace(/\s+on[a-zA-Z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+    clean = clean.replace(/(?:href|src)\s*=\s*["']\s*javascript:[^"']*["']/gi, '');
+    return clean;
 }
-
 export function renderFormattedContent(text) {
-  if (!text || typeof text !== 'string') return '';
-  if (/<[a-z][\s\S]*>/i.test(text)) {
-    return sanitizeRichContent(text);
-  }
-  return escape(text).replace(/\n/g, '<br>');
+    if (!text || typeof text !== 'string')
+        return '';
+    if (/<[a-z][\s\S]*>/i.test(text)) {
+        return sanitizeRichContent(text);
+    }
+    return escape(text).replace(/\n/g, '<br>');
 }
-
 export function formatPedagogicalTypeLabel(item) {
-  if (!item) return 'Câu hỏi';
-  const rawCode = (item.pedagogicalTypeCode || item.layoutType || item.interactionType || item.graderType || '').toLowerCase();
-  
-  if (rawCode.includes('table_completion') || rawCode.includes('inline_cloze') || rawCode.includes('inline_dropdown')) {
-    return 'Điền từ vào đoạn văn';
-  }
-  if (rawCode.includes('pronunciation')) {
-    return 'Ngữ âm & Phát âm';
-  }
-  if (rawCode.includes('sentence_rewrite') || rawCode.includes('keyword_transformation')) {
-    return 'Viết lại câu';
-  }
-  if (rawCode.includes('sentence_reorder') || rawCode.includes('token_scramble')) {
-    return 'Sắp xếp câu';
-  }
-  if (rawCode.includes('correction') || rawCode.includes('error')) {
-    return 'Tìm & sửa lỗi sai';
-  }
-  if (rawCode.includes('reading_matching') || rawCode.includes('split_pane')) {
-    return 'Ghép nối thông tin';
-  }
-  if (rawCode.includes('listening_order') || rawCode.includes('timeline')) {
-    return 'Sắp xếp thứ tự nghe';
-  }
-  if (rawCode.includes('pictorial')) {
-    return 'Từ vựng qua ảnh';
-  }
-  if (rawCode.includes('vocab') || rawCode.includes('text_select_pair')) {
-    return 'Cặp từ vựng';
-  }
-  if (rawCode.includes('single_choice')) {
-    return 'Trắc nghiệm 1 đáp án';
-  }
-  if (rawCode.includes('multi_choice')) {
-    return 'Trắc nghiệm chọn nhiều';
-  }
-  if (rawCode.includes('rubric') || rawCode.includes('long_text') || rawCode.includes('essay')) {
-    return 'Tự luận';
-  }
-  if (rawCode.includes('short_text') || rawCode.includes('qa')) {
-    return 'Trả lời ngắn';
-  }
-  return 'Câu hỏi';
+    if (!item)
+        return 'Câu hỏi';
+    const rawCode = (item.pedagogicalTypeCode || item.layoutType || item.interactionType || item.graderType || '').toLowerCase();
+    if (rawCode.includes('table_completion') || rawCode.includes('inline_cloze') || rawCode.includes('inline_dropdown')) {
+        return 'Điền từ vào đoạn văn';
+    }
+    if (rawCode.includes('pronunciation')) {
+        return 'Ngữ âm & Phát âm';
+    }
+    if (rawCode.includes('sentence_rewrite') || rawCode.includes('keyword_transformation')) {
+        return 'Viết lại câu';
+    }
+    if (rawCode.includes('sentence_reorder') || rawCode.includes('token_scramble')) {
+        return 'Sắp xếp câu';
+    }
+    if (rawCode.includes('correction') || rawCode.includes('error')) {
+        return 'Tìm & sửa lỗi sai';
+    }
+    if (rawCode.includes('reading_matching') || rawCode.includes('split_pane')) {
+        return 'Ghép nối thông tin';
+    }
+    if (rawCode.includes('listening_order') || rawCode.includes('timeline')) {
+        return 'Sắp xếp thứ tự nghe';
+    }
+    if (rawCode.includes('pictorial')) {
+        return 'Từ vựng qua ảnh';
+    }
+    if (rawCode.includes('vocab') || rawCode.includes('text_select_pair')) {
+        return 'Cặp từ vựng';
+    }
+    if (rawCode.includes('single_choice')) {
+        return 'Trắc nghiệm 1 đáp án';
+    }
+    if (rawCode.includes('multi_choice')) {
+        return 'Trắc nghiệm chọn nhiều';
+    }
+    if (rawCode.includes('rubric') || rawCode.includes('long_text') || rawCode.includes('essay')) {
+        return 'Tự luận';
+    }
+    if (rawCode.includes('short_text') || rawCode.includes('qa')) {
+        return 'Trả lời ngắn';
+    }
+    return 'Câu hỏi';
 }
-
 // Câu điền chỗ trống (đoạn văn hoặc bảng). Mọi nơi dùng chung hàm này để màn làm bài, bảng câu hỏi và cách đếm số ô không lệch nhau.
 export function isInlineClozeItem(item) {
-  return item.pedagogicalTypeCode === 'inline_cloze' ||
-    item.layoutType === 'inline_cloze' ||
-    item.pedagogicalTypeCode === 'table_completion' ||
-    item.layoutType === 'table_completion' ||
-    item.layoutType === 'inline_dropdown_table' ||
-    (item.interactionType === 'short_text' && (
-      (item.prompt && (/(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
-      (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)
-    ));
+    return item.pedagogicalTypeCode === 'inline_cloze' ||
+        item.layoutType === 'inline_cloze' ||
+        item.pedagogicalTypeCode === 'table_completion' ||
+        item.layoutType === 'table_completion' ||
+        item.layoutType === 'inline_dropdown_table' ||
+        (item.interactionType === 'short_text' && ((item.prompt && (/(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/.test(item.prompt))) ||
+            (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0)));
 }
-
 export function getItemSpanCount(item) {
-  if (!item) return 1;
-  const isInlineCloze = isInlineClozeItem(item);
-  if (isInlineCloze) {
-    const numPattern = /(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
-    const matches = Array.from((item.prompt || '').matchAll(numPattern));
-    if (matches && matches.length > 0) {
-      const uniqueNums = new Set(matches.map(m => Number(m[1] || m[2])));
-      return Math.max(1, uniqueNums.size);
+    if (!item)
+        return 1;
+    const isInlineCloze = isInlineClozeItem(item);
+    if (isInlineCloze) {
+        const numPattern = /(?:\((\d+)\)\s*[_.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+        const matches = Array.from((item.prompt || '').matchAll(numPattern));
+        if (matches && matches.length > 0) {
+            const uniqueNums = new Set(matches.map((m) => Number(m[1] || m[2])));
+            return Math.max(1, uniqueNums.size);
+        }
+        if (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0) {
+            return Object.keys(item.clozeAnswers).length;
+        }
     }
-    if (item.clozeAnswers && Object.keys(item.clozeAnswers).length > 0) {
-      return Object.keys(item.clozeAnswers).length;
+    const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
+        item.layoutType === 'timeline_sequence' ||
+        item.graderType === 'ordered_sequence' ||
+        (Array.isArray(item.events) && item.events.length > 0);
+    if (isListeningOrder && Array.isArray(item.events) && item.events.length > 0) {
+        return item.events.length;
     }
-  }
-  const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
-    item.layoutType === 'timeline_sequence' ||
-    item.graderType === 'ordered_sequence' ||
-    (Array.isArray(item.events) && item.events.length > 0);
-  if (isListeningOrder && Array.isArray(item.events) && item.events.length > 0) {
-    return item.events.length;
-  }
-  return 1;
+    return 1;
 }
-
 export function getTotalItemCount(definition) {
-  if (!definition || !Array.isArray(definition.blocks)) return 0;
-  return definition.blocks.reduce((sum, b) => {
-    return sum + (Array.isArray(b.items) ? b.items.reduce((s, it) => s + getItemSpanCount(it), 0) : 0);
-  }, 0);
+    const def = definition;
+    if (!def || !Array.isArray(def.blocks))
+        return 0;
+    return def.blocks.reduce((sum, b) => {
+        return sum + (Array.isArray(b.items) ? b.items.reduce((s, it) => s + getItemSpanCount(it), 0) : 0);
+    }, 0);
 }
-
 export function getAnsweredCount(definition, answers = {}) {
-  if (!definition || !Array.isArray(definition.blocks)) return 0;
-  let answered = 0;
-  const allItems = definition.blocks.flatMap(b => b.items || []);
-  for (const item of allItems) {
-    const span = getItemSpanCount(item);
-    const val = answers[item.itemVersionId];
-    if (val === undefined || val === null) continue;
-    if (span > 1 && typeof val === 'object' && !Array.isArray(val)) {
-      for (const k of Object.keys(val)) {
-        if (typeof val[k] === 'string' && val[k].trim() !== '') answered++;
-      }
-    } else if (Array.isArray(val)) {
-      if (val.some(v => typeof v === 'string' && v.trim() !== '')) answered++;
-    } else if (typeof val === 'object') {
-      if (Object.values(val).some(v => typeof v === 'string' && v.trim() !== '')) answered++;
-    } else if (typeof val === 'string' && val.trim() !== '') {
-      answered++;
+    const def = definition;
+    if (!def || !Array.isArray(def.blocks))
+        return 0;
+    let answered = 0;
+    const allItems = def.blocks.flatMap((b) => b.items || []);
+    for (const item of allItems) {
+        const span = getItemSpanCount(item);
+        const val = answers[item.itemVersionId];
+        if (val === undefined || val === null)
+            continue;
+        if (span > 1 && typeof val === 'object' && !Array.isArray(val)) {
+            for (const k of Object.keys(val)) {
+                if (typeof val[k] === 'string' && val[k].trim() !== '')
+                    answered++;
+            }
+        }
+        else if (Array.isArray(val)) {
+            if (val.some(v => typeof v === 'string' && v.trim() !== ''))
+                answered++;
+        }
+        else if (typeof val === 'object') {
+            if (Object.values(val).some(v => typeof v === 'string' && v.trim() !== ''))
+                answered++;
+        }
+        else if (typeof val === 'string' && val.trim() !== '') {
+            answered++;
+        }
     }
-  }
-  return answered;
+    return answered;
 }
-
 export function formatOptionDisplayLetter(optId, index) {
-  if (!optId && index === undefined) return '';
-  const strId = String(optId || '').trim();
-  const directMatch = strId.match(/^([a-z])$/i);
-  if (directMatch) return directMatch[1].toUpperCase();
-  const standardSuffixMatch = strId.match(/[-_]([a-z])$/i);
-  if (standardSuffixMatch) return standardSuffixMatch[1].toUpperCase();
-  const numSuffixMatch = strId.match(/[-_](\d+)$/i);
-  if (numSuffixMatch) {
-    const num = parseInt(numSuffixMatch[1], 10);
-    if (num >= 1 && num <= 26) return String.fromCharCode(64 + num);
-  }
-  if (typeof index === 'number' && index >= 0 && index < 26) {
-    return String.fromCharCode(65 + index);
-  }
-  return strId.toUpperCase().slice(0, 2);
+    if (!optId && index === undefined)
+        return '';
+    const strId = String(optId || '').trim();
+    const directMatch = strId.match(/^([a-z])$/i);
+    if (directMatch)
+        return directMatch[1].toUpperCase();
+    const standardSuffixMatch = strId.match(/[-_]([a-z])$/i);
+    if (standardSuffixMatch)
+        return standardSuffixMatch[1].toUpperCase();
+    const numSuffixMatch = strId.match(/[-_](\d+)$/i);
+    if (numSuffixMatch) {
+        const num = parseInt(numSuffixMatch[1], 10);
+        if (num >= 1 && num <= 26)
+            return String.fromCharCode(64 + num);
+    }
+    if (typeof index === 'number' && index >= 0 && index < 26) {
+        return String.fromCharCode(65 + index);
+    }
+    return strId.toUpperCase().slice(0, 2);
 }
-
 function parseClozeBlanks(text) {
-  const detected = [];
-  const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
-  for (const m of (text || '').matchAll(pattern)) {
-    const num = Number(m[1] || m[2]);
-    if (!Number.isNaN(num)) detected.push({ number: num });
-  }
-  return detected;
+    const detected = [];
+    const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+    for (const m of (text || '').matchAll(pattern)) {
+        const num = Number(m[1] || m[2]);
+        if (!Number.isNaN(num))
+            detected.push({ number: num });
+    }
+    return detected;
 }
-
 function isAnswerValueFilled(val) {
-  if (val === undefined || val === null) return false;
-  if (Array.isArray(val)) return val.some(v => typeof v === 'string' && v.trim() !== '');
-  if (typeof val === 'object') return Object.values(val).some(v => typeof v === 'string' && v.trim() !== '');
-  if (typeof val === 'string') return val.trim().length > 0;
-  return false;
+    if (val === undefined || val === null)
+        return false;
+    if (Array.isArray(val))
+        return val.some(v => typeof v === 'string' && v.trim() !== '');
+    if (typeof val === 'object')
+        return Object.values(val).some(v => typeof v === 'string' && v.trim() !== '');
+    if (typeof val === 'string')
+        return val.trim().length > 0;
+    return false;
 }
-
 export function renderSectionNavPills(definition, activeBlockIdx = 0) {
-  if (!definition || !Array.isArray(definition.blocks)) return '';
-  return definition.blocks.map((b, i) => {
-    const bCount = (b.items || []).reduce((s, it) => s + getItemSpanCount(it), 0);
-    const exCount = (b.exercises || []).length;
-    const badgeText = exCount > 1 ? `${exCount} bài · ${bCount} câu` : `${bCount} câu`;
-    const isActive = i === activeBlockIdx;
-    return `
+    if (!definition || !Array.isArray(definition.blocks))
+        return '';
+    return definition.blocks.map((b, i) => {
+        const bCount = (b.items || []).reduce((s, it) => s + getItemSpanCount(it), 0);
+        const exCount = (b.exercises || []).length;
+        const badgeText = exCount > 1 ? `${exCount} bài · ${bCount} câu` : `${bCount} câu`;
+        const isActive = i === activeBlockIdx;
+        return `
       <button type="button" class="section-tab simulation-nav-pill cbt-nav-pill ${isActive ? 'active' : ''}" data-section-target="sim-block-${i}" data-demo-go="${escape(b.title || `Phần ${i + 1}`)}">
         <span class="cbt-pill-title">${escape(b.title || `Phần ${i + 1}`)}</span>
         <span class="tab-count cbt-pill-badge">${badgeText}</span>
       </button>
     `;
-  }).join('');
+    }).join('');
 }
-
 export function renderQuestionNavigator(definition, answers = {}) {
-  if (!definition || !Array.isArray(definition.blocks)) return '';
-  const blocks = definition.blocks;
-  return blocks.flatMap((b, bIdx) => {
-    const items = b.items || [];
-    return items.flatMap(item => {
-      const span = getItemSpanCount(item);
-      const isInlineCloze = isInlineClozeItem(item);
-      const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
-        item.layoutType === 'timeline_sequence' ||
-        item.graderType === 'ordered_sequence' ||
-        (Array.isArray(item.events) && item.events.length > 0);
-
-      const val = answers[item.itemVersionId];
-
-      if (isInlineCloze && span > 1) {
-        const detected = parseClozeBlanks(item.prompt || '');
-        const uniqueNums = [];
-        for (const d of detected) {
-          if (!uniqueNums.includes(d.number)) uniqueNums.push(d.number);
-        }
-        if (item.clozeAnswers) {
-          Object.keys(item.clozeAnswers).forEach(k => {
-            const n = Number(k);
-            if (!Number.isNaN(n) && !uniqueNums.includes(n)) uniqueNums.push(n);
-          });
-        }
-        uniqueNums.sort((a, b) => a - b);
-        const btns = [];
-        for (let k = 0; k < span; k++) {
-          const qPos = item.position + k;
-          const blankNum = uniqueNums[k] ?? qPos;
-          const isBlankAnswered = typeof val === 'object' && val !== null ? Boolean(val[blankNum]?.trim()) : (typeof val === 'string' && val.trim().length > 0);
-          btns.push(`
+    if (!definition || !Array.isArray(definition.blocks))
+        return '';
+    const blocks = definition.blocks;
+    return blocks.flatMap((b, bIdx) => {
+        const items = b.items || [];
+        return items.flatMap((item) => {
+            const span = getItemSpanCount(item);
+            const isInlineCloze = isInlineClozeItem(item);
+            const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' ||
+                item.layoutType === 'timeline_sequence' ||
+                item.graderType === 'ordered_sequence' ||
+                (Array.isArray(item.events) && item.events.length > 0);
+            const val = answers[item.itemVersionId];
+            if (isInlineCloze && span > 1) {
+                const detected = parseClozeBlanks(item.prompt || '');
+                const uniqueNums = [];
+                for (const d of detected) {
+                    if (!uniqueNums.includes(d.number))
+                        uniqueNums.push(d.number);
+                }
+                if (item.clozeAnswers) {
+                    Object.keys(item.clozeAnswers).forEach(k => {
+                        const n = Number(k);
+                        if (!Number.isNaN(n) && !uniqueNums.includes(n))
+                            uniqueNums.push(n);
+                    });
+                }
+                uniqueNums.sort((a, b) => a - b);
+                const btns = [];
+                for (let k = 0; k < span; k++) {
+                    const qPos = item.position + k;
+                    const blankNum = uniqueNums[k] ?? qPos;
+                    const isBlankAnswered = typeof val === 'object' && val !== null ? Boolean(val[blankNum]?.trim()) : (typeof val === 'string' && val.trim().length > 0);
+                    btns.push(`
             <button type="button" class="btn-qnav ${isBlankAnswered ? 'answered' : ''}" data-pos="${qPos}" data-blank-pos="${blankNum}" data-item-id="${escape(item.itemVersionId)}" data-section-target="sim-block-${bIdx}" title="Câu ${qPos} (Chỗ trống ${blankNum})">
               <span class="qnav-num">${qPos}</span>
             </button>
           `);
-        }
-        return btns;
-      }
-
-      if (isListeningOrder && span > 1) {
-        const btns = [];
-        for (let k = 0; k < span; k++) {
-          const qPos = item.position + k;
-          const slotNum = k + 1;
-          const isSlotAnswered = typeof val === 'object' && val !== null ? Boolean(val[slotNum]?.trim()) : false;
-          btns.push(`
+                }
+                return btns;
+            }
+            if (isListeningOrder && span > 1) {
+                const btns = [];
+                for (let k = 0; k < span; k++) {
+                    const qPos = item.position + k;
+                    const slotNum = k + 1;
+                    const isSlotAnswered = typeof val === 'object' && val !== null ? Boolean(val[slotNum]?.trim()) : false;
+                    btns.push(`
             <button type="button" class="btn-qnav ${isSlotAnswered ? 'answered' : ''}" data-pos="${qPos}" data-slot-num="${slotNum}" data-item-id="${escape(item.itemVersionId)}" data-section-target="sim-block-${bIdx}" title="Câu ${qPos} (Bước thứ ${slotNum})">
               <span class="qnav-num">${qPos}</span>
             </button>
           `);
-        }
-        return btns;
-      }
-
-      const qPos = item.position || 1;
-      const isAnswered = isAnswerValueFilled(val);
-      return [
-        `
+                }
+                return btns;
+            }
+            const qPos = item.position || 1;
+            const isAnswered = isAnswerValueFilled(val);
+            return [
+                `
         <button type="button" class="btn-qnav ${isAnswered ? 'answered' : ''}" data-pos="${qPos}" data-item-id="${escape(item.itemVersionId)}" data-section-target="sim-block-${bIdx}" title="Câu ${qPos}">
           <span class="qnav-num">${qPos}</span>
         </button>
         `
-      ];
-    });
-  }).join('');
+            ];
+        });
+    }).join('');
 }
-
 export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
-  if (!definition || !Array.isArray(definition.blocks)) return '';
-  const blocks = definition.blocks;
-  const totalItems = getTotalItemCount(definition);
-  const answeredTotal = getAnsweredCount(definition, state.answers || {});
-  const pct = totalItems ? Math.round((answeredTotal / totalItems) * 100) : 0;
-
-  const navigatorButtonsHtml = renderQuestionNavigator(definition, state.answers || {});
-
-  return `
+    if (!definition || !Array.isArray(definition.blocks))
+        return '';
+    const blocks = definition.blocks;
+    const totalItems = getTotalItemCount(definition);
+    const answeredTotal = getAnsweredCount(definition, state.answers || {});
+    const pct = totalItems ? Math.round((answeredTotal / totalItems) * 100) : 0;
+    const navigatorButtonsHtml = renderQuestionNavigator(definition, state.answers || {});
+    return `
     <aside class="side-panel cbt-side-panel">
       <!-- Card 1: Tiến độ làm bài -->
       <div class="panel-card cbt-panel-card cbt-progress-card">
@@ -336,20 +341,21 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
         </div>
         <div class="section-list cbt-section-jump-list">
           ${blocks.map((b, i) => {
-            const bItems = b.items || [];
-            const bTotal = bItems.reduce((s, it) => s + getItemSpanCount(it), 0);
-            let bDone = 0;
-            for (const it of bItems) {
-              const val = (state.answers || {})[it.itemVersionId];
-              if (isAnswerValueFilled(val)) bDone += getItemSpanCount(it);
-            }
-            return `
+        const bItems = b.items || [];
+        const bTotal = bItems.reduce((s, it) => s + getItemSpanCount(it), 0);
+        let bDone = 0;
+        for (const it of bItems) {
+            const val = (state.answers || {})[it.itemVersionId];
+            if (isAnswerValueFilled(val))
+                bDone += getItemSpanCount(it);
+        }
+        return `
               <button type="button" class="side-section-btn cbt-jump-btn ${i === activeBlockIdx ? 'active' : ''}" data-section-target="sim-block-${i}" data-demo-go="${escape(b.title || `Phần ${i + 1}`)}">
                 <span class="cbt-jump-title">${escape(b.title || `Phần ${i + 1}`)}</span>
                 <span class="side-count cbt-jump-count" data-side-count="sim-block-${i}">${bDone}/${bTotal}</span>
               </button>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </div>
 
@@ -386,15 +392,14 @@ export function renderSidePanel(definition, state = {}, activeBlockIdx = 0) {
     </aside>
   `;
 }
-
 function renderSimVocabPairTable(vocabItems, answers = {}) {
-  if (!vocabItems || !vocabItems.length) return '';
-  const firstPrompt = (vocabItems[0]?.prompt || '').trim();
-  const promptText = (firstPrompt && !firstPrompt.startsWith('Từ vựng') && firstPrompt.length > 15)
-    ? firstPrompt
-    : 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:';
-
-  return `
+    if (!vocabItems || !vocabItems.length)
+        return '';
+    const firstPrompt = (vocabItems[0]?.prompt || '').trim();
+    const promptText = (firstPrompt && !firstPrompt.startsWith('Từ vựng') && firstPrompt.length > 15)
+        ? firstPrompt
+        : 'Nghe đoạn ghi âm, nhập từ/cụm từ tiếng Anh và chọn nghĩa tiếng Việt tương ứng:';
+    return `
     <div class="candidate-vocab-table-container cbt-vocab-card">
       <div class="candidate-vocab-table-intro">
         <div class="candidate-vocab-table-prompt">${renderFormattedContent(promptText)}</div>
@@ -406,11 +411,11 @@ function renderSimVocabPairTable(vocabItems, answers = {}) {
           <div class="vocab-th vocab-th-vi">Nghĩa tiếng Việt tương ứng (50% điểm)</div>
         </div>
         <div class="candidate-vocab-table-body">
-          ${vocabItems.map(item => {
-            const rawAns = answers[item.itemVersionId];
-            const enVal = Array.isArray(rawAns) ? (rawAns[0] || '') : (typeof rawAns === 'string' ? rawAns : '');
-            const viVal = Array.isArray(rawAns) ? (rawAns[1] || '') : '';
-            return `
+          ${vocabItems.map((item) => {
+        const rawAns = answers[item.itemVersionId];
+        const enVal = Array.isArray(rawAns) ? (rawAns[0] || '') : (typeof rawAns === 'string' ? rawAns : '');
+        const viVal = Array.isArray(rawAns) ? (rawAns[1] || '') : '';
+        return `
               <div class="candidate-vocab-table-row" data-item-id="${escape(item.itemVersionId)}">
                 <div class="vocab-td vocab-td-num">
                   <span class="vocab-row-num-badge qnum" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 14px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">Câu ${escape(item.position)}</span>
@@ -421,32 +426,32 @@ function renderSimVocabPairTable(vocabItems, answers = {}) {
                 <div class="vocab-td vocab-td-vi">
                   <select class="candidate-vocab-select" data-item-id="${escape(item.itemVersionId)}">
                     <option value="">-- Chọn nghĩa tương ứng --</option>
-                    ${(item.options || []).map(opt => `
+                    ${(item.options || []).map((opt) => `
                       <option value="${escape(opt.id)}" ${viVal === opt.id ? 'selected' : ''}>${escape(opt.label || opt.id)}</option>
                     `).join('')}
                   </select>
                 </div>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </div>
     </div>
   `;
 }
-
 function renderSimPictorialGroup(pictorialItems, answers = {}) {
-  if (!pictorialItems || !pictorialItems.length) return '';
-  return `
+    if (!pictorialItems || !pictorialItems.length)
+        return '';
+    return `
     <div class="candidate-pictorial-group-container cbt-pictorial-wrap">
       <div class="candidate-pictorial-group-intro">
         <div class="candidate-pictorial-group-prompt">Dựa vào hình ảnh và gợi ý, hãy hoàn thành từ/cụm từ tương ứng:</div>
       </div>
       <div class="candidate-pictorial-grid">
-        ${pictorialItems.map(item => {
-          const imgSrc = item.image || item.stimulusImageUrl || '';
-          const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
-          return `
+        ${pictorialItems.map((item) => {
+        const imgSrc = item.image || item.stimulusImageUrl || '';
+        const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
+        return `
             <div class="candidate-pictorial-card cbt-pictorial-card" data-item-id="${escape(item.itemVersionId)}">
               <div class="candidate-pictorial-card-header">
                 <span class="question-num-badge qnum" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 14px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">Câu ${escape(item.position)}</span>
@@ -466,28 +471,28 @@ function renderSimPictorialGroup(pictorialItems, answers = {}) {
               </div>
             </div>
           `;
-        }).join('')}
+    }).join('')}
       </div>
     </div>
   `;
 }
-
 export function isShortQaEligibleFor2Col(items) {
-  if (!Array.isArray(items) || items.length <= 1) return false;
-  return items.every(item => {
-    const prompt = (item.prompt || '').trim();
-    const clean = prompt.replace(/<[^>]+>/g, '').trim();
-    const hasComplexHtml = /<(?:table|tbody|tr|td|th|img|figure|video|audio|blockquote|hr)\b/i.test(prompt);
-    return clean.length > 0 && clean.length <= 100 && !hasComplexHtml;
-  });
+    if (!Array.isArray(items) || items.length <= 1)
+        return false;
+    return items.every(item => {
+        const prompt = (item.prompt || '').trim();
+        const clean = prompt.replace(/<[^>]+>/g, '').trim();
+        const hasComplexHtml = /<(?:table|tbody|tr|td|th|img|figure|video|audio|blockquote|hr)\b/i.test(prompt);
+        return clean.length > 0 && clean.length <= 100 && !hasComplexHtml;
+    });
 }
-
 function renderSimShortQaGroup(shortItems, answers = {}) {
-  if (!shortItems || !shortItems.length) return '';
-  const is2Col = isShortQaEligibleFor2Col(shortItems);
-  return `
+    if (!shortItems || !shortItems.length)
+        return '';
+    const is2Col = isShortQaEligibleFor2Col(shortItems);
+    return `
     <div class="candidate-short-qa-container cbt-short-qa-wrap ${is2Col ? 'short-qa-2col' : ''}">
-      ${shortItems.map(item => {
+      ${shortItems.map((item) => {
         const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
         return `
           <div class="candidate-short-qa-item cbt-short-qa-card" data-item-id="${escape(item.itemVersionId)}">
@@ -500,101 +505,96 @@ function renderSimShortQaGroup(shortItems, answers = {}) {
             </div>
           </div>
         `;
-      }).join('')}
+    }).join('')}
     </div>
   `;
 }
-
 export function renderInlineCloze(item, answers = {}) {
-  const text = item.prompt || '';
-  const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
-  const containsHtml = /<[a-z][\s\S]*>/i.test(text);
-
-  // Đáp án chuỗi là bản nháp cũ từ khi câu này còn hiện thành ô trả lời ngắn (#39):
-  // chỉ đưa vào ô trống đầu tiên, không lặp lại ở mọi ô.
-  let legacyStringUsed = false;
-  const renderBlank = (num) => {
-    const rawVal = answers[item.itemVersionId];
-    let val = '';
-    if (typeof rawVal === 'object' && rawVal !== null) val = rawVal[num] || '';
-    else if (typeof rawVal === 'string' && !legacyStringUsed) { val = rawVal; legacyStringUsed = true; }
-    const isFilled = typeof val === 'string' && val.trim().length > 0;
-    return `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
-      `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
-      `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />` +
-    `</span>`;
-  };
-
-  if (containsHtml) {
-    const cleanHtml = sanitizeRichContent(text);
+    const text = item.prompt || '';
+    const pattern = /(?:\((\d+)\)\s*[_\.\u2026]{2,})|(?:\{\{(\d+)\}\})/g;
+    const containsHtml = /<[a-z][\s\S]*>/i.test(text);
+    // Đáp án chuỗi là bản nháp cũ từ khi câu này còn hiện thành ô trả lời ngắn (#39):
+    // chỉ đưa vào ô trống đầu tiên, không lặp lại ở mọi ô.
+    let legacyStringUsed = false;
+    const renderBlank = (num) => {
+        const rawVal = answers[item.itemVersionId];
+        let val = '';
+        if (typeof rawVal === 'object' && rawVal !== null)
+            val = rawVal[num] || '';
+        else if (typeof rawVal === 'string' && !legacyStringUsed) {
+            val = rawVal;
+            legacyStringUsed = true;
+        }
+        const isFilled = typeof val === 'string' && val.trim().length > 0;
+        return `<span class="inline-blank-wrapper cbt-blank-pill ${isFilled ? 'is-filled' : ''}" data-item-id="${escape(item.itemVersionId)}">` +
+            `<span class="inline-blank-number cbt-blank-idx">(${num})</span>` +
+            `<input type="text" class="inline-fill-input cbt-blank-input" data-item-id="${escape(item.itemVersionId)}" data-position="${num}" placeholder="" value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />` +
+            `</span>`;
+    };
+    if (containsHtml) {
+        const cleanHtml = sanitizeRichContent(text);
+        let html = '';
+        let last = 0;
+        for (const match of cleanHtml.matchAll(pattern)) {
+            const num = Number(match[1] || match[2]);
+            html += cleanHtml.slice(last, match.index);
+            html += renderBlank(num);
+            last = match.index + match[0].length;
+        }
+        html += cleanHtml.slice(last);
+        return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${html}</div>`;
+    }
+    const cleanText = text.replace(/\r\n/g, '\n').replace(/[ \t]+\n/g, '\n').replace(/\u00a0/g, ' ').trim();
+    const rawLines = cleanText.split('\n');
+    if (rawLines.length > 1) {
+        const linesHtml = rawLines.map((line) => {
+            let lineHtml = '';
+            let last = 0;
+            for (const match of line.matchAll(pattern)) {
+                const num = Number(match[1] || match[2]);
+                lineHtml += escape(line.slice(last, match.index));
+                lineHtml += renderBlank(num);
+                last = match.index + match[0].length;
+            }
+            lineHtml += escape(line.slice(last));
+            return `<div class="cbt-cloze-line" style="display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;word-break:normal;margin-bottom:14px;line-height:2.2;">${lineHtml}</div>`;
+        }).join('');
+        return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${linesHtml}</div>`;
+    }
     let html = '';
     let last = 0;
-    for (const match of cleanHtml.matchAll(pattern)) {
-      const num = Number(match[1] || match[2]);
-      html += cleanHtml.slice(last, match.index);
-      html += renderBlank(num);
-      last = match.index + match[0].length;
-    }
-    html += cleanHtml.slice(last);
-    return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${html}</div>`;
-  }
-
-  const cleanText = text.replace(/\r\n/g, '\n').replace(/[ \t]+\n/g, '\n').replace(/\u00a0/g, ' ').trim();
-  const rawLines = cleanText.split('\n');
-
-  if (rawLines.length > 1) {
-    const linesHtml = rawLines.map(line => {
-      let lineHtml = '';
-      let last = 0;
-      for (const match of line.matchAll(pattern)) {
+    for (const match of cleanText.matchAll(pattern)) {
         const num = Number(match[1] || match[2]);
-        lineHtml += escape(line.slice(last, match.index));
-        lineHtml += renderBlank(num);
+        html += escape(cleanText.slice(last, match.index));
+        html += renderBlank(num);
         last = match.index + match[0].length;
-      }
-      lineHtml += escape(line.slice(last));
-      return `<div class="cbt-cloze-line" style="display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;word-break:normal;margin-bottom:14px;line-height:2.2;">${lineHtml}</div>`;
-    }).join('');
-
-    return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;">${linesHtml}</div>`;
-  }
-
-  let html = '';
-  let last = 0;
-  for (const match of cleanText.matchAll(pattern)) {
-    const num = Number(match[1] || match[2]);
-    html += escape(cleanText.slice(last, match.index));
-    html += renderBlank(num);
-    last = match.index + match[0].length;
-  }
-  html += escape(cleanText.slice(last));
-  return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;"><div class="cbt-cloze-line" style="display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;word-break:normal;line-height:2.2;">${html}</div></div>`;
+    }
+    html += escape(cleanText.slice(last));
+    return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;"><div class="cbt-cloze-line" style="display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;word-break:normal;line-height:2.2;">${html}</div></div>`;
 }
-
 export function renderQuestionCard(item, answers = {}, block = null) {
-  const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
-  const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
-  const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
-  const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair');
-  const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching');
-  const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0));
-  const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
-  const isMultiGroup = item.interactionType === 'multi_choice_group';
-  const isInlineCloze = isInlineClozeItem(item);
-  const isRubricAsync = item.graderType === 'rubric_async' || item.interactionType === 'long_text';
-
-  const rawAns = answers[item.itemVersionId];
-  let interactiveHtml = '';
-
-  if (isInlineCloze) {
-    interactiveHtml = renderInlineCloze(item, answers);
-  } else if (isSingleChoice) {
-    const cols = (item.options || []).length === 3 ? 'grid-cols-3' : ((item.options || []).length >= 4 ? 'grid-cols-4' : 'grid-cols-2');
-    interactiveHtml = `
+    const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
+    const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
+    const isSentenceReorder = (item.pedagogicalTypeCode === 'sentence_reorder' || item.layoutType === 'token_scramble') && !isSentenceRewrite && !isPronunciation;
+    const isErrorCorrection = (item.interactionType === 'correction_pair' || item.pedagogicalTypeCode === 'error_correction' || item.graderType === 'correction_pair');
+    const isReadingMatching = (item.pedagogicalTypeCode === 'reading_matching' || item.layoutType === 'split_pane_matching');
+    const isListeningOrder = (item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0));
+    const isSingleChoice = item.interactionType === 'single_choice' && !isListeningOrder && !isReadingMatching && !isErrorCorrection;
+    const isMultiGroup = item.interactionType === 'multi_choice_group';
+    const isInlineCloze = isInlineClozeItem(item);
+    const isRubricAsync = item.graderType === 'rubric_async' || item.interactionType === 'long_text';
+    const rawAns = answers[item.itemVersionId];
+    let interactiveHtml = '';
+    if (isInlineCloze) {
+        interactiveHtml = renderInlineCloze(item, answers);
+    }
+    else if (isSingleChoice) {
+        const cols = (item.options || []).length === 3 ? 'grid-cols-3' : ((item.options || []).length >= 4 ? 'grid-cols-4' : 'grid-cols-2');
+        interactiveHtml = `
       <div class="candidate-options-grid cbt-options-grid ${cols}">
         ${(item.options || []).map((opt, optIdx) => {
-          const checked = rawAns === opt.id ? 'checked' : '';
-          return `
+            const checked = rawAns === opt.id ? 'checked' : '';
+            return `
             <label class="candidate-choice-label cbt-choice-tile ${checked ? 'selected' : ''}">
               <input type="radio" name="cand_${escape(item.itemVersionId)}" value="${escape(opt.id)}" data-item-id="${escape(item.itemVersionId)}" ${checked} />
               <span class="choice-key cbt-choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
@@ -604,13 +604,14 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         }).join('')}
       </div>
     `;
-  } else if (isMultiGroup) {
-    const selectedList = Array.isArray(rawAns) ? rawAns : [];
-    interactiveHtml = `
+    }
+    else if (isMultiGroup) {
+        const selectedList = Array.isArray(rawAns) ? rawAns : [];
+        interactiveHtml = `
       <div class="candidate-options-grid cbt-options-grid grid-cols-2">
         ${(item.options || []).map((opt, optIdx) => {
-          const checked = selectedList.includes(opt.id) ? 'checked' : '';
-          return `
+            const checked = selectedList.includes(opt.id) ? 'checked' : '';
+            return `
             <label class="candidate-choice-label cbt-choice-tile ${checked ? 'selected' : ''}">
               <input type="checkbox" name="cand_${escape(item.itemVersionId)}" value="${escape(opt.id)}" data-item-id="${escape(item.itemVersionId)}" ${checked} />
               <span class="choice-key cbt-choice-key">${formatOptionDisplayLetter(opt.id, optIdx)}</span>
@@ -620,9 +621,10 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         }).join('')}
       </div>
     `;
-  } else if (isSentenceRewrite) {
-    const val = typeof rawAns === 'string' ? rawAns : '';
-    interactiveHtml = `
+    }
+    else if (isSentenceRewrite) {
+        const val = typeof rawAns === 'string' ? rawAns : '';
+        interactiveHtml = `
       <div class="candidate-transformation-wrap cbt-transformation-wrap" data-item-id="${escape(item.itemVersionId)}">
         <div class="transformation-keyword-row cbt-keyword-row">
           <span class="cbt-keyword-label">Từ khóa bắt buộc:</span>
@@ -635,13 +637,14 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         </div>
       </div>
     `;
-  } else if (isSentenceReorder) {
-    const val = typeof rawAns === 'string' ? rawAns : '';
-    const tokens = item.tokens || (item.targetSentence ? item.targetSentence.split(' ') : []);
-    interactiveHtml = `
+    }
+    else if (isSentenceReorder) {
+        const val = typeof rawAns === 'string' ? rawAns : '';
+        const tokens = item.tokens || (item.targetSentence ? item.targetSentence.split(' ') : []);
+        interactiveHtml = `
       <div class="candidate-sentence-reorder-wrap cbt-reorder-wrap" data-item-id="${escape(item.itemVersionId)}">
         <div class="candidate-token-bank cbt-token-bank">
-          ${tokens.map(tok => `
+          ${tokens.map((tok) => `
             <button type="button" class="btn-token-chip cbt-token-chip" data-token="${escape(tok)}">${escape(tok)}</button>
           `).join('')}
         </div>
@@ -651,10 +654,11 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         </div>
       </div>
     `;
-  } else if (isErrorCorrection) {
-    const errVal = rawAns?.error || '';
-    const corrVal = rawAns?.correction || '';
-    interactiveHtml = `
+    }
+    else if (isErrorCorrection) {
+        const errVal = rawAns?.error || '';
+        const corrVal = rawAns?.correction || '';
+        interactiveHtml = `
       <div class="candidate-error-correction-grid cbt-correction-grid" data-item-id="${escape(item.itemVersionId)}">
         <div class="candidate-dual-box cbt-dual-box">
           <label class="cbt-error-label">1. Từ/cụm từ sai:</label>
@@ -666,25 +670,26 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         </div>
       </div>
     `;
-  } else if (isReadingMatching) {
-    const val = typeof rawAns === 'string' ? rawAns : '';
-    interactiveHtml = `
+    }
+    else if (isReadingMatching) {
+        const val = typeof rawAns === 'string' ? rawAns : '';
+        interactiveHtml = `
       <div class="candidate-matching-wrap cbt-matching-wrap">
         <select class="candidate-choice-select cbt-select-field" data-item-id="${escape(item.itemVersionId)}">
           <option value="">-- Chọn Heading tương ứng --</option>
-          ${(item.options || []).map(opt => `
+          ${(item.options || []).map((opt) => `
             <option value="${escape(opt.id)}" ${val === opt.id ? 'selected' : ''}>${escape(opt.label || opt.id)}</option>
           `).join('')}
         </select>
       </div>
     `;
-  } else if (isListeningOrder) {
-    const events = item.events || [];
-    const audioSrc = item.audioUrl || block?.audioUrl || '';
-    const selectedObj = (typeof rawAns === 'object' && rawAns !== null && !Array.isArray(rawAns)) ? rawAns : {};
-    const usedLabels = new Set(Object.values(selectedObj).filter(Boolean));
-
-    interactiveHtml = `
+    }
+    else if (isListeningOrder) {
+        const events = item.events || [];
+        const audioSrc = item.audioUrl || block?.audioUrl || '';
+        const selectedObj = (typeof rawAns === 'object' && rawAns !== null && !Array.isArray(rawAns)) ? rawAns : {};
+        const usedLabels = new Set(Object.values(selectedObj).filter(Boolean));
+        interactiveHtml = `
       <div class="candidate-listening-order-wrap cbt-listening-order-wrap" data-item-id="${escape(item.itemVersionId)}">
         ${audioSrc ? `
           <div class="candidate-audio-dock cbt-audio-dock">
@@ -695,16 +700,16 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         <div class="candidate-events-pool cbt-events-pool">
           <div class="events-pool-title cbt-pool-title">Các câu / sự kiện cần sắp xếp:</div>
           <div class="events-pool-grid cbt-events-pool-grid">
-            ${events.map(ev => {
-              const isUsed = usedLabels.has(ev.label);
-              return `
+            ${events.map((ev) => {
+            const isUsed = usedLabels.has(ev.label);
+            return `
                 <div class="event-pool-card cbt-event-card ${isUsed ? 'is-selected-event' : ''}" data-event-label="${escape(ev.label)}">
                   <span class="event-pool-badge cbt-event-badge">${escape(ev.label)}</span>
                   <span class="event-pool-text cbt-event-text">${escape(ev.text || '')}</span>
                   ${isUsed ? `<span class="event-used-indicator cbt-event-used" title="Đã chọn">${ICONS.check} Đã chọn</span>` : ''}
                 </div>
               `;
-            }).join('')}
+        }).join('')}
           </div>
         </div>
 
@@ -712,10 +717,10 @@ export function renderQuestionCard(item, answers = {}, block = null) {
           <div class="timeline-slots-title cbt-slots-title">Trình tự diễn ra theo thời gian:</div>
           <div class="timeline-slots-grid cbt-slots-grid">
             ${events.map((_, idx) => {
-              const slotNum = idx + 1;
-              const qPos = (item.position || 1) + idx;
-              const currentVal = selectedObj[slotNum] || '';
-              return `
+            const slotNum = idx + 1;
+            const qPos = (item.position || 1) + idx;
+            const currentVal = selectedObj[slotNum] || '';
+            return `
                 <div class="timeline-slot-card cbt-slot-card" data-slot-num="${slotNum}" data-position="${qPos}" data-item-id="${escape(item.itemVersionId)}">
                   <div class="slot-badge cbt-slot-badge">
                     <span class="slot-qnum">Câu ${qPos}</span>
@@ -724,27 +729,28 @@ export function renderQuestionCard(item, answers = {}, block = null) {
                   </div>
                   <select class="form-select form-select-sm candidate-sequence-select cbt-sequence-select" data-slot="${slotNum}" data-position="${qPos}" data-item-id="${escape(item.itemVersionId)}">
                     <option value="">-- Chọn sự kiện cho Thứ ${slotNum} --</option>
-                    ${events.map(ev => {
-                      const isSelected = currentVal === ev.label;
-                      const previewText = ev.text ? (ev.text.length > 50 ? ev.text.substring(0, 50) + '...' : ev.text) : '';
-                      return `
+                    ${events.map((ev) => {
+                const isSelected = currentVal === ev.label;
+                const previewText = ev.text ? (ev.text.length > 50 ? ev.text.substring(0, 50) + '...' : ev.text) : '';
+                return `
                         <option value="${escape(ev.label)}" ${isSelected ? 'selected' : ''}>
                           ${escape(ev.label)}: ${escape(previewText)}
                         </option>
                       `;
-                    }).join('')}
+            }).join('')}
                   </select>
                 </div>
               `;
-            }).join('')}
+        }).join('')}
           </div>
         </div>
       </div>
     `;
-  } else if (isRubricAsync) {
-    const val = typeof rawAns === 'string' ? rawAns : '';
-    const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
-    interactiveHtml = `
+    }
+    else if (isRubricAsync) {
+        const val = typeof rawAns === 'string' ? rawAns : '';
+        const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
+        interactiveHtml = `
       <div class="candidate-open-wrap cbt-open-wrap">
         <textarea class="candidate-open-textarea cbt-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" ${ANSWER_TEXT_ATTRS} placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
         <div class="candidate-open-meta cbt-open-meta">
@@ -753,27 +759,28 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         </div>
       </div>
     `;
-  } else {
-    const val = typeof rawAns === 'string' ? rawAns : '';
-    interactiveHtml = `
+    }
+    else {
+        const val = typeof rawAns === 'string' ? rawAns : '';
+        interactiveHtml = `
       <input type="text" class="candidate-short-input cbt-short-input" data-item-id="${escape(item.itemVersionId)}" placeholder="Gõ câu trả lời của bạn..." value="${escape(val)}" ${ANSWER_TEXT_ATTRS} />
     `;
-  }
-
-  let promptText = '';
-  if (isInlineCloze) {
-    promptText = item.instructions || item.instruction || item.taskInstructions || item.helpText || block?.instructions || 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc câu bên dưới:';
-  } else if (item.instructions && item.instructions !== item.prompt && item.prompt) {
-    promptText = `${item.instructions}<br/>${item.prompt}`;
-  } else {
-    promptText = item.prompt || item.instructions || item.instruction || '';
-  }
-  const span = getItemSpanCount(item);
-  const qNumDisplay = span > 1 ? `Câu ${item.position} – ${item.position + span - 1}` : `Câu ${item.position}`;
-  const scoreDisplay = span > 1 ? `${span} câu · ${item.maxScore || span} điểm` : `${item.maxScore || 1} điểm`;
-  const typeLabel = formatPedagogicalTypeLabel(item);
-
-  return `
+    }
+    let promptText = '';
+    if (isInlineCloze) {
+        promptText = item.instructions || item.instruction || item.taskInstructions || item.helpText || block?.instructions || 'Điền từ thích hợp vào chỗ trống trong đoạn văn hoặc câu bên dưới:';
+    }
+    else if (item.instructions && item.instructions !== item.prompt && item.prompt) {
+        promptText = `${item.instructions}<br/>${item.prompt}`;
+    }
+    else {
+        promptText = item.prompt || item.instructions || item.instruction || '';
+    }
+    const span = getItemSpanCount(item);
+    const qNumDisplay = span > 1 ? `Câu ${item.position} – ${item.position + span - 1}` : `Câu ${item.position}`;
+    const scoreDisplay = span > 1 ? `${span} câu · ${item.maxScore || span} điểm` : `${item.maxScore || 1} điểm`;
+    const typeLabel = formatPedagogicalTypeLabel(item);
+    return `
     <div class="candidate-question-card cbt-question-card" data-item-id="${escape(item.itemVersionId)}">
       <div class="candidate-question-header cbt-question-header">
         <div class="cbt-qhead-left">
@@ -791,43 +798,45 @@ export function renderQuestionCard(item, answers = {}, block = null) {
     </div>
   `;
 }
-
 export function convertGoogleDriveAudioUrl(rawUrl) {
-  if (!rawUrl || typeof rawUrl !== 'string') return '';
-  const trimmed = rawUrl.trim();
-  const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if (match) {
-    const fileId = match[1];
-    let apiBase = '';
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
-      if (isLocal) {
-        apiBase = (window.location.port === '8034' || window.location.port === '8788')
-          ? ''
-          : `${window.location.protocol}//${hostname}:8788`;
-      } else if (hostname === 'webtest.ducanhdev.com') {
-        apiBase = '';
-      } else {
-        apiBase = window.WEBTEST_34_PREVIEW_CONFIG?.API_BASE_URL
-          || window.WEBTEST_34_PREVIEW_CONFIG?.LEARNING_API_BASE_URL
-          || 'https://webtest.ducanhdev.com';
-      }
+    if (!rawUrl || typeof rawUrl !== 'string')
+        return '';
+    const trimmed = rawUrl.trim();
+    const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (match) {
+        const fileId = match[1];
+        let apiBase = '';
+        if (typeof window !== 'undefined') {
+            const hostname = window.location.hostname;
+            const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
+            if (isLocal) {
+                apiBase = (window.location.port === '8034' || window.location.port === '8788')
+                    ? ''
+                    : `${window.location.protocol}//${hostname}:8788`;
+            }
+            else if (hostname === 'webtest.ducanhdev.com') {
+                apiBase = '';
+            }
+            else {
+                apiBase = window.WEBTEST_34_PREVIEW_CONFIG?.API_BASE_URL
+                    || window.WEBTEST_34_PREVIEW_CONFIG?.LEARNING_API_BASE_URL
+                    || 'https://webtest.ducanhdev.com';
+            }
+        }
+        const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';
+        return `${cleanBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
     }
-    const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';
-    return `${cleanBase}/api/teacher/media/drive-stream?id=${encodeURIComponent(fileId)}`;
-  }
-  if (trimmed.startsWith('assets/')) {
-    return `https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/${trimmed}`;
-  }
-  return trimmed;
+    if (trimmed.startsWith('assets/')) {
+        return `https://pub-2a60b39d70e14f98a922aaa8cb1f1dd2.r2.dev/${trimmed}`;
+    }
+    return trimmed;
 }
-
 // audioKey: khóa tiến độ nghe gửi lên máy chủ (/attempts/audio/checkpoint); chỉ gồm chữ, số, _ và -.
 export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', maxListens = 1, audioKey = '') {
-  const convertedUrl = convertGoogleDriveAudioUrl(audioSrc);
-  if (!convertedUrl) return '';
-  return `
+    const convertedUrl = convertGoogleDriveAudioUrl(audioSrc);
+    if (!convertedUrl)
+        return '';
+    return `
     <div class="strict-audio-dock candidate-audio-dock" data-audio-src="${escape(convertedUrl)}" data-listens-count="0" data-max-listens="${maxListens}"${audioKey ? ` data-audio-key="${escape(audioKey)}"` : ''}>
       <div class="strict-audio-header">
         <span class="audio-badge">${ICONS.volume} ${escape(label)}</span>
@@ -864,83 +873,79 @@ export function renderAudioDockHtml(audioSrc, label = 'Bài nghe phần thi', ma
     </div>
   `;
 }
-
 export function renderDynamicExam(definition, container, { state = { answers: {} }, onAnswerChange, activeSection }) {
-  if (!container || !definition || !Array.isArray(definition.blocks)) return;
-
-  const blocks = definition.blocks;
-  const currentSection = activeSection || blocks[0]?.title || 'Phần 1';
-
-  let html = '';
-
-  const unlockedSet = state?.unlockedAudioBlocks instanceof Set
-    ? state.unlockedAudioBlocks
-    : (Array.isArray(state?.unlockedAudioBlocks) ? new Set(state.unlockedAudioBlocks) : new Set());
-
-  blocks.forEach((block, bIdx) => {
-    const sectionName = block.title || `Phần ${bIdx + 1}`;
-    const isVisible = sectionName === currentSection || (!activeSection && bIdx === 0);
-    const items = block.items || [];
-    const audioSrc = (block.audioUrl || block.stimulusAudioUrl || '').trim();
-    const hasAudio = Boolean(audioSrc);
-    const blockId = block.blockId || `block-${bIdx}`;
-    const isUnlocked = !hasAudio || unlockedSet.has(blockId);
-    const reading = block.readingPassage || '';
-
-    // Check if this block has split-pane reading matching
-    const hasSplitPane = items.some(it => it.pedagogicalTypeCode === 'reading_matching' || it.layoutType === 'split_pane_matching');
-
-    // Group items into sub-clusters
-    const itemGroups = [];
-    items.forEach(item => {
-      const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0);
-      const isVocab = item.interactionType === 'text_select_pair';
-      const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
-      const isShortText = item.interactionType === 'short_text' && !isInlineClozeItem(item) && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching' && !isListeningOrder;
-
-      const lastGroup = itemGroups[itemGroups.length - 1];
-      if (isVocab) {
-        if (lastGroup && lastGroup.type === 'vocab_pair_group') {
-          lastGroup.items.push(item);
-        } else {
-          itemGroups.push({ type: 'vocab_pair_group', items: [item] });
-        }
-      } else if (isPictorial) {
-        if (lastGroup && lastGroup.type === 'pictorial_group') {
-          lastGroup.items.push(item);
-        } else {
-          itemGroups.push({ type: 'pictorial_group', items: [item] });
-        }
-      } else if (isShortText) {
-        if (lastGroup && lastGroup.type === 'short_qa_group') {
-          lastGroup.items.push(item);
-        } else {
-          itemGroups.push({ type: 'short_qa_group', items: [item] });
-        }
-      } else {
-        itemGroups.push({ type: 'single', item });
-      }
-    });
-
-    const renderedGroups = itemGroups.map(group => {
-      if (group.type === 'vocab_pair_group') {
-        return renderSimVocabPairTable(group.items, state.answers);
-      }
-      if (group.type === 'pictorial_group') {
-        return renderSimPictorialGroup(group.items, state.answers);
-      }
-      if (group.type === 'short_qa_group') {
-        return renderSimShortQaGroup(group.items, state.answers);
-      }
-      return renderQuestionCard(group.item, state.answers, block);
-    }).join('');
-
-    const bCount = items.reduce((s, it) => s + getItemSpanCount(it), 0);
-    const exCount = (block.exercises || []).length;
-
-    let sectionContentHtml = '';
-    if (hasSplitPane && reading) {
-      sectionContentHtml = `
+    if (!container || !definition || !Array.isArray(definition.blocks))
+        return;
+    const blocks = definition.blocks;
+    const currentSection = activeSection || blocks[0]?.title || 'Phần 1';
+    let html = '';
+    const unlockedSet = state?.unlockedAudioBlocks instanceof Set
+        ? state.unlockedAudioBlocks
+        : (Array.isArray(state?.unlockedAudioBlocks) ? new Set(state.unlockedAudioBlocks) : new Set());
+    blocks.forEach((block, bIdx) => {
+        const sectionName = block.title || `Phần ${bIdx + 1}`;
+        const isVisible = sectionName === currentSection || (!activeSection && bIdx === 0);
+        const items = block.items || [];
+        const audioSrc = (block.audioUrl || block.stimulusAudioUrl || '').trim();
+        const hasAudio = Boolean(audioSrc);
+        const blockId = block.blockId || `block-${bIdx}`;
+        const isUnlocked = !hasAudio || unlockedSet.has(blockId);
+        const reading = block.readingPassage || '';
+        // Check if this block has split-pane reading matching
+        const hasSplitPane = items.some((it) => it.pedagogicalTypeCode === 'reading_matching' || it.layoutType === 'split_pane_matching');
+        // Group items into sub-clusters
+        const itemGroups = [];
+        items.forEach((item) => {
+            const isListeningOrder = item.pedagogicalTypeCode === 'listening_order' || item.layoutType === 'timeline_sequence' || item.interactionType === 'listening_order' || (Array.isArray(item.events) && item.events.length > 0);
+            const isVocab = item.interactionType === 'text_select_pair';
+            const isPictorial = item.interactionType === 'short_text' && (item.layoutType === 'pictorial_card' || item.pedagogicalTypeCode === 'pictorial_vocabulary');
+            const isShortText = item.interactionType === 'short_text' && !isInlineClozeItem(item) && !isPictorial && item.pedagogicalTypeCode !== 'reading_matching' && !isListeningOrder;
+            const lastGroup = itemGroups[itemGroups.length - 1];
+            if (isVocab) {
+                if (lastGroup && lastGroup.type === 'vocab_pair_group') {
+                    lastGroup.items.push(item);
+                }
+                else {
+                    itemGroups.push({ type: 'vocab_pair_group', items: [item] });
+                }
+            }
+            else if (isPictorial) {
+                if (lastGroup && lastGroup.type === 'pictorial_group') {
+                    lastGroup.items.push(item);
+                }
+                else {
+                    itemGroups.push({ type: 'pictorial_group', items: [item] });
+                }
+            }
+            else if (isShortText) {
+                if (lastGroup && lastGroup.type === 'short_qa_group') {
+                    lastGroup.items.push(item);
+                }
+                else {
+                    itemGroups.push({ type: 'short_qa_group', items: [item] });
+                }
+            }
+            else {
+                itemGroups.push({ type: 'single', item });
+            }
+        });
+        const renderedGroups = itemGroups.map(group => {
+            if (group.type === 'vocab_pair_group') {
+                return renderSimVocabPairTable(group.items, state.answers);
+            }
+            if (group.type === 'pictorial_group') {
+                return renderSimPictorialGroup(group.items, state.answers);
+            }
+            if (group.type === 'short_qa_group') {
+                return renderSimShortQaGroup(group.items, state.answers);
+            }
+            return renderQuestionCard(group.item, state.answers, block);
+        }).join('');
+        const bCount = items.reduce((s, it) => s + getItemSpanCount(it), 0);
+        const exCount = (block.exercises || []).length;
+        let sectionContentHtml = '';
+        if (hasSplitPane && reading) {
+            sectionContentHtml = `
         <div class="cbt-section-hero">
           <div class="cbt-hero-top">
             <div class="cbt-hero-title-group">
@@ -996,8 +1001,9 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
           </div>
         </div>
       `;
-    } else {
-      sectionContentHtml = `
+        }
+        else {
+            sectionContentHtml = `
         <div class="cbt-section-hero">
           <div class="cbt-hero-top">
             <div class="cbt-hero-title-group">
@@ -1040,9 +1046,8 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
           </div>
         </div>
       `;
-    }
-
-    const audioGatePlaceholderHtml = hasAudio ? `
+        }
+        const audioGatePlaceholderHtml = hasAudio ? `
       <div class="cbt-audio-gate-placeholder" role="status" aria-live="polite">
         <div class="cbt-audio-gate-icon-wrap">
           ${ICONS.volume || ICONS.zap}
@@ -1055,16 +1060,14 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
         </div>
       </div>
     ` : '';
-
-    html += `
+        html += `
       <section class="simulation-section-card section-page ${isVisible ? 'active' : ''}" id="sim-block-${bIdx}" data-block-id="${escape(blockId)}" data-has-audio="${hasAudio}" data-audio-unlocked="${isUnlocked}">
         ${audioGatePlaceholderHtml}
         ${sectionContentHtml}
       </section>
     `;
-  });
-
-  html += `
+    });
+    html += `
     <footer class="simulation-footer cbt-simulation-footer">
       <div class="footer-note cbt-footer-note">
         <span class="cbt-save-indicator-dot"></span>
@@ -1090,679 +1093,684 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
       </div>
     </dialog>
   `;
-
-  container.innerHTML = html;
+    container.innerHTML = html;
 }
-
 // iOS không đổi innerHeight khi bàn phím mở; nhân scale để phóng to bằng hai ngón không bị hiểu nhầm.
 export function isKeyboardOpen(viewport, layoutHeight) {
-  return layoutHeight - viewport.height * viewport.scale > 120;
+    return layoutHeight - viewport.height * viewport.scale > 120;
 }
-
-export function initDynamicExamInteractions(rootEl, { definition, state = { answers: {} }, onAnswerChange, onSectionChange, onAudioProgress }) {
-  if (!rootEl || !definition) return;
-
-  const blocks = definition.blocks || [];
-  const qnavBtns = rootEl.querySelectorAll('.btn-qnav');
-
-  // Question Navigator filtering strictly by Section
-  const filterNavigatorBySection = (targetSectionId) => {
-    let visibleCount = 0;
-    qnavBtns.forEach(btn => {
-      const btnSection = btn.getAttribute('data-section-target');
-      const isMatch = !targetSectionId || btnSection === targetSectionId;
-      btn.style.display = isMatch ? 'inline-flex' : 'none';
-      if (isMatch) visibleCount++;
-    });
-    const summaryEl = rootEl.querySelector('#qnav-summary');
-    if (summaryEl) {
-      summaryEl.textContent = `${visibleCount} câu`;
-    }
-  };
-
-  let currentActiveBlockIdx = 0;
-  let keyboardOpen = false;
-
-  const syncBottomBar = () => {
-    const bar = rootEl.querySelector('.cbt-bottom-bar');
-    if (!bar) return;
-    bar.hidden = Boolean(state.submittedAt) || keyboardOpen;
-    rootEl.querySelector('.cbt-exam-shell')?.classList.toggle('is-submitted', Boolean(state.submittedAt));
-    if (state.submittedAt) rootEl.querySelector('#cbtSheet')?.close();
-    const currentSection = rootEl.querySelector('#cbt-current-section');
-    if (currentSection) currentSection.textContent = blocks[currentActiveBlockIdx]?.title || `Phần ${currentActiveBlockIdx + 1}`;
-    rootEl.querySelector('#cbt-bar-prev').disabled = currentActiveBlockIdx === 0;
-    rootEl.querySelector('#cbt-bar-next').textContent = currentActiveBlockIdx === blocks.length - 1 ? 'Nộp bài' : 'Sau';
-    rootEl.querySelector('#cbt-bar-count').textContent = `${getAnsweredCount(definition, state.answers)}/${getTotalItemCount(definition)} câu`;
-  };
-
-  const viewport = typeof window !== 'undefined' ? window.visualViewport : null;
-  if (viewport) {
-    viewport.onresize = () => {
-      keyboardOpen = isKeyboardOpen(viewport, window.innerHeight);
-      syncBottomBar();
+export function initDynamicExamInteractions(rootElArg, { definition, state = { answers: {} }, onAnswerChange, onSectionChange, onAudioProgress }) {
+    if (!rootElArg || !definition)
+        return;
+    const rootEl = rootElArg;
+    const blocks = definition.blocks || [];
+    const qnavBtns = rootEl.querySelectorAll('.btn-qnav');
+    // Question Navigator filtering strictly by Section
+    const filterNavigatorBySection = (targetSectionId) => {
+        let visibleCount = 0;
+        qnavBtns.forEach((btn) => {
+            const btnSection = btn.getAttribute('data-section-target');
+            const isMatch = !targetSectionId || btnSection === targetSectionId;
+            btn.style.display = isMatch ? 'inline-flex' : 'none';
+            if (isMatch)
+                visibleCount++;
+        });
+        const summaryEl = rootEl.querySelector('#qnav-summary');
+        if (summaryEl) {
+            summaryEl.textContent = `${visibleCount} câu`;
+        }
     };
-  }
-
-  // Section switcher
-  const activateSection = (targetId) => {
-    const blockIdx = parseInt((targetId || '').replace('sim-block-', ''), 10) || 0;
-    currentActiveBlockIdx = blockIdx;
-
-    rootEl.querySelectorAll('.section-tab, .simulation-nav-pill').forEach(b => {
-      // Hàng phần cuộn ngang trên màn hẹp: đưa phần đang chọn vào tầm nhìn.
-      if (b.classList.toggle('active', b.getAttribute('data-section-target') === targetId)) b.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+    let currentActiveBlockIdx = 0;
+    let keyboardOpen = false;
+    const syncBottomBar = () => {
+        const bar = rootEl.querySelector('.cbt-bottom-bar');
+        if (!bar)
+            return;
+        bar.hidden = Boolean(state.submittedAt) || keyboardOpen;
+        rootEl.querySelector('.cbt-exam-shell')?.classList.toggle('is-submitted', Boolean(state.submittedAt));
+        if (state.submittedAt)
+            rootEl.querySelector('#cbtSheet')?.close();
+        const currentSection = rootEl.querySelector('#cbt-current-section');
+        if (currentSection)
+            currentSection.textContent = blocks[currentActiveBlockIdx]?.title || `Phần ${currentActiveBlockIdx + 1}`;
+        rootEl.querySelector('#cbt-bar-prev').disabled = currentActiveBlockIdx === 0;
+        rootEl.querySelector('#cbt-bar-next').textContent = currentActiveBlockIdx === blocks.length - 1 ? 'Nộp bài' : 'Sau';
+        rootEl.querySelector('#cbt-bar-count').textContent = `${getAnsweredCount(definition, state.answers)}/${getTotalItemCount(definition)} câu`;
+    };
+    const viewport = typeof window !== 'undefined' ? window.visualViewport : null;
+    if (viewport) {
+        viewport.onresize = () => {
+            keyboardOpen = isKeyboardOpen(viewport, window.innerHeight);
+            syncBottomBar();
+        };
+    }
+    // Section switcher
+    const activateSection = (targetId) => {
+        const blockIdx = parseInt((targetId || '').replace('sim-block-', ''), 10) || 0;
+        currentActiveBlockIdx = blockIdx;
+        rootEl.querySelectorAll('.section-tab, .simulation-nav-pill').forEach((b) => {
+            // Hàng phần cuộn ngang trên màn hẹp: đưa phần đang chọn vào tầm nhìn.
+            if (b.classList.toggle('active', b.getAttribute('data-section-target') === targetId))
+                b.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+        });
+        rootEl.querySelectorAll('.side-section-btn').forEach((b) => {
+            b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
+        });
+        rootEl.querySelectorAll('.section-page, .simulation-section-card').forEach((sec) => {
+            sec.classList.toggle('active', sec.id === targetId);
+        });
+        filterNavigatorBySection(targetId);
+        // Sync Prev/Next button labels & disabled states
+        const prevBtn = rootEl.querySelector('#demo-prev');
+        const nextBtn = rootEl.querySelector('#demo-next');
+        if (prevBtn)
+            prevBtn.disabled = blockIdx === 0;
+        if (nextBtn) {
+            nextBtn.textContent = blockIdx === blocks.length - 1 ? 'Nộp bài' : 'Phần tiếp →';
+        }
+        syncBottomBar();
+        if (onSectionChange) {
+            const activeBlock = blocks[blockIdx];
+            onSectionChange(activeBlock?.title || `Phần ${blockIdx + 1}`);
+        }
+        // Luôn cuộn mượt lên đầu phần thi khi chuyển phần
+        if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+            window.scrollTo({ top: 0, behavior: scrollBehavior() });
+        }
+    };
+    // Bind Section Pills & Side section buttons
+    rootEl.querySelectorAll('.section-tab, .simulation-nav-pill, .side-section-btn').forEach((btn) => {
+        btn.onclick = () => {
+            const targetId = btn.getAttribute('data-section-target');
+            if (targetId)
+                activateSection(targetId);
+        };
     });
-    rootEl.querySelectorAll('.side-section-btn').forEach(b => {
-      b.classList.toggle('active', b.getAttribute('data-section-target') === targetId);
-    });
-    rootEl.querySelectorAll('.section-page, .simulation-section-card').forEach(sec => {
-      sec.classList.toggle('active', sec.id === targetId);
-    });
-    filterNavigatorBySection(targetId);
-
-    // Sync Prev/Next button labels & disabled states
+    // Prev / Next button navigation with onclick (triệt tiêu 100% rủi ro double-binding)
     const prevBtn = rootEl.querySelector('#demo-prev');
     const nextBtn = rootEl.querySelector('#demo-next');
-    if (prevBtn) prevBtn.disabled = blockIdx === 0;
-    if (nextBtn) {
-      nextBtn.textContent = blockIdx === blocks.length - 1 ? 'Nộp bài' : 'Phần tiếp →';
-    }
-    syncBottomBar();
-
-    if (onSectionChange) {
-      const activeBlock = blocks[blockIdx];
-      onSectionChange(activeBlock?.title || `Phần ${blockIdx + 1}`);
-    }
-
-    // Luôn cuộn mượt lên đầu phần thi khi chuyển phần
-    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
-      window.scrollTo({ top: 0, behavior: scrollBehavior() });
-    }
-  };
-
-  // Bind Section Pills & Side section buttons
-  rootEl.querySelectorAll('.section-tab, .simulation-nav-pill, .side-section-btn').forEach(btn => {
-    btn.onclick = () => {
-      const targetId = btn.getAttribute('data-section-target');
-      if (targetId) activateSection(targetId);
+    const goPrev = () => {
+        if (currentActiveBlockIdx > 0) {
+            activateSection(`sim-block-${currentActiveBlockIdx - 1}`);
+        }
     };
-  });
-
-  // Prev / Next button navigation with onclick (triệt tiêu 100% rủi ro double-binding)
-  const prevBtn = rootEl.querySelector('#demo-prev');
-  const nextBtn = rootEl.querySelector('#demo-next');
-  const goPrev = () => {
-    if (currentActiveBlockIdx > 0) {
-      activateSection(`sim-block-${currentActiveBlockIdx - 1}`);
-    }
-  };
-  const goNext = () => {
-    if (currentActiveBlockIdx < blocks.length - 1) {
-      activateSection(`sim-block-${currentActiveBlockIdx + 1}`);
-    } else {
-      const topSubmit = document.querySelector('#demo-submit-top') || document.querySelector('#demo-submit');
-      if (topSubmit) topSubmit.click();
-    }
-  };
-  if (prevBtn) prevBtn.onclick = goPrev;
-  if (nextBtn) nextBtn.onclick = goNext;
-  const barPrev = rootEl.querySelector('#cbt-bar-prev');
-  const barNext = rootEl.querySelector('#cbt-bar-next');
-  if (barPrev) barPrev.onclick = goPrev;
-  if (barNext) barNext.onclick = goNext;
-
-  const sheet = rootEl.querySelector('#cbtSheet');
-  if (sheet) {
-    // Mượn nguyên node đang có để giữ handler và trạng thái; đóng thì trả về chỗ cũ.
-    const borrowed = ['#examSidePanelContainer', '.cbt-font-toggles', '#demo-submit-top']
-      .map(selector => rootEl.querySelector(selector))
-      .filter(Boolean)
-      .map(el => ({ el, home: el.parentNode, next: el.nextSibling }));
-    rootEl.querySelector('#cbt-bar-count').onclick = () => {
-      sheet.querySelector('.cbt-sheet-body').append(...borrowed.map(({ el }) => el));
-      sheet.showModal();
+    const goNext = () => {
+        if (currentActiveBlockIdx < blocks.length - 1) {
+            activateSection(`sim-block-${currentActiveBlockIdx + 1}`);
+        }
+        else {
+            const topSubmit = document.querySelector('#demo-submit-top') || document.querySelector('#demo-submit');
+            if (topSubmit)
+                topSubmit.click();
+        }
     };
-    sheet.onclose = () => borrowed.forEach(({ el, home, next }) => home.insertBefore(el, next));
-    // Pha capture: đóng bảng trước khi nút xử lý, để cuộn và hộp xác nhận chạy trên trang đã mở khóa.
-    sheet.addEventListener('click', event => {
-      if (event.target === sheet || event.target.closest('.cbt-sheet-close, .btn-qnav, .side-section-btn, #demo-submit-top')) sheet.close();
-    }, true);
-    window.matchMedia('(min-width: 1024px)').onchange = event => {
-      if (event.matches) sheet.close();
+    if (prevBtn)
+        prevBtn.onclick = goPrev;
+    if (nextBtn)
+        nextBtn.onclick = goNext;
+    const barPrev = rootEl.querySelector('#cbt-bar-prev');
+    const barNext = rootEl.querySelector('#cbt-bar-next');
+    if (barPrev)
+        barPrev.onclick = goPrev;
+    if (barNext)
+        barNext.onclick = goNext;
+    const sheet = rootEl.querySelector('#cbtSheet');
+    if (sheet) {
+        // Mượn nguyên node đang có để giữ handler và trạng thái; đóng thì trả về chỗ cũ.
+        const borrowed = ['#examSidePanelContainer', '.cbt-font-toggles', '#demo-submit-top']
+            .map(selector => rootEl.querySelector(selector))
+            .filter(Boolean)
+            .map(el => ({ el: el, home: el.parentNode, next: el.nextSibling }));
+        rootEl.querySelector('#cbt-bar-count').onclick = () => {
+            sheet.querySelector('.cbt-sheet-body').append(...borrowed.map(({ el }) => el));
+            sheet.showModal();
+        };
+        sheet.onclose = () => borrowed.forEach(({ el, home, next }) => home.insertBefore(el, next));
+        // Pha capture: đóng bảng trước khi nút xử lý, để cuộn và hộp xác nhận chạy trên trang đã mở khóa.
+        sheet.addEventListener('click', (event) => {
+            if (event.target === sheet || event.target.closest('.cbt-sheet-close, .btn-qnav, .side-section-btn, #demo-submit-top'))
+                sheet.close();
+        }, true);
+        window.matchMedia('(min-width: 1024px)').onchange = event => {
+            if (event.matches)
+                sheet.close();
+        };
+    }
+    // Question Navigator click-to-focus and section navigation
+    qnavBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const targetSectionId = btn.getAttribute('data-section-target');
+            const pos = btn.getAttribute('data-pos');
+            const blankPos = btn.getAttribute('data-blank-pos');
+            const slotNum = btn.getAttribute('data-slot-num');
+            const itemId = btn.getAttribute('data-item-id');
+            // 1. Activate target section
+            if (targetSectionId) {
+                activateSection(targetSectionId);
+            }
+            // 2. Find target element
+            let targetEl = null;
+            if (blankPos || btn.hasAttribute('data-blank-pos')) {
+                targetEl = rootEl.querySelector(`.inline-fill-input[data-position="${blankPos}"]`) ||
+                    rootEl.querySelector(`.inline-fill-input[data-position="${pos}"]`);
+            }
+            else if (slotNum || btn.hasAttribute('data-slot-num')) {
+                targetEl = rootEl.querySelector(`.candidate-sequence-select[data-position="${pos}"]`) ||
+                    rootEl.querySelector(`[data-item-id="${CSS.escape(itemId)}"] .candidate-sequence-select[data-slot="${slotNum}"]`);
+            }
+            else if (itemId) {
+                const itemCard = rootEl.querySelector(`.candidate-question-card[data-item-id="${CSS.escape(itemId)}"]`) ||
+                    rootEl.querySelector(`.candidate-vocab-table-row[data-item-id="${CSS.escape(itemId)}"]`) ||
+                    rootEl.querySelector(`.candidate-pictorial-card[data-item-id="${CSS.escape(itemId)}"]`) ||
+                    rootEl.querySelector(`.candidate-short-qa-item[data-item-id="${CSS.escape(itemId)}"]`) ||
+                    rootEl.querySelector(`[data-item-id="${CSS.escape(itemId)}"]`);
+                if (itemCard) {
+                    targetEl = itemCard.querySelector('input:not([type="hidden"]), select, textarea') || itemCard;
+                }
+            }
+            if (targetEl) {
+                // Đề đọc ghép: câu đang ở tab ẩn (dưới 1024px) thì mở tab chứa nó trước, nếu không scroll/focus không có tác dụng.
+                const splitPane = targetEl.closest('.cbt-split-pane');
+                if (splitPane) {
+                    setPane(splitPane.id.replace('split-pane-', ''), targetEl.closest('[data-pane-type]')?.getAttribute('data-pane-type') || 'questions', { restoreScroll: false });
+                }
+                if (typeof targetEl.scrollIntoView === 'function') {
+                    targetEl.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
+                }
+                // Trên cảm ứng, focus() bật bàn phím che mất câu vừa nhảy tới.
+                if (typeof targetEl.focus === 'function' && !window.matchMedia?.('(pointer: coarse)').matches) {
+                    targetEl.focus();
+                }
+                targetEl.classList.add('nav-focus-pulse');
+                setTimeout(() => {
+                    targetEl.classList.remove('nav-focus-pulse');
+                }, 1200);
+            }
+        });
+    });
+    // Function to update navigator answered states and progress bar
+    const updateAnsweredState = () => {
+        const totalItems = getTotalItemCount(definition);
+        let answeredTotal = 0;
+        qnavBtns.forEach((btn) => {
+            const pos = btn.getAttribute('data-pos');
+            const blankPos = btn.getAttribute('data-blank-pos');
+            const slotNum = btn.getAttribute('data-slot-num');
+            const itemId = btn.getAttribute('data-item-id');
+            let isAnswered = false;
+            if (blankPos || btn.hasAttribute('data-blank-pos')) {
+                const input = rootEl.querySelector(`.inline-fill-input[data-position="${blankPos || pos}"]`);
+                if (input && input.value && input.value.trim().length > 0)
+                    isAnswered = true;
+            }
+            else if (slotNum || btn.hasAttribute('data-slot-num')) {
+                const slot = slotNum || btn.getAttribute('data-slot-num');
+                const valObj = state.answers[itemId];
+                if (valObj && typeof valObj === 'object' && valObj[slot] && String(valObj[slot]).trim().length > 0) {
+                    isAnswered = true;
+                }
+                else {
+                    const select = rootEl.querySelector(`.candidate-sequence-select[data-position="${pos}"]`);
+                    if (select && select.value && select.value.trim().length > 0)
+                        isAnswered = true;
+                }
+            }
+            else if (itemId) {
+                const val = state.answers[itemId];
+                isAnswered = isAnswerValueFilled(val);
+            }
+            btn.classList.toggle('answered', isAnswered);
+            if (isAnswered)
+                answeredTotal++;
+        });
+        // Update Progress ratio & fill
+        const progressRatio = rootEl.querySelector('#progressRatioDisplay');
+        if (progressRatio)
+            progressRatio.textContent = `${answeredTotal}/${totalItems}`;
+        const progressFill = rootEl.querySelector('#progressFillBar');
+        if (progressFill) {
+            const pct = totalItems ? Math.round((answeredTotal / totalItems) * 100) : 0;
+            progressFill.style.width = `${pct}%`;
+        }
+        // Update Side section badges
+        blocks.forEach((b, i) => {
+            const bItems = b.items || [];
+            const bTotal = bItems.reduce((s, it) => s + getItemSpanCount(it), 0);
+            let bDone = 0;
+            for (const it of bItems) {
+                const span = getItemSpanCount(it);
+                const val = state.answers[it.itemVersionId];
+                if (span > 1 && typeof val === 'object' && val !== null && !Array.isArray(val)) {
+                    for (const k of Object.keys(val)) {
+                        if (typeof val[k] === 'string' && val[k].trim() !== '')
+                            bDone++;
+                    }
+                }
+                else if (isAnswerValueFilled(val)) {
+                    bDone += span;
+                }
+            }
+            const sideBadge = rootEl.querySelector(`[data-side-count="sim-block-${i}"]`);
+            if (sideBadge)
+                sideBadge.textContent = `${bDone}/${bTotal}`;
+        });
+        syncBottomBar();
     };
-  }
-
-  // Question Navigator click-to-focus and section navigation
-  qnavBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetSectionId = btn.getAttribute('data-section-target');
-      const pos = btn.getAttribute('data-pos');
-      const blankPos = btn.getAttribute('data-blank-pos');
-      const slotNum = btn.getAttribute('data-slot-num');
-      const itemId = btn.getAttribute('data-item-id');
-
-      // 1. Activate target section
-      if (targetSectionId) {
-        activateSection(targetSectionId);
-      }
-
-      // 2. Find target element
-      let targetEl = null;
-      if (blankPos || btn.hasAttribute('data-blank-pos')) {
-        targetEl = rootEl.querySelector(`.inline-fill-input[data-position="${blankPos}"]`) ||
-          rootEl.querySelector(`.inline-fill-input[data-position="${pos}"]`);
-      } else if (slotNum || btn.hasAttribute('data-slot-num')) {
-        targetEl = rootEl.querySelector(`.candidate-sequence-select[data-position="${pos}"]`) ||
-          rootEl.querySelector(`[data-item-id="${CSS.escape(itemId)}"] .candidate-sequence-select[data-slot="${slotNum}"]`);
-      } else if (itemId) {
-        const itemCard = rootEl.querySelector(`.candidate-question-card[data-item-id="${CSS.escape(itemId)}"]`) ||
-          rootEl.querySelector(`.candidate-vocab-table-row[data-item-id="${CSS.escape(itemId)}"]`) ||
-          rootEl.querySelector(`.candidate-pictorial-card[data-item-id="${CSS.escape(itemId)}"]`) ||
-          rootEl.querySelector(`.candidate-short-qa-item[data-item-id="${CSS.escape(itemId)}"]`) ||
-          rootEl.querySelector(`[data-item-id="${CSS.escape(itemId)}"]`);
-        if (itemCard) {
-          targetEl = itemCard.querySelector('input:not([type="hidden"]), select, textarea') || itemCard;
-        }
-      }
-
-      if (targetEl) {
-        // Đề đọc ghép: câu đang ở tab ẩn (dưới 1024px) thì mở tab chứa nó trước, nếu không scroll/focus không có tác dụng.
-        const splitPane = targetEl.closest('.cbt-split-pane');
-        if (splitPane) {
-          setPane(splitPane.id.replace('split-pane-', ''), targetEl.closest('[data-pane-type]')?.getAttribute('data-pane-type') || 'questions', { restoreScroll: false });
-        }
-        if (typeof targetEl.scrollIntoView === 'function') {
-          targetEl.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
-        }
-        // Trên cảm ứng, focus() bật bàn phím che mất câu vừa nhảy tới.
-        if (typeof targetEl.focus === 'function' && !window.matchMedia?.('(pointer: coarse)').matches) {
-          targetEl.focus();
-        }
-        targetEl.classList.add('nav-focus-pulse');
-        setTimeout(() => {
-          targetEl.classList.remove('nav-focus-pulse');
-        }, 1200);
-      }
-    });
-  });
-
-  // Function to update navigator answered states and progress bar
-  const updateAnsweredState = () => {
-    const totalItems = getTotalItemCount(definition);
-    let answeredTotal = 0;
-
-    qnavBtns.forEach(btn => {
-      const pos = btn.getAttribute('data-pos');
-      const blankPos = btn.getAttribute('data-blank-pos');
-      const slotNum = btn.getAttribute('data-slot-num');
-      const itemId = btn.getAttribute('data-item-id');
-
-      let isAnswered = false;
-      if (blankPos || btn.hasAttribute('data-blank-pos')) {
-        const input = rootEl.querySelector(`.inline-fill-input[data-position="${blankPos || pos}"]`);
-        if (input && input.value && input.value.trim().length > 0) isAnswered = true;
-      } else if (slotNum || btn.hasAttribute('data-slot-num')) {
-        const slot = slotNum || btn.getAttribute('data-slot-num');
-        const valObj = state.answers[itemId];
-        if (valObj && typeof valObj === 'object' && valObj[slot] && String(valObj[slot]).trim().length > 0) {
-          isAnswered = true;
-        } else {
-          const select = rootEl.querySelector(`.candidate-sequence-select[data-position="${pos}"]`);
-          if (select && select.value && select.value.trim().length > 0) isAnswered = true;
-        }
-      } else if (itemId) {
-        const val = state.answers[itemId];
-        isAnswered = isAnswerValueFilled(val);
-      }
-
-      btn.classList.toggle('answered', isAnswered);
-      if (isAnswered) answeredTotal++;
-    });
-
-    // Update Progress ratio & fill
-    const progressRatio = rootEl.querySelector('#progressRatioDisplay');
-    if (progressRatio) progressRatio.textContent = `${answeredTotal}/${totalItems}`;
-    const progressFill = rootEl.querySelector('#progressFillBar');
-    if (progressFill) {
-      const pct = totalItems ? Math.round((answeredTotal / totalItems) * 100) : 0;
-      progressFill.style.width = `${pct}%`;
-    }
-
-    // Update Side section badges
-    blocks.forEach((b, i) => {
-      const bItems = b.items || [];
-      const bTotal = bItems.reduce((s, it) => s + getItemSpanCount(it), 0);
-      let bDone = 0;
-      for (const it of bItems) {
-        const span = getItemSpanCount(it);
-        const val = state.answers[it.itemVersionId];
-        if (span > 1 && typeof val === 'object' && val !== null && !Array.isArray(val)) {
-          for (const k of Object.keys(val)) {
-            if (typeof val[k] === 'string' && val[k].trim() !== '') bDone++;
-          }
-        } else if (isAnswerValueFilled(val)) {
-          bDone += span;
-        }
-      }
-      const sideBadge = rootEl.querySelector(`[data-side-count="sim-block-${i}"]`);
-      if (sideBadge) sideBadge.textContent = `${bDone}/${bTotal}`;
-    });
-    syncBottomBar();
-  };
-
-  // Initial navigator filter
-  filterNavigatorBySection('sim-block-0');
-  updateAnsweredState();
-
-  // Input & change event delegation
-  function captureAnswer(e) {
-    const target = e.target;
-    const itemId = target.getAttribute('data-item-id');
-    if (!itemId) return;
-
-    let value = undefined;
-
-    // Listening Order sequence select
-    if (target.classList.contains('candidate-sequence-select') || target.classList.contains('cbt-sequence-select')) {
-      const slot = target.getAttribute('data-slot');
-      const currentAnswers = typeof state.answers[itemId] === 'object' && state.answers[itemId] !== null && !Array.isArray(state.answers[itemId])
-        ? state.answers[itemId]
-        : {};
-      currentAnswers[slot] = target.value;
-      value = currentAnswers;
-      state.answers[itemId] = value;
-
-      // Update is-selected-event highlighting in the pool
-      const wrap = target.closest('.candidate-listening-order-wrap') || target.closest('.cbt-listening-order-wrap');
-      if (wrap) {
-        const used = new Set(Object.values(currentAnswers).filter(Boolean));
-        wrap.querySelectorAll('.event-pool-card, .cbt-event-card').forEach(card => {
-          const lbl = card.getAttribute('data-event-label');
-          const isUsed = used.has(lbl);
-          card.classList.toggle('is-selected-event', isUsed);
-          let indicator = card.querySelector('.event-used-indicator');
-          if (isUsed && !indicator) {
-            indicator = document.createElement('span');
-            indicator.className = 'event-used-indicator cbt-event-used';
-            indicator.title = 'Đã chọn';
-            indicator.innerHTML = `${ICONS.check} Đã chọn`;
-            card.appendChild(indicator);
-          } else if (!isUsed && indicator) {
-            indicator.remove();
-          }
-        });
-      }
-
-      updateAnsweredState();
-      if (onAnswerChange) onAnswerChange(itemId, value);
-      return;
-    }
-
-    // Vocab pair
-    const row = target.closest('.candidate-vocab-table-row');
-    if (row) {
-      const enInput = row.querySelector('.candidate-vocab-text-input');
-      const viSelect = row.querySelector('.candidate-vocab-select');
-      const enVal = (enInput?.value || '').trim();
-      const viVal = viSelect?.value || '';
-      value = [enVal, viVal];
-      state.answers[itemId] = value;
-      updateAnsweredState();
-      if (onAnswerChange) onAnswerChange(itemId, value);
-      return;
-    }
-
-    // Error correction
-    const errGrid = target.closest('.candidate-error-correction-grid');
-    if (errGrid) {
-      const errInp = errGrid.querySelector('.candidate-error-input');
-      const corrInp = errGrid.querySelector('.candidate-correction-input');
-      value = { error: (errInp?.value || '').trim(), correction: (corrInp?.value || '').trim() };
-      state.answers[itemId] = value;
-      updateAnsweredState();
-      if (onAnswerChange) onAnswerChange(itemId, value);
-      return;
-    }
-
-    // Inline cloze blank
-    const blankWrap = target.closest('.inline-blank-wrapper');
-    if (blankWrap) {
-      const pos = target.getAttribute('data-position');
-      if (pos) {
-        const raw = state.answers[itemId];
-        // Bản nháp cũ dạng chuỗi (#39): dựng lại từ các ô đang hiện để không mất đáp án ở ô khác.
-        const currentAnswers = typeof raw === 'object' && raw !== null
-          ? raw
-          : Object.fromEntries([...rootEl.querySelectorAll('.inline-fill-input')]
-            .filter(input => input.getAttribute('data-item-id') === itemId)
-            .map(input => [input.getAttribute('data-position'), input.value.trim()])
-            .filter(([, v]) => v));
-        currentAnswers[pos] = target.value.trim();
-        value = currentAnswers;
-        state.answers[itemId] = value;
-        blankWrap.classList.toggle('is-filled', Boolean(target.value.trim()));
-        updateAnsweredState();
-        if (onAnswerChange) onAnswerChange(itemId, value);
-        return;
-      }
-    }
-
-    // Multi group (checkbox)
-    if (target.type === 'checkbox') {
-      const checkedBoxes = rootEl.querySelectorAll(`input[type="checkbox"][data-item-id="${CSS.escape(itemId)}"]:checked`);
-      value = Array.from(checkedBoxes).map(cb => cb.value);
-      state.answers[itemId] = value;
-      const card = target.closest('.candidate-question-card') || target.closest('.cbt-question-card');
-      if (card) {
-        card.querySelectorAll('.candidate-choice-label').forEach(lbl => {
-          const cb = lbl.querySelector('input[type="checkbox"]');
-          lbl.classList.toggle('selected', cb && cb.checked);
-        });
-      }
-      updateAnsweredState();
-      if (onAnswerChange) onAnswerChange(itemId, value);
-      return;
-    }
-
-    // Single choice (radio)
-    if (target.type === 'radio') {
-      value = target.value;
-      state.answers[itemId] = value;
-      const card = target.closest('.candidate-question-card') || target.closest('.cbt-question-card');
-      if (card) {
-        card.querySelectorAll('.candidate-choice-label').forEach(lbl => {
-          const r = lbl.querySelector('input[type="radio"]');
-          lbl.classList.toggle('selected', r && r.checked);
-        });
-      }
-      updateAnsweredState();
-      if (onAnswerChange) onAnswerChange(itemId, value);
-      return;
-    }
-
-    // Textarea word counter
-    if (target.tagName === 'TEXTAREA') {
-      value = target.value;
-      const countBadge = target.parentElement?.querySelector('.word-count-badge strong');
-      if (countBadge) {
-        const words = value.trim() ? value.trim().split(/\s+/).length : 0;
-        countBadge.textContent = String(words);
-      }
-      state.answers[itemId] = value;
-      updateAnsweredState();
-      if (onAnswerChange) onAnswerChange(itemId, value);
-      return;
-    }
-
-    // Standard text or select
-    value = target.value;
-    state.answers[itemId] = value;
+    // Initial navigator filter
+    filterNavigatorBySection('sim-block-0');
     updateAnsweredState();
-    if (onAnswerChange) onAnswerChange(itemId, value);
-  }
-
-  rootEl.addEventListener('input', captureAnswer);
-  rootEl.addEventListener('change', captureAnswer);
-
-  // Token chips click-to-assemble
-  rootEl.querySelectorAll('.btn-token-chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const wrap = btn.closest('.candidate-sentence-reorder-wrap');
-      const input = wrap?.querySelector('.candidate-reorder-input');
-      if (input) {
-        const token = btn.getAttribute('data-token');
-        input.value = (input.value ? input.value + ' ' : '') + token;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    });
-  });
-
-  // Reorder clear button
-  rootEl.querySelectorAll('.btn-clear-assembly').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const wrap = btn.closest('.candidate-sentence-reorder-wrap');
-      const input = wrap?.querySelector('.candidate-reorder-input');
-      if (input) {
-        input.value = '';
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    });
-  });
-
-  // Split-pane mobile toggles
-  // Tài liệu là phần tử cuộn, nên vị trí cuộn của mỗi tab được lưu riêng theo phần: paneScroll[secIdx][pane].
-  // Việc ẩn/hiện cột do CSS (data-active-pane) quyết định; từ 1024px cả hai cột luôn hiện.
-  const paneScroll = {};
-  // html đang đặt scroll-behavior:smooth, nên tắt tạm để khôi phục vị trí tức thì (không dùng {behavior:'instant'} vì Safari cũ ném lỗi).
-  const jumpScroll = (y) => {
-    const root = document.documentElement;
-    const prev = root.style.scrollBehavior;
-    root.style.scrollBehavior = 'auto';
-    window.scrollTo(0, Math.max(0, y));
-    root.style.scrollBehavior = prev;
-  };
-  const setPane = (secIdx, pane, { restoreScroll = true } = {}) => {
-    const container = rootEl.querySelector(`#split-pane-${secIdx}`);
-    if (!container) return;
-    const prev = container.getAttribute('data-active-pane') || 'reading';
-    if (prev === pane) return;
-    (paneScroll[secIdx] ||= {})[prev] = window.scrollY;
-    container.setAttribute('data-active-pane', pane);
-    rootEl.querySelectorAll(`.toggle-pane-btn[data-section="${secIdx}"]`).forEach(b => {
-      const on = b.getAttribute('data-pane') === pane;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-selected', String(on));
-    });
-    if (!restoreScroll || typeof window.scrollTo !== 'function') return;
-    const saved = paneScroll[secIdx][pane];
-    if (saved !== undefined) {
-      jumpScroll(saved);
-    } else {
-      // Lần đầu mở tab: đưa đầu nội dung lên ngay dưới thanh tab dính, không giữ vị trí của tab kia.
-      const toggle = container.parentElement.querySelector('.split-pane-mobile-toggle');
-      const topbarH = parseFloat(rootEl.style.getPropertyValue('--cbt-topbar-h')) || 0;
-      const contentTop = container.getBoundingClientRect().top + window.scrollY;
-      jumpScroll(contentTop - (toggle ? toggle.offsetHeight : 0) - topbarH);
+    // Input & change event delegation
+    function captureAnswer(e) {
+        const target = e.target;
+        const itemId = target.getAttribute('data-item-id');
+        if (!itemId)
+            return;
+        let value = undefined;
+        // Listening Order sequence select
+        if (target.classList.contains('candidate-sequence-select') || target.classList.contains('cbt-sequence-select')) {
+            const slot = target.getAttribute('data-slot');
+            const currentAnswers = typeof state.answers[itemId] === 'object' && state.answers[itemId] !== null && !Array.isArray(state.answers[itemId])
+                ? state.answers[itemId]
+                : {};
+            currentAnswers[slot] = target.value;
+            value = currentAnswers;
+            state.answers[itemId] = value;
+            // Update is-selected-event highlighting in the pool
+            const wrap = target.closest('.candidate-listening-order-wrap') || target.closest('.cbt-listening-order-wrap');
+            if (wrap) {
+                const used = new Set(Object.values(currentAnswers).filter(Boolean));
+                wrap.querySelectorAll('.event-pool-card, .cbt-event-card').forEach((card) => {
+                    const lbl = card.getAttribute('data-event-label');
+                    const isUsed = used.has(lbl);
+                    card.classList.toggle('is-selected-event', isUsed);
+                    let indicator = card.querySelector('.event-used-indicator');
+                    if (isUsed && !indicator) {
+                        indicator = document.createElement('span');
+                        indicator.className = 'event-used-indicator cbt-event-used';
+                        indicator.title = 'Đã chọn';
+                        indicator.innerHTML = `${ICONS.check} Đã chọn`;
+                        card.appendChild(indicator);
+                    }
+                    else if (!isUsed && indicator) {
+                        indicator.remove();
+                    }
+                });
+            }
+            updateAnsweredState();
+            if (onAnswerChange)
+                onAnswerChange(itemId, value);
+            return;
+        }
+        // Vocab pair
+        const row = target.closest('.candidate-vocab-table-row');
+        if (row) {
+            const enInput = row.querySelector('.candidate-vocab-text-input');
+            const viSelect = row.querySelector('.candidate-vocab-select');
+            const enVal = (enInput?.value || '').trim();
+            const viVal = viSelect?.value || '';
+            value = [enVal, viVal];
+            state.answers[itemId] = value;
+            updateAnsweredState();
+            if (onAnswerChange)
+                onAnswerChange(itemId, value);
+            return;
+        }
+        // Error correction
+        const errGrid = target.closest('.candidate-error-correction-grid');
+        if (errGrid) {
+            const errInp = errGrid.querySelector('.candidate-error-input');
+            const corrInp = errGrid.querySelector('.candidate-correction-input');
+            value = { error: (errInp?.value || '').trim(), correction: (corrInp?.value || '').trim() };
+            state.answers[itemId] = value;
+            updateAnsweredState();
+            if (onAnswerChange)
+                onAnswerChange(itemId, value);
+            return;
+        }
+        // Inline cloze blank
+        const blankWrap = target.closest('.inline-blank-wrapper');
+        if (blankWrap) {
+            const pos = target.getAttribute('data-position');
+            if (pos) {
+                const raw = state.answers[itemId];
+                // Bản nháp cũ dạng chuỗi (#39): dựng lại từ các ô đang hiện để không mất đáp án ở ô khác.
+                const currentAnswers = typeof raw === 'object' && raw !== null
+                    ? raw
+                    : Object.fromEntries([...rootEl.querySelectorAll('.inline-fill-input')]
+                        .filter(input => input.getAttribute('data-item-id') === itemId)
+                        .map(input => [input.getAttribute('data-position'), input.value.trim()])
+                        .filter(([, v]) => v));
+                currentAnswers[pos] = target.value.trim();
+                value = currentAnswers;
+                state.answers[itemId] = value;
+                blankWrap.classList.toggle('is-filled', Boolean(target.value.trim()));
+                updateAnsweredState();
+                if (onAnswerChange)
+                    onAnswerChange(itemId, value);
+                return;
+            }
+        }
+        // Multi group (checkbox)
+        if (target.type === 'checkbox') {
+            const checkedBoxes = rootEl.querySelectorAll(`input[type="checkbox"][data-item-id="${CSS.escape(itemId)}"]:checked`);
+            value = Array.from(checkedBoxes).map(cb => cb.value);
+            state.answers[itemId] = value;
+            const card = target.closest('.candidate-question-card') || target.closest('.cbt-question-card');
+            if (card) {
+                card.querySelectorAll('.candidate-choice-label').forEach((lbl) => {
+                    const cb = lbl.querySelector('input[type="checkbox"]');
+                    lbl.classList.toggle('selected', Boolean(cb && cb.checked));
+                });
+            }
+            updateAnsweredState();
+            if (onAnswerChange)
+                onAnswerChange(itemId, value);
+            return;
+        }
+        // Single choice (radio)
+        if (target.type === 'radio') {
+            value = target.value;
+            state.answers[itemId] = value;
+            const card = target.closest('.candidate-question-card') || target.closest('.cbt-question-card');
+            if (card) {
+                card.querySelectorAll('.candidate-choice-label').forEach((lbl) => {
+                    const r = lbl.querySelector('input[type="radio"]');
+                    lbl.classList.toggle('selected', Boolean(r && r.checked));
+                });
+            }
+            updateAnsweredState();
+            if (onAnswerChange)
+                onAnswerChange(itemId, value);
+            return;
+        }
+        // Textarea word counter
+        if (target.tagName === 'TEXTAREA') {
+            value = target.value;
+            const countBadge = target.parentElement?.querySelector('.word-count-badge strong');
+            if (countBadge) {
+                const words = value.trim() ? value.trim().split(/\s+/).length : 0;
+                countBadge.textContent = String(words);
+            }
+            state.answers[itemId] = value;
+            updateAnsweredState();
+            if (onAnswerChange)
+                onAnswerChange(itemId, value);
+            return;
+        }
+        // Standard text or select
+        value = target.value;
+        state.answers[itemId] = value;
+        updateAnsweredState();
+        if (onAnswerChange)
+            onAnswerChange(itemId, value);
     }
-  };
-  rootEl.querySelectorAll('.toggle-pane-btn').forEach(btn => {
-    btn.addEventListener('click', () => setPane(btn.getAttribute('data-section'), btn.getAttribute('data-pane')));
-  });
-
-  // Chiều cao thanh trên thay đổi theo khổ màn hình; tab dính cần biết để nằm ngay dưới nó.
-  const topbarEl = typeof document !== 'undefined' ? document.querySelector('.cbt-topbar') : null;
-  if (topbarEl && typeof ResizeObserver === 'function') {
-    const syncTopbarHeight = () => rootEl.style.setProperty('--cbt-topbar-h', `${topbarEl.offsetHeight}px`);
-    new ResizeObserver(syncTopbarHeight).observe(topbarEl);
-    syncTopbarHeight();
-  }
-
-  // Initialize Strict Audio Docks (max 2 listens)
-  initStrictAudioDocks(rootEl, { state, onAudioProgress });
-
-  return {
-    activateSection,
-    filterNavigatorBySection,
-    updateAnsweredState
-  };
+    rootEl.addEventListener('input', captureAnswer);
+    rootEl.addEventListener('change', captureAnswer);
+    // Token chips click-to-assemble
+    rootEl.querySelectorAll('.btn-token-chip').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const wrap = btn.closest('.candidate-sentence-reorder-wrap');
+            const input = wrap?.querySelector('.candidate-reorder-input');
+            if (input) {
+                const token = btn.getAttribute('data-token');
+                input.value = (input.value ? input.value + ' ' : '') + token;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        });
+    });
+    // Reorder clear button
+    rootEl.querySelectorAll('.btn-clear-assembly').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const wrap = btn.closest('.candidate-sentence-reorder-wrap');
+            const input = wrap?.querySelector('.candidate-reorder-input');
+            if (input) {
+                input.value = '';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        });
+    });
+    // Split-pane mobile toggles
+    // Tài liệu là phần tử cuộn, nên vị trí cuộn của mỗi tab được lưu riêng theo phần: paneScroll[secIdx][pane].
+    // Việc ẩn/hiện cột do CSS (data-active-pane) quyết định; từ 1024px cả hai cột luôn hiện.
+    const paneScroll = {};
+    // html đang đặt scroll-behavior:smooth, nên tắt tạm để khôi phục vị trí tức thì (không dùng {behavior:'instant'} vì Safari cũ ném lỗi).
+    const jumpScroll = (y) => {
+        const root = document.documentElement;
+        const prev = root.style.scrollBehavior;
+        root.style.scrollBehavior = 'auto';
+        window.scrollTo(0, Math.max(0, y));
+        root.style.scrollBehavior = prev;
+    };
+    const setPane = (secIdx, pane, { restoreScroll = true } = {}) => {
+        const container = rootEl.querySelector(`#split-pane-${secIdx}`);
+        if (!container)
+            return;
+        const prev = container.getAttribute('data-active-pane') || 'reading';
+        if (prev === pane)
+            return;
+        (paneScroll[secIdx] ||= {})[prev] = window.scrollY;
+        container.setAttribute('data-active-pane', pane);
+        rootEl.querySelectorAll(`.toggle-pane-btn[data-section="${secIdx}"]`).forEach((b) => {
+            const on = b.getAttribute('data-pane') === pane;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-selected', String(on));
+        });
+        if (!restoreScroll || typeof window.scrollTo !== 'function')
+            return;
+        const saved = paneScroll[secIdx][pane];
+        if (saved !== undefined) {
+            jumpScroll(saved);
+        }
+        else {
+            // Lần đầu mở tab: đưa đầu nội dung lên ngay dưới thanh tab dính, không giữ vị trí của tab kia.
+            const toggle = container.parentElement.querySelector('.split-pane-mobile-toggle');
+            const topbarH = parseFloat(rootEl.style.getPropertyValue('--cbt-topbar-h')) || 0;
+            const contentTop = container.getBoundingClientRect().top + window.scrollY;
+            jumpScroll(contentTop - (toggle ? toggle.offsetHeight : 0) - topbarH);
+        }
+    };
+    rootEl.querySelectorAll('.toggle-pane-btn').forEach((btn) => {
+        btn.addEventListener('click', () => setPane(btn.getAttribute('data-section'), btn.getAttribute('data-pane')));
+    });
+    // Chiều cao thanh trên thay đổi theo khổ màn hình; tab dính cần biết để nằm ngay dưới nó.
+    const topbarEl = typeof document !== 'undefined' ? document.querySelector('.cbt-topbar') : null;
+    if (topbarEl && typeof ResizeObserver === 'function') {
+        const syncTopbarHeight = () => rootEl.style.setProperty('--cbt-topbar-h', `${topbarEl.offsetHeight}px`);
+        new ResizeObserver(syncTopbarHeight).observe(topbarEl);
+        syncTopbarHeight();
+    }
+    // Initialize Strict Audio Docks (max 2 listens)
+    initStrictAudioDocks(rootEl, { state, onAudioProgress });
+    return {
+        activateSection,
+        filterNavigatorBySection,
+        updateAnsweredState
+    };
 }
-
 // state.audioProgress[audioKey] = { lastHeardSeconds, completed } khôi phục từ máy chủ; onAudioProgress(audioKey, seconds, completed) báo mốc mới.
 export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
-  if (!rootEl) return;
-  const docks = rootEl.querySelectorAll('.strict-audio-dock');
-  docks.forEach(dock => {
-    const audioEl = dock.querySelector('.audio-hidden-element');
-    const playBtn = dock.querySelector('.btn-sim-audio-play');
-    const volumeInput = dock.querySelector('.candidate-audio-volume');
-    const volumeOutput = dock.querySelector('.volume-output');
-    const liveStatus = dock.querySelector('.audio-live-status');
-    const endedNotice = dock.querySelector('.audio-ended-notice');
-    const timeCurrent = dock.querySelector('.sim-audio-time-current');
-    const timeTotal = dock.querySelector('.sim-audio-time-total');
-    const barFill = dock.querySelector('.sim-audio-bar-fill');
-
-    if (!audioEl || !playBtn) return;
-
-    const maxListens = parseInt(dock.getAttribute('data-max-listens') || '1', 10);
-    let listensCount = parseInt(dock.getAttribute('data-listens-count') || '0', 10);
-    let maxPlayedTime = 0;
-    const listensLeft = dock.querySelector('.audio-listens-left');
-    // Lượt đang nghe dở cũng tính là đã dùng, vì không được nghe lại từ đầu.
-    const syncListensLeft = () => {
-      if (listensLeft) listensLeft.textContent = `Còn ${Math.max(0, maxListens - listensCount - (maxPlayedTime > 0 || !audioEl.paused ? 1 : 0))} lượt nghe`;
-    };
-
-    const formatSec = (secs) => {
-      if (isNaN(secs) || secs < 0) return '00:00';
-      const m = Math.floor(secs / 60);
-      const s = Math.floor(secs % 60);
-      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    };
-
-    // Ensure audio element is unmuted and volume is properly set
-    audioEl.muted = false;
-    if (volumeInput) {
-      const initVol = Number(volumeInput.value);
-      audioEl.volume = Number.isFinite(initVol) && initVol >= 0 ? initVol : 1;
-      volumeInput.addEventListener('input', (e) => {
-        const val = Number(e.target.value) || 0;
-        audioEl.volume = val;
-        audioEl.muted = false;
-        if (volumeOutput) volumeOutput.textContent = `${Math.round(val * 100)}%`;
-      });
-    }
-
-    if (typeof audioEl.addEventListener === 'function') {
-      const updateDuration = () => {
-        if (timeTotal && Number.isFinite(audioEl.duration) && audioEl.duration > 0) {
-          timeTotal.textContent = formatSec(audioEl.duration);
-        }
-      };
-
-      audioEl.addEventListener('loadedmetadata', updateDuration);
-      audioEl.addEventListener('durationchange', updateDuration);
-      audioEl.addEventListener('canplay', updateDuration);
-
-      audioEl.addEventListener('timeupdate', () => {
-        if (timeCurrent) timeCurrent.textContent = formatSec(audioEl.currentTime);
-        if (barFill && Number.isFinite(audioEl.duration) && audioEl.duration > 0) {
-          const pct = Math.min(100, (audioEl.currentTime / audioEl.duration) * 100);
-          barFill.style.width = `${pct}%`;
-        }
-        maxPlayedTime = Math.max(maxPlayedTime, audioEl.currentTime);
-      });
-
-      audioEl.addEventListener('pause', () => {
-        if (!audioEl.ended && listensCount < maxListens) {
-          playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
-          if (liveStatus) liveStatus.style.display = 'none';
-        }
-      });
-
-      audioEl.addEventListener('playing', () => {
-        playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
-        if (liveStatus) liveStatus.style.display = 'inline-flex';
-        syncListensLeft();
-
-        // Mở khóa đề bài khi audio bắt đầu phát
-        const sectionCard = dock.closest('.simulation-section-card');
-        if (sectionCard && sectionCard.getAttribute('data-has-audio') === 'true') {
-          sectionCard.setAttribute('data-audio-unlocked', 'true');
-          const blockId = sectionCard.getAttribute('data-block-id');
-          if (state && blockId) {
-            if (!state.unlockedAudioBlocks) state.unlockedAudioBlocks = new Set();
-            if (typeof state.unlockedAudioBlocks.add === 'function') {
-              state.unlockedAudioBlocks.add(blockId);
-            }
-          }
-        }
-      });
-
-      audioEl.addEventListener('ended', () => {
-        listensCount++;
-        dock.setAttribute('data-listens-count', String(listensCount));
-        maxPlayedTime = 0;
-        if (liveStatus) liveStatus.style.display = 'none';
-        syncListensLeft();
-
-        playBtn.disabled = true;
-        playBtn.style.display = 'none';
-        if (endedNotice) endedNotice.style.display = 'inline-flex';
-      });
-
-      audioEl.addEventListener('error', () => {
-        console.warn('Audio playback error:', audioEl.error);
-        if (liveStatus) {
-          liveStatus.innerHTML = `<span class="dot" style="background:#e11d48"></span><span class="status-text" style="color:#e11d48">Không thể phát file bài nghe</span>`;
-          liveStatus.style.display = 'inline-flex';
-        }
-      });
-    }
-
-    // Tiến độ nghe lưu trên máy chủ: nghe xong thì khóa; nghe dở thì tiếp tục từ vị trí đã lưu (vẫn tính là đã dùng lượt).
-    const audioKey = dock.getAttribute('data-audio-key') || '';
-    const saved = audioKey ? state?.audioProgress?.[audioKey] : null;
-    if (saved) {
-      const savedCard = dock.closest('.simulation-section-card');
-      if (savedCard && savedCard.getAttribute('data-has-audio') === 'true') savedCard.setAttribute('data-audio-unlocked', 'true');
-      if (saved.completed) {
-        listensCount = maxListens;
-        dock.setAttribute('data-listens-count', String(listensCount));
-        playBtn.disabled = true;
-        playBtn.style.display = 'none';
-        if (endedNotice) endedNotice.style.display = 'inline-flex';
-        syncListensLeft();
-      } else if (saved.lastHeardSeconds > 0) {
-        maxPlayedTime = saved.lastHeardSeconds;
-        const seekToSaved = () => {
-          if (Number.isFinite(audioEl.duration) && audioEl.duration > 0) audioEl.currentTime = Math.min(saved.lastHeardSeconds, Math.max(0, audioEl.duration - 0.25));
+    if (!rootEl)
+        return;
+    const docks = rootEl.querySelectorAll('.strict-audio-dock');
+    docks.forEach((dock) => {
+        const audioEl = dock.querySelector('.audio-hidden-element');
+        const playBtn = dock.querySelector('.btn-sim-audio-play');
+        const volumeInput = dock.querySelector('.candidate-audio-volume');
+        const volumeOutput = dock.querySelector('.volume-output');
+        const liveStatus = dock.querySelector('.audio-live-status');
+        const endedNotice = dock.querySelector('.audio-ended-notice');
+        const timeCurrent = dock.querySelector('.sim-audio-time-current');
+        const timeTotal = dock.querySelector('.sim-audio-time-total');
+        const barFill = dock.querySelector('.sim-audio-bar-fill');
+        if (!audioEl || !playBtn)
+            return;
+        const maxListens = parseInt(dock.getAttribute('data-max-listens') || '1', 10);
+        let listensCount = parseInt(dock.getAttribute('data-listens-count') || '0', 10);
+        let maxPlayedTime = 0;
+        const listensLeft = dock.querySelector('.audio-listens-left');
+        // Lượt đang nghe dở cũng tính là đã dùng, vì không được nghe lại từ đầu.
+        const syncListensLeft = () => {
+            if (listensLeft)
+                listensLeft.textContent = `Còn ${Math.max(0, maxListens - listensCount - (maxPlayedTime > 0 || !audioEl.paused ? 1 : 0))} lượt nghe`;
         };
-        audioEl.addEventListener('loadedmetadata', seekToSaved, { once: true });
-        if (audioEl.readyState >= 1) seekToSaved();
-        playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
-        syncListensLeft();
-      }
-    }
-    if (audioKey && typeof onAudioProgress === 'function' && typeof audioEl.addEventListener === 'function') {
-      let lastReportAt = 0;
-      const report = completed => {
-        const seconds = completed && Number.isFinite(audioEl.duration) ? audioEl.duration : audioEl.currentTime;
-        onAudioProgress(audioKey, Math.round(seconds * 10) / 10, completed);
-      };
-      audioEl.addEventListener('timeupdate', () => {
-        const now = Date.now();
-        if (!audioEl.paused && now - lastReportAt >= 5000) { lastReportAt = now; report(false); }
-      });
-      audioEl.addEventListener('pause', () => { if (!audioEl.ended) report(false); });
-      audioEl.addEventListener('ended', () => report(true));
-      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && !audioEl.paused) report(false); });
-    }
-
-    playBtn.addEventListener('click', async () => {
-      if (listensCount >= maxListens) return;
-
-      if (audioEl.paused) {
-        // Pause all other audios in rootEl
-        rootEl.querySelectorAll('.audio-hidden-element').forEach(other => {
-          if (other !== audioEl && !other.paused) other.pause();
-        });
-
-        try {
-          audioEl.muted = false;
-          await audioEl.play();
-          playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
-          if (liveStatus) liveStatus.style.display = 'inline-flex';
-        } catch (err) {
-          console.warn('Cannot play audio:', err);
+        const formatSec = (secs) => {
+            if (isNaN(secs) || secs < 0)
+                return '00:00';
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60);
+            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        };
+        // Ensure audio element is unmuted and volume is properly set
+        audioEl.muted = false;
+        if (volumeInput) {
+            const initVol = Number(volumeInput.value);
+            audioEl.volume = Number.isFinite(initVol) && initVol >= 0 ? initVol : 1;
+            volumeInput.addEventListener('input', (e) => {
+                const val = Number(e.target.value) || 0;
+                audioEl.volume = val;
+                audioEl.muted = false;
+                if (volumeOutput)
+                    volumeOutput.textContent = `${Math.round(val * 100)}%`;
+            });
         }
-      } else {
-        audioEl.pause();
-        playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
-        if (liveStatus) liveStatus.style.display = 'none';
-      }
+        if (typeof audioEl.addEventListener === 'function') {
+            const updateDuration = () => {
+                if (timeTotal && Number.isFinite(audioEl.duration) && audioEl.duration > 0) {
+                    timeTotal.textContent = formatSec(audioEl.duration);
+                }
+            };
+            audioEl.addEventListener('loadedmetadata', updateDuration);
+            audioEl.addEventListener('durationchange', updateDuration);
+            audioEl.addEventListener('canplay', updateDuration);
+            audioEl.addEventListener('timeupdate', () => {
+                if (timeCurrent)
+                    timeCurrent.textContent = formatSec(audioEl.currentTime);
+                if (barFill && Number.isFinite(audioEl.duration) && audioEl.duration > 0) {
+                    const pct = Math.min(100, (audioEl.currentTime / audioEl.duration) * 100);
+                    barFill.style.width = `${pct}%`;
+                }
+                maxPlayedTime = Math.max(maxPlayedTime, audioEl.currentTime);
+            });
+            audioEl.addEventListener('pause', () => {
+                if (!audioEl.ended && listensCount < maxListens) {
+                    playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
+                    if (liveStatus)
+                        liveStatus.style.display = 'none';
+                }
+            });
+            audioEl.addEventListener('playing', () => {
+                playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
+                if (liveStatus)
+                    liveStatus.style.display = 'inline-flex';
+                syncListensLeft();
+                // Mở khóa đề bài khi audio bắt đầu phát
+                const sectionCard = dock.closest('.simulation-section-card');
+                if (sectionCard && sectionCard.getAttribute('data-has-audio') === 'true') {
+                    sectionCard.setAttribute('data-audio-unlocked', 'true');
+                    const blockId = sectionCard.getAttribute('data-block-id');
+                    if (state && blockId) {
+                        if (!state.unlockedAudioBlocks)
+                            state.unlockedAudioBlocks = new Set();
+                        if (typeof state.unlockedAudioBlocks.add === 'function') {
+                            state.unlockedAudioBlocks.add(blockId);
+                        }
+                    }
+                }
+            });
+            audioEl.addEventListener('ended', () => {
+                listensCount++;
+                dock.setAttribute('data-listens-count', String(listensCount));
+                maxPlayedTime = 0;
+                if (liveStatus)
+                    liveStatus.style.display = 'none';
+                syncListensLeft();
+                playBtn.disabled = true;
+                playBtn.style.display = 'none';
+                if (endedNotice)
+                    endedNotice.style.display = 'inline-flex';
+            });
+            audioEl.addEventListener('error', () => {
+                console.warn('Audio playback error:', audioEl.error);
+                if (liveStatus) {
+                    liveStatus.innerHTML = `<span class="dot" style="background:#e11d48"></span><span class="status-text" style="color:#e11d48">Không thể phát file bài nghe</span>`;
+                    liveStatus.style.display = 'inline-flex';
+                }
+            });
+        }
+        // Tiến độ nghe lưu trên máy chủ: nghe xong thì khóa; nghe dở thì tiếp tục từ vị trí đã lưu (vẫn tính là đã dùng lượt).
+        const audioKey = dock.getAttribute('data-audio-key') || '';
+        const saved = audioKey ? state?.audioProgress?.[audioKey] : null;
+        if (saved) {
+            const savedCard = dock.closest('.simulation-section-card');
+            if (savedCard && savedCard.getAttribute('data-has-audio') === 'true')
+                savedCard.setAttribute('data-audio-unlocked', 'true');
+            if (saved.completed) {
+                listensCount = maxListens;
+                dock.setAttribute('data-listens-count', String(listensCount));
+                playBtn.disabled = true;
+                playBtn.style.display = 'none';
+                if (endedNotice)
+                    endedNotice.style.display = 'inline-flex';
+                syncListensLeft();
+            }
+            else if (saved.lastHeardSeconds > 0) {
+                maxPlayedTime = saved.lastHeardSeconds;
+                const seekToSaved = () => {
+                    if (Number.isFinite(audioEl.duration) && audioEl.duration > 0)
+                        audioEl.currentTime = Math.min(saved.lastHeardSeconds, Math.max(0, audioEl.duration - 0.25));
+                };
+                audioEl.addEventListener('loadedmetadata', seekToSaved, { once: true });
+                if (audioEl.readyState >= 1)
+                    seekToSaved();
+                playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
+                syncListensLeft();
+            }
+        }
+        if (audioKey && typeof onAudioProgress === 'function' && typeof audioEl.addEventListener === 'function') {
+            let lastReportAt = 0;
+            const report = (completed) => {
+                const seconds = completed && Number.isFinite(audioEl.duration) ? audioEl.duration : audioEl.currentTime;
+                onAudioProgress(audioKey, Math.round(seconds * 10) / 10, completed);
+            };
+            audioEl.addEventListener('timeupdate', () => {
+                const now = Date.now();
+                if (!audioEl.paused && now - lastReportAt >= 5000) {
+                    lastReportAt = now;
+                    report(false);
+                }
+            });
+            audioEl.addEventListener('pause', () => { if (!audioEl.ended)
+                report(false); });
+            audioEl.addEventListener('ended', () => report(true));
+            document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && !audioEl.paused)
+                report(false); });
+        }
+        playBtn.addEventListener('click', async () => {
+            if (listensCount >= maxListens)
+                return;
+            if (audioEl.paused) {
+                // Pause all other audios in rootEl
+                rootEl.querySelectorAll('.audio-hidden-element').forEach((other) => {
+                    if (other !== audioEl && !other.paused)
+                        other.pause();
+                });
+                try {
+                    audioEl.muted = false;
+                    await audioEl.play();
+                    playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
+                    if (liveStatus)
+                        liveStatus.style.display = 'inline-flex';
+                }
+                catch (err) {
+                    console.warn('Cannot play audio:', err);
+                }
+            }
+            else {
+                audioEl.pause();
+                playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
+                if (liveStatus)
+                    liveStatus.style.display = 'none';
+            }
+        });
     });
-  });
 }
-

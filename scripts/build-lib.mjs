@@ -26,8 +26,14 @@ export function emit(outDir) {
   const run = spawnSync(process.execPath, [tsc, '-p', 'tsconfig.build.json', '--outDir', outDir], { cwd: root, encoding: 'utf8' });
   if (run.status !== 0) throw new Error(run.stdout || run.stderr);
   const rev = currentRev();
-  // Chỉ file .js có nguồn .ts cạnh nó; file .js thuần được .ts import (allowJs) chỉ phục vụ kiểm kiểu, không được ghi đè.
-  const files = walk(outDir).filter(file => file.endsWith('.js') && existsSync(path.join(root, 'term-tests', path.relative(outDir, file).replace(/\.js$/, '.ts'))));
+  // Chỉ file .js có nguồn .ts (hoặc .mjs có nguồn .mts) cạnh nó; file .js/.mjs thuần được .ts import (allowJs) chỉ phục vụ
+  // kiểm kiểu, không được ghi đè.
+  const hasSource = file => {
+    const rel = path.relative(outDir, file);
+    const source = rel.endsWith('.mjs') ? rel.replace(/\.mjs$/, '.mts') : rel.replace(/\.js$/, '.ts');
+    return existsSync(path.join(root, 'term-tests', source));
+  };
+  const files = walk(outDir).filter(file => /\.m?js$/.test(file) && hasSource(file));
   for (const file of files) {
     // Chỉ cây shell học viên (webtest-34-demo) dùng rev chung. Dashboard import không có `?rev=`; thêm rev vào đó sẽ cho cùng
     // một module hai URL, tức hai thể hiện module với state riêng.

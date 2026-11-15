@@ -2,6 +2,8 @@
 export {};
 
 declare global {
+  // Cấu hình học viên do config.js gắn vào window (nạp bằng thẻ <script> trước content-preview.mjs).
+  interface Window { WEBTEST_34_PREVIEW_CONFIG?: Record<string, any> }
   // eslint-disable-next-line no-var
   var isIosDevice: ((nav: { userAgent?: string, maxTouchPoints?: number }) => boolean) | undefined;
   // eslint-disable-next-line no-var
