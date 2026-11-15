@@ -1,9 +1,9 @@
 // NGUỒN: file .mts này; content-preview.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS, scrollBehavior } from './dynamic-exam-renderer.mjs?rev=20261113-submit-a';
-import { escape, words } from './candidate/text-utils.js?rev=20261113-submit-a';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261113-submit-a';
+import { escape } from './candidate/text-utils.js?rev=20261113-submit-a';
 import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261113-submit-a';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, sectionKey, sectionLabels, groupSections } from './candidate/group-render.js?rev=20261113-submit-a';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261113-submit-a';
 import { createExamMode } from './candidate/exam-mode.js?rev=20261113-submit-a';
 import { createIntroScreen } from './candidate/intro-screen.js?rev=20261113-submit-a';
 import { createReviewScreen } from './candidate/review-screen.js?rev=20261113-submit-a';
@@ -37,7 +37,6 @@ export async function mount(course) {
     let form = { course, groups: [], durationMinutes: 60 };
     let items = [];
     let title = `Khóa ${course}`;
-    let sections = [];
     let activeSection = '';
     let key = `izone_learning_${testToken || course}`;
     let state = { answers: {}, submittedAt: null };
@@ -355,14 +354,14 @@ export async function mount(course) {
     return;
     // --- RENDER GIAO DIỆN BÀI THI CHÍNH THỨC ---
     function renderExamInterface() {
-        const isDynamic = Boolean(learningState.definition?.blocks?.length);
-        const examTitle = isDynamic ? (learningState.definition.title || learningState.assignment?.title || title) : title;
-        const examDuration = isDynamic
-            ? (Number(learningState.definition.timing?.totalMinutes || learningState.definition.durationMinutes) || 120)
-            : (Number(form.durationMinutes) || 120);
-        const examSections = isDynamic
-            ? learningState.definition.blocks.map((b, i) => b.title || `Phần ${i + 1}`)
-            : sections;
+        const definitionBlocks = learningState.definition?.blocks || [];
+        if (!definitionBlocks.length) {
+            document.body.innerHTML = '<main class="cbt-intro-wrap"><div class="cbt-intro-card"><h1>Đề thi chưa có nội dung</h1><p>Hãy liên hệ giáo viên để được cấp lại link bài thi.</p></div></main>';
+            return;
+        }
+        const examTitle = learningState.definition.title || learningState.assignment?.title || title;
+        const examDuration = Number(learningState.definition.timing?.totalMinutes || learningState.definition.durationMinutes) || 120;
+        const examSections = definitionBlocks.map((b, i) => b.title || `Phần ${i + 1}`);
         if (!examSections.includes(activeSection)) {
             activeSection = examSections[0];
         }
@@ -370,175 +369,91 @@ export async function mount(course) {
         const headerSub = `Thí sinh: <strong>${escape(learningState.studentName)}</strong> · Lớp: <strong>${escape(learningState.className)}</strong>`;
         const noticeBanner = selfProctoringBannerHtml(learningState.selfProctoring);
         let dynamicExamControls = null;
-        if (isDynamic) {
-            document.body.innerHTML = `
-        <div class="candidate-simulation-shell content-demo cbt-exam-shell">
-          <header class="topbar simulation-topbar cbt-topbar">
-            <div class="topbar-inner demo-top cbt-topbar-inner">
-              <div class="brand cbt-brand">
-                <div class="brand-mark cbt-brand-mark">IZ</div>
-                <div class="brand-copy cbt-brand-copy">
-                  <div class="brand-title cbt-brand-title">IZONE · ${escape((examTitle || '').replace(/^(?:IZONE\s*[·•\-:]\s*)+/gi, ''))}</div>
-                  <div class="brand-sub cbt-brand-sub">${headerSub}</div>
-                </div>
-              </div>
-              <div class="cbt-current-section" id="cbt-current-section"></div>
-              <div class="top-actions cbt-top-actions">
-                <span id="demo-save" role="status" class="cbt-save-pill">Đã lưu</span>
-                <div class="cbt-font-toggles">
-                  <button type="button" class="icon-btn cbt-font-btn" id="demo-font-down" aria-label="Giảm cỡ chữ" title="Giảm cỡ chữ">A−</button>
-                  <button type="button" class="icon-btn cbt-font-btn" id="demo-font-up" aria-label="Tăng cỡ chữ" title="Tăng cỡ chữ">A+</button>
-                </div>
-                <div class="cbt-timer-container">
-                  <span class="cbt-timer-icon">${ICONS.clock}</span>
-                  <span class="cbt-timer" id="examTimerDisplay">${examDuration}:00</span>
-                </div>
-                <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${state.submittedAt ? 'Đã nộp bài' : 'Nộp bài'}</button>
+        document.body.innerHTML = `
+      <div class="candidate-simulation-shell content-demo cbt-exam-shell">
+        <header class="topbar simulation-topbar cbt-topbar">
+          <div class="topbar-inner demo-top cbt-topbar-inner">
+            <div class="brand cbt-brand">
+              <div class="brand-mark cbt-brand-mark">IZ</div>
+              <div class="brand-copy cbt-brand-copy">
+                <div class="brand-title cbt-brand-title">IZONE · ${escape((examTitle || '').replace(/^(?:IZONE\s*[·•\-:]\s*)+/gi, ''))}</div>
+                <div class="brand-sub cbt-brand-sub">${headerSub}</div>
               </div>
             </div>
-            <div class="section-nav-wrap cbt-section-nav-wrap">
-              <nav class="section-nav simulation-nav-bar cbt-section-nav-bar" id="sectionNavContainer" aria-label="Các phần bài thi">
-                ${renderSectionNavPills(learningState.definition, 0)}
-              </nav>
-            </div>
-            <div id="demo-save-alert" class="cbt-save-alert" role="alert"></div>
-          </header>
-
-          <main class="demo-width cbt-main-content" style="max-width:1380px;margin:0 auto;padding:20px 24px;">
-            ${noticeBanner}
-            <div id="demo-result" class="cbt-result-box" style="display:none;" hidden></div>
-            <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
-
-            <div class="exam-layout cbt-exam-layout">
-              <div class="main-column simulation-viewport cbt-viewport" id="examMainViewport"></div>
-              <div id="examSidePanelContainer" class="cbt-side-container">
-                ${renderSidePanel(learningState.definition, state, 0)}
+            <div class="cbt-current-section" id="cbt-current-section"></div>
+            <div class="top-actions cbt-top-actions">
+              <span id="demo-save" role="status" class="cbt-save-pill">Đã lưu</span>
+              <div class="cbt-font-toggles">
+                <button type="button" class="icon-btn cbt-font-btn" id="demo-font-down" aria-label="Giảm cỡ chữ" title="Giảm cỡ chữ">A−</button>
+                <button type="button" class="icon-btn cbt-font-btn" id="demo-font-up" aria-label="Tăng cỡ chữ" title="Tăng cỡ chữ">A+</button>
               </div>
+              <div class="cbt-timer-container">
+                <span class="cbt-timer-icon">${ICONS.clock}</span>
+                <span class="cbt-timer" id="examTimerDisplay">${examDuration}:00</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${state.submittedAt ? 'Đã nộp bài' : 'Nộp bài'}</button>
             </div>
-          </main>
-
-          <dialog id="demo-confirm">
-            <h2>Xác nhận nộp bài thi?</h2>
-            <p id="demo-confirm-text"></p>
-            <p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p>
-            <p>Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.</p>
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-              <button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button>
-              <button type="button" class="btn btn-primary" id="demo-confirm-submit">Xác nhận nộp bài</button>
-            </div>
-          </dialog>
-        </div>
-      `;
-            if (learningState.status === 'active' && !state.submittedAt) {
-                examMode.wantWakeLock = true;
-                requestWakeLock();
-            }
-            // Cần để env(safe-area-inset-*) có giá trị; chỉ bật ở màn thi để không đổi các trang khác.
-            document.querySelector('meta[name="viewport"]')?.setAttribute('content', 'width=device-width,initial-scale=1,viewport-fit=cover');
-            renderDynamicExam(learningState.definition, document.querySelector('#examMainViewport'), {
-                state,
-                activeSection,
-                onAnswerChange: () => {
-                    persist();
-                    update();
-                }
-            });
-            dynamicExamControls = initDynamicExamInteractions(document.body, {
-                definition: learningState.definition,
-                state,
-                onAudioProgress: saveAudioProgress,
-                onAnswerChange: () => {
-                    persist();
-                    update();
-                },
-                onSectionChange: (secName) => {
-                    activeSection = secName;
-                }
-            });
-        }
-        else {
-            document.body.innerHTML = `<div class="content-demo">
-        <header class="topbar"><div class="topbar-inner demo-top"><div class="brand"><div class="brand-mark">IZ</div><div class="brand-copy"><div class="brand-title">IZONE · ${escape(examTitle)}</div><div class="brand-sub">${headerSub}</div></div></div></div><nav class="section-nav demo-tabs" aria-label="Các phần bài">${examSections.map((sec) => `<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span class="tab-count" data-demo-tab-count="${escape(sec)}"></span></button>`).join('')}</nav></header>
-        <main class="demo-width">
-          ${noticeBanner}
-          <div class="demo-toolbar">
-            <span id="demo-progress" aria-live="polite"></span>
-            <span id="demo-save" role="status"></span>
-            <button type="button" class="btn btn-primary" id="demo-submit">Nộp bài</button>
           </div>
-          <div id="demo-result" class="demo-notice" hidden></div>
+          <div class="section-nav-wrap cbt-section-nav-wrap">
+            <nav class="section-nav simulation-nav-bar cbt-section-nav-bar" id="sectionNavContainer" aria-label="Các phần bài thi">
+              ${renderSectionNavPills(learningState.definition, 0)}
+            </nav>
+          </div>
+          <div id="demo-save-alert" class="cbt-save-alert" role="alert"></div>
+        </header>
+
+        <main class="demo-width cbt-main-content" style="max-width:1380px;margin:0 auto;padding:20px 24px;">
+          ${noticeBanner}
+          <div id="demo-result" class="cbt-result-box" style="display:none;" hidden></div>
           <div id="demo-ai-card" hidden style="margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 8px 20px rgba(0,0,0,0.04)"></div>
-          <div class="demo-layout"><aside class="side-panel"><div class="panel-card"><strong>Tiến độ làm bài</strong><div class="progress-track"><div class="progress-fill" id="demo-fill"></div></div><nav aria-label="Điều hướng bài thi">${examSections.map((sec) => `<button class="section-tab" data-demo-go="${escape(sec)}">${isDynamic ? escape(sec) : sectionLabels[sec]} <span data-demo-section-count="${escape(sec)}"></span></button>`).join('')}</nav></div><div class="panel-card"><strong>Lưu ý khi làm bài</strong><p class="meta">Câu trả lời được lưu tự động. Chuyển phần không mất đáp án. Kiểm tra các ô chưa trả lời trước khi nộp bài.</p></div></aside>
-          <div class="demo-main">${groupSections(form, true)}<div class="bottom-actions demo-bottom"><button class="btn btn-secondary" id="demo-prev">← Phần trước</button><button class="btn btn-primary" id="demo-next">Phần tiếp →</button></div></div></div>
-        </main><dialog id="demo-confirm"><h2>Xác nhận nộp bài thi?</h2><p id="demo-confirm-text"></p><p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p><p>Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.</p><button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button> <button type="button" class="btn btn-primary" id="demo-confirm-submit">Xác nhận nộp bài</button></dialog>
-      </div>`;
-            document.querySelector('.demo-top').insertAdjacentHTML('beforeend', `<div class="top-actions"><button type="button" class="icon-btn" id="demo-font-down" aria-label="Giảm cỡ chữ">A−</button><button type="button" class="icon-btn" id="demo-font-up" aria-label="Tăng cỡ chữ">A+</button><span class="timer" id="examTimerDisplay">${examDuration}:00</span></div>`);
-            document.querySelector('.top-actions').prepend(document.querySelector('#demo-save'));
+
+          <div class="exam-layout cbt-exam-layout">
+            <div class="main-column simulation-viewport cbt-viewport" id="examMainViewport"></div>
+            <div id="examSidePanelContainer" class="cbt-side-container">
+              ${renderSidePanel(learningState.definition, state, 0)}
+            </div>
+          </div>
+        </main>
+
+        <dialog id="demo-confirm">
+          <h2>Xác nhận nộp bài thi?</h2>
+          <p id="demo-confirm-text"></p>
+          <p id="demo-confirm-error" style="color:#db0829" role="alert" hidden></p>
+          <p>Sau khi nộp, hệ thống và AI sẽ tiến hành chấm điểm. Bạn không thể chỉnh sửa bài làm.</p>
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+            <button type="button" class="btn btn-secondary" id="demo-cancel">Quay lại bài</button>
+            <button type="button" class="btn btn-primary" id="demo-confirm-submit">Xác nhận nộp bài</button>
+          </div>
+        </dialog>
+      </div>
+    `;
+        if (learningState.status === 'active' && !state.submittedAt) {
+            examMode.wantWakeLock = true;
+            requestWakeLock();
         }
-        const examTimer = createExamTimer({ course, examDuration, testToken, isLearningMode, state, learningState });
-        if (!isDynamic) {
-            for (const section of sections) {
-                const groups = form.groups.filter((group) => sectionKey(group) === section);
-                document.querySelector(`[data-demo-page="${section}"]`)?.insertAdjacentHTML('beforebegin', `<div class="section-hero" data-demo-page="${section}"><div class="section-kicker">${escape(title)}</div><h2>${sectionLabels[section]}</h2><p>${groups.length} nhóm bài · ${groups.reduce((count, group) => count + group.items.length, 0)} ô trả lời</p></div>`);
+        // Cần để env(safe-area-inset-*) có giá trị; chỉ bật ở màn thi để không đổi các trang khác.
+        document.querySelector('meta[name="viewport"]')?.setAttribute('content', 'width=device-width,initial-scale=1,viewport-fit=cover');
+        renderDynamicExam(learningState.definition, document.querySelector('#examMainViewport'), {
+            state,
+            activeSection,
+            onAnswerChange: () => {
+                persist();
+                update();
             }
-            const style = document.createElement('style');
-            style.textContent = `
-        .content-demo{color:#404040;background:#f3f4f6;min-height:100vh}.demo-width{max-width:1180px;margin:auto;padding:20px}.demo-top{display:flex;align-items:center;justify-content:space-between;gap:16px}.demo-top nav{display:flex;gap:12px}.content-demo a{color:#174266}.content-demo a[aria-current]{font-weight:700;color:#db0829}.demo-notice{background:#fff4df;border:1px solid #ecd8b1;padding:12px 16px;border-radius:10px;margin:12px 0}.demo-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.content-demo button{padding:10px 16px;border:1px solid #ddd;border-radius:8px;background:white}.content-demo #demo-submit,.content-demo #demo-confirm-submit{background:#db0829;color:white;border-color:#db0829}.demo-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}.demo-layout aside nav{position:sticky;top:100px;display:grid;gap:12px;background:white;padding:16px;border-radius:12px}.demo-section{background:white;border:1px solid #e5e7eb;border-radius:16px;padding:24px;margin-bottom:24px;scroll-margin-top:110px}.demo-section h2{margin-top:0;color:#174266;font-size:22px}.demo-lines{white-space:pre-wrap}.demo-context{background:#f3f4f6;padding:16px;border-radius:10px;margin:16px 0}.demo-question{padding:16px 0;border-top:1px solid #eee}.demo-question label{display:block;margin-bottom:10px;font-weight:500}.demo-question img{display:block;max-width:220px;max-height:180px;object-fit:contain;margin:12px 0}.demo-question input,.demo-question textarea,.demo-question select{display:block;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;color:#404040;background:white}.demo-question input:focus,.demo-question textarea:focus,.demo-question select:focus{outline:2px solid #174266;outline-offset:2px}.demo-question small{display:block;margin-top:6px;color:#62576a}.demo-question.done{border-left:3px solid #238563;padding-left:12px}.content-demo dialog{max-width:480px;border:0;border-radius:16px;padding:24px}.content-demo dialog::backdrop{background:#0006}@media(max-width:760px){.demo-layout{grid-template-columns:1fr}.demo-layout aside nav{position:static;display:flex;overflow:auto;white-space:nowrap}.demo-top{flex-direction:column;align-items:flex-start}.demo-section{padding:16px}.demo-width{padding:12px}}`;
-            document.head.append(style);
-            const layoutStyle = document.createElement('style');
-            layoutStyle.textContent = `
-        .content-demo .demo-tabs{display:flex;gap:8px;max-width:1180px;margin:auto;overflow-x:auto;padding:8px 24px}
-        .content-demo .demo-layout{grid-template-columns:minmax(0,1fr) 280px;gap:24px}
-        .content-demo .demo-main{grid-column:1;grid-row:1;min-width:0}
-        .content-demo .demo-layout aside{grid-column:2;grid-row:1;top:140px}
-        .content-demo .demo-layout aside nav{position:static;padding:0;margin-top:16px;background:transparent;gap:4px}
-        .content-demo .demo-layout aside .section-tab{justify-content:space-between;text-align:left}
-        .content-demo .demo-section{box-shadow:var(--shadow-1);border-color:var(--color-border);border-radius:var(--radius-lg)}
-        .content-demo .demo-audio-gate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px;margin:14px 0 18px;border:1px solid #f1c8cf;border-radius:12px;background:#fff3f5}
-        .content-demo .demo-audio-gate audio{display:none}
-        .content-demo .demo-audio-status{font-size:13px;font-weight:600;color:var(--color-text-secondary)}
-        .content-demo .demo-audio-linked{font-size:13px}
-        .content-demo .demo-section h2{font-family:Geologica,sans-serif;color:var(--color-text);font-size:19px;margin-bottom:0}
-        .content-demo .demo-section .points{white-space:nowrap}
-        .content-demo .demo-section[hidden]{display:none}
-        .content-demo .demo-context{background:#fafbfc;border:1px solid #e9ebee}
-        .content-demo .demo-question input:focus,.content-demo .demo-question select:focus,.content-demo .demo-question textarea:focus{outline:2px solid var(--color-primary)}
-        .content-demo .demo-cloze{line-height:3;white-space:pre-wrap;overflow-wrap:anywhere}
-        .content-demo .demo-sentence{padding:12px 0;border-bottom:1px solid var(--color-border)}
-        .content-demo .demo-inline{display:inline-flex;align-items:center;vertical-align:middle;gap:6px;padding:0 4px;border:0;white-space:normal}
-        .content-demo .demo-inline input{display:inline-block;width:clamp(110px,16vw,170px);padding:7px 10px;line-height:1.5}
-        .content-demo .demo-inline.done{border:0;padding-left:4px}
-        .content-demo .demo-inline.done input{border-color:#238563}
-        .content-demo .demo-blank-number{font-size:12px;color:var(--color-text-secondary)}
-        .content-demo .demo-vocab-grid,.content-demo .demo-picture-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
-        .content-demo .demo-bottom{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
-        .content-demo button.section-tab{border:0;background:transparent;padding:10px 12px}
-        .content-demo button.section-tab.active{background:#fff3f5;color:var(--color-primary)}
-        .content-demo .progress-track{margin-top:12px}
-        .content-demo .demo-table-wrapper{margin:20px 0;background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-        .content-demo .demo-table-title{padding:14px 18px;font-family:Geologica,sans-serif;font-size:16px;font-weight:700;color:#1e293b;background:#f8fafc;border-bottom:2px solid #e2e8f0}
-        .content-demo .demo-cloze-table{width:100%;border-collapse:collapse}
-        .content-demo .demo-table-header{width:28%;min-width:160px;vertical-align:top;text-align:left;padding:14px 18px;background:#f8fafc;font-weight:600;font-size:14px;color:#334155;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0}
-        .content-demo .demo-table-cell{vertical-align:top;padding:14px 18px;line-height:2.6;color:#1e293b;border-bottom:1px solid #e2e8f0}
-        .content-demo .demo-table-cell br{line-height:1.8}
-        .content-demo .demo-cloze-table tr:last-child .demo-table-header,.content-demo .demo-cloze-table tr:last-child .demo-table-cell{border-bottom:0}
-
-        .content-demo .demo-order-container{margin:18px 0;display:grid;gap:18px}
-        .content-demo .demo-order-sentences{display:grid;gap:10px}
-        .content-demo .demo-order-sentence-card{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;line-height:1.5}
-        .content-demo .demo-order-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--color-primary);color:white;font-weight:700;font-size:13px;flex-shrink:0}
-        .content-demo .demo-order-text{flex:1;color:#334155;font-weight:500;padding-top:3px}
-        .content-demo .demo-order-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:16px;background:#f1f5f9;border-radius:12px}
-        .content-demo .demo-order-slot{display:flex;flex-direction:column;gap:6px}
-        .content-demo .demo-order-slot-label{font-size:12px;font-weight:700;color:#475569}
-        .content-demo .demo-order-slot select{width:100%;min-height:40px;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;background:white;font-weight:600}
-
-        .content-demo .demo-picture-grid .demo-prompt-row .demo-lines{font-weight:600;letter-spacing:0.5px}
-        @media(max-width:900px){.content-demo .demo-layout{grid-template-columns:1fr}.content-demo .demo-layout aside{display:none}.content-demo .demo-main{grid-column:1}}
-        @media(max-width:600px){.content-demo .demo-picture-grid{grid-template-columns:1fr}.content-demo .demo-vocab-grid{gap:0 10px}.content-demo .demo-question{min-width:0}.content-demo .demo-question input,.content-demo .demo-question select{min-width:0}.content-demo .demo-inline input{width:120px}.content-demo .demo-tabs{padding:8px 12px}.content-demo .exercise-head{gap:8px}.content-demo .demo-cloze{line-height:3.2}.content-demo .demo-top nav{flex-shrink:0}}
-      `;
-            document.head.append(layoutStyle);
-        }
+        });
+        dynamicExamControls = initDynamicExamInteractions(document.body, {
+            definition: learningState.definition,
+            state,
+            onAudioProgress: saveAudioProgress,
+            onAnswerChange: () => {
+                persist();
+                update();
+            },
+            onSectionChange: (secName) => {
+                activeSection = secName;
+            }
+        });
+        const examTimer = createExamTimer({ course, examDuration, testToken, isLearningMode, state, learningState });
         for (const button of document.querySelectorAll('[data-demo-audio-start]')) {
             const gateId = button.dataset.demoAudioStart;
             const audio = document.querySelector(`[data-demo-audio-player="${gateId}"]`);
@@ -683,143 +598,48 @@ export async function mount(course) {
         if (btnFontUp)
             btnFontUp.addEventListener('click', () => resizeFont(0.06));
         const query = (selector) => document.querySelector(selector);
-        const fields = [...document.querySelectorAll('[data-demo-answer]')];
         const { queueServerDraft, persist, clearDraftTimer } = createDraftSync({ query, isLearningMode, key, state, learningState, apiRequest, buildResponsesPayload });
         function update() {
-            if (isDynamic) {
-                if (dynamicExamControls && typeof dynamicExamControls.updateAnsweredState === 'function') {
-                    dynamicExamControls.updateAnsweredState();
-                }
-                const total = getTotalItemCount(learningState.definition);
-                const done = getAnsweredCount(learningState.definition, state.answers);
-                if (query('#demo-progress'))
-                    query('#demo-progress').textContent = `${done}/${total} câu đã trả lời`;
-                if (query('#demo-fill'))
-                    query('#demo-fill').style.width = `${total ? Math.round(done / total * 100) : 0}%`;
-                learningState.definition.blocks.forEach((block, bIdx) => {
-                    const secName = block.title || `Phần ${bIdx + 1}`;
-                    const bItems = block.items || [];
-                    let bDone = 0;
-                    for (const it of bItems) {
-                        const val = state.answers[it.itemVersionId];
-                        if (val !== undefined && val !== null) {
-                            if (Array.isArray(val) && val.some(v => typeof v === 'string' && v.trim() !== ''))
-                                bDone++;
-                            else if (typeof val === 'object' && Object.values(val).some(v => typeof v === 'string' && v.trim() !== ''))
-                                bDone++;
-                            else if (typeof val === 'string' && val.trim() !== '')
-                                bDone++;
-                        }
+            if (dynamicExamControls && typeof dynamicExamControls.updateAnsweredState === 'function') {
+                dynamicExamControls.updateAnsweredState();
+            }
+            const total = getTotalItemCount(learningState.definition);
+            const done = getAnsweredCount(learningState.definition, state.answers);
+            if (query('#demo-progress'))
+                query('#demo-progress').textContent = `${done}/${total} câu đã trả lời`;
+            if (query('#demo-fill'))
+                query('#demo-fill').style.width = `${total ? Math.round(done / total * 100) : 0}%`;
+            learningState.definition.blocks.forEach((block, bIdx) => {
+                const secName = block.title || `Phần ${bIdx + 1}`;
+                const bItems = block.items || [];
+                let bDone = 0;
+                for (const it of bItems) {
+                    const val = state.answers[it.itemVersionId];
+                    if (val !== undefined && val !== null) {
+                        if (Array.isArray(val) && val.some(v => typeof v === 'string' && v.trim() !== ''))
+                            bDone++;
+                        else if (typeof val === 'object' && Object.values(val).some(v => typeof v === 'string' && v.trim() !== ''))
+                            bDone++;
+                        else if (typeof val === 'string' && val.trim() !== '')
+                            bDone++;
                     }
-                    document.querySelectorAll(`[data-demo-section-count="${secName}"], [data-demo-tab-count="${secName}"]`).forEach(count => {
-                        count.textContent = `${bDone}/${bItems.length}`;
-                    });
-                });
-                if (query('#demo-submit'))
-                    query('#demo-submit').disabled = Boolean(state.submittedAt);
-                if (query('#demo-submit-top'))
-                    query('#demo-submit-top').disabled = Boolean(state.submittedAt);
-                if (query('#demo-result'))
-                    query('#demo-result').hidden = !state.submittedAt;
-                return;
-            }
-            const done = items.filter(item => String(state.answers[item.id] || '').trim()).length;
-            query('#demo-progress').textContent = `${done}/${items.length} ô đã trả lời`;
-            query('#demo-fill').style.width = `${Math.round(done / items.length * 100)}%`;
-            for (const section of sections) {
-                const sectionItems = form.groups.filter((group) => sectionKey(group) === section).flatMap((group) => group.items);
-                const answered = sectionItems.filter((item) => String(state.answers[item.id] || '').trim()).length;
-                document.querySelectorAll(`[data-demo-section-count="${section}"], [data-demo-tab-count="${section}"]`).forEach((count) => count.textContent = `${answered}/${sectionItems.length}`);
-            }
-            for (const item of items) {
-                const field = document.getElementById(item.id);
-                if (field) {
-                    field.disabled = Boolean(state.submittedAt);
-                    field.closest('.demo-question')?.classList.toggle('done', Boolean(String(state.answers[item.id] || '').trim()));
                 }
-                const count = document.getElementById(`${item.id}-count`);
-                if (count)
-                    count.textContent = `${words(state.answers[item.id])} từ${item.minWords ? ` · tối thiểu ${item.minWords}` : item.maxWords ? ` · tối đa ${item.maxWords} từ (hoặc số theo đề)` : ''}`;
-            }
-            query('#demo-submit').disabled = Boolean(state.submittedAt);
-            document.querySelectorAll('[data-demo-choice]').forEach(radio => {
-                radio.checked = state.answers[radio.dataset.demoChoice] === radio.value;
-                radio.disabled = Boolean(state.submittedAt);
-            });
-            document.querySelectorAll('[data-demo-clear]').forEach(button => {
-                button.disabled = Boolean(state.submittedAt) || !state.answers[button.dataset.demoClear];
-            });
-            query('#demo-result').hidden = !state.submittedAt;
-        }
-        for (const field of fields) {
-            field.value = state.answers[field.dataset.demoAnswer] || '';
-            field.addEventListener(field.tagName === 'SELECT' ? 'change' : 'input', () => {
-                if (state.submittedAt)
-                    return;
-                state.answers[field.dataset.demoAnswer] = field.value;
-                persist();
-                update();
-            });
-        }
-        document.querySelectorAll('[data-demo-choice]').forEach(radio => radio.addEventListener('change', () => {
-            if (state.submittedAt || !radio.checked)
-                return;
-            const field = document.getElementById(radio.dataset.demoChoice);
-            if (field) {
-                field.value = radio.value;
-                field.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-        }));
-        document.querySelectorAll('[data-demo-clear]').forEach(button => button.addEventListener('click', () => {
-            if (state.submittedAt)
-                return;
-            const field = document.getElementById(button.dataset.demoClear);
-            if (field) {
-                field.value = '';
-                field.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-        }));
-        const { pollLearningResult } = createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic, examTimer, query, update, queueServerDraft, persist, clearDraftTimer });
-        if (!isDynamic) {
-            function showSection(section) {
-                activeSection = section;
-                document.querySelectorAll('[data-demo-page]').forEach(page => {
-                    page.hidden = page.dataset.demoPage !== section;
-                    page.classList.toggle('hidden', page.dataset.demoPage !== section);
+                document.querySelectorAll(`[data-demo-section-count="${secName}"], [data-demo-tab-count="${secName}"]`).forEach(count => {
+                    count.textContent = `${bDone}/${bItems.length}`;
                 });
-                document.querySelectorAll('[data-demo-go]').forEach(button => {
-                    button.classList.toggle('active', button.dataset.demoGo === section);
-                    if (button.dataset.demoGo === section)
-                        button.setAttribute('aria-current', 'page');
-                    else
-                        button.removeAttribute('aria-current');
-                });
-                query('#demo-prev').disabled = examSections.indexOf(section) === 0;
-                query('#demo-next').textContent = examSections.indexOf(section) === examSections.length - 1 ? 'Nộp bài' : 'Phần tiếp →';
-                window.scrollTo({ top: 0, behavior: scrollBehavior() });
-            }
-            document.querySelectorAll('[data-demo-go]').forEach(button => button.addEventListener('click', () => showSection(button.dataset.demoGo)));
-            query('#demo-prev').addEventListener('click', () => {
-                const previous = examSections[examSections.indexOf(activeSection) - 1];
-                if (previous)
-                    showSection(previous);
             });
-            query('#demo-next').addEventListener('click', () => {
-                const next = examSections[examSections.indexOf(activeSection) + 1];
-                if (next)
-                    showSection(next);
-                else
-                    query('#demo-submit').click();
-            });
-            update();
-            showSection(activeSection);
+            if (query('#demo-submit'))
+                query('#demo-submit').disabled = Boolean(state.submittedAt);
+            if (query('#demo-submit-top'))
+                query('#demo-submit-top').disabled = Boolean(state.submittedAt);
+            if (query('#demo-result'))
+                query('#demo-result').hidden = !state.submittedAt;
         }
-        else {
-            update();
-            const initialIdx = examSections.indexOf(activeSection);
-            if (initialIdx >= 0 && dynamicExamControls?.activateSection) {
-                dynamicExamControls.activateSection('sim-block-' + initialIdx);
-            }
+        const { pollLearningResult } = createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic: true, examTimer, query, update, queueServerDraft, persist, clearDraftTimer });
+        update();
+        const initialIdx = examSections.indexOf(activeSection);
+        if (initialIdx >= 0 && dynamicExamControls?.activateSection) {
+            dynamicExamControls.activateSection('sim-block-' + initialIdx);
         }
         if (state.submittedAt) {
             void pollLearningResult();

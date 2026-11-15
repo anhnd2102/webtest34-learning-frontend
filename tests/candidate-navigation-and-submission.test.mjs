@@ -19,8 +19,10 @@ test('Candidate Exam: prev/next navigation does not double-bind in dynamic exam 
   const file = findFile('term-tests/webtest-34-demo/content-preview.mjs');
   const code = readFileSync(file, 'utf8');
 
-  // Kiểm tra logic showSection và click listeners cho demo-prev / demo-next chỉ được gắn khi !isDynamic
-  assert.ok(code.includes('if (!isDynamic) {'), 'Navigation listeners must be guarded with if (!isDynamic)');
+  // Nhánh giao diện tĩnh đã gỡ: content-preview không còn tự gắn showSection hay click listener cho demo-prev / demo-next,
+  // việc chuyển phần do dynamicExamControls (renderer động) đảm nhiệm nên không thể gắn đôi.
+  assert.ok(!code.includes('showSection('), 'content-preview must not bind its own section navigation');
+  assert.ok(!/query\('#demo-(prev|next)'\)\.addEventListener/.test(code), 'content-preview must not bind demo-prev/demo-next listeners');
   assert.ok(
     code.includes('dynamicExamControls.activateSection'),
     'Dynamic exam must delegate section activation to dynamicExamControls'
