@@ -17,6 +17,8 @@
     "term-tests/webtest-34-demo/candidate/intro-screen.ts",
     "term-tests/webtest-34-demo/candidate/submit-flow.ts",
     "term-tests/webtest-34-demo/candidate/group-render.ts",
+    "term-tests/teacher-dashboard/api/client.ts",
+    "term-tests/teacher-dashboard/api/teacher.ts",
     "term-tests/teacher-dashboard/ui/presentation.ts",
     "term-tests/teacher-dashboard/shell/pagination.ts",
     "term-tests/teacher-dashboard/studio/block-jump-chips.ts",

@@ -16,8 +16,8 @@
     "types": []
   },
   "include": [
-    "term-tests/teacher-dashboard/api/client.js",
-    "term-tests/teacher-dashboard/api/teacher.js",
+    "term-tests/teacher-dashboard/api/client.ts",
+    "term-tests/teacher-dashboard/api/teacher.ts",
     "term-tests/teacher-dashboard/studio/content-import.ts",
     "term-tests/teacher-dashboard/studio/batch-import.ts",
     "term-tests/teacher-dashboard/studio/draft-saving.ts",
