@@ -32,6 +32,7 @@
     "term-tests/teacher-dashboard/studio/simulation.ts",
     "term-tests/teacher-dashboard/studio/publishing.ts",
     "term-tests/teacher-dashboard/studio/builder.ts",
+    "term-tests/teacher-dashboard/studio/rich-editor.ts",
     "term-tests/webtest-34-demo/candidate/text-utils.ts",
     "term-tests/webtest-34-demo/candidate/learning-api.ts",
     "term-tests/webtest-34-demo/candidate/exam-timer.ts",
