@@ -61,6 +61,9 @@ export function createDraftInputSync({ container, draftState, updateScoreBreakdo
                     block.readingPassage = readingEl.value || null;
                     block.stimulusReadingPassage = block.readingPassage;
                 }
+                const blockImageEl = bCard.querySelector('.block-image-input');
+                if (blockImageEl)
+                    block.stimulusImageUrl = convertGoogleDriveImageUrl(blockImageEl.value.trim()) || null;
                 const exCards = bCard.querySelectorAll('.builder-exercise-card');
                 if (exCards && typeof exCards.forEach === 'function') {
                     exCards.forEach((exCard, exIdx) => {

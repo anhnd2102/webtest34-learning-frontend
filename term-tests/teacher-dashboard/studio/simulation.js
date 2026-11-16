@@ -597,6 +597,7 @@ export function createSimulation({ draftState, builderOwner, syncInputs }) {
             }).join('');
             return `
           <section class="simulation-section-card section-page ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
+            ${b.stimulusImageUrl ? `<figure class="sim-block-image" style="margin:0 0 16px;text-align:center;"><img src="${escapeHtml(b.stimulusImageUrl)}" alt="Hình minh họa đầu phần thi" style="max-width:100%;max-height:70vh;height:auto;" /></figure>` : ''}
             ${(b.instructions || audioUrl || reading) && exercises.length > 1 ? `
               <div class="sim-section-lead-head">
                 <h2>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>

@@ -81,6 +81,9 @@ function syncInputs() {
           block.stimulusReadingPassage = block.readingPassage;
         }
 
+        const blockImageEl = bCard.querySelector<HTMLInputElement>('.block-image-input');
+        if (blockImageEl) block.stimulusImageUrl = convertGoogleDriveImageUrl(blockImageEl.value.trim()) || null;
+
         const exCards = bCard.querySelectorAll<HTMLElement>('.builder-exercise-card');
         if (exCards && typeof exCards.forEach === 'function') {
           exCards.forEach((exCard, exIdx) => {
