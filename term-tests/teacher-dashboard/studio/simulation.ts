@@ -34,6 +34,13 @@ import {
 } from './draft-model.js';
 import type { DraftState } from './draft-model.js';
 
+// Khớp renderer học viên: đáp án dài (> 24 ký tự) xếp từng dòng, ngắn thì chia cột theo số đáp án.
+function choiceColsClass(options: any[], shortFallback = ''): string {
+  if (options.some(opt => String(opt?.label ?? opt?.id ?? '').trim().length > 24)) return 'grid-cols-1';
+  if (shortFallback) return shortFallback;
+  return options.length === 3 ? 'grid-cols-3' : (options.length >= 4 ? 'grid-cols-4' : 'grid-cols-2');
+}
+
 export function createSimulation({ draftState, builderOwner, syncInputs }: { draftState: DraftState, builderOwner: unknown, syncInputs: () => void }) {
 function openCandidateSimulationModal() {
       syncInputs();
@@ -196,7 +203,7 @@ function openCandidateSimulationModal() {
             `;
           } else if (isSingleChoice) {
             interactiveHtml = `
-              <div class="candidate-options-grid ${colsClass}">
+              <div class="candidate-options-grid ${choiceColsClass(item.options || [])}">
                 ${(item.options || []).map((opt: any, optIdx: any) => `
                   <label class="candidate-choice-label">
                     <input type="radio" name="sim_choice_${item.itemVersionId}" value="${opt.id}" />
@@ -208,7 +215,7 @@ function openCandidateSimulationModal() {
             `;
           } else if (isMultiGroup) {
             interactiveHtml = `
-              <div class="candidate-options-grid ${colsClass}">
+              <div class="candidate-options-grid ${choiceColsClass(item.options || [], 'grid-cols-2')}">
                 ${(item.options || []).map((opt: any, optIdx: any) => `
                   <label class="candidate-choice-label">
                     <input type="checkbox" name="sim_multi_${item.itemVersionId}" value="${opt.id}" />
