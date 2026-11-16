@@ -22,7 +22,7 @@ import { createSubmitFlow } from './candidate/submit-flow.js';
 export { formatCandidateOptionLabel } from './candidate/text-utils.js';
 export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js';
 export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue, clozeSegments, choiceLayout, groupBody, CLOUDFLARE_R2_AUDIO_BASE, resolveAudioUrl, groupSections } from './candidate/group-render.js';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js';
 
 export async function mount(course: string) {
   if (!['03','34','45'].includes(course)) throw new Error('Unknown demo course');
@@ -482,51 +482,6 @@ export async function mount(course: string) {
     });
 
     const examTimer = createExamTimer({ course, examDuration, testToken, isLearningMode, state, learningState });
-
-    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-demo-audio-start]')) {
-      const gateId = button.dataset.demoAudioStart;
-      const audio = document.querySelector<HTMLAudioElement>(`[data-demo-audio-player="${gateId}"]`)!;
-      const status = document.querySelector<HTMLElement>(`[data-demo-audio-status="${gateId}"]`)!;
-      let started = false;
-      let lastGoodTime = 0;
-      document.querySelectorAll<HTMLElement>(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
-      if (status) status.textContent = 'Đã mở khóa nội dung câu hỏi để kiểm tra đề.';
-      audio.addEventListener('play', () => {
-        started = true;
-        document.querySelectorAll<HTMLElement>(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
-        document.querySelectorAll<HTMLElement>('.demo-audio-linked').forEach(notice => {
-          if (notice.closest('.demo-section')?.querySelector(`[data-demo-audio-content="${gateId}"]`)) notice.hidden = true;
-        });
-        button.hidden = true;
-        status.textContent = 'Audio đang phát.';
-      });
-      audio.addEventListener('timeupdate', () => { if (!audio.seeking) lastGoodTime = audio.currentTime; });
-      audio.addEventListener('seeking', () => {
-        if (started && Math.abs(audio.currentTime - lastGoodTime) > 0.75) audio.currentTime = lastGoodTime;
-      });
-      audio.addEventListener('pause', () => {
-        if (started && !audio.ended && !examMode.audioHold) audio.play().catch(() => {});
-      });
-      audio.addEventListener('ended', () => { status.textContent = 'Audio đã phát xong · bài tập vẫn mở để hoàn thành.'; });
-      audio.addEventListener('error', () => {
-        button.disabled = false;
-        button.textContent = 'Thử phát lại audio';
-        status.textContent = 'Chưa tải được audio (nội dung câu hỏi vẫn mở để bạn kiểm tra).';
-        document.querySelectorAll<HTMLElement>(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
-      });
-      button.addEventListener('click', async () => {
-        button.disabled = true;
-        status.textContent = 'Đang tải audio…';
-        try {
-          await audio.play();
-        } catch {
-          button.disabled = false;
-          button.textContent = 'Thử phát lại audio';
-          status.textContent = 'Trình duyệt chưa phát được audio (nội dung câu hỏi vẫn mở để bạn kiểm tra).';
-          document.querySelectorAll<HTMLElement>(`[data-demo-audio-content="${gateId}"]`).forEach(content => { content.hidden = false; });
-        }
-      });
-    }
 
     const choiceStyle=document.createElement('style');
     choiceStyle.textContent=`.content-demo .demo-prompt-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}.content-demo .demo-prompt-row .qnum{flex-shrink:0}.content-demo .demo-prompt-row label{margin:4px 0 0}.content-demo .demo-mcq-question{border:1px solid #e5e7eb;border-radius:16px;padding:20px;margin:12px 0}.content-demo .demo-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.content-demo label.demo-choice{display:flex;align-items:center;gap:10px;border:1px solid #dce1e8;border-radius:12px;padding:14px;cursor:pointer;font-weight:400;margin:0;position:relative;overflow-wrap:anywhere}.content-demo .demo-choice-letter{font-weight:700}.content-demo .demo-choice input[type=radio]{position:absolute;opacity:0;width:1px;height:1px;padding:0}.content-demo .demo-choice:has(input:checked){border-color:var(--color-primary);background:#fff3f5}.content-demo .demo-choice:has(input:focus-visible){outline:2px solid var(--color-primary);outline-offset:2px}.content-demo .demo-choice:has(input:disabled){cursor:default}.content-demo input[type=hidden]{display:none}@media(max-width:600px){.content-demo .demo-choice-grid{grid-template-columns:1fr}.content-demo .demo-mcq-question{padding:14px}}`;
