@@ -113,6 +113,11 @@
     "term-tests/teacher-dashboard/studio/authoring/rubric-actions.ts",
     "term-tests/teacher-dashboard/studio/authoring/vocabulary-actions.ts",
     "term-tests/teacher-dashboard/studio/authoring/choice-variant-actions.ts",
+    "term-tests/34-shared/pedagogical-types.ts",
+    "term-tests/34-shared/learning-key-map.ts",
+    "term-tests/34-shared/learning-result.ts",
+    "term-tests/34-shared/review-module.mts",
+    "term-tests/webtest-34-demo/exam-guard.ts",
     "term-tests/webtest-34-demo/globals.d.ts"
   ]
 }
