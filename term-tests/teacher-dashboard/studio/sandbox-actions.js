@@ -52,6 +52,15 @@ export function bindSandboxActions({ container, draftState, syncInputs, options 
               <span class="sandbox-criterion-score">${c.score}đ</span>
             </div>
           `).join('');
+                const labels = {};
+                for (const entry of [...(currentKey.rubric.requirements || []), ...(currentKey.rubric.criteria || [])])
+                    labels[entry.id] = entry.label;
+                const requirementRows = (sandboxResult.requiredStructures || []).filter((r) => r.maxScore !== undefined).map((r) => `
+            <div class="sandbox-criterion-row">
+              <span><strong>${escapeHtml(labels[r.id] || r.id)}:</strong> ${r.achieved ? 'Đạt' : (r.credit > 0 ? 'Một phần' : 'Chưa đạt')}</span>
+              <span class="sandbox-criterion-score">${r.scoreEarned}/${r.maxScore}đ</span>
+            </div>
+          `).join('');
                 const errorsRows = (sandboxResult.errors || []).map((err) => `
             <div class="error-pill">
               • <strong>${escapeHtml(err.code || '')}:</strong> ${escapeHtml(err.message || '')}
@@ -64,6 +73,7 @@ export function bindSandboxActions({ container, draftState, syncInputs, options 
                   <span>Điểm AI tạm tính:</span>
                   <span class="sandbox-score-badge">${sandboxResult.scoreEarned} / ${sandboxResult.maxScore}</span>
                 </div>
+                ${requirementRows ? `<div class="sandbox-criteria-breakdown">${requirementRows}</div>` : ''}
                 ${criteriaRows ? `<div class="sandbox-criteria-breakdown">${criteriaRows}</div>` : ''}
                 ${errorsRows ? `<div class="sandbox-errors-breakdown">${errorsRows}</div>` : ''}
               </div>

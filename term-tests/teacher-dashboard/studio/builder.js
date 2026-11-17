@@ -788,7 +788,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
         return nextPos;
     }
     function bindEvents() {
-        const authoringHost = { container, draftState, builderOwner, actions: { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } };
+        const authoringHost = { container, draftState, builderOwner, options, actions: { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } };
         if (typeof container.querySelector !== 'function')
             return;
         // Live update Score Breakdown Bar and mark dirty when question or rubric criterion score changes

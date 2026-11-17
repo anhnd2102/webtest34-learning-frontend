@@ -93,6 +93,7 @@ export interface AuthoringHost {
   draftState: DraftState;
   builderOwner: unknown;
   actions: AuthoringActions;
+  options?: BuilderOptions;
 }
 
 // Tùy chọn do dashboard truyền vào builder (callback gọi API, catalog, courseId...): hợp đồng nằm ở shell/studio-view.

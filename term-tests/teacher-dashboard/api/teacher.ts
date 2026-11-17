@@ -159,6 +159,15 @@ export function previewSandboxPath(apiBase = ''): string {
   return cleanBase ? `${cleanBase}/api/teacher/forms/preview-sandbox` : '/api/teacher/forms/preview-sandbox';
 }
 
+export function rubricPresetsPath(apiBase = ''): string {
+  const cleanBase = apiBase.replace(/\/+$/, '');
+  return cleanBase ? `${cleanBase}/api/teacher/rubric-presets` : '/api/teacher/rubric-presets';
+}
+
+export function rubricPresetsBuildPath(apiBase = ''): string {
+  return `${rubricPresetsPath(apiBase)}/build`;
+}
+
 export function formPublishPath(apiBase = ''): string {
   const cleanBase = String(apiBase || '').replace(/\/+$/, '');
   return cleanBase ? `${cleanBase}/api/teacher/forms/publish` : '/api/teacher/forms/publish';

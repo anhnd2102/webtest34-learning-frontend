@@ -1,5 +1,6 @@
 // NGUỒN: file .ts này; question-renderer.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
+import { isRubricV2, renderRubricV2Section } from './rubric-v2-card.js';
 import { parseClozeBlanks, getItemSpanCount } from './draft-model.js';
 import { COMMON_IPA_SYMBOLS, formatIpaTranscription, tokenizeSentence, scrambleTokens, extractParagraphLabels, validateListeningOrderUniqueness, formatOptionDisplayLetter } from './question-content.js';
 import { escapeHtml } from '../ui/presentation.js';
@@ -994,6 +995,9 @@ export function createQuestionRenderer({ draftState, collapsedCardKeys }) {
             </div>
           </div>
         `;
+        }
+        else if (isRubricAsync && isRubricV2(itemKey.rubric)) {
+            specificHtml = renderRubricV2Section({ blockIdx, itemIdx, rubric: itemKey.rubric, item });
         }
         else if (isRubricAsync) {
             const rubricObj = itemKey.rubric || {

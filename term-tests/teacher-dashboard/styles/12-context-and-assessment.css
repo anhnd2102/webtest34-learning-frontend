@@ -488,3 +488,51 @@
 .rich-editor__error.popup-image-error:not([hidden]) {
   display: block;
 }
+
+/* ==========================================================================
+   Trình hướng dẫn tạo câu Tự luận chấm AI (spec #40) và thẻ rubric v2.
+   Chỉ dùng token --izone-*; thẻ bo 10px, nút/ô nhập bo 6-8px.
+   ========================================================================== */
+.rw-card { max-width: 860px; width: 100%; max-height: 92vh; display: flex; flex-direction: column; }
+.rw-body { overflow-y: auto; padding: 16px 20px; }
+.rw-footer { display: flex; align-items: center; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--izone-border); }
+.rw-spacer { flex: 1 1 auto; }
+.rw-stepper { display: flex; gap: 8px; margin: 0 0 14px; padding: 0; list-style: none; }
+.rw-step { display: flex; align-items: center; gap: 8px; flex: 1 1 0; padding: 8px 10px; border: 1px solid var(--izone-border); border-radius: 8px; color: var(--izone-text-muted); font-size: 13px; }
+.rw-step-number { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid currentColor; font-size: 12px; font-weight: 600; }
+.rw-step.is-current { border-color: var(--izone-primary); color: var(--izone-primary); font-weight: 600; }
+.rw-step.is-done { color: var(--izone-slate-600); background: var(--izone-slate-bg); }
+.rw-lead { margin: 0 0 12px; color: var(--izone-text-body); }
+.rw-muted { color: var(--izone-text-muted); font-size: 13px; }
+.rw-error, .rw-errors:not(:empty) { color: var(--izone-danger-text); background: var(--izone-danger-bg); border: 1px solid var(--izone-danger-border); border-radius: 8px; padding: 8px 12px; margin: 0 0 12px; }
+.rw-family { border: 0; margin: 0 0 14px; padding: 0; }
+.rw-family legend { font-weight: 600; color: var(--izone-navy); margin-bottom: 8px; }
+.rw-variant-grid, .rw-level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+.rw-variant-card, .rw-level-card { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid var(--izone-border); border-radius: 10px; background: var(--izone-surface); cursor: pointer; }
+.rw-variant-card input, .rw-level-card input { position: absolute; opacity: 0; pointer-events: none; }
+.rw-variant-card:focus-within, .rw-level-card:focus-within { outline: 2px solid var(--izone-primary); outline-offset: 2px; }
+.rw-variant-card.is-selected, .rw-level-card.is-selected { border-color: var(--izone-primary); background: var(--izone-soft-red); }
+.rw-variant-title { font-weight: 600; color: var(--izone-navy); }
+.rw-variant-desc { color: var(--izone-text-body); font-size: 13px; }
+.rw-variant-example { color: var(--izone-text-muted); font-size: 12px; }
+.rw-subtitle { margin: 16px 0 8px; font-size: 14px; color: var(--izone-navy); }
+.rw-summary { margin: 0 0 12px; padding-left: 20px; color: var(--izone-text-body); }
+.rw-summary li { margin-bottom: 4px; }
+.rw-field { margin-bottom: 12px; }
+.rw-input { width: 100%; border-radius: 6px; }
+.rw-input-score { max-width: 110px; }
+.rw-question { border: 1px solid var(--izone-border); border-radius: 10px; padding: 12px; margin-bottom: 12px; background: var(--izone-surface); }
+.rw-question-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.rw-question-head h4 { margin: 0; font-size: 14px; color: var(--izone-navy); }
+.rw-requirements { display: flex; flex-direction: column; gap: 8px; }
+.rw-requirement-row { display: grid; grid-template-columns: minmax(0, 2fr) 90px minmax(0, 2fr) auto; gap: 8px; align-items: center; }
+.rw-advanced { margin-top: 14px; border: 1px solid var(--izone-border); border-radius: 10px; padding: 8px 12px; }
+.rw-advanced summary { cursor: pointer; font-weight: 600; color: var(--izone-slate-600); }
+.rw-sandbox-result { margin-top: 12px; }
+.rw-result { border: 1px solid var(--izone-border); border-radius: 10px; padding: 10px 12px; background: var(--izone-slate-bg); }
+.rw-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.rw-chip { display: inline-block; padding: 2px 10px; border: 1px solid var(--izone-border); border-radius: 999px; font-size: 12px; color: var(--izone-slate-600); background: var(--izone-slate-bg); }
+@media (max-width: 640px) {
+  .rw-stepper { flex-direction: column; }
+  .rw-requirement-row { grid-template-columns: 1fr; }
+}

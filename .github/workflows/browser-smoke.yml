@@ -36,7 +36,7 @@ jobs:
           failed=0
           for smoke in \
             dashboard-actions-smoke dashboard-grading-smoke dashboard-integration-smoke dashboard-read-concurrency-smoke \
-            exam-room-lifecycle-smoke builder-actions-smoke builder-import-smoke builder-media-smoke builder-lifecycle-smoke \
+            exam-room-lifecycle-smoke builder-actions-smoke builder-import-smoke builder-media-smoke builder-lifecycle-smoke rubric-wizard-smoke \
             candidate-flow-smoke candidate-exam-mode-smoke candidate-entry-review-smoke candidate-audio-smoke candidate-mobile-smoke; do
             echo "::group::$smoke"
             if ! node "tests/browser/$smoke.mjs"; then echo "::error::$smoke thất bại"; failed=1; fi
