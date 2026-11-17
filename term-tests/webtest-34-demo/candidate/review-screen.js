@@ -1,6 +1,6 @@
 // Màn hình "Xem kết quả" của học viên: chỉ đọc qua /attempts/review + /attempts/result (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; review-screen.js do `npm run build` sinh ra (xem text-utils.ts).
-import { studentReviewHtml, bindResultFilters } from './result-view.js?rev=20261113-submit-a';
+import { studentReviewHtml, bindResultFilters } from './result-view.js?rev=20261118-writing-aids';
 export function createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect }) {
     // --- XEM KẾT QUẢ: chỉ đọc qua /attempts/review + /attempts/result, không start, không âm thanh, không Exam Guard ---
     // Các phần tử này có sẵn trong màn nhập tên khi tạo màn kết quả; `!` giữ nguyên hành vi cũ (thiếu thì ném lỗi khi dùng).
@@ -20,7 +20,7 @@ export function createReviewScreen({ testToken, title, learningState, apiRequest
     let reviewShown = false;
     // Lỗi nạp module không được nuốt: mỗi lần thử lại dùng URL mới để tránh cache lỗi.
     function loadReviewModule() {
-        reviewModulePromise ||= import(`../../34-shared/review-module.mjs?rev=20261113-submit-a${reviewModuleTries++ ? `&retry=${Date.now()}` : ''}`)
+        reviewModulePromise ||= import(`../../34-shared/review-module.mjs?rev=20261118-writing-aids${reviewModuleTries++ ? `&retry=${Date.now()}` : ''}`)
             .then(module => (reviewApi = module), error => { reviewModulePromise = null; throw error; });
         return reviewModulePromise;
     }

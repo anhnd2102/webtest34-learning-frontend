@@ -53,6 +53,7 @@ export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorr
 // không phải import file này).
 export { scrollBehavior } from './candidate/motion.js';
 import { scrollBehavior } from './candidate/motion.js';
+import { writingAidsHtml } from './candidate/writing-aids.js';
 
 function escape(str: unknown) {
   return String(str ?? '')
@@ -771,6 +772,7 @@ export function renderQuestionCard(item: ExamItem, answers: Record<string, any> 
     const val = typeof rawAns === 'string' ? rawAns : '';
     const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
     interactiveHtml = `
+      ${writingAidsHtml(item)}
       <div class="candidate-open-wrap cbt-open-wrap">
         <textarea class="candidate-open-textarea cbt-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" ${ANSWER_TEXT_ATTRS} placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
         <div class="candidate-open-meta cbt-open-meta">

@@ -2,6 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { trackBuilderModal, releaseBuilderModal, registerBuilderModalCleanup } from '../navigation/unsaved-changes.js';
 import { initSimulationPronunciationAudio } from './simulation-pronunciation-audio.js';
+import { writingAidsHtml } from '../../webtest-34-demo/candidate/writing-aids.js';
 import { escapeHtml } from '../ui/presentation.js';
 import { sanitizeRichContent, renderInlineClozeMarkup } from '../ui/rich-content.js';
 import { formatIpaTranscription, formatOptionDisplayLetter, tokenizeSentence, scrambleTokens, isShortQaEligibleFor2Col, scoreTransformationAnswer } from './question-content.js';
@@ -295,6 +296,7 @@ export function createSimulation({ draftState, builderOwner, syncInputs }) {
                 }
                 else if (isRubricAsync) {
                     interactiveHtml = `
+              ${writingAidsHtml(item)}
               <div class="candidate-open-wrap">
                 <textarea class="form-control candidate-open-textarea" data-item-id="${item.itemVersionId}" rows="4" placeholder="Nhập bài luận hoặc câu trả lời tại đây..."></textarea>
                 <div class="candidate-open-meta">
