@@ -11330,5 +11330,79 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".cbt-vocab-chips li"
+  },
+  {
+    "order": 1876,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-list"
+  },
+  {
+    "order": 1877,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-row"
+  },
+  {
+    "order": 1878,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-name"
+  },
+  {
+    "order": 1879,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-evidence"
+  },
+  {
+    "order": 1880,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-note"
+  },
+  {
+    "order": 1881,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-score"
+  },
+  {
+    "order": 1882,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-score-input"
+  },
+  {
+    "order": 1883,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-denom"
+  },
+  {
+    "order": 1884,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-ai"
+  },
+  {
+    "order": 1885,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-errors"
+  },
+  {
+    "order": 1886,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".score-by-requirement-hint"
+  },
+  {
+    "order": 1887,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".req-row"
   }
 ]

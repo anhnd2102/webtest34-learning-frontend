@@ -2,6 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { attemptStatusLabel, formatAssignmentWindow, resultStatusLabel, formatDashboardScore, resolveStudentAnswerDisplay, resolveExpectedAnswerDisplay, extractAttemptSkills, formatCompactPrompt, verdictLabel, formatCurrentTime, validateManualGradingScores } from '../results/presentation.js';
 import { escapeHtml } from '../ui/presentation.js';
+import { collectRequirementScores, hasRequirementBreakdown, previewRequirementTotal, requirementReviewHtml } from './requirement-review.js';
 import { formatOptionDisplayLetter } from '../studio/question-content.js';
 import { renderSvgIcon, ICONS } from '../ui/icons.js';
 import { manualGradingDraftPath, manualGradingCompletePath, attemptPublishPath } from '../api/teacher.js';
@@ -283,12 +284,14 @@ function renderAttemptDetail(payload: AttemptPayload) {
         ? item.draftFeedback
         : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));
 
+      const byRequirement = hasRequirementBreakdown(item.feedback);
       overrideBlock.innerHTML = `
         <div class="modal-override-head">
           <h4>Chấm điểm / Điều chỉnh điểm</h4>
           ${item.isOverridden ? '<span class="badge-manual-override">Đã sửa tay</span>' : ''}
         </div>
-        <div class="modal-override-score-row">
+        ${byRequirement ? `<div class="modal-req-review">${requirementReviewHtml(item.feedback, item.draftRequirementScores)}</div>` : ''}
+        <div class="modal-override-score-row"${byRequirement ? ' hidden' : ''}>
           <label class="modal-override-label">Điểm số:</label>
           <input type="number" step="any" min="0" max="${item.maxScore}" class="modal-override-score-input table-grade-input" value="${curScore !== null && curScore !== undefined ? curScore : ''}" placeholder="0-${item.maxScore}">
           <span class="modal-override-max">/ ${item.maxScore} điểm</span>
@@ -311,6 +314,20 @@ function renderAttemptDetail(payload: AttemptPayload) {
 
       if (modalSaveBtn) {
         lifecycle.listen(modalSaveBtn, 'click', async () => {
+          if (byRequirement) {
+            // Giáo viên chỉ sửa điểm từng yêu cầu; tổng điểm chính thức do backend tính lại khi lưu.
+            const scores = collectRequirementScores(overrideBlock);
+            const bad = Object.entries(scores).find(([, value]) => !Number.isFinite(value) || value < 0);
+            if (bad) { alert('Điểm từng yêu cầu không hợp lệ.'); return; }
+            item.draftRequirementScores = scores;
+            item.draftScore = previewRequirementTotal(item.feedback, scores);
+            item.draftFeedback = modalFeedbackInp.value.trim();
+            item.isOverridden = true;
+            await saveManualGradingDraft(true);
+            renderAttemptTableRows(viewState.currentSkillTab);
+            itemContextModal.close();
+            return;
+          }
           const rawScore = modalScoreInp.value.trim();
           if (rawScore === '') return;
           const num = Number(rawScore);
@@ -435,7 +452,18 @@ function renderAttemptDetail(payload: AttemptPayload) {
             ? item.draftScore
             : (item.manualReview ? item.scoreEarned : item.scoreEarned);
 
-          if (!isAutomated || isInlineEditing) {
+          const byRequirementRow = hasRequirementBreakdown(item.feedback);
+          if (byRequirementRow) {
+            tdScore.innerHTML = `
+              <div class="col-score-cell">
+                <div class="table-grade-score-wrap">
+                  <span class="score-fraction">${currentScoreVal !== undefined && currentScoreVal !== null ? currentScoreVal : item.scoreEarned}/${item.maxScore}</span>
+                </div>
+                <div class="score-by-requirement-hint">Chấm theo yêu cầu — mở câu để sửa</div>
+                ${item.isOverridden ? '<div class="badge-manual-override">Đã sửa tay</div>' : ''}
+              </div>
+            `;
+          } else if (!isAutomated || isInlineEditing) {
             tdScore.innerHTML = `
               <div class="col-score-cell">
                 <div class="table-grade-score-wrap is-editing">
@@ -695,7 +723,8 @@ async function saveManualGradingDraft(silent = false) {
           itemsToSubmit.push({
             itemVersionId: itm.itemVersionId,
             scoreEarned: Number(scoreVal),
-            feedback: feedbackVal || null
+            feedback: feedbackVal || null,
+            ...(itm.draftRequirementScores ? { requirementScores: itm.draftRequirementScores } : {})
           });
         }
       }
@@ -784,9 +813,19 @@ async function completeManualGrading() {
           itemsToSubmit.push({
             itemVersionId: itm.itemVersionId,
             scoreEarned: Number(scoreVal),
-            feedback: feedbackVal || null
+            feedback: feedbackVal || null,
+            ...(itm.draftRequirementScores ? { requirementScores: itm.draftRequirementScores } : {})
           });
         }
+      }
+    }
+
+    const draftByItem = new Map<string, unknown>((viewState.currentAttemptDetail.items as AttemptItem[]).map(it => [it.itemVersionId, it.draftRequirementScores]));
+    // Câu chấm theo yêu cầu mà giáo viên chưa sửa: điểm AI giữ nguyên, vẫn gửi để xác nhận (backend tính tổng).
+    for (const itm of viewState.currentAttemptDetail.items) {
+      if (itm.canGrade && hasRequirementBreakdown(itm.feedback) && !itemsToSubmit.some(it => it.itemVersionId === itm.itemVersionId)) {
+        scoresMap[itm.itemVersionId] = Number(itm.scoreEarned) || 0;
+        itemsToSubmit.push({ itemVersionId: itm.itemVersionId, scoreEarned: Number(itm.scoreEarned) || 0, requirementScores: {}, feedback: null });
       }
     }
 
@@ -805,7 +844,8 @@ async function completeManualGrading() {
         const itemObj = {
           itemVersionId: input.dataset.itemId!,
           scoreEarned: num,
-          feedback: feedbackMap.get(input.dataset.itemId!) || null
+          feedback: feedbackMap.get(input.dataset.itemId!) || null,
+          ...(draftByItem.get(input.dataset.itemId!) ? { requirementScores: draftByItem.get(input.dataset.itemId!) } : {})
         };
         if (existingIdx >= 0) {
           itemsToSubmit[existingIdx] = itemObj;
