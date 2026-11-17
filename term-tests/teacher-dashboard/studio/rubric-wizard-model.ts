@@ -26,6 +26,8 @@ export interface WizardState {
   level: RubricLevel;
   points: string;
   context: string;
+  // true: dùng ngữ cảnh nhập riêng cho các câu này; false: dùng bài đọc của Phần (nếu Phần có).
+  useOwnContext: boolean;
   languageScore: string;
   wordMin: string;
   sample: string;
@@ -77,6 +79,18 @@ export function emptyQuestion(variant: RubricVariant | null): QuestionDraft {
   };
 }
 
+// Bài đọc của Phần dùng chung cho mọi câu trong Phần: nguồn duy nhất, nhập một lần ở ô Bài đọc của Phần.
+// Backend tự ghép nó khi chấm nếu câu/bài tập không có ngữ cảnh riêng, nên không sao chép vào từng câu.
+export function sharedContextFromBlock(block: { readingPassage?: string | null, stimulusReadingPassage?: string | null, referenceContext?: string | null } | null | undefined): string {
+  const raw = block?.readingPassage || block?.stimulusReadingPassage || block?.referenceContext || '';
+  return String(raw).replace(/<\/(p|div|li|h\d)>|<br\s*\/?>/gi, ' ').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+}
+
+// Ngữ cảnh AI dùng để chấm thử: riêng (hoặc Phần không có bài đọc) thì lấy ô nhập, ngược lại lấy bài đọc của Phần.
+export function effectiveContext(state: WizardState, sharedContext: string): string {
+  return state.useOwnContext || !sharedContext ? state.context : sharedContext;
+}
+
 export function createWizardState({ variant = null, courseId }: { variant?: RubricVariant | null, courseId?: unknown } = {}): WizardState {
   let level = suggestLevel(courseId);
   if (!levelsForVariant(variant).includes(level)) level = '34';
@@ -86,6 +100,7 @@ export function createWizardState({ variant = null, courseId }: { variant?: Rubr
     level,
     points: variant === 'writing' ? '15' : '4',
     context: '',
+    useOwnContext: false,
     languageScore: '',
     wordMin: '',
     sample: '',

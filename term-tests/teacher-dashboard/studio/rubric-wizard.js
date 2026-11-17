@@ -6,7 +6,7 @@
 import { registerBuilderModalCleanup, trackBuilderModal } from '../navigation/unsaved-changes.js';
 import { renderSvgIcon } from '../ui/icons.js';
 import { escapeHtml } from '../ui/presentation.js';
-import { VARIANT_EXAMPLES, buildRubricPayload, changeVariant, emptyQuestion, levelsForVariant, questionsFromSentences, validateWizardStep } from './rubric-wizard-model.js';
+import { VARIANT_EXAMPLES, buildRubricPayload, changeVariant, emptyQuestion, effectiveContext, levelsForVariant, questionsFromSentences, validateWizardStep } from './rubric-wizard-model.js';
 const STEP_TITLES = ['Chọn dạng', 'Nội dung', 'Khối và mức chấm', 'Chấm thử'];
 export function renderStepper(step) {
     return `<ol class="rw-stepper" aria-label="Các bước">${STEP_TITLES.map((title, index) => {
@@ -63,11 +63,18 @@ function renderQuestion(state, question, qIndex) {
     const removable = state.questions.length > 1 ? `<button type="button" class="btn btn-icon btn-sm btn-ghost" data-rw-action="remove-question" data-q="${qIndex}" title="Xóa câu" aria-label="Xóa câu">${renderSvgIcon('trash', 'icon-inline')}</button>` : '';
     return `<section class="rw-question" data-q="${qIndex}"><header class="rw-question-head"><h4>Câu ${qIndex + 1}</h4>${removable}</header>${body}</section>`;
 }
-export function renderStepTwo(state, precedingScript = '') {
+export function renderStepTwo(state, precedingScript = '', sharedContext = '') {
     const variant = state.variant;
     const usesContext = variant === 'reading_comprehension' || variant === 'sentence_role' || variant === 'speaking_text';
-    const context = usesContext ? field('Bài đọc / ngữ cảnh chung cho AI (ẩn với học viên)', `<textarea class="form-control rw-input" rows="4" data-rw="context" placeholder="Dán đoạn văn bài đọc hoặc script...">${escapeHtml(state.context)}</textarea>`
-        + (precedingScript ? `<button type="button" class="btn btn-secondary btn-sm" data-rw-action="pull-script">${renderSvgIcon('clipboard', 'icon-inline')} <span>Lấy script từ bài phía trước</span></button>` : ''), 'AI đối chiếu văn bản này khi chấm. Học viên không nhìn thấy ở ô này.') : '';
+    const sharedMode = usesContext && Boolean(sharedContext) && !state.useOwnContext;
+    const sharedBlock = sharedMode ? field('Bài đọc / ngữ cảnh cho AI', `<p class="rw-shared-context">Đang dùng bài đọc của Phần này làm ngữ cảnh chấm; bạn không cần dán lại.</p>
+     <details class="rw-shared-preview"><summary>Xem bài đọc đang dùng</summary><p>${escapeHtml(sharedContext)}</p></details>
+     <button type="button" class="btn btn-secondary btn-sm" data-rw-action="use-own-context">${renderSvgIcon('edit', 'icon-inline')} <span>Dùng ngữ cảnh riêng cho các câu này</span></button>`, 'Sửa bài đọc ở Phần thì mọi câu trong Phần tự theo bản mới.') : '';
+    const backToShared = usesContext && Boolean(sharedContext) && state.useOwnContext
+        ? `<button type="button" class="btn btn-secondary btn-sm" data-rw-action="use-shared-context">${renderSvgIcon('rotate', 'icon-inline')} <span>Dùng bài đọc của Phần</span></button>` : '';
+    const context = sharedMode ? sharedBlock : usesContext ? field('Bài đọc / ngữ cảnh chung cho AI (ẩn với học viên)', `<textarea class="form-control rw-input" rows="4" data-rw="context" placeholder="Dán đoạn văn bài đọc hoặc script...">${escapeHtml(state.context)}</textarea>`
+        + (precedingScript ? `<button type="button" class="btn btn-secondary btn-sm" data-rw-action="pull-script">${renderSvgIcon('clipboard', 'icon-inline')} <span>Lấy script từ bài phía trước</span></button>` : '')
+        + backToShared, sharedContext ? 'AI đối chiếu văn bản này khi chấm. Học viên không nhìn thấy ở ô này.' : 'AI đối chiếu văn bản này khi chấm. Để dùng chung cho nhiều câu, hãy nhập bài đọc ở ô Bài đọc của Phần; các câu theo ý sẽ tự dùng.') : '';
     const splitter = variant === 'sentence_role' ? field('Các câu cần phân tích (mỗi dòng một câu)', `<textarea class="form-control rw-input" rows="4" data-rw="sentences" placeholder="Một mặt, có những tranh luận đạo đức chống lại việc thí nghiệm trên động vật."></textarea>
      <button type="button" class="btn btn-secondary btn-sm" data-rw-action="split-sentences">${renderSvgIcon('layers', 'icon-inline')} <span>Tạo câu hỏi từ các dòng này</span></button>`, 'Mỗi dòng thành một câu hỏi "Vai trò đúng của Câu N"; sau đó bạn chỉ cần nhập vai trò đúng.') : '';
     const points = field(variant === 'writing' ? 'Điểm mỗi câu (một đoạn thân bài)' : 'Điểm mỗi câu', `<input type="text" inputmode="decimal" class="form-control rw-input rw-input-score" data-rw="points" value="${escapeHtml(state.points)}" />`);
@@ -210,7 +217,7 @@ export function openRubricWizard(options) {
         else if (step === 1)
             inner = renderStepOne(catalog, state);
         else if (step === 2)
-            inner = renderStepTwo(state, options.precedingScript);
+            inner = renderStepTwo(state, options.precedingScript, options.sharedContext || '');
         else if (step === 3)
             inner = renderStepThree(state, catalog, summary);
         else
@@ -304,6 +311,10 @@ export function openRubricWizard(options) {
             state.questions[q].requirements.push({ label: '', maxScore: '', acceptedForms: '' });
         else if (action === 'remove-requirement')
             state.questions[q].requirements.splice(r, 1);
+        else if (action === 'use-own-context')
+            state.useOwnContext = true;
+        else if (action === 'use-shared-context')
+            state.useOwnContext = false;
         else if (action === 'pull-script')
             state.context = options.precedingScript || state.context;
         else if (action === 'split-sentences') {
@@ -329,7 +340,7 @@ export function openRubricWizard(options) {
             try {
                 const rubric = (await options.buildRubric(buildRubricPayload(state, state.questions[0]))).rubric;
                 const result = await options.previewSandbox({
-                    prompt: state.questions[0].prompt, context: state.context, sampleAnswer: state.sample,
+                    prompt: state.questions[0].prompt, context: effectiveContext(state, options.sharedContext || ''), sampleAnswer: state.sample,
                     interactionType: 'long_text', pedagogicalTypeCode: 'writing', rubric
                 });
                 const labels = {};

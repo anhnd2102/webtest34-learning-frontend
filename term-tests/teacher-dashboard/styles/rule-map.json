@@ -11404,5 +11404,29 @@
       "(max-width: 640px)"
     ],
     "selector": ".req-row"
+  },
+  {
+    "order": 1888,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-context"
+  },
+  {
+    "order": 1889,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-preview"
+  },
+  {
+    "order": 1890,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-preview summary"
+  },
+  {
+    "order": 1891,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-preview p"
   }
 ]

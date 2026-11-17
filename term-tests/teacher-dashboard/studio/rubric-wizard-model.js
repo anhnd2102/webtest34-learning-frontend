@@ -38,6 +38,16 @@ export function emptyQuestion(variant) {
         role: ''
     };
 }
+// Bài đọc của Phần dùng chung cho mọi câu trong Phần: nguồn duy nhất, nhập một lần ở ô Bài đọc của Phần.
+// Backend tự ghép nó khi chấm nếu câu/bài tập không có ngữ cảnh riêng, nên không sao chép vào từng câu.
+export function sharedContextFromBlock(block) {
+    const raw = block?.readingPassage || block?.stimulusReadingPassage || block?.referenceContext || '';
+    return String(raw).replace(/<\/(p|div|li|h\d)>|<br\s*\/?>/gi, ' ').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+}
+// Ngữ cảnh AI dùng để chấm thử: riêng (hoặc Phần không có bài đọc) thì lấy ô nhập, ngược lại lấy bài đọc của Phần.
+export function effectiveContext(state, sharedContext) {
+    return state.useOwnContext || !sharedContext ? state.context : sharedContext;
+}
 export function createWizardState({ variant = null, courseId } = {}) {
     let level = suggestLevel(courseId);
     if (!levelsForVariant(variant).includes(level))
@@ -48,6 +58,7 @@ export function createWizardState({ variant = null, courseId } = {}) {
         level,
         points: variant === 'writing' ? '15' : '4',
         context: '',
+        useOwnContext: false,
         languageScore: '',
         wordMin: '',
         sample: '',

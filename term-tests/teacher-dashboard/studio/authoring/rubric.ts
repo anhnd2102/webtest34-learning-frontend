@@ -2,7 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import type { AuthoringHost, DraftExercise } from '../draft-model.js';
 import { openRubricWizard } from '../rubric-wizard.js';
-import { createWizardState, draftFromItem, itemsFromWizard, splitLines } from '../rubric-wizard-model.js';
+import { createWizardState, draftFromItem, itemsFromWizard, sharedContextFromBlock, splitLines } from '../rubric-wizard-model.js';
 import { renderSvgIcon } from '../../ui/icons.js';
 import { findPrecedingClozeScript } from '../draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
@@ -284,6 +284,7 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             state: createWizardState({ courseId: options?.courseId }),
             exerciseTitle: targetEx.title,
             precedingScript: findPrecedingClozeScript(draftState, bIdx),
+            sharedContext: sharedContextFromBlock(block),
             loadPresets: () => options!.onRubricPresets(),
             buildRubric: payload => options!.onBuildRubric(payload),
             previewSandbox: options!.onPreviewSandbox,
@@ -292,7 +293,8 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
               const created = itemsFromWizard(state, rubrics, {
                 exerciseId: targetEx.exerciseId!, exerciseTitle: targetEx.title || '', startPosition: getNextPosition(), newId: generateUuid
               });
-              if (state.context.trim()) targetEx.referenceContext = state.context.trim();
+              // Dùng bài đọc của Phần thì không sao chép vào bài tập: backend tự ghép khi chấm, sửa bài đọc là mọi câu theo.
+              if (state.context.trim() && (state.useOwnContext || !sharedContextFromBlock(block))) targetEx.referenceContext = state.context.trim();
               Object.assign(draftState.gradingKey!.items!, created.gradingKeyItems);
               insertItemsIntoBlockExercise(block, targetEx, created.items);
               resequenceItemPositions();
@@ -320,9 +322,12 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
         const exercise = block.exercises?.find(candidate => candidate.exerciseId === item.exerciseId);
         const state = draftFromItem(item, key, { courseId: options?.courseId });
         state.context = String(item.referenceContext || exercise?.referenceContext || '');
+        const sharedContext = sharedContextFromBlock(block);
+        state.useOwnContext = Boolean(state.context.trim()) || !sharedContext;
         openRubricWizard({
           owner: builderOwner,
           state,
+          sharedContext,
           exerciseTitle: exercise?.title,
           loadPresets: () => options!.onRubricPresets(),
           buildRubric: payload => options!.onBuildRubric(payload),
@@ -338,7 +343,7 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
               const hints = splitLines(question.vocabularyHints);
               if (hints.length) item.vocabularyHints = hints; else delete item.vocabularyHints;
             }
-            const context = done.context.trim();
+            const context = done.useOwnContext || !sharedContext ? done.context.trim() : '';
             if (context !== String(exercise?.referenceContext || '').trim()) item.referenceContext = context || null;
             key.rubric = rubric;
             markAsDirty();
