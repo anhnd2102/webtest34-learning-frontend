@@ -41,8 +41,9 @@ export const ICONS = {
 export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
 // Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
 // không phải import file này).
-export { scrollBehavior } from './candidate/motion.js?rev=20261113-submit-a';
-import { scrollBehavior } from './candidate/motion.js?rev=20261113-submit-a';
+export { scrollBehavior } from './candidate/motion.js?rev=20261118-writing-aids';
+import { scrollBehavior } from './candidate/motion.js?rev=20261118-writing-aids';
+import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261118-writing-aids';
 function escape(str) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -767,6 +768,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         const val = typeof rawAns === 'string' ? rawAns : '';
         const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
         interactiveHtml = `
+      ${writingAidsHtml(item)}
       <div class="candidate-open-wrap cbt-open-wrap">
         <textarea class="candidate-open-textarea cbt-open-textarea" data-item-id="${escape(item.itemVersionId)}" rows="5" ${ANSWER_TEXT_ATTRS} placeholder="Nhập bài viết / câu trả lời của bạn tại đây...">${escape(val)}</textarea>
         <div class="candidate-open-meta cbt-open-meta">

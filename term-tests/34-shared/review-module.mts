@@ -1,8 +1,8 @@
 // NGUỒN: file .mts này; review-module.mjs do `npm run build` sinh ra (build tự thêm ?rev= vào import nội bộ).
 // Module thuần dựng Màn hình xem kết quả (view model + HTML), mobile-first, một cột.
 // Chưa nối vào index.html. Dữ liệu vào: kết quả từ /attempts/result và định nghĩa đề.
-import { resultViewModel } from '../webtest-34-demo/candidate/result-view.js';
-import type { ResultPayload, ResultDefinition } from '../webtest-34-demo/candidate/result-view.js';
+import { requirementFeedbackHtml, resultViewModel } from '../webtest-34-demo/candidate/result-view.js';
+import type { ResultPayload, ResultDefinition, ResultFeedback } from '../webtest-34-demo/candidate/result-view.js';
 
 const escape = (value: unknown): string => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] as string));
 // Kiểu dữ liệu: câu kết quả (trường lấy từ /attempts/result) và view model hai trạng thái (thông báo / đã sẵn sàng).
@@ -10,7 +10,7 @@ type ReviewItem = GroupResultItem & {
   position?: number | string;
   rawAnswer?: unknown;
   expectedAnswer?: unknown;
-  feedback?: { structureScore?: number | null, structureMaxScore?: number, accuracyScore?: number | null, accuracyMaxScore?: number, errors?: { message?: string, code?: string }[] };
+  feedback?: ResultFeedback & { structureScore?: number | null, structureMaxScore?: number, accuracyScore?: number | null, accuracyMaxScore?: number };
 };
 interface ReviewMeta { testTitle?: string, studentName?: string, className?: string, submittedAt?: string }
 interface ReviewViewModelInput {
@@ -65,7 +65,8 @@ function itemViewModel(item: ReviewItem) {
     tone: verdictTone(item.verdict),
     answer: item.rawAnswer || 'Chưa trả lời',
     expected: hasExpected ? (Array.isArray(item.expectedAnswer) ? item.expectedAnswer.join(', ') : String(item.expectedAnswer)) : '',
-    essay: hasScores ? `${part('Structure', fb.structureScore, fb.structureMaxScore)} · ${part('Accuracy', fb.accuracyScore, fb.accuracyMaxScore)}` : '',
+    requirementsHtml: requirementFeedbackHtml(fb),
+    essay: hasScores && !requirementFeedbackHtml(fb) ? `${part('Structure', fb.structureScore, fb.structureMaxScore)} · ${part('Accuracy', fb.accuracyScore, fb.accuracyMaxScore)}` : '',
     errors: (fb.errors || []).map((error: { message?: string, code?: string }) => error.message || error.code || '').filter(Boolean)
   };
 }
@@ -112,7 +113,7 @@ const PRINT_CSS = '<style>.review-screen{max-width:640px;margin:0 auto;padding:1
 function itemHtml(item: ReturnType<typeof itemViewModel>): string {
   const expected = item.expected ? `<div class="review-expected"><strong>Đáp án:</strong> ${escape(item.expected)}</div>` : '<div class="review-expected muted">Đáp án chưa được mở</div>';
   const errors = item.errors.length ? `<div><strong>Lỗi</strong><ul>${item.errors.map(error => `<li>${escape(error)}</li>`).join('')}</ul></div>` : '';
-  const feedback = item.essay || errors ? `<div class="review-feedback">${item.essay ? `<strong>${escape(item.essay)}</strong>` : ''}${errors}</div>` : '';
+  const feedback = item.essay || errors || item.requirementsHtml ? `<div class="review-feedback">${item.essay ? `<strong>${escape(item.essay)}</strong>` : ''}${item.requirementsHtml ? `<div class="review-requirements">${item.requirementsHtml}</div>` : ''}${errors}</div>` : '';
   return `<li class="review-item"><span class="review-verdict ${escape(item.tone)}">${escape(item.verdictLabel)}</span><div><strong>Câu ${escape(item.position)}</strong><div class="review-answer">${escape(item.answer)}</div>${expected}${feedback}</div></li>`;
 }
 

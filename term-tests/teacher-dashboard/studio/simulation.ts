@@ -6,6 +6,7 @@ import {
   registerBuilderModalCleanup
 } from '../navigation/unsaved-changes.js';
 import { initSimulationPronunciationAudio } from './simulation-pronunciation-audio.js';
+import { writingAidsHtml } from '../../webtest-34-demo/candidate/writing-aids.js';
 import {
   escapeHtml
 } from '../ui/presentation.js';
@@ -312,6 +313,7 @@ function openCandidateSimulationModal() {
             `;
           } else if (isRubricAsync) {
             interactiveHtml = `
+              ${writingAidsHtml(item)}
               <div class="candidate-open-wrap">
                 <textarea class="form-control candidate-open-textarea" data-item-id="${item.itemVersionId}" rows="4" placeholder="Nhập bài luận hoặc câu trả lời tại đây..."></textarea>
                 <div class="candidate-open-meta">

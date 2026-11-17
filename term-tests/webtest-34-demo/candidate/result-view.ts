@@ -13,7 +13,16 @@ export interface ResultItem {
   maxScore?: number;
   rawAnswer?: unknown;
   expectedAnswer?: unknown;
-  feedback?: { errors?: { message?: string, code?: string }[] };
+  feedback?: ResultFeedback;
+}
+
+// Phản hồi rubric v2: từng yêu cầu có điểm, nhận xét ngắn; tên/nhận xét chỉ có khi đáp án đã công bố (backend quyết định).
+export interface ResultRequirement { id: string, label?: string, comment?: string, achieved?: boolean, credit?: number, maxScore?: number, scoreEarned?: number }
+export interface ResultFeedback {
+  errors?: { message?: string, code?: string }[];
+  requiredStructures?: ResultRequirement[];
+  criteria?: { id: string, label?: string, score?: number, maxScore?: number }[];
+  language?: { maxScore: number, scoreEarned: number, independentErrors?: number } | null;
 }
 export interface ResultPayload {
   gradingStatus?: string;
@@ -38,6 +47,24 @@ export function resultViewModel(result?: ResultPayload | null) {
     scoreLabel: scoreFinal ? 'Điểm chính thức' : 'Điểm tạm tính',
     score: `${summary.scoreEarned ?? 0} / ${summary.maxScore ?? 0}`
   };
+}
+
+const fmt = (value: unknown): string => String(Number(Number(value ?? 0).toFixed(2)));
+
+// Chi tiết điểm theo từng yêu cầu của câu chấm bằng rubric v2: Đạt / Một phần / Chưa đạt + điểm + nhận xét ngắn.
+// Rubric cũ không có điểm từng yêu cầu nên không dựng gì. Điểm hiển thị dạng đạt/tối đa, không phần trăm.
+export function requirementFeedbackHtml(feedback?: ResultFeedback | null): string {
+  const requirements = (feedback?.requiredStructures || []).filter(requirement => requirement.maxScore !== undefined);
+  if (!requirements.length) return '';
+  const rows = requirements.map((requirement, index) => {
+    const credit = requirement.credit ?? (requirement.achieved ? 1 : 0);
+    const status = credit >= 1 ? { cls: 'ok', text: 'Đạt' } : (credit > 0 ? { cls: 'partial', text: 'Một phần' } : { cls: 'miss', text: 'Chưa đạt' });
+    const name = requirement.label ? escape(requirement.label) : `Yêu cầu ${index + 1}`;
+    return `<li class="sim-req is-${status.cls}"><span class="sim-req-status">${status.text}</span><span class="sim-req-name">${name}</span><span class="sim-req-score">${fmt(requirement.scoreEarned)}/${fmt(requirement.maxScore)}đ</span>${requirement.comment ? `<p class="sim-req-comment">${escape(requirement.comment)}</p>` : ''}</li>`;
+  }).join('');
+  const criteria = (feedback?.criteria || []).map(criterion => `<li class="sim-req is-criterion"><span class="sim-req-name">${escape(criterion.label || criterion.id)}</span><span class="sim-req-score">${fmt(criterion.score)}/${fmt(criterion.maxScore)}đ</span></li>`).join('');
+  const language = feedback?.language ? `<li class="sim-req is-criterion"><span class="sim-req-name">Grammar/Vocab</span><span class="sim-req-score">${fmt(feedback.language.scoreEarned)}/${fmt(feedback.language.maxScore)}đ</span></li>` : '';
+  return `<details class="sim-card-requirements" open><summary>Chi tiết điểm theo yêu cầu</summary><ul>${rows}${language}${criteria}</ul></details>`;
 }
 
 export function resultDetailsHtml(result?: ResultPayload | null, definition?: ResultDefinition | null) {
@@ -107,6 +134,7 @@ export function studentResultsBodyHtml({ result, definition, studentName, classN
       </div>
       <div class="sim-card-row"><span class="sim-card-label">Bài làm của bạn</span><span class="${hasAnswer ? '' : 'is-empty'}">${escape(answer)}</span></div>
       ${expected ? `<div class="sim-card-row"><span class="sim-card-label">Đáp án đúng</span><span class="sim-card-expected">${escape(expected)}</span></div>` : ''}
+      ${requirementFeedbackHtml(it.feedback)}
       ${errors.length ? `<details class="sim-card-errors"${errors.length <= 3 ? ' open' : ''}><summary>Lỗi gặp phải (${errors.length})</summary><ul>${errors.map(error => `<li>${escape(error)}</li>`).join('')}</ul></details>` : ''}
     </li>`;
   };
