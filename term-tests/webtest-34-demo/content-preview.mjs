@@ -1,19 +1,19 @@
 // NGUỒN: file .mts này; content-preview.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261118-writing-aids';
-import { escape } from './candidate/text-utils.js?rev=20261118-writing-aids';
-import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261118-writing-aids';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261118-writing-aids';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261118-writing-aids';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261118-writing-aids';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261118-writing-aids';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261118-writing-aids';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261118-writing-aids';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261118-writing-aids';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261118-writing-aids';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261118-writing-aids';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261118-writing-aids';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261118-writing-aids';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261118-exercise-heading';
+import { escape } from './candidate/text-utils.js?rev=20261118-exercise-heading';
+import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261118-exercise-heading';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261118-exercise-heading';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261118-exercise-heading';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261118-exercise-heading';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261118-exercise-heading';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261118-exercise-heading';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261118-exercise-heading';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261118-exercise-heading';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261118-exercise-heading';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261118-exercise-heading';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261118-exercise-heading';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261118-exercise-heading';
 export async function mount(course) {
     if (!['03', '34', '45'].includes(course))
         throw new Error('Unknown demo course');

@@ -3054,3 +3054,8 @@ body {
 .sim-req-name { overflow-wrap: anywhere; }
 .sim-req-score { font-weight: 700; color: var(--izone-navy); }
 .sim-req-comment { grid-column: 1 / -1; margin: 0; color: var(--izone-muted); }
+
+/* Đề bài của từng bài tập (exercise) trên màn làm bài. */
+.cbt-exercise-heading { margin: 16px 0 8px; padding: 10px 12px; border-left: 3px solid var(--izone-primary); background: var(--izone-card-bg); border-radius: 0 8px 8px 0; }
+.cbt-exercise-title { margin: 0 0 4px; font-size: 1rem; color: var(--izone-navy); }
+.cbt-exercise-instructions { font-size: 0.95rem; color: var(--izone-slate); overflow-wrap: anywhere; }

@@ -1,11 +1,11 @@
 // Hộp thoại nộp bài, nộp bài lên máy chủ, hộp kết quả và theo dõi kết quả sau nộp (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; submit-flow.js do `npm run build` sinh ra (xem text-utils.ts). Import nội bộ viết
 // không có `?rev=`, bước build tự thêm rev dùng chung của shell học viên.
-import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261118-writing-aids';
-import { scrollBehavior } from './motion.js?rev=20261118-writing-aids';
-import { escape } from './text-utils.js?rev=20261118-writing-aids';
-import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261118-writing-aids';
-import { withLocalGroupLabels } from './group-render.js?rev=20261118-writing-aids';
+import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261118-exercise-heading';
+import { scrollBehavior } from './motion.js?rev=20261118-exercise-heading';
+import { escape } from './text-utils.js?rev=20261118-exercise-heading';
+import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261118-exercise-heading';
+import { withLocalGroupLabels } from './group-render.js?rev=20261118-exercise-heading';
 export function createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic, examTimer, query, update, queueServerDraft, persist, clearDraftTimer }) {
     const timerDisplay = examTimer.display;
     function handleOpenSubmitDialog() {
