@@ -1,6 +1,6 @@
 // NGUỒN: file .ts này; studio-view.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
-import { courseTestCatalogPath, formDraftPath, formDetailPath, formPublishPath, formPublishPreviewPath, previewSandboxPath } from '../api/teacher.js';
+import { courseTestCatalogPath, formDraftPath, formDetailPath, formPublishPath, formPublishPreviewPath, previewSandboxPath, rubricPresetsPath, rubricPresetsBuildPath } from '../api/teacher.js';
 import { hasActiveUnsavedChanges, clearActiveUnsavedChanges, openUnsavedChangesModal } from '../navigation/unsaved-changes.js';
 import { openCreateTestModal, renderCourseTestCatalogView, filterClassesForCourse } from '../studio/catalog.js';
 export function createStudioView({ root, queryCoordinator, authState, scopeState, form, viewExams, disposeOwnedBuilder, renderOwnedBuilder, request }) {
@@ -124,6 +124,13 @@ export function createStudioView({ root, queryCoordinator, authState, scopeState
                                         });
                                         return putRes;
                                     },
+                                    onRubricPresets: async () => request(rubricPresetsPath(), { errorMessage: 'Không tải được danh sách dạng câu hỏi.' }),
+                                    onBuildRubric: async (rubricPayload) => request(rubricPresetsBuildPath(), {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(rubricPayload),
+                                        errorMessage: 'Không dựng được cách chấm.'
+                                    }),
                                     onPreviewSandbox: async (sandboxPayload) => {
                                         return await request(previewSandboxPath(), {
                                             method: 'POST',
@@ -208,6 +215,13 @@ export function createStudioView({ root, queryCoordinator, authState, scopeState
                                 });
                                 return putRes;
                             },
+                            onRubricPresets: async () => request(rubricPresetsPath(), { errorMessage: 'Không tải được danh sách dạng câu hỏi.' }),
+                            onBuildRubric: async (rubricPayload) => request(rubricPresetsBuildPath(), {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(rubricPayload),
+                                errorMessage: 'Không dựng được cách chấm.'
+                            }),
                             onPreviewSandbox: async (sandboxPayload) => {
                                 return await request(previewSandboxPath(), {
                                     method: 'POST',

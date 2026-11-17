@@ -1,6 +1,8 @@
 // NGUỒN: file .ts này; rubric.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import type { AuthoringHost, DraftExercise } from '../draft-model.js';
+import { openRubricWizard } from '../rubric-wizard.js';
+import { createWizardState, draftFromItem, itemsFromWizard, splitLines } from '../rubric-wizard-model.js';
 import { renderSvgIcon } from '../../ui/icons.js';
 import { findPrecedingClozeScript } from '../draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
@@ -9,7 +11,7 @@ import { escapeHtml } from '../../ui/presentation.js';
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 
-export function bindRubricAuthoring({ container, draftState, builderOwner, actions }: AuthoringHost) {
+export function bindRubricAuthoring({ container, draftState, builderOwner, actions, options }: AuthoringHost) {
   const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
 // Add AI-Graded Open Text (rubric_async)
     function getRubricConfigForType(selectedType: any, points = 4) {
@@ -55,6 +57,7 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
       };
     }
 
+    const wizardAvailable = Boolean(options && typeof options.onRubricPresets === 'function' && typeof options.onBuildRubric === 'function');
     const addRubricBtns = container.querySelectorAll<HTMLElement>('.btn-add-rubric-async');
     addRubricBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -63,6 +66,8 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
         const block = draftState.blocks[bIdx];
         if (!block) return;
         const targetEx = resolveTargetExercise(block, btn);
+        // Hộp thoại cũ (3 preset cố định + CSV) giữ lại làm đường dự phòng và cho nhập hàng loạt từ CSV.
+        const openLegacy = () => {
         const rubricBatchModal = openGenericBatchModal({ owner: builderOwner,
           title: 'Tạo câu hỏi Tự luận chấm AI (AI Rubric)',
           subtitle: `Tạo câu hỏi tự luận có tiêu chí chấm AI thuộc bài tập ${targetEx.title || 'bài tập'}.`,
@@ -271,8 +276,75 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             });
           }
         }
+        };
+
+        if (wizardAvailable) {
+          openRubricWizard({
+            owner: builderOwner,
+            state: createWizardState({ courseId: options?.courseId }),
+            exerciseTitle: targetEx.title,
+            precedingScript: findPrecedingClozeScript(draftState, bIdx),
+            loadPresets: () => options!.onRubricPresets(),
+            buildRubric: payload => options!.onBuildRubric(payload),
+            previewSandbox: options!.onPreviewSandbox,
+            onLegacy: openLegacy,
+            onComplete: ({ state, rubrics }) => {
+              const created = itemsFromWizard(state, rubrics, {
+                exerciseId: targetEx.exerciseId!, exerciseTitle: targetEx.title || '', startPosition: getNextPosition(), newId: generateUuid
+              });
+              if (state.context.trim()) targetEx.referenceContext = state.context.trim();
+              Object.assign(draftState.gradingKey!.items!, created.gradingKeyItems);
+              insertItemsIntoBlockExercise(block, targetEx, created.items);
+              resequenceItemPositions();
+              markAsDirty();
+              render();
+            }
+          });
+          return;
+        }
+        openLegacy();
       });
     });
 
 
+
+    // Chỉnh lại một câu đã tạo bằng trình hướng dẫn (rubric v2): đọc ngược rubric snapshot rồi thay bằng bản dựng mới.
+    container.querySelectorAll<HTMLElement>('.btn-edit-rubric-wizard').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!wizardAvailable) return;
+        syncInputs();
+        const block = draftState.blocks[Number(btn.getAttribute('data-block-idx'))];
+        const item = block?.items?.[Number(btn.getAttribute('data-item-idx'))];
+        const key = item ? draftState.gradingKey!.items![item.itemVersionId!] : null;
+        if (!block || !item || !key?.rubric) return;
+        const exercise = block.exercises?.find(candidate => candidate.exerciseId === item.exerciseId);
+        const state = draftFromItem(item, key, { courseId: options?.courseId });
+        state.context = String(item.referenceContext || exercise?.referenceContext || '');
+        openRubricWizard({
+          owner: builderOwner,
+          state,
+          exerciseTitle: exercise?.title,
+          loadPresets: () => options!.onRubricPresets(),
+          buildRubric: payload => options!.onBuildRubric(payload),
+          previewSandbox: options!.onPreviewSandbox,
+          onComplete: ({ state: done, rubrics }) => {
+            const question = done.questions[0];
+            const rubric = rubrics[0];
+            item.prompt = question.prompt.trim();
+            item.maxScore = rubric.maxScore;
+            item.rubricVariant = done.variant;
+            if (done.variant === 'writing') {
+              item.studentOutline = splitLines(question.outline);
+              const hints = splitLines(question.vocabularyHints);
+              if (hints.length) item.vocabularyHints = hints; else delete item.vocabularyHints;
+            }
+            const context = done.context.trim();
+            if (context !== String(exercise?.referenceContext || '').trim()) item.referenceContext = context || null;
+            key.rubric = rubric;
+            markAsDirty();
+            render();
+          }
+        });
+      });
+    });
 }

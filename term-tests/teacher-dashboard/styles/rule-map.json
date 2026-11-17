@@ -11038,5 +11038,255 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rich-editor__error.popup-image-error:not([hidden])"
+  },
+  {
+    "order": 1828,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-card"
+  },
+  {
+    "order": 1829,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-body"
+  },
+  {
+    "order": 1830,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-footer"
+  },
+  {
+    "order": 1831,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-spacer"
+  },
+  {
+    "order": 1832,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-stepper"
+  },
+  {
+    "order": 1833,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-step"
+  },
+  {
+    "order": 1834,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-step-number"
+  },
+  {
+    "order": 1835,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-step.is-current"
+  },
+  {
+    "order": 1836,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-step.is-done"
+  },
+  {
+    "order": 1837,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-lead"
+  },
+  {
+    "order": 1838,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-muted"
+  },
+  {
+    "order": 1839,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-error, .rw-errors:not(:empty)"
+  },
+  {
+    "order": 1840,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-family"
+  },
+  {
+    "order": 1841,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-family legend"
+  },
+  {
+    "order": 1842,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-grid, .rw-level-grid"
+  },
+  {
+    "order": 1843,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card, .rw-level-card"
+  },
+  {
+    "order": 1844,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card input, .rw-level-card input"
+  },
+  {
+    "order": 1845,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card:focus-within, .rw-level-card:focus-within"
+  },
+  {
+    "order": 1846,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card.is-selected, .rw-level-card.is-selected"
+  },
+  {
+    "order": 1847,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-title"
+  },
+  {
+    "order": 1848,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-desc"
+  },
+  {
+    "order": 1849,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-example"
+  },
+  {
+    "order": 1850,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-subtitle"
+  },
+  {
+    "order": 1851,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-summary"
+  },
+  {
+    "order": 1852,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-summary li"
+  },
+  {
+    "order": 1853,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-field"
+  },
+  {
+    "order": 1854,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-input"
+  },
+  {
+    "order": 1855,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-input-score"
+  },
+  {
+    "order": 1856,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-question"
+  },
+  {
+    "order": 1857,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-question-head"
+  },
+  {
+    "order": 1858,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-question-head h4"
+  },
+  {
+    "order": 1859,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-requirements"
+  },
+  {
+    "order": 1860,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-requirement-row"
+  },
+  {
+    "order": 1861,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-advanced"
+  },
+  {
+    "order": 1862,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-advanced summary"
+  },
+  {
+    "order": 1863,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-sandbox-result"
+  },
+  {
+    "order": 1864,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-result"
+  },
+  {
+    "order": 1865,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-card-head"
+  },
+  {
+    "order": 1866,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-chip"
+  },
+  {
+    "order": 1867,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".rw-stepper"
+  },
+  {
+    "order": 1868,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".rw-requirement-row"
   }
 ]

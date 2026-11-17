@@ -1,3 +1,5 @@
+import { openRubricWizard } from '../rubric-wizard.js';
+import { createWizardState, draftFromItem, itemsFromWizard, splitLines } from '../rubric-wizard-model.js';
 import { renderSvgIcon } from '../../ui/icons.js';
 import { findPrecedingClozeScript } from '../draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
@@ -5,7 +7,7 @@ import { generateRubricAsyncTemplateCsv, parseRubricAsyncCsv } from '.././conten
 import { escapeHtml } from '../../ui/presentation.js';
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
-export function bindRubricAuthoring({ container, draftState, builderOwner, actions }) {
+export function bindRubricAuthoring({ container, draftState, builderOwner, actions, options }) {
     const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
     // Add AI-Graded Open Text (rubric_async)
     function getRubricConfigForType(selectedType, points = 4) {
@@ -50,6 +52,7 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             ]
         };
     }
+    const wizardAvailable = Boolean(options && typeof options.onRubricPresets === 'function' && typeof options.onBuildRubric === 'function');
     const addRubricBtns = container.querySelectorAll('.btn-add-rubric-async');
     addRubricBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -59,14 +62,16 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
             if (!block)
                 return;
             const targetEx = resolveTargetExercise(block, btn);
-            const rubricBatchModal = openGenericBatchModal({ owner: builderOwner,
-                title: 'Tạo câu hỏi Tự luận chấm AI (AI Rubric)',
-                subtitle: `Tạo câu hỏi tự luận có tiêu chí chấm AI thuộc bài tập ${targetEx.title || 'bài tập'}.`,
-                defaultCount: 2,
-                minCount: 1,
-                maxCount: 10,
-                defaultPoints: 4.0,
-                extraConfigHtml: `
+            // Hộp thoại cũ (3 preset cố định + CSV) giữ lại làm đường dự phòng và cho nhập hàng loạt từ CSV.
+            const openLegacy = () => {
+                const rubricBatchModal = openGenericBatchModal({ owner: builderOwner,
+                    title: 'Tạo câu hỏi Tự luận chấm AI (AI Rubric)',
+                    subtitle: `Tạo câu hỏi tự luận có tiêu chí chấm AI thuộc bài tập ${targetEx.title || 'bài tập'}.`,
+                    defaultCount: 2,
+                    minCount: 1,
+                    maxCount: 10,
+                    defaultPoints: 4.0,
+                    extraConfigHtml: `
             <div class="form-group batch-rubric-type-form-group">
               <label class="form-label"><strong>Dạng câu hỏi tự luận (Question Type / Rubric Preset):</strong></label>
               <select class="form-control select-batch-rubric-type">
@@ -93,79 +98,125 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
               </div>
             </div>
           `,
-                csvConfig: {
-                    templateFileName: 'mau_tu_luan_cham_ai.csv',
-                    columnsHint: 'Cột: Đề bài câu hỏi | Ngữ cảnh tham chiếu (nếu có) | Điểm tối đa | Loại rubric | Tiêu chí 1 | Tiêu chí 2',
-                    placeholder: '"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,translation,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"\n"Từ \"innovative\" ở dòng 3 có nghĩa là gì?","Đoạn trích thông tin bài đọc...",4,comprehension,"Mức độ hiểu nội dung (2.8đ)","Từ khóa cốt lõi (1.2đ)"',
-                    getTemplateCsv: generateRubricAsyncTemplateCsv,
-                    parseCsv: parseRubricAsyncCsv,
-                    renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} (${itm.maxScore} điểm)`,
-                    onImport: (items, { defaultPoints = 4 } = {}) => {
+                    csvConfig: {
+                        templateFileName: 'mau_tu_luan_cham_ai.csv',
+                        columnsHint: 'Cột: Đề bài câu hỏi | Ngữ cảnh tham chiếu (nếu có) | Điểm tối đa | Loại rubric | Tiêu chí 1 | Tiêu chí 2',
+                        placeholder: '"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,translation,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"\n"Từ \"innovative\" ở dòng 3 có nghĩa là gì?","Đoạn trích thông tin bài đọc...",4,comprehension,"Mức độ hiểu nội dung (2.8đ)","Từ khóa cốt lõi (1.2đ)"',
+                        getTemplateCsv: generateRubricAsyncTemplateCsv,
+                        parseCsv: parseRubricAsyncCsv,
+                        renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} (${itm.maxScore} điểm)`,
+                        onImport: (items, { defaultPoints = 4 } = {}) => {
+                            const startingPos = getNextPosition();
+                            const batchItems = [];
+                            items.forEach((parsed, idx) => {
+                                const newItemId = generateUuid();
+                                const itemScore = parsed.maxScore != null && !isNaN(parsed.maxScore) && parsed.maxScore > 0 ? parsed.maxScore : defaultPoints;
+                                batchItems.push({
+                                    itemFamilyId: generateUuid(),
+                                    itemVersionId: newItemId,
+                                    position: startingPos + idx,
+                                    exerciseId: targetEx.exerciseId,
+                                    exerciseTitle: targetEx.title,
+                                    prompt: parsed.prompt,
+                                    helpText: parsed.helpText || '',
+                                    interactionType: 'long_text',
+                                    pedagogicalTypeCode: 'writing',
+                                    layoutType: 'default',
+                                    graderType: 'rubric_async',
+                                    required: true,
+                                    maxScore: itemScore,
+                                    options: [],
+                                    skillCodes: [],
+                                    releasePolicy: 'inherit'
+                                });
+                                draftState.gradingKey.items[newItemId] = {
+                                    graderType: 'rubric_async',
+                                    rubricCode: parsed.rubricCode || 'rubric_translation_v1',
+                                    rubricVersion: 1,
+                                    rubric: parsed.rubric || {
+                                        scoringVersion: 'rubric_translation_v1',
+                                        maxScore: itemScore,
+                                        criteria: [
+                                            { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: itemScore / 2, requiredConcepts: [] },
+                                            { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: itemScore / 2, requiredConcepts: [] }
+                                        ]
+                                    }
+                                };
+                            });
+                            insertItemsIntoBlockExercise(block, targetEx, batchItems);
+                            resequenceItemPositions();
+                            markAsDirty();
+                            render();
+                        }
+                    },
+                    onConfirm: ({ count, defaultPoints = 4, modal }) => {
+                        const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
+                        if (selectedType === 'comprehension') {
+                            targetEx.exerciseType = 'comprehension';
+                            const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
+                            if (modalContextInput && modalContextInput.value.trim()) {
+                                targetEx.referenceContext = modalContextInput.value.trim();
+                            }
+                        }
+                        const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
                         const startingPos = getNextPosition();
                         const batchItems = [];
-                        items.forEach((parsed, idx) => {
+                        for (let i = 0; i < count; i++) {
+                            const currentPos = startingPos + i;
                             const newItemId = generateUuid();
-                            const itemScore = parsed.maxScore != null && !isNaN(parsed.maxScore) && parsed.maxScore > 0 ? parsed.maxScore : defaultPoints;
                             batchItems.push({
                                 itemFamilyId: generateUuid(),
                                 itemVersionId: newItemId,
-                                position: startingPos + idx,
+                                position: currentPos,
                                 exerciseId: targetEx.exerciseId,
                                 exerciseTitle: targetEx.title,
-                                prompt: parsed.prompt,
-                                helpText: parsed.helpText || '',
+                                prompt: rubCfg.defaultPrompt.includes('1.') ? `${i + 1}. Từ "..." ở dòng thứ ... có nghĩa là gì? Thay thế cho từ/cụm từ nào?` : `${rubCfg.defaultPrompt} ${currentPos}:`,
+                                helpText: '',
                                 interactionType: 'long_text',
                                 pedagogicalTypeCode: 'writing',
                                 layoutType: 'default',
                                 graderType: 'rubric_async',
                                 required: true,
-                                maxScore: itemScore,
+                                maxScore: defaultPoints,
                                 options: [],
                                 skillCodes: [],
                                 releasePolicy: 'inherit'
                             });
                             draftState.gradingKey.items[newItemId] = {
                                 graderType: 'rubric_async',
-                                rubricCode: parsed.rubricCode || 'rubric_translation_v1',
+                                rubricCode: rubCfg.rubricCode,
                                 rubricVersion: 1,
-                                rubric: parsed.rubric || {
-                                    scoringVersion: 'rubric_translation_v1',
-                                    maxScore: itemScore,
-                                    criteria: [
-                                        { id: 'meaning', label: 'Ý nghĩa (Meaning)', maxScore: itemScore / 2, requiredConcepts: [] },
-                                        { id: 'grammar', label: 'Ngữ pháp (Grammar)', maxScore: itemScore / 2, requiredConcepts: [] }
-                                    ]
+                                rubric: {
+                                    scoringVersion: rubCfg.scoringVersion,
+                                    maxScore: defaultPoints,
+                                    criteria: rubCfg.criteria.map(c => ({ ...c }))
                                 }
                             };
-                        });
+                        }
                         insertItemsIntoBlockExercise(block, targetEx, batchItems);
                         resequenceItemPositions();
                         markAsDirty();
                         render();
-                    }
-                },
-                onConfirm: ({ count, defaultPoints = 4, modal }) => {
-                    const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
-                    if (selectedType === 'comprehension') {
-                        targetEx.exerciseType = 'comprehension';
-                        const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
-                        if (modalContextInput && modalContextInput.value.trim()) {
-                            targetEx.referenceContext = modalContextInput.value.trim();
+                    },
+                    onSingle: ({ modal, defaultPoints = 4 } = {}) => {
+                        const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
+                        if (selectedType === 'comprehension') {
+                            targetEx.exerciseType = 'comprehension';
+                            const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
+                            if (modalContextInput && modalContextInput.value.trim()) {
+                                targetEx.referenceContext = modalContextInput.value.trim();
+                            }
                         }
-                    }
-                    const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
-                    const startingPos = getNextPosition();
-                    const batchItems = [];
-                    for (let i = 0; i < count; i++) {
-                        const currentPos = startingPos + i;
+                        const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
+                        const nextPos = getNextPosition();
                         const newItemId = generateUuid();
-                        batchItems.push({
+                        const newItem = {
                             itemFamilyId: generateUuid(),
                             itemVersionId: newItemId,
-                            position: currentPos,
+                            position: nextPos,
                             exerciseId: targetEx.exerciseId,
                             exerciseTitle: targetEx.title,
-                            prompt: rubCfg.defaultPrompt.includes('1.') ? `${i + 1}. Từ "..." ở dòng thứ ... có nghĩa là gì? Thay thế cho từ/cụm từ nào?` : `${rubCfg.defaultPrompt} ${currentPos}:`,
+                            prompt: `${rubCfg.defaultPrompt} ${nextPos}:`,
                             helpText: '',
                             interactionType: 'long_text',
                             pedagogicalTypeCode: 'writing',
@@ -176,7 +227,7 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
                             options: [],
                             skillCodes: [],
                             releasePolicy: 'inherit'
-                        });
+                        };
                         draftState.gradingKey.items[newItemId] = {
                             graderType: 'rubric_async',
                             rubricCode: rubCfg.rubricCode,
@@ -187,84 +238,110 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
                                 criteria: rubCfg.criteria.map(c => ({ ...c }))
                             }
                         };
+                        insertItemsIntoBlockExercise(block, targetEx, newItem);
+                        resequenceItemPositions();
+                        markAsDirty();
+                        render();
                     }
-                    insertItemsIntoBlockExercise(block, targetEx, batchItems);
-                    resequenceItemPositions();
-                    markAsDirty();
-                    render();
-                },
-                onSingle: ({ modal, defaultPoints = 4 } = {}) => {
-                    const selectedType = modal?.querySelector?.('.select-batch-rubric-type')?.value || 'comprehension';
-                    if (selectedType === 'comprehension') {
-                        targetEx.exerciseType = 'comprehension';
-                        const modalContextInput = modal?.querySelector?.('.batch-rubric-context-input');
-                        if (modalContextInput && modalContextInput.value.trim()) {
-                            targetEx.referenceContext = modalContextInput.value.trim();
-                        }
+                });
+                if (rubricBatchModal) {
+                    const typeSel = rubricBatchModal.querySelector('.select-batch-rubric-type');
+                    const ctxGroup = rubricBatchModal.querySelector('#batch-rubric-context-group');
+                    const pullModalBtn = rubricBatchModal.querySelector('.btn-modal-pull-cloze-script');
+                    const ctxInput = rubricBatchModal.querySelector('.batch-rubric-context-input');
+                    const updateCtxVisibility = () => {
+                        if (!typeSel || !ctxGroup)
+                            return;
+                        ctxGroup.hidden = typeSel.value !== 'comprehension';
+                    };
+                    if (typeSel) {
+                        typeSel.addEventListener('change', updateCtxVisibility);
+                        updateCtxVisibility();
                     }
-                    const rubCfg = getRubricConfigForType(selectedType, defaultPoints);
-                    const nextPos = getNextPosition();
-                    const newItemId = generateUuid();
-                    const newItem = {
-                        itemFamilyId: generateUuid(),
-                        itemVersionId: newItemId,
-                        position: nextPos,
-                        exerciseId: targetEx.exerciseId,
-                        exerciseTitle: targetEx.title,
-                        prompt: `${rubCfg.defaultPrompt} ${nextPos}:`,
-                        helpText: '',
-                        interactionType: 'long_text',
-                        pedagogicalTypeCode: 'writing',
-                        layoutType: 'default',
-                        graderType: 'rubric_async',
-                        required: true,
-                        maxScore: defaultPoints,
-                        options: [],
-                        skillCodes: [],
-                        releasePolicy: 'inherit'
-                    };
-                    draftState.gradingKey.items[newItemId] = {
-                        graderType: 'rubric_async',
-                        rubricCode: rubCfg.rubricCode,
-                        rubricVersion: 1,
-                        rubric: {
-                            scoringVersion: rubCfg.scoringVersion,
-                            maxScore: defaultPoints,
-                            criteria: rubCfg.criteria.map(c => ({ ...c }))
-                        }
-                    };
-                    insertItemsIntoBlockExercise(block, targetEx, newItem);
-                    resequenceItemPositions();
+                    if (pullModalBtn && ctxInput) {
+                        pullModalBtn.addEventListener('click', () => {
+                            const script = findPrecedingClozeScript(draftState, bIdx);
+                            if (script) {
+                                ctxInput.value = script;
+                            }
+                            else {
+                                alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
+                            }
+                        });
+                    }
+                }
+            };
+            if (wizardAvailable) {
+                openRubricWizard({
+                    owner: builderOwner,
+                    state: createWizardState({ courseId: options?.courseId }),
+                    exerciseTitle: targetEx.title,
+                    precedingScript: findPrecedingClozeScript(draftState, bIdx),
+                    loadPresets: () => options.onRubricPresets(),
+                    buildRubric: payload => options.onBuildRubric(payload),
+                    previewSandbox: options.onPreviewSandbox,
+                    onLegacy: openLegacy,
+                    onComplete: ({ state, rubrics }) => {
+                        const created = itemsFromWizard(state, rubrics, {
+                            exerciseId: targetEx.exerciseId, exerciseTitle: targetEx.title || '', startPosition: getNextPosition(), newId: generateUuid
+                        });
+                        if (state.context.trim())
+                            targetEx.referenceContext = state.context.trim();
+                        Object.assign(draftState.gradingKey.items, created.gradingKeyItems);
+                        insertItemsIntoBlockExercise(block, targetEx, created.items);
+                        resequenceItemPositions();
+                        markAsDirty();
+                        render();
+                    }
+                });
+                return;
+            }
+            openLegacy();
+        });
+    });
+    // Chỉnh lại một câu đã tạo bằng trình hướng dẫn (rubric v2): đọc ngược rubric snapshot rồi thay bằng bản dựng mới.
+    container.querySelectorAll('.btn-edit-rubric-wizard').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (!wizardAvailable)
+                return;
+            syncInputs();
+            const block = draftState.blocks[Number(btn.getAttribute('data-block-idx'))];
+            const item = block?.items?.[Number(btn.getAttribute('data-item-idx'))];
+            const key = item ? draftState.gradingKey.items[item.itemVersionId] : null;
+            if (!block || !item || !key?.rubric)
+                return;
+            const exercise = block.exercises?.find(candidate => candidate.exerciseId === item.exerciseId);
+            const state = draftFromItem(item, key, { courseId: options?.courseId });
+            state.context = String(item.referenceContext || exercise?.referenceContext || '');
+            openRubricWizard({
+                owner: builderOwner,
+                state,
+                exerciseTitle: exercise?.title,
+                loadPresets: () => options.onRubricPresets(),
+                buildRubric: payload => options.onBuildRubric(payload),
+                previewSandbox: options.onPreviewSandbox,
+                onComplete: ({ state: done, rubrics }) => {
+                    const question = done.questions[0];
+                    const rubric = rubrics[0];
+                    item.prompt = question.prompt.trim();
+                    item.maxScore = rubric.maxScore;
+                    item.rubricVariant = done.variant;
+                    if (done.variant === 'writing') {
+                        item.studentOutline = splitLines(question.outline);
+                        const hints = splitLines(question.vocabularyHints);
+                        if (hints.length)
+                            item.vocabularyHints = hints;
+                        else
+                            delete item.vocabularyHints;
+                    }
+                    const context = done.context.trim();
+                    if (context !== String(exercise?.referenceContext || '').trim())
+                        item.referenceContext = context || null;
+                    key.rubric = rubric;
                     markAsDirty();
                     render();
                 }
             });
-            if (rubricBatchModal) {
-                const typeSel = rubricBatchModal.querySelector('.select-batch-rubric-type');
-                const ctxGroup = rubricBatchModal.querySelector('#batch-rubric-context-group');
-                const pullModalBtn = rubricBatchModal.querySelector('.btn-modal-pull-cloze-script');
-                const ctxInput = rubricBatchModal.querySelector('.batch-rubric-context-input');
-                const updateCtxVisibility = () => {
-                    if (!typeSel || !ctxGroup)
-                        return;
-                    ctxGroup.hidden = typeSel.value !== 'comprehension';
-                };
-                if (typeSel) {
-                    typeSel.addEventListener('change', updateCtxVisibility);
-                    updateCtxVisibility();
-                }
-                if (pullModalBtn && ctxInput) {
-                    pullModalBtn.addEventListener('click', () => {
-                        const script = findPrecedingClozeScript(draftState, bIdx);
-                        if (script) {
-                            ctxInput.value = script;
-                        }
-                        else {
-                            alert('Không tìm thấy bài điền từ nội tuyến hoặc đoạn văn nào ở các phần phía trước.');
-                        }
-                    });
-                }
-            }
         });
     });
 }

@@ -1,5 +1,6 @@
 // NGUỒN: file .ts này; draft-inputs.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
+import { splitLines } from './rubric-wizard-model.js';
 import type { BinderBase } from './draft-model.js';
 import {
   sanitizeRichContent
@@ -553,7 +554,9 @@ function syncInputs() {
               const currentKey = draftState.gradingKey.items[item.itemVersionId!];
               if (currentKey && currentKey.rubric) {
                 const critCards = iCard.querySelectorAll<HTMLElement>('.rubric-criterion-card');
-                if (critCards && currentKey.rubric.criteria) {
+                // Rubric v2 do trình hướng dẫn dựng và backend kiểm tổng điểm: không sửa tiêu chí/tổng điểm tại thẻ.
+                const isRubricV2 = currentKey.rubric.scoringVersion === 'izone-rubric-v2';
+                if (!isRubricV2 && critCards && currentKey.rubric.criteria) {
                   critCards.forEach((cCard, cIdx) => {
                     const critObj = currentKey.rubric!.criteria[cIdx];
                     if (!critObj) return;
@@ -581,6 +584,13 @@ function syncInputs() {
                 const guidanceEl = iCard.querySelector<HTMLInputElement>('.input-rubric-guidance');
                 if (guidanceEl) {
                   currentKey.rubric.promptGuidance = guidanceEl.value.trim();
+                }
+
+                const modelAnswersEl = iCard.querySelector<HTMLTextAreaElement>('.input-rubric-model-answers');
+                if (isRubricV2 && modelAnswersEl) {
+                  const answers = splitLines(modelAnswersEl.value);
+                  if (answers.length) currentKey.rubric.modelAnswers = answers;
+                  else delete currentKey.rubric.modelAnswers;
                 }
               }
             }
