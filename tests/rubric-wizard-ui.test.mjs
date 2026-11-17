@@ -62,6 +62,9 @@ test('bước 2 theo từng dạng: dịch có dạng chấp nhận, Writing có
   const t = renderStepTwo(translation);
   assert.match(t, /data-f="req-forms"/);
   assert.match(t, /Đáp án mẫu \(chỉ AI thấy/);
+  assert.match(t, /Dạng chấp nhận khác, ngoài cách viết ở tên yêu cầu/);
+  assert.match(t, /phần còn lại tự tính cho Grammar\/Vocab/);
+  assert.match(t, /ô đáp án mẫu/);
 
   const writing = renderStepTwo(createWizardState({ variant: 'writing', courseId: 3 }));
   assert.match(writing, /data-f="outline"/);

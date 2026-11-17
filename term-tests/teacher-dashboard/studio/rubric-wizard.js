@@ -34,7 +34,7 @@ function renderRequirementRows(question, qIndex, withForms, kindLabel) {
     <div class="rw-requirement-row" data-r="${rIndex}">
       <input type="text" class="form-control rw-input" data-q="${qIndex}" data-f="req-label" data-r="${rIndex}" value="${escapeHtml(row.label)}" placeholder="${kindLabel}" aria-label="${kindLabel}" />
       <input type="text" inputmode="decimal" class="form-control rw-input rw-input-score" data-q="${qIndex}" data-f="req-score" data-r="${rIndex}" value="${escapeHtml(row.maxScore)}" placeholder="Điểm" aria-label="Điểm của yêu cầu" />
-      ${withForms ? `<input type="text" class="form-control rw-input" data-q="${qIndex}" data-f="req-forms" data-r="${rIndex}" value="${escapeHtml(row.acceptedForms)}" placeholder="Dạng chấp nhận thêm (cách nhau bằng dấu ;)" aria-label="Dạng chấp nhận thêm" />` : ''}
+      ${withForms ? `<input type="text" class="form-control rw-input" data-q="${qIndex}" data-f="req-forms" data-r="${rIndex}" value="${escapeHtml(row.acceptedForms)}" placeholder="Dạng chấp nhận khác, ngoài cách viết ở tên yêu cầu (cách nhau bằng dấu ;)" aria-label="Dạng chấp nhận khác" />` : ''}
       <button type="button" class="btn btn-icon btn-sm btn-ghost" data-rw-action="remove-requirement" data-q="${qIndex}" data-r="${rIndex}" title="Xóa dòng" aria-label="Xóa dòng">${renderSvgIcon('close', 'icon-inline')}</button>
     </div>`).join('');
     return `<div class="rw-requirements">${rows}<button type="button" class="btn btn-secondary btn-sm" data-rw-action="add-requirement" data-q="${qIndex}">${renderSvgIcon('plusCircle', 'icon-inline')} <span>Thêm dòng</span></button></div>`;
@@ -56,7 +56,7 @@ function renderQuestion(state, question, qIndex) {
         const structured = variant === 'translation' || variant === 'sentence_order';
         body = field('Đề bài (hiện cho học viên)', textarea('prompt', question.prompt, 3, variant === 'sentence_order' ? 'Từ cho sẵn: ... Hãy sắp xếp thành câu hoàn chỉnh và chia động từ.' : ''))
             + field(structured ? 'Yêu cầu bắt buộc (mỗi yêu cầu có điểm riêng)' : 'Ý chính cần có (mỗi ý có điểm riêng)', renderRequirementRows(question, qIndex, structured, structured ? 'Cấu trúc hoặc từ vựng bắt buộc' : 'Ý chính'), structured
-                ? 'Để trống cột điểm để hệ thống chia đều. Cột "dạng chấp nhận" chỉ nhận đúng các dạng bạn liệt kê, không tự suy từ đồng nghĩa.'
+                ? 'Tên yêu cầu nên ghi khung cấu trúc (ví dụ: It’s + adj + to V); câu ví dụ cụ thể để vào ô đáp án mẫu bên dưới. AI nhận cách viết ở tên yêu cầu và các dạng ở cột "dạng chấp nhận khác", không tự suy dạng nào khác. Để trống cột điểm để hệ thống chia đều; nếu bạn ghi điểm cho mọi yêu cầu mà tổng chưa đủ điểm của câu, phần còn lại tự tính cho Grammar/Vocab.'
                 : 'Ý đúng một phần được nửa điểm. Để trống cột điểm để hệ thống chia đều.')
             + field('Đáp án mẫu (chỉ AI thấy, mỗi dòng một đáp án)', textarea('model', question.modelAnswers, 3));
     }
