@@ -29,6 +29,7 @@ export function bindDraftSaving({ container, draftState, options, syncInputs, re
                         readingPassage: b.readingPassage || null,
                         stimulusAudioUrl: b.audioUrl || null,
                         stimulusReadingPassage: b.readingPassage || null,
+                        stimulusImageUrl: b.stimulusImageUrl || null,
                         exercises: b.exercises || [],
                         items: (b.items || []).map((itm, itmIdx) => ({
                             ...itm,

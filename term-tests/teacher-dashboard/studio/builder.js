@@ -33,6 +33,7 @@ import { bindVariantInputActions } from './authoring/variant-input-actions.js';
 import { bindRubricActions } from './authoring/rubric-actions.js';
 import { bindClozeScriptActions } from './cloze-script-actions.js';
 import { bindSandboxActions } from './sandbox-actions.js';
+import { bindBlockImageActions } from './block-image-actions.js';
 import { bindBlockReorderActions } from './block-actions.js';
 import { bindToolbarActions } from './toolbar-actions.js';
 import { bindRichEditorControls } from './rich-editor-controls.js';
@@ -508,6 +509,13 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
               <label class="form-label">Đoạn văn đọc hiểu (Reading Passage):</label>
               <textarea class="form-control block-reading-input" data-index="${index}" rows="8" placeholder="Dán văn bản đọc hiểu (nếu có)...">${escapeHtml(readingVal)}</textarea>
             </div>
+            <div class="form-group block-field">
+              <label class="form-label">Ảnh đầu phần thi (Image URL) — dùng cho đề Writing mô tả tranh/biểu đồ:</label>
+              <input type="url" class="form-control block-image-input" data-index="${index}" value="${escapeHtml(block.stimulusImageUrl || '')}" placeholder="https://... hoặc link Google Drive" />
+              <div class="form-hint">Ảnh hiển thị ở đầu phần thi, ngay dưới hướng dẫn, trước các câu hỏi.</div>
+              <img class="block-image-preview-img pictorial-preview-img" alt="Xem trước ảnh đầu phần thi" ${block.stimulusImageUrl ? `src="${escapeHtml(block.stimulusImageUrl)}"` : 'hidden'} />
+              <div class="block-image-preview-error text-danger" hidden>Không tải được ảnh. Kiểm tra lại link hoặc quyền chia sẻ.</div>
+            </div>
 
             <div class="block-items-section">
               <div class="block-items-header-bar">
@@ -884,6 +892,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
         bindRubricActions({ container, draftState, markAsDirty, render, syncInputs });
         bindClozeScriptActions({ container, draftState, markAsDirty, render, syncInputs });
         bindSandboxActions({ container, draftState, render, syncInputs, options });
+        bindBlockImageActions({ container, draftState, markAsDirty });
         bindBlockReorderActions({ container, draftState, markAsDirty, setActiveBlockIdx, getActiveBlockIdx, resequenceItemPositions, render, syncInputs });
         bindDraftSaving({ container, draftState, options, syncInputs, render, markSaved, lifecycle: workflowLifecycle });
         const openCandidateSimulationModal = createSimulation({ draftState, builderOwner, syncInputs });

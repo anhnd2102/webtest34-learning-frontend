@@ -8,6 +8,14 @@ import { formatIpaTranscription, formatOptionDisplayLetter, tokenizeSentence, sc
 import { renderSvgIcon } from '../ui/icons.js';
 import { renderStrictCandidateAudioDock, initStrictCandidateAudioDocks } from './media.js';
 import { getItemSpanCount, parseClozeBlanks } from './draft-model.js';
+// Khớp renderer học viên: đáp án dài (> 24 ký tự) xếp từng dòng, ngắn thì chia cột theo số đáp án.
+function choiceColsClass(options, shortFallback = '') {
+    if (options.some(opt => String(opt?.label ?? opt?.id ?? '').trim().length > 24))
+        return 'grid-cols-1';
+    if (shortFallback)
+        return shortFallback;
+    return options.length === 3 ? 'grid-cols-3' : (options.length >= 4 ? 'grid-cols-4' : 'grid-cols-2');
+}
 export function createSimulation({ draftState, builderOwner, syncInputs }) {
     function openCandidateSimulationModal() {
         syncInputs();
@@ -170,7 +178,7 @@ export function createSimulation({ draftState, builderOwner, syncInputs }) {
                 }
                 else if (isSingleChoice) {
                     interactiveHtml = `
-              <div class="candidate-options-grid ${colsClass}">
+              <div class="candidate-options-grid ${choiceColsClass(item.options || [])}">
                 ${(item.options || []).map((opt, optIdx) => `
                   <label class="candidate-choice-label">
                     <input type="radio" name="sim_choice_${item.itemVersionId}" value="${opt.id}" />
@@ -183,7 +191,7 @@ export function createSimulation({ draftState, builderOwner, syncInputs }) {
                 }
                 else if (isMultiGroup) {
                     interactiveHtml = `
-              <div class="candidate-options-grid ${colsClass}">
+              <div class="candidate-options-grid ${choiceColsClass(item.options || [], 'grid-cols-2')}">
                 ${(item.options || []).map((opt, optIdx) => `
                   <label class="candidate-choice-label">
                     <input type="checkbox" name="sim_multi_${item.itemVersionId}" value="${opt.id}" />
@@ -597,6 +605,7 @@ export function createSimulation({ draftState, builderOwner, syncInputs }) {
             }).join('');
             return `
           <section class="simulation-section-card section-page ${bIdx === 0 ? 'active' : ''}" id="sim-block-${bIdx}">
+            ${b.stimulusImageUrl ? `<figure class="sim-block-image" style="margin:0 0 16px;text-align:center;"><img src="${escapeHtml(b.stimulusImageUrl)}" alt="Hình minh họa đầu phần thi" style="max-width:100%;max-height:70vh;height:auto;" /></figure>` : ''}
             ${(b.instructions || audioUrl || reading) && exercises.length > 1 ? `
               <div class="sim-section-lead-head">
                 <h2>Phần ${bIdx + 1}: ${escapeHtml(b.title || `Phần ${bIdx + 1}`)}</h2>

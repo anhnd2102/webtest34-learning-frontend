@@ -572,6 +572,22 @@ export function renderInlineCloze(item, answers = {}) {
     html += escape(cleanText.slice(last));
     return `<div class="candidate-inline-cloze-wrap cbt-cloze-content" style="max-width:100%;word-break:break-word;overflow-wrap:break-word;white-space:normal;"><div class="cbt-cloze-line" style="display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;word-break:normal;line-height:2.2;">${html}</div></div>`;
 }
+// Đáp án dài (hoặc có xuống dòng) xếp từng dòng; đáp án ngắn mới chia lưới nhiều cột.
+const LONG_OPTION_LABEL_LENGTH = 24;
+function choiceGridColumns(options, shortFallback = '') {
+    const hasLongOption = options.some((opt) => String(opt?.label ?? opt?.id ?? '').trim().length > LONG_OPTION_LABEL_LENGTH);
+    if (hasLongOption)
+        return 'grid-cols-1';
+    if (shortFallback)
+        return shortFallback;
+    return options.length === 3 ? 'grid-cols-3' : (options.length >= 4 ? 'grid-cols-4' : 'grid-cols-2');
+}
+function renderBlockStimulusImage(block) {
+    const src = String(block.stimulusImageUrl || '').trim();
+    if (!src)
+        return '';
+    return `<figure class="cbt-block-image"><img src="${escape(src)}" alt="Hình minh họa đầu phần thi" loading="lazy" decoding="async" /></figure>`;
+}
 export function renderQuestionCard(item, answers = {}, block = null) {
     const isPronunciation = item.pedagogicalTypeCode === 'pronunciation_choice' || item.pedagogicalTypeCode === 'pronunciation_word' || item.layoutType === 'ipa_card';
     const isSentenceRewrite = (item.pedagogicalTypeCode === 'sentence_rewrite' || item.layoutType === 'keyword_transformation') && !isPronunciation;
@@ -589,7 +605,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
         interactiveHtml = renderInlineCloze(item, answers);
     }
     else if (isSingleChoice) {
-        const cols = (item.options || []).length === 3 ? 'grid-cols-3' : ((item.options || []).length >= 4 ? 'grid-cols-4' : 'grid-cols-2');
+        const cols = choiceGridColumns(item.options || []);
         interactiveHtml = `
       <div class="candidate-options-grid cbt-options-grid ${cols}">
         ${(item.options || []).map((opt, optIdx) => {
@@ -608,7 +624,7 @@ export function renderQuestionCard(item, answers = {}, block = null) {
     else if (isMultiGroup) {
         const selectedList = Array.isArray(rawAns) ? rawAns : [];
         interactiveHtml = `
-      <div class="candidate-options-grid cbt-options-grid grid-cols-2">
+      <div class="candidate-options-grid cbt-options-grid ${choiceGridColumns(item.options || [], 'grid-cols-2')}">
         ${(item.options || []).map((opt, optIdx) => {
             const checked = selectedList.includes(opt.id) ? 'checked' : '';
             return `
@@ -944,7 +960,9 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
         const bCount = items.reduce((s, it) => s + getItemSpanCount(it), 0);
         const exCount = (block.exercises || []).length;
         let sectionContentHtml = '';
-        if (hasSplitPane && reading) {
+        const useReadingSplit = Boolean(reading) && (hasSplitPane || !hasAudio);
+        const blockImageHtml = renderBlockStimulusImage(block);
+        if (useReadingSplit) {
             sectionContentHtml = `
         <div class="cbt-section-hero">
           <div class="cbt-hero-top">
@@ -964,6 +982,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             </div>
           ` : ''}
         </div>
+        ${blockImageHtml}
 
         <div class="exercise simulation-split-pane-exercise cbt-exercise-wrap">
           <div class="exercise-head" style="display:none;">
@@ -993,7 +1012,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             </div>
 
             <div class="matching-questions-column cbt-matching-col" data-pane-type="questions">
-              <div class="matching-column-header cbt-matching-header">Danh sách câu hỏi ghép nối</div>
+              <div class="matching-column-header cbt-matching-header">${hasSplitPane ? 'Danh sách câu hỏi ghép nối' : 'Câu hỏi'}</div>
               <div class="demo-questions-wrap cbt-questions-wrap">
                 ${renderedGroups}
               </div>
@@ -1022,6 +1041,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
             </div>
           ` : ''}
         </div>
+        ${blockImageHtml}
 
         <div class="exercise cbt-exercise-wrap">
           <div class="exercise-head" style="display:none;">
