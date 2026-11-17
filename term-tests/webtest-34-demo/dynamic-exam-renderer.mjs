@@ -41,9 +41,10 @@ export const ICONS = {
 export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
 // Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
 // không phải import file này).
-export { scrollBehavior } from './candidate/motion.js?rev=20261118-writing-aids';
-import { scrollBehavior } from './candidate/motion.js?rev=20261118-writing-aids';
-import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261118-writing-aids';
+export { scrollBehavior } from './candidate/motion.js?rev=20261118-exercise-heading';
+import { scrollBehavior } from './candidate/motion.js?rev=20261118-exercise-heading';
+import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261118-exercise-heading';
+import { exerciseHeadingHtml } from './candidate/exercise-heading.js?rev=20261118-exercise-heading';
 function escape(str) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -947,7 +948,22 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
                 itemGroups.push({ type: 'single', item });
             }
         });
+        // Đề bài của bài tập hiện trước nhóm câu đầu tiên của bài tập đó.
+        const exerciseList = (block.exercises || []);
+        const shownExercises = new Set();
+        const exerciseHeadingFor = (group) => {
+            const first = group.items ? group.items[0] : group.item;
+            const exerciseId = first?.exerciseId;
+            if (!exerciseId || shownExercises.has(exerciseId))
+                return '';
+            shownExercises.add(exerciseId);
+            return exerciseHeadingHtml(exerciseList.find(exercise => exercise.exerciseId === exerciseId), exerciseList.length, renderFormattedContent);
+        };
         const renderedGroups = itemGroups.map(group => {
+            const heading = exerciseHeadingFor(group);
+            return heading + renderGroup(group);
+        }).join('');
+        function renderGroup(group) {
             if (group.type === 'vocab_pair_group') {
                 return renderSimVocabPairTable(group.items, state.answers);
             }
@@ -958,7 +974,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
                 return renderSimShortQaGroup(group.items, state.answers);
             }
             return renderQuestionCard(group.item, state.answers, block);
-        }).join('');
+        }
         const bCount = items.reduce((s, it) => s + getItemSpanCount(it), 0);
         const exCount = (block.exercises || []).length;
         let sectionContentHtml = '';

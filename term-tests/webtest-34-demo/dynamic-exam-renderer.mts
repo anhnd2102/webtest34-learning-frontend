@@ -54,6 +54,8 @@ export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorr
 export { scrollBehavior } from './candidate/motion.js';
 import { scrollBehavior } from './candidate/motion.js';
 import { writingAidsHtml } from './candidate/writing-aids.js';
+import { exerciseHeadingHtml } from './candidate/exercise-heading.js';
+import type { ExerciseLike } from './candidate/exercise-heading.js';
 
 function escape(str: unknown) {
   return String(str ?? '')
@@ -950,7 +952,21 @@ export function renderDynamicExam(definition: ExamDefinition, container: HTMLEle
       }
     });
 
+    // Đề bài của bài tập hiện trước nhóm câu đầu tiên của bài tập đó.
+    const exerciseList = (block.exercises || []) as (ExerciseLike & { exerciseId?: string })[];
+    const shownExercises = new Set<string>();
+    const exerciseHeadingFor = (group: any): string => {
+      const first = group.items ? group.items[0] : group.item;
+      const exerciseId = first?.exerciseId;
+      if (!exerciseId || shownExercises.has(exerciseId)) return '';
+      shownExercises.add(exerciseId);
+      return exerciseHeadingHtml(exerciseList.find(exercise => exercise.exerciseId === exerciseId), exerciseList.length, renderFormattedContent);
+    };
     const renderedGroups = itemGroups.map(group => {
+      const heading = exerciseHeadingFor(group);
+      return heading + renderGroup(group);
+    }).join('');
+    function renderGroup(group: any): string {
       if (group.type === 'vocab_pair_group') {
         return renderSimVocabPairTable(group.items, state.answers);
       }
@@ -961,7 +977,7 @@ export function renderDynamicExam(definition: ExamDefinition, container: HTMLEle
         return renderSimShortQaGroup(group.items, state.answers);
       }
       return renderQuestionCard(group.item, state.answers, block);
-    }).join('');
+    }
 
     const bCount = items.reduce((s: number, it: ExamItem) => s + getItemSpanCount(it), 0);
     const exCount = (block.exercises || []).length;

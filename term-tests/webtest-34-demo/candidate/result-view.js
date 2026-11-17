@@ -1,7 +1,7 @@
 // Dựng kết quả bài làm cho học viên (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; result-view.js do `npm run build` sinh ra (xem text-utils.ts).
-import { scrollBehavior } from './motion.js?rev=20261118-writing-aids';
-import { escape } from './text-utils.js?rev=20261118-writing-aids';
+import { scrollBehavior } from './motion.js?rev=20261118-exercise-heading';
+import { escape } from './text-utils.js?rev=20261118-exercise-heading';
 export function resultViewModel(result) {
     const summary = result?.summary || {};
     const gradingStatus = result?.gradingStatus || 'pending';
