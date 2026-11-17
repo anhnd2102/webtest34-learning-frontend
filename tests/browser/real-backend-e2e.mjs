@@ -10,6 +10,7 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -22,6 +23,8 @@ const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).h
 const frontendRoot = fileURLToPath(new URL('../../', import.meta.url));
 const backendDir = path.resolve(process.env.BACKEND_DIR || path.join(frontendRoot, '..', 'webtest34-learning-platform', 'backend'));
 const pg = createRequire(path.join(backendDir, 'package.json'))('pg');
+// Backend đang chuyển dần sang TypeScript (Node 24 chạy `.ts` trực tiếp): nhận cả hai tên file điểm vào.
+const backendEntry = existsSync(path.join(backendDir, 'src', 'server.ts')) ? 'src/server.ts' : 'src/server.js';
 const frontendPort = Number(process.env.E2E_FRONTEND_PORT) || 18350;
 const frontendOrigin = `http://127.0.0.1:${frontendPort}`;
 const apiPort = 8788; // cố định: config.js của frontend chọn http://127.0.0.1:8788 khi chạy ở loopback
@@ -83,7 +86,7 @@ const waitFor = async (predicate, message, timeout = 10000) => {
 let backend, web, browser;
 try {
   await seed();
-  backend = startProcess(process.execPath, ['src/server.js'], {
+  backend = startProcess(process.execPath, [backendEntry], {
     cwd: backendDir,
     env: { ...process.env, NODE_ENV: 'development', PORT: String(apiPort), TRUST_PROXY_HOPS: '0', LEARNING_DATABASE_URL: databaseUrl, ALLOWED_ORIGINS: frontendOrigin }
   }, String(apiPort));
