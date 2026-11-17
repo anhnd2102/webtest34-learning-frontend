@@ -1,0 +1,75 @@
+// NGUỒN: file .ts này; file .js cạnh nó do `npm run build` sinh ra (xem candidate/text-utils.ts). Đây là script cổ điển nạp bằng
+// thẻ <script>, không có import/export; kiểu toàn cục khai báo ở webtest-34-demo/globals.d.ts.
+(function () {
+  'use strict';
+
+  const contract = window.WEBTEST34_PEDAGOGICAL_TYPES!;
+  if (!contract) throw new Error('WEBTEST34_PEDAGOGICAL_TYPES_MISSING');
+
+  const positionToAnswerKey = new Map<number, string>();
+
+  function addRange(firstPosition: number, count: number, prefix: string): void {
+    for (let index = 0; index < count; index += 1) {
+      positionToAnswerKey.set(firstPosition + index, `${prefix}_${index + 1}`);
+    }
+  }
+
+  addRange(1, 25, 'vocab1');
+  addRange(26, 25, 'vocab2');
+  addRange(51, 5, 'listen_p1');
+  addRange(56, 5, 'listen_p2');
+  addRange(61, 5, 'listen_p3');
+  addRange(66, 10, 'pron_p1');
+  addRange(76, 10, 'pron_p2');
+  addRange(86, 8, 'translation');
+  addRange(94, 3, 'speaking');
+
+  function answerKeyForPosition(position: unknown): string {
+    const answerKey = positionToAnswerKey.get(Number(position));
+    if (!answerKey) throw new Error(`WEBTEST34_POSITION_KEY_MISSING: ${position}`);
+    return answerKey;
+  }
+
+  function answerPrefixForItem(item: KeyMapItem | null | undefined): string {
+    return contract.resolvePedagogicalType(item?.pedagogicalTypeCode).answerPrefix;
+  }
+
+  function isCompleteTextSelectPair(value: unknown, item?: KeyMapItem | null): boolean {
+    if(!Array.isArray(value) || value.length !== 2) return false;
+    const word = String(value[0] ?? '').trim();
+    const optionId = String(value[1] ?? '').trim();
+    if(!word || !optionId) return false;
+    const options = Array.isArray(item?.options) ? item.options : [];
+    return options.some(option => String(option?.id ?? '') === optionId);
+  }
+
+  function buildResponses({ items, blocks, answers }: { items?: KeyMapItem[], blocks?: { items?: KeyMapItem[] }[], answers?: Record<string, unknown> }): Record<string, string | string[]> {
+    const blockItems: { item: KeyMapItem }[] = blocks?.length
+      ? blocks.flatMap(block => (block.items || []).map(item => ({ item })))
+        .sort((left, right) => Number(left.item.position) - Number(right.item.position))
+      : [...(items || [])].sort((left, right) => Number(left.position) - Number(right.position)).map(item => ({ item }));
+    const typedItems = blockItems.filter(({ item }) => String(item?.pedagogicalTypeCode || ''));
+    if (typedItems.length && typedItems.length !== blockItems.length) {
+      throw new Error('WEBTEST34_PEDAGOGICAL_TYPE_MIXED: items must all include a pedagogicalTypeCode or all omit it');
+    }
+    const typeOrdinals = new Map<string, number>();
+    const answerKeys = new Set<string>();
+    const itemIds = new Set<string>();
+    return Object.fromEntries(blockItems.map(({ item }) => {
+      if (!item?.itemVersionId) throw new Error('WEBTEST34_ITEM_ID_MISSING');
+      if (itemIds.has(item.itemVersionId)) throw new Error(`WEBTEST34_ITEM_ID_DUPLICATE: ${item.itemVersionId}`);
+      itemIds.add(item.itemVersionId);
+      const prefix = typedItems.length ? answerPrefixForItem(item) : '';
+      const ordinal = (typeOrdinals.get(prefix) || 0) + 1;
+      if (prefix) typeOrdinals.set(prefix, ordinal);
+      const positionalAnswerKey = positionToAnswerKey.get(Number(item.position));
+      const answerKey = positionalAnswerKey || (prefix ? `${prefix}_${ordinal}` : answerKeyForPosition(item.position));
+      if (answerKeys.has(answerKey)) throw new Error(`WEBTEST34_ANSWER_KEY_DUPLICATE: ${answerKey}`);
+      answerKeys.add(answerKey);
+      const value = answers?.[answerKey];
+      return [item.itemVersionId, Array.isArray(value) ? [...value] : String(value ?? '')] as [string, string | string[]];
+    }));
+  }
+
+  window.WEBTEST34_LEARNING_KEY_MAP = Object.freeze({ answerKeyForPosition, answerPrefixForItem, buildResponses, isCompleteTextSelectPair, resolvePedagogicalType: contract.resolvePedagogicalType });
+}());

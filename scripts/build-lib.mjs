@@ -37,7 +37,8 @@ export function emit(outDir) {
   for (const file of files) {
     // Chỉ cây shell học viên (webtest-34-demo) dùng rev chung. Dashboard import không có `?rev=`; thêm rev vào đó sẽ cho cùng
     // một module hai URL, tức hai thể hiện module với state riêng.
-    if (!path.relative(outDir, file).replace(/\\/g, '/').startsWith('webtest-34-demo/')) continue;
+    const relOut = path.relative(outDir, file).replace(/\\/g, '/');
+    if (!relOut.startsWith('webtest-34-demo/') && relOut !== '34-shared/review-module.mjs') continue;
     const code = readFileSync(file, 'utf8');
     const rewritten = code.replace(/(\bfrom\s+')(\.{1,2}\/[^'?]+\.m?js)(')/g, `$1$2?rev=${rev}$3`);
     if (rewritten !== code) writeFileSync(file, rewritten);
