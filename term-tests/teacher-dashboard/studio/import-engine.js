@@ -3,7 +3,7 @@
 // Bộ đọc/ghi CSV thống nhất cho Test Studio (spec #91, GĐ 1). Một bộ đọc cho cả "một dạng trong một bài tập" (scope 'type')
 // và "cả Phần" (scope 'block'); tự nhận file mới (cột tiếng Việt) lẫn file cũ (mẫu từng dạng, mẫu 7 cột, tiêu đề tiếng Anh).
 // Không dừng ở lỗi đầu tiên: mỗi dòng có trạng thái Hợp lệ / Cảnh báo / Lỗi kèm số dòng, cột và cách sửa. Không đụng DOM.
-import { COLUMNS, COLUMN_LABEL, OPTION_FIELDS, OPTION_LETTERS, TYPES, TYPE_BY_CODE, isKnownHeader, resolveHeader, resolveTypeCode } from './import-registry.js';
+import { COLUMNS, COLUMN_LABEL, FIELD_NOTES, OPTION_FIELDS, OPTION_LETTERS, TYPES, TYPE_BY_CODE, isKnownHeader, resolveHeader, resolveTypeCode } from './import-registry.js';
 // ---------------------------------------------------------------- phân tích văn bản
 const countOutsideQuotes = (line, char) => {
     let inside = false;
@@ -615,4 +615,38 @@ export function toLegacyResult(result) {
         items: result.cards,
         invalidRows: result.rows.filter(row => row.status === 'error').map(row => ({ line: row.line, row: Object.values(row.record).map(String), reason: row.messages.filter(m => m.level === 'error').map(m => `${m.column}: ${m.text}`).join(' ') }))
     };
+}
+const SHEET_FORBIDDEN = /[\\/?*[\]:]/g;
+const sheetName = (label, taken) => {
+    let name = label.replace(SHEET_FORBIDDEN, ' ').replace(/\s+/g, ' ').trim().slice(0, 31);
+    let suffix = 2;
+    while (taken.has(name)) {
+        const tail = ` ${suffix}`;
+        name = `${label.slice(0, 31 - tail.length)}${tail}`;
+        suffix += 1;
+    }
+    taken.add(name);
+    return name;
+};
+const toRows = (records, columnIds) => [columnIds.map(id => COLUMN_LABEL[id] || id), ...records.map(record => columnIds.map(id => clean(record[id])))];
+export function templateWorkbookSheets() {
+    const taken = new Set();
+    const sheets = [];
+    sheets.push({ name: sheetName('Phần thi', taken), rows: toRows(blockTemplateRecords(), blockColumnIds()) });
+    sheets.push({ name: sheetName('Thông tin Phần', taken), rows: [
+            ['Tiêu đề', 'Hướng dẫn', 'Bài đọc', 'Audio'],
+            ['Phần 1: Reading', 'Đọc bài đọc rồi trả lời các câu hỏi.', 'Dán bài đọc dài của Phần vào đây (tùy chọn).', 'bai-nghe-1.mp3']
+        ] });
+    for (const spec of TYPES) {
+        const columns = COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id));
+        sheets.push({ name: sheetName(spec.label, taken), rows: toRows(typeTemplateRecords(spec.code), columns) });
+    }
+    const guide = [['Dạng câu', 'Cột', 'Bắt buộc', 'Ý nghĩa']];
+    for (const spec of TYPES) {
+        for (const id of COLUMNS.map(column => column.id).filter(columnId => spec.columns.includes(columnId))) {
+            guide.push([spec.label, COLUMN_LABEL[id] || id, spec.required.includes(id) ? 'Có' : 'Không', spec.help.columnNotes[id] || FIELD_NOTES[id] || '']);
+        }
+    }
+    sheets.push({ name: sheetName('Hướng dẫn', taken), rows: guide });
+    return sheets;
 }
