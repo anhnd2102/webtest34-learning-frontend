@@ -28,6 +28,15 @@ function buildItem(card, options, index) {
     };
     if (card.explanation)
         item.explanation = card.explanation;
+    // Tự luận kiểu mới: dạng chấm; dàn ý/từ vựng gợi ý dành cho học viên nên nằm trong câu công khai (đáp án mẫu chỉ ở khóa chấm).
+    if (card.rubricVariant)
+        item.rubricVariant = card.rubricVariant;
+    if (card.studentOutline)
+        item.studentOutline = card.studentOutline;
+    if (card.vocabularyHints)
+        item.vocabularyHints = card.vocabularyHints;
+    if (card.graderType === 'rubric_async' && card.rubricVariant && card.referenceContext)
+        item.referenceContext = card.referenceContext;
     const type = card.pedagogicalTypeCode;
     if (type === 'sentence_reorder') {
         item.tokens = card.tokens;

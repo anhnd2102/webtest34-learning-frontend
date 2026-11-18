@@ -37,7 +37,7 @@ export function openAddQuestionDialog(options) {
     let attempted = false;
     let fileText = '';
     const existingPrompts = options.existingPrompts || [];
-    const readerOptions = () => ({ defaultPoints, existingPrompts, mediaBase: getMediaBase() });
+    const readerOptions = () => ({ defaultPoints, existingPrompts, mediaBase: getMediaBase(), defaultLevel: options.defaultLevel });
     const modal = document.createElement('div');
     modal.id = 'add-question-dialog';
     modal.className = 'candidate-sim-overlay aq-overlay';

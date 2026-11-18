@@ -1,5 +1,7 @@
 import { generateUuid } from './draft-model.js';
 import { appendExercisesToBlock, applyBlockInfo } from './card-to-item.js';
+import { failuresMessage, resolveExerciseRubrics } from './rubric-resolve.js';
+import { suggestLevel } from './rubric-wizard-model.js';
 import { openBlockCsvUploadModal } from './batch-import.js';
 export function bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options, runImport }) {
     // Import Block CSV (All Exercises in Block)
@@ -14,8 +16,16 @@ export function bindBlockCsvImport({ container, builderOwner, draftState, markAs
             openBlockCsvUploadModal({ owner: builderOwner,
                 block,
                 blockIdx: bIdx,
-                onImport: ({ mode, exercises, blockInfo }) => {
-                    if (!exercises || !exercises.length)
+                defaultLevel: suggestLevel(options?.courseId),
+                onImport: async ({ mode, exercises: rawExercises, blockInfo }) => {
+                    if (!rawExercises || !rawExercises.length)
+                        return;
+                    // Dòng Tự luận chấm AI kiểu mới: backend dựng quy tắc chấm trước khi thành câu hỏi.
+                    const outcome = await resolveExerciseRubrics(rawExercises, options?.onBuildRubric);
+                    if (outcome.failures.length)
+                        window.alert?.(failuresMessage(outcome.failures));
+                    const exercises = outcome.exercises;
+                    if (!exercises.length)
                         return;
                     const count = exercises.reduce((sum, exercise) => sum + (exercise.items?.length || 0), 0);
                     const apply = () => {

@@ -15,6 +15,7 @@ import { importErrorsCsv, importPreviewHtml } from './import-preview.js';
 import { QUICK_HINT, QUICK_TYPES, cardPreviewHtml, emptyRecord, formFields, pasteToRecords, quickTextToRecords, singleMode, typeChoices } from './add-question-model.js';
 import { COLUMN_LABEL, TYPE_BY_CODE } from './import-registry.js';
 import type { ImportRecord, TypeCode } from './import-registry.js';
+import type { RubricLevel } from './rubric-wizard-model.js';
 
 export interface AddQuestionOptions {
   owner?: unknown;
@@ -23,6 +24,8 @@ export interface AddQuestionOptions {
   defaultPoints?: number;
   // Đề bài các câu đã có trong bài tập: câu trùng bị cảnh báo.
   existingPrompts?: string[];
+  // Khối mặc định của đề cho dòng Tự luận chấm AI không ghi Khối.
+  defaultLevel?: RubricLevel;
   // Trả các thẻ câu hỏi đã hợp lệ cho nơi gọi thêm vào bài tập; nơi gọi tự dựng câu và đáp án chấm.
   onCommit: (cards: ImportCardOut[], meta: { typeCode: TypeCode, via: 'single' | 'bulk' | 'file' }) => void;
   // Tự luận chấm AI: mở trình hướng dẫn tạo câu hiện có.
@@ -50,7 +53,7 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
   let attempted = false;
   let fileText = '';
   const existingPrompts = options.existingPrompts || [];
-  const readerOptions = () => ({ defaultPoints, existingPrompts, mediaBase: getMediaBase() });
+  const readerOptions = () => ({ defaultPoints, existingPrompts, mediaBase: getMediaBase(), defaultLevel: options.defaultLevel });
 
   const modal = document.createElement('div');
   modal.id = 'add-question-dialog';

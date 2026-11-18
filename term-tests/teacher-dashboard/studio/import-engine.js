@@ -4,6 +4,7 @@
 // và "cả Phần" (scope 'block'); tự nhận file mới (cột tiếng Việt) lẫn file cũ (mẫu từng dạng, mẫu 7 cột, tiêu đề tiếng Anh).
 // Không dừng ở lỗi đầu tiên: mỗi dòng có trạng thái Hợp lệ / Cảnh báo / Lỗi kèm số dòng, cột và cách sửa. Không đụng DOM.
 import { COLUMNS, COLUMN_LABEL, FIELD_NOTES, OPTION_FIELDS, OPTION_LETTERS, TYPES, TYPE_BY_CODE, isKnownHeader, resolveHeader, resolveTypeCode } from './import-registry.js';
+import { buildRubricRow } from './import-rubric.js';
 // ---------------------------------------------------------------- phân tích văn bản
 const countOutsideQuotes = (line, char) => {
     let inside = false;
@@ -281,6 +282,12 @@ function buildCards(record, spec, ctx, messages) {
             return [{ prompt, interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', layoutType: 'split_pane_matching', graderType: 'exact_option', options: options.map(option => ({ id: option.letter, label: option.text })), expectedOptionId: letter, maxScore: points }];
         }
         case 'rubric_async': {
+            // Dòng có Dạng chấm là tự luận kiểu mới (theo Khối); quy tắc chấm do backend dựng lúc nhập.
+            if (clean(record.variant)) {
+                const built = buildRubricRow(record, { defaultLevel: ctx.defaultLevel });
+                messages.push(...built.messages);
+                return built.card ? [built.card] : [];
+            }
             const context = clean(record.context);
             const half = Math.round((points / 2) * 10) / 10;
             const criteria = [
@@ -289,7 +296,7 @@ function buildCards(record, spec, ctx, messages) {
             ];
             const preset = clean(record.legacyPreset);
             if (preset)
-                messages.push(message('warning', 'legacyPreset', `Mã mẫu chấm cũ "${preset}" chỉ còn giá trị tham khảo.`, 'Tự luận chấm AI kiểu mới (theo Khối) sẽ có cột riêng ở giai đoạn sau.'));
+                messages.push(message('warning', 'legacyPreset', `Mã mẫu chấm cũ "${preset}" chỉ còn giá trị tham khảo.`, 'Dùng cột Dạng chấm và Khối để chấm theo từng Khối (xem hướng dẫn).'));
             return [{ prompt, referenceContext: context, helpText: context, interactionType: 'long_text', pedagogicalTypeCode: 'writing', layoutType: 'default', graderType: 'rubric_async', maxScore: points, rubricCode: 'rubric_async_custom', rubricVersion: 1, rubric: { scoringVersion: 'rubric_async_custom', maxScore: points, criteria } }];
         }
         default:
@@ -437,7 +444,7 @@ const defaultGroupId = () => `group_${Date.now().toString(36)}_${Math.random().t
 // Dựng câu hỏi từ MỘT bản ghi nhập tay (form "Từng câu"): cùng quy tắc kiểm tra và cùng thẻ câu hỏi như đọc file.
 export function buildFromRecord(typeCode, record, options = {}) {
     const messages = [];
-    const ctx = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase };
+    const ctx = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase, defaultLevel: options.defaultLevel };
     const cards = buildCards(record, TYPE_BY_CODE[typeCode], ctx, messages);
     if (cards.length && typeCode !== 'listening_order') {
         const key = normalizePrompt(typeCode === 'pictorial_vocabulary' ? record.correct : record.prompt);
@@ -470,7 +477,8 @@ export function readImport(rawText, options) {
     const ctx = {
         defaultPoints: options.defaultPoints || 0,
         newGroupId: options.newGroupId || (() => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`),
-        mediaBase: options.mediaBase
+        mediaBase: options.mediaBase,
+        defaultLevel: options.defaultLevel
     };
     const first = lines[0].cells;
     const headerFields = first.map(cell => resolveHeader(cell, options.typeCode));

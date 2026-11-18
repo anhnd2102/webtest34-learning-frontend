@@ -63,7 +63,7 @@ export function openTestImportDialog(options) {
             addBtn.disabled = true;
             return;
         }
-        const test = readTestWorkbook(sheets, { mediaBase: getMediaBase() });
+        const test = readTestWorkbook(sheets, { mediaBase: getMediaBase(), defaultLevel: options.defaultLevel });
         importable = test.blocks.filter(entry => entry.read.exercises.some(exercise => exercise.items.length)).slice(0, room);
         const cards = importable.reduce((sum, entry) => sum + entry.read.cards.length, 0);
         const notices = [...test.notices, ...(test.blocks.length > room ? [`Chỉ còn chỗ cho ${room} Phần; các Phần sau bị bỏ qua.`] : [])];

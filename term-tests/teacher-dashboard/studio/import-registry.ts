@@ -8,6 +8,7 @@ export type FieldId =
   | 'optA' | 'optB' | 'optC' | 'optD' | 'optE' | 'optF' | 'optG' | 'optH'
   | 'correct' | 'accepted' | 'explanation' | 'points' | 'image' | 'audio' | 'hint'
   | 'wrongPart' | 'keyword' | 'targetSentence' | 'context' | 'criterion1' | 'criterion2' | 'legacyPreset'
+  | 'variant' | 'level' | 'requirements' | 'sample' | 'wordMin' | 'languageScore' | 'guidance'
   | 'optionsList';
 
 export const OPTION_FIELDS: FieldId[] = ['optA', 'optB', 'optC', 'optD', 'optE', 'optF', 'optG', 'optH'];
@@ -27,6 +28,8 @@ export const COLUMNS: { id: FieldId, label: string, aliases: string[] }[] = [
   { id: 'type', label: 'Dạng câu', aliases: ['question type', 'question_type', 'loại câu', 'dạng'] },
   { id: 'prompt', label: 'Đề bài', aliases: ['prompt', 'question prompt', 'question_prompt', 'question', 'câu hỏi', 'đề', 'nội dung'] },
   { id: 'context', label: 'Ngữ cảnh', aliases: ['reference context', 'reference_context', 'context', 'bài đọc'] },
+  { id: 'variant', label: 'Dạng chấm', aliases: ['rubric variant', 'variant', 'dạng chấm ai'] },
+  { id: 'level', label: 'Khối', aliases: ['level', 'khối lớp', 'mức chấm'] },
   { id: 'image', label: 'Ảnh', aliases: ['image', 'image url', 'image_url', 'hình ảnh', 'tên ảnh'] },
   { id: 'audio', label: 'Âm thanh', aliases: ['audio', 'audio url', 'audio_url', 'file nghe', 'tên file âm thanh'] },
   { id: 'wrongPart', label: 'Từ sai', aliases: ['error part', 'error_part', 'phần sai', 'lỗi sai'] },
@@ -45,6 +48,11 @@ export const COLUMNS: { id: FieldId, label: string, aliases: string[] }[] = [
   { id: 'accepted', label: 'Đáp án chấp nhận thêm', aliases: ['accepted variants', 'accepted_variants', 'đáp án khác', 'chấp nhận thêm'] },
   { id: 'explanation', label: 'Giải thích', aliases: ['explanation', 'giải thích đáp án'] },
   { id: 'points', label: 'Điểm', aliases: ['points', 'score', 'điểm số', 'max score', 'max_score'] },
+  { id: 'requirements', label: 'Yêu cầu bắt buộc', aliases: ['requirements', 'yêu cầu', 'dàn ý', 'outline'] },
+  { id: 'sample', label: 'Đáp án mẫu', aliases: ['model answer', 'model answers', 'sample answer', 'sample', 'đáp án tham khảo'] },
+  { id: 'wordMin', label: 'Số từ tối thiểu', aliases: ['word min', 'minimum words', 'min words'] },
+  { id: 'languageScore', label: 'Điểm Grammar/Vocab', aliases: ['language score', 'grammar vocab', 'điểm ngôn ngữ'] },
+  { id: 'guidance', label: 'Hướng dẫn chấm thêm', aliases: ['prompt guidance', 'guidance', 'ghi chú chấm'] },
   { id: 'criterion1', label: 'Tiêu chí 1', aliases: ['criterion 1', 'criterion_1'] },
   { id: 'criterion2', label: 'Tiêu chí 2', aliases: ['criterion 2', 'criterion_2'] },
   { id: 'legacyPreset', label: 'Mã mẫu chấm cũ', aliases: ['preset type', 'preset_type'] }
@@ -255,17 +263,33 @@ export const TYPES: TypeSpec[] = [
   },
   {
     code: 'rubric_async', label: 'Tự luận chấm AI', family: 'Viết / Tự luận', defaultPoints: 4,
-    columns: ['prompt', 'context', 'points', 'criterion1', 'criterion2'],
+    columns: ['prompt', 'context', 'variant', 'level', 'points', 'requirements', 'sample', 'correct', 'hint', 'wordMin', 'languageScore', 'guidance'],
     required: ['prompt'],
     aliases: ['tự luận', 'tự luận chấm ai', 'tu luan', 'rubric', 'rubric async', 'writing'],
     legacy: { headers: ['Prompt', 'Reference_Context', 'Max_Score', 'Preset_Type', 'Criterion_1', 'Criterion_2'], order: ['prompt', 'context', 'points', 'legacyPreset', 'criterion1', 'criterion2'] },
     examples: ex([
-      { prompt: 'Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.', points: '4', criterion1: 'Độ chính xác ý nghĩa', criterion2: 'Cấu trúc ngữ pháp' },
-      { prompt: 'Summarize the main idea of Paragraph A in 50 words.', context: 'Đoạn trích thông tin bài đọc...', points: '4' }
+      { prompt: 'Dịch: Tôi đặc biệt thích chạy bộ, bơi lội và đạp xe.', variant: 'Dịch Việt–Anh', level: '34', points: '4', requirements: 'Particularly + enjoy + V-ing (1.5) [particularly; especially] | Cấu trúc song song (1)', sample: 'I particularly enjoy running, swimming, and cycling.' },
+      { prompt: 'Vì sao tác giả cho rằng thành phố đắt đỏ hơn?', context: 'Cities are expensive because housing and services cost more than in the countryside.', variant: 'Đọc hiểu', level: '34', points: '4', requirements: 'Chi phí nhà ở cao (2) | Giá dịch vụ cao (2)', sample: 'Housing and services are more expensive in cities.' },
+      { prompt: 'Vai trò đúng của Câu 1. Một mặt, có những tranh luận đạo đức chống lại việc thí nghiệm trên động vật. là:', context: 'On the one hand, there are ethical arguments against animal testing.', variant: 'Writing đọc hiểu', level: '34', points: '2', correct: 'Nêu luận điểm phản đối thí nghiệm trên động vật' },
+      { prompt: 'Explain the difficulties of living in a big city.', variant: 'Viết đoạn/bài (Writing)', level: '45', points: '15', requirements: 'Topic sentence | Ý 1: chi phí sinh hoạt cao | Ý 2: nhiều vấn đề xã hội', hint: 'migrate to | the cost of living', wordMin: '120', sample: 'Living in a big city is difficult for several reasons.' }
     ]),
     help: {
       studentView: 'Học viên thấy đề bài (và ngữ cảnh nếu có) và viết câu trả lời vào ô văn bản; AI chấm theo tiêu chí.',
-      columnNotes: { context: 'Bài đọc/ngữ cảnh AI dùng để đối chiếu (học viên không thấy).', criterion1: 'Tiêu chí 1 (tùy chọn); điểm chia đôi giữa hai tiêu chí.' }, commonMistakes: ['Tự luận kiểu mới (6 dạng, từng Khối) sẽ có cột riêng ở giai đoạn sau.'] }
+      columnNotes: {
+        context: 'Bài đọc/ngữ cảnh AI dùng để đối chiếu (học viên không thấy). Để trống thì dùng bài đọc của Phần.',
+        variant: 'Một trong: Dịch Việt–Anh, Điền sắp xếp và chia động từ, Đọc hiểu, Writing đọc hiểu, Speaking dạng văn bản, Viết đoạn/bài (Writing).',
+        level: 'Khối chấm: 03, 34 hoặc 45 (Writing chỉ có 34, 45). Để trống thì theo Khối của đề.',
+        points: 'Điểm cả câu (Writing mặc định 15, còn lại 4). Backend tính phần Grammar/Vocab theo Khối.',
+        requirements: 'Mỗi yêu cầu một mục, cách nhau bằng |: tên (điểm) [cách viết chấp nhận]. Với Viết đoạn/bài: mỗi mục là một ý của dàn ý.',
+        sample: 'Đáp án mẫu để AI đối chiếu (học viên không thấy); nhiều đáp án cách nhau bằng |.',
+        correct: 'Chỉ dùng cho Writing đọc hiểu: vai trò đúng của câu.',
+        hint: 'Chỉ dùng cho Viết đoạn/bài: từ vựng gợi ý cho học viên, cách nhau bằng |.',
+        wordMin: 'Chỉ dùng cho Viết đoạn/bài: số từ tối thiểu (dưới mức này điểm bị giới hạn).',
+        languageScore: 'Tùy chọn: điểm riêng cho Grammar/Vocab; để trống thì backend lấy phần điểm còn lại.',
+        guidance: 'Tùy chọn: dặn thêm AI khi chấm.'
+      },
+      commonMistakes: ['Dạng chấm hoặc Khối ghi sai chính tả.', 'Tổng điểm các yêu cầu vượt điểm của câu.', 'Writing đọc hiểu thiếu vai trò đúng (cột Đáp án đúng).']
+    }
   }
 ];
 

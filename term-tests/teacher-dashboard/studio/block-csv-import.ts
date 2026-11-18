@@ -3,6 +3,8 @@
 import type { BinderBase, BuilderOptions } from './draft-model.js';
 import { generateUuid } from './draft-model.js';
 import { appendExercisesToBlock, applyBlockInfo } from './card-to-item.js';
+import { failuresMessage, resolveExerciseRubrics } from './rubric-resolve.js';
+import { suggestLevel } from './rubric-wizard-model.js';
 import { openBlockCsvUploadModal } from './batch-import.js';
 
 export function bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options, runImport }: BinderBase & {
@@ -24,8 +26,14 @@ export function bindBlockCsvImport({ container, builderOwner, draftState, markAs
         openBlockCsvUploadModal({ owner: builderOwner,
           block,
           blockIdx: bIdx,
-          onImport: ({ mode, exercises, blockInfo }: any) => {
-            if (!exercises || !exercises.length) return;
+          defaultLevel: suggestLevel(options?.courseId),
+          onImport: async ({ mode, exercises: rawExercises, blockInfo }: any) => {
+            if (!rawExercises || !rawExercises.length) return;
+            // Dòng Tự luận chấm AI kiểu mới: backend dựng quy tắc chấm trước khi thành câu hỏi.
+            const outcome = await resolveExerciseRubrics(rawExercises, options?.onBuildRubric);
+            if (outcome.failures.length) window.alert?.(failuresMessage(outcome.failures));
+            const exercises = outcome.exercises;
+            if (!exercises.length) return;
             const count = exercises.reduce((sum: number, exercise: any) => sum + (exercise.items?.length || 0), 0);
             const apply = () => {
               appendExercisesToBlock({ draftState, block, exercises, getNextPosition, newId: generateUuid, mode: mode === 'overwrite' ? 'overwrite' : 'append' });

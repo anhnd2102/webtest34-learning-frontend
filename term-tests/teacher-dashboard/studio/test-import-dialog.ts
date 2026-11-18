@@ -10,12 +10,15 @@ import type { UploadedSheet } from './batch-import.js';
 import { importErrorsCsv, importPreviewHtml } from './import-preview.js';
 import { MAX_BLOCKS, readTestWorkbook } from './import-workbook.js';
 import type { TestBlockRead } from './import-workbook.js';
+import type { RubricLevel } from './rubric-wizard-model.js';
 import { getMediaBase, mediaBaseFieldHtml, setMediaBase } from './media-base.js';
 
 export interface TestImportOptions {
   owner?: unknown;
   // Số Phần đã có trong đề (đề chỉ có tối đa 10 Phần).
   existingBlockCount: number;
+  // Khối mặc định của đề cho dòng Tự luận chấm AI không ghi Khối.
+  defaultLevel?: RubricLevel;
   onImport: (blocks: TestBlockRead[]) => void;
 }
 
@@ -70,7 +73,7 @@ export function openTestImportDialog(options: TestImportOptions): HTMLElement | 
 
   function paint() {
     if (!sheets.length) { preview.innerHTML = ''; addBtn.disabled = true; return; }
-    const test = readTestWorkbook(sheets, { mediaBase: getMediaBase() });
+    const test = readTestWorkbook(sheets, { mediaBase: getMediaBase(), defaultLevel: options.defaultLevel });
     importable = test.blocks.filter(entry => entry.read.exercises.some(exercise => exercise.items.length)).slice(0, room);
     const cards = importable.reduce((sum, entry) => sum + entry.read.cards.length, 0);
     const notices = [...test.notices, ...(test.blocks.length > room ? [`Chỉ còn chỗ cho ${room} Phần; các Phần sau bị bỏ qua.`] : [])];
