@@ -64,6 +64,7 @@ export function guideHtml(options = {}) {
         <li><strong>Thông tin Phần</strong> (tiêu đề, hướng dẫn, bài đọc dài, âm thanh): thêm một dòng có Dạng câu là "Thông tin Phần" (Bài tập = tiêu đề, Hướng dẫn bài tập = hướng dẫn, Đề bài = bài đọc, Âm thanh = bài nghe). Với Excel, dùng sheet "Thông tin Phần". Không điền thì nhập tay trong Test Studio.</li>
         <li><strong>Cả đề:</strong> nút "Nhập cả đề từ Excel" ở đầu danh sách Phần. Mỗi sheet là một Phần (tên sheet là tên Phần); sheet "Thông tin Phần" và "Hướng dẫn" không thành Phần. Đề có tối đa 10 Phần.</li>
         <li><strong>Ảnh và âm thanh:</strong> ghi đường dẫn hoặc link. Nếu chỉ ghi tên file (apple.png), hãy khai "Thư mục ảnh/âm thanh" trong hộp thoại nhập để hệ thống ghép đường dẫn.</li>
+        <li><strong>Tự luận chấm AI theo Khối:</strong> ghi Dạng chấm (6 dạng) và Khối (03, 34, 45; để trống thì theo Khối của đề). Điểm từng yêu cầu, phần Grammar/Vocab và bảng trừ lỗi do hệ thống dựng lúc nhập, giống trình hướng dẫn từng câu; dòng nào hệ thống từ chối sẽ được báo và không nhập.</li>
         <li><strong>Sau khi nhập:</strong> câu trùng đề bài với câu đã có bị cảnh báo (vẫn nhập được); nút "Hoàn tác lần nhập này" hiện cho tới khi bạn sửa tiếp.</li>
       </ul>
       <div class="guide-downloads">

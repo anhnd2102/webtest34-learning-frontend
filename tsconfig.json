@@ -28,6 +28,8 @@
     "term-tests/teacher-dashboard/studio/import-guide.ts",
     "term-tests/teacher-dashboard/studio/card-to-item.ts",
     "term-tests/teacher-dashboard/studio/import-workbook.ts",
+    "term-tests/teacher-dashboard/studio/import-rubric.ts",
+    "term-tests/teacher-dashboard/studio/rubric-resolve.ts",
     "term-tests/teacher-dashboard/studio/import-undo.ts",
     "term-tests/teacher-dashboard/studio/media-base.ts",
     "term-tests/teacher-dashboard/studio/test-import-dialog.ts",

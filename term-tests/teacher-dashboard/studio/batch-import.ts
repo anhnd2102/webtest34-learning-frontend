@@ -838,7 +838,7 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
       return;
     }
 
-    const readOptions = { existingPrompts, mediaBase: getMediaBase() };
+    const readOptions = { existingPrompts, mediaBase: getMediaBase(), defaultLevel: opts.defaultLevel };
     let read: ReadResult;
     let info: BlockInfo | undefined;
     if (workbookSheets) {

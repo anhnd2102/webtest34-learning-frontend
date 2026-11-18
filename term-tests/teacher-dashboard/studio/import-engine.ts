@@ -8,6 +8,8 @@ import {
   isKnownHeader, resolveHeader, resolveTypeCode
 } from './import-registry.js';
 import type { FieldId, ImportRecord, TypeCode, TypeSpec } from './import-registry.js';
+import { buildRubricRow } from './import-rubric.js';
+import type { RubricLevel } from './rubric-wizard-model.js';
 
 export type Scope = 'type' | 'block';
 export type RowStatus = 'ok' | 'warning' | 'error';
@@ -38,6 +40,8 @@ export interface ReadOptions {
   existingPrompts?: string[];
   // Thư mục chứa ảnh/âm thanh: ghép với cột chỉ có tên file.
   mediaBase?: string;
+  // Khối mặc định của đề cho dòng Tự luận chấm AI không ghi Khối.
+  defaultLevel?: RubricLevel;
 }
 
 // ---------------------------------------------------------------- phân tích văn bản
@@ -112,7 +116,7 @@ const message = (level: RowMessage['level'], field: FieldId | string, text: stri
 
 // ---------------------------------------------------------------- dựng thẻ câu hỏi từ một dòng chuẩn
 
-interface BuildContext { defaultPoints: number, newGroupId: () => string, mediaBase?: string }
+interface BuildContext { defaultPoints: number, newGroupId: () => string, mediaBase?: string, defaultLevel?: RubricLevel }
 
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i;
 // Chỉ có tên file (không đường dẫn, không giao thức): cần thư mục để biết file nằm ở đâu.
@@ -253,6 +257,12 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
       return [{ prompt, interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', layoutType: 'split_pane_matching', graderType: 'exact_option', options: options.map(option => ({ id: option.letter, label: option.text })), expectedOptionId: letter, maxScore: points }];
     }
     case 'rubric_async': {
+      // Dòng có Dạng chấm là tự luận kiểu mới (theo Khối); quy tắc chấm do backend dựng lúc nhập.
+      if (clean(record.variant)) {
+        const built = buildRubricRow(record, { defaultLevel: ctx.defaultLevel });
+        messages.push(...built.messages);
+        return built.card ? [built.card] : [];
+      }
       const context = clean(record.context);
       const half = Math.round((points / 2) * 10) / 10;
       const criteria = [
@@ -260,7 +270,7 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
         { id: 'crit_2', label: clean(record.criterion2) || 'Ngữ pháp & Diễn đạt', maxScore: Math.round((points - half) * 10) / 10, requiredConcepts: [] as string[] }
       ];
       const preset = clean(record.legacyPreset);
-      if (preset) messages.push(message('warning', 'legacyPreset', `Mã mẫu chấm cũ "${preset}" chỉ còn giá trị tham khảo.`, 'Tự luận chấm AI kiểu mới (theo Khối) sẽ có cột riêng ở giai đoạn sau.'));
+      if (preset) messages.push(message('warning', 'legacyPreset', `Mã mẫu chấm cũ "${preset}" chỉ còn giá trị tham khảo.`, 'Dùng cột Dạng chấm và Khối để chấm theo từng Khối (xem hướng dẫn).'));
       return [{ prompt, referenceContext: context, helpText: context, interactionType: 'long_text', pedagogicalTypeCode: 'writing', layoutType: 'default', graderType: 'rubric_async', maxScore: points, rubricCode: 'rubric_async_custom', rubricVersion: 1, rubric: { scoringVersion: 'rubric_async_custom', maxScore: points, criteria } }];
     }
     default:
@@ -358,9 +368,9 @@ function convertLegacyMatching(rows: { cells: string[], line: number }[]): { rec
 const defaultGroupId = (): string => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
 
 // Dựng câu hỏi từ MỘT bản ghi nhập tay (form "Từng câu"): cùng quy tắc kiểm tra và cùng thẻ câu hỏi như đọc file.
-export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string } = {}): { status: RowStatus, messages: RowMessage[], cards: ImportCardOut[] } {
+export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string, defaultLevel?: RubricLevel } = {}): { status: RowStatus, messages: RowMessage[], cards: ImportCardOut[] } {
   const messages: RowMessage[] = [];
-  const ctx: BuildContext = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase };
+  const ctx: BuildContext = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase, defaultLevel: options.defaultLevel };
   const cards = buildCards(record, TYPE_BY_CODE[typeCode], ctx, messages);
   if (cards.length && typeCode !== 'listening_order') {
     const key = normalizePrompt(typeCode === 'pictorial_vocabulary' ? record.correct : record.prompt);
@@ -377,7 +387,7 @@ export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, option
 }
 
 // Đọc một danh sách bản ghi (bảng nhập hàng loạt đã sửa) bằng đúng bộ đọc của file.
-export function readRecords(typeCode: TypeCode, records: ImportRecord[], options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string } = {}): ReadResult {
+export function readRecords(typeCode: TypeCode, records: ImportRecord[], options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string, defaultLevel?: RubricLevel } = {}): ReadResult {
   const columns = COLUMNS.map(column => column.id).filter(id => TYPE_BY_CODE[typeCode].columns.includes(id));
   return readImport(recordsToCsv(records, columns), { scope: 'type', typeCode, ...options });
 }
@@ -393,7 +403,8 @@ export function readImport(rawText: string, options: ReadOptions): ReadResult {
   const ctx: BuildContext = {
     defaultPoints: options.defaultPoints || 0,
     newGroupId: options.newGroupId || (() => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`),
-    mediaBase: options.mediaBase
+    mediaBase: options.mediaBase,
+    defaultLevel: options.defaultLevel
   };
 
   const first = lines[0].cells;
