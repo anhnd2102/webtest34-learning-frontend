@@ -12,14 +12,9 @@ import {
 import {
   escapeHtml
 } from '../ui/presentation.js';
-import {
-  generateBlockExercisesTemplateCsv,
-  parseBlockExercisesCsv,
-  generateInlineClozeTemplateCsv,
-  parseInlineClozeCsv,
-  generateMultiGroupTemplateCsv,
-  parseMultiGroupCsv
-} from './content-import.js';
+import { blockTemplateCsv, readImport, typeTemplateCsv } from './import-engine.js';
+import { importErrorsCsv, importPreviewHtml, typeColumnsHint, typePlaceholder } from './import-preview.js';
+import type { ReadResult } from './import-engine.js';
 
 declare const XLSX: any;
 
@@ -76,6 +71,19 @@ export function parseUploadedFileToCsv(file: File, callback: (error: Error | nul
     reader.onerror = () => callback(new Error('Lỗi khi đọc file CSV từ thiết bị.'));
     reader.readAsText(file, 'utf-8');
   }
+}
+
+// Tải một chuỗi CSV về máy (dùng cho mẫu và danh sách lỗi).
+function downloadCsvText(csvContent: string, fileName: string): void {
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 export interface BatchModalArgs { count: number, modal: HTMLElement, defaultPoints?: number, [key: string]: any }
@@ -350,18 +358,11 @@ export function openGenericBatchModal({
     }
 
     const downloadBtn = modal.querySelector<HTMLElement>('.btn-download-template');
-    if (downloadBtn && typeof csvConfig.getTemplateCsv === 'function') {
+    if (downloadBtn && (csvConfig.typeCode || typeof csvConfig.getTemplateCsv === 'function')) {
       downloadBtn.addEventListener('click', () => {
-        const csvContent = csvConfig.getTemplateCsv();
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', csvConfig.templateFileName || 'mau_cau_hoi.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        // Dạng đã khai typeCode dùng bộ cột thống nhất; cấu hình cũ (không typeCode) giữ mẫu riêng.
+        const csvContent = csvConfig.typeCode ? typeTemplateCsv(csvConfig.typeCode) : csvConfig.getTemplateCsv();
+        downloadCsvText(csvContent, csvConfig.templateFileName || 'mau_cau_hoi.csv');
       });
     }
 
@@ -378,10 +379,18 @@ export function openGenericBatchModal({
         return;
       }
 
+      previewBox.hidden = false;
+      if (csvConfig.typeCode) {
+        // Bộ đọc thống nhất: bảng trạng thái từng dòng; chỉ dòng Hợp lệ/Cảnh báo được nhập.
+        const read: ReadResult = readImport(val, { scope: 'type', typeCode: csvConfig.typeCode, defaultPoints: getSafePoints() });
+        parsedItems = read.cards;
+        previewBox.innerHTML = importPreviewHtml(read);
+        previewBox.querySelector('.btn-download-import-errors')?.addEventListener('click', () => downloadCsvText(importErrorsCsv(read), 'loi_nhap_file.csv'));
+        return;
+      }
       const parseFn = typeof csvConfig.parseCsv === 'function' ? csvConfig.parseCsv : () => ({ items: [] });
       const parsed = parseFn(val);
       parsedItems = parsed.items || [];
-      previewBox.hidden = false;
 
       if (parsedItems.length === 0) {
         previewBox.innerHTML = `<span class="generic-layout-error">Chưa tìm thấy câu hỏi hợp lệ nào. Vui lòng kiểm tra lại cấu trúc cột hoặc bấm “Tải file mẫu CSV” để xem định dạng chuẩn.</span>`;
@@ -772,6 +781,7 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
   modal.className = 'candidate-sim-overlay block-csv-modal-overlay';
 
   const blockTitle = (block?.title || `Phần ${blockIdx + 1}`).trim();
+  const blockHeaderLine = blockTemplateCsv().replace(/^\uFEFF/, '').split(/\r?\n/)[0].split(',').join(', ');
 
   modal.innerHTML = `
     <div class="candidate-sim-modal block-csv-modal csv-layout-upload-dialog" role="dialog" aria-modal="true">
@@ -782,7 +792,7 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
             <span>Nhập CSV các bài tập vào ${escapeHtml(blockTitle)}</span>
           </h3>
           <p class="csv-layout-subtitle">
-            Tải lên file CSV gộp 7 cột đa năng để tạo hàng loạt bài tập và câu hỏi cho Phần này.
+            Tải lên một file CSV/Excel để tạo hàng loạt bài tập và câu hỏi cho Phần này. Cột giống hệt file của từng dạng, thêm ba cột đầu: Bài tập, Hướng dẫn bài tập, Dạng câu.
           </p>
         </div>
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-modal" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
@@ -790,11 +800,11 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
 
       <div class="modal-body csv-layout-upload-body">
         <div class="csv-layout-schema-panel">
-          <div class="csv-layout-schema-title">Cấu trúc 7 cột chuẩn hóa:</div>
+          <div class="csv-layout-schema-title">Các cột của file Phần thi:</div>
           <code class="csv-layout-schema-code">
-            Exercise_Title, Exercise_Instructions, Question_Type, Prompt, Correct_Answer, Options_Or_Details, Score
+            ${escapeHtml(blockHeaderLine)}
           </code>
-          <div>Hỗ trợ: <em>single_choice, multi_select_group, inline_cloze, fitb, vocabulary_pair, error_correction, sentence_transformation, sentence_reorder, listening_order, pictorial_vocabulary, pronunciation_choice, rubric_async</em>.</div>
+          <div>Cột không dùng cho dạng câu đó thì để trống. File theo mẫu cũ (7 cột) vẫn nhập được và được tự chuyển đổi.</div>
         </div>
 
         <div class="csv-layout-file-actions">
@@ -815,7 +825,7 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
 
         <div class="form-group csv-layout-field">
           <label class="form-label csv-layout-field-label">Hoặc dán nội dung CSV vào đây:</label>
-          <textarea class="form-control block-csv-textarea csv-layout-textarea" rows="6" placeholder="Dán nội dung CSV theo 7 cột vào đây..."></textarea>
+          <textarea class="form-control block-csv-textarea csv-layout-textarea" rows="6" placeholder="Dán nội dung CSV (có hàng tiêu đề) vào đây..."></textarea>
         </div>
 
         <div class="form-group csv-layout-mode-panel">
@@ -874,14 +884,7 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
   });
 
   downloadBtn?.addEventListener('click', () => {
-    const csvContent = generateBlockExercisesTemplateCsv();
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', 'mau_cac_bai_tap_trong_phan.csv');
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    downloadCsvText(blockTemplateCsv(), 'mau_cac_bai_tap_trong_phan.csv');
   });
 
   let parsedData: any = null;
@@ -896,13 +899,15 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
       return;
     }
 
-    parsedData = parseBlockExercisesCsv(raw);
+    const read: ReadResult = readImport(raw, { scope: 'block' });
+    parsedData = { exercises: read.exercises.filter(exercise => exercise.items.length) };
     const exCount = parsedData.exercises.length;
     const totalItems = parsedData.exercises.reduce((s: number, ex: any) => s + (ex.items?.length || 0), 0);
 
     if (totalItems === 0) {
       errorBox.hidden = false;
-      errorBox.innerHTML = '<strong>Không nhận diện được câu hỏi nào hợp lệ!</strong> Vui lòng kiểm tra định dạng các cột.';
+      errorBox.innerHTML = `<strong>Không nhận diện được câu hỏi nào hợp lệ!</strong> Vui lòng kiểm tra định dạng các cột.${read.summary.total ? importPreviewHtml(read) : ''}`;
+      errorBox.querySelector('.btn-download-import-errors')?.addEventListener('click', () => downloadCsvText(importErrorsCsv(read), 'loi_nhap_file.csv'));
       previewBox.hidden = true;
       confirmBtn.disabled = true;
       return;
@@ -916,8 +921,9 @@ export function openBlockCsvUploadModal(opts: Record<string, any> = {}) {
     parsedData.exercises.forEach((ex: any) => {
       html += `<li><strong>${escapeHtml(ex.title)}:</strong> ${ex.items.length} câu hỏi <em>(${escapeHtml(ex.instructions || 'Không có hướng dẫn')})</em></li>`;
     });
-    html += '</ul>';
+    html += `</ul>${importPreviewHtml(read)}`;
     previewBox.innerHTML = html;
+    previewBox.querySelector('.btn-download-import-errors')?.addEventListener('click', () => downloadCsvText(importErrorsCsv(read), 'loi_nhap_file.csv'));
   }
 
   if (triggerFileBtn && fileInput) {
@@ -1011,10 +1017,9 @@ export function openMultiGroupBatchModal(opts: Record<string, any> = {}) {
     defaultPoints: 2,
     csvConfig: {
       templateFileName: 'mau_cau_hoi_multi_group.csv',
-      columnsHint: 'Question_Prompt, Correct_Options, All_Options, Score',
-      placeholder: '"Which TWO activities are free of charge?","A, C","Swimming pool | Tennis court | Fitness center | Sauna | Yoga class",2',
-      getTemplateCsv: generateMultiGroupTemplateCsv,
-      parseCsv: parseMultiGroupCsv,
+      typeCode: 'multi_select_group',
+      columnsHint: typeColumnsHint('multi_select_group'),
+      placeholder: typePlaceholder('multi_select_group'),
       renderPreviewRow: (item: any, idx: any) => `
         <div class="batch-preview-row-text">
           <strong>Vị trí ${idx + 1}:</strong> ${escapeHtml(item.prompt)} 
@@ -1053,10 +1058,9 @@ export function openInlineClozeBatchModal(opts: Record<string, any> = {}) {
     defaultPoints: 1,
     csvConfig: {
       templateFileName: 'mau_cau_hoi_inline_cloze.csv',
-      columnsHint: 'Prompt, Answers, Points',
-      placeholder: '"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,1',
-      getTemplateCsv: generateInlineClozeTemplateCsv,
-      parseCsv: parseInlineClozeCsv,
+      typeCode: 'inline_cloze',
+      columnsHint: typeColumnsHint('inline_cloze'),
+      placeholder: typePlaceholder('inline_cloze'),
       renderPreviewRow: (item: any, idx: any) => `
         <div class="batch-preview-row-text">
           <strong>Đoạn ${idx + 1}:</strong> ${escapeHtml(item.prompt.slice(0, 80))}... 

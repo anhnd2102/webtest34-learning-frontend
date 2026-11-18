@@ -4,7 +4,7 @@ import type { AuthoringHost, DraftExercise } from '../draft-model.js';
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
-import { generatePronunciationTemplateCsv, parsePronunciationCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { formatIpaTranscription } from '.././question-content.js';
 
@@ -79,10 +79,9 @@ function createBatchPronunciation(bIdx: number, targetEx: DraftExercise, count =
           maxCount: 50,
           csvConfig: {
             templateFileName: 'mau_phat_am_ipa.csv',
-            columnsHint: 'Cột: Từ/Đề bài | Lựa chọn A | Lựa chọn B | Lựa chọn C | Lựa chọn D | Đáp án đúng | Điểm',
-            placeholder: 'camera,/ˈkæm.ər.ə/,/kəˈmɪər.ə/,/ˈkæm.eɪ.rə/,,A,1\ngenerous,/ˈdʒen.ər.əs/,/dʒəˈner.əs/,/ˈdʒen.eɪ.rəs/,,A,1',
-            getTemplateCsv: generatePronunciationTemplateCsv,
-            parseCsv: parsePronunciationCsv,
+            typeCode: 'pronunciation_choice',
+            columnsHint: typeColumnsHint('pronunciation_choice'),
+            placeholder: typePlaceholder('pronunciation_choice'),
             renderPreviewRow: (itm: any, idx: any) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId)}</em> (${itm.options.length} phương án, ${itm.maxScore}đ)`,
             onImport: (items: any, { defaultPoints = 1 } = {}) => {
               const startingPos = getNextPosition();

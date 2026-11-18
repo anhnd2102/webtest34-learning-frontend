@@ -5,7 +5,7 @@ import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
-import { generateErrorCorrectionTemplateCsv, parseErrorCorrectionCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { expandSentenceVariants } from '.././question-content.js';
 
 export function bindErrorCorrectionAuthoring({ container, draftState, builderOwner, actions }: AuthoringHost) {
@@ -72,10 +72,9 @@ function createBatchErrorCorrection(bIdx: number, targetEx: DraftExercise, count
           maxCount: 50,
           csvConfig: {
             templateFileName: 'mau_tim_sua_loi_sai.csv',
-            columnsHint: 'Cột: Đề bài câu | Từ/cụm từ lỗi | Các đáp án sửa đúng (|) | Giải thích',
-            placeholder: 'She do not like swimming in cold weather.,do,does|doesn\'t,Chủ ngữ số ít đi với does\nI have seen him yesterday morning.,have seen,saw,Hành động có mốc thời gian quá khứ',
-            getTemplateCsv: generateErrorCorrectionTemplateCsv,
-            parseCsv: parseErrorCorrectionCsv,
+            typeCode: 'error_correction',
+            columnsHint: typeColumnsHint('error_correction'),
+            placeholder: typePlaceholder('error_correction'),
             renderPreviewRow: (itm: any, idx: any) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Lỗi: <span style="color:#ef4444;text-decoration:line-through;">${escapeHtml(itm.targetWord)}</span> → <span style="color:#10b981;">${escapeHtml(itm.accepted[0] || '')}</span>]`,
             onImport: (items: any) => {
               const startingPos = getNextPosition();

@@ -5,7 +5,7 @@ import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise, parseClozeBlanks, getItemSpanCount } from '.././draft-model.js';
 import { openGenericBatchModal, openInlineClozeBatchModal } from '.././batch-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
-import { generateFitbTemplateCsv, parseFitbCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { expandSentenceVariants } from '.././question-content.js';
 
 export function bindShortAnswerAuthoring({ container, draftState, builderOwner, actions }: AuthoringHost) {
@@ -76,10 +76,9 @@ function createBatchFitb(bIdx: number, targetEx: DraftExercise, count = 1, defau
         defaultPoints: 1.0,
         csvConfig: {
           templateFileName: 'mau_dien_o_trong.csv',
-          columnsHint: 'Cột: Đề bài | Đáp án đúng | Điểm',
-          placeholder: 'The capital of France is ___.,Paris,1\nWater freezes at ___ degrees Celsius.,0,1\nThe Sun rises in the ___.,east,1',
-          getTemplateCsv: generateFitbTemplateCsv,
-          parseCsv: parseFitbCsv,
+          typeCode: 'fitb',
+          columnsHint: typeColumnsHint('fitb'),
+          placeholder: typePlaceholder('fitb'),
           renderPreviewRow: (itm: any, idx: any) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.targetAnswer)}</em> (${itm.maxScore || 1} điểm)`,
           onImport: (items: any, { defaultPoints = 1 } = {}) => {
             const startingPos = getNextPosition();

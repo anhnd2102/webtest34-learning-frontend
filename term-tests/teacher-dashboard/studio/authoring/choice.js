@@ -2,7 +2,7 @@ import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { openGenericBatchModal, openMultiGroupBatchModal } from '.././batch-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
-import { generateSingleChoiceTemplateCsv, parseSingleChoiceCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 export function bindChoiceAuthoring({ container, draftState, builderOwner, actions }) {
     const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
     function createBatchSingleChoice(bIdx, targetEx, count = 1, optionCount = 4, defaultPoints = 1) {
@@ -74,10 +74,9 @@ export function bindChoiceAuthoring({ container, draftState, builderOwner, actio
             defaultPoints: 1.0,
             csvConfig: {
                 templateFileName: 'mau_trac_nghiem_don.csv',
-                columnsHint: 'Cột: Đề bài | Phương án A | B | C | D | Đáp án đúng | Giải thích | Điểm',
-                placeholder: 'The cruise departs ___ Miami.,at,from,on,in,B,Cụm từ depart from,1\nShe is interested ___ marine life.,in,at,on,,A,Interested in,1',
-                getTemplateCsv: generateSingleChoiceTemplateCsv,
-                parseCsv: parseSingleChoiceCsv,
+                typeCode: 'single_choice',
+                columnsHint: typeColumnsHint('single_choice'),
+                placeholder: typePlaceholder('single_choice'),
                 renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} — <em>Đáp án: ${escapeHtml(itm.expectedOptionId.toUpperCase().replace('OPT_', ''))}</em> (${itm.options.length} phương án, ${itm.maxScore || 1} điểm)`,
                 onImport: (items, { defaultPoints = 1 } = {}) => {
                     const startingPos = getNextPosition();

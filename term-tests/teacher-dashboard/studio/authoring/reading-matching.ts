@@ -2,7 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import type { AuthoringHost, DraftExercise } from '../draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
-import { generateReadingMatchingTemplateCsv, parseReadingMatchingCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
@@ -27,10 +27,9 @@ export function bindReadingMatchingAuthoring({ container, draftState, builderOwn
           maxCount: 20,
           csvConfig: {
             templateFileName: 'mau_ghep_noi_doan_van.csv',
-            columnsHint: 'Cột: Tên đoạn văn (Paragraph_Label) | Mã Heading | Nội dung Heading | Đáp án đúng (true/false) | Điểm',
-            placeholder: 'Paragraph A,i,The spy in the sky,true,1\nParagraph A,ii,The spread of technology,false,0\nParagraph B,ii,The spread of technology,true,1',
-            getTemplateCsv: generateReadingMatchingTemplateCsv,
-            parseCsv: parseReadingMatchingCsv,
+            typeCode: 'reading_matching',
+            columnsHint: typeColumnsHint('reading_matching'),
+            placeholder: typePlaceholder('reading_matching'),
             renderPreviewRow: (itm: any, idx: any) => `<strong>${escapeHtml(itm.prompt)}:</strong> Đáp án mã <em>${escapeHtml(itm.expectedOptionId)}</em> (${itm.options.length} headings, ${itm.maxScore}đ)`,
             onImport: (items: any, { defaultPoints = 1 } = {}) => {
               const startingPos = getNextPosition();

@@ -2,7 +2,7 @@ import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { openGenericBatchModal } from '.././batch-import.js';
-import { generatePictorialVocabTemplateCsv, parsePictorialVocabCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { generateHangmanHint, expandSentenceVariants } from '.././question-content.js';
 import { convertGoogleDriveImageUrl } from '.././media.js';
 export function bindPictorialAuthoring({ container, draftState, builderOwner, actions }) {
@@ -25,10 +25,9 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
                 maxCount: 50,
                 csvConfig: {
                     templateFileName: 'mau_tu_vung_qua_anh.csv',
-                    columnsHint: 'Cột: Đường dẫn ảnh (Image_URL) | Từ vựng (Target_Word) | Nghĩa tiếng Việt | Biến thể (|) | Điểm',
-                    placeholder: 'assets/test 1/vocabulary/image1.png,apple,quả táo,an apple|the apple,1\nassets/test 1/vocabulary/image2.png,camera,máy ảnh,a camera,1',
-                    getTemplateCsv: generatePictorialVocabTemplateCsv,
-                    parseCsv: parsePictorialVocabCsv,
+                    typeCode: 'pictorial_vocabulary',
+                    columnsHint: typeColumnsHint('pictorial_vocabulary'),
+                    placeholder: typePlaceholder('pictorial_vocabulary'),
                     renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> [Ảnh: ${escapeHtml(itm.image)}] <strong>${escapeHtml(itm.targetWord)}</strong> (${escapeHtml(itm.captionHint || '')})`,
                     onImport: (items, { defaultPoints = 1 } = {}) => {
                         const startingPos = getNextPosition();

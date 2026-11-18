@@ -153,6 +153,15 @@ export function bindBlockCsvImport({ container, builderOwner, draftState, markAs
                     accepted: parsedItem.accepted || [itmObj.targetWord || ''],
                     normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
                   };
+                } else if (parsedItem.graderType === 'unordered_group_slot') {
+                  // Trắc nghiệm chọn nhiều: các ô trả lời cùng nhóm dùng chung bộ đáp án đúng (trước đây rơi vào nhánh mặc định và mất đáp án).
+                  const expectedIds = parsedItem.expectedOptionIds || [];
+                  itmObj.groupId = parsedItem.groupId;
+                  draftState.gradingKey.groups = draftState.gradingKey.groups || {};
+                  if (parsedItem.groupId && !draftState.gradingKey.groups[parsedItem.groupId]) {
+                    draftState.gradingKey.groups[parsedItem.groupId] = { graderType: 'unordered_group_slot', expectedOptionIds: expectedIds };
+                  }
+                  draftState.gradingKey.items[newItemId] = { graderType: 'unordered_group_slot', groupId: parsedItem.groupId, expectedOptionIds: expectedIds };
                 } else if (parsedItem.graderType === 'correction_pair' || parsedItem.pedagogicalTypeCode === 'error_correction' || parsedItem.interactionType === 'correction_pair') {
                   const errs = itmObj.expectedErrors || (parsedItem.targetWord ? [parsedItem.targetWord] : ['error']);
                   const corrs = itmObj.expectedCorrections || (parsedItem.accepted && parsedItem.accepted.length ? parsedItem.accepted : ['correction']);

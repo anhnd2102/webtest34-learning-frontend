@@ -3,7 +3,7 @@ import { createWizardState, draftFromItem, itemsFromWizard, sharedContextFromBlo
 import { renderSvgIcon } from '../../ui/icons.js';
 import { findPrecedingClozeScript } from '../draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
-import { generateRubricAsyncTemplateCsv, parseRubricAsyncCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
@@ -100,10 +100,9 @@ export function bindRubricAuthoring({ container, draftState, builderOwner, actio
           `,
                     csvConfig: {
                         templateFileName: 'mau_tu_luan_cham_ai.csv',
-                        columnsHint: 'Cột: Đề bài câu hỏi | Ngữ cảnh tham chiếu (nếu có) | Điểm tối đa | Loại rubric | Tiêu chí 1 | Tiêu chí 2',
-                        placeholder: '"Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.",,4,translation,"Độ chính xác ý nghĩa (2đ)","Cấu trúc ngữ pháp (2đ)"\n"Từ \"innovative\" ở dòng 3 có nghĩa là gì?","Đoạn trích thông tin bài đọc...",4,comprehension,"Mức độ hiểu nội dung (2.8đ)","Từ khóa cốt lõi (1.2đ)"',
-                        getTemplateCsv: generateRubricAsyncTemplateCsv,
-                        parseCsv: parseRubricAsyncCsv,
+                        typeCode: 'rubric_async',
+                        columnsHint: typeColumnsHint('rubric_async'),
+                        placeholder: typePlaceholder('rubric_async'),
                         renderPreviewRow: (itm, idx) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} (${itm.maxScore} điểm)`,
                         onImport: (items, { defaultPoints = 4 } = {}) => {
                             const startingPos = getNextPosition();
