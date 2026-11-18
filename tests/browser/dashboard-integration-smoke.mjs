@@ -49,6 +49,7 @@ try {
       if (process.env.SMOKE_ROOT_ONLY === '1' && prefix) continue;
       if (captureOnly && prefix) continue;
       const page = await browser.newPage({ viewport, hasTouch: process.env.SMOKE_TOUCH === '1', reducedMotion: 'reduce', locale: 'vi-VN', timezoneId: 'Asia/Ho_Chi_Minh' });
+      await page.addInitScript(() => { const openShortcuts = () => document.querySelectorAll('.add-item-shortcuts').forEach(details => { details.open = true; }); new MutationObserver(openShortcuts).observe(document, { childList: true, subtree: true }); });
       page.setDefaultTimeout(10000);
       const errors = [];
       const modules = [];

@@ -59,6 +59,7 @@ try {
   importantAudit?.attach(browser);
   for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
     const page = await browser.newPage({ viewport, reducedMotion: 'reduce', locale: 'vi-VN', timezoneId: 'Asia/Ho_Chi_Minh' });
+    await page.addInitScript(() => { const openShortcuts = () => document.querySelectorAll('.add-item-shortcuts').forEach(details => { details.open = true; }); new MutationObserver(openShortcuts).observe(document, { childList: true, subtree: true }); });
     page.setDefaultTimeout(10000);
     const errors = [];
     page.on('pageerror', e => { errors.push(e.message); if (process.env.TOGGLE_DEBUG) console.error('PAGEERROR', e.message); });

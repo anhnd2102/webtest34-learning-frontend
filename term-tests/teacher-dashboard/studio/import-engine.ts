@@ -323,6 +323,29 @@ function convertLegacyMatching(rows: { cells: string[], line: number }[]): { rec
   return out;
 }
 
+// ---------------------------------------------------------------- dựng từ bản ghi (form từng câu, bảng hàng loạt)
+
+const defaultGroupId = (): string => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+
+// Dựng câu hỏi từ MỘT bản ghi nhập tay (form "Từng câu"): cùng quy tắc kiểm tra và cùng thẻ câu hỏi như đọc file.
+export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, options: { defaultPoints?: number, newGroupId?: () => string } = {}): { status: RowStatus, messages: RowMessage[], cards: ImportCardOut[] } {
+  const messages: RowMessage[] = [];
+  const ctx: BuildContext = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId };
+  const cards = buildCards(record, TYPE_BY_CODE[typeCode], ctx, messages);
+  const status: RowStatus = messages.some(item => item.level === 'error') ? 'error' : (messages.length ? 'warning' : 'ok');
+  if (status === 'error') return { status, messages, cards: [] };
+  const exercise: ImportExercise = { title: '', instructions: '', items: cards };
+  finalizeVocabulary(exercise);
+  finalizeListening(exercise);
+  return { status, messages, cards: exercise.items };
+}
+
+// Đọc một danh sách bản ghi (bảng nhập hàng loạt đã sửa) bằng đúng bộ đọc của file.
+export function readRecords(typeCode: TypeCode, records: ImportRecord[], options: { defaultPoints?: number, newGroupId?: () => string } = {}): ReadResult {
+  const columns = COLUMNS.map(column => column.id).filter(id => TYPE_BY_CODE[typeCode].columns.includes(id));
+  return readImport(recordsToCsv(records, columns), { scope: 'type', typeCode, ...options });
+}
+
 // ---------------------------------------------------------------- bộ đọc chính
 
 export function readImport(rawText: string, options: ReadOptions): ReadResult {

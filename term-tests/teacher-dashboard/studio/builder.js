@@ -1,6 +1,7 @@
 // NGUỒN: file .ts này; builder.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { bindChoiceAuthoring } from './authoring/choice.js';
+import { bindAddQuestion } from './authoring/add-question.js';
 import { bindShortAnswerAuthoring } from './authoring/short-answer.js';
 import { bindReadingMatchingAuthoring } from './authoring/reading-matching.js';
 import { bindListeningOrderAuthoring } from './authoring/listening-order.js';
@@ -407,7 +408,12 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
               ${renderExerciseItems(block, blockIdx, ex, exIdx)}
             </div>
             <div class="exercise-add-item-bar block-add-item-bar">
-              <span class="add-item-caption">+ Thêm câu hỏi vào Exercise ${ex.exerciseNumber || (exIdx + 1)}:</span>
+              <button type="button" class="btn btn-primary btn-sm btn-add-question" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
+                ${renderSvgIcon('plusCircle', 'icon-inline')} <span>Thêm câu hỏi</span>
+              </button>
+              <span class="add-item-caption">Từng câu, hàng loạt hoặc tải CSV/Excel — mọi dạng câu.</span>
+              <details class="add-item-shortcuts">
+              <summary>Lối tắt theo dạng</summary>
               <div class="add-item-buttons">
                 <button type="button" class="btn btn-secondary btn-sm btn-add-listening-order" data-block-idx="${blockIdx}" data-exercise-idx="${exIdx}" data-exercise-id="${ex.exerciseId}">
                   + Sắp xếp thứ tự nghe (Listening Order)
@@ -440,6 +446,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
                   + Tự luận chấm AI (AI Rubric)
                 </button>
               </div>
+              </details>
             </div>
           </div>
         </div>
@@ -874,6 +881,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
         bindExerciseActions({ container, builderOwner, draftState, markAsDirty, setActiveBlockIdx, resolveTargetExercise, resequenceItemPositions, render, syncInputs });
         bindAudioPreviewActions({ container, render });
         bindBlockNavigationActions({ container, draftState, markAsDirty, setActiveBlockIdx, render, jumpToBlock, syncInputs, getNextPosition, options });
+        bindAddQuestion(authoringHost);
         bindChoiceAuthoring(authoringHost);
         bindShortAnswerAuthoring(authoringHost);
         bindReadingMatchingAuthoring(authoringHost);

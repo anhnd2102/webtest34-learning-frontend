@@ -33,6 +33,7 @@ try {
   });
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'vi-VN' });
+  await page.addInitScript(() => { const openShortcuts = () => document.querySelectorAll('.add-item-shortcuts').forEach(details => { details.open = true; }); new MutationObserver(openShortcuts).observe(document, { childList: true, subtree: true }); });
   page.setDefaultTimeout(10000);
   const errors = [];
   const confirms = [];
