@@ -4,7 +4,8 @@
 // và "cả Phần" (scope 'block'); tự nhận file mới (cột tiếng Việt) lẫn file cũ (mẫu từng dạng, mẫu 7 cột, tiêu đề tiếng Anh).
 // Không dừng ở lỗi đầu tiên: mỗi dòng có trạng thái Hợp lệ / Cảnh báo / Lỗi kèm số dòng, cột và cách sửa. Không đụng DOM.
 import { COLUMNS, COLUMN_LABEL, FIELD_NOTES, OPTION_FIELDS, OPTION_LETTERS, TYPES, TYPE_BY_CODE, isKnownHeader, resolveHeader, resolveTypeCode } from './import-registry.js';
-import { buildRubricRow } from './import-rubric.js';
+import { buildRubricRow, templateColumnsForVariant } from './import-rubric.js';
+import { resolveRubricVariant } from './import-rubric.js';
 // ---------------------------------------------------------------- phân tích văn bản
 const countOutsideQuotes = (line, char) => {
     let inside = false;
@@ -283,8 +284,8 @@ function buildCards(record, spec, ctx, messages) {
         }
         case 'rubric_async': {
             // Dòng có Dạng chấm là tự luận kiểu mới (theo Khối); quy tắc chấm do backend dựng lúc nhập.
-            if (clean(record.variant)) {
-                const built = buildRubricRow(record, { defaultLevel: ctx.defaultLevel });
+            if (clean(record.variant) || ctx.rubricVariant) {
+                const built = buildRubricRow(record, { defaultLevel: ctx.defaultLevel, defaultVariant: ctx.rubricVariant });
                 messages.push(...built.messages);
                 return built.card ? [built.card] : [];
             }
@@ -444,7 +445,7 @@ const defaultGroupId = () => `group_${Date.now().toString(36)}_${Math.random().t
 // Dựng câu hỏi từ MỘT bản ghi nhập tay (form "Từng câu"): cùng quy tắc kiểm tra và cùng thẻ câu hỏi như đọc file.
 export function buildFromRecord(typeCode, record, options = {}) {
     const messages = [];
-    const ctx = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase, defaultLevel: options.defaultLevel };
+    const ctx = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase, defaultLevel: options.defaultLevel, rubricVariant: options.rubricVariant };
     const cards = buildCards(record, TYPE_BY_CODE[typeCode], ctx, messages);
     if (cards.length && typeCode !== 'listening_order') {
         const key = normalizePrompt(typeCode === 'pictorial_vocabulary' ? record.correct : record.prompt);
@@ -478,7 +479,8 @@ export function readImport(rawText, options) {
         defaultPoints: options.defaultPoints || 0,
         newGroupId: options.newGroupId || (() => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`),
         mediaBase: options.mediaBase,
-        defaultLevel: options.defaultLevel
+        defaultLevel: options.defaultLevel,
+        rubricVariant: options.rubricVariant
     };
     const first = lines[0].cells;
     const headerFields = first.map(cell => resolveHeader(cell, options.typeCode));
@@ -670,8 +672,13 @@ export function blockColumnIds() {
 }
 // Mẫu một dạng = cột của dạng đó theo thứ tự chuẩn (đúng bộ cột cả Phần bỏ ba cột đầu và bỏ cột không dùng).
 export function typeTemplateRecords(typeCode) { return TYPE_BY_CODE[typeCode].examples.map(example => ({ ...example })); }
-export function typeTemplateCsv(typeCode) {
+export function typeTemplateCsv(typeCode, variant) {
     const spec = TYPE_BY_CODE[typeCode];
+    // Tự luận chấm AI theo một Dạng chấm: cột và ví dụ của đúng dạng đó.
+    if (typeCode === 'rubric_async' && variant) {
+        const records = typeTemplateRecords(typeCode).filter(record => resolveRubricVariant(String(record.variant ?? '')) === variant);
+        return recordsToCsv(records, templateColumnsForVariant(variant));
+    }
     const columns = [...COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id))];
     return recordsToCsv(typeTemplateRecords(typeCode), columns);
 }

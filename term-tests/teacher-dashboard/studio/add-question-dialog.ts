@@ -15,7 +15,8 @@ import { importErrorsCsv, importPreviewHtml } from './import-preview.js';
 import { QUICK_HINT, QUICK_TYPES, cardPreviewHtml, emptyRecord, formFields, pasteToRecords, quickTextToRecords, singleMode, typeChoices } from './add-question-model.js';
 import { COLUMN_LABEL, TYPE_BY_CODE } from './import-registry.js';
 import type { ImportRecord, TypeCode } from './import-registry.js';
-import type { RubricLevel } from './rubric-wizard-model.js';
+import type { RubricLevel, RubricVariant } from './rubric-wizard-model.js';
+import { RUBRIC_VARIANTS } from './import-rubric.js';
 
 export interface AddQuestionOptions {
   owner?: unknown;
@@ -45,6 +46,11 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
   document.getElementById('add-question-dialog')?.remove();
   const owner = options.owner ?? getActiveUnsavedChangesOwner();
   let typeCode: TypeCode | undefined = options.typeCode;
+  // Tự luận chấm AI: Dạng chấm và Khối chọn trước, rồi form/bảng/mẫu chỉ có cột của dạng đó.
+  let rubricVariant: RubricVariant | undefined;
+  let rubricLevel: RubricLevel = options.defaultLevel || '34';
+  // true: một file có nhiều Dạng chấm (cột Dạng chấm ghi từng dòng), giữ đủ cột.
+  let mixedRubric = false;
   let tab: 'single' | 'bulk' | 'file' = 'single';
   let defaultPoints = options.defaultPoints && options.defaultPoints > 0 ? options.defaultPoints : 0;
   let record: ImportRecord = {};
@@ -53,7 +59,8 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
   let attempted = false;
   let fileText = '';
   const existingPrompts = options.existingPrompts || [];
-  const readerOptions = () => ({ defaultPoints, existingPrompts, mediaBase: getMediaBase(), defaultLevel: options.defaultLevel });
+  const readerOptions = () => ({ defaultPoints, existingPrompts, mediaBase: getMediaBase(), defaultLevel: typeCode === 'rubric_async' && rubricVariant ? rubricLevel : options.defaultLevel, rubricVariant });
+  const needsRubricStep = (): boolean => typeCode === 'rubric_async' && !rubricVariant && !mixedRubric;
 
   const modal = document.createElement('div');
   modal.id = 'add-question-dialog';
@@ -68,15 +75,22 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
     return typeChoices().map(group => `<section class="aq-family"><h4>${escapeHtml(group.family)}</h4><div class="aq-type-grid">${group.types.map(type => `<button type="button" class="aq-type-btn" data-aq-type="${type.code}">${escapeHtml(type.label)}</button>`).join('')}</div></section>`).join('');
   }
 
+  function rubricStep(): string {
+    const cards = RUBRIC_VARIANTS.map(entry => `<button type="button" class="aq-variant-card" data-aq-variant="${entry.variant}"><strong>${escapeHtml(entry.label)}</strong><span>${escapeHtml(entry.hint)}</span></button>`).join('');
+    return `<section class="aq-rubric-step"><h4>Chọn dạng chấm</h4><div class="aq-variant-grid">${cards}</div>
+      <p class="aq-note-text">Chọn dạng chấm trước: form, bảng hàng loạt và file mẫu sẽ chỉ có các cột của dạng đó, và Khối chọn một lần cho cả lô.</p>
+      <div class="aq-rubric-links"><button type="button" class="btn btn-secondary btn-sm aq-rubric-wizard">Dùng trình hướng dẫn từng bước</button><button type="button" class="btn btn-secondary btn-sm aq-rubric-mixed">Một file có nhiều dạng chấm</button></div></section>`;
+  }
+
   function singlePanel(code: TypeCode): string {
-    const mode = singleMode(code);
+    const mode = singleMode(code, rubricVariant);
     if (mode === 'wizard') {
       return `<div class="aq-note"><p>Câu Tự luận chấm AI được tạo bằng trình hướng dẫn từng bước (chọn dạng chấm, Khối, yêu cầu bắt buộc).</p><button type="button" class="btn btn-primary btn-sm aq-open-wizard">Mở trình hướng dẫn</button></div>`;
     }
     if (mode === 'batch-only') {
       return `<div class="aq-note"><p>Dạng này cần nhập theo bộ (nhiều sự kiện cùng lúc). Hãy dùng tab <strong>Hàng loạt</strong> hoặc <strong>Tải CSV/Excel</strong>.</p></div>`;
     }
-    const fields = formFields(code).map(field => {
+    const fields = formFields(code, rubricVariant).map(field => {
       const control = field.multiline
         ? `<textarea class="form-control aq-field" data-aq-field="${field.id}" rows="3" placeholder="${escapeHtml(field.placeholder ? `Ví dụ: ${field.placeholder}` : '')}"></textarea>`
         : `<input type="text" class="form-control aq-field" data-aq-field="${field.id}" placeholder="${escapeHtml(field.placeholder ? `Ví dụ: ${field.placeholder}` : '')}" />`;
@@ -90,7 +104,7 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
     return `<div class="aq-bulk">
       <div class="aq-bulk-input">
         <label class="form-label"><strong>Dán nhiều dòng từ Excel / Google Sheets / Word</strong> (các ô cách nhau bằng tab; có hoặc không có hàng tiêu đề)</label>
-        <textarea class="form-control aq-paste" rows="4" placeholder="${escapeHtml(TYPE_BY_CODE[code].columns.map(id => COLUMN_LABEL[id] || id).join('\t'))}"></textarea>
+        <textarea class="form-control aq-paste" rows="4" placeholder="${escapeHtml(formFields(code, rubricVariant).map(field => field.label).join('\t'))}"></textarea>
         ${quick ? `<label class="form-label aq-quick-label"><strong>Hoặc gõ nhanh</strong> — ${escapeHtml(QUICK_HINT[code] || '')}</label><textarea class="form-control aq-quick" rows="4"></textarea>` : ''}
       </div>
       <div class="aq-grid-wrap"><div class="aq-grid-empty">Chưa có dòng nào. Dán hoặc gõ nhanh ở trên, bảng sẽ hiện ở đây để bạn sửa trước khi thêm.</div></div>
@@ -122,18 +136,18 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
         <button type="button" class="btn btn-icon btn-sm btn-ghost aq-close" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
       <div class="modal-body aq-body">
-        ${spec ? `<div class="aq-sticky"><div class="aq-chosen"><span><strong>${escapeHtml(spec.label)}</strong></span><button type="button" class="btn btn-secondary btn-sm aq-change-type">Đổi dạng</button><label class="aq-points">Điểm mặc định <input type="number" class="form-control aq-default-points" min="0.25" step="0.25" value="${pointsLabel()}" placeholder="${spec.defaultPoints}" /></label></div>
-        <div class="modal-batch-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" class="modal-batch-tab-btn${tab === id ? ' active' : ''}" aria-selected="${tab === id}" data-aq-tab="${id}">${label}</button>`).join('')}</div></div>
+        ${spec ? `<div class="aq-sticky"><div class="aq-chosen"><span><strong>${escapeHtml(spec.label)}</strong>${rubricVariant ? ` · ${escapeHtml(RUBRIC_VARIANTS.find(entry => entry.variant === rubricVariant)?.label || '')}` : ''}</span><button type="button" class="btn btn-secondary btn-sm aq-change-type">Đổi dạng</button>${typeCode === 'rubric_async' && (rubricVariant || mixedRubric) ? `<button type="button" class="btn btn-secondary btn-sm aq-change-variant">Đổi dạng chấm</button>` : ''}${rubricVariant ? `<label class="aq-points">Khối <select class="form-control aq-rubric-level">${(RUBRIC_VARIANTS.find(entry => entry.variant === rubricVariant)?.levels || ['34']).map(level => `<option value="${level}"${level === rubricLevel ? ' selected' : ''}>Khối ${level}</option>`).join('')}</select></label>` : ''}<label class="aq-points">Điểm mặc định <input type="number" class="form-control aq-default-points" min="0.25" step="0.25" value="${pointsLabel()}" placeholder="${spec.defaultPoints}" /></label></div>
+${needsRubricStep() ? '' : `<div class="modal-batch-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" class="modal-batch-tab-btn${tab === id ? ' active' : ''}" aria-selected="${tab === id}" data-aq-tab="${id}">${label}</button>`).join('')}</div>`}</div>
         ${typeCode === 'pictorial_vocabulary' ? `<div class="aq-media-row">${mediaBaseFieldHtml(getMediaBase())}</div>` : ''}
-        <div class="aq-panel" data-panel="single"${tab === 'single' ? '' : ' hidden'}>${singlePanel(typeCode as TypeCode)}</div>
+        ${needsRubricStep() ? rubricStep() : `<div class="aq-panel" data-panel="single"${tab === 'single' ? '' : ' hidden'}>${singlePanel(typeCode as TypeCode)}</div>
         <div class="aq-panel" data-panel="bulk"${tab === 'bulk' ? '' : ' hidden'}>${bulkPanel(typeCode as TypeCode)}</div>
-        <div class="aq-panel" data-panel="file"${tab === 'file' ? '' : ' hidden'}>${filePanel()}</div>` : typeStep()}
+        <div class="aq-panel" data-panel="file"${tab === 'file' ? '' : ' hidden'}>${filePanel()}</div>`}` : typeStep()}
       </div>
       <div class="candidate-sim-footer csv-layout-footer aq-footer">
         <span class="aq-added" aria-live="polite">${added ? `Đã thêm ${added} câu trong lần mở này.` : ''}</span>
         <div class="aq-footer-actions">
           <button type="button" class="btn btn-secondary aq-cancel">${added ? 'Xong' : 'Hủy'}</button>
-          ${spec ? `<button type="button" class="btn btn-secondary aq-save-next" data-aq-for="single">Lưu và thêm câu tiếp</button>
+          ${spec && !needsRubricStep() ? `<button type="button" class="btn btn-secondary aq-save-next" data-aq-for="single">Lưu và thêm câu tiếp</button>
           <button type="button" class="btn btn-primary aq-save" data-aq-for="single">${renderSvgIcon('check', 'icon-inline')} <span>Lưu</span></button>
           <button type="button" class="btn btn-primary aq-bulk-add" data-aq-for="bulk" hidden disabled>Thêm các dòng hợp lệ</button>
           <button type="button" class="btn btn-primary aq-file-add" data-aq-for="file" hidden disabled>Thêm các dòng hợp lệ</button>` : ''}
@@ -141,7 +155,7 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
       </div>
     </div>`;
     bind();
-    if (spec) { syncFooter(); if (tab === 'single') refreshSingle(); }
+    if (spec && !needsRubricStep()) { syncFooter(); if (tab === 'single') refreshSingle(); }
   }
 
   function syncFooter() {
@@ -149,19 +163,19 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
       const visible = button.getAttribute('data-aq-for') === tab;
       button.hidden = !visible;
     });
-    const single = typeCode ? singleMode(typeCode) : 'form';
+    const single = typeCode ? singleMode(typeCode, rubricVariant) : 'form';
     if (single !== 'form') modal.querySelectorAll<HTMLElement>('.aq-save, .aq-save-next').forEach(button => { (button as HTMLButtonElement).disabled = true; });
   }
 
   // ---- Từng câu
   function readForm(): ImportRecord {
-    const next: ImportRecord = emptyRecord(typeCode as TypeCode);
+    const next: ImportRecord = emptyRecord(typeCode as TypeCode, rubricVariant);
     modal.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('.aq-field').forEach(input => { next[input.getAttribute('data-aq-field') as keyof ImportRecord] = input.value; });
     return next;
   }
 
   function refreshSingle(): { ok: boolean, cards: ImportCardOut[] } {
-    if (!typeCode || singleMode(typeCode) !== 'form') return { ok: false, cards: [] };
+    if (!typeCode || singleMode(typeCode, rubricVariant) !== 'form') return { ok: false, cards: [] };
     record = readForm();
     const built = buildFromRecord(typeCode, record, readerOptions());
     const preview = modal.querySelector<HTMLElement>('.aq-preview');
@@ -215,7 +229,7 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
     const wrap = modal.querySelector<HTMLElement>('.aq-grid-wrap');
     if (!wrap || !typeCode) return;
     if (!bulkRecords.length) { wrap.innerHTML = '<div class="aq-grid-empty">Chưa có dòng nào. Dán hoặc gõ nhanh ở trên, bảng sẽ hiện ở đây để bạn sửa trước khi thêm.</div>'; paintBulkStatuses(); return; }
-    const fields = formFields(typeCode);
+    const fields = formFields(typeCode, rubricVariant);
     const head = `<th>#</th>${fields.map(field => `<th>${escapeHtml(field.label)}</th>`).join('')}<th>Trạng thái</th>`;
     const rows = bulkRecords.map((row, index) => `<tr><td>${index + 1}</td>${fields.map(field => `<td><input type="text" class="form-control aq-cell" data-aq-row="${index}" data-aq-col="${field.id}" value="${escapeHtml(String(row[field.id] ?? ''))}" aria-label="${escapeHtml(field.label)} dòng ${index + 1}" /></td>`).join('')}<td data-aq-status="${index}" class="aq-status"></td></tr>`).join('');
     wrap.innerHTML = `<div class="aq-table-scroll"><table class="aq-grid"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -246,11 +260,26 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
     modal.querySelector('.aq-cancel')?.addEventListener('click', close);
     modal.querySelectorAll<HTMLElement>('[data-aq-type]').forEach(button => button.addEventListener('click', () => {
       typeCode = button.getAttribute('data-aq-type') as TypeCode;
+      tab = 'single'; record = {}; bulkRecords = []; fileText = ''; attempted = false; rubricVariant = undefined; mixedRubric = false;
+      paint();
+      modal.querySelector<HTMLElement>('.aq-field')?.focus();
+    }));
+    modal.querySelector('.aq-change-type')?.addEventListener('click', () => { typeCode = undefined; rubricVariant = undefined; mixedRubric = false; paint(); });
+    modal.querySelector('.aq-change-variant')?.addEventListener('click', () => { rubricVariant = undefined; mixedRubric = false; record = {}; bulkRecords = []; fileText = ''; paint(); });
+    modal.querySelectorAll<HTMLElement>('[data-aq-variant]').forEach(button => button.addEventListener('click', () => {
+      rubricVariant = button.getAttribute('data-aq-variant') as RubricVariant;
+      const levels = RUBRIC_VARIANTS.find(entry => entry.variant === rubricVariant)?.levels || ['34'];
+      if (!levels.includes(rubricLevel)) rubricLevel = levels.includes('34') ? '34' : levels[0];
       tab = 'single'; record = {}; bulkRecords = []; fileText = ''; attempted = false;
       paint();
       modal.querySelector<HTMLElement>('.aq-field')?.focus();
     }));
-    modal.querySelector('.aq-change-type')?.addEventListener('click', () => { typeCode = undefined; paint(); });
+    modal.querySelector('.aq-rubric-wizard')?.addEventListener('click', () => { close(); options.onOpenWizard?.(); });
+    modal.querySelector('.aq-rubric-mixed')?.addEventListener('click', () => { mixedRubric = true; tab = 'file'; paint(); });
+    modal.querySelector<HTMLSelectElement>('.aq-rubric-level')?.addEventListener('change', event => {
+      rubricLevel = (event.target as HTMLSelectElement).value as RubricLevel;
+      if (tab === 'single') refreshSingle(); else if (tab === 'bulk') paintBulkStatuses(); else paintFile();
+    });
     modal.querySelector<HTMLInputElement>('.aq-default-points')?.addEventListener('input', event => {
       const value = Number((event.target as HTMLInputElement).value);
       defaultPoints = Number.isFinite(value) && value > 0 ? value : 0;
@@ -274,7 +303,7 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
     modal.querySelector('.aq-open-wizard')?.addEventListener('click', () => { close(); options.onOpenWizard?.(); });
 
     modal.querySelector<HTMLTextAreaElement>('.aq-paste')?.addEventListener('input', event => {
-      bulkRecords = pasteToRecords(typeCode as TypeCode, (event.target as HTMLTextAreaElement).value);
+      bulkRecords = pasteToRecords(typeCode as TypeCode, (event.target as HTMLTextAreaElement).value, rubricVariant);
       paintGrid();
     });
     modal.querySelector<HTMLTextAreaElement>('.aq-quick')?.addEventListener('input', event => {
@@ -292,7 +321,7 @@ export function openAddQuestionDialog(options: AddQuestionOptions): HTMLElement 
       close();
     });
 
-    modal.querySelector('.aq-download-template')?.addEventListener('click', () => downloadText(typeTemplateCsv(typeCode as TypeCode), `mau_${typeCode}.csv`));
+    modal.querySelector('.aq-download-template')?.addEventListener('click', () => downloadText(typeTemplateCsv(typeCode as TypeCode, rubricVariant), `mau_${typeCode}${rubricVariant ? `_${rubricVariant}` : ''}.csv`));
     modal.querySelector('.aq-open-guide')?.addEventListener('click', () => openCsvQuickGuideModal(owner, { focus: typeCode }));
     const fileInput = modal.querySelector<HTMLInputElement>('.aq-file-input');
     modal.querySelector('.aq-choose-file')?.addEventListener('click', () => fileInput?.click());
