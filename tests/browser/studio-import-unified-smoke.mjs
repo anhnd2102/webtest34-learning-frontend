@@ -125,6 +125,26 @@ try {
   const [download] = await Promise.all([page.waitForEvent('download'), page.locator('.btn-download-block-template').click()]);
   const text = await (await import('node:fs/promises')).readFile(await download.path(), 'utf8');
   assert.ok(text.startsWith('﻿Bài tập,Hướng dẫn bài tập,Dạng câu,Đề bài'));
+  // Trung tâm hướng dẫn: đủ 13 dạng, mở đúng dạng từ hộp thoại một dạng, Excel mẫu sinh lúc tải
+  await page.locator('#modal-block-csv-upload .btn-view-csv-guide').click();
+  const guide = page.locator('#modal-csv-quick-guide');
+  await guide.waitFor();
+  assert.equal(await guide.locator('[data-guide-type]').count(), 13);
+  const [excel] = await Promise.all([page.waitForEvent('download'), guide.locator('.btn-download-excel-template').click()]);
+  const fs = await import('node:fs/promises');
+  const vendor = await fs.readFile(new URL('../../term-tests/teacher-dashboard/vendor/xlsx.full.min.js', import.meta.url), 'utf8');
+  const XLSX = new Function('window', 'global', `${vendor}; return window.XLSX || global.XLSX;`)(globalThis, globalThis);
+  const workbook = XLSX.read(await fs.readFile(await excel.path()), { type: 'buffer' });
+  assert.equal(workbook.SheetNames[0], 'Phần thi');
+  assert.ok(workbook.SheetNames.includes('Thông tin Phần') && workbook.SheetNames.includes('Hướng dẫn'));
+  assert.equal(workbook.SheetNames.length, 16);
+  await guide.locator('.btn-close-guide').click();
+  await page.locator('#modal-block-csv-upload .btn-cancel-block-csv').click();
+  await page.locator('.btn-add-single-choice').first().click();
+  await page.locator('#generic-batch-modal .btn-view-csv-guide').click();
+  await guide.waitFor();
+  assert.equal(await guide.locator('.guide-type.is-focus').getAttribute('data-guide-type'), 'single_choice');
+  await guide.locator('.btn-close-guide-footer').click();
   assert.equal(errors.length, 0, errors.join('\n'));
   process.stdout.write(JSON.stringify({ status: 'passed', errors: 0 }) + '\n');
 } finally {

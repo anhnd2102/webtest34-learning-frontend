@@ -4,7 +4,7 @@
 // và "cả Phần" (scope 'block'); tự nhận file mới (cột tiếng Việt) lẫn file cũ (mẫu từng dạng, mẫu 7 cột, tiêu đề tiếng Anh).
 // Không dừng ở lỗi đầu tiên: mỗi dòng có trạng thái Hợp lệ / Cảnh báo / Lỗi kèm số dòng, cột và cách sửa. Không đụng DOM.
 import {
-  COLUMNS, COLUMN_LABEL, OPTION_FIELDS, OPTION_LETTERS, TYPES, TYPE_BY_CODE,
+  COLUMNS, COLUMN_LABEL, FIELD_NOTES, OPTION_FIELDS, OPTION_LETTERS, TYPES, TYPE_BY_CODE,
   isKnownHeader, resolveHeader, resolveTypeCode
 } from './import-registry.js';
 import type { FieldId, ImportRecord, TypeCode, TypeSpec } from './import-registry.js';
@@ -514,4 +514,40 @@ export function toLegacyResult(result: ReadResult): { items: ImportCardOut[], in
     items: result.cards,
     invalidRows: result.rows.filter(row => row.status === 'error').map(row => ({ line: row.line, row: Object.values(row.record).map(String), reason: row.messages.filter(m => m.level === 'error').map(m => `${m.column}: ${m.text}`).join(' ') }))
   };
+}
+
+// Excel mẫu (sinh lúc tải, không còn file nhị phân tĩnh): "Phần thi" đứng đầu để tải lên được ngay, "Thông tin Phần",
+// mỗi dạng một sheet có ví dụ điền sẵn, và "Hướng dẫn" liệt kê cột từng dạng. Dữ liệu thuần; ghi file ở lớp giao diện.
+export interface SheetData { name: string, rows: string[][] }
+
+const SHEET_FORBIDDEN = /[\\/?*[\]:]/g;
+const sheetName = (label: string, taken: Set<string>): string => {
+  let name = label.replace(SHEET_FORBIDDEN, ' ').replace(/\s+/g, ' ').trim().slice(0, 31);
+  let suffix = 2;
+  while (taken.has(name)) { const tail = ` ${suffix}`; name = `${label.slice(0, 31 - tail.length)}${tail}`; suffix += 1; }
+  taken.add(name);
+  return name;
+};
+const toRows = (records: ImportRecord[], columnIds: FieldId[]): string[][] => [columnIds.map(id => COLUMN_LABEL[id] || id), ...records.map(record => columnIds.map(id => clean(record[id])))];
+
+export function templateWorkbookSheets(): SheetData[] {
+  const taken = new Set<string>();
+  const sheets: SheetData[] = [];
+  sheets.push({ name: sheetName('Phần thi', taken), rows: toRows(blockTemplateRecords(), blockColumnIds()) });
+  sheets.push({ name: sheetName('Thông tin Phần', taken), rows: [
+    ['Tiêu đề', 'Hướng dẫn', 'Bài đọc', 'Audio'],
+    ['Phần 1: Reading', 'Đọc bài đọc rồi trả lời các câu hỏi.', 'Dán bài đọc dài của Phần vào đây (tùy chọn).', 'bai-nghe-1.mp3']
+  ] });
+  for (const spec of TYPES) {
+    const columns = COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id));
+    sheets.push({ name: sheetName(spec.label, taken), rows: toRows(typeTemplateRecords(spec.code), columns) });
+  }
+  const guide: string[][] = [['Dạng câu', 'Cột', 'Bắt buộc', 'Ý nghĩa']];
+  for (const spec of TYPES) {
+    for (const id of COLUMNS.map(column => column.id).filter(columnId => spec.columns.includes(columnId))) {
+      guide.push([spec.label, COLUMN_LABEL[id] || id, spec.required.includes(id) ? 'Có' : 'Không', spec.help.columnNotes[id] || FIELD_NOTES[id] || '']);
+    }
+  }
+  sheets.push({ name: sheetName('Hướng dẫn', taken), rows: guide });
+  return sheets;
 }

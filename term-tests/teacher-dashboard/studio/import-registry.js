@@ -46,6 +46,7 @@ export const TYPES = [
             { prompt: 'She is interested ___ marine biology.', optA: 'in', optB: 'at', optC: 'on', correct: 'A', explanation: 'Cấu trúc "interested in something"', points: '1' }
         ]),
         help: {
+            studentView: 'Học viên thấy đề bài và các lựa chọn, chọn một đáp án. Đáp án đúng chỉ hiện sau khi giáo viên công bố.',
             columnNotes: { optA: 'Tối thiểu 2 lựa chọn (A và B); C, D để trống nếu không dùng.', correct: 'Một chữ cái A–D trùng với lựa chọn đã điền.' },
             commonMistakes: ['Đáp án đúng ghi chữ không có trong các lựa chọn (ví dụ E khi chỉ có A–D).', 'Bỏ trống Lựa chọn A hoặc B.']
         }
@@ -60,6 +61,7 @@ export const TYPES = [
             { prompt: 'Which TWO activities are free of charge?', optA: 'Swimming pool', optB: 'Tennis court', optC: 'Fitness center', optD: 'Sauna', optE: 'Yoga class', correct: 'A, C', points: '2' }
         ]),
         help: {
+            studentView: 'Học viên thấy đề bài và danh sách lựa chọn, rồi chọn đúng số đáp án được yêu cầu (ví dụ 2 đáp án).',
             columnNotes: { correct: 'Các chữ cái đúng, cách nhau bằng dấu phẩy (ví dụ A, C). Điểm là tổng điểm cả câu.' },
             commonMistakes: ['Chỉ ghi một đáp án đúng (dạng này cần từ 2 đáp án đúng trở lên).', 'Ghi chữ cái ngoài các lựa chọn đã điền.']
         }
@@ -75,6 +77,7 @@ export const TYPES = [
             { prompt: 'She was born ___ 1995.', correct: 'in', accepted: 'during', points: '1' }
         ]),
         help: {
+            studentView: 'Học viên thấy câu có chỗ trống và gõ từ cần điền vào ô.',
             columnNotes: { accepted: 'Các đáp án khác cũng được tính đúng, cách nhau bằng |.' },
             commonMistakes: ['Quên đánh dấu chỗ trống bằng ___ trong đề bài.']
         }
@@ -89,6 +92,7 @@ export const TYPES = [
             { prompt: 'The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.', correct: 'six | Nassau', points: '1' }
         ]),
         help: {
+            studentView: 'Học viên thấy cả đoạn văn và điền từng chỗ trống đánh số ngay trong đoạn.',
             columnNotes: { prompt: 'Đoạn văn có các chỗ trống đánh số (1) ___, (2) ___ hoặc [1], [2].', correct: 'Đáp án từng chỗ trống theo thứ tự, cách nhau bằng |; nhiều cách viết cho một chỗ cách nhau bằng /.', points: 'Điểm cho mỗi chỗ trống.' },
             commonMistakes: ['Số đáp án ít hơn số chỗ trống.', 'Quên đánh số chỗ trống.']
         }
@@ -103,7 +107,10 @@ export const TYPES = [
             { prompt: 'destination', correct: 'điểm đến', points: '1' },
             { prompt: 'itinerary', correct: 'lịch trình chuyến đi', points: '1' }
         ]),
-        help: { columnNotes: { prompt: 'Từ tiếng Anh.', correct: 'Nghĩa tiếng Việt.' }, commonMistakes: ['Hai từ khác nhau cùng một nghĩa dễ gây nhầm cho học viên.'] }
+        help: {
+            studentView: 'Học viên thấy danh sách từ tiếng Anh và chọn nghĩa tiếng Việt đúng cho từng từ.',
+            columnNotes: { prompt: 'Từ tiếng Anh.', correct: 'Nghĩa tiếng Việt.' }, commonMistakes: ['Hai từ khác nhau cùng một nghĩa dễ gây nhầm cho học viên.']
+        }
     },
     {
         code: 'pictorial_vocabulary', label: 'Từ vựng qua ảnh', family: 'Từ vựng', defaultPoints: 1,
@@ -116,6 +123,7 @@ export const TYPES = [
             { image: 'camera.png', correct: 'camera', hint: 'máy ảnh', points: '1' }
         ]),
         help: {
+            studentView: 'Học viên thấy một bức ảnh kèm gợi ý nghĩa và gõ từ tiếng Anh tương ứng.',
             columnNotes: { image: 'Tên file ảnh (hoặc đường dẫn đầy đủ).', correct: 'Từ tiếng Anh học viên phải điền.', hint: 'Nghĩa tiếng Việt hiện làm gợi ý.' },
             commonMistakes: ['Thiếu ảnh: câu sẽ không có hình để học viên nhìn.']
         }
@@ -130,7 +138,10 @@ export const TYPES = [
             { prompt: 'camera', optA: '/ˈkæm.ər.ə/', optB: '/kəˈmɪər.ə/', optC: '/ˈkæm.eɪ.rə/', correct: 'A', points: '1' },
             { prompt: 'Chọn từ có trọng âm khác', optA: 'develop', optB: 'remember', optC: 'understand', optD: 'consider', correct: 'C', points: '1' }
         ]),
-        help: { columnNotes: { prompt: 'Một từ (hệ thống tự thêm câu dẫn) hoặc một câu hỏi đầy đủ.' }, commonMistakes: ['Đáp án đúng ghi chữ không có trong các lựa chọn.'] }
+        help: {
+            studentView: 'Học viên thấy một từ (hoặc một câu hỏi) và chọn phiên âm hay từ đúng trong các lựa chọn.',
+            columnNotes: { prompt: 'Một từ (hệ thống tự thêm câu dẫn) hoặc một câu hỏi đầy đủ.' }, commonMistakes: ['Đáp án đúng ghi chữ không có trong các lựa chọn.']
+        }
     },
     {
         code: 'error_correction', label: 'Tìm và sửa lỗi sai', family: 'Viết câu', defaultPoints: 1,
@@ -142,7 +153,9 @@ export const TYPES = [
             { prompt: 'There are much people on the ship.', wrongPart: 'much', correct: 'many', accepted: 'a lot of', explanation: 'Much dùng cho danh từ không đếm được', points: '1' },
             { prompt: 'He go to the port yesterday.', wrongPart: 'go', correct: 'went', explanation: 'Quá khứ đơn của go là went', points: '1' }
         ]),
-        help: { columnNotes: { prompt: 'Câu có lỗi.', wrongPart: 'Từ/cụm sai, phải có trong đề bài.', correct: 'Cách sửa đúng.' }, commonMistakes: ['Từ sai không xuất hiện trong đề bài.']
+        help: {
+            studentView: 'Học viên thấy câu có lỗi, bấm vào từ sai và gõ cách sửa đúng.',
+            columnNotes: { prompt: 'Câu có lỗi.', wrongPart: 'Từ/cụm sai, phải có trong đề bài.', correct: 'Cách sửa đúng.' }, commonMistakes: ['Từ sai không xuất hiện trong đề bài.']
         }
     },
     {
@@ -154,7 +167,10 @@ export const TYPES = [
         examples: ex([
             { prompt: 'It is not necessary for you to book now.', keyword: 'HAVE', targetSentence: 'You __________ tickets now.', correct: 'do not have to book', accepted: "don't have to book", points: '1' }
         ]),
-        help: { columnNotes: { keyword: 'Từ khóa học viên bắt buộc dùng.', targetSentence: 'Câu đích có chỗ trống ____ cho phần học viên viết.', correct: 'Phần điền vào chỗ trống.' }, commonMistakes: ['Quên từ khóa bắt buộc.'] }
+        help: {
+            studentView: 'Học viên thấy câu gốc, từ khóa bắt buộc và câu đích có chỗ trống để viết lại.',
+            columnNotes: { keyword: 'Từ khóa học viên bắt buộc dùng.', targetSentence: 'Câu đích có chỗ trống ____ cho phần học viên viết.', correct: 'Phần điền vào chỗ trống.' }, commonMistakes: ['Quên từ khóa bắt buộc.']
+        }
     },
     {
         code: 'sentence_reorder', label: 'Sắp xếp câu', family: 'Viết câu', defaultPoints: 1,
@@ -166,7 +182,10 @@ export const TYPES = [
             { prompt: 'She / has worked / at the company / for five years', hint: 'Thì hiện tại hoàn thành', points: '1' },
             { prompt: 'They / will travel / to Japan / next summer', correct: 'They will travel to Japan next summer.', points: '1' }
         ]),
-        help: { columnNotes: { prompt: 'Các từ/cụm từ cách nhau bằng dấu /.', correct: 'Câu hoàn chỉnh (để trống thì ghép theo thứ tự đã nhập).' }, commonMistakes: ['Chỉ có một cụm, không có dấu / ngăn cách.'] }
+        help: {
+            studentView: 'Học viên thấy các từ/cụm từ bị xáo trộn và sắp xếp lại thành câu hoàn chỉnh.',
+            columnNotes: { prompt: 'Các từ/cụm từ cách nhau bằng dấu /.', correct: 'Câu hoàn chỉnh (để trống thì ghép theo thứ tự đã nhập).' }, commonMistakes: ['Chỉ có một cụm, không có dấu / ngăn cách.']
+        }
     },
     {
         code: 'listening_order', label: 'Nghe và sắp xếp thứ tự', family: 'Nghe', defaultPoints: 1,
@@ -179,7 +198,10 @@ export const TYPES = [
             { prompt: 'Safety drill and lifeboat inspection', correct: '2', points: '1' },
             { prompt: "Captain's dinner in dining hall", correct: '3', points: '1' }
         ]),
-        help: { columnNotes: { prompt: 'Một sự kiện nghe được; các dòng liên tiếp trong cùng bài tập tạo thành một câu sắp xếp.', correct: 'Thứ tự đúng (1, 2, 3…).' }, commonMistakes: ['Hai sự kiện trùng thứ tự.'] }
+        help: {
+            studentView: 'Học viên nghe bài nghe và sắp xếp các sự kiện theo đúng trình tự.',
+            columnNotes: { prompt: 'Một sự kiện nghe được; các dòng liên tiếp trong cùng bài tập tạo thành một câu sắp xếp.', correct: 'Thứ tự đúng (1, 2, 3…).' }, commonMistakes: ['Hai sự kiện trùng thứ tự.']
+        }
     },
     {
         code: 'reading_matching', label: 'Ghép tiêu đề với đoạn văn', family: 'Đọc', defaultPoints: 1,
@@ -191,7 +213,10 @@ export const TYPES = [
             { prompt: 'Paragraph A', optA: 'The spy in the sky', optB: 'The spread of technology', optC: 'The limitations of cameras', correct: 'A', points: '1' },
             { prompt: 'Paragraph B', optA: 'The spy in the sky', optB: 'The spread of technology', optC: 'The limitations of cameras', correct: 'B', points: '1' }
         ]),
-        help: { columnNotes: { prompt: 'Tên đoạn văn (Paragraph A…).', optA: 'Danh sách tiêu đề; lặp lại giống nhau ở mọi dòng của cùng bài tập.', correct: 'Chữ cái của tiêu đề đúng cho đoạn này.' }, commonMistakes: ['Danh sách tiêu đề ở các dòng không giống nhau.'] }
+        help: {
+            studentView: 'Học viên thấy bài đọc chia đoạn và chọn tiêu đề phù hợp cho từng đoạn.',
+            columnNotes: { prompt: 'Tên đoạn văn (Paragraph A…).', optA: 'Danh sách tiêu đề; lặp lại giống nhau ở mọi dòng của cùng bài tập.', correct: 'Chữ cái của tiêu đề đúng cho đoạn này.' }, commonMistakes: ['Danh sách tiêu đề ở các dòng không giống nhau.']
+        }
     },
     {
         code: 'rubric_async', label: 'Tự luận chấm AI', family: 'Viết / Tự luận', defaultPoints: 4,
@@ -203,7 +228,10 @@ export const TYPES = [
             { prompt: 'Translate into English: Chuyến tàu rời cảng lúc 8 giờ sáng.', points: '4', criterion1: 'Độ chính xác ý nghĩa', criterion2: 'Cấu trúc ngữ pháp' },
             { prompt: 'Summarize the main idea of Paragraph A in 50 words.', context: 'Đoạn trích thông tin bài đọc...', points: '4' }
         ]),
-        help: { columnNotes: { context: 'Bài đọc/ngữ cảnh AI dùng để đối chiếu (học viên không thấy).', criterion1: 'Tiêu chí 1 (tùy chọn); điểm chia đôi giữa hai tiêu chí.' }, commonMistakes: ['Tự luận kiểu mới (6 dạng, từng Khối) sẽ có cột riêng ở giai đoạn sau.'] }
+        help: {
+            studentView: 'Học viên thấy đề bài (và ngữ cảnh nếu có) và viết câu trả lời vào ô văn bản; AI chấm theo tiêu chí.',
+            columnNotes: { context: 'Bài đọc/ngữ cảnh AI dùng để đối chiếu (học viên không thấy).', criterion1: 'Tiêu chí 1 (tùy chọn); điểm chia đôi giữa hai tiêu chí.' }, commonMistakes: ['Tự luận kiểu mới (6 dạng, từng Khối) sẽ có cột riêng ở giai đoạn sau.']
+        }
     }
 ];
 export const TYPE_BY_CODE = Object.fromEntries(TYPES.map(spec => [spec.code, spec]));
@@ -258,3 +286,24 @@ export function isKnownHeader(raw) {
         return true;
     return TYPES.some(spec => spec.legacy.headers.some(header => fold(header) === fold(raw)));
 }
+// Ý nghĩa mặc định của cột khi dạng không ghi chú riêng.
+export const FIELD_NOTES = {
+    exerciseTitle: 'Tên bài tập (chỉ ở file cả Phần). Các dòng sau của cùng bài tập có thể để trống.',
+    exerciseInstructions: 'Hướng dẫn làm bài tập (chỉ ở file cả Phần; điền ở dòng đầu của bài tập).',
+    type: 'Dạng câu (chỉ ở file cả Phần), ví dụ "Trắc nghiệm một đáp án".',
+    prompt: 'Nội dung câu hỏi.',
+    optA: 'Lựa chọn A.', optB: 'Lựa chọn B.', optC: 'Lựa chọn C (để trống nếu không dùng).', optD: 'Lựa chọn D (để trống nếu không dùng).',
+    optE: 'Lựa chọn E (để trống nếu không dùng).', optF: 'Lựa chọn F (để trống nếu không dùng).', optG: 'Lựa chọn G (để trống nếu không dùng).', optH: 'Lựa chọn H (để trống nếu không dùng).',
+    correct: 'Đáp án đúng.',
+    accepted: 'Các đáp án khác cũng được tính đúng, cách nhau bằng |.',
+    explanation: 'Giải thích đáp án (hiện cho học viên khi đáp án được công bố).',
+    points: 'Điểm của câu; để trống thì dùng điểm mặc định của hộp thoại.',
+    image: 'Tên file ảnh (hoặc đường dẫn đầy đủ).',
+    hint: 'Gợi ý hiện cho học viên.',
+    wrongPart: 'Từ/cụm từ sai trong câu.',
+    keyword: 'Từ khóa học viên bắt buộc dùng.',
+    targetSentence: 'Câu đích có chỗ trống.',
+    context: 'Bài đọc/ngữ cảnh AI dùng để đối chiếu (học viên không thấy).',
+    criterion1: 'Tiêu chí chấm 1 (tùy chọn).',
+    criterion2: 'Tiêu chí chấm 2 (tùy chọn).'
+};

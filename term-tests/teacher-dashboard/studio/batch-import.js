@@ -3,7 +3,8 @@
 import { getActiveUnsavedChangesOwner, releaseBuilderModal, trackBuilderModal, registerBuilderModalCleanup } from '../navigation/unsaved-changes.js';
 import { renderSvgIcon } from '../ui/icons.js';
 import { escapeHtml } from '../ui/presentation.js';
-import { blockTemplateCsv, readImport, typeTemplateCsv } from './import-engine.js';
+import { blockTemplateCsv, readImport, templateWorkbookSheets, typeTemplateCsv } from './import-engine.js';
+import { guideHtml } from './import-guide.js';
 import { importErrorsCsv, importPreviewHtml, typeColumnsHint, typePlaceholder } from './import-preview.js';
 export function parseUploadedFileToCsv(file, callback) {
     if (!file || typeof callback !== 'function')
@@ -307,7 +308,7 @@ export function openGenericBatchModal({ title = 'Tạo câu hỏi hàng loạt',
         const viewGuideBtn = modal.querySelector('.btn-view-csv-guide');
         if (viewGuideBtn) {
             viewGuideBtn.addEventListener('click', () => {
-                openCsvQuickGuideModal(owner);
+                openCsvQuickGuideModal(owner, { focus: csvConfig.typeCode });
             });
         }
         const downloadBtn = modal.querySelector('.btn-download-template');
@@ -524,7 +525,20 @@ export function openGenericBatchModal({ title = 'Tạo câu hỏi hàng loạt',
     }
     return modal;
 }
-export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
+// Ghi Excel mẫu sinh từ registry (thư viện Excel có sẵn trong trang); không còn file .xlsx tĩnh.
+function downloadTemplateWorkbook() {
+    if (typeof XLSX === 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.alert === 'function')
+            window.alert('Chưa tải được thư viện Excel. Hãy tải lại trang hoặc dùng mẫu .csv.');
+        return;
+    }
+    const workbook = XLSX.utils.book_new();
+    for (const sheet of templateWorkbookSheets())
+        XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(sheet.rows), sheet.name);
+    XLSX.writeFile(workbook, 'mau_de_thi_test_studio.xlsx');
+}
+// Trung tâm "Mẫu và hướng dẫn": nội dung sinh từ registry. Giữ id/class cũ của hộp thoại để các nơi gọi và test không đổi.
+export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner(), options = {}) {
     if (typeof document === 'undefined')
         return null;
     const existingModal = document.getElementById('modal-csv-quick-guide');
@@ -534,132 +548,18 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
     modal.id = 'modal-csv-quick-guide';
     modal.className = 'candidate-sim-overlay quick-csv-guide-modal-overlay';
     modal.innerHTML = `
-    <div class="candidate-sim-modal quick-csv-guide-modal csv-layout-guide-dialog" role="dialog" aria-modal="true">
+    <div class="candidate-sim-modal quick-csv-guide-modal csv-layout-guide-dialog" role="dialog" aria-modal="true" aria-labelledby="csv-guide-title">
       <div class="candidate-sim-header csv-layout-header">
         <div>
-          <h3 class="csv-layout-title">
+          <h3 class="csv-layout-title" id="csv-guide-title">
             ${renderSvgIcon('fileText', 'icon-inline')}
-            <span>Hướng dẫn điền file CSV / Excel tạo đề thi (Test Studio)</span>
+            <span>Mẫu và hướng dẫn nhập đề</span>
           </h3>
-          <p class="csv-layout-subtitle">
-            Hệ thống hỗ trợ tiếng Việt có dấu (UTF-8 BOM), phân tách bằng dấu phẩy hoặc tab Excel.
-          </p>
+          <p class="csv-layout-subtitle">Cột, ví dụ và lỗi thường gặp của từng dạng câu. Tải mẫu CSV/Excel đã điền sẵn ví dụ.</p>
         </div>
         <button type="button" class="btn btn-icon btn-sm btn-ghost btn-close-guide" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>
       </div>
-
-      <div class="modal-body csv-layout-guide-body">
-        <h4 class="csv-layout-section-title">1. Cấu trúc 7 cột chuẩn hóa gộp cả Phần thi (Block CSV / Excel Sheet 1)</h4>
-        <div class="csv-layout-column-schema">
-          Exercise_Title, Exercise_Instructions, Question_Type, Prompt, Correct_Answer, Options_Or_Details, Score
-        </div>
-        <ul class="csv-layout-column-notes">
-          <li><strong>Exercise_Title</strong>: Tiêu đề bài tập. Các câu tiếp theo cùng bài tập có thể để trống cột này.</li>
-          <li><strong>Exercise_Instructions</strong>: Hướng dẫn làm bài tập (chỉ cần điền ở dòng đầu tiên của bài tập).</li>
-          <li><strong>Question_Type</strong>: Loại câu hỏi (tiếng Anh hoặc tiếng Việt chuẩn hóa bên dưới).</li>
-        </ul>
-
-        <h4 class="csv-layout-types-title">2. Chi tiết cách điền từng dạng câu hỏi (Bấm "Chép mẫu" để dán ngay)</h4>
-        <div class="csv-layout-table-frame">
-        <table class="quick-guide-table csv-layout-table">
-          <thead>
-            <tr class="csv-layout-table-heading">
-              <th class="csv-layout-type-heading">Dạng bài</th>
-              <th class="csv-layout-column-heading">Quy ước các cột (Prompt, Đáp án, Chi tiết)</th>
-              <th class="csv-layout-column-heading">Dòng ví dụ mẫu</th>
-              <th class="csv-layout-action-heading">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="csv-layout-type-cell">Trắc nghiệm đơn<br><code class="csv-layout-type-code">single_choice</code></td>
-              <td class="csv-layout-details-cell">Cột 5: Chữ cái đáp án đúng (A/B/C/D). Cột 6: Các lựa chọn cách nhau bởi <code>|</code></td>
-              <td class="csv-layout-sample-cell">The cruise departs ___ Miami.,B,at | from | on | in,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 1: Grammar,Choose correct answer,single_choice,The cruise departs ___ Miami.,B,at | from | on | in,1">Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Trắc nghiệm nhóm<br><code class="csv-layout-type-code">multi_select_group</code></td>
-              <td class="csv-layout-details-cell">Cột 5: Các đáp án đúng (VD: <code>A, C</code> hoặc <code>A|C</code>). Cột 6: Danh sách lựa chọn cách nhau bởi <code>|</code></td>
-              <td class="csv-layout-sample-cell">Which TWO activities are free?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga,2</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 2: Group Choice,Select correct options,multi_select_group,Which TWO activities are free of charge?,A, C,Swimming pool | Tennis court | Fitness center | Sauna | Yoga class,2">Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Điền từ nội tuyến (Đoạn văn)<br><code class="csv-layout-type-code">inline_cloze</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Đoạn văn chứa <code>(1) _____</code> hoặc <code>[1]</code>. Cột 5: Đáp án theo thứ tự cách nhau bởi <code>|</code> (nhiều biến thể cách nhau bởi <code>/</code>)</td>
-              <td class="csv-layout-sample-cell">"She visits (1) _____ islands and arrives in (2) _____.",six | Nassau,,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample='Part 3: Cloze Passage,Fill in the blanks,inline_cloze,"The cruise departs from Miami and visits (1) __________ Caribbean islands before heading to (2) __________.",six | Nassau,,1'>Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Tìm và sửa lỗi sai<br><code class="csv-layout-type-code">error_correction</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Câu gốc chứa lỗi. Cột 5: Từ viết sai (Error). Cột 6: Từ sửa lại đúng (Correction) kèm biến thể cách nhau bởi <code>|</code></td>
-              <td class="csv-layout-sample-cell">We have two knife in the kitchen.,knife,knives,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 4: Error Correction,Find and correct the mistake,error_correction,We have two knife in the kitchen.,knife,knives,1">Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Điền ô trống ngắn<br><code class="csv-layout-type-code">fitb</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Câu hỏi chứa <code>___</code>. Cột 5: Đáp án đúng. Cột 6: Biến thể chấp nhận cách nhau bởi <code>|</code></td>
-              <td class="csv-layout-sample-cell">Water freezes at ___ degrees Celsius.,0,zero,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 5: Short Blank,Fill in the missing word,fitb,Water freezes at ___ degrees Celsius.,0,zero,1">Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Cặp từ vựng<br><code class="csv-layout-type-code">vocabulary_pair</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Từ tiếng Anh. Cột 5: Nghĩa tiếng Việt tương ứng</td>
-              <td class="csv-layout-sample-cell">destination,điểm đến,,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 6: Vocabulary,Match meaning,vocabulary_pair,destination,điểm đến,,1">Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Viết lại câu có từ khóa<br><code class="csv-layout-type-code">sentence_transformation</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Câu gốc. Cột 5: Từ khóa in hoa. Cột 6: Câu đích có <code>___</code> | Đáp án đúng</td>
-              <td class="csv-layout-sample-cell">It is not necessary to book.,HAVE,You ___ in advance. | do not have to book,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 7: Transformation,Rewrite the sentence,sentence_transformation,It is not necessary to book in advance.,HAVE,You ___ in advance. | do not have to book,1">Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Sắp xếp câu<br><code class="csv-layout-type-code">sentence_reorder</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Các cụm từ ngăn cách bằng <code>/</code>. Cột 5: Câu hoàn chỉnh</td>
-              <td class="csv-layout-sample-cell">"She / has worked / here",She has worked here.,,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample='Part 8: Reorder,Arrange the words,sentence_reorder,"She / has worked / here / for five years",She has worked here for five years.,,1'>Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Sắp xếp nghe<br><code class="csv-layout-type-code">listening_order</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Tên sự kiện. Cột 5: Thứ tự xuất hiện (1, 2, 3...)</td>
-              <td class="csv-layout-sample-cell">Safety drill and inspection,2,,1</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 9: Listening Order,Order the events,listening_order,Safety drill and lifeboat inspection,2,,1">Chép mẫu</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="csv-layout-type-cell">Tự luận chấm AI<br><code class="csv-layout-type-code">rubric_async</code></td>
-              <td class="csv-layout-details-cell">Cột 4: Đề bài. Cột 6: Tiêu chí chấm điểm ngăn cách bởi <code>|</code></td>
-              <td class="csv-layout-sample-cell">Summarize paragraph A in 50 words.,,Ý chính (2đ) | Ngữ pháp (2đ),4</td>
-              <td class="csv-layout-action-cell">
-                <button type="button" class="btn btn-xs btn-outline-secondary btn-copy-sample csv-layout-copy-button" data-sample="Part 10: Writing,Write a short summary,rubric_async,Summarize the main idea of Paragraph A in 50 words.,,Ý chính đầy đủ (2đ) | Ngữ pháp chuẩn (2đ),4">Chép mẫu</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        </div>
-
-        <div class="csv-layout-warning">
-          <strong>Lưu ý quan trọng khi lưu file từ Excel:</strong> Nếu câu hỏi có dấu phẩy hoặc xuống dòng, hãy bọc câu trong dấu nháy kép <code>""</code>. Khi lưu từ Excel, hãy chọn <em>CSV UTF-8 (Comma delimited) (*.csv)</em> để đảm bảo tiếng Việt không bị lỗi font.
-        </div>
-      </div>
-
+      <div class="modal-body csv-layout-guide-body">${guideHtml(options)}</div>
       <div class="candidate-sim-footer csv-layout-footer">
         <button type="button" class="btn btn-secondary btn-close-guide-footer">Đóng</button>
       </div>
@@ -676,6 +576,24 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
         if (e.target === modal)
             closeModal();
     });
+    modal.querySelectorAll('.btn-download-type-template').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const typeCode = btn.getAttribute('data-download-type');
+            downloadCsvText(typeTemplateCsv(typeCode), `mau_${typeCode}.csv`);
+        });
+    });
+    modal.querySelector('.btn-download-excel-template')?.addEventListener('click', downloadTemplateWorkbook);
+    modal.querySelector('.btn-download-block-template-guide')?.addEventListener('click', () => downloadCsvText(blockTemplateCsv(), 'mau_cac_bai_tap_trong_phan.csv'));
+    const jumpTo = (typeCode) => {
+        const target = modal.querySelector(`[data-guide-type="${typeCode}"]`);
+        if (target && typeof target.scrollIntoView === 'function')
+            target.scrollIntoView({ block: 'start' });
+    };
+    modal.querySelectorAll('[data-guide-jump]').forEach(chip => {
+        chip.addEventListener('click', () => jumpTo(chip.getAttribute('data-guide-jump') || ''));
+    });
+    if (options.focus)
+        jumpTo(options.focus);
     modal.querySelectorAll('.btn-copy-sample').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -683,7 +601,7 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner()) {
             if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(sample).then(() => {
                     const origText = btn.innerHTML;
-                    btn.innerHTML = '✓ Đã chép';
+                    btn.textContent = 'Đã chép';
                     btn.classList.add('is-copied');
                     setTimeout(() => {
                         btn.innerHTML = origText;
@@ -735,9 +653,9 @@ export function openBlockCsvUploadModal(opts = {}) {
         </div>
 
         <div class="csv-layout-file-actions">
-          <a href="./assets/templates/mau_de_thi_test_studio.xlsx" download="mau_de_thi_test_studio.xlsx" class="btn btn-primary btn-sm btn-download-excel-template csv-layout-download-link">
-            ${renderSvgIcon('download', 'icon-inline')} <span>Tải mẫu Excel 2 Sheet (.xlsx)</span>
-          </a>
+          <button type="button" class="btn btn-primary btn-sm btn-download-excel-template csv-layout-download-link">
+            ${renderSvgIcon('download', 'icon-inline')} <span>Tải mẫu Excel (.xlsx)</span>
+          </button>
           <button type="button" class="btn btn-secondary btn-sm btn-download-block-template">
             ${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu CSV Phần</span>
           </button>
@@ -805,6 +723,7 @@ export function openBlockCsvUploadModal(opts = {}) {
     viewGuideBtn?.addEventListener('click', () => {
         openCsvQuickGuideModal(owner);
     });
+    modal.querySelector('.btn-download-excel-template')?.addEventListener('click', downloadTemplateWorkbook);
     downloadBtn?.addEventListener('click', () => {
         downloadCsvText(blockTemplateCsv(), 'mau_cac_bai_tap_trong_phan.csv');
     });

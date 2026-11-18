@@ -588,3 +588,25 @@
 .import-messages { margin: 4px 0 0; padding-left: 16px; }
 .import-hint { color: var(--izone-text-muted); }
 .import-more, .import-preview-empty { margin-top: 6px; font-size: 13px; color: var(--izone-text-muted); }
+
+/* Trung tâm "Mẫu và hướng dẫn" nhập đề (spec #91, GĐ 2). Chỉ dùng token --izone-*. */
+.guide-body { display: flex; flex-direction: column; gap: 16px; }
+.guide-section-title { margin: 12px 0 6px; font-size: 15px; color: var(--izone-navy); }
+.guide-list { margin: 0 0 8px; padding-left: 20px; font-size: 14px; }
+.guide-list li { margin-bottom: 4px; }
+.guide-downloads { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.guide-toc { display: flex; flex-wrap: wrap; gap: 6px; position: sticky; top: 0; z-index: 2; padding: 8px 0; background: var(--izone-surface); border-bottom: 1px solid var(--izone-border); }
+.guide-toc-chip { padding: 4px 10px; border: 1px solid var(--izone-border); border-radius: 6px; background: var(--izone-surface); color: var(--izone-navy); font-size: 13px; cursor: pointer; }
+@media (hover: hover) { .guide-toc-chip:hover { border-color: var(--izone-primary); color: var(--izone-primary); } }
+.guide-type { padding: 12px 14px; border: 1px solid var(--izone-border); border-radius: 10px; background: var(--izone-surface); }
+.guide-type.is-focus { border-color: var(--izone-primary); }
+.guide-type-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 6px; }
+.guide-type-title { margin: 0; font-size: 16px; color: var(--izone-navy); }
+.guide-type-family { font-size: 12px; color: var(--izone-text-muted); }
+.guide-student { margin: 0 0 8px; font-size: 14px; }
+.guide-subtitle { margin: 12px 0 6px; font-size: 13px; font-weight: 700; color: var(--izone-navy); }
+.guide-table-wrap { overflow-x: auto; border: 1px solid var(--izone-border); border-radius: 8px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.guide-table th, .guide-table td { padding: 6px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--izone-border); overflow-wrap: anywhere; }
+.guide-table th { background: var(--izone-bg); font-weight: 700; color: var(--izone-navy); }
+.guide-mistakes { margin: 0; padding-left: 20px; font-size: 13px; color: var(--izone-text-muted); }
