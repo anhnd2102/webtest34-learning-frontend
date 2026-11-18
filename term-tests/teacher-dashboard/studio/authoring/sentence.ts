@@ -4,7 +4,7 @@ import type { AuthoringHost, DraftExercise } from '../draft-model.js';
 import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
-import { generateSentenceReorderTemplateCsv, parseSentenceReorderCsv, generateSentenceTransformationTemplateCsv, parseSentenceTransformationCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { expandSentenceVariants, tokenizeSentence } from '.././question-content.js';
 
@@ -75,10 +75,9 @@ function createBatchSentenceReorder(bIdx: number, targetEx: DraftExercise, count
           maxCount: 50,
           csvConfig: {
             templateFileName: 'mau_sap_xep_cau.csv',
-            columnsHint: 'Cột: Câu cần sắp xếp (Sentence_Text) | Điểm (Score) | Gợi ý (Help_Text)',
-            placeholder: '"She / has worked / at the company / for five years",1,"Thì hiện tại hoàn thành"\n"They / will travel / to Japan / next summer",1,"Thì tương lai đơn"',
-            getTemplateCsv: generateSentenceReorderTemplateCsv,
-            parseCsv: parseSentenceReorderCsv,
+            typeCode: 'sentence_reorder',
+            columnsHint: typeColumnsHint('sentence_reorder'),
+            placeholder: typePlaceholder('sentence_reorder'),
             renderPreviewRow: (itm: any, idx: any) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.tokens.join(' / '))} [${itm.maxScore}đ]`,
             onImport: (items: any, { defaultPoints = 1 } = {}) => {
               const startingPos = getNextPosition();
@@ -202,10 +201,9 @@ function createBatchSentenceReorder(bIdx: number, targetEx: DraftExercise, count
           maxCount: 50,
           csvConfig: {
             templateFileName: 'mau_viet_lai_cau.csv',
-            columnsHint: 'Cột: Câu gốc | Từ khóa bắt buộc | Câu gợi ý / Chỗ trống | Các phương án đúng (|) | Giải thích',
-            placeholder: 'He could not go because of illness.,PREVENTED,His severe illness (1) __________ from going.,prevented him,Cấu trúc prevent someone from doing\nIt is not necessary for you to come.,NEED,You (1) __________ come tomorrow.,need not|do not need to|don\'t need to,Need not do sth',
-            getTemplateCsv: generateSentenceTransformationTemplateCsv,
-            parseCsv: parseSentenceTransformationCsv,
+            typeCode: 'sentence_transformation',
+            columnsHint: typeColumnsHint('sentence_transformation'),
+            placeholder: typePlaceholder('sentence_transformation'),
             renderPreviewRow: (itm: any, idx: any) => `<strong>Câu ${idx}:</strong> ${escapeHtml(itm.prompt)} [Từ khóa: <strong>${escapeHtml(itm.mandatoryKeyword)}</strong> → Đáp án: <em>${escapeHtml(itm.accepted[0] || '')}</em>]`,
             onImport: (items: any) => {
               const startingPos = getNextPosition();

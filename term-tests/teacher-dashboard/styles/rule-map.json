@@ -11428,5 +11428,131 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rw-shared-preview p"
+  },
+  {
+    "order": 1892,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-preview"
+  },
+  {
+    "order": 1893,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-summary"
+  },
+  {
+    "order": 1894,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip"
+  },
+  {
+    "order": 1895,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip.is-ok"
+  },
+  {
+    "order": 1896,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip.is-warning"
+  },
+  {
+    "order": 1897,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip.is-error"
+  },
+  {
+    "order": 1898,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-action"
+  },
+  {
+    "order": 1899,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-notices"
+  },
+  {
+    "order": 1900,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table-wrap"
+  },
+  {
+    "order": 1901,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table"
+  },
+  {
+    "order": 1902,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table th, .import-table td"
+  },
+  {
+    "order": 1903,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table th"
+  },
+  {
+    "order": 1904,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-line"
+  },
+  {
+    "order": 1905,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-status"
+  },
+  {
+    "order": 1906,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-badge"
+  },
+  {
+    "order": 1907,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-badge.is-error"
+  },
+  {
+    "order": 1908,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-badge.is-warning"
+  },
+  {
+    "order": 1909,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-row.is-error"
+  },
+  {
+    "order": 1910,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-messages"
+  },
+  {
+    "order": 1911,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-hint"
+  },
+  {
+    "order": 1912,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-more, .import-preview-empty"
   }
 ]

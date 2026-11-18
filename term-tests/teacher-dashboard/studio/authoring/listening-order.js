@@ -2,7 +2,7 @@ import { generateUuid } from '../draft-model.js';
 import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { openCsvUploadModal } from '.././batch-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
-import { generateListeningOrderTemplateCsv, parseListeningOrderCsv } from '.././content-import.js';
+import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 export function bindListeningOrderAuthoring({ container, draftState, builderOwner, actions }) {
     const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
     // Add Listening Order Question (Opens CSV / Excel import popup with single item creation option)
@@ -60,10 +60,9 @@ export function bindListeningOrderAuthoring({ container, draftState, builderOwne
                 title: 'Nhập bài tập Sắp xếp thứ tự nghe vào Exercise (CSV / Excel)',
                 subtitle: `Nhập danh sách các sự kiện bài nghe và thứ tự đúng cho bài tập ${escapeHtml(targetEx.title || 'Bài tập')}.`,
                 templateFileName: 'mau_sap_xep_thu_tu_nghe.csv',
-                columnsHint: 'Cột: Nội dung sự kiện (Event_Text) | Thứ tự đúng (Correct_Order: 1, 2, 3...) | Điểm (Score: mặc định 1)',
-                placeholder: 'Welcome aboard meeting at main lounge,1,1\nSafety drill and lifeboat inspection,2,1\nCaptain\'s dinner in dining hall,3,1\nEvening musical performance on deck,4,1',
-                getTemplateCsv: generateListeningOrderTemplateCsv,
-                parseCsv: parseListeningOrderCsv,
+                typeCode: 'listening_order',
+                columnsHint: typeColumnsHint('listening_order'),
+                placeholder: typePlaceholder('listening_order'),
                 renderPreviewRow: (itm) => `<strong>Bài tập sắp xếp (${(itm.events || itm.listeningEvents || []).length} sự kiện):</strong> ${escapeHtml(itm.prompt)} (Điểm tối đa: ${itm.maxScore})`,
                 onSingle: () => {
                     createSingleListeningOrder();

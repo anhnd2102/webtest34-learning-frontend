@@ -565,3 +565,26 @@
 .rw-shared-preview { margin: 0 0 8px; padding: 8px 10px; border: 1px solid var(--izone-border); border-radius: 8px; background: var(--izone-surface); font-size: 13px; }
 .rw-shared-preview summary { cursor: pointer; font-weight: 600; }
 .rw-shared-preview p { margin: 6px 0 0; max-height: 200px; overflow: auto; color: var(--izone-text-muted); }
+
+/* Bảng xem trước khi nhập file CSV/Excel (spec #91, GĐ 1). Chỉ dùng token --izone-*. */
+.import-preview { margin-top: 12px; }
+.import-summary { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.import-chip { padding: 2px 10px; border: 1px solid var(--izone-border); border-radius: 6px; font-size: 13px; font-weight: 600; background: var(--izone-surface); }
+.import-chip.is-ok { color: var(--izone-navy); }
+.import-chip.is-warning { background: var(--izone-warning-bg); color: var(--izone-navy); }
+.import-chip.is-error { color: var(--izone-primary-crimson); }
+.import-action { margin: 0 0 8px; font-size: 14px; color: var(--izone-navy); }
+.import-notices { margin: 0 0 8px; padding-left: 18px; font-size: 13px; color: var(--izone-text-muted); }
+.import-table-wrap { max-height: 280px; overflow: auto; border: 1px solid var(--izone-border); border-radius: 8px; }
+.import-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.import-table th, .import-table td { padding: 6px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--izone-border); }
+.import-table th { position: sticky; top: 0; background: var(--izone-surface); font-weight: 700; color: var(--izone-navy); }
+.import-line { width: 52px; color: var(--izone-text-muted); }
+.import-status { width: 92px; }
+.import-badge { display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; border: 1px solid var(--izone-border); }
+.import-badge.is-error { color: var(--izone-primary-crimson); border-color: var(--izone-primary-crimson); }
+.import-badge.is-warning { background: var(--izone-warning-bg); color: var(--izone-navy); }
+.import-row.is-error { background: var(--izone-bg); }
+.import-messages { margin: 4px 0 0; padding-left: 16px; }
+.import-hint { color: var(--izone-text-muted); }
+.import-more, .import-preview-empty { margin-top: 6px; font-size: 13px; color: var(--izone-text-muted); }

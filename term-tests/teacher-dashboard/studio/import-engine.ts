@@ -107,7 +107,7 @@ function readPoints(record: ImportRecord, fallback: number, messages: RowMessage
   if (!raw) return fallback;
   const value = Number(raw.replace(',', '.'));
   if (!Number.isFinite(value) || value <= 0) {
-    messages.push(message('warning', 'points', `Điểm "${raw}" không hợp lệ, dùng mặc định ${fallback}.`, 'Nhập một số lớn hơn 0, ví dụ 1 hoặc 0.5.'));
+    messages.push(message('warning', 'points', `"${raw}" không hợp lệ, dùng mặc định ${fallback}.`, 'Nhập một số lớn hơn 0, ví dụ 1 hoặc 0.5.'));
     return fallback;
   }
   return value;
@@ -116,7 +116,7 @@ function readPoints(record: ImportRecord, fallback: number, messages: RowMessage
 function requireFields(record: ImportRecord, spec: TypeSpec, messages: RowMessage[]): boolean {
   let ok = true;
   for (const field of spec.required) {
-    if (!clean(record[field])) { messages.push(message('error', field, `Thiếu ${COLUMN_LABEL[field]}.`, `Dạng "${spec.label}" bắt buộc có ${COLUMN_LABEL[field]}.`)); ok = false; }
+    if (!clean(record[field])) { messages.push(message('error', field, 'Chưa điền (bắt buộc).', `Dạng "${spec.label}" bắt buộc có cột ${COLUMN_LABEL[field]}.`)); ok = false; }
   }
   return ok;
 }
@@ -136,7 +136,7 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
       if (options.length < 2) { messages.push(message('error', 'optB', 'Cần ít nhất 2 lựa chọn (A và B).')); return []; }
       const letter = resolveLetter(correct, options, false);
       if (!letter) {
-        messages.push(message('error', 'correct', `Đáp án đúng "${correct}" không có trong các lựa chọn ${options.map(option => option.letter).join(', ')}.`, 'Ghi đúng chữ cái của lựa chọn đúng.'));
+        messages.push(message('error', 'correct', `"${correct}" không có trong các lựa chọn ${options.map(option => option.letter).join(', ')}.`, 'Ghi đúng chữ cái của lựa chọn đúng.'));
         return [];
       }
       const pronunciation = spec.code === 'pronunciation_choice';
@@ -160,7 +160,7 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
       const letters: string[] = [];
       for (const token of correct.split(/[,|;\s]+/).filter(Boolean)) {
         const letter = resolveLetter(token, options, false);
-        if (!letter) { messages.push(message('error', 'correct', `Đáp án "${token}" không có trong các lựa chọn ${options.map(option => option.letter).join(', ')}.`, 'Ghi các chữ cái đúng, cách nhau bằng dấu phẩy (ví dụ A, C).')); return []; }
+        if (!letter) { messages.push(message('error', 'correct', `"${token}" không có trong các lựa chọn ${options.map(option => option.letter).join(', ')}.`, 'Ghi các chữ cái đúng, cách nhau bằng dấu phẩy (ví dụ A, C).')); return []; }
         if (!letters.includes(letter)) letters.push(letter);
       }
       if (letters.length < 2) { messages.push(message('error', 'correct', 'Dạng chọn nhiều cần từ 2 đáp án đúng trở lên.', 'Ghi ví dụ A, C. Nếu chỉ có một đáp án đúng, dùng dạng "Trắc nghiệm một đáp án".')); return []; }
@@ -181,7 +181,7 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
       const blanks = Array.from(prompt.matchAll(/(?:\((\d+)\)\s*[_.…]{1,})|(?:\[(\d+)\]\s*[_.…]*)|(?:\{\{(\d+)\}\})|(?:\((\d+)\))/g));
       const numbers: number[] = [];
       for (const match of blanks) { const n = Number(match[1] || match[2] || match[3] || match[4]); if (!numbers.includes(n)) numbers.push(n); }
-      if (!numbers.length) { messages.push(message('error', 'prompt', 'Không tìm thấy chỗ trống đánh số trong đề bài.', 'Đánh số chỗ trống dạng (1) ______ hoặc [1].')); return []; }
+      if (!numbers.length) { messages.push(message('error', 'prompt', 'Không tìm thấy chỗ trống đánh số.', 'Đánh số chỗ trống dạng (1) ______ hoặc [1].')); return []; }
       const answers = correct.split(/[|;]/).map(answer => answer.trim());
       if (answers.filter(Boolean).length < numbers.length) messages.push(message('warning', 'correct', `Đề bài có ${numbers.length} chỗ trống nhưng chỉ có ${answers.filter(Boolean).length} đáp án.`, 'Ghi đáp án từng chỗ trống theo thứ tự, cách nhau bằng |.'));
       const clozeAnswers: { [n: number]: { targetWord: string, accepted: string[] } } = {};
@@ -196,12 +196,12 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
     case 'vocabulary_pair':
       return [{ prompt, english: prompt, vietnamese: correct, targetWord: prompt, vietnameseMeaning: correct, captionHint: correct, interactionType: 'text_select_pair', pedagogicalTypeCode: 'vocabulary_pair', layoutType: 'vocab_pair', graderType: 'accepted_text_exact_option', accepted: [prompt], options: [], expectedOptionId: '', maxScore: points }];
     case 'pictorial_vocabulary': {
-      if (!clean(record.image)) messages.push(message('warning', 'image', 'Thiếu ảnh.', 'Điền tên file ảnh (hoặc đường dẫn); không có ảnh học viên sẽ không có hình để nhìn.'));
+      if (!clean(record.image)) messages.push(message('warning', 'image', 'Chưa điền.', 'Điền tên file ảnh (hoặc đường dẫn); không có ảnh học viên sẽ không có hình để nhìn.'));
       return [{ prompt: correct, image: clean(record.image), targetWord: correct, captionHint: clean(record.hint), accepted: Array.from(new Set([correct, ...accepted])), interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: points }];
     }
     case 'error_correction': {
       const wrong = clean(record.wrongPart);
-      if (!prompt.toLowerCase().includes(wrong.toLowerCase())) messages.push(message('warning', 'wrongPart', `Từ sai "${wrong}" không xuất hiện trong đề bài.`, 'Kiểm tra lại cách viết từ sai.'));
+      if (!prompt.toLowerCase().includes(wrong.toLowerCase())) messages.push(message('warning', 'wrongPart', `"${wrong}" không xuất hiện trong đề bài.`, 'Kiểm tra lại cách viết từ sai.'));
       const corrections = Array.from(new Set([...correct.split(/[|/]/).map(part => part.trim()).filter(Boolean), ...accepted]));
       return [{ prompt, explanation: clean(record.explanation), interactionType: 'correction_pair', pedagogicalTypeCode: 'error_correction', layoutType: 'correction_inline', graderType: 'correction_pair', targetWord: wrong, expectedErrors: [wrong], expectedCorrections: corrections, accepted: corrections, scoringRule: 'split_points', maxScore: points }];
     }
@@ -217,13 +217,13 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
     }
     case 'listening_order': {
       const rank = Number.parseInt(correct, 10);
-      if (!Number.isFinite(rank) || rank < 1) { messages.push(message('error', 'correct', `Thứ tự "${correct}" không hợp lệ.`, 'Ghi số thứ tự đúng: 1, 2, 3…')); return []; }
+      if (!Number.isFinite(rank) || rank < 1) { messages.push(message('error', 'correct', `"${correct}" không phải thứ tự hợp lệ.`, 'Ghi số thứ tự đúng: 1, 2, 3…')); return []; }
       return [{ prompt, text: prompt, correctRank: rank, rank, interactionType: 'listening_order', pedagogicalTypeCode: 'listening_order', layoutType: 'timeline_sequence', graderType: 'exact_option', maxScore: points }];
     }
     case 'reading_matching': {
       if (options.length < 2) { messages.push(message('error', 'optB', 'Cần ít nhất 2 tiêu đề (Lựa chọn A và B).')); return []; }
       const letter = resolveLetter(correct, options, true);
-      if (!letter) { messages.push(message('error', 'correct', `Đáp án "${correct}" không có trong các lựa chọn ${options.map(option => option.letter).join(', ')}.`, 'Ghi chữ cái của tiêu đề đúng cho đoạn này.')); return []; }
+      if (!letter) { messages.push(message('error', 'correct', `"${correct}" không có trong các lựa chọn ${options.map(option => option.letter).join(', ')}.`, 'Ghi chữ cái của tiêu đề đúng cho đoạn này.')); return []; }
       return [{ prompt, interactionType: 'single_choice', pedagogicalTypeCode: 'reading_matching', layoutType: 'split_pane_matching', graderType: 'exact_option', options: options.map(option => ({ id: option.letter, label: option.text })), expectedOptionId: letter, maxScore: points }];
     }
     case 'rubric_async': {

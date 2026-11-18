@@ -1,10 +1,10 @@
 {
-  "baseline": "6136098",
-  "sourceSha256": "955f67b05cce76727bbfdd2f25ae976a79e7a33ed4b048bad4f4caa069eb8b92",
-  "sourceLines": 12781,
+  "baseline": "9f229f2",
+  "sourceSha256": "41b2d8fd892b9c16b7f8a61d0246aca0b37aeb936724faa3a20596e849653372",
+  "sourceLines": 12804,
   "fragments": [
     {
-      "href": "styles/01-foundation.css?rev=20261118-shared-context",
+      "href": "styles/01-foundation.css?rev=20261119-import-engine",
       "startLine": 1,
       "endLine": 1107,
       "sha256": "42b95c76e931da3ac38a81c7b64332a3fb7e977a332b140e04a7a9890e664970",
@@ -12,7 +12,7 @@
       "extractionEndLine": 1069
     },
     {
-      "href": "styles/02-dashboard-grading.css?rev=20261118-shared-context",
+      "href": "styles/02-dashboard-grading.css?rev=20261119-import-engine",
       "startLine": 1108,
       "endLine": 2747,
       "sha256": "c2ea5256b70ba84866c7c1aaead3ab356b293bb2d2b7e82ad8578509dc00bb92",
@@ -20,7 +20,7 @@
       "extractionEndLine": 2726
     },
     {
-      "href": "styles/03-studio-builder.css?rev=20261118-shared-context",
+      "href": "styles/03-studio-builder.css?rev=20261119-import-engine",
       "startLine": 2748,
       "endLine": 4683,
       "sha256": "3981842880d8afe25fc2358816804aaf87aa98e5aeaa9373f703b68ab67d8d86",
@@ -28,7 +28,7 @@
       "extractionEndLine": 4644
     },
     {
-      "href": "styles/04-authoring.css?rev=20261118-shared-context",
+      "href": "styles/04-authoring.css?rev=20261119-import-engine",
       "startLine": 4684,
       "endLine": 5347,
       "sha256": "b80af14f1f3c10ca7400af86995d5af3ff0818e1c07c70f0f55709465ca0805d",
@@ -36,7 +36,7 @@
       "extractionEndLine": 5289
     },
     {
-      "href": "styles/05-simulation-questions.css?rev=20261118-shared-context",
+      "href": "styles/05-simulation-questions.css?rev=20261119-import-engine",
       "startLine": 5348,
       "endLine": 6215,
       "sha256": "cd0dc4be60d4c3ef4fd3362030cbfaaf0199bbc29a1367d651a121d8700bdb31",
@@ -44,7 +44,7 @@
       "extractionEndLine": 6204
     },
     {
-      "href": "styles/06-publishing.css?rev=20261118-shared-context",
+      "href": "styles/06-publishing.css?rev=20261119-import-engine",
       "startLine": 6216,
       "endLine": 7379,
       "sha256": "7ce7b2922eb224bcbd00f60ede6bbf37635b29206c1d4cf4dc205338f84416fc",
@@ -52,7 +52,7 @@
       "extractionEndLine": 6829
     },
     {
-      "href": "styles/07-reports-and-question-layouts.css?rev=20261118-shared-context",
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261119-import-engine",
       "startLine": 7380,
       "endLine": 8959,
       "sha256": "8cb5cc911b13c9c5319067ac1f559f217fb407b02992a4a816bea3b6ba1739a6",
@@ -60,7 +60,7 @@
       "extractionEndLine": 7911
     },
     {
-      "href": "styles/08-studio-simulation-shell.css?rev=20261118-shared-context",
+      "href": "styles/08-studio-simulation-shell.css?rev=20261119-import-engine",
       "startLine": 8960,
       "endLine": 10032,
       "sha256": "80c667ef3d86958ece4fc90cf242bc561597583a06fe7d7bca5c6a3d4c088355",
@@ -68,7 +68,7 @@
       "extractionEndLine": 8949
     },
     {
-      "href": "styles/09-editor-media.css?rev=20261118-shared-context",
+      "href": "styles/09-editor-media.css?rev=20261119-import-engine",
       "startLine": 10033,
       "endLine": 10583,
       "sha256": "bc8cf66528635916a8d6c48383ebde28595596a434a4196bc48e6d3015d99aeb",
@@ -76,7 +76,7 @@
       "extractionEndLine": 9535
     },
     {
-      "href": "styles/10-studio-overrides.css?rev=20261118-shared-context",
+      "href": "styles/10-studio-overrides.css?rev=20261119-import-engine",
       "startLine": 10584,
       "endLine": 11346,
       "sha256": "daf0862790917e0f01f34f3637065b8729a61da21f6f0dd530039689cef80911",
@@ -84,7 +84,7 @@
       "extractionEndLine": 10306
     },
     {
-      "href": "styles/11-analytics.css?rev=20261118-shared-context",
+      "href": "styles/11-analytics.css?rev=20261119-import-engine",
       "startLine": 11347,
       "endLine": 12214,
       "sha256": "090a8b29cd6c3777beebf1096df9f272717595d969cb75a033105750bbdda19e",
@@ -92,10 +92,10 @@
       "extractionEndLine": 11174
     },
     {
-      "href": "styles/12-context-and-assessment.css?rev=20261118-shared-context",
+      "href": "styles/12-context-and-assessment.css?rev=20261119-import-engine",
       "startLine": 12215,
-      "endLine": 12781,
-      "sha256": "f552166e330943eae186d67d2844ca3d0037f197a8d0560c02ab8a83d4e78bbb",
+      "endLine": 12804,
+      "sha256": "bc883f0a4654e485487428bbeb16c7bac807e7b3ea006a38763c10d41180fce9",
       "extractionStartLine": 11175,
       "extractionEndLine": 11527
     }
@@ -105,5 +105,5 @@
     "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
     "sourceLines": 11527
   },
-  "revision": "shared-context"
+  "revision": "import-engine"
 }

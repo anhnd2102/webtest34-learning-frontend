@@ -158,9 +158,9 @@ test('lỗi từng dòng có số dòng, cột và cách sửa; một dòng lỗ
   assert.equal(wrongLetter.column, 'Đáp án đúng');
   assert.match(wrongLetter.text, /"E".*A, B, C, D/);
   assert.ok(wrongLetter.hint);
-  assert.match(result.rows[2].messages[0].text, /Thiếu Đề bài/);
-  assert.match(result.rows[3].messages[0].text, /Thiếu Lựa chọn B/);
-  assert.match(result.rows[4].messages[0].text, /Điểm "abc" không hợp lệ/);
+  assert.match(result.rows[2].messages[0].text, /Chưa điền/);
+  assert.match(result.rows[3].messages[0].text, /Chưa điền/);
+  assert.match(result.rows[4].messages[0].text, /"abc" không hợp lệ/);
   assert.equal(result.rows[4].cards[0].maxScore, 1, 'điểm sai thì dùng mặc định');
   assert.deepEqual(result.summary, { total: 5, ok: 1, warning: 1, error: 3 });
   assert.equal(result.cards.length, 2, 'chỉ dòng Hợp lệ/Cảnh báo ra câu hỏi');
