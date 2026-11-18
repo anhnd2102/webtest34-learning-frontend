@@ -60,6 +60,12 @@ export function guideHtml(options = {}) {
       </ul>
       <h4 class="guide-section-title">File cả Phần thi</h4>
       <p>File cả Phần có đúng các cột của từng dạng, thêm ba cột đầu: Bài tập, Hướng dẫn bài tập, Dạng câu. Một dạng trong một bài tập chính là file cả Phần bỏ ba cột đầu.</p>
+      <ul class="guide-list">
+        <li><strong>Thông tin Phần</strong> (tiêu đề, hướng dẫn, bài đọc dài, âm thanh): thêm một dòng có Dạng câu là "Thông tin Phần" (Bài tập = tiêu đề, Hướng dẫn bài tập = hướng dẫn, Đề bài = bài đọc, Âm thanh = bài nghe). Với Excel, dùng sheet "Thông tin Phần". Không điền thì nhập tay trong Test Studio.</li>
+        <li><strong>Cả đề:</strong> nút "Nhập cả đề từ Excel" ở đầu danh sách Phần. Mỗi sheet là một Phần (tên sheet là tên Phần); sheet "Thông tin Phần" và "Hướng dẫn" không thành Phần. Đề có tối đa 10 Phần.</li>
+        <li><strong>Ảnh và âm thanh:</strong> ghi đường dẫn hoặc link. Nếu chỉ ghi tên file (apple.png), hãy khai "Thư mục ảnh/âm thanh" trong hộp thoại nhập để hệ thống ghép đường dẫn.</li>
+        <li><strong>Sau khi nhập:</strong> câu trùng đề bài với câu đã có bị cảnh báo (vẫn nhập được); nút "Hoàn tác lần nhập này" hiện cho tới khi bạn sửa tiếp.</li>
+      </ul>
       <div class="guide-downloads">
         <button type="button" class="btn btn-primary btn-sm btn-download-excel-template">Tải mẫu Excel (.xlsx)</button>
         <button type="button" class="btn btn-secondary btn-sm btn-download-block-template-guide">Tải mẫu cả Phần (.csv)</button>

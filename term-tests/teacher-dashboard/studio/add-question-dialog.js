@@ -6,7 +6,9 @@
 import { getActiveUnsavedChangesOwner, trackBuilderModal } from '../navigation/unsaved-changes.js';
 import { renderSvgIcon } from '../ui/icons.js';
 import { escapeHtml } from '../ui/presentation.js';
-import { openCsvQuickGuideModal, parseUploadedFileToCsv } from './batch-import.js';
+import { openCsvQuickGuideModal, parseUploadedFileToSheets } from './batch-import.js';
+import { sheetForType } from './import-workbook.js';
+import { getMediaBase, mediaBaseFieldHtml, setMediaBase } from './media-base.js';
 import { buildFromRecord, readImport, readRecords, typeTemplateCsv } from './import-engine.js';
 import { importErrorsCsv, importPreviewHtml } from './import-preview.js';
 import { QUICK_HINT, QUICK_TYPES, cardPreviewHtml, emptyRecord, formFields, pasteToRecords, quickTextToRecords, singleMode, typeChoices } from './add-question-model.js';
@@ -34,6 +36,8 @@ export function openAddQuestionDialog(options) {
     let added = 0;
     let attempted = false;
     let fileText = '';
+    const existingPrompts = options.existingPrompts || [];
+    const readerOptions = () => ({ defaultPoints, existingPrompts, mediaBase: getMediaBase() });
     const modal = document.createElement('div');
     modal.id = 'add-question-dialog';
     modal.className = 'candidate-sim-overlay aq-overlay';
@@ -78,7 +82,7 @@ export function openAddQuestionDialog(options) {
         <button type="button" class="btn btn-secondary btn-sm aq-download-template">${renderSvgIcon('download', 'icon-inline')} <span>Tải file mẫu</span></button>
         <button type="button" class="btn btn-secondary btn-sm aq-choose-file">${renderSvgIcon('upload', 'icon-inline')} <span>Chọn file CSV/Excel</span></button>
         <button type="button" class="btn btn-secondary btn-sm aq-open-guide">${renderSvgIcon('fileText', 'icon-inline')} <span>Xem hướng dẫn</span></button>
-        <input type="file" class="aq-file-input generic-layout-hidden" accept=".csv,.tsv,.txt,.xlsx,.xls" />
+        <input type="file" class="aq-file-input" hidden accept=".csv,.tsv,.txt,.xlsx,.xls" />
       </div>
       <label class="form-label">Hoặc dán nội dung CSV:</label>
       <textarea class="form-control aq-file-text" rows="5"></textarea>
@@ -97,6 +101,7 @@ export function openAddQuestionDialog(options) {
       <div class="modal-body aq-body">
         ${spec ? `<div class="aq-sticky"><div class="aq-chosen"><span><strong>${escapeHtml(spec.label)}</strong></span><button type="button" class="btn btn-secondary btn-sm aq-change-type">Đổi dạng</button><label class="aq-points">Điểm mặc định <input type="number" class="form-control aq-default-points" min="0.25" step="0.25" value="${pointsLabel()}" placeholder="${spec.defaultPoints}" /></label></div>
         <div class="modal-batch-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" class="modal-batch-tab-btn${tab === id ? ' active' : ''}" aria-selected="${tab === id}" data-aq-tab="${id}">${label}</button>`).join('')}</div></div>
+        ${typeCode === 'pictorial_vocabulary' ? `<div class="aq-media-row">${mediaBaseFieldHtml(getMediaBase())}</div>` : ''}
         <div class="aq-panel" data-panel="single"${tab === 'single' ? '' : ' hidden'}>${singlePanel(typeCode)}</div>
         <div class="aq-panel" data-panel="bulk"${tab === 'bulk' ? '' : ' hidden'}>${bulkPanel(typeCode)}</div>
         <div class="aq-panel" data-panel="file"${tab === 'file' ? '' : ' hidden'}>${filePanel()}</div>` : typeStep()}
@@ -138,7 +143,7 @@ export function openAddQuestionDialog(options) {
         if (!typeCode || singleMode(typeCode) !== 'form')
             return { ok: false, cards: [] };
         record = readForm();
-        const built = buildFromRecord(typeCode, record, { defaultPoints });
+        const built = buildFromRecord(typeCode, record, readerOptions());
         const preview = modal.querySelector('.aq-preview');
         const messages = modal.querySelector('.aq-messages');
         const empty = Object.values(record).every(value => !String(value || '').trim());
@@ -173,7 +178,7 @@ export function openAddQuestionDialog(options) {
         modal.querySelector('.aq-field')?.focus();
     }
     // ---- Hàng loạt
-    function bulkStatus() { return readRecords(typeCode, bulkRecords, { defaultPoints }); }
+    function bulkStatus() { return readRecords(typeCode, bulkRecords, readerOptions()); }
     function paintBulkStatuses() {
         const wrap = modal.querySelector('.aq-grid-wrap');
         const summary = modal.querySelector('.aq-bulk-summary');
@@ -230,7 +235,7 @@ export function openAddQuestionDialog(options) {
             }
             return;
         }
-        const read = readImport(fileText, { scope: 'type', typeCode, defaultPoints });
+        const read = readImport(fileText, { scope: 'type', typeCode, ...readerOptions() });
         box.innerHTML = importPreviewHtml(read);
         box.querySelector('.btn-download-import-errors')?.addEventListener('click', () => downloadText(importErrorsCsv(read), 'loi_nhap_file.csv'));
         const ready = read.cards.length;
@@ -256,6 +261,16 @@ export function openAddQuestionDialog(options) {
         modal.querySelector('.aq-default-points')?.addEventListener('input', event => {
             const value = Number(event.target.value);
             defaultPoints = Number.isFinite(value) && value > 0 ? value : 0;
+            if (tab === 'single')
+                refreshSingle();
+            else if (tab === 'bulk')
+                paintBulkStatuses();
+            else
+                paintFile();
+        });
+        const mediaInput = modal.querySelector('.input-media-base');
+        mediaInput?.addEventListener('input', () => {
+            setMediaBase(mediaInput.value);
             if (tab === 'single')
                 refreshSingle();
             else if (tab === 'bulk')
@@ -301,12 +316,13 @@ export function openAddQuestionDialog(options) {
             const file = event.target.files?.[0];
             if (!file)
                 return;
-            parseUploadedFileToCsv(file, (error, csvText) => {
+            parseUploadedFileToSheets(file, (error, sheets) => {
                 if (error) {
                     window.alert?.(error.message || 'Không thể đọc file.');
                     return;
                 }
-                fileText = csvText || '';
+                // Excel nhiều sheet: lấy sheet đặt tên theo dạng này, không có thì sheet đầu.
+                fileText = sheetForType(sheets || [], typeCode)?.csv || '';
                 const textarea = modal.querySelector('.aq-file-text');
                 if (textarea)
                     textarea.value = fileText;
@@ -315,7 +331,7 @@ export function openAddQuestionDialog(options) {
         });
         modal.querySelector('.aq-file-text')?.addEventListener('input', event => { fileText = event.target.value; paintFile(); });
         modal.querySelector('.aq-file-add')?.addEventListener('click', () => {
-            const read = readImport(fileText, { scope: 'type', typeCode: typeCode, defaultPoints });
+            const read = readImport(fileText, { scope: 'type', typeCode: typeCode, ...readerOptions() });
             if (!read.cards.length)
                 return;
             options.onCommit(read.cards, { typeCode: typeCode, via: 'file' });

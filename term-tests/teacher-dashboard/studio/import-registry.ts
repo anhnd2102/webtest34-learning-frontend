@@ -6,7 +6,7 @@
 export type FieldId =
   | 'exerciseTitle' | 'exerciseInstructions' | 'type' | 'prompt'
   | 'optA' | 'optB' | 'optC' | 'optD' | 'optE' | 'optF' | 'optG' | 'optH'
-  | 'correct' | 'accepted' | 'explanation' | 'points' | 'image' | 'hint'
+  | 'correct' | 'accepted' | 'explanation' | 'points' | 'image' | 'audio' | 'hint'
   | 'wrongPart' | 'keyword' | 'targetSentence' | 'context' | 'criterion1' | 'criterion2' | 'legacyPreset'
   | 'optionsList';
 
@@ -28,6 +28,7 @@ export const COLUMNS: { id: FieldId, label: string, aliases: string[] }[] = [
   { id: 'prompt', label: 'Đề bài', aliases: ['prompt', 'question prompt', 'question_prompt', 'question', 'câu hỏi', 'đề', 'nội dung'] },
   { id: 'context', label: 'Ngữ cảnh', aliases: ['reference context', 'reference_context', 'context', 'bài đọc'] },
   { id: 'image', label: 'Ảnh', aliases: ['image', 'image url', 'image_url', 'hình ảnh', 'tên ảnh'] },
+  { id: 'audio', label: 'Âm thanh', aliases: ['audio', 'audio url', 'audio_url', 'file nghe', 'tên file âm thanh'] },
   { id: 'wrongPart', label: 'Từ sai', aliases: ['error part', 'error_part', 'phần sai', 'lỗi sai'] },
   { id: 'keyword', label: 'Từ khóa bắt buộc', aliases: ['mandatory keyword', 'mandatory_keyword', 'từ khóa', 'keyword'] },
   { id: 'targetSentence', label: 'Câu đích', aliases: ['target sentence with blank', 'target_sentence_with_blank', 'target sentence', 'câu đích có chỗ trống'] },
@@ -157,13 +158,13 @@ export const TYPES: TypeSpec[] = [
     aliases: ['từ vựng qua ảnh', 'từ vựng ảnh', 'pictorial', 'pictorial vocabulary', 'image vocabulary'],
     legacy: { headers: ['Image_URL', 'Target_Word', 'Vietnamese_Meaning', 'Accepted_Variants', 'Score'], order: ['image', 'correct', 'hint', 'accepted', 'points'] },
     examples: ex([
-      { image: 'apple.png', correct: 'apple', hint: 'quả táo', accepted: 'an apple | the apple', points: '1' },
-      { image: 'camera.png', correct: 'camera', hint: 'máy ảnh', points: '1' }
+      { image: 'assets/vocabulary/apple.png', correct: 'apple', hint: 'quả táo', accepted: 'an apple | the apple', points: '1' },
+      { image: 'assets/vocabulary/camera.png', correct: 'camera', hint: 'máy ảnh', points: '1' }
     ]),
     help: {
       studentView: 'Học viên thấy một bức ảnh kèm gợi ý nghĩa và gõ từ tiếng Anh tương ứng.',
      
-      columnNotes: { image: 'Tên file ảnh (hoặc đường dẫn đầy đủ).', correct: 'Từ tiếng Anh học viên phải điền.', hint: 'Nghĩa tiếng Việt hiện làm gợi ý.' },
+      columnNotes: { image: 'Đường dẫn ảnh (ví dụ assets/vocabulary/apple.png), link Drive, hoặc chỉ tên file nếu đã khai Thư mục ảnh/âm thanh.', correct: 'Từ tiếng Anh học viên phải điền.', hint: 'Nghĩa tiếng Việt hiện làm gợi ý.' },
       commonMistakes: ['Thiếu ảnh: câu sẽ không có hình để học viên nhìn.']
     }
   },
@@ -330,7 +331,8 @@ export const FIELD_NOTES: { [K in FieldId]?: string } = {
   accepted: 'Các đáp án khác cũng được tính đúng, cách nhau bằng |.',
   explanation: 'Giải thích đáp án (hiện cho học viên khi đáp án được công bố).',
   points: 'Điểm của câu; để trống thì dùng điểm mặc định của hộp thoại.',
-  image: 'Tên file ảnh (hoặc đường dẫn đầy đủ).',
+  image: 'Đường dẫn ảnh, link Drive, hoặc tên file kèm Thư mục ảnh/âm thanh.',
+  audio: 'Chỉ dùng ở dòng "Thông tin Phần": đường dẫn hoặc tên file bài nghe của cả Phần.',
   hint: 'Gợi ý hiện cho học viên.',
   wrongPart: 'Từ/cụm từ sai trong câu.',
   keyword: 'Từ khóa học viên bắt buộc dùng.',

@@ -4,9 +4,12 @@ import { getActiveUnsavedChangesOwner, releaseBuilderModal, trackBuilderModal, r
 import { renderSvgIcon } from '../ui/icons.js';
 import { escapeHtml } from '../ui/presentation.js';
 import { blockTemplateCsv, readImport, templateWorkbookSheets, typeTemplateCsv } from './import-engine.js';
+import { readBlockWorkbook } from './import-workbook.js';
+import { getMediaBase, mediaBaseFieldHtml, setMediaBase } from './media-base.js';
 import { guideHtml } from './import-guide.js';
 import { importErrorsCsv, importPreviewHtml, typeColumnsHint, typePlaceholder } from './import-preview.js';
-export function parseUploadedFileToCsv(file, callback) {
+// Đọc file tải lên thành danh sách sheet đã đổi sang CSV: .xlsx/.xls có nhiều sheet; CSV/TSV/văn bản chỉ có một sheet.
+export function parseUploadedFileToSheets(file, callback) {
     if (!file || typeof callback !== 'function')
         return;
     const fileName = (file.name || '').toLowerCase();
@@ -16,20 +19,12 @@ export function parseUploadedFileToCsv(file, callback) {
             reader.onload = (evt) => {
                 try {
                     const data = new Uint8Array(evt.target.result);
-                    if (typeof XLSX !== 'undefined') {
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        // Luôn ưu tiên Sheet 1 (hoặc sheet có tên Nhap_De_Thi) để import
-                        let targetSheetName = workbook.SheetNames[0];
-                        if (workbook.SheetNames.includes('Nhap_De_Thi')) {
-                            targetSheetName = 'Nhap_De_Thi';
-                        }
-                        const worksheet = workbook.Sheets[targetSheetName];
-                        const csvText = XLSX.utils.sheet_to_csv(worksheet);
-                        callback(null, csvText);
+                    if (typeof XLSX === 'undefined') {
+                        callback(new Error('Thư viện Excel (XLSX) chưa được tải trên trình duyệt. Vui lòng chuyển file sang định dạng CSV UTF-8 rồi tải lại.'));
+                        return;
                     }
-                    else {
-                        callback(new Error('Thư viện Excel (XLSX) chưa được tải trên trình duyệt. Vui lòng chuyển file sang định dạng CSV UTF-8.'));
-                    }
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    callback(null, workbook.SheetNames.map((name) => ({ name, csv: XLSX.utils.sheet_to_csv(workbook.Sheets[name]) })));
                 }
                 catch (err) {
                     callback(err);
@@ -49,7 +44,7 @@ export function parseUploadedFileToCsv(file, callback) {
                 const cdnScript = document.createElement('script');
                 cdnScript.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
                 cdnScript.onload = () => doParse();
-                cdnScript.onerror = () => callback(new Error('Không thể tải thư viện đọc file Excel (XLSX). Vui lòng lưu file sang định dạng CSV UTF-8.'));
+                cdnScript.onerror = () => callback(new Error('Không thể tải thư viện đọc file Excel (XLSX). Vui lòng lưu file sang định dạng CSV UTF-8 rồi tải lại.'));
                 document.head.appendChild(cdnScript);
             };
             document.head.appendChild(script);
@@ -58,11 +53,23 @@ export function parseUploadedFileToCsv(file, callback) {
     else {
         const reader = new FileReader();
         reader.onload = (evt) => {
-            callback(null, evt.target.result || '');
+            callback(null, [{ name: 'CSV', csv: evt.target.result || '' }]);
         };
         reader.onerror = () => callback(new Error('Lỗi khi đọc file CSV từ thiết bị.'));
         reader.readAsText(file, 'utf-8');
     }
+}
+// Giữ hàm cũ cho các hộp thoại chỉ cần một CSV: sheet "Nhap_De_Thi" (mẫu cũ) hoặc sheet đầu.
+export function parseUploadedFileToCsv(file, callback) {
+    parseUploadedFileToSheets(file, (error, sheets) => {
+        if (error) {
+            callback(error);
+            return;
+        }
+        const list = sheets || [];
+        const chosen = list.find(sheet => sheet.name === 'Nhap_De_Thi') || list[0];
+        callback(null, chosen?.csv ?? '');
+    });
 }
 // Tải một chuỗi CSV về máy (dùng cho mẫu và danh sách lỗi).
 function downloadCsvText(csvContent, fileName) {
@@ -334,7 +341,7 @@ export function openGenericBatchModal({ title = 'Tạo câu hỏi hàng loạt',
             previewBox.hidden = false;
             if (csvConfig.typeCode) {
                 // Bộ đọc thống nhất: bảng trạng thái từng dòng; chỉ dòng Hợp lệ/Cảnh báo được nhập.
-                const read = readImport(val, { scope: 'type', typeCode: csvConfig.typeCode, defaultPoints: getSafePoints() });
+                const read = readImport(val, { scope: 'type', typeCode: csvConfig.typeCode, defaultPoints: getSafePoints(), existingPrompts: csvConfig.existingPrompts, mediaBase: getMediaBase() });
                 parsedItems = read.cards;
                 previewBox.innerHTML = importPreviewHtml(read);
                 previewBox.querySelector('.btn-download-import-errors')?.addEventListener('click', () => downloadCsvText(importErrorsCsv(read), 'loi_nhap_file.csv'));
@@ -613,6 +620,10 @@ export function openCsvQuickGuideModal(owner = getActiveUnsavedChangesOwner(), o
     });
     return modal;
 }
+function readBlockWorkbookCsv(sheets) {
+    const chosen = readBlockWorkbook(sheets, {}).sheetName;
+    return sheets.find(sheet => sheet.name === chosen)?.csv || '';
+}
 export function openBlockCsvUploadModal(opts = {}) {
     const { block, blockIdx, owner = getActiveUnsavedChangesOwner(), onImport = () => { } } = opts;
     if (typeof document === 'undefined') {
@@ -667,6 +678,8 @@ export function openBlockCsvUploadModal(opts = {}) {
           </button>
           <input type="file" class="input-block-csv-file csv-layout-file-input" accept=".csv,.tsv,.txt,.xlsx,.xls" />
         </div>
+
+        <div class="form-group csv-layout-field">${mediaBaseFieldHtml(getMediaBase())}</div>
 
         <div class="form-group csv-layout-field">
           <label class="form-label csv-layout-field-label">Hoặc dán nội dung CSV vào đây:</label>
@@ -728,6 +741,11 @@ export function openBlockCsvUploadModal(opts = {}) {
         downloadCsvText(blockTemplateCsv(), 'mau_cac_bai_tap_trong_phan.csv');
     });
     let parsedData = null;
+    // Danh sách sheet khi file là Excel; sheet "Thông tin Phần" cho thông tin cả Phần.
+    let workbookSheets = null;
+    const existingPrompts = (block?.items || []).map(item => String(item.prompt || '')).filter(Boolean);
+    const mediaInput = modal.querySelector('.input-media-base');
+    mediaInput?.addEventListener('input', () => { setMediaBase(mediaInput.value); updatePreview(); });
     function updatePreview() {
         const raw = (textarea?.value || '').trim();
         if (!raw) {
@@ -737,8 +755,19 @@ export function openBlockCsvUploadModal(opts = {}) {
             parsedData = null;
             return;
         }
-        const read = readImport(raw, { scope: 'block' });
-        parsedData = { exercises: read.exercises.filter(exercise => exercise.items.length) };
+        const readOptions = { existingPrompts, mediaBase: getMediaBase() };
+        let read;
+        let info;
+        if (workbookSheets) {
+            const workbook = readBlockWorkbook(workbookSheets, readOptions);
+            read = workbook.read;
+            info = workbook.info;
+        }
+        else {
+            read = readImport(raw, { scope: 'block', ...readOptions });
+            info = read.blockInfo;
+        }
+        parsedData = { exercises: read.exercises.filter(exercise => exercise.items.length), info };
         const exCount = parsedData.exercises.length;
         const totalItems = parsedData.exercises.reduce((s, ex) => s + (ex.items?.length || 0), 0);
         if (totalItems === 0) {
@@ -756,6 +785,9 @@ export function openBlockCsvUploadModal(opts = {}) {
         parsedData.exercises.forEach((ex) => {
             html += `<li><strong>${escapeHtml(ex.title)}:</strong> ${ex.items.length} câu hỏi <em>(${escapeHtml(ex.instructions || 'Không có hướng dẫn')})</em></li>`;
         });
+        if (info && (info.title || info.instructions || info.reading || info.audio)) {
+            html += `<label class="csv-layout-mode-option"><input type="checkbox" class="chk-apply-block-info" checked /> <span><strong>Cập nhật thông tin Phần từ file</strong> (${[info.title && 'tiêu đề', info.instructions && 'hướng dẫn', info.reading && 'bài đọc', info.audio && 'âm thanh'].filter(Boolean).join(', ')})</span></label>`;
+        }
         html += `</ul>${importPreviewHtml(read)}`;
         previewBox.innerHTML = html;
         previewBox.querySelector('.btn-download-import-errors')?.addEventListener('click', () => downloadCsvText(importErrorsCsv(read), 'loi_nhap_file.csv'));
@@ -766,28 +798,32 @@ export function openBlockCsvUploadModal(opts = {}) {
             const file = e.target.files?.[0];
             if (!file)
                 return;
-            parseUploadedFileToCsv(file, (err, csvText) => {
+            parseUploadedFileToSheets(file, (err, sheets) => {
                 if (err) {
                     if (typeof window !== 'undefined' && typeof window.alert === 'function') {
                         window.alert(err.message || 'Không thể đọc file.');
                     }
                     return;
                 }
+                const list = sheets || [];
+                workbookSheets = list.length > 1 || (list[0] && list[0].name !== 'CSV') ? list : null;
                 if (textarea) {
-                    textarea.value = csvText || '';
+                    // Ô dán hiện sheet nội dung Phần để người dùng xem/sửa; Excel nhiều sheet vẫn lấy thông tin Phần từ sheet riêng.
+                    textarea.value = workbookSheets ? readBlockWorkbookCsv(list) : (list[0]?.csv || '');
                     updatePreview();
                 }
             });
         });
     }
-    textarea?.addEventListener('input', updatePreview);
+    textarea?.addEventListener('input', () => { workbookSheets = null; updatePreview(); });
     confirmBtn?.addEventListener('click', () => {
         if (!parsedData || !parsedData.exercises.length)
             return;
         const mode = modal.querySelector('input[name="block-import-mode"]:checked')?.value || 'append';
         closeModal();
+        const applyInfo = Boolean(modal.querySelector('.chk-apply-block-info')?.checked);
         if (typeof onImport === 'function') {
-            onImport({ mode, exercises: parsedData.exercises });
+            onImport({ mode, exercises: parsedData.exercises, blockInfo: applyInfo ? parsedData.info : undefined });
         }
     });
     return modal;
