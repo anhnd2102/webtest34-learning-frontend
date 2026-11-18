@@ -11554,5 +11554,127 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".import-more, .import-preview-empty"
+  },
+  {
+    "order": 1913,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-body"
+  },
+  {
+    "order": 1914,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-section-title"
+  },
+  {
+    "order": 1915,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-list"
+  },
+  {
+    "order": 1916,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-list li"
+  },
+  {
+    "order": 1917,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-downloads"
+  },
+  {
+    "order": 1918,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-toc"
+  },
+  {
+    "order": 1919,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-toc-chip"
+  },
+  {
+    "order": 1920,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(hover: hover)"
+    ],
+    "selector": ".guide-toc-chip:hover"
+  },
+  {
+    "order": 1921,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-type"
+  },
+  {
+    "order": 1922,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-type.is-focus"
+  },
+  {
+    "order": 1923,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-type-head"
+  },
+  {
+    "order": 1924,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-type-title"
+  },
+  {
+    "order": 1925,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-type-family"
+  },
+  {
+    "order": 1926,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-student"
+  },
+  {
+    "order": 1927,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-subtitle"
+  },
+  {
+    "order": 1928,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-table-wrap"
+  },
+  {
+    "order": 1929,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-table"
+  },
+  {
+    "order": 1930,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-table th, .guide-table td"
+  },
+  {
+    "order": 1931,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-table th"
+  },
+  {
+    "order": 1932,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-mistakes"
   }
 ]
