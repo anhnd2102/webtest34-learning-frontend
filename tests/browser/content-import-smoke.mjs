@@ -43,6 +43,7 @@ try {
   browser = await chromium.launch({ headless: true, channel: 'chrome' });
   for (const [width, height] of [[1440, 900], [1024, 768], [390, 844]]) {
     const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
+    await page.addInitScript(() => { const openShortcuts = () => document.querySelectorAll('.add-item-shortcuts').forEach(details => { details.open = true; }); new MutationObserver(openShortcuts).observe(document, { childList: true, subtree: true }); });
     page.setDefaultTimeout(10000);
     const screenshot = async state => {
       // Settle the existing modal's delayed focus, then neutralize caret/hover/animation noise.

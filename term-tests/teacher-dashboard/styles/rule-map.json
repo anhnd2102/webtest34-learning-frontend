@@ -11676,5 +11676,339 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-mistakes"
+  },
+  {
+    "order": 1933,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".add-item-shortcuts"
+  },
+  {
+    "order": 1934,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".add-item-shortcuts summary"
+  },
+  {
+    "order": 1935,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".add-item-shortcuts .add-item-buttons"
+  },
+  {
+    "order": 1936,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-overlay .aq-dialog"
+  },
+  {
+    "order": 1937,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-body"
+  },
+  {
+    "order": 1938,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-family"
+  },
+  {
+    "order": 1939,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-family h4"
+  },
+  {
+    "order": 1940,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-type-grid"
+  },
+  {
+    "order": 1941,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-type-btn"
+  },
+  {
+    "order": 1942,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(hover: hover)"
+    ],
+    "selector": ".aq-type-btn:hover"
+  },
+  {
+    "order": 1943,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-chosen"
+  },
+  {
+    "order": 1944,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-points"
+  },
+  {
+    "order": 1945,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-points input"
+  },
+  {
+    "order": 1946,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-panel"
+  },
+  {
+    "order": 1947,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-single"
+  },
+  {
+    "order": 1948,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(max-width: 800px)"
+    ],
+    "selector": ".aq-single"
+  },
+  {
+    "order": 1949,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-form-row"
+  },
+  {
+    "order": 1950,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-required"
+  },
+  {
+    "order": 1951,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-note-text"
+  },
+  {
+    "order": 1952,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-side"
+  },
+  {
+    "order": 1953,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-side h5"
+  },
+  {
+    "order": 1954,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-card"
+  },
+  {
+    "order": 1955,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-prompt"
+  },
+  {
+    "order": 1956,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-options"
+  },
+  {
+    "order": 1957,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-meta, .aq-preview-points"
+  },
+  {
+    "order": 1958,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-tokens"
+  },
+  {
+    "order": 1959,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-token"
+  },
+  {
+    "order": 1960,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-input"
+  },
+  {
+    "order": 1961,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-preview-textarea"
+  },
+  {
+    "order": 1962,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-message-list"
+  },
+  {
+    "order": 1963,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-message-list .is-error"
+  },
+  {
+    "order": 1964,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-note"
+  },
+  {
+    "order": 1965,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-bulk-input textarea"
+  },
+  {
+    "order": 1966,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-quick-label"
+  },
+  {
+    "order": 1967,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-table-scroll"
+  },
+  {
+    "order": 1968,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-grid"
+  },
+  {
+    "order": 1969,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-grid th, .aq-grid td"
+  },
+  {
+    "order": 1970,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-grid th"
+  },
+  {
+    "order": 1971,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-cell"
+  },
+  {
+    "order": 1972,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-status"
+  },
+  {
+    "order": 1973,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-status.is-error"
+  },
+  {
+    "order": 1974,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-status.is-warning"
+  },
+  {
+    "order": 1975,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-row-messages"
+  },
+  {
+    "order": 1976,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-grid-empty"
+  },
+  {
+    "order": 1977,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-bulk-summary"
+  },
+  {
+    "order": 1978,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-file-actions"
+  },
+  {
+    "order": 1979,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-footer"
+  },
+  {
+    "order": 1980,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-footer-actions"
+  },
+  {
+    "order": 1981,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-added"
+  },
+  {
+    "order": 1982,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-dialog > .csv-layout-header"
+  },
+  {
+    "order": 1983,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-dialog .aq-body"
+  },
+  {
+    "order": 1984,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-dialog .aq-footer"
+  },
+  {
+    "order": 1985,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-points input"
+  },
+  {
+    "order": 1986,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-sticky"
+  },
+  {
+    "order": 1987,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-points"
   }
 ]

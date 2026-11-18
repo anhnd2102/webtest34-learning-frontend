@@ -414,6 +414,26 @@ function convertLegacyMatching(rows) {
     });
     return out;
 }
+// ---------------------------------------------------------------- dựng từ bản ghi (form từng câu, bảng hàng loạt)
+const defaultGroupId = () => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+// Dựng câu hỏi từ MỘT bản ghi nhập tay (form "Từng câu"): cùng quy tắc kiểm tra và cùng thẻ câu hỏi như đọc file.
+export function buildFromRecord(typeCode, record, options = {}) {
+    const messages = [];
+    const ctx = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId };
+    const cards = buildCards(record, TYPE_BY_CODE[typeCode], ctx, messages);
+    const status = messages.some(item => item.level === 'error') ? 'error' : (messages.length ? 'warning' : 'ok');
+    if (status === 'error')
+        return { status, messages, cards: [] };
+    const exercise = { title: '', instructions: '', items: cards };
+    finalizeVocabulary(exercise);
+    finalizeListening(exercise);
+    return { status, messages, cards: exercise.items };
+}
+// Đọc một danh sách bản ghi (bảng nhập hàng loạt đã sửa) bằng đúng bộ đọc của file.
+export function readRecords(typeCode, records, options = {}) {
+    const columns = COLUMNS.map(column => column.id).filter(id => TYPE_BY_CODE[typeCode].columns.includes(id));
+    return readImport(recordsToCsv(records, columns), { scope: 'type', typeCode, ...options });
+}
 // ---------------------------------------------------------------- bộ đọc chính
 export function readImport(rawText, options) {
     const scope = options.scope;
