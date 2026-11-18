@@ -73,7 +73,7 @@ test('điền từ nội tuyến, sửa lỗi, viết lại, sắp xếp câu, n
   assert.equal(listening.gradingKeyItems[listening.items[0].itemVersionId].events.length, 3);
 
   const pictorial = commit(cardsOf('pictorial_vocabulary'));
-  assert.equal(pictorial.items[0].image, 'apple.png');
+  assert.equal(pictorial.items[0].image, 'assets/vocabulary/apple.png');
   assert.ok(pictorial.items[0].letterHint);
 });
 

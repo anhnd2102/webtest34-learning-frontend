@@ -1,11 +1,12 @@
 // NGUỒN: file .ts này; block-csv-import.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
-import type { BinderBase, BuilderOptions, DraftExercise } from './draft-model.js';
+import type { BinderBase, BuilderOptions } from './draft-model.js';
 import { generateUuid } from './draft-model.js';
-import { commitCardsToExercise } from './card-to-item.js';
+import { appendExercisesToBlock, applyBlockInfo } from './card-to-item.js';
 import { openBlockCsvUploadModal } from './batch-import.js';
 
-export function bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options }: BinderBase & {
+export function bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options, runImport }: BinderBase & {
+  runImport?: (label: string, apply: () => void) => void;
   builderOwner: unknown;
   resequenceItemPositions: () => void;
   getNextPosition: () => number;
@@ -23,40 +24,18 @@ export function bindBlockCsvImport({ container, builderOwner, draftState, markAs
         openBlockCsvUploadModal({ owner: builderOwner,
           block,
           blockIdx: bIdx,
-          onImport: ({ mode, exercises }: any) => {
+          onImport: ({ mode, exercises, blockInfo }: any) => {
             if (!exercises || !exercises.length) return;
-
-            if (mode === 'overwrite') {
-              (block.items || []).forEach(it => {
-                if (it.itemVersionId) {
-                  delete draftState.gradingKey.items[it.itemVersionId!];
-                }
-              });
-              block.exercises = [];
-              block.items = [];
-            }
-
-            block.exercises = block.exercises || [];
-            block.items = block.items || [];
-
-            exercises.forEach((parsedEx: any) => {
-              const newExId = generateUuid();
-              const newExNumber = block.exercises!.length + 1;
-              const targetEx: DraftExercise = {
-                exerciseId: newExId,
-                exerciseNumber: newExNumber,
-                title: parsedEx.title || `Exercise ${newExNumber}`,
-                instructions: parsedEx.instructions || ''
-              };
-              block.exercises!.push(targetEx);
-
-              // Dựng câu + đáp án chấm bằng hàm dùng chung với hộp thoại "Thêm câu hỏi".
-              commitCardsToExercise({ draftState, block, exercise: targetEx, cards: parsedEx.items || [], startPosition: getNextPosition(), newId: generateUuid });
-            });
-
-            resequenceItemPositions();
-            markAsDirty();
-            render();
+            const count = exercises.reduce((sum: number, exercise: any) => sum + (exercise.items?.length || 0), 0);
+            const apply = () => {
+              appendExercisesToBlock({ draftState, block, exercises, getNextPosition, newId: generateUuid, mode: mode === 'overwrite' ? 'overwrite' : 'append' });
+              if (blockInfo) applyBlockInfo(block, blockInfo);
+              resequenceItemPositions();
+              markAsDirty();
+              render();
+            };
+            // Có thể hoàn tác lần nhập này cho tới khi người ra đề sửa tiếp.
+            if (runImport) runImport(`Đã nhập ${count} câu vào ${block.title || `Phần ${bIdx + 1}`}.`, apply); else apply();
           }
         });
       });

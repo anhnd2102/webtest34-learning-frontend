@@ -2,6 +2,9 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { bindChoiceAuthoring } from './authoring/choice.js';
 import { bindAddQuestion } from './authoring/add-question.js';
+import { bindTestImport } from './authoring/test-import.js';
+import { restoreDraft, snapshotDraft } from './import-undo.js';
+import type { DraftSnapshot } from './import-undo.js';
 import { bindShortAnswerAuthoring } from './authoring/short-answer.js';
 import { bindReadingMatchingAuthoring } from './authoring/reading-matching.js';
 import { bindListeningOrderAuthoring } from './authoring/listening-order.js';
@@ -189,8 +192,48 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     }
   }
 
+  // Hoàn tác lần nhập (spec #91, GĐ 4): chụp bản nháp trước khi nhập; nút Hoàn tác nằm ở thanh nổi cho tới khi người ra đề sửa tiếp.
+  let importUndo: { snapshot: DraftSnapshot, label: string } | null = null;
+  let committingImport = false;
+
+  function clearImportUndo() {
+    importUndo = null;
+    if (typeof document !== 'undefined' && typeof document.getElementById === 'function') document.getElementById('import-undo-toast')?.remove();
+  }
+
+  function showImportUndo() {
+    if (typeof document === 'undefined' || typeof document.getElementById !== 'function' || !importUndo) return;
+    document.getElementById('import-undo-toast')?.remove();
+    const toast = document.createElement('div');
+    toast.id = 'import-undo-toast';
+    toast.className = 'import-undo-toast';
+    toast.setAttribute('role', 'status');
+    toast.innerHTML = `<span class="import-undo-label"></span><button type="button" class="btn btn-secondary btn-sm btn-undo-import">Hoàn tác lần nhập này</button><button type="button" class="btn btn-ghost btn-sm btn-dismiss-undo" aria-label="Đóng">${renderSvgIcon('close', 'icon-inline')}</button>`;
+    (toast.querySelector('.import-undo-label') as HTMLElement).textContent = importUndo.label;
+    toast.querySelector('.btn-undo-import')?.addEventListener('click', () => {
+      const pending = importUndo;
+      clearImportUndo();
+      if (!pending || isDisposed) return;
+      restoreDraft(draftState, pending.snapshot);
+      markAsDirty();
+      render();
+    });
+    toast.querySelector('.btn-dismiss-undo')?.addEventListener('click', clearImportUndo);
+    document.body.appendChild(toast);
+  }
+
+  function runImport(label: string, apply: () => void) {
+    const snapshot = snapshotDraft(draftState);
+    committingImport = true;
+    try { apply(); } finally { committingImport = false; }
+    importUndo = { snapshot, label };
+    showImportUndo();
+  }
+
   function markAsDirty() {
     if (isDisposed) return;
+    // Mọi chỉnh sửa khác sau lần nhập làm hết hiệu lực hoàn tác (tránh ghi đè công sức mới).
+    if (!committingImport) clearImportUndo();
     dirtyVersion++;
     isDirty = true;
     if (typeof container?.querySelector === 'function') {
@@ -680,6 +723,9 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
                 <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-expand-all" title="Mở rộng toàn bộ bài tập trong phần thi này">
                   Mở rộng bài tập
                 </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-import-test-excel" title="Nhập nhiều Phần từ một file Excel (mỗi sheet là một Phần)">
+                  ${renderSvgIcon('upload', 'icon-inline')} <span>Nhập cả đề từ Excel</span>
+                </button>
                 <button type="button" class="btn btn-secondary btn-sm" id="btn-add-block">
                   + Thêm phần thi (Block)
                 </button>
@@ -821,7 +867,7 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
   }
 
   function bindEvents() {
-    const authoringHost = { container, draftState, builderOwner, options, actions: { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } };
+    const authoringHost = { container, draftState, builderOwner, options, actions: { runImport, syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } };
     if (typeof container.querySelector !== 'function') return;
 
     // Live update Score Breakdown Bar and mark dirty when question or rubric criterion score changes
@@ -899,7 +945,7 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     }
     bindBlockJumpChips({ container, jumpToBlock });
 
-    bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options });
+    bindBlockCsvImport({ container, builderOwner, draftState, markAsDirty, resequenceItemPositions, render, syncInputs, getNextPosition, options, runImport });
 
     bindExerciseActions({ container, builderOwner, draftState, markAsDirty, setActiveBlockIdx, resolveTargetExercise, resequenceItemPositions, render, syncInputs });
 
@@ -908,6 +954,8 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     bindBlockNavigationActions({ container, draftState, markAsDirty, setActiveBlockIdx, render, jumpToBlock, syncInputs, getNextPosition, options });
 
     bindAddQuestion(authoringHost);
+
+    bindTestImport(authoringHost);
 
     bindChoiceAuthoring(authoringHost);
 
@@ -968,6 +1016,7 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     dispose() {
       if (isDisposed) return;
       isDisposed = true;
+      clearImportUndo();
       for (const cleanup of renderCycleCleanups) {
         try { cleanup(); } catch (_) {}
       }

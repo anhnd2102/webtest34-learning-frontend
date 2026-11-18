@@ -165,3 +165,40 @@ export function commitCardsToExercise({ draftState, block, exercise, cards, star
     insertItemsIntoBlockExercise(block, exercise, result.items);
     return result.items;
 }
+// Thêm các bài tập đọc từ file vào một Phần: bài tập đánh số tiếp, câu có đáp án chấm. Chế độ 'overwrite' xóa bài tập
+// và đáp án chấm cũ của Phần trước. Dùng chung cho nhập cả Phần và nhập cả đề.
+export function appendExercisesToBlock({ draftState, block, exercises, getNextPosition, newId, mode = 'append' }) {
+    if (mode === 'overwrite') {
+        const keys = draftState.gradingKey?.items;
+        for (const item of (block.items || []))
+            if (item.itemVersionId && keys)
+                delete keys[item.itemVersionId];
+        block.exercises = [];
+        block.items = [];
+    }
+    block.exercises = block.exercises || [];
+    block.items = block.items || [];
+    const created = [];
+    for (const parsed of exercises) {
+        const exerciseNumber = block.exercises.length + 1;
+        const exercise = { exerciseId: newId(), exerciseNumber, title: parsed.title || `Exercise ${exerciseNumber}`, instructions: parsed.instructions || '' };
+        block.exercises.push(exercise);
+        created.push(...commitCardsToExercise({ draftState, block, exercise, cards: parsed.items || [], startPosition: getNextPosition(), newId }));
+    }
+    return created;
+}
+// Thông tin cả Phần đọc từ file (dòng/sheet "Thông tin Phần"): chỉ ghi đè trường có giá trị trong file.
+export function applyBlockInfo(block, info, options = {}) {
+    if (options.withTitle !== false && info.title)
+        block.title = info.title;
+    if (info.instructions)
+        block.instructions = info.instructions;
+    if (info.reading) {
+        block.readingPassage = info.reading;
+        block.stimulusReadingPassage = info.reading;
+    }
+    if (info.audio) {
+        block.audioUrl = info.audio;
+        block.stimulusAudioUrl = info.audio;
+    }
+}

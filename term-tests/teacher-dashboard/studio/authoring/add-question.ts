@@ -7,7 +7,7 @@ import { commitCardsToExercise } from '../card-to-item.js';
 import { openAddQuestionDialog } from '../add-question-dialog.js';
 
 export function bindAddQuestion({ container, draftState, builderOwner, actions }: AuthoringHost) {
-  const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
+  const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render, runImport } = actions;
   container.querySelectorAll<HTMLElement>('.btn-add-question').forEach(btn => {
     btn.addEventListener('click', () => {
       syncInputs();
@@ -18,11 +18,16 @@ export function bindAddQuestion({ container, draftState, builderOwner, actions }
       openAddQuestionDialog({
         owner: builderOwner,
         exerciseTitle: exercise.title || `Bài tập ${exercise.exerciseNumber || ''}`.trim(),
-        onCommit: cards => {
-          commitCardsToExercise({ draftState, block, exercise, cards, startPosition: getNextPosition(), newId: generateUuid });
-          resequenceItemPositions();
-          markAsDirty();
-          render();
+        existingPrompts: ((block.items || []) as { exerciseId?: string, prompt?: string }[]).filter(item => item.exerciseId === exercise.exerciseId).map(item => String(item.prompt || '')).filter(Boolean),
+        onCommit: (cards, meta) => {
+          const apply = () => {
+            commitCardsToExercise({ draftState, block, exercise, cards, startPosition: getNextPosition(), newId: generateUuid });
+            resequenceItemPositions();
+            markAsDirty();
+            render();
+          };
+          // Nhập hàng loạt hoặc từ file có thể hoàn tác; thêm từng câu thì không (người ra đề thấy ngay câu vừa thêm).
+          if (meta.via !== 'single' && runImport) runImport(`Đã thêm ${cards.length} câu vào ${exercise.title || 'bài tập'}.`, apply); else apply();
         },
         // Tự luận chấm AI: dùng trình hướng dẫn hiện có (nút của đúng bài tập này).
         onOpenWizard: () => {

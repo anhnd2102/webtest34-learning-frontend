@@ -24,9 +24,21 @@ export interface ReadResult {
   exercises: ImportExercise[];
   // Các thẻ câu hỏi của các dòng Hợp lệ/Cảnh báo, theo thứ tự (cho nhập một dạng).
   cards: ImportCardOut[];
+  // Dòng "Thông tin Phần" trong file cả Phần (nếu có).
+  blockInfo?: BlockInfo;
   summary: { total: number, ok: number, warning: number, error: number };
 }
-export interface ReadOptions { scope: Scope, typeCode?: TypeCode, defaultPoints?: number, newGroupId?: () => string }
+export interface BlockInfo { title: string, instructions: string, reading: string, audio: string }
+export interface ReadOptions {
+  scope: Scope;
+  typeCode?: TypeCode;
+  defaultPoints?: number;
+  newGroupId?: () => string;
+  // Đề bài của các câu đã có trong bài tập/Phần: câu trùng bị cảnh báo (vẫn nhập được).
+  existingPrompts?: string[];
+  // Thư mục chứa ảnh/âm thanh: ghép với cột chỉ có tên file.
+  mediaBase?: string;
+}
 
 // ---------------------------------------------------------------- phân tích văn bản
 
@@ -100,7 +112,19 @@ const message = (level: RowMessage['level'], field: FieldId | string, text: stri
 
 // ---------------------------------------------------------------- dựng thẻ câu hỏi từ một dòng chuẩn
 
-interface BuildContext { defaultPoints: number, newGroupId: () => string }
+interface BuildContext { defaultPoints: number, newGroupId: () => string, mediaBase?: string }
+
+const SCHEME = /^[a-z][a-z0-9+.-]*:/i;
+// Chỉ có tên file (không đường dẫn, không giao thức): cần thư mục để biết file nằm ở đâu.
+export const isBareFilename = (value: string): boolean => Boolean(value) && !value.includes('/') && !SCHEME.test(value);
+
+export function resolveMedia(value: string, base?: string): string {
+  const raw = String(value ?? '').trim();
+  if (!raw || !isBareFilename(raw)) return raw;
+  const folder = String(base ?? '').trim();
+  if (!folder) return raw;
+  return `${folder.replace(/\/+$/, '')}/${encodeURIComponent(raw)}`;
+}
 
 function readPoints(record: ImportRecord, fallback: number, messages: RowMessage[]): number {
   const raw = clean(record.points);
@@ -196,8 +220,10 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
     case 'vocabulary_pair':
       return [{ prompt, english: prompt, vietnamese: correct, targetWord: prompt, vietnameseMeaning: correct, captionHint: correct, interactionType: 'text_select_pair', pedagogicalTypeCode: 'vocabulary_pair', layoutType: 'vocab_pair', graderType: 'accepted_text_exact_option', accepted: [prompt], options: [], expectedOptionId: '', maxScore: points }];
     case 'pictorial_vocabulary': {
-      if (!clean(record.image)) messages.push(message('warning', 'image', 'Chưa điền.', 'Điền tên file ảnh (hoặc đường dẫn); không có ảnh học viên sẽ không có hình để nhìn.'));
-      return [{ prompt: correct, image: clean(record.image), targetWord: correct, captionHint: clean(record.hint), accepted: Array.from(new Set([correct, ...accepted])), interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: points }];
+      const rawImage = clean(record.image);
+      if (!rawImage) messages.push(message('warning', 'image', 'Chưa điền.', 'Điền đường dẫn ảnh; không có ảnh học viên sẽ không có hình để nhìn.'));
+      else if (isBareFilename(rawImage) && !clean(ctx.mediaBase)) messages.push(message('warning', 'image', `Chỉ có tên file "${rawImage}"; chưa biết file nằm ở đâu.`, 'Điền "Thư mục ảnh/âm thanh" hoặc dùng đường dẫn đầy đủ.'));
+      return [{ prompt: correct, image: resolveMedia(rawImage, ctx.mediaBase), targetWord: correct, captionHint: clean(record.hint), accepted: Array.from(new Set([correct, ...accepted])), interactionType: 'short_text', pedagogicalTypeCode: 'pictorial_vocabulary', layoutType: 'pictorial_card', graderType: 'accepted_text', maxScore: points }];
     }
     case 'error_correction': {
       const wrong = clean(record.wrongPart);
@@ -243,6 +269,10 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
 }
 
 // ---------------------------------------------------------------- nhận diện định dạng và chuyển dòng thành bản ghi chuẩn
+
+const INFO_TYPE_NAMES = ['thông tin phần', 'thong tin phan', 'block info'];
+const foldName = (text: string): string => clean(text).normalize('NFC').toLowerCase().replace(/[_\-]+/g, ' ').replace(/\s+/g, ' ');
+const normalizePrompt = (text: string | undefined): string => clean(text).toLowerCase().replace(/\s+/g, ' ');
 
 const LEGACY_BLOCK_HEADER = ['exercise title', 'exercise instructions', 'question type', 'prompt', 'correct answer', 'options or details', 'score'];
 const foldHeader = (text: string): string => clean(text).toLowerCase().replace(/[_\-]+/g, ' ').replace(/\s+/g, ' ');
@@ -328,10 +358,16 @@ function convertLegacyMatching(rows: { cells: string[], line: number }[]): { rec
 const defaultGroupId = (): string => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
 
 // Dựng câu hỏi từ MỘT bản ghi nhập tay (form "Từng câu"): cùng quy tắc kiểm tra và cùng thẻ câu hỏi như đọc file.
-export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, options: { defaultPoints?: number, newGroupId?: () => string } = {}): { status: RowStatus, messages: RowMessage[], cards: ImportCardOut[] } {
+export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string } = {}): { status: RowStatus, messages: RowMessage[], cards: ImportCardOut[] } {
   const messages: RowMessage[] = [];
-  const ctx: BuildContext = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId };
+  const ctx: BuildContext = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase };
   const cards = buildCards(record, TYPE_BY_CODE[typeCode], ctx, messages);
+  if (cards.length && typeCode !== 'listening_order') {
+    const key = normalizePrompt(typeCode === 'pictorial_vocabulary' ? record.correct : record.prompt);
+    if (key && (options.existingPrompts || []).some(existing => normalizePrompt(existing) === key)) {
+      messages.push(message('warning', typeCode === 'pictorial_vocabulary' ? 'correct' : 'prompt', 'Trùng với một câu đã có.', 'Kiểm tra lại; bỏ qua nếu nhập nhầm.'));
+    }
+  }
   const status: RowStatus = messages.some(item => item.level === 'error') ? 'error' : (messages.length ? 'warning' : 'ok');
   if (status === 'error') return { status, messages, cards: [] };
   const exercise: ImportExercise = { title: '', instructions: '', items: cards };
@@ -341,7 +377,7 @@ export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, option
 }
 
 // Đọc một danh sách bản ghi (bảng nhập hàng loạt đã sửa) bằng đúng bộ đọc của file.
-export function readRecords(typeCode: TypeCode, records: ImportRecord[], options: { defaultPoints?: number, newGroupId?: () => string } = {}): ReadResult {
+export function readRecords(typeCode: TypeCode, records: ImportRecord[], options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string } = {}): ReadResult {
   const columns = COLUMNS.map(column => column.id).filter(id => TYPE_BY_CODE[typeCode].columns.includes(id));
   return readImport(recordsToCsv(records, columns), { scope: 'type', typeCode, ...options });
 }
@@ -356,14 +392,15 @@ export function readImport(rawText: string, options: ReadOptions): ReadResult {
   if (scope === 'type' && !options.typeCode) throw new Error('Đọc một dạng cần chỉ rõ typeCode.');
   const ctx: BuildContext = {
     defaultPoints: options.defaultPoints || 0,
-    newGroupId: options.newGroupId || (() => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`)
+    newGroupId: options.newGroupId || (() => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`),
+    mediaBase: options.mediaBase
   };
 
   const first = lines[0].cells;
   const headerFields = first.map(cell => resolveHeader(cell, options.typeCode));
   const recognized = headerFields.filter(Boolean).length;
   const looksLikeHeader = recognized >= 2 || (first.length === 1 && recognized === 1);
-  const records: { record: ImportRecord, line: number, typeCode?: TypeCode, typeError?: string }[] = [];
+  const records: { record: ImportRecord, line: number, typeCode?: TypeCode, typeError?: string, isInfo?: boolean }[] = [];
 
   const dataLines = looksLikeHeader ? lines.slice(1) : lines;
   const hasTypeColumn = headerFields.includes('type') || first.some(cell => foldHeader(cell) === 'question type');
@@ -381,6 +418,7 @@ export function readImport(rawText: string, options: ReadOptions): ReadResult {
       if (unified) {
         record = mapByColumns(cells, headerFields);
         const rawType = clean(record.type);
+        if (INFO_TYPE_NAMES.includes(foldName(rawType))) { records.push({ record, line, isInfo: true }); continue; }
         typeCode = rawType ? resolveTypeCode(rawType) : lastType;
         if (rawType && !typeCode) typeError = `Dạng câu "${rawType}" không nhận ra.`;
         else if (!rawType && !typeCode) typeError = 'Thiếu Dạng câu.';
@@ -430,13 +468,33 @@ export function readImport(rawText: string, options: ReadOptions): ReadResult {
   const exerciseOrder: string[] = [];
   const exerciseMap = new Map<string, ImportExercise>();
   let currentExercise = '';
+  const seenPrompts = new Set<string>((options.existingPrompts || []).map(normalizePrompt).filter(Boolean));
   for (const entry of records) {
     const messages: RowMessage[] = [];
     let cards: ImportCardOut[] = [];
+    if (entry.isInfo) {
+      const rawAudio = clean(entry.record.audio);
+      if (rawAudio && isBareFilename(rawAudio) && !clean(ctx.mediaBase)) messages.push(message('warning', 'audio', `Chỉ có tên file "${rawAudio}"; chưa biết file nằm ở đâu.`, 'Điền "Thư mục ảnh/âm thanh" hoặc dùng đường dẫn đầy đủ.'));
+      if (!result.blockInfo) {
+        result.blockInfo = { title: clean(entry.record.exerciseTitle), instructions: clean(entry.record.exerciseInstructions), reading: clean(entry.record.prompt), audio: resolveMedia(rawAudio, ctx.mediaBase) };
+      }
+      const infoStatus: RowStatus = messages.length ? 'warning' : 'ok';
+      result.rows.push({ line: entry.line, typeCode: undefined, status: infoStatus, messages, record: entry.record, cards: [] });
+      result.summary[infoStatus] += 1; result.summary.total += 1;
+      continue;
+    }
     if (entry.typeError || !entry.typeCode) {
       messages.push(message('error', 'type', entry.typeError || 'Thiếu Dạng câu.', 'Dùng tên dạng trong hướng dẫn, ví dụ "Trắc nghiệm một đáp án".'));
     } else {
       cards = buildCards(entry.record, TYPE_BY_CODE[entry.typeCode], ctx, messages);
+      // Câu trùng đề bài (với câu đã có hoặc với dòng trước trong file): cảnh báo, vẫn nhập được.
+      if (cards.length && entry.typeCode !== 'listening_order') {
+        const key = normalizePrompt(entry.typeCode === 'pictorial_vocabulary' ? entry.record.correct : entry.record.prompt);
+        if (key) {
+          if (seenPrompts.has(key)) messages.push(message('warning', entry.typeCode === 'pictorial_vocabulary' ? 'correct' : 'prompt', 'Trùng với một câu đã có.', 'Kiểm tra lại; bỏ dòng này nếu nhập nhầm.'));
+          seenPrompts.add(key);
+        }
+      }
     }
     const status: RowStatus = messages.some(m => m.level === 'error') ? 'error' : (messages.length ? 'warning' : 'ok');
     result.rows.push({ line: entry.line, typeCode: entry.typeCode, status, messages, record: entry.record, cards: status === 'error' ? [] : cards });
@@ -502,7 +560,8 @@ const BLOCK_HEAD: FieldId[] = ['exerciseTitle', 'exerciseInstructions', 'type'];
 
 export function blockColumnIds(): FieldId[] {
   const used = new Set<FieldId>(TYPES.flatMap(spec => spec.columns));
-  return [...BLOCK_HEAD, ...COLUMNS.map(column => column.id).filter(id => used.has(id) && !BLOCK_HEAD.includes(id))];
+  // Cột Âm thanh chỉ dùng ở dòng "Thông tin Phần" nên đứng cuối.
+  return [...BLOCK_HEAD, ...COLUMNS.map(column => column.id).filter(id => used.has(id) && !BLOCK_HEAD.includes(id)), 'audio'];
 }
 
 // Mẫu một dạng = cột của dạng đó theo thứ tự chuẩn (đúng bộ cột cả Phần bỏ ba cột đầu và bỏ cột không dùng).
@@ -544,8 +603,10 @@ export function toLegacyResult(result: ReadResult): { items: ImportCardOut[], in
 export interface SheetData { name: string, rows: string[][] }
 
 const SHEET_FORBIDDEN = /[\\/?*[\]:]/g;
+// Tên sheet Excel hợp lệ từ một nhãn: bỏ ký tự cấm, tối đa 31 ký tự. Bộ đọc cả đề dùng chính hàm này để nhận ra sheet theo dạng.
+export const excelSheetName = (label: string): string => label.replace(SHEET_FORBIDDEN, ' ').replace(/\s+/g, ' ').trim().slice(0, 31);
 const sheetName = (label: string, taken: Set<string>): string => {
-  let name = label.replace(SHEET_FORBIDDEN, ' ').replace(/\s+/g, ' ').trim().slice(0, 31);
+  let name = excelSheetName(label);
   let suffix = 2;
   while (taken.has(name)) { const tail = ` ${suffix}`; name = `${label.slice(0, 31 - tail.length)}${tail}`; suffix += 1; }
   taken.add(name);

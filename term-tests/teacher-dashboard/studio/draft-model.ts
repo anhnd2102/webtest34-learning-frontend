@@ -86,6 +86,8 @@ export interface AuthoringActions {
   resequenceItemPositions: () => void;
   markAsDirty: () => void;
   render: () => void;
+  // Chạy một lần nhập có thể hoàn tác (chụp bản nháp trước, hiện nút Hoàn tác sau).
+  runImport?: (label: string, apply: () => void) => void;
 }
 
 export interface AuthoringHost {
