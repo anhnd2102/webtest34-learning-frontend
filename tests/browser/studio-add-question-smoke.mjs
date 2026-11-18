@@ -159,7 +159,8 @@ try {
 
   // Tự luận chấm AI: từng câu dùng trình hướng dẫn; nghe sắp xếp: chỉ làm theo bộ
   await openDialog('rubric_async');
-  assert.equal(await dialog.locator('.aq-open-wizard').count(), 1);
+  assert.equal(await dialog.locator('.aq-variant-card').count(), 6, 'chọn Dạng chấm trước');
+  assert.equal(await dialog.locator('.aq-rubric-wizard').count(), 1, 'vẫn có lối vào trình hướng dẫn');
   await dialog.locator('.aq-cancel').click();
   await openDialog('listening_order');
   assert.match(await dialog.locator('[data-panel="single"]').innerText(), /Hàng loạt/);

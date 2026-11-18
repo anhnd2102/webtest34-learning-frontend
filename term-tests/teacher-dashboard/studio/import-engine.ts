@@ -8,8 +8,9 @@ import {
   isKnownHeader, resolveHeader, resolveTypeCode
 } from './import-registry.js';
 import type { FieldId, ImportRecord, TypeCode, TypeSpec } from './import-registry.js';
-import { buildRubricRow } from './import-rubric.js';
-import type { RubricLevel } from './rubric-wizard-model.js';
+import { buildRubricRow, templateColumnsForVariant } from './import-rubric.js';
+import { resolveRubricVariant } from './import-rubric.js';
+import type { RubricLevel, RubricVariant } from './rubric-wizard-model.js';
 
 export type Scope = 'type' | 'block';
 export type RowStatus = 'ok' | 'warning' | 'error';
@@ -42,6 +43,8 @@ export interface ReadOptions {
   mediaBase?: string;
   // Khối mặc định của đề cho dòng Tự luận chấm AI không ghi Khối.
   defaultLevel?: RubricLevel;
+  // Dạng chấm đã chọn: dòng Tự luận chấm AI không ghi Dạng chấm dùng dạng này.
+  rubricVariant?: RubricVariant;
 }
 
 // ---------------------------------------------------------------- phân tích văn bản
@@ -116,7 +119,7 @@ const message = (level: RowMessage['level'], field: FieldId | string, text: stri
 
 // ---------------------------------------------------------------- dựng thẻ câu hỏi từ một dòng chuẩn
 
-interface BuildContext { defaultPoints: number, newGroupId: () => string, mediaBase?: string, defaultLevel?: RubricLevel }
+interface BuildContext { defaultPoints: number, newGroupId: () => string, mediaBase?: string, defaultLevel?: RubricLevel, rubricVariant?: RubricVariant }
 
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i;
 // Chỉ có tên file (không đường dẫn, không giao thức): cần thư mục để biết file nằm ở đâu.
@@ -258,8 +261,8 @@ function buildCards(record: ImportRecord, spec: TypeSpec, ctx: BuildContext, mes
     }
     case 'rubric_async': {
       // Dòng có Dạng chấm là tự luận kiểu mới (theo Khối); quy tắc chấm do backend dựng lúc nhập.
-      if (clean(record.variant)) {
-        const built = buildRubricRow(record, { defaultLevel: ctx.defaultLevel });
+      if (clean(record.variant) || ctx.rubricVariant) {
+        const built = buildRubricRow(record, { defaultLevel: ctx.defaultLevel, defaultVariant: ctx.rubricVariant });
         messages.push(...built.messages);
         return built.card ? [built.card] : [];
       }
@@ -368,9 +371,9 @@ function convertLegacyMatching(rows: { cells: string[], line: number }[]): { rec
 const defaultGroupId = (): string => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
 
 // Dựng câu hỏi từ MỘT bản ghi nhập tay (form "Từng câu"): cùng quy tắc kiểm tra và cùng thẻ câu hỏi như đọc file.
-export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string, defaultLevel?: RubricLevel } = {}): { status: RowStatus, messages: RowMessage[], cards: ImportCardOut[] } {
+export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string, defaultLevel?: RubricLevel, rubricVariant?: RubricVariant } = {}): { status: RowStatus, messages: RowMessage[], cards: ImportCardOut[] } {
   const messages: RowMessage[] = [];
-  const ctx: BuildContext = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase, defaultLevel: options.defaultLevel };
+  const ctx: BuildContext = { defaultPoints: options.defaultPoints || 0, newGroupId: options.newGroupId || defaultGroupId, mediaBase: options.mediaBase, defaultLevel: options.defaultLevel, rubricVariant: options.rubricVariant };
   const cards = buildCards(record, TYPE_BY_CODE[typeCode], ctx, messages);
   if (cards.length && typeCode !== 'listening_order') {
     const key = normalizePrompt(typeCode === 'pictorial_vocabulary' ? record.correct : record.prompt);
@@ -387,7 +390,7 @@ export function buildFromRecord(typeCode: TypeCode, record: ImportRecord, option
 }
 
 // Đọc một danh sách bản ghi (bảng nhập hàng loạt đã sửa) bằng đúng bộ đọc của file.
-export function readRecords(typeCode: TypeCode, records: ImportRecord[], options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string, defaultLevel?: RubricLevel } = {}): ReadResult {
+export function readRecords(typeCode: TypeCode, records: ImportRecord[], options: { defaultPoints?: number, newGroupId?: () => string, existingPrompts?: string[], mediaBase?: string, defaultLevel?: RubricLevel, rubricVariant?: RubricVariant } = {}): ReadResult {
   const columns = COLUMNS.map(column => column.id).filter(id => TYPE_BY_CODE[typeCode].columns.includes(id));
   return readImport(recordsToCsv(records, columns), { scope: 'type', typeCode, ...options });
 }
@@ -404,7 +407,8 @@ export function readImport(rawText: string, options: ReadOptions): ReadResult {
     defaultPoints: options.defaultPoints || 0,
     newGroupId: options.newGroupId || (() => `group_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`),
     mediaBase: options.mediaBase,
-    defaultLevel: options.defaultLevel
+    defaultLevel: options.defaultLevel,
+    rubricVariant: options.rubricVariant
   };
 
   const first = lines[0].cells;
@@ -578,8 +582,13 @@ export function blockColumnIds(): FieldId[] {
 // Mẫu một dạng = cột của dạng đó theo thứ tự chuẩn (đúng bộ cột cả Phần bỏ ba cột đầu và bỏ cột không dùng).
 export function typeTemplateRecords(typeCode: TypeCode): ImportRecord[] { return TYPE_BY_CODE[typeCode].examples.map(example => ({ ...example })); }
 
-export function typeTemplateCsv(typeCode: TypeCode): string {
+export function typeTemplateCsv(typeCode: TypeCode, variant?: RubricVariant): string {
   const spec = TYPE_BY_CODE[typeCode];
+  // Tự luận chấm AI theo một Dạng chấm: cột và ví dụ của đúng dạng đó.
+  if (typeCode === 'rubric_async' && variant) {
+    const records = typeTemplateRecords(typeCode).filter(record => resolveRubricVariant(String(record.variant ?? '')) === variant);
+    return recordsToCsv(records, templateColumnsForVariant(variant));
+  }
   const columns = [...COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id))];
   return recordsToCsv(typeTemplateRecords(typeCode), columns);
 }

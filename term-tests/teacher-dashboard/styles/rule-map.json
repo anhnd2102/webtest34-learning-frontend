@@ -12052,5 +12052,49 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".ti-block summary"
+  },
+  {
+    "order": 1995,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-rubric-step h4"
+  },
+  {
+    "order": 1996,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-variant-grid"
+  },
+  {
+    "order": 1997,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-variant-card"
+  },
+  {
+    "order": 1998,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-variant-card span"
+  },
+  {
+    "order": 1999,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(hover: hover)"
+    ],
+    "selector": ".aq-variant-card:hover"
+  },
+  {
+    "order": 2000,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-rubric-links"
+  },
+  {
+    "order": 2001,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".aq-points select"
   }
 ]

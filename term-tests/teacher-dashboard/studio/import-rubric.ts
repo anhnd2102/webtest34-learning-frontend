@@ -3,10 +3,10 @@
 // Dòng Tự luận chấm AI kiểu mới trong CSV (spec #91, GĐ 5): Dạng chấm, Khối, Yêu cầu bắt buộc, Đáp án mẫu...
 // Dùng lại mô hình của trình hướng dẫn (cùng quy tắc kiểm tra, cùng payload gửi backend), nên CSV và trình hướng dẫn cho kết quả như nhau.
 // Điểm, bảng trừ lỗi theo Khối và chỉ dẫn cho AI do backend dựng khi nhập; frontend không tự tính.
-import { COLUMN_LABEL } from './import-registry.js';
+import { COLUMNS, COLUMN_LABEL } from './import-registry.js';
 import type { FieldId, ImportRecord } from './import-registry.js';
 import {
-  buildRubricPayload, createWizardState, emptyQuestion, splitLines, validateWizardStep
+  buildRubricPayload, createWizardState, emptyQuestion, levelsForVariant, splitLines, validateWizardStep
 } from './rubric-wizard-model.js';
 import type { RequirementDraft, RubricLevel, RubricVariant } from './rubric-wizard-model.js';
 import type { ImportCardOut, RowMessage } from './import-engine.js';
@@ -22,6 +22,38 @@ const VARIANT_NAMES: { variant: RubricVariant, names: string[] }[] = [
   { variant: 'speaking_text', names: ['Speaking dạng văn bản', 'Speaking', 'speaking text', 'speaking_text'] },
   { variant: 'writing', names: ['Viết đoạn/bài (Writing)', 'Viết đoạn/bài', 'Writing', 'Viết'] }
 ];
+
+// Danh mục Dạng chấm cho hộp thoại: tên, mô tả ngắn, Khối khả dụng.
+export const RUBRIC_VARIANTS: { variant: RubricVariant, label: string, hint: string, levels: RubricLevel[] }[] = [
+  { variant: 'translation', label: 'Dịch Việt–Anh', hint: 'Dịch một câu; chấm theo từng cấu trúc bắt buộc và Grammar/Vocab.' },
+  { variant: 'sentence_order', label: 'Điền sắp xếp và chia động từ', hint: 'Sắp xếp từ cho sẵn thành câu và chia động từ; chấm theo cấu trúc và Grammar/Vocab.' },
+  { variant: 'reading_comprehension', label: 'Đọc hiểu', hint: 'Trả lời câu hỏi từ bài đọc; chấm theo ý nghĩa, không trừ ngữ pháp.' },
+  { variant: 'sentence_role', label: 'Writing đọc hiểu', hint: 'Nêu vai trò của một câu trong đoạn văn; chấm theo ý nghĩa.' },
+  { variant: 'speaking_text', label: 'Speaking dạng văn bản', hint: 'Trả lời Speaking bằng văn bản; chấm theo ý chính và một khoản nhỏ cho Grammar/Vocab.' },
+  { variant: 'writing', label: 'Viết đoạn/bài (Writing)', hint: 'Viết đoạn theo dàn ý; chấm Task achievement, Coherence, Grammar, Vocabulary.' }
+].map(entry => ({ ...entry, levels: levelsForVariant(entry.variant as RubricVariant) })) as { variant: RubricVariant, label: string, hint: string, levels: RubricLevel[] }[];
+
+const VARIANT_COLUMNS: { [K in RubricVariant]: FieldId[] } = {
+  translation: ['prompt', 'points', 'requirements', 'sample', 'languageScore', 'guidance'],
+  sentence_order: ['prompt', 'points', 'requirements', 'sample', 'languageScore', 'guidance'],
+  reading_comprehension: ['prompt', 'context', 'points', 'requirements', 'sample', 'guidance'],
+  sentence_role: ['prompt', 'context', 'correct', 'points', 'guidance'],
+  speaking_text: ['prompt', 'context', 'points', 'requirements', 'sample', 'languageScore', 'guidance'],
+  writing: ['prompt', 'hint', 'points', 'requirements', 'sample', 'wordMin', 'guidance']
+};
+const byColumnOrder = (ids: FieldId[]): FieldId[] => [...ids].sort((a, b) => COLUMNS.findIndex(c => c.id === a) - COLUMNS.findIndex(c => c.id === b));
+
+// Cột người ra đề điền cho một Dạng chấm (Dạng chấm và Khối đã chọn ở trên nên không nằm trong đây).
+export function columnsForVariant(variant: RubricVariant): FieldId[] { return byColumnOrder(VARIANT_COLUMNS[variant]); }
+
+// Cột của file mẫu: thêm Dạng chấm và Khối để file dùng được độc lập (ví dụ tải vào cả Phần).
+export function templateColumnsForVariant(variant: RubricVariant): FieldId[] { return byColumnOrder(['variant', 'level', ...VARIANT_COLUMNS[variant]]); }
+
+// Ghi chú cột riêng theo Dạng chấm (ví dụ Writing: yêu cầu bắt buộc chính là các ý của dàn ý).
+export const VARIANT_NOTES: { [K in RubricVariant]?: { [F in FieldId]?: string } } = {
+  writing: { requirements: 'Mỗi mục là một ý của dàn ý (cách nhau bằng | hoặc xuống dòng); học viên thấy dàn ý này.', hint: 'Từ vựng gợi ý cho học viên (không bắt buộc), cách nhau bằng |.', wordMin: 'Số từ tối thiểu; dưới mức này điểm bị giới hạn.' },
+  sentence_role: { correct: 'Vai trò đúng của câu (AI đối chiếu ý nghĩa; học viên không thấy).' }
+};
 
 export function resolveRubricVariant(raw: string): RubricVariant | undefined {
   const key = plain(raw);
@@ -67,9 +99,10 @@ function columnOf(problem: string): FieldId {
   return 'requirements';
 }
 
-export function buildRubricRow(record: ImportRecord, options: { defaultLevel?: RubricLevel } = {}): { card?: ImportCardOut, messages: RowMessage[] } {
+export function buildRubricRow(record: ImportRecord, options: { defaultLevel?: RubricLevel, defaultVariant?: RubricVariant } = {}): { card?: ImportCardOut, messages: RowMessage[] } {
   const messages: RowMessage[] = [];
-  const variant = resolveRubricVariant(clean(record.variant));
+  // Dòng không ghi Dạng chấm dùng Dạng chấm đã chọn trong hộp thoại.
+  const variant = clean(record.variant) ? resolveRubricVariant(clean(record.variant)) : options.defaultVariant;
   if (!variant) {
     messages.push(err('variant', `"${clean(record.variant)}" không nhận ra.`, 'Dùng: Dịch Việt–Anh, Điền sắp xếp và chia động từ, Đọc hiểu, Writing đọc hiểu, Speaking dạng văn bản hoặc Viết đoạn/bài (Writing).'));
     return { messages };

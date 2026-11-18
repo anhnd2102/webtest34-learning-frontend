@@ -5,6 +5,7 @@
 import { escapeHtml } from '../ui/presentation.js';
 import { COLUMNS, COLUMN_LABEL, FIELD_NOTES, OPTION_FIELDS, TYPES, TYPE_BY_CODE, resolveHeader } from './import-registry.js';
 import { parseDelimited } from './import-engine.js';
+import { VARIANT_NOTES, columnsForVariant, resolveRubricVariant } from './import-rubric.js';
 const FAMILY_ORDER = ['Trắc nghiệm', 'Điền từ', 'Từ vựng', 'Viết câu', 'Nghe', 'Đọc', 'Viết / Tự luận'];
 export function typeChoices() {
     const families = new Map();
@@ -14,46 +15,51 @@ export function typeChoices() {
     const extra = [...families.keys()].filter(family => !FAMILY_ORDER.includes(family));
     return [...known, ...extra].map(family => ({ family, types: families.get(family) }));
 }
-export function singleMode(typeCode) {
+export function singleMode(typeCode, variant) {
+    // Tự luận chấm AI: đã chọn Dạng chấm thì nhập bằng form như các dạng khác; chưa chọn thì dùng trình hướng dẫn từng bước.
     if (typeCode === 'rubric_async')
-        return 'wizard';
+        return variant ? 'form' : 'wizard';
     if (typeCode === 'listening_order')
         return 'batch-only';
     return 'form';
 }
-const MULTILINE = ['prompt', 'context', 'explanation'];
-export function formFields(typeCode) {
+const MULTILINE = ['prompt', 'context', 'explanation', 'requirements', 'sample', 'guidance'];
+// `variant`: Dạng chấm của Tự luận chấm AI; có thì chỉ lấy cột của dạng đó và ví dụ của dạng đó.
+export function formFields(typeCode, variant) {
     const spec = TYPE_BY_CODE[typeCode];
-    const example = spec.examples[0] || {};
-    return COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id)).map(id => ({
+    const forVariant = typeCode === 'rubric_async' && variant;
+    const example = (forVariant ? spec.examples.find(candidate => resolveRubricVariant(String(candidate.variant ?? '')) === variant) : undefined) || spec.examples[0] || {};
+    const ids = forVariant ? columnsForVariant(variant) : COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id));
+    const required = forVariant ? ids.filter(id => id === 'prompt' || id === 'requirements' && variant !== 'sentence_role' || id === 'correct' && variant === 'sentence_role') : spec.required;
+    return ids.map(id => ({
         id,
         label: COLUMN_LABEL[id] || id,
-        required: spec.required.includes(id),
-        note: spec.help.columnNotes[id] || FIELD_NOTES[id] || '',
+        required: required.includes(id),
+        note: (forVariant && VARIANT_NOTES[variant]?.[id]) || spec.help.columnNotes[id] || FIELD_NOTES[id] || '',
         multiline: MULTILINE.includes(id),
         placeholder: String(example[id] ?? '')
     }));
 }
-export function emptyRecord(typeCode) {
+export function emptyRecord(typeCode, variant) {
     const record = {};
-    for (const field of formFields(typeCode))
+    for (const field of formFields(typeCode, variant))
         record[field.id] = '';
     return record;
 }
 // ---------------------------------------------------------------- dán hàng loạt từ Excel / Sheets / Word
 // Dán nhiều dòng (ô cách nhau bằng tab hoặc phẩy): có hàng tiêu đề thì ghép theo tên cột, không có thì theo thứ tự cột của dạng.
-export function pasteToRecords(typeCode, text) {
+export function pasteToRecords(typeCode, text, variant) {
     const rows = parseDelimited(text);
     if (!rows.length)
         return [];
     const spec = TYPE_BY_CODE[typeCode];
-    const canonical = COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id));
+    const canonical = typeCode === 'rubric_async' && variant ? columnsForVariant(variant) : COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id));
     const headerFields = rows[0].cells.map(cell => resolveHeader(cell, typeCode));
     const hasHeader = headerFields.filter(Boolean).length >= 2;
     const columns = hasHeader ? headerFields : canonical;
     const body = hasHeader ? rows.slice(1) : rows;
     return body.map(({ cells }) => {
-        const record = emptyRecord(typeCode);
+        const record = emptyRecord(typeCode, variant);
         columns.forEach((field, index) => {
             if (!field || field === 'optionsList')
                 return;

@@ -126,6 +126,8 @@ try {
   await page.locator('.btn-add-question').first().click();
   await dialog.waitFor();
   await dialog.locator('[data-aq-type="rubric_async"]').click();
+  await dialog.locator('.aq-rubric-mixed').click();
+  if (process.env.RB_SHOT) { await dialog.screenshot({ path: process.env.RB_SHOT + '_single.png' }); await dialog.locator('[data-aq-tab="bulk"]').click(); await dialog.screenshot({ path: process.env.RB_SHOT + '_bulk.png' }); }
   await dialog.locator('[data-aq-tab="file"]').click();
   await dialog.locator('.aq-file-text').fill(csv);
   await page.waitForFunction(() => document.querySelector('#add-question-dialog .import-table'));
@@ -177,6 +179,63 @@ try {
   assert.equal(builds.length, buildsBefore + 2);
   assert.ok(dialogs.some(text => /Không dựng được quy tắc chấm cho 1 câu/.test(text) && /Điểm 99 vượt giới hạn/.test(text)), 'báo rõ câu nào bị backend từ chối');
   assert.ok(!(await prompts()).includes('Câu bị backend từ chối.'));
+
+
+  // ---- Chọn Dạng chấm và Khối trước: form, bảng hàng loạt và mẫu chỉ có cột của dạng đó
+  await page.locator('.btn-add-question').first().click();
+  await dialog.waitFor();
+  await dialog.locator('[data-aq-type="rubric_async"]').click();
+  assert.equal(await dialog.locator('.aq-variant-card').count(), 6);
+  if (process.env.RB_SHOT) await dialog.screenshot({ path: process.env.RB_SHOT + '_step.png' });
+  await dialog.locator('[data-aq-variant="translation"]').click();
+  assert.equal(await dialog.locator('.aq-rubric-level option').count(), 3);
+  await dialog.locator('.aq-rubric-level').selectOption('03');
+  const formLabels = await dialog.locator('[data-panel="single"] .aq-form-row > label').allInnerTexts();
+  assert.deepEqual(formLabels.map(text => text.replace(/\s*\(bắt buộc\)/, '').trim()), ['Đề bài', 'Điểm', 'Yêu cầu bắt buộc', 'Đáp án mẫu', 'Điểm Grammar/Vocab', 'Hướng dẫn chấm thêm']);
+  await dialog.locator('[data-aq-field="prompt"]').fill('Dịch câu ba.');
+  await dialog.locator('[data-aq-field="points"]').fill('4');
+  await dialog.locator('[data-aq-field="requirements"]').fill('Cấu trúc A (2) | Cấu trúc B (1)');
+  await dialog.locator('[data-aq-field="sample"]').fill('Answer three');
+  if (process.env.RB_SHOT) await dialog.screenshot({ path: process.env.RB_SHOT + '_form.png' });
+  await dialog.locator('.aq-save').click();
+  await dialog.waitFor({ state: 'detached' });
+  await page.waitForFunction(() => [...document.querySelectorAll('.item-prompt-input')].some(input => input.value === 'Dịch câu ba.'));
+  const lastBuild = builds.at(-1);
+  assert.equal(lastBuild.variant, 'translation');
+  assert.equal(lastBuild.level, '03', 'Khối chọn một lần trong hộp thoại');
+  assert.deepEqual(lastBuild.requirements.map(requirement => requirement.label), ['Cấu trúc A', 'Cấu trúc B']);
+
+  await page.locator('.btn-add-question').first().click();
+  await dialog.waitFor();
+  await dialog.locator('[data-aq-type="rubric_async"]').click();
+  await dialog.locator('[data-aq-variant="writing"]').click();
+  assert.equal(await dialog.locator('.aq-rubric-level option').count(), 2, 'Writing chỉ có Khối 34 và 45');
+  await dialog.locator('[data-aq-tab="bulk"]').click();
+  await dialog.locator('.aq-paste').fill('Explain A\tword one | word two\t15\tTopic | Idea one\tSample A\t100');
+  await page.waitForFunction(() => document.querySelectorAll('#add-question-dialog .aq-cell').length > 0);
+  assert.match(await dialog.locator('.aq-bulk-summary').innerText(), /1 Hợp lệ/);
+  await dialog.locator('.aq-bulk-add').click();
+  await dialog.waitFor({ state: 'detached' });
+  await page.waitForFunction(() => [...document.querySelectorAll('.item-prompt-input')].some(input => input.value === 'Explain A'));
+  const writingBuild = builds.at(-1);
+  assert.equal(writingBuild.variant, 'writing');
+  assert.equal(writingBuild.level, '34');
+  assert.deepEqual(writingBuild.outline, ['Topic', 'Idea one']);
+  assert.deepEqual(writingBuild.wordCount, { minimum: 100, scoreCapBelowMinimum: true });
+  const savedVariant = await savedDraft();
+  const essayA = savedVariant.blocks[0].items.find(item => item.prompt === 'Explain A');
+  assert.deepEqual(essayA.studentOutline, ['Topic', 'Idea one']);
+  assert.deepEqual(essayA.vocabularyHints, ['word one', 'word two']);
+
+  await page.locator('.btn-add-question').first().click();
+  await dialog.waitFor();
+  await dialog.locator('[data-aq-type="rubric_async"]').click();
+  await dialog.locator('[data-aq-variant="writing"]').click();
+  await dialog.locator('[data-aq-tab="file"]').click();
+  const [template] = await Promise.all([page.waitForEvent('download'), dialog.locator('.aq-download-template').click()]);
+  const templateText = (await (await import('node:fs/promises')).readFile(await template.path(), 'utf8')).replace(/^\uFEFF/, '');
+  assert.equal(templateText.split(/\r?\n/)[0], 'Đề bài,Dạng chấm,Khối,Gợi ý,Điểm,Yêu cầu bắt buộc,Đáp án mẫu,Số từ tối thiểu,Hướng dẫn chấm thêm');
+  await dialog.locator('.aq-cancel').click();
 
   assert.equal(errors.length, 0, errors.join('\n'));
   process.stdout.write(JSON.stringify({ status: 'passed', builds: builds.length, errors: 0 }) + '\n');
