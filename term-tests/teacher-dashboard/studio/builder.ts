@@ -43,6 +43,8 @@ import { bindBlockReorderActions } from './block-actions.js';
 import { bindToolbarActions } from './toolbar-actions.js';
 import { bindRichEditorControls } from './rich-editor-controls.js';
 import { bindExerciseActions } from './exercise-actions.js';
+import { createNormalizationGuard, defaultNormalization } from './normalization-policy.js';
+import { annotateVariantChips } from './variant-chip-reasons.js';
 
 
 export function mountBuilder(containerArg: HTMLElement | null | undefined, formVersionData: Record<string, any> = {}, options: BuilderOptions = {}): BuilderHandle {
@@ -192,6 +194,9 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     }
   }
 
+  // Giữ chính sách chuẩn hóa của câu đã có (spec #54): câu cũ không tự lên v2 cho tới khi bấm "Tạo lại biến thể".
+  const normalizationGuard = createNormalizationGuard(draftState);
+
   // Hoàn tác lần nhập (spec #91, GĐ 4): chụp bản nháp trước khi nhập; nút Hoàn tác nằm ở thanh nổi cho tới khi người ra đề sửa tiếp.
   let importUndo: { snapshot: DraftSnapshot, label: string } | null = null;
   let committingImport = false;
@@ -234,6 +239,7 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     if (isDisposed) return;
     // Mọi chỉnh sửa khác sau lần nhập làm hết hiệu lực hoàn tác (tránh ghi đè công sức mới).
     if (!committingImport) clearImportUndo();
+    normalizationGuard.reconcile();
     dirtyVersion++;
     isDirty = true;
     if (typeof container?.querySelector === 'function') {
@@ -325,7 +331,7 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
           draftState.gradingKey.items[itm.itemVersionId!] = {
             graderType: 'accepted_text',
             accepted: initialWord ? [initialWord] : [],
-            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            normalization: defaultNormalization()
           };
         } else {
           const currentKey = draftState.gradingKey.items[itm.itemVersionId!];
@@ -343,7 +349,7 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
             graderType: 'accepted_text_exact_option',
             accepted: initialWord ? [initialWord] : [],
             expectedOptionId: itm.options?.[0]?.id || 'opt_1',
-            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            normalization: defaultNormalization()
           };
         } else {
           const currentKey = draftState.gradingKey.items[itm.itemVersionId!];
@@ -741,6 +747,7 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     `;
 
     bindEvents();
+    annotateVariantChips(container);
 
     if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
       window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
@@ -850,7 +857,8 @@ export function mountBuilder(containerArg: HTMLElement | null | undefined, formV
     if (totalQTag) totalQTag.textContent = `${summary.totalQuestions} câu hỏi`;
   }
 
-  const syncInputs = createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges });
+  const rawSyncInputs = createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges });
+  const syncInputs = () => { rawSyncInputs(); normalizationGuard.reconcile(); };
 
   function getNextPosition() {
     let nextPos = 1;

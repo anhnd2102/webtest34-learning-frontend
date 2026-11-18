@@ -9,6 +9,7 @@ import { escapeHtml } from '../../ui/presentation.js';
 import { generateVocabPairTemplateCsv, parseVocabPairCsv } from '.././content-import.js';
 import { parseUploadedFileToCsv } from '.././batch-import.js';
 import { expandSentenceVariants } from '.././question-content.js';
+import { defaultNormalization } from '../normalization-policy.js';
 
 export function bindVocabularyAuthoring({ container, draftState, builderOwner, actions }: AuthoringHost) {
   const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
@@ -59,7 +60,7 @@ function createSingleVocabItem(bIdx: number, targetEx: DraftExercise) {
         graderType: 'accepted_text_exact_option',
         accepted: [],
         expectedOptionId: initialOptions[0].id,
-        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+        normalization: defaultNormalization()
       };
       resequenceItemPositions();
       markAsDirty();
@@ -298,7 +299,7 @@ function createSingleVocabItem(bIdx: number, targetEx: DraftExercise) {
                 graderType: 'accepted_text_exact_option',
                 accepted: acceptedVariants,
                 expectedOptionId: matchedOpt.id,
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
             });
 

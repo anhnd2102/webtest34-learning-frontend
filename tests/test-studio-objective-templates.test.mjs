@@ -5,110 +5,30 @@ import {
   renderTestBuilderView
 } from '../term-tests/teacher-dashboard/app.js';
 
-test('expandSentenceVariants generates NFKC, contraction, punctuation and apostrophe variants', () => {
+// Chi tiết quy tắc sinh biến thể (spec #54) nằm ở tests/answer-variants.test.mjs; ở đây giữ kiểm tra lối gọi cũ qua app.
+test('expandSentenceVariants (lối gọi cũ) vẫn sinh rút gọn, tùy chọn (s)/(the), đơn vị, số, viết tắt, chính tả', () => {
   const variants = expandSentenceVariants(["I'm a big fan of nature."]);
   assert.ok(variants.includes("I'm a big fan of nature."));
-  assert.ok(variants.includes("I'm a big fan of nature"));
-  assert.ok(variants.includes("I’m a big fan of nature."));
-  assert.ok(variants.includes("I’m a big fan of nature"));
   assert.ok(variants.includes("I am a big fan of nature."));
-  assert.ok(variants.includes("I am a big fan of nature"));
-  assert.ok(variants.length <= 50);
+  assert.ok(variants.length <= 12, 'tối đa 12 biến thể');
+  assert.ok(expandSentenceVariants(["don't, stop"]).includes('do not stop'));
 
-  const donVariants = expandSentenceVariants(["don't, stop"]);
-  assert.ok(donVariants.includes("don't, stop"));
-  assert.ok(donVariants.includes("don't stop"));
-  assert.ok(donVariants.includes("do not stop"));
-  assert.ok(donVariants.includes("don’t stop"));
+  assert.equal(expandSentenceVariants(['hospital']).includes('the hospital'), false);
+  assert.ok(expandSentenceVariants(['car(s)']).includes('cars'));
+  assert.ok(expandSentenceVariants(['(the) hospital']).includes('the hospital'));
+  assert.ok(expandSentenceVariants(['help sb with sth']).some(v => v.includes('help somebody with something')));
+  assert.ok(expandSentenceVariants(['5 km and 2 hrs']).some(v => v.includes('5 kilometres')));
+  assert.ok(expandSentenceVariants(['approx. 20 dept.']).some(v => v.includes('approximately')));
+  assert.ok(expandSentenceVariants(['well-being and timetable']).some(v => v.includes('wellbeing')));
+  assert.ok(expandSentenceVariants(['1st floor, 3 books']).some(v => v.includes('first floor')));
+  assert.ok(expandSentenceVariants(['colour and theatre']).some(v => v.includes('color')));
 });
 
-test('expandSentenceVariants handles IELTS rules: pronouns, units, abbreviations, compounds, numbers, and no prefix addition', () => {
-  // 1. No automatic prefix added to bare word
-  const bareVariants = expandSentenceVariants(['hospital']);
-  assert.equal(bareVariants.includes('the hospital'), false);
-  assert.equal(bareVariants.includes('a hospital'), false);
-
-  // 2. Parentheses extraction still works
-  const carVariants = expandSentenceVariants(['car(s)']);
-  assert.ok(carVariants.includes('car'));
-  assert.ok(carVariants.includes('cars'));
-
-  const hospitalVariants = expandSentenceVariants(['(the) hospital']);
-  assert.ok(hospitalVariants.includes('hospital'));
-  assert.ok(hospitalVariants.includes('the hospital'));
-
-  // 3. Pronoun abbreviations (sb, sth, so, sw, sb's)
-  const sbVariants = expandSentenceVariants(['help sb with sth']);
-  assert.ok(sbVariants.some(v => v.includes('help somebody with something')));
-
-  const soVariants = expandSentenceVariants(['ask someone to go somewhere']);
-  assert.ok(soVariants.some(v => v.includes('ask so to go sw')));
-
-  // 4. Units & time
-  const unitVariants = expandSentenceVariants(['5 km and 2 hrs']);
-  assert.ok(unitVariants.some(v => v.includes('5 kilometres')));
-  assert.ok(unitVariants.some(v => v.includes('2 hours')));
-
-  // 5. Form abbreviations
-  const formVariants = expandSentenceVariants(['approx. 20 dept.']);
-  assert.ok(formVariants.some(v => v.includes('approximately')));
-  assert.ok(formVariants.some(v => v.includes('department')));
-
-  // 6. Compound words
-  const compoundVariants = expandSentenceVariants(['well-being and timetable']);
-  assert.ok(compoundVariants.some(v => v.includes('wellbeing')));
-  assert.ok(compoundVariants.some(v => v.includes('time table')));
-
-  // 7. Hyphenation vs space
-  const jobVariants = expandSentenceVariants(['full-time job']);
-  assert.ok(jobVariants.includes('full time job'));
-
-  // 8. Numbers & Ordinals
-  const numVariants = expandSentenceVariants(['1st floor, 3 books']);
-  assert.ok(numVariants.some(v => v.includes('first floor')));
-  assert.ok(numVariants.some(v => v.includes('three books')));
-
-  // 9. British vs American spelling
-  const colourVariants = expandSentenceVariants(['colour and theatre']);
-  assert.ok(colourVariants.some(v => v.includes('color')));
-  assert.ok(colourVariants.some(v => v.includes('theater')));
-
-  // 10. Hyphen spacing variants (non-governmental, non - governmental, non -governmental, non- governmental)
-  const nonGovVariants = expandSentenceVariants(['non-governmental']);
-  assert.ok(nonGovVariants.includes('non-governmental'));
-  assert.ok(nonGovVariants.includes('non - governmental'));
-  assert.ok(nonGovVariants.includes('non -governmental'));
-  assert.ok(nonGovVariants.includes('non- governmental'));
-  assert.ok(nonGovVariants.includes('non governmental'));
-
-  const nonGovSpaced = expandSentenceVariants(['non - governmental']);
-  assert.ok(nonGovSpaced.includes('non-governmental'));
-  assert.ok(nonGovSpaced.includes('non - governmental'));
-  assert.ok(nonGovSpaced.includes('non -governmental'));
-  assert.ok(nonGovSpaced.includes('non- governmental'));
-  assert.ok(nonGovSpaced.includes('non governmental'));
-
-  // 11. Honorific titles and dot spacing variants (Mr.A, Mr. A, Mr .A, Mr . A, Mr A)
-  const mrVariants = expandSentenceVariants(['Mr.A']);
-  assert.ok(mrVariants.includes('Mr.A'));
-  assert.ok(mrVariants.includes('Mr. A'));
-  assert.ok(mrVariants.includes('Mr .A'));
-  assert.ok(mrVariants.includes('Mr . A'));
-  assert.ok(mrVariants.includes('Mr A'));
-
-  const mrSpacedVariants = expandSentenceVariants(['Mr. A']);
-  assert.ok(mrSpacedVariants.includes('Mr.A'));
-  assert.ok(mrSpacedVariants.includes('Mr. A'));
-  assert.ok(mrSpacedVariants.includes('Mr .A'));
-  assert.ok(mrSpacedVariants.includes('Mr . A'));
-  assert.ok(mrSpacedVariants.includes('Mr A'));
-
-  const mrDotSpacedVariants = expandSentenceVariants(['Mr .A']);
-  assert.ok(mrDotSpacedVariants.includes('Mr.A'));
-  assert.ok(mrDotSpacedVariants.includes('Mr. A'));
-  assert.ok(mrDotSpacedVariants.includes('Mr .A'));
-  assert.ok(mrDotSpacedVariants.includes('Mr . A'));
-  assert.ok(mrDotSpacedVariants.includes('Mr A'));
+test('expandSentenceVariants không còn nối dấu gạch cho cụm 2 từ, không sinh biến thể khoảng cách quanh dấu -, nháy cong hay tước hiệu', () => {
+  assert.deepEqual(expandSentenceVariants(['New York']), ['New York']);
+  assert.deepEqual(expandSentenceVariants(['non-governmental']), ['non-governmental']);
+  assert.deepEqual(expandSentenceVariants(['Mr.A']), ['Mr.A']);
+  assert.deepEqual(expandSentenceVariants(['I was so tired']), ['I was so tired']);
 });
 
 test('renderTestBuilderView renders single choice template with responsive grid and answer key selector', () => {
@@ -281,8 +201,11 @@ test('renderTestBuilderView renders fill-in-the-blank with accepted-answer chip 
   assert.ok(container.innerHTML.includes('variant-chip') || container.innerHTML.includes('accepted-chip'));
 });
 
-test('btn-generate-variants preserves manually added variants through union merging', () => {
+test('btn-generate-variants (Tạo lại biến thể) thay danh sách theo quy tắc mới, hỏi trước khi làm mất biến thể tự thêm, và nâng câu lên v2', () => {
   let generateClickListener = null;
+  const confirms = [];
+  globalThis.window = { ...(globalThis.window || {}), confirm: message => { confirms.push(message); return confirmAnswer; }, scrollTo: undefined };
+  let confirmAnswer = false;
 
   const rawInputMock = {
     value: '(the) hospital',
@@ -372,10 +295,17 @@ test('btn-generate-variants preserves manually added variants through union merg
   assert.ok(container.innerHTML.includes('custom_teacher_variant_123'));
   assert.ok(typeof generateClickListener === 'function', 'Listener should be bound');
 
-  // Trigger generate variants button listener
+  // Giáo viên từ chối: không có gì đổi, vẫn hỏi và nêu biến thể sẽ mất.
   generateClickListener();
+  assert.equal(confirms.length, 1);
+  assert.match(confirms[0], /custom_teacher_variant_123/);
+  assert.ok(container.innerHTML.includes('custom_teacher_variant_123'), 'từ chối thì giữ nguyên');
 
-  // After generating, custom_teacher_variant_123 MUST STILL BE PRESENT (not wiped out!)
-  assert.ok(container.innerHTML.includes('custom_teacher_variant_123'), 'Manual variant must be preserved after auto-generation');
-  assert.ok(container.innerHTML.includes('the hospital'), 'Generated IELTS variant should also be present');
+  // Giáo viên đồng ý: danh sách được thay bằng bộ sinh mới; câu được nâng lên v2.
+  confirmAnswer = true;
+  generateClickListener();
+  assert.equal(confirms.length, 2);
+  assert.equal(container.innerHTML.includes('custom_teacher_variant_123'), false, 'biến thể tự thêm bị thay');
+  assert.ok(container.innerHTML.includes('the hospital'), 'biến thể sinh theo quy tắc mới có mặt');
+  delete globalThis.window;
 });

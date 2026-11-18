@@ -2,6 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import type { BinderBase } from '../draft-model.js';
 import { expandSentenceVariants } from '../question-content.js';
+import { defaultNormalization } from '../normalization-policy.js';
 
 export function bindVocabularyActions({ container, draftState, markAsDirty, render, syncInputs, options }: BinderBase & { options?: any }) {
     // Generate variants button for Vocab Pair
@@ -30,7 +31,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
           graderType: 'accepted_text_exact_option',
           accepted: merged,
           expectedOptionId: currentExpected,
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          normalization: defaultNormalization()
         };
         markAsDirty();
         render();
@@ -55,7 +56,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
             graderType: 'accepted_text_exact_option',
             accepted: [],
             expectedOptionId: currentExpected,
-            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            normalization: defaultNormalization()
           };
           if (!currentKey.accepted.includes(val)) {
             currentKey.accepted.push(val);
@@ -255,7 +256,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
               graderType: 'accepted_text_exact_option',
               accepted: [item.prompt || 'word'],
               expectedOptionId: sel.value,
-              normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              normalization: defaultNormalization()
             };
           } else {
             draftState.gradingKey.items[item.itemVersionId!].expectedOptionId = sel.value;

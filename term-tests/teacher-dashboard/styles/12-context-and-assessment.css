@@ -676,3 +676,7 @@
 .aq-media-base input { flex: 1; min-width: 220px; }
 .ti-block { margin-top: 8px; padding: 8px 10px; border: 1px solid var(--izone-border); border-radius: 8px; background: var(--izone-surface); }
 .ti-block summary { cursor: pointer; }
+
+/* Thẻ biến thể kèm lý do (spec #54). Chỉ dùng token --izone-*. */
+.variant-chip .chip-reason { margin: 0 6px; padding: 0 6px; border: 1px solid var(--izone-border); border-radius: 6px; font-size: 11px; line-height: 18px; color: var(--izone-text-muted); background: var(--izone-bg); white-space: nowrap; }
+.variant-chip .chip-reason.is-manual { color: var(--izone-navy); }

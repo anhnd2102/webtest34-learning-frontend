@@ -15,6 +15,7 @@ import {
 import {
   renderSvgIcon
 } from '../ui/icons.js';
+import { defaultNormalization } from './normalization-policy.js';
 
 export function createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges }: Pick<BinderBase, 'container' | 'draftState'> & {
   updateScoreBreakdownBar: () => void;
@@ -259,7 +260,7 @@ function syncInputs() {
                 graderType: 'inline_cloze',
                 blanks: item.clozeAnswers,
                 accepted: primaryVariants.length ? primaryVariants : ['answer'],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
             } else if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble' && item.pedagogicalTypeCode !== 'sentence_rewrite' && item.layoutType !== 'keyword_transformation') {
               const rawInput = iCard.querySelector<HTMLInputElement>('.input-fitb-raw, .input-pictorial-target');
@@ -290,7 +291,7 @@ function syncInputs() {
               draftState.gradingKey.items[item.itemVersionId!] = {
                 graderType: 'accepted_text',
                 accepted: variants,
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
             }
 
@@ -323,7 +324,7 @@ function syncInputs() {
                 accepted: acceptedList,
                 tokens: item.tokens || [],
                 distractors: item.distractors || [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
             }
 
@@ -358,7 +359,7 @@ function syncInputs() {
                 framePrefix: item.framePrefix || '',
                 frameSuffix: item.frameSuffix || '',
                 accepted: acceptedList,
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
             }
 
@@ -380,7 +381,7 @@ function syncInputs() {
                 expectedErrors: fallbackErrors,
                 expectedCorrections: fallbackCorrections,
                 scoringRule: item.scoringRule || 'split_points',
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
               currentKey.graderType = 'correction_pair';
 
@@ -538,7 +539,7 @@ function syncInputs() {
                 graderType: 'accepted_text_exact_option',
                 accepted: variants,
                 expectedOptionId: expectedOptId,
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
 
               const optInputs = iCard.querySelectorAll<HTMLInputElement>('.vocab-meaning-input');

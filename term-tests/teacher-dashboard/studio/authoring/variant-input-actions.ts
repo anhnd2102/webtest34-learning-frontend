@@ -2,6 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { parseClozeBlanks } from '../draft-model.js';
 import type { BinderBase } from '../draft-model.js';
+import { defaultNormalization } from '../normalization-policy.js';
 
 export function bindVariantInputActions({ container, draftState, markAsDirty, render, syncInputs }: BinderBase) {
     // Add manual variant input
@@ -33,7 +34,7 @@ export function bindVariantInputActions({ container, draftState, markAsDirty, re
               const currentKey = draftState.gradingKey!.items![item.itemVersionId!] || {
                 graderType: 'accepted_text',
                 accepted: [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
               if (!currentKey.accepted.includes(val)) {
                 currentKey.accepted.push(val);
@@ -49,7 +50,7 @@ export function bindVariantInputActions({ container, draftState, markAsDirty, re
           const currentKey = draftState.gradingKey!.items![item.itemVersionId!] || {
             graderType: 'accepted_text',
             accepted: [],
-            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            normalization: defaultNormalization()
           };
           if (!currentKey.accepted.includes(val)) {
             currentKey.accepted.push(val);

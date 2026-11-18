@@ -6,8 +6,10 @@ import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { openGenericBatchModal } from '.././batch-import.js';
 import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
-import { generateHangmanHint, expandSentenceVariants } from '.././question-content.js';
+import { generateHangmanHint } from '.././question-content.js';
+import { regenerateVariantList, truncationNotice } from '../variant-regeneration.js';
 import { convertGoogleDriveImageUrl } from '.././media.js';
+import { defaultNormalization } from '../normalization-policy.js';
 
 export function bindPictorialAuthoring({ container, draftState, builderOwner, actions }: AuthoringHost) {
   const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
@@ -62,7 +64,7 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
                 draftState.gradingKey!.items![newItemId] = {
                   graderType: 'accepted_text',
                   accepted: parsed.accepted || [parsed.targetWord],
-                  normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                  normalization: defaultNormalization()
                 };
               });
               insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -101,7 +103,7 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
               draftState.gradingKey!.items![newItemId] = {
                 graderType: 'accepted_text',
                 accepted: [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
               };
             }
             insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -136,7 +138,7 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
             draftState.gradingKey!.items![newItemId] = {
               graderType: 'accepted_text',
               accepted: [],
-              normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+              normalization: defaultNormalization()
             };
             insertItemsIntoBlockExercise(block, targetEx, newItem);
             resequenceItemPositions();
@@ -167,13 +169,14 @@ export function bindPictorialAuthoring({ container, draftState, builderOwner, ac
         const currentKey = draftState.gradingKey!.items![item.itemVersionId!] || {
           graderType: 'accepted_text',
           accepted: [],
-          normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+          normalization: defaultNormalization()
         };
-        const generated = expandSentenceVariants([targetVal]);
-        const prevAccepted = Array.isArray(currentKey.accepted) ? currentKey.accepted : [];
-        currentKey.accepted = Array.from(new Set([...prevAccepted, ...generated]));
+        const regenerated = regenerateVariantList(currentKey, targetVal);
+        if (!regenerated) return;
         draftState.gradingKey!.items![item.itemVersionId!] = currentKey;
         render();
+        const notice = truncationNotice(regenerated.truncated);
+        if (notice && typeof alert === 'function') alert(notice);
       });
     });
 

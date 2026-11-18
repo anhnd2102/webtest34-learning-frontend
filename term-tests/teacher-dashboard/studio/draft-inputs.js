@@ -5,6 +5,7 @@ import { sanitizeRichContent } from '../ui/rich-content.js';
 import { convertGoogleDriveAudioUrl, convertGoogleDriveImageUrl } from './media.js';
 import { tokenizeSentence } from './question-content.js';
 import { renderSvgIcon } from '../ui/icons.js';
+import { defaultNormalization } from './normalization-policy.js';
 export function createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges }) {
     function syncInputs() {
         if (typeof container.querySelector !== 'function')
@@ -231,7 +232,7 @@ export function createDraftInputSync({ container, draftState, updateScoreBreakdo
                                 graderType: 'inline_cloze',
                                 blanks: item.clozeAnswers,
                                 accepted: primaryVariants.length ? primaryVariants : ['answer'],
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                         }
                         else if (item.interactionType === 'short_text' && item.pedagogicalTypeCode !== 'sentence_reorder' && item.layoutType !== 'token_scramble' && item.pedagogicalTypeCode !== 'sentence_rewrite' && item.layoutType !== 'keyword_transformation') {
@@ -259,7 +260,7 @@ export function createDraftInputSync({ container, draftState, updateScoreBreakdo
                             draftState.gradingKey.items[item.itemVersionId] = {
                                 graderType: 'accepted_text',
                                 accepted: variants,
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                         }
                         // Sentence reorder sync
@@ -286,7 +287,7 @@ export function createDraftInputSync({ container, draftState, updateScoreBreakdo
                                 accepted: acceptedList,
                                 tokens: item.tokens || [],
                                 distractors: item.distractors || [],
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                         }
                         // Sentence transformation sync
@@ -317,7 +318,7 @@ export function createDraftInputSync({ container, draftState, updateScoreBreakdo
                                 framePrefix: item.framePrefix || '',
                                 frameSuffix: item.frameSuffix || '',
                                 accepted: acceptedList,
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                         }
                         // Error correction sync
@@ -336,7 +337,7 @@ export function createDraftInputSync({ container, draftState, updateScoreBreakdo
                                 expectedErrors: fallbackErrors,
                                 expectedCorrections: fallbackCorrections,
                                 scoringRule: item.scoringRule || 'split_points',
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                             currentKey.graderType = 'correction_pair';
                             if (scoringRuleSelect) {
@@ -493,7 +494,7 @@ export function createDraftInputSync({ container, draftState, updateScoreBreakdo
                                 graderType: 'accepted_text_exact_option',
                                 accepted: variants,
                                 expectedOptionId: expectedOptId,
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                             const optInputs = iCard.querySelectorAll('.vocab-meaning-input');
                             optInputs.forEach(optIn => {

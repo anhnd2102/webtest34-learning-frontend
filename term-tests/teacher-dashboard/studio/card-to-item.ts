@@ -5,6 +5,7 @@
 // Hàm thuần: không đụng DOM, nhận hàm sinh id để kiểm thử được.
 import { insertItemsIntoBlockExercise } from './draft-model.js';
 import { expandSentenceVariants, generateHangmanHint } from './question-content.js';
+import { defaultNormalization } from './normalization-policy.js';
 
 export type Card = { [key: string]: any };
 export interface ExerciseRef { exerciseId?: string, title?: string }
@@ -23,7 +24,6 @@ export interface CommitResult {
   updatedExisting: { itemVersionId: string, options: Card[], expectedOptionId: string }[];
 }
 
-const NORMALIZATION = { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true };
 
 function buildItem(card: Card, options: CommitOptions, index: number): Card {
   const maxScore = card.maxScore != null && !Number.isNaN(card.maxScore) && card.maxScore > 0 ? card.maxScore : 1;
@@ -93,10 +93,10 @@ function gradingKeyFor(card: Card, item: Card, result: CommitResult): Card {
     };
   }
   if (grader === 'accepted_text_exact_option' || card.interactionType === 'text_select_pair' || card.pedagogicalTypeCode === 'vocabulary_pair') {
-    return { graderType: 'accepted_text_exact_option', accepted: expandSentenceVariants([item.targetWord || item.prompt || '']), expectedOptionId: card.expectedOptionId || item.options?.[0]?.id || 'meaning-01', normalization: NORMALIZATION };
+    return { graderType: 'accepted_text_exact_option', accepted: expandSentenceVariants([item.targetWord || item.prompt || '']), expectedOptionId: card.expectedOptionId || item.options?.[0]?.id || 'meaning-01', normalization: defaultNormalization() };
   }
   if (grader === 'inline_cloze' || card.layoutType === 'inline_cloze') {
-    return { graderType: 'inline_cloze', blanks: item.clozeAnswers, accepted: card.accepted || [item.targetWord || ''], normalization: NORMALIZATION };
+    return { graderType: 'inline_cloze', blanks: item.clozeAnswers, accepted: card.accepted || [item.targetWord || ''], normalization: defaultNormalization() };
   }
   if (grader === 'unordered_group_slot') {
     const expected = card.expectedOptionIds || [];
@@ -104,9 +104,9 @@ function gradingKeyFor(card: Card, item: Card, result: CommitResult): Card {
     return { graderType: 'unordered_group_slot', groupId: card.groupId, expectedOptionIds: expected };
   }
   if (grader === 'correction_pair') {
-    return { graderType: 'correction_pair', expectedErrors: item.expectedErrors, expectedCorrections: item.expectedCorrections, accepted: item.expectedCorrections, scoringRule: card.scoringRule || 'split_points', normalization: NORMALIZATION };
+    return { graderType: 'correction_pair', expectedErrors: item.expectedErrors, expectedCorrections: item.expectedCorrections, accepted: item.expectedCorrections, scoringRule: card.scoringRule || 'split_points', normalization: defaultNormalization() };
   }
-  const key: Card = { graderType: 'accepted_text', accepted: card.accepted || [card.targetAnswer || ''], normalization: NORMALIZATION };
+  const key: Card = { graderType: 'accepted_text', accepted: card.accepted || [card.targetAnswer || ''], normalization: defaultNormalization() };
   if (card.pedagogicalTypeCode === 'sentence_reorder') { key.tokens = card.tokens; key.distractors = card.distractors || []; }
   else if (card.pedagogicalTypeCode === 'sentence_rewrite') key.keyword = card.mandatoryKeyword;
   return key;

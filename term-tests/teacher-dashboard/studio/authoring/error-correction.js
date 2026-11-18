@@ -3,7 +3,8 @@ import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
 import { escapeHtml } from '../../ui/presentation.js';
 import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
-import { expandSentenceVariants } from '.././question-content.js';
+import { regenerateVariantList } from '../variant-regeneration.js';
+import { defaultNormalization } from '../normalization-policy.js';
 export function bindErrorCorrectionAuthoring({ container, draftState, builderOwner, actions }) {
     const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
     function createBatchErrorCorrection(bIdx, targetEx, count = 1) {
@@ -40,7 +41,7 @@ export function bindErrorCorrectionAuthoring({ container, draftState, builderOwn
                 expectedErrors: [''],
                 expectedCorrections: [''],
                 scoringRule: 'split_points',
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
         }
         insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -106,7 +107,7 @@ export function bindErrorCorrectionAuthoring({ container, draftState, builderOwn
                                 expectedCorrections: corrs,
                                 accepted: corrs,
                                 scoringRule: 'split_points',
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                         });
                         insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -146,9 +147,9 @@ export function bindErrorCorrectionAuthoring({ container, draftState, builderOwn
                 expectedCorrections: [],
                 scoringRule: 'split_points'
             };
-            const generatedErrors = expandSentenceVariants([raw]);
-            const prevErrors = Array.isArray(currentKey.expectedErrors) ? currentKey.expectedErrors : [];
-            currentKey.expectedErrors = Array.from(new Set([...prevErrors, ...generatedErrors]));
+            const regeneratedErrors = regenerateVariantList(currentKey, raw, 'expectedErrors');
+            if (!regeneratedErrors)
+                return;
             item.expectedErrors = currentKey.expectedErrors;
             item.targetWord = currentKey.expectedErrors[0] || item.targetWord;
             draftState.gradingKey.items[item.itemVersionId] = currentKey;
@@ -179,9 +180,9 @@ export function bindErrorCorrectionAuthoring({ container, draftState, builderOwn
                 expectedCorrections: [],
                 scoringRule: 'split_points'
             };
-            const generatedCorrections = expandSentenceVariants([raw]);
-            const prevCorrections = Array.isArray(currentKey.expectedCorrections) ? currentKey.expectedCorrections : [];
-            currentKey.expectedCorrections = Array.from(new Set([...prevCorrections, ...generatedCorrections]));
+            const regeneratedCorrections = regenerateVariantList(currentKey, raw, 'expectedCorrections');
+            if (!regeneratedCorrections)
+                return;
             item.expectedCorrections = currentKey.expectedCorrections;
             item.accepted = currentKey.expectedCorrections;
             draftState.gradingKey.items[item.itemVersionId] = currentKey;
