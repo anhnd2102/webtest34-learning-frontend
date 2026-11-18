@@ -4,6 +4,7 @@ import { openGenericBatchModal, openInlineClozeBatchModal } from '.././batch-imp
 import { escapeHtml } from '../../ui/presentation.js';
 import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { expandSentenceVariants } from '.././question-content.js';
+import { defaultNormalization } from '../normalization-policy.js';
 export function bindShortAnswerAuthoring({ container, draftState, builderOwner, actions }) {
     const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
     function createBatchFitb(bIdx, targetEx, count = 1, defaultPoints = 1) {
@@ -37,7 +38,7 @@ export function bindShortAnswerAuthoring({ container, draftState, builderOwner, 
             draftState.gradingKey.items[newItemId] = {
                 graderType: 'accepted_text',
                 accepted: ['answer'],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
         }
         insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -102,7 +103,7 @@ export function bindShortAnswerAuthoring({ container, draftState, builderOwner, 
                         draftState.gradingKey.items[newItemId] = {
                             graderType: 'accepted_text',
                             accepted: expandSentenceVariants([parsed.targetAnswer]),
-                            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                            normalization: defaultNormalization()
                         };
                     });
                     insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -155,7 +156,7 @@ export function bindShortAnswerAuthoring({ container, draftState, builderOwner, 
             graderType: 'inline_cloze',
             blanks: newItem.clozeAnswers,
             accepted: ['six'],
-            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+            normalization: defaultNormalization()
         };
         resequenceItemPositions();
         markAsDirty();
@@ -214,7 +215,7 @@ export function bindShortAnswerAuthoring({ container, draftState, builderOwner, 
                             graderType: 'inline_cloze',
                             blanks: itmObj.clozeAnswers,
                             accepted: parsed.accepted || [itmObj.targetWord || ''],
-                            normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                            normalization: defaultNormalization()
                         };
                     });
                     insertItemsIntoBlockExercise(block, targetEx, batchItems);

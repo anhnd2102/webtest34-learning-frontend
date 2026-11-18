@@ -12052,5 +12052,17 @@
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".ti-block summary"
+  },
+  {
+    "order": 1995,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".variant-chip .chip-reason"
+  },
+  {
+    "order": 1996,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".variant-chip .chip-reason.is-manual"
   }
 ]

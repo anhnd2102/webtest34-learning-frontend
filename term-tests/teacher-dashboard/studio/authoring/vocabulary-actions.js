@@ -1,4 +1,5 @@
 import { expandSentenceVariants } from '../question-content.js';
+import { defaultNormalization } from '../normalization-policy.js';
 export function bindVocabularyActions({ container, draftState, markAsDirty, render, syncInputs, options }) {
     // Generate variants button for Vocab Pair
     const genVocabVariantBtns = container.querySelectorAll('.btn-generate-vocab-variants');
@@ -27,7 +28,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
                 graderType: 'accepted_text_exact_option',
                 accepted: merged,
                 expectedOptionId: currentExpected,
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
             markAsDirty();
             render();
@@ -53,7 +54,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
                     graderType: 'accepted_text_exact_option',
                     accepted: [],
                     expectedOptionId: currentExpected,
-                    normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                    normalization: defaultNormalization()
                 };
                 if (!currentKey.accepted.includes(val)) {
                     currentKey.accepted.push(val);
@@ -250,7 +251,7 @@ export function bindVocabularyActions({ container, draftState, markAsDirty, rend
                         graderType: 'accepted_text_exact_option',
                         accepted: [item.prompt || 'word'],
                         expectedOptionId: sel.value,
-                        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                        normalization: defaultNormalization()
                     };
                 }
                 else {

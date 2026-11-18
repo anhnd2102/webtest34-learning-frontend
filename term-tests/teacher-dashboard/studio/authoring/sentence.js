@@ -3,7 +3,9 @@ import { insertItemsIntoBlockExercise } from '.././draft-model.js';
 import { openGenericBatchModal } from '.././batch-import.js';
 import { typeColumnsHint, typePlaceholder } from '../import-preview.js';
 import { escapeHtml } from '../../ui/presentation.js';
-import { expandSentenceVariants, tokenizeSentence } from '.././question-content.js';
+import { tokenizeSentence } from '.././question-content.js';
+import { regenerateVariantList, truncationNotice } from '../variant-regeneration.js';
+import { defaultNormalization } from '../normalization-policy.js';
 export function bindSentenceAuthoring({ container, draftState, builderOwner, actions }) {
     const { syncInputs, getNextPosition, resolveTargetExercise, resequenceItemPositions, markAsDirty, render } = actions;
     function createBatchSentenceReorder(bIdx, targetEx, count = 1) {
@@ -44,7 +46,7 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
                 accepted: [defaultSentence],
                 tokens: [...defaultTokens],
                 distractors: [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
         }
         insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -106,7 +108,7 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
                                 accepted: parsed.accepted || [parsed.targetSentence],
                                 tokens: parsed.tokens,
                                 distractors: parsed.distractors || [],
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                         });
                         insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -166,7 +168,7 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
                 framePrefix: defaultPrefix,
                 frameSuffix: defaultSuffix,
                 accepted: [defaultAnswer],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
         }
         insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -228,7 +230,7 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
                                 graderType: 'accepted_text',
                                 keyword: parsed.mandatoryKeyword,
                                 accepted: parsed.accepted || [],
-                                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                                normalization: defaultNormalization()
                             };
                         });
                         insertItemsIntoBlockExercise(block, targetEx, batchItems);
@@ -263,12 +265,16 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
             const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
                 graderType: 'accepted_text',
                 accepted: [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
-            const expanded = expandSentenceVariants([ans]);
-            currentKey.accepted = Array.from(new Set([...(currentKey.accepted || []), ...expanded]));
+            const regeneratedAnswer = regenerateVariantList(currentKey, ans);
+            if (!regeneratedAnswer)
+                return;
             draftState.gradingKey.items[item.itemVersionId] = currentKey;
             render();
+            const answerNotice = truncationNotice(regeneratedAnswer.truncated);
+            if (answerNotice && typeof alert === 'function')
+                alert(answerNotice);
         });
     });
     // Add manual transformation variant on Enter
@@ -289,7 +295,7 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
                 const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
                     graderType: 'accepted_text',
                     accepted: [],
-                    normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                    normalization: defaultNormalization()
                 };
                 currentKey.accepted = currentKey.accepted || [];
                 if (!currentKey.accepted.includes(val)) {
@@ -328,7 +334,7 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
             const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
                 graderType: 'accepted_text',
                 accepted: [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
             currentKey.tokens = item.tokens;
             if (!currentKey.accepted || !currentKey.accepted.length) {
@@ -425,13 +431,16 @@ export function bindSentenceAuthoring({ container, draftState, builderOwner, act
             const currentKey = draftState.gradingKey.items[item.itemVersionId] || {
                 graderType: 'accepted_text',
                 accepted: [],
-                normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                normalization: defaultNormalization()
             };
-            const generated = expandSentenceVariants([target]);
-            const prevAccepted = Array.isArray(currentKey.accepted) ? currentKey.accepted : [];
-            currentKey.accepted = Array.from(new Set([...prevAccepted, ...generated]));
+            const regeneratedTarget = regenerateVariantList(currentKey, target);
+            if (!regeneratedTarget)
+                return;
             draftState.gradingKey.items[item.itemVersionId] = currentKey;
             render();
+            const targetNotice = truncationNotice(regeneratedTarget.truncated);
+            if (targetNotice && typeof alert === 'function')
+                alert(targetNotice);
         });
     });
 }

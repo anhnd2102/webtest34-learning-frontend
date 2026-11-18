@@ -1,5 +1,7 @@
 import { parseClozeBlanks } from '../draft-model.js';
-import { expandSentenceVariants } from '../question-content.js';
+import { generateAnswerVariants } from '../answer-variants.js';
+import { upgradeNormalization } from '../normalization-policy.js';
+import { confirmReplaceVariants, truncationNotice } from '../variant-regeneration.js';
 export function bindChoiceVariantActions({ container, draftState, markAsDirty, render, syncInputs }) {
     // Add Option to single/multi choice
     const addOptBtns = container.querySelectorAll('.btn-add-option');
@@ -56,11 +58,17 @@ export function bindChoiceVariantActions({ container, draftState, markAsDirty, r
                 alert('Vui lòng nhập đáp án chuẩn trước khi sinh biến thể.');
                 return;
             }
-            const generated = expandSentenceVariants([rawVal]);
+            const regenerated = generateAnswerVariants(rawVal);
+            const generated = regenerated.variants.map(variant => variant.text);
+            const previousList = blankNum && item.layoutType === 'inline_cloze'
+                ? (Array.isArray(item.clozeAnswers?.[blankNum]?.accepted) ? item.clozeAnswers[blankNum].accepted : [])
+                : (Array.isArray(draftState.gradingKey.items[item.itemVersionId]?.accepted) ? draftState.gradingKey.items[item.itemVersionId].accepted : []);
+            if (!confirmReplaceVariants(previousList, generated))
+                return;
+            const upgraded = upgradeNormalization(draftState.gradingKey.items[item.itemVersionId]?.normalization);
             if (blankNum && item.layoutType === 'inline_cloze') {
                 item.clozeAnswers = item.clozeAnswers || {};
-                const prevAccepted = Array.isArray(item.clozeAnswers[blankNum]?.accepted) ? item.clozeAnswers[blankNum].accepted : [];
-                const merged = Array.from(new Set([...prevAccepted, ...generated]));
+                const merged = generated;
                 item.clozeAnswers[blankNum] = {
                     targetWord: rawVal,
                     accepted: merged
@@ -71,23 +79,25 @@ export function bindChoiceVariantActions({ container, draftState, markAsDirty, r
                     draftState.gradingKey.items[item.itemVersionId] = {
                         graderType: 'accepted_text',
                         accepted: merged,
-                        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                        normalization: upgraded
                     };
+                }
+                else if (draftState.gradingKey.items[item.itemVersionId]) {
+                    draftState.gradingKey.items[item.itemVersionId].normalization = upgraded;
                 }
             }
             else {
-                const prevAccepted = Array.isArray(draftState.gradingKey.items[item.itemVersionId]?.accepted)
-                    ? draftState.gradingKey.items[item.itemVersionId].accepted
-                    : [];
-                const merged = Array.from(new Set([...prevAccepted, ...generated]));
                 draftState.gradingKey.items[item.itemVersionId] = {
                     graderType: 'accepted_text',
-                    accepted: merged,
-                    normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                    accepted: generated,
+                    normalization: upgraded
                 };
             }
             markAsDirty();
             render();
+            const notice = truncationNotice(regenerated.truncated);
+            if (notice && typeof alert === 'function')
+                alert(notice);
         });
     });
     // Remove single variant chip

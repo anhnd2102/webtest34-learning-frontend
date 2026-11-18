@@ -41,6 +41,8 @@ import { bindBlockReorderActions } from './block-actions.js';
 import { bindToolbarActions } from './toolbar-actions.js';
 import { bindRichEditorControls } from './rich-editor-controls.js';
 import { bindExerciseActions } from './exercise-actions.js';
+import { createNormalizationGuard, defaultNormalization } from './normalization-policy.js';
+import { annotateVariantChips } from './variant-chip-reasons.js';
 export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
     if (!containerArg)
         return { dispose() { }, hasUnsavedChanges: () => false, getDraft: () => null };
@@ -180,6 +182,8 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
             ex.itemIds = (block.items || []).filter(it => it.exerciseId === ex.exerciseId).map(it => it.itemVersionId);
         }
     }
+    // Giữ chính sách chuẩn hóa của câu đã có (spec #54): câu cũ không tự lên v2 cho tới khi bấm "Tạo lại biến thể".
+    const normalizationGuard = createNormalizationGuard(draftState);
     // Hoàn tác lần nhập (spec #91, GĐ 4): chụp bản nháp trước khi nhập; nút Hoàn tác nằm ở thanh nổi cho tới khi người ra đề sửa tiếp.
     let importUndo = null;
     let committingImport = false;
@@ -228,6 +232,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
         // Mọi chỉnh sửa khác sau lần nhập làm hết hiệu lực hoàn tác (tránh ghi đè công sức mới).
         if (!committingImport)
             clearImportUndo();
+        normalizationGuard.reconcile();
         dirtyVersion++;
         isDirty = true;
         if (typeof container?.querySelector === 'function') {
@@ -315,7 +320,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
                     draftState.gradingKey.items[itm.itemVersionId] = {
                         graderType: 'accepted_text',
                         accepted: initialWord ? [initialWord] : [],
-                        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                        normalization: defaultNormalization()
                     };
                 }
                 else {
@@ -335,7 +340,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
                         graderType: 'accepted_text_exact_option',
                         accepted: initialWord ? [initialWord] : [],
                         expectedOptionId: itm.options?.[0]?.id || 'opt_1',
-                        normalization: { unicode: 'NFKC', caseInsensitive: true, collapseWhitespace: true }
+                        normalization: defaultNormalization()
                     };
                 }
                 else {
@@ -726,6 +731,7 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
       </div>
     `;
         bindEvents();
+        annotateVariantChips(container);
         if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
             window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
         }
@@ -830,7 +836,8 @@ export function mountBuilder(containerArg, formVersionData = {}, options = {}) {
         if (totalQTag)
             totalQTag.textContent = `${summary.totalQuestions} câu hỏi`;
     }
-    const syncInputs = createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges });
+    const rawSyncInputs = createDraftInputSync({ container, draftState, updateScoreBreakdownBar, hasUnsavedChanges });
+    const syncInputs = () => { rawSyncInputs(); normalizationGuard.reconcile(); };
     function getNextPosition() {
         let nextPos = 1;
         for (const b of draftState.blocks) {

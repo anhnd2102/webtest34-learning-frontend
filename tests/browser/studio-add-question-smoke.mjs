@@ -166,6 +166,35 @@ try {
   assert.equal(await dialog.locator('.aq-save').isDisabled(), true);
   await dialog.locator('.aq-cancel').click();
 
+  // ---- Biến thể đáp án (spec #54): câu mới dùng chuẩn hóa v2; "Tự động sinh biến thể" cho thẻ kèm lý do, không nối gạch cụm 2 từ
+  await openDialog('fitb');
+  await dialog.locator('[data-aq-field="prompt"]').fill('Variant city ___');
+  await dialog.locator('[data-aq-field="correct"]').fill('New York');
+  await dialog.locator('.aq-save-next').click();
+  await dialog.locator('[data-aq-field="prompt"]').fill('Variant happy ___');
+  await dialog.locator('[data-aq-field="correct"]').fill('I am happy');
+  await dialog.locator('.aq-save').click();
+  await dialog.waitFor({ state: 'detached' });
+  const cityCard = page.locator('.builder-item-card').filter({ has: page.locator('.input-fitb-raw[value="New York"]') }).first();
+  await cityCard.locator('.btn-generate-variants').click();
+  const cityChips = await cityCard.locator('.variant-chip').allInnerTexts();
+  assert.equal(cityChips.length, 1, `cụm 2 từ không bị nối gạch: ${cityChips.join(' | ')}`);
+  const happyCard = page.locator('.builder-item-card').filter({ has: page.locator('.input-fitb-raw[value="I am happy"]') }).first();
+  await happyCard.locator('.btn-generate-variants').click();
+  const happyChips = happyCard.locator('.variant-chip');
+  await page.waitForFunction(() => [...document.querySelectorAll('.variant-chip')].some(chip => /I'm happy/.test(chip.textContent)));
+  assert.ok((await happyChips.first().innerText()).includes('đáp án gốc'));
+  const contraction = happyCard.locator('.variant-chip', { hasText: "I'm happy" });
+  assert.match(await contraction.innerText(), /rút gọn/);
+  await page.locator('#btn-save-draft').click().catch(() => {});
+  await page.waitForTimeout(500);
+  const savedVariants = saves.at(-1);
+  const happyItem = savedVariants.blocks[0].items.find(item => item.prompt === 'Variant happy ___');
+  const cityItem = savedVariants.blocks[0].items.find(item => item.prompt === 'Variant city ___');
+  assert.equal(savedVariants.gradingKey.items[happyItem.itemVersionId].normalization.ruleSet, 'v2');
+  assert.equal(savedVariants.gradingKey.items[cityItem.itemVersionId].normalization.ruleSet, 'v2');
+  assert.ok(savedVariants.gradingKey.items[happyItem.itemVersionId].accepted.includes("I'm happy"));
+
   assert.equal(errors.length, 0, errors.join('\n'));
   process.stdout.write(JSON.stringify({ status: 'passed', errors: 0 }) + '\n');
 } finally {

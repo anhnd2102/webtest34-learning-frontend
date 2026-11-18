@@ -54,7 +54,7 @@ test('batchGenerateExerciseVocabVariants generates and merges variants across al
         itemVersionId: 'it-vocab-1',
         exerciseId: 'ex-1',
         interactionType: 'text_select_pair',
-        targetWord: 'cant',
+        targetWord: "can't",
         options: [{ id: 'opt_1', label: 'không thể' }]
       },
       {
@@ -83,7 +83,7 @@ test('batchGenerateExerciseVocabVariants generates and merges variants across al
       items: {
         'it-vocab-1': {
           graderType: 'accepted_text_exact_option',
-          accepted: ['custom_manual_variant', 'cant'],
+          accepted: ['custom_manual_variant', "can't"],
           expectedOptionId: 'opt_1'
         },
         'it-vocab-2': {
@@ -100,7 +100,7 @@ test('batchGenerateExerciseVocabVariants generates and merges variants across al
 
   const key1 = mockDraftState.gradingKey.items['it-vocab-1'];
   assert.ok(key1.accepted.includes('custom_manual_variant'), 'Preserves existing manual variant');
-  assert.ok(key1.accepted.includes('can’t') || key1.accepted.includes("can't") || key1.accepted.includes('cannot'), 'Expands contractions');
+  assert.ok(key1.accepted.includes('cannot'), 'Expands contractions');
 
   const key2 = mockDraftState.gradingKey.items['it-vocab-2'];
   assert.ok(key2.accepted.includes('destination'), 'Includes target word');
