@@ -142,16 +142,17 @@ try {
     assert.equal(await a.locator('input[data-item-id="it-2"]').isVisible(), false, 'ô trả lời bị ẩn khi chưa nghe');
     assert.match(await dock(page, 'b2').locator('.audio-listens-left').textContent(), /Còn 1 lượt nghe/);
 
-    // 2. Bấm nghe: mở khóa đề, tính là đã dùng lượt, nút đổi thành Tạm dừng
+    // 2. Bấm nghe: mở khóa đề, tính là đã dùng lượt, nút khóa lại (không có tạm dừng)
     await dock(page, 'b2').locator('.btn-sim-audio-play').click();
     await waitFor(async () => (await a.getAttribute('data-audio-unlocked')) === 'true', 'bài nghe phát thì mở khóa đề');
     assert.equal(await a.locator('.cbt-audio-gate-placeholder').isVisible(), false, 'thông báo đề ẩn biến mất');
     assert.equal(await a.locator('input[data-item-id="it-2"]').isVisible(), true, 'ô trả lời hiện ra');
-    assert.match(await dock(page, 'b2').locator('.btn-sim-audio-play').textContent(), /Tạm dừng/);
+    assert.match(await dock(page, 'b2').locator('.btn-sim-audio-play').textContent(), /Đang phát/);
+    assert.equal(await dock(page, 'b2').locator('.btn-sim-audio-play').isDisabled(), true, 'đang nghe thì không bấm tạm dừng được');
     assert.match(await dock(page, 'b2').locator('.audio-listens-left').textContent(), /Còn 0 lượt nghe/, 'lượt đang nghe dở cũng tính là đã dùng');
 
-    // 3. Tạm dừng giữa chừng: tiếp tục nghe được, lượt vẫn tính là đã dùng
-    await dock(page, 'b2').locator('.btn-sim-audio-play').click();
+    // 3. Hệ thống dừng giữa chừng (mất tiêu điểm...): tiếp tục nghe được, lượt vẫn tính là đã dùng
+    await page.evaluate(() => document.querySelector('.simulation-section-card[data-block-id="b2"] audio').pause());
     assert.equal((await audioState(page, 'b2')).paused, true);
     assert.match(await dock(page, 'b2').locator('.btn-sim-audio-play').textContent(), /Tiếp tục nghe/);
     assert.match(await dock(page, 'b2').locator('.audio-listens-left').textContent(), /Còn 0 lượt nghe/);
@@ -277,7 +278,7 @@ try {
     await goTo(page, 2);
     await dock(page, 'b3').locator('.btn-sim-audio-play').click();
     await waitFor(async () => (await audioState(page, 'b3')).currentTime > 1.2, 'bài nghe B phát được hơn 1 giây');
-    await dock(page, 'b3').locator('.btn-sim-audio-play').click();
+    await page.evaluate(() => document.querySelector('.simulation-section-card[data-block-id="b3"] audio').pause());
     await waitFor(() => api.checkpoints.b3?.lastHeardSeconds > 1, 'tạm dừng thì gửi mốc đúng vị trí đang nghe');
     const saved = api.checkpoints.b3.lastHeardSeconds;
     assert.ok(saved > 1, 'mốc lưu đúng vị trí đang nghe: ' + saved);
