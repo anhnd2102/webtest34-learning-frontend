@@ -40,5 +40,5 @@ export function blockedPreviewRequest(): Promise<never> {
 }
 
 export const PREVIEW_CSS = `
-.cbt-preview-banner{padding:8px 16px;text-align:center;font-weight:700;font-size:.9rem;color:var(--izone-on-primary,#fff);background:var(--izone-navy,#0f172a);letter-spacing:.2px}
+.cbt-preview-banner{padding:8px 16px;text-align:center;font-weight:700;font-size:.9rem;color:var(--izone-on-primary,#fff);background:var(--izone-primary,#e11d48);letter-spacing:.2px}
 `;
