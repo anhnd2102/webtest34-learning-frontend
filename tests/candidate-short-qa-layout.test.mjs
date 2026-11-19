@@ -24,3 +24,11 @@ test('bài nghe: không có nút tạm dừng', () => {
   const html = renderAudioDockHtml('https://example.com/a.mp3');
   assert.doesNotMatch(html, /Tạm dừng/);
 });
+
+test('câu trả lời ngắn: đề xếp từ bằng dấu gạch chéo coi là dài, một câu một hàng', () => {
+  const slash = '3. see/leave/can/last/his/early/parents/not/Terry/night/because/they';
+  const html = renderSimShortQaGroup([item(66, 'Short one'), item(67, 'Short two'), item(68, slash)]);
+  const cards = html.split('cbt-short-qa-card').slice(1);
+  assert.ok(!cards[0].startsWith(' short-qa-wide'));
+  assert.ok(cards[2].startsWith(' short-qa-wide'));
+});

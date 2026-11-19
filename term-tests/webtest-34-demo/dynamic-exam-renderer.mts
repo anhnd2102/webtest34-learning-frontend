@@ -497,8 +497,12 @@ export function isShortQaEligibleFor2Col(items: ExamItem[]) {
 }
 
 // Đề bài ngắn xếp 2 câu một hàng; đề bài dài (hoặc có bảng, ảnh) chiếm trọn một hàng.
+// Đề xếp từ cách nhau bằng dấu gạch chéo ("see/leave/can/...") không có chỗ xuống dòng nên luôn coi là dài.
 export function isShortQaItemShort(item: ExamItem) {
-  return isShortQaEligibleFor2Col([item, item]);
+  if (!isShortQaEligibleFor2Col([item, item])) return false;
+  const clean = String(item.prompt || '').replace(/<[^>]+>/g, ' ');
+  const longestToken = Math.max(0, ...clean.split(/\s+/).map(token => token.length));
+  return longestToken <= 24 && (clean.match(/\//g) || []).length < 3;
 }
 
 export function renderSimShortQaGroup(shortItems: ExamItem[], answers: Record<string, any> = {}) {
