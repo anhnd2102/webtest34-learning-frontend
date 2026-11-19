@@ -3059,3 +3059,75 @@ body {
 .cbt-exercise-heading { margin: 16px 0 8px; padding: 10px 12px; border-left: 3px solid var(--izone-primary); background: var(--izone-card-bg); border-radius: 0 8px 8px 0; }
 .cbt-exercise-title { margin: 0 0 4px; font-size: 1rem; color: var(--izone-navy); }
 .cbt-exercise-instructions { font-size: 0.95rem; color: var(--izone-slate); overflow-wrap: anywhere; }
+
+/* ==========================================================================
+   17. ĐỘ ĐẬM CHỮ & NÚT NGHE (màn làm bài học viên)
+   Chữ trước đây mảnh (tiêu đề weight 400, nội dung 450, màu xám nhạt): tăng độ đậm và độ tương phản.
+   ========================================================================== */
+.cbt-exam-shell {
+  color: var(--izone-navy);
+  font-weight: 500;
+}
+.cbt-exam-shell :is(h1, h2, h3, h4) {
+  color: var(--izone-navy);
+  font-weight: 700;
+}
+.cbt-exam-shell .candidate-inline-cloze-wrap,
+.cbt-exam-shell .cbt-cloze-content {
+  color: var(--izone-navy);
+  font-weight: 500;
+}
+.cbt-exam-shell .candidate-short-prompt-text {
+  color: var(--izone-navy);
+  font-weight: 600;
+}
+.cbt-exam-shell :is(.choice-text, .cbt-choice-text) {
+  color: var(--izone-navy);
+  font-weight: 600;
+}
+.cbt-exam-shell .cbt-question-card,
+.cbt-exam-shell .cbt-short-qa-card {
+  border-color: #cbd5e1;
+}
+.cbt-exam-shell :is(.candidate-short-input, .inline-fill-input, .cbt-blank-input, .candidate-pictorial-input) {
+  font-weight: 600;
+  color: var(--izone-navy);
+  border-color: #94a3b8;
+}
+.cbt-exam-shell :is(.audio-listens-left, .sim-audio-time-current, .sim-audio-time-total, .cbt-exercise-instructions) {
+  color: var(--izone-slate);
+  font-weight: 600;
+}
+
+/* Nút nghe đã khóa khi đang phát: nhìn rõ là đang chạy, không phải nút hỏng. */
+.btn-sim-audio-play:disabled {
+  opacity: 1 !important;
+  cursor: default;
+  background: var(--izone-navy) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Câu trả lời ngắn: ô lưới không bị chữ dài đẩy tràn khung; đề bài dài chiếm trọn một hàng. */
+.candidate-short-qa-container.short-qa-2col .candidate-short-qa-item,
+.cbt-short-qa-wrap.short-qa-2col .cbt-short-qa-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.candidate-short-qa-container.short-qa-2col .short-qa-wide,
+.cbt-short-qa-wrap.short-qa-2col .short-qa-wide {
+  grid-column: 1 / -1;
+}
+.candidate-short-qa-item,
+.cbt-short-qa-card {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+.candidate-short-prompt-text :is(img, table, video) {
+  max-width: 100%;
+}
+.candidate-short-prompt-text table {
+  display: block;
+  overflow-x: auto;
+}

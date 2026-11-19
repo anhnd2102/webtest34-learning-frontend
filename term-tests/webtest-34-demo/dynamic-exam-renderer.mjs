@@ -488,16 +488,20 @@ export function isShortQaEligibleFor2Col(items) {
         return clean.length > 0 && clean.length <= 100 && !hasComplexHtml;
     });
 }
-function renderSimShortQaGroup(shortItems, answers = {}) {
+// Đề bài ngắn xếp 2 câu một hàng; đề bài dài (hoặc có bảng, ảnh) chiếm trọn một hàng.
+export function isShortQaItemShort(item) {
+    return isShortQaEligibleFor2Col([item, item]);
+}
+export function renderSimShortQaGroup(shortItems, answers = {}) {
     if (!shortItems || !shortItems.length)
         return '';
-    const is2Col = isShortQaEligibleFor2Col(shortItems);
+    const is2Col = shortItems.length > 1 && shortItems.some(isShortQaItemShort);
     return `
     <div class="candidate-short-qa-container cbt-short-qa-wrap ${is2Col ? 'short-qa-2col' : ''}">
       ${shortItems.map((item) => {
         const val = typeof answers[item.itemVersionId] === 'string' ? answers[item.itemVersionId] : '';
         return `
-          <div class="candidate-short-qa-item cbt-short-qa-card" data-item-id="${escape(item.itemVersionId)}">
+          <div class="candidate-short-qa-item cbt-short-qa-card${is2Col && !isShortQaItemShort(item) ? ' short-qa-wide' : ''}" data-item-id="${escape(item.itemVersionId)}">
             <div class="candidate-short-prompt-row">
               <span class="candidate-short-qnum qnum" style="display:inline-flex !important;width:auto !important;max-width:none !important;min-width:max-content !important;height:auto !important;min-height:28px !important;padding:4px 14px !important;border-radius:9999px !important;white-space:nowrap !important;box-sizing:border-box !important;">Câu ${escape(item.position)}</span>
               <div class="candidate-short-prompt-text">${renderFormattedContent(item.prompt || '')}</div>
@@ -1691,13 +1695,17 @@ export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
             });
             audioEl.addEventListener('pause', () => {
                 if (!audioEl.ended && listensCount < maxListens) {
+                    // Chỉ hệ thống (mất tiêu điểm, thoát toàn màn hình) mới làm dừng; học viên bấm tiếp tục được.
+                    playBtn.disabled = false;
                     playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
                     if (liveStatus)
                         liveStatus.style.display = 'none';
                 }
             });
             audioEl.addEventListener('playing', () => {
-                playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
+                // Đã nghe là nghe liền một mạch: không có nút tạm dừng.
+                playBtn.disabled = true;
+                playBtn.innerHTML = `${ICONS.volume} Đang phát`;
                 if (liveStatus)
                     liveStatus.style.display = 'inline-flex';
                 syncListensLeft();
@@ -1784,30 +1792,23 @@ export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
                 report(false); });
         }
         playBtn.addEventListener('click', async () => {
-            if (listensCount >= maxListens)
+            if (listensCount >= maxListens || !audioEl.paused)
                 return;
-            if (audioEl.paused) {
-                // Pause all other audios in rootEl
-                rootEl.querySelectorAll('.audio-hidden-element').forEach((other) => {
-                    if (other !== audioEl && !other.paused)
-                        other.pause();
-                });
-                try {
-                    audioEl.muted = false;
-                    await audioEl.play();
-                    playBtn.innerHTML = `${ICONS.pause} Tạm dừng`;
-                    if (liveStatus)
-                        liveStatus.style.display = 'inline-flex';
-                }
-                catch (err) {
-                    console.warn('Cannot play audio:', err);
-                }
-            }
-            else {
-                audioEl.pause();
-                playBtn.innerHTML = `${ICONS.play} Tiếp tục nghe`;
+            // Pause all other audios in rootEl
+            rootEl.querySelectorAll('.audio-hidden-element').forEach((other) => {
+                if (other !== audioEl && !other.paused)
+                    other.pause();
+            });
+            try {
+                audioEl.muted = false;
+                await audioEl.play();
+                playBtn.disabled = true;
+                playBtn.innerHTML = `${ICONS.volume} Đang phát`;
                 if (liveStatus)
-                    liveStatus.style.display = 'none';
+                    liveStatus.style.display = 'inline-flex';
+            }
+            catch (err) {
+                console.warn('Cannot play audio:', err);
             }
         });
     });
