@@ -1,7 +1,7 @@
 // Draft, hợp đồng lời gọi Learning API và trạng thái lượt (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; learning-api.js do `npm run build` sinh ra (xem text-utils.ts). Import nội bộ viết
 // không có `?rev=`, bước build tự thêm rev dùng chung của shell học viên.
-import { optionId } from './text-utils.js?rev=20261119-exam-preview';
+import { optionId } from './text-utils.js?rev=20261119-preview-banner';
 export const draftKey = (form) => `izone_content_demo_${form.course}_${form.sourceHash}_v1`;
 /**
  * Chỉ giữ đáp án hợp lệ (chuỗi không quá 12.000 ký tự, nằm trong danh sách lựa chọn nếu có) từ bản nháp trong trình duyệt.

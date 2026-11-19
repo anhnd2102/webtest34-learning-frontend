@@ -1,6 +1,6 @@
 // Lưu nháp lên máy chủ (gom 1,5 giây, thử lại khi lỗi tạm thời) và trạng thái lưu (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; draft-sync.js do `npm run build` sinh ra (xem text-utils.ts).
-import { DRAFT_REJECTED_REASON } from './learning-api.js?rev=20261119-exam-preview';
+import { DRAFT_REJECTED_REASON } from './learning-api.js?rev=20261119-preview-banner';
 export function createDraftSync({ query, isLearningMode, key, state, learningState, apiRequest, buildResponsesPayload }) {
     let draftDebounceTimer = null;
     // Dải báo lỗi lưu (#28): chỉ đổi theo kết quả gọi /attempts/draft; rỗng thì CSS ẩn.

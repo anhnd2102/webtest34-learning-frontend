@@ -2,7 +2,7 @@
 //
 // Đề bài của từng bài tập (exercise) trên màn làm bài của học viên: tiêu đề + hướng dẫn do người ra đề nhập,
 // hiện ngay trước câu đầu tiên của bài tập. Không thay cho câu dẫn theo dạng câu của từng câu hỏi.
-import { escape } from './text-utils.js?rev=20261119-exam-preview';
+import { escape } from './text-utils.js?rev=20261119-preview-banner';
 const DEFAULT_TITLE = /^(bài tập|exercise)\s*\d+$/iu;
 const plain = (text) => escape(text).replace(/\n/g, '<br>');
 // `renderText` mặc định chỉ escape; màn làm bài truyền bộ dựng nội dung đã làm sạch (hỗ trợ HTML an toàn).

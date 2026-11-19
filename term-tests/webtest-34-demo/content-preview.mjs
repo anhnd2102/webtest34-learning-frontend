@@ -1,20 +1,20 @@
 // NGUỒN: file .mts này; content-preview.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261119-exam-preview';
-import { escape } from './candidate/text-utils.js?rev=20261119-exam-preview';
-import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261119-exam-preview';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-exam-preview';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261119-exam-preview';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261119-exam-preview';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261119-exam-preview';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261119-exam-preview';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261119-exam-preview';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261119-exam-preview';
-import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261119-exam-preview';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261119-exam-preview';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261119-exam-preview';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261119-exam-preview';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-exam-preview';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261119-preview-banner';
+import { escape } from './candidate/text-utils.js?rev=20261119-preview-banner';
+import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261119-preview-banner';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-preview-banner';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261119-preview-banner';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261119-preview-banner';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261119-preview-banner';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261119-preview-banner';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261119-preview-banner';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261119-preview-banner';
+import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261119-preview-banner';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261119-preview-banner';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261119-preview-banner';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261119-preview-banner';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-preview-banner';
 export async function mount(course) {
     if (!['03', '34', '45'].includes(course))
         throw new Error('Unknown demo course');
