@@ -177,3 +177,8 @@ export function formPublishPreviewPath(apiBase = ''): string {
   const cleanBase = String(apiBase || '').replace(/\/+$/, '');
   return cleanBase ? `${cleanBase}/api/teacher/forms/publish-preview` : '/api/teacher/forms/publish-preview';
 }
+
+// Cấp token xem trước ngắn hạn cho một đề đã xuất bản (POST, không ghi dữ liệu học viên).
+export function formPreviewTokenPath(versionId: string): string {
+  return `/api/teacher/forms/${encodeURIComponent(versionId)}/preview-token`;
+}

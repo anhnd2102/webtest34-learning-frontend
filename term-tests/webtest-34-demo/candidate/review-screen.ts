@@ -36,7 +36,7 @@ export function createReviewScreen({ testToken, title, learningState, apiRequest
 
     // Lỗi nạp module không được nuốt: mỗi lần thử lại dùng URL mới để tránh cache lỗi.
     function loadReviewModule() {
-      reviewModulePromise ||= import(`../../34-shared/review-module.mjs?rev=20261118-exercise-heading${reviewModuleTries++ ? `&retry=${Date.now()}` : ''}`)
+      reviewModulePromise ||= import(`../../34-shared/review-module.mjs?rev=20261119-exam-preview${reviewModuleTries++ ? `&retry=${Date.now()}` : ''}`)
         .then(module => (reviewApi = module), error => { reviewModulePromise = null; throw error; });
       return reviewModulePromise;
     }

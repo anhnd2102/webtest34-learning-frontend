@@ -3,6 +3,7 @@
 import { courseTestCatalogPath, formDraftPath, formDetailPath, formPublishPath, formPublishPreviewPath, previewSandboxPath, rubricPresetsPath, rubricPresetsBuildPath } from '../api/teacher.js';
 import { hasActiveUnsavedChanges, clearActiveUnsavedChanges, openUnsavedChangesModal } from '../navigation/unsaved-changes.js';
 import { openCreateTestModal, renderCourseTestCatalogView, filterClassesForCourse } from '../studio/catalog.js';
+import { openExamPreview } from './preview-link.js';
 export function createStudioView({ root, queryCoordinator, authState, scopeState, form, viewExams, disposeOwnedBuilder, renderOwnedBuilder, request }) {
     let currentStudioCourseId = 1;
     async function loadAndRenderTestStudio(targetCourseId = currentStudioCourseId) {
@@ -164,6 +165,14 @@ export function createStudioView({ root, queryCoordinator, authState, scopeState
                         }
                     });
                 },
+                onPreviewTest: ({ formVersionId }) => openExamPreview({
+                    formVersionId: formVersionId || '',
+                    request: request,
+                    win: window,
+                    pageUrl: window.location.href,
+                    apiBase: form?.elements?.apiBase?.value || '',
+                    onError: message => alert(message)
+                }),
                 onEditTest: async ({ testKey, formVersionId }) => {
                     if (!formVersionId) {
                         alert('Bài thi này chưa liên kết với phiên bản form nào.');

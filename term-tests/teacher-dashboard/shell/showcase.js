@@ -2,7 +2,8 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { ICONS } from '../ui/icons.js';
 import { localStudentUrl, formatAssignmentMeta } from './dashboard-state.js';
-export function createShowcase({ root, lifecycle, viewState, scopeState, document, classSelect, selectedAssignmentCard, showcaseBadgeClass, showcaseTitle, showcaseBlockBadge, showcasePhaseBadge, showcaseStatusBadge, examSwitchControls, examRoomOpenButton, examRoom, showcaseLinkBar, showcaseStudentUrl, copyShowcaseLinkBtn, openShowcaseLinkBtn, currentLocation, apiBase, stopExamRoomEvents, updateExamModeUI, updateSelfProctoringUI, renderExamSwitch }) {
+import { openExamPreview } from './preview-link.js';
+export function createShowcase({ root, lifecycle, viewState, scopeState, document, classSelect, selectedAssignmentCard, showcaseBadgeClass, showcaseTitle, showcaseBlockBadge, showcasePhaseBadge, showcaseStatusBadge, examSwitchControls, examRoomOpenButton, examRoom, showcaseLinkBar, showcaseStudentUrl, copyShowcaseLinkBtn, openShowcaseLinkBtn, currentLocation, apiBase, previewAssignmentBtn, request, previewWindow, stopExamRoomEvents, updateExamModeUI, updateSelfProctoringUI, renderExamSwitch }) {
     if (copyShowcaseLinkBtn) {
         lifecycle.listen(copyShowcaseLinkBtn, 'click', async () => {
             const url = showcaseStudentUrl?.value;
@@ -119,6 +120,8 @@ export function createShowcase({ root, lifecycle, viewState, scopeState, documen
             showcaseStatusBadge.textContent = assignment.status === 'published' ? 'Đang phát hành' : assignment.status;
         }
         const currentApi = typeof apiBase === 'function' ? apiBase() : '';
+        if (previewAssignmentBtn)
+            previewAssignmentBtn.hidden = !assignment.formVersionId;
         const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation, currentApi);
         if (studentUrl) {
             if (showcaseStudentUrl)
@@ -132,6 +135,19 @@ export function createShowcase({ root, lifecycle, viewState, scopeState, documen
             if (showcaseLinkBar)
                 showcaseLinkBar.hidden = true;
         }
+    }
+    if (previewAssignmentBtn && request && previewWindow) {
+        lifecycle.listen(previewAssignmentBtn, 'click', () => {
+            const assignment = scopeState.currentSelectedAssignment;
+            void openExamPreview({
+                formVersionId: assignment?.formVersionId || '',
+                request: request,
+                win: previewWindow,
+                pageUrl: previewWindow.location.href,
+                apiBase: typeof apiBase === 'function' ? apiBase() : '',
+                onError: message => alert(message)
+            });
+        });
     }
     return { renderSelectedAssignmentShowcase };
 }

@@ -39,6 +39,7 @@ export interface AssignmentChip { assignmentId: string, title: string, phase?: u
 
 export interface AssignmentRecord extends AssignmentChip {
   id?: string;
+  formVersionId?: string | null;
   classId?: string;
   examMode?: boolean;
   exitLimit?: number | null;

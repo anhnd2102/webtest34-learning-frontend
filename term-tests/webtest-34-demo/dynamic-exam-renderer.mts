@@ -1156,7 +1156,7 @@ export function isKeyboardOpen(viewport: any, layoutHeight: number) {
   return layoutHeight - viewport.height * viewport.scale > 120;
 }
 
-export function initDynamicExamInteractions(rootElArg: HTMLElement | null | undefined, { definition, state = { answers: {} }, onAnswerChange, onSectionChange, onAudioProgress }: { definition: ExamDefinition, state?: ExamState, onAnswerChange?: (...args: any[]) => void, onSectionChange?: (...args: any[]) => void, onAudioProgress?: (...args: any[]) => void }) {
+export function initDynamicExamInteractions(rootElArg: HTMLElement | null | undefined, { definition, state = { answers: {} }, onAnswerChange, onSectionChange, onAudioProgress, allowReplay = false }: { definition: ExamDefinition, state?: ExamState, onAnswerChange?: (...args: any[]) => void, onSectionChange?: (...args: any[]) => void, onAudioProgress?: (...args: any[]) => void, allowReplay?: boolean }) {
   if (!rootElArg || !definition) return;
   const rootEl: HTMLElement = rootElArg;
 
@@ -1637,7 +1637,7 @@ export function initDynamicExamInteractions(rootElArg: HTMLElement | null | unde
   }
 
   // Initialize Strict Audio Docks (max 2 listens)
-  initStrictAudioDocks(rootEl, { state, onAudioProgress });
+  initStrictAudioDocks(rootEl, { state, onAudioProgress, allowReplay });
 
   return {
     activateSection,
@@ -1647,7 +1647,7 @@ export function initDynamicExamInteractions(rootElArg: HTMLElement | null | unde
 }
 
 // state.audioProgress[audioKey] = { lastHeardSeconds, completed } khôi phục từ máy chủ; onAudioProgress(audioKey, seconds, completed) báo mốc mới.
-export function initStrictAudioDocks(rootEl: HTMLElement | null | undefined, { state, onAudioProgress }: { state?: ExamState, onAudioProgress?: (...args: any[]) => void } = {}) {
+export function initStrictAudioDocks(rootEl: HTMLElement | null | undefined, { state, onAudioProgress, allowReplay = false }: { state?: ExamState, onAudioProgress?: (...args: any[]) => void, allowReplay?: boolean } = {}) {
   if (!rootEl) return;
   const docks = rootEl.querySelectorAll<HTMLElement>('.strict-audio-dock');
   docks.forEach((dock: HTMLElement) => {
@@ -1667,6 +1667,7 @@ export function initStrictAudioDocks(rootEl: HTMLElement | null | undefined, { s
     let listensCount = parseInt(dock.getAttribute('data-listens-count') || '0', 10);
     let maxPlayedTime = 0;
     const listensLeft = dock.querySelector<HTMLElement>('.audio-listens-left');
+    if (allowReplay && listensLeft) listensLeft.style.display = 'none';
     // Lượt đang nghe dở cũng tính là đã dùng, vì không được nghe lại từ đầu.
     const syncListensLeft = () => {
       if (listensLeft) listensLeft.textContent = `Còn ${Math.max(0, maxListens - listensCount - (maxPlayedTime > 0 || !audioEl.paused ? 1 : 0))} lượt nghe`;
@@ -1743,6 +1744,13 @@ export function initStrictAudioDocks(rootEl: HTMLElement | null | undefined, { s
       });
 
       audioEl.addEventListener('ended', () => {
+        if (allowReplay) {
+          // Xem trước của giáo viên: nghe lại được, không tính lượt, không khóa bài nghe.
+          if (liveStatus) liveStatus.style.display = 'none';
+          playBtn.disabled = false;
+          playBtn.innerHTML = `${ICONS.play} Nghe lại`;
+          return;
+        }
         listensCount++;
         dock.setAttribute('data-listens-count', String(listensCount));
         maxPlayedTime = 0;
@@ -1804,6 +1812,7 @@ export function initStrictAudioDocks(rootEl: HTMLElement | null | undefined, { s
 
     playBtn.addEventListener('click', async () => {
       if (listensCount >= maxListens || !audioEl.paused) return;
+      if (allowReplay && audioEl.ended) audioEl.currentTime = 0;
 
       // Pause all other audios in rootEl
       rootEl.querySelectorAll<HTMLAudioElement>('.audio-hidden-element').forEach((other: any) => {

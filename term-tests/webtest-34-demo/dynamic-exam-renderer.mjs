@@ -41,10 +41,10 @@ export const ICONS = {
 export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
 // Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
 // không phải import file này).
-export { scrollBehavior } from './candidate/motion.js?rev=20261118-exercise-heading';
-import { scrollBehavior } from './candidate/motion.js?rev=20261118-exercise-heading';
-import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261118-exercise-heading';
-import { exerciseHeadingHtml } from './candidate/exercise-heading.js?rev=20261118-exercise-heading';
+export { scrollBehavior } from './candidate/motion.js?rev=20261119-exam-preview';
+import { scrollBehavior } from './candidate/motion.js?rev=20261119-exam-preview';
+import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261119-exam-preview';
+import { exerciseHeadingHtml } from './candidate/exercise-heading.js?rev=20261119-exam-preview';
 function escape(str) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -1146,7 +1146,7 @@ export function renderDynamicExam(definition, container, { state = { answers: {}
 export function isKeyboardOpen(viewport, layoutHeight) {
     return layoutHeight - viewport.height * viewport.scale > 120;
 }
-export function initDynamicExamInteractions(rootElArg, { definition, state = { answers: {} }, onAnswerChange, onSectionChange, onAudioProgress }) {
+export function initDynamicExamInteractions(rootElArg, { definition, state = { answers: {} }, onAnswerChange, onSectionChange, onAudioProgress, allowReplay = false }) {
     if (!rootElArg || !definition)
         return;
     const rootEl = rootElArg;
@@ -1627,7 +1627,7 @@ export function initDynamicExamInteractions(rootElArg, { definition, state = { a
         syncTopbarHeight();
     }
     // Initialize Strict Audio Docks (max 2 listens)
-    initStrictAudioDocks(rootEl, { state, onAudioProgress });
+    initStrictAudioDocks(rootEl, { state, onAudioProgress, allowReplay });
     return {
         activateSection,
         filterNavigatorBySection,
@@ -1635,7 +1635,7 @@ export function initDynamicExamInteractions(rootElArg, { definition, state = { a
     };
 }
 // state.audioProgress[audioKey] = { lastHeardSeconds, completed } khôi phục từ máy chủ; onAudioProgress(audioKey, seconds, completed) báo mốc mới.
-export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
+export function initStrictAudioDocks(rootEl, { state, onAudioProgress, allowReplay = false } = {}) {
     if (!rootEl)
         return;
     const docks = rootEl.querySelectorAll('.strict-audio-dock');
@@ -1655,6 +1655,8 @@ export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
         let listensCount = parseInt(dock.getAttribute('data-listens-count') || '0', 10);
         let maxPlayedTime = 0;
         const listensLeft = dock.querySelector('.audio-listens-left');
+        if (allowReplay && listensLeft)
+            listensLeft.style.display = 'none';
         // Lượt đang nghe dở cũng tính là đã dùng, vì không được nghe lại từ đầu.
         const syncListensLeft = () => {
             if (listensLeft)
@@ -1729,6 +1731,14 @@ export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
                 }
             });
             audioEl.addEventListener('ended', () => {
+                if (allowReplay) {
+                    // Xem trước của giáo viên: nghe lại được, không tính lượt, không khóa bài nghe.
+                    if (liveStatus)
+                        liveStatus.style.display = 'none';
+                    playBtn.disabled = false;
+                    playBtn.innerHTML = `${ICONS.play} Nghe lại`;
+                    return;
+                }
                 listensCount++;
                 dock.setAttribute('data-listens-count', String(listensCount));
                 maxPlayedTime = 0;
@@ -1799,6 +1809,8 @@ export function initStrictAudioDocks(rootEl, { state, onAudioProgress } = {}) {
         playBtn.addEventListener('click', async () => {
             if (listensCount >= maxListens || !audioEl.paused)
                 return;
+            if (allowReplay && audioEl.ended)
+                audioEl.currentTime = 0;
             // Pause all other audios in rootEl
             rootEl.querySelectorAll('.audio-hidden-element').forEach((other) => {
                 if (other !== audioEl && !other.paused)

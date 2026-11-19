@@ -372,6 +372,11 @@ export function renderCourseTestCatalogView(container: HTMLElement, catalog: any
             </div>
             <div class="col-actions">
               <div class="test-row-actions">
+                ${isPublished ? `
+                  <button type="button" class="btn btn-secondary btn-sm btn-preview-test" data-form-version-id="${item.formVersionId || ''}" title="Xem trước đúng giao diện học viên, không tính điểm">
+                    ${renderSvgIcon('view', 'icon-inline')} Xem trước
+                  </button>
+                ` : ''}
                 <button type="button" class="btn btn-secondary btn-sm btn-edit-test" data-test-key="${item.testKey || ''}" data-form-version-id="${item.formVersionId || ''}">
                   ${renderSvgIcon('edit', 'icon-inline')} Chỉnh sửa
                 </button>
@@ -478,6 +483,12 @@ export function renderCourseTestCatalogView(container: HTMLElement, catalog: any
     if (addBtn) {
       addBtn.addEventListener('click', options.onAddTest);
     }
+  }
+
+  if (typeof options.onPreviewTest === 'function' && typeof container.querySelectorAll === 'function') {
+    container.querySelectorAll<HTMLElement>('.btn-preview-test').forEach(btn => {
+      btn.addEventListener('click', () => options.onPreviewTest({ formVersionId: btn.getAttribute('data-form-version-id') || '' }));
+    });
   }
 
   if (typeof options.onEditTest === 'function' && typeof container.querySelectorAll === 'function') {

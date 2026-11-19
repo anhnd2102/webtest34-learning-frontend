@@ -1,19 +1,20 @@
 // NGUỒN: file .mts này; content-preview.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261118-exercise-heading';
-import { escape } from './candidate/text-utils.js?rev=20261118-exercise-heading';
-import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261118-exercise-heading';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261118-exercise-heading';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261118-exercise-heading';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261118-exercise-heading';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261118-exercise-heading';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261118-exercise-heading';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261118-exercise-heading';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261118-exercise-heading';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261118-exercise-heading';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261118-exercise-heading';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261118-exercise-heading';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261118-exercise-heading';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261119-exam-preview';
+import { escape } from './candidate/text-utils.js?rev=20261119-exam-preview';
+import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261119-exam-preview';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-exam-preview';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261119-exam-preview';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261119-exam-preview';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261119-exam-preview';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261119-exam-preview';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261119-exam-preview';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261119-exam-preview';
+import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261119-exam-preview';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261119-exam-preview';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261119-exam-preview';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261119-exam-preview';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-exam-preview';
 export async function mount(course) {
     if (!['03', '34', '45'].includes(course))
         throw new Error('Unknown demo course');
@@ -26,10 +27,13 @@ export async function mount(course) {
     const rawTestToken = (hashToken?.includes('-') ? hashToken : '') || rawTestTokenParam || config.LEARNING_TEST_TOKEN || '';
     // Link chia sẻ qua chat hay dính ký tự thừa (vd. ``, %5C, %20) sau token; chỉ giữ đúng UUID khi có.
     const testToken = rawTestToken.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i)?.[0] || rawTestToken;
+    // Xem trước của giáo viên: token ký ngắn hạn trong fragment `#preview=...`; không có danh tính học viên.
+    const previewToken = readPreviewToken(location.hash);
+    const isPreview = Boolean(previewToken);
     const isProd = queryParams.get('prod') === '1' || queryParams.get('apiEnv') === 'production';
     const apiBase = (isProd ? 'https://webtest.ducanhdev.com' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhdev.com')).replace(/\/$/, '');
     // Shell chỉ mở bằng link có token (chế độ xem thử bằng đề dựng sẵn đã bỏ); `isLearningMode` giữ lại làm tham số cho các module `candidate/`.
-    if (!testToken)
+    if (!testToken && !isPreview)
         throw new Error('Thiếu mã bài thi: hãy mở bài thi bằng link do giáo viên cung cấp.');
     const isLearningMode = true;
     // form, state và learningState dùng chung cho nhiều module `candidate/` có kiểu riêng (hợp đồng nằm ở từng module); ở đây giữ `any`
@@ -105,6 +109,9 @@ export async function mount(course) {
         renderExamInterface();
     }
     async function apiRequest(path, body) {
+        // Xem trước không gửi gì lên máy chủ (đề được đọc riêng bằng một GET khi mở trang).
+        if (isPreview)
+            return blockedPreviewRequest();
         const res = await fetch(`${apiBase}/api/learning${path}`, {
             method: learningRequestMethod(path),
             headers: { 'Content-Type': 'application/json' },
@@ -348,9 +355,42 @@ export async function mount(course) {
     const studentSelect = document.querySelector('#studentSelectInput');
     const studentStatus = document.querySelector('#studentSelectStatus');
     const startBtn = document.querySelector('#startExamBtn');
-    const { handleLoadRoster } = createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface: openExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn });
-    createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect });
-    void handleLoadRoster();
+    const { handleLoadRoster } = createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface: openExamInterface, preview: isPreview, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn });
+    if (isPreview) {
+        canonicalStyle.textContent += PREVIEW_CSS;
+        const introCard = document.querySelector('.cbt-intro-card');
+        for (const field of [classInput, studentSelect])
+            field.closest('.cbt-intro-field')?.setAttribute('hidden', '');
+        document.querySelector('#viewResultBtn')?.setAttribute('hidden', '');
+        introCard?.insertAdjacentHTML('afterbegin', previewBannerHtml());
+        startBtn.disabled = true;
+        startBtn.textContent = 'Đang tải đề…';
+        const startError = document.querySelector('#startExamError');
+        fetchPreviewDefinition(apiBase, previewToken).then(({ definition }) => {
+            learningState.definition = definition;
+            learningState.studentName = 'Xem trước';
+            learningState.className = '';
+            const minutes = Number(definition.timing?.totalMinutes || definition.durationMinutes) || 120;
+            const titleEl = document.querySelector('.cbt-intro-title');
+            if (titleEl)
+                titleEl.textContent = definition.title || initialTitle;
+            const subEl = document.querySelector('.cbt-intro-sub');
+            if (subEl)
+                subEl.innerHTML = `Thời gian làm bài: <strong>${minutes} phút</strong> · Tổng số câu hỏi: <strong>${getTotalItemCount(definition)} câu</strong>.<br>Đây là bản xem trước để kiểm tra nội dung; không có bài làm nào được lưu.`;
+            startBtn.disabled = false;
+            startBtn.textContent = 'Bắt đầu xem trước →';
+        }).catch((err) => {
+            startBtn.textContent = 'Không mở được đề';
+            if (startError) {
+                startError.textContent = err.message;
+                startError.hidden = false;
+            }
+        });
+    }
+    else {
+        createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect });
+        void handleLoadRoster();
+    }
     return;
     // --- RENDER GIAO DIỆN BÀI THI CHÍNH THỨC ---
     function renderExamInterface() {
@@ -366,12 +406,13 @@ export async function mount(course) {
             activeSection = examSections[0];
         }
         document.title = `IZONE · Thi CBT · ${examTitle}`;
-        const headerSub = `Thí sinh: <strong>${escape(learningState.studentName)}</strong> · Lớp: <strong>${escape(learningState.className)}</strong>`;
+        const headerSub = isPreview ? 'Bản xem trước' : `Thí sinh: <strong>${escape(learningState.studentName)}</strong> · Lớp: <strong>${escape(learningState.className)}</strong>`;
         const noticeBanner = selfProctoringBannerHtml(learningState.selfProctoring);
         let dynamicExamControls = null;
         document.body.innerHTML = `
       <div class="candidate-simulation-shell content-demo cbt-exam-shell">
         <header class="topbar simulation-topbar cbt-topbar">
+          ${isPreview ? previewBannerHtml() : ''}
           <div class="topbar-inner demo-top cbt-topbar-inner">
             <div class="brand cbt-brand">
               <div class="brand-mark cbt-brand-mark">IZ</div>
@@ -391,7 +432,7 @@ export async function mount(course) {
                 <span class="cbt-timer-icon">${ICONS.clock}</span>
                 <span class="cbt-timer" id="examTimerDisplay">${examDuration}:00</span>
               </div>
-              <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${state.submittedAt ? 'Đã nộp bài' : 'Nộp bài'}</button>
+              <button type="button" class="btn btn-primary btn-submit-top cbt-btn-submit" id="demo-submit-top">${state.submittedAt ? 'Đã nộp bài' : (isPreview ? 'Thoát xem trước' : 'Nộp bài')}</button>
             </div>
           </div>
           <div class="section-nav-wrap cbt-section-nav-wrap">
@@ -444,7 +485,8 @@ export async function mount(course) {
         dynamicExamControls = initDynamicExamInteractions(document.body, {
             definition: learningState.definition,
             state,
-            onAudioProgress: saveAudioProgress,
+            onAudioProgress: isPreview ? undefined : saveAudioProgress,
+            allowReplay: isPreview,
             onAnswerChange: () => {
                 persist();
                 update();
@@ -453,7 +495,7 @@ export async function mount(course) {
                 activeSection = secName;
             }
         });
-        const examTimer = createExamTimer({ course, examDuration, testToken, isLearningMode, state, learningState });
+        const examTimer = createExamTimer({ course, examDuration, testToken, isLearningMode, state, learningState, countUp: isPreview });
         const canonicalStyle = document.createElement('style');
         canonicalStyle.textContent = `
       .content-demo button.btn{min-height:44px;border-radius:10px;padding:0 18px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px}
@@ -518,7 +560,10 @@ export async function mount(course) {
         if (btnFontUp)
             btnFontUp.addEventListener('click', () => resizeFont(0.06));
         const query = (selector) => document.querySelector(selector);
-        const { queueServerDraft, persist, clearDraftTimer } = createDraftSync({ query, isLearningMode, key, state, learningState, apiRequest, buildResponsesPayload });
+        // Xem trước không lưu nháp (cả máy chủ lẫn trình duyệt).
+        const { queueServerDraft, persist, clearDraftTimer } = isPreview
+            ? { queueServerDraft() { }, persist() { }, clearDraftTimer() { } }
+            : createDraftSync({ query, isLearningMode, key, state, learningState, apiRequest, buildResponsesPayload });
         function update() {
             if (dynamicExamControls && typeof dynamicExamControls.updateAnsweredState === 'function') {
                 dynamicExamControls.updateAnsweredState();
@@ -555,7 +600,21 @@ export async function mount(course) {
             if (query('#demo-result'))
                 query('#demo-result').hidden = !state.submittedAt;
         }
-        const { pollLearningResult } = createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic: true, examTimer, query, update, queueServerDraft, persist, clearDraftTimer });
+        let pollLearningResult = () => { };
+        if (isPreview) {
+            // Không có nộp bài: nút trên thanh chỉ thoát xem trước và không gửi gì.
+            const savePill = query('#demo-save');
+            if (savePill)
+                savePill.hidden = true;
+            query('#demo-submit-top')?.addEventListener('click', () => {
+                examTimer.stop();
+                window.close();
+                document.body.innerHTML = '<main class="cbt-intro-wrap"><div class="cbt-intro-card"><h1 class="cbt-intro-title">Đã thoát xem trước</h1><p>Bạn có thể đóng tab này và quay lại Dashboard.</p></div></main>';
+            });
+        }
+        else {
+            ({ pollLearningResult } = createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic: true, examTimer, query, update, queueServerDraft, persist, clearDraftTimer }));
+        }
         update();
         const initialIdx = examSections.indexOf(activeSection);
         if (initialIdx >= 0 && dynamicExamControls?.activateSection) {
