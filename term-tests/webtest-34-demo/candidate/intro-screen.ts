@@ -54,6 +54,8 @@ export interface IntroScreenParams {
   mountExamGuard: () => void;
   applyServerDraft: (draft: unknown) => void;
   renderExamInterface: () => Promise<unknown> | unknown;
+  // Xem trước của giáo viên: bấm bắt đầu chỉ mở giao diện đề, không gọi máy chủ.
+  preview?: boolean;
   classInput: HTMLInputElement;
   loadBtn: HTMLButtonElement;
   classStatus: HTMLElement;
@@ -62,7 +64,7 @@ export interface IntroScreenParams {
   startBtn: HTMLButtonElement;
 }
 
-export function createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn }: IntroScreenParams) {
+export function createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn, preview = false }: IntroScreenParams) {
     // Thiết bị cảm ứng; iPad đời mới tự nhận là Macintosh nên nhận qua số điểm chạm.
     const isTouchDevice = matchMedia('(pointer: coarse)').matches || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
     document.querySelector<HTMLElement>('#mobileExamNotice')!.hidden = !isTouchDevice;
@@ -269,6 +271,11 @@ export function createIntroScreen({ config, testToken, paramClassCode, state, le
         soundcheckAudio.currentTime = 0;
       }
       // Exam Mode: vào toàn màn hình ngay trong cú bấm (trình duyệt chỉ cho phép trong user gesture).
+      if (preview) {
+        learningState.status = 'preview';
+        await renderExamInterface();
+        return;
+      }
       if (learningState.assignment?.exam?.enabled) requestFullscreen().catch(() => {});
       startBtn.disabled = true;
       startBtn.textContent = 'Đang mở đề thi…';

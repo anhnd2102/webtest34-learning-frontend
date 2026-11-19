@@ -2,6 +2,8 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { ICONS } from '../ui/icons.js';
 import { localStudentUrl, formatAssignmentMeta } from './dashboard-state.js';
+import type { DashboardRequest } from './dashboard-state.js';
+import { openExamPreview } from './preview-link.js';
 import type { AssignmentRecord, ScopeState } from './dashboard-state.js';
 import type { Lifecycle } from './lifecycle.js';
 
@@ -29,13 +31,16 @@ export interface ShowcaseParams {
   openShowcaseLinkBtn?: HTMLAnchorElement | null;
   currentLocation: { hostname?: string, origin: string } | null | undefined;
   apiBase?: (() => string) | null;
+  previewAssignmentBtn?: HTMLElement | null;
+  request?: DashboardRequest;
+  previewWindow?: Window;
   stopExamRoomEvents: () => void;
   updateExamModeUI: (enabled: unknown) => void;
   updateSelfProctoringUI: (exitLimit: number | null | undefined, examMode: boolean | undefined) => void;
   renderExamSwitch: (assignment: AssignmentRecord | null | undefined) => void;
 }
 
-export function createShowcase({ root, lifecycle, viewState, scopeState, document, classSelect, selectedAssignmentCard, showcaseBadgeClass, showcaseTitle, showcaseBlockBadge, showcasePhaseBadge, showcaseStatusBadge, examSwitchControls, examRoomOpenButton, examRoom, showcaseLinkBar, showcaseStudentUrl, copyShowcaseLinkBtn, openShowcaseLinkBtn, currentLocation, apiBase, stopExamRoomEvents, updateExamModeUI, updateSelfProctoringUI, renderExamSwitch }: ShowcaseParams) {
+export function createShowcase({ root, lifecycle, viewState, scopeState, document, classSelect, selectedAssignmentCard, showcaseBadgeClass, showcaseTitle, showcaseBlockBadge, showcasePhaseBadge, showcaseStatusBadge, examSwitchControls, examRoomOpenButton, examRoom, showcaseLinkBar, showcaseStudentUrl, copyShowcaseLinkBtn, openShowcaseLinkBtn, currentLocation, apiBase, previewAssignmentBtn, request, previewWindow, stopExamRoomEvents, updateExamModeUI, updateSelfProctoringUI, renderExamSwitch }: ShowcaseParams) {
   if (copyShowcaseLinkBtn) {
     lifecycle.listen(copyShowcaseLinkBtn, 'click', async () => {
       const url = showcaseStudentUrl?.value;
@@ -139,6 +144,7 @@ export function createShowcase({ root, lifecycle, viewState, scopeState, documen
     }
 
     const currentApi = typeof apiBase === 'function' ? apiBase() : '';
+    if (previewAssignmentBtn) previewAssignmentBtn.hidden = !assignment.formVersionId;
     const studentUrl = localStudentUrl(assignment.studentUrl, currentLocation, currentApi);
     if (studentUrl) {
       if (showcaseStudentUrl) showcaseStudentUrl.value = studentUrl;
@@ -147,6 +153,20 @@ export function createShowcase({ root, lifecycle, viewState, scopeState, documen
     } else {
       if (showcaseLinkBar) showcaseLinkBar.hidden = true;
     }
+  }
+
+  if (previewAssignmentBtn && request && previewWindow) {
+    lifecycle.listen(previewAssignmentBtn, 'click', () => {
+      const assignment = scopeState.currentSelectedAssignment;
+      void openExamPreview({
+        formVersionId: assignment?.formVersionId || '',
+        request: request as any,
+        win: previewWindow,
+        pageUrl: previewWindow.location.href,
+        apiBase: typeof apiBase === 'function' ? apiBase() : '',
+        onError: message => alert(message)
+      });
+    });
   }
 
   return { renderSelectedAssignmentShowcase };

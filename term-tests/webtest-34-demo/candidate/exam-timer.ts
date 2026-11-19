@@ -8,9 +8,23 @@ export interface ExamTimerParams {
   state: { submittedAt: number | null };
   // expiresAt là mili giây (Date.parse); Exam Mode cập nhật khi giáo viên gia hạn.
   learningState: { attemptToken: string, expiresAt: number | null, submitTimedOut?: boolean };
+  // Xem trước của giáo viên: đếm lên thời gian đã dùng, không tự nộp khi hết giờ, không lưu mốc bắt đầu.
+  countUp?: boolean;
 }
 
-export function createExamTimer({ course, examDuration, testToken, isLearningMode, state, learningState }: ExamTimerParams) {
+export function createExamTimer({ course, examDuration, testToken, isLearningMode, state, learningState, countUp = false }: ExamTimerParams) {
+    if (countUp) {
+      const startedAt = Date.now();
+      const display = document.querySelector<HTMLElement>('#examTimerDisplay');
+      const tickUp = () => {
+        if (!display) return;
+        const secs = Math.floor((Date.now() - startedAt) / 1000);
+        display.textContent = `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`;
+      };
+      tickUp();
+      const id = setInterval(tickUp, 1000);
+      return { display, stop() { clearInterval(id); } };
+    }
     // Đếm ngược thời gian làm bài
     const durationMinutes = Number(examDuration) || 120;
     const durationMs = durationMinutes * 60 * 1000;
