@@ -149,7 +149,7 @@ test('Candidate Simulation Modal renders canonical IZONE exam layout with brand 
     const modalHtml = mockModal.innerHTML;
 
     // 1. Brand Logo Mark: Red box with white IZ
-    assert.match(modalHtml, /brand-mark[^>]*>IZ<\/div>/i, 'Should render canonical red IZ brand mark');
+    assert.match(modalHtml, /<img class="brand-mark"[^>]*asset\/favicon\/favicon\.png/i, 'Should render IZONE logo image as brand mark');
 
     // 2. Section navigation bar
     assert.match(modalHtml, /section-nav/, 'Should render horizontal section navigation');
