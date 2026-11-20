@@ -1,11 +1,11 @@
 // Hộp thoại nộp bài, nộp bài lên máy chủ, hộp kết quả và theo dõi kết quả sau nộp (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; submit-flow.js do `npm run build` sinh ra (xem text-utils.ts). Import nội bộ viết
 // không có `?rev=`, bước build tự thêm rev dùng chung của shell học viên.
-import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261121-wordmark-logo';
-import { scrollBehavior } from './motion.js?rev=20261121-wordmark-logo';
-import { escape } from './text-utils.js?rev=20261121-wordmark-logo';
-import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261121-wordmark-logo';
-import { withLocalGroupLabels } from './group-render.js?rev=20261121-wordmark-logo';
+import { getTotalItemCount, getAnsweredCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261121-logo-only';
+import { scrollBehavior } from './motion.js?rev=20261121-logo-only';
+import { escape } from './text-utils.js?rev=20261121-logo-only';
+import { resultViewModel, resultDetailsHtml, studentResultsHtml, bindResultFilters } from './result-view.js?rev=20261121-logo-only';
+import { withLocalGroupLabels } from './group-render.js?rev=20261121-logo-only';
 export function createSubmitFlow({ isLearningMode, form, items, title, state, learningState, apiRequest, createUuid, stopExamConnections, buildResponsesPayload, isDynamic, examTimer, query, update, queueServerDraft, persist, clearDraftTimer }) {
     const timerDisplay = examTimer.display;
     function handleOpenSubmitDialog() {
