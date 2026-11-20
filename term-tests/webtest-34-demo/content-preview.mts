@@ -250,7 +250,7 @@ export async function mount(course: string) {
         <header class="topbar cbt-topbar simulation-topbar">
           <div class="topbar-inner demo-top">
             <div class="brand">
-              <div class="brand-mark">IZ</div>
+              <img class="brand-mark" src="../../asset/favicon/logo.png" alt="IZONE · IELTS Chiến lược" height="34" style="height:34px;width:auto;border-radius:0;background:none;box-shadow:none;display:block;flex-shrink:0">
               <div class="brand-copy">
                 <div class="brand-title">IZONE · COMPUTER-BASED TEST</div>
                 <div class="brand-sub">${escape(initialTitle)}</div>
@@ -431,7 +431,7 @@ export async function mount(course: string) {
           ${isPreview ? previewBannerHtml() : ''}
           <div class="topbar-inner demo-top cbt-topbar-inner">
             <div class="brand cbt-brand">
-              <div class="brand-mark cbt-brand-mark">IZ</div>
+              <img class="brand-mark cbt-brand-mark" src="../../asset/favicon/logo.png" alt="IZONE · IELTS Chiến lược" height="34" style="height:34px;width:auto;border-radius:0;background:none;box-shadow:none;display:block;flex-shrink:0">
               <div class="brand-copy cbt-brand-copy">
                 <div class="brand-title cbt-brand-title">IZONE · ${escape((examTitle || '').replace(/^(?:IZONE\s*[·•\-:]\s*)+/gi, ''))}</div>
                 <div class="brand-sub cbt-brand-sub">${headerSub}</div>

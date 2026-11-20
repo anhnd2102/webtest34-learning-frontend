@@ -1,20 +1,20 @@
 // NGUỒN: file .mts này; content-preview.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261119-preview-banner';
-import { escape } from './candidate/text-utils.js?rev=20261119-preview-banner';
-import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261119-preview-banner';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-preview-banner';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261119-preview-banner';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261119-preview-banner';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261119-preview-banner';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261119-preview-banner';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261119-preview-banner';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261119-preview-banner';
-import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261119-preview-banner';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261119-preview-banner';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261119-preview-banner';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261119-preview-banner';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261119-preview-banner';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261121-wordmark-logo';
+import { escape } from './candidate/text-utils.js?rev=20261121-wordmark-logo';
+import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261121-wordmark-logo';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261121-wordmark-logo';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261121-wordmark-logo';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261121-wordmark-logo';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261121-wordmark-logo';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261121-wordmark-logo';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261121-wordmark-logo';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261121-wordmark-logo';
+import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261121-wordmark-logo';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261121-wordmark-logo';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261121-wordmark-logo';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261121-wordmark-logo';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261121-wordmark-logo';
 export async function mount(course) {
     if (!['03', '34', '45'].includes(course))
         throw new Error('Unknown demo course');
@@ -238,7 +238,7 @@ export async function mount(course) {
         <header class="topbar cbt-topbar simulation-topbar">
           <div class="topbar-inner demo-top">
             <div class="brand">
-              <div class="brand-mark">IZ</div>
+              <img class="brand-mark" src="../../asset/favicon/logo.png" alt="IZONE · IELTS Chiến lược" height="34" style="height:34px;width:auto;border-radius:0;background:none;box-shadow:none;display:block;flex-shrink:0">
               <div class="brand-copy">
                 <div class="brand-title">IZONE · COMPUTER-BASED TEST</div>
                 <div class="brand-sub">${escape(initialTitle)}</div>
@@ -415,7 +415,7 @@ export async function mount(course) {
           ${isPreview ? previewBannerHtml() : ''}
           <div class="topbar-inner demo-top cbt-topbar-inner">
             <div class="brand cbt-brand">
-              <div class="brand-mark cbt-brand-mark">IZ</div>
+              <img class="brand-mark cbt-brand-mark" src="../../asset/favicon/logo.png" alt="IZONE · IELTS Chiến lược" height="34" style="height:34px;width:auto;border-radius:0;background:none;box-shadow:none;display:block;flex-shrink:0">
               <div class="brand-copy cbt-brand-copy">
                 <div class="brand-title cbt-brand-title">IZONE · ${escape((examTitle || '').replace(/^(?:IZONE\s*[·•\-:]\s*)+/gi, ''))}</div>
                 <div class="brand-sub cbt-brand-sub">${headerSub}</div>

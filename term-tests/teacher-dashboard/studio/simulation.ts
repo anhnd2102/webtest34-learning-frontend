@@ -728,7 +728,7 @@ function openCandidateSimulationModal() {
           <header class="topbar simulation-topbar simulation-top-header">
             <div class="topbar-inner">
               <div class="brand sim-title-area">
-                <img class="brand-mark" src="../../asset/favicon/favicon.png" alt="IZONE" width="38" height="38">
+                <img class="brand-mark" src="../../asset/favicon/logo.png" alt="IZONE · IELTS Chiến lược" height="34" style="height:34px;width:auto;border-radius:0;background:none;box-shadow:none;display:block;flex-shrink:0">
                 <div class="brand-copy">
                   <div class="brand-title">IZONE · ${escapeHtml(draftState.title || 'Đề thi')}</div>
                   <div class="brand-sub">IZONE · CANDIDATE SIMULATION · Chế độ xem trước giáo viên</div>

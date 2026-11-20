@@ -41,10 +41,10 @@ export const ICONS = {
 export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
 // Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
 // không phải import file này).
-export { scrollBehavior } from './candidate/motion.js?rev=20261119-preview-banner';
-import { scrollBehavior } from './candidate/motion.js?rev=20261119-preview-banner';
-import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261119-preview-banner';
-import { exerciseHeadingHtml } from './candidate/exercise-heading.js?rev=20261119-preview-banner';
+export { scrollBehavior } from './candidate/motion.js?rev=20261121-wordmark-logo';
+import { scrollBehavior } from './candidate/motion.js?rev=20261121-wordmark-logo';
+import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261121-wordmark-logo';
+import { exerciseHeadingHtml } from './candidate/exercise-heading.js?rev=20261121-wordmark-logo';
 function escape(str) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
