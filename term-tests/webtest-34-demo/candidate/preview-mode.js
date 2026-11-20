@@ -1,6 +1,6 @@
 // Chế độ xem trước đề của giáo viên: cùng renderer với học viên, không danh tính, không ghi gì lên máy chủ.
 // NGUỒN: file .ts này; preview-mode.js do `npm run build` sinh ra (xem text-utils.ts).
-import { escape } from './text-utils.js?rev=20261119-preview-banner';
+import { escape } from './text-utils.js?rev=20261121-brand-logo';
 export const PREVIEW_BANNER_TEXT = 'Bản xem trước, không lưu bài làm';
 // Token xem trước chỉ đi trong fragment: `#preview=<token>`; không đọc từ query hay storage.
 export function readPreviewToken(hash) {
