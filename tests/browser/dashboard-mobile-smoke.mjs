@@ -24,7 +24,7 @@ try {
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const outDir = process.env.MOBILE_SHOTS;
   if (outDir) await mkdir(outDir, { recursive: true });
-  for (const width of [360, 390, 412, 1024]) {
+  for (const [role, width] of ['admin', 'lead'].flatMap(role => [360, 390, 412, 1024].map(width => [role, width]))) {
     const page = await browser.newPage({ viewport: { width, height: 800 }, hasTouch: width < 640 });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -42,7 +42,7 @@ try {
       if (url.pathname.startsWith('/api/teacher/')) {
         const path = url.pathname;
         let payload = {};
-        if (path.endsWith('/auth/me')) payload = { teacher: { name: 'Giáo viên', role: 'admin', courseCodes: ['34'] } };
+        if (path.endsWith('/auth/me')) payload = { teacher: { name: 'Giáo viên', role, courseCodes: ['34'] } };
         else if (path.endsWith('/classes')) payload = { classes: [{ classId: '101', name: 'Lớp thử', courseCode: '34', status: 'on_going' }] };
         else if (path.endsWith('/assignments')) payload = { assignments: [{ assignmentId: 'assign-1', title: 'Bài thi giữa khóa', courseCode: '34', examMode: true, status: 'published' }] };
         else if (path.endsWith('/results')) payload = { assignment: { assignmentId: 'assign-1' }, skills: [], students: [] };
@@ -55,27 +55,29 @@ try {
     });
     await page.goto(`http://127.0.0.1:${port}/term-tests/teacher-dashboard/index.html?classId=101&assignmentId=assign-1#dashboard`);
     await page.locator('#selected-assignment-card').waitFor({ state: 'visible' });
+    const toolbarOverflow = await page.evaluate(() => { const t = document.querySelector('.control-toolbar'); return t.scrollWidth - t.clientWidth; });
+    assert.ok(toolbarOverflow <= 0, `${role} ${width}px: control-toolbar tràn ${toolbarOverflow}px`);
     const card = await page.locator('#selected-assignment-card').boundingBox();
     const inside = async selector => {
       const box = await page.locator(selector).first().boundingBox();
       return !box || (box.x >= card.x - 0.5 && box.x + box.width <= card.x + card.width + 0.5);
     };
     if (await page.locator('#self-proctoring-save').isVisible()) {
-      assert.ok(await inside('#self-proctoring-save'), `${width}px: nút Lưu tràn khỏi thẻ`);
-      assert.ok(await inside('#self-proctoring-controls'), `${width}px: khối Tự giám sát tràn khỏi thẻ`);
+      assert.ok(await inside('#self-proctoring-save'), `${role} ${width}px: nút Lưu tràn khỏi thẻ`);
+      assert.ok(await inside('#self-proctoring-controls'), `${role} ${width}px: khối Tự giám sát tràn khỏi thẻ`);
     }
     await page.locator('#exam-room-open').click();
     await page.locator('#exam-room-students tr').first().waitFor();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     const offenders = overflow > 0 ? await page.evaluate(() => [...document.querySelectorAll('body *')].filter(el => el.getBoundingClientRect().right > document.documentElement.clientWidth + 0.5 && el.getClientRects().length).slice(0, 6).map(el => `${el.tagName.toLowerCase()}#${el.id}.${String(el.className).slice(0, 40)}`)) : [];
-    assert.ok(overflow <= 0, `${width}px: trang cuộn ngang ${overflow}px: ${offenders.join(' | ')}`);
+    assert.ok(overflow <= 0, `${role} ${width}px: trang cuộn ngang ${overflow}px: ${offenders.join(' | ')}`);
     const scroller = await page.evaluate(() => { const s = document.querySelector('#exam-room .results-scroll'); return s.scrollWidth - s.clientWidth; });
     if (width <= 640) {
-      assert.ok(scroller <= 0, `${width}px: bảng Phòng thi vẫn cuộn ngang ${scroller}px`);
-      assert.equal(await page.locator('#exam-room thead').isVisible(), false, `${width}px: còn hiện tiêu đề bảng`);
+      assert.ok(scroller <= 0, `${role} ${width}px: bảng Phòng thi vẫn cuộn ngang ${scroller}px`);
+      assert.equal(await page.locator('#exam-room thead').isVisible(), false, `${role} ${width}px: còn hiện tiêu đề bảng`);
       const tops = await page.evaluate(() => [...document.querySelectorAll('#exam-room-students tr')].map(tr => [tr.innerText.split(String.fromCharCode(10))[0], tr.getBoundingClientRect().top]));
       tops.sort((x, y) => x[1] - y[1]);
-      assert.match(tops[0][0], /Trần Thị Bình/, `${width}px: học viên có sự cố phải đứng đầu, thực tế ${tops[0][0]}`);
+      assert.match(tops[0][0], /Trần Thị Bình/, `${role} ${width}px: học viên có sự cố phải đứng đầu, thực tế ${tops[0][0]}`);
     }
     assert.deepEqual(errors, []);
     if (outDir) await page.screenshot({ path: `${outDir}/mobile-${width}.png`, fullPage: true });

@@ -817,3 +817,18 @@ img.brand-badge,
   #exam-room tbody td[data-label="Thiết bị"], #exam-room tbody td:last-child { grid-column: 1 / -1; }
   #exam-room tbody td:last-child button { width: 100%; min-height: 44px; }
 }
+
+/* Mobile (≤640px): thanh chọn lớp/bài test (control-toolbar) không tràn khung, kể cả bộ lọc phạm vi của Lead. */
+@media (max-width: 640px) {
+  .control-toolbar { padding: 16px; min-width: 0; }
+  .control-toolbar .class-filter-toolbar,
+  .control-toolbar .class-search-status-row,
+  .control-toolbar .class-search-wrap { min-width: 0; max-width: 100%; }
+  .control-toolbar .class-search-wrap { flex: 1 1 100%; }
+  .control-toolbar #lead-scope-filters { flex-wrap: wrap; }
+  .control-toolbar #lead-scope-filters .filter-group-label { flex: 1 1 100%; }
+  .control-toolbar #lead-scope-filters .filter-pills { min-width: 0; }
+  .control-toolbar #lead-scope-filters .filter-pill { min-height: 44px; }
+  .control-toolbar .toolbar-grid { grid-template-columns: 1fr; }
+  .control-toolbar .toolbar-grid > label, .control-toolbar select { min-width: 0; max-width: 100%; }
+}
