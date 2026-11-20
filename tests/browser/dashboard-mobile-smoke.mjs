@@ -57,6 +57,10 @@ try {
     await page.locator('#selected-assignment-card').waitFor({ state: 'visible' });
     const nav = await page.evaluate(() => { const c = document.querySelector('.navbar-container'); const cs = getComputedStyle(c); const box = c.getBoundingClientRect(); const logout = document.querySelector('#logout-btn').getBoundingClientRect(); return { padRight: parseFloat(cs.paddingRight), contentRight: box.right - parseFloat(cs.paddingRight), logoutRight: logout.right, scroll: c.scrollWidth - c.clientWidth }; });
     assert.ok(nav.logoutRight <= nav.contentRight + 0.5 && nav.scroll <= 0, `${role} ${width}px: nút Đăng xuất vượt navbar-container (phải ${Math.round(nav.logoutRight)} > ${Math.round(nav.contentRight)})`);
+    await page.locator('#role-info-btn').click();
+    const pop = await page.locator('#role-capabilities-popover').boundingBox();
+    assert.ok(pop && pop.x >= -0.5 && pop.x + pop.width <= width + 0.5 && pop.y >= -0.5 && pop.y + pop.height <= 800 + 0.5, `${role} ${width}px: popover vai trò tràn màn hình (${JSON.stringify(pop)})`);
+    await page.locator('#close-role-popover').click();
     const toolbarOverflow = await page.evaluate(() => { const t = document.querySelector('.control-toolbar'); return t.scrollWidth - t.clientWidth; });
     assert.ok(toolbarOverflow <= 0, `${role} ${width}px: control-toolbar tràn ${toolbarOverflow}px`);
     const card = await page.locator('#selected-assignment-card').boundingBox();
