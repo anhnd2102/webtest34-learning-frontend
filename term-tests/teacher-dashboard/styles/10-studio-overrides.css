@@ -860,3 +860,6 @@ button.btn-icon:disabled,
     overflow-y: auto;
   }
 }
+
+/* Logo ngang thay chữ IZONE / LEARNING PLATFORM trên màn đăng nhập */
+.login-brand .login-logo { display: block; height: 48px; width: auto; max-width: 100%; margin: 0 auto 12px; }

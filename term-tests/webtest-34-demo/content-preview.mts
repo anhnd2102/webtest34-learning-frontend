@@ -252,7 +252,7 @@ export async function mount(course: string) {
             <div class="brand">
               <img class="brand-mark" src="../../asset/favicon/logo.png" alt="IZONE · IELTS Chiến lược" height="34" style="height:34px;width:auto;border-radius:0;background:none;box-shadow:none;display:block;flex-shrink:0">
               <div class="brand-copy">
-                <div class="brand-title">IZONE · COMPUTER-BASED TEST</div>
+                <div class="brand-title">COMPUTER-BASED TEST</div>
                 <div class="brand-sub">${escape(initialTitle)}</div>
               </div>
             </div>
@@ -263,7 +263,7 @@ export async function mount(course: string) {
         </header>
         <main class="cbt-intro-wrap">
           <div class="cbt-intro-card">
-            <span class="cbt-intro-badge">IZONE · COMPUTER-BASED TEST</span>
+            <span class="cbt-intro-badge">COMPUTER-BASED TEST</span>
             <h1 class="cbt-intro-title">${escape(initialTitle)}</h1>
             <p class="cbt-intro-sub">
               Thời gian làm bài: <strong>60 phút</strong> · Tổng số câu hỏi: <strong>96 câu</strong>.<br>
@@ -433,7 +433,7 @@ export async function mount(course: string) {
             <div class="brand cbt-brand">
               <img class="brand-mark cbt-brand-mark" src="../../asset/favicon/logo.png" alt="IZONE · IELTS Chiến lược" height="34" style="height:34px;width:auto;border-radius:0;background:none;box-shadow:none;display:block;flex-shrink:0">
               <div class="brand-copy cbt-brand-copy">
-                <div class="brand-title cbt-brand-title">IZONE · ${escape((examTitle || '').replace(/^(?:IZONE\s*[·•\-:]\s*)+/gi, ''))}</div>
+                <div class="brand-title cbt-brand-title">${escape((examTitle || '').replace(/^(?:IZONE\s*[·•\-:]\s*)+/gi, ''))}</div>
                 <div class="brand-sub cbt-brand-sub">${headerSub}</div>
               </div>
             </div>

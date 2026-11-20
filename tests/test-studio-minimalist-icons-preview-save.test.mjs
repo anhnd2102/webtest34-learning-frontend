@@ -158,7 +158,9 @@ test('Candidate Simulation Modal uses IZONE brand identity and monochromatic lin
     // Check modal markup
     const modalHtml = mockModal.innerHTML;
     // Eyebrow badge should mention IZONE or Candidate Simulation without emojis
-    assert.match(modalHtml, /IZONE · CANDIDATE SIMULATION|Candidate Simulation/);
+    assert.match(modalHtml, /asset\/favicon\/logo\.png/);
+    assert.match(modalHtml, /Chế độ xem trước giáo viên/);
+    assert.doesNotMatch(modalHtml, /IZONE · CANDIDATE SIMULATION/);
     assert.doesNotMatch(modalHtml, /⏱️/);
     assert.doesNotMatch(modalHtml, /📑/);
     assert.doesNotMatch(modalHtml, /🔒/);
