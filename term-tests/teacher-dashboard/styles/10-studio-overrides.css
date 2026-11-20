@@ -783,7 +783,7 @@ img.brand-badge,
 @media (max-width: 640px) {
   .navbar-right { min-width: 0; gap: 8px; }
   .global-navbar #teacher-profile { min-width: 0; }
-  .global-navbar #teacher-profile-name { max-width: 110px; overflow: hidden; text-overflow: ellipsis; }
+  .global-navbar #teacher-profile-name { max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
   #logout-btn > span { display: none; }
   #logout-btn { min-width: 44px; min-height: 44px; justify-content: center; padding: 0 12px; }
   .selected-assignment-card { padding: 16px; min-width: 0; }
@@ -831,4 +831,15 @@ img.brand-badge,
   .control-toolbar #lead-scope-filters .filter-pill { min-height: 44px; }
   .control-toolbar .toolbar-grid { grid-template-columns: 1fr; }
   .control-toolbar .toolbar-grid > label, .control-toolbar select { min-width: 0; max-width: 100%; }
+}
+
+/* Mobile (≤640px): thu gọn navbar để nút Đăng xuất nằm trọn trong navbar-container (có đủ lề phải). */
+@media (max-width: 640px) {
+  .navbar-container { padding: 0 12px; gap: 8px; }
+  .navbar-left { min-width: 0; gap: 12px; }
+  .navbar-brand { gap: 8px; min-width: 0; }
+  .navbar-brand .brand-sub { display: none; }
+  .navbar-right { flex-shrink: 0; }
+  .global-navbar #teacher-profile { gap: 6px; padding: 4px 8px 4px 6px; }
+  .global-navbar .profile-info { gap: 6px; }
 }

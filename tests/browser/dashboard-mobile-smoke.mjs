@@ -24,7 +24,7 @@ try {
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const outDir = process.env.MOBILE_SHOTS;
   if (outDir) await mkdir(outDir, { recursive: true });
-  for (const [role, width] of ['admin', 'lead'].flatMap(role => [360, 390, 412, 1024].map(width => [role, width]))) {
+  for (const [role, width] of ['admin', 'lead'].flatMap(role => [320, 360, 390, 412, 768, 1024].map(width => [role, width]))) {
     const page = await browser.newPage({ viewport: { width, height: 800 }, hasTouch: width < 640 });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -55,6 +55,8 @@ try {
     });
     await page.goto(`http://127.0.0.1:${port}/term-tests/teacher-dashboard/index.html?classId=101&assignmentId=assign-1#dashboard`);
     await page.locator('#selected-assignment-card').waitFor({ state: 'visible' });
+    const nav = await page.evaluate(() => { const c = document.querySelector('.navbar-container'); const cs = getComputedStyle(c); const box = c.getBoundingClientRect(); const logout = document.querySelector('#logout-btn').getBoundingClientRect(); return { padRight: parseFloat(cs.paddingRight), contentRight: box.right - parseFloat(cs.paddingRight), logoutRight: logout.right, scroll: c.scrollWidth - c.clientWidth }; });
+    assert.ok(nav.logoutRight <= nav.contentRight + 0.5 && nav.scroll <= 0, `${role} ${width}px: nút Đăng xuất vượt navbar-container (phải ${Math.round(nav.logoutRight)} > ${Math.round(nav.contentRight)})`);
     const toolbarOverflow = await page.evaluate(() => { const t = document.querySelector('.control-toolbar'); return t.scrollWidth - t.clientWidth; });
     assert.ok(toolbarOverflow <= 0, `${role} ${width}px: control-toolbar tràn ${toolbarOverflow}px`);
     const card = await page.locator('#selected-assignment-card').boundingBox();
