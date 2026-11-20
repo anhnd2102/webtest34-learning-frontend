@@ -1,6 +1,6 @@
 {
   "baseline": "8d07311",
-  "sourceSha256": "4c8dab6d5056ef26b8814e9cc5661086051e49aa115cfc2a1ab32d0b07b41b7d",
+  "sourceSha256": "2ff2471bb27cdbc5ad5bdfe07df1b18e3594c49c9dcb18c444ebcc45feb69c5f",
   "sourceLines": 12950,
   "fragments": [
     {
@@ -79,7 +79,7 @@
       "href": "styles/10-studio-overrides.css?rev=20261121-mobile-dashboard",
       "startLine": 10586,
       "endLine": 11404,
-      "sha256": "bc24998d31be7f31113a7616e0139fe06cab0e87990160f99891c51a0f1460e8",
+      "sha256": "2fcbee9cec5b8ea7766f850bfe36b32e0cd51188a1ffa474c063d0e516d2f23d",
       "extractionStartLine": 9536,
       "extractionEndLine": 10306
     },

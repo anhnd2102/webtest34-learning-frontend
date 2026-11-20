@@ -777,7 +777,7 @@ img.brand-badge,
   border-radius: 50%;
   box-shadow: none;
   object-fit: cover;
-=======
+}
 
 /* Mobile (≤640px): thẻ bài đang chọn không tràn khung, Phòng thi hiện từng học viên thành một thẻ thay vì bảng cuộn ngang. */
 @media (max-width: 640px) {
