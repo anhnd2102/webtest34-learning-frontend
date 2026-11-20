@@ -843,3 +843,18 @@ img.brand-badge,
   .global-navbar #teacher-profile { gap: 6px; padding: 4px 8px 4px 6px; }
   .global-navbar .profile-info { gap: 6px; }
 }
+
+/* Mobile (≤640px): popover vai trò neo theo khung nhìn (không neo theo icon nhỏ) nên luôn nằm trọn trong màn hình. */
+@media (max-width: 640px) {
+  .role-capabilities-popover {
+    position: fixed;
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+    max-height: calc(100vh - 88px);
+    max-height: calc(100dvh - 88px);
+    overflow-y: auto;
+  }
+}
