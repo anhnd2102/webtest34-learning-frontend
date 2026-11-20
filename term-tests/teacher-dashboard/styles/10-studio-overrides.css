@@ -770,3 +770,11 @@ button.btn-icon:disabled,
 .portal-sync input[type="checkbox"] { width: 18px; height: 18px; padding: 0; margin: 0; box-shadow: none; }
 .portal-sync .portal-sync-row button { width: auto; }
 
+/* Logo IZONE dạng ảnh thay huy hiệu chữ "IZ": bỏ nền, bo và bóng của huy hiệu */
+img.brand-badge,
+.simulation-topbar img.brand-mark {
+  background: none;
+  border-radius: 50%;
+  box-shadow: none;
+  object-fit: cover;
+}
