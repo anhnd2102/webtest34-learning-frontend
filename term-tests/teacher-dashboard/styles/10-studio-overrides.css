@@ -1,4 +1,4 @@
-/* ==========================================================================
+/* ===================================================================
    IZONE Brand Identity & Test Studio Polish
    ========================================================================== */
 
@@ -777,4 +777,43 @@ img.brand-badge,
   border-radius: 50%;
   box-shadow: none;
   object-fit: cover;
+=======
+
+/* Mobile (≤640px): thẻ bài đang chọn không tràn khung, Phòng thi hiện từng học viên thành một thẻ thay vì bảng cuộn ngang. */
+@media (max-width: 640px) {
+  .navbar-right { min-width: 0; gap: 8px; }
+  .global-navbar #teacher-profile { min-width: 0; }
+  .global-navbar #teacher-profile-name { max-width: 110px; overflow: hidden; text-overflow: ellipsis; }
+  #logout-btn > span { display: none; }
+  #logout-btn { min-width: 44px; min-height: 44px; justify-content: center; padding: 0 12px; }
+  .selected-assignment-card { padding: 16px; min-width: 0; }
+  .selected-assignment-card .showcase-details,
+  .selected-assignment-card .showcase-exam-controls { min-width: 0; max-width: 100%; }
+  .showcase-exam-controls .exam-mode-switch-wrap { flex-wrap: wrap; gap: 8px 10px; min-width: 0; }
+  .showcase-exam-controls .exam-mode-switch-wrap > label:not(.exam-mode-toggle) { display: inline; white-space: nowrap; }
+  .showcase-exam-controls .exam-mode-toggle { min-height: 44px; }
+  #self-proctoring-controls .exam-mode-toggle { flex: 1 1 100%; order: 0; }
+  #self-proctoring-controls > label:not(.exam-mode-toggle) { order: 1; flex: 1 1 0; min-width: 0; white-space: normal; }
+  #self-proctoring-controls > input { order: 1; flex: 0 0 auto; }
+  #self-proctoring-controls > span { order: 1; flex: 0 0 auto; white-space: nowrap; }
+  #self-proctoring-controls > input { min-height: 44px; }
+  #self-proctoring-controls .proctoring-lock-hint { flex: 1 1 100%; order: 2; }
+  #self-proctoring-save { flex: 1 1 100%; order: 3; width: 100%; min-height: 44px; }
+  #exam-switch-btn { width: 100%; min-height: 44px; }
+
+  #exam-room .refresh-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+  #exam-room .refresh-container > label { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  #exam-room .refresh-container > label input { flex: 1; min-width: 0; }
+  #exam-room .refresh-container button { min-height: 44px; }
+  #exam-room .results-scroll { overflow: visible; border: 0; }
+  #exam-room table, #exam-room tbody { display: block; }
+  #exam-room thead { display: none; }
+  #exam-room tbody { display: flex; flex-direction: column; gap: 10px; }
+  #exam-room tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; padding: 12px; border: 1px solid var(--izone-border); border-radius: 10px; background: var(--izone-card-bg); }
+  #exam-room tbody tr.exam-incident-active { order: -1; border-color: var(--izone-danger-border); border-left: 4px solid var(--izone-danger-strong); background: var(--izone-danger-bg); }
+  #exam-room tbody td { display: block; padding: 0; border: 0; white-space: normal; min-width: 0; }
+  #exam-room tbody td:first-child { grid-column: 1 / -1; font-weight: 700; color: var(--izone-navy); }
+  #exam-room tbody td[data-label]::before { content: attr(data-label); display: block; font-size: 0.72rem; font-weight: 600; color: var(--izone-muted); }
+  #exam-room tbody td[data-label="Thiết bị"], #exam-room tbody td:last-child { grid-column: 1 / -1; }
+  #exam-room tbody td:last-child button { width: 100%; min-height: 44px; }
 }

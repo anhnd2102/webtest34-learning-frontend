@@ -49,6 +49,12 @@ function renderExamRoom(room: ExamRoom) {
         const openIncident = (student.openIncidents || []).length > 0;
         incidents.textContent = student.status === 'not_entered' ? '—' : `${incidentCount}${openIncident ? ' · đang rời bài' : ''}`;
         device.textContent = formatExamDevice(student);
+        // Nhãn cột để CSS mobile dựng mỗi học viên thành một thẻ (≤640px) thay vì bảng cuộn ngang.
+        participation.setAttribute('data-label', 'Trạng thái');
+        progress.setAttribute('data-label', 'Tiến độ');
+        connection.setAttribute('data-label', 'Kết nối');
+        incidents.setAttribute('data-label', 'Sự cố');
+        device.setAttribute('data-label', 'Thiết bị');
 
         // 7. Retake Action column in Exam Room
         const retake = document.createElement('td');
