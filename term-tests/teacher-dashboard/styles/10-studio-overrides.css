@@ -770,13 +770,15 @@ button.btn-icon:disabled,
 .portal-sync input[type="checkbox"] { width: 18px; height: 18px; padding: 0; margin: 0; box-shadow: none; }
 .portal-sync .portal-sync-row button { width: auto; }
 
-/* Logo IZONE dạng ảnh thay huy hiệu chữ "IZ": bỏ nền, bo và bóng của huy hiệu */
-img.brand-badge,
+/* Logo IZONE ngang thay huy hiệu chữ "IZ": bỏ nền, bo và bóng của huy hiệu */
+.navbar-brand .brand-logo { height: 32px; width: auto; display: block; }
 .simulation-topbar img.brand-mark {
+  width: auto;
+  height: 34px;
   background: none;
-  border-radius: 50%;
+  border-radius: 0;
   box-shadow: none;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 /* Mobile (≤640px): thẻ bài đang chọn không tràn khung, Phòng thi hiện từng học viên thành một thẻ thay vì bảng cuộn ngang. */
