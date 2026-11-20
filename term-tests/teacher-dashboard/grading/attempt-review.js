@@ -370,6 +370,8 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
                     tr.append(tdPos);
                     // 2. Prompt Column
                     const tdPrompt = document.createElement('td');
+                    // Nhãn ô để CSS mobile (≤640px) dựng mỗi câu thành một thẻ thay vì bảng cuộn ngang.
+                    tdPrompt.setAttribute('data-label', 'Câu hỏi');
                     const compactPrompt = formatCompactPrompt(item);
                     const optBtnHtml = compactPrompt.hasExtensiveOptions
                         ? `<button type="button" class="prompt-opt-btn" data-item-id="${item.itemVersionId}">${ICONS.clipboard} <span>Xem danh sách từ (${compactPrompt.optionsCount})</span></button>`
@@ -384,6 +386,7 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
                     tr.append(tdPrompt);
                     // 3. Student Answer Column
                     const tdStudent = document.createElement('td');
+                    tdStudent.setAttribute('data-label', 'Bài làm học viên');
                     const studentAnsDisplay = resolveStudentAnswerDisplay(item);
                     tdStudent.innerHTML = `
             <div class="ans-display-cell">
@@ -393,6 +396,7 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
                     tr.append(tdStudent);
                     // 4. Expected Answer Column
                     const tdExpected = document.createElement('td');
+                    tdExpected.setAttribute('data-label', 'Đáp án mẫu / Rubric');
                     const expectedAnsDisplay = resolveExpectedAnswerDisplay(item);
                     tdExpected.innerHTML = `
             <div class="ans-display-cell">
@@ -403,11 +407,13 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
                     // 5. Verdict Column
                     const tdVerdict = document.createElement('td');
                     tdVerdict.className = 'col-verdict';
+                    tdVerdict.setAttribute('data-label', 'Trạng thái');
                     tdVerdict.innerHTML = `<span class="verdict-badge ${item.verdict}">${verdictLabel(item.verdict)}</span>`;
                     tr.append(tdVerdict);
                     // 6. Score Column
                     const tdScore = document.createElement('td');
                     tdScore.className = 'col-score';
+                    tdScore.setAttribute('data-label', 'Điểm số');
                     const isAutomated = item.graderType !== 'rubric_async';
                     const isInlineEditing = item._isEditingInline === true;
                     const currentScoreVal = item.draftScore !== null && item.draftScore !== undefined
@@ -452,6 +458,7 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
                     // 7. Feedback Column
                     const tdFeedback = document.createElement('td');
                     tdFeedback.className = 'col-feedback';
+                    tdFeedback.setAttribute('data-label', 'Nhận xét');
                     const currentFeedbackVal = typeof item.draftFeedback === 'string'
                         ? item.draftFeedback
                         : (item.draftFeedback?.comment ?? (item.manualReview && typeof item.feedback === 'object' ? (item.feedback?.comment || '') : ''));

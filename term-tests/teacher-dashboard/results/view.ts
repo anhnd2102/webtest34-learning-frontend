@@ -185,10 +185,12 @@ function renderResults(payload?: ResultsPayload | null) {
     headerRow.append(createTextHeader('Học viên'));
     headerRow.append(createTextHeader('Trạng thái'));
     headerRow.append(createScoreHeader('Tổng điểm', maxTotal));
+    const skillLabels: Record<string, string> = {};
     for (const skill of payload.skills) {
       const code = skill.code || '';
       const normCode = normalizeSkillCode(code);
       const label = CANONICAL_SKILL_LABELS[normCode] || (code.charAt(0).toUpperCase() + code.slice(1));
+      skillLabels[code] = label;
       headerRow.append(createScoreHeader(label, skill.maximum));
     }
     headerRow.append(createTextHeader('Sự cố'));
@@ -246,6 +248,8 @@ function renderResults(payload?: ResultsPayload | null) {
         // 3. Total Score Cell: Bold, larger text, direct tier text color, NO badge
         const totalCell = document.createElement('td');
         totalCell.className = 'score-cell';
+        // Nhãn ô để CSS mobile (≤640px) dựng mỗi học viên thành một thẻ thay vì bảng cuộn ngang.
+        totalCell.setAttribute('data-label', 'Tổng điểm');
         if (student.total && student.total.earned !== null && student.total.earned !== undefined) {
           const totalTier = getScoreTier(student.total.earned, student.total.maximum);
           const scoreVal = formatCompactScore(student.total);
@@ -261,6 +265,7 @@ function renderResults(payload?: ResultsPayload | null) {
         for (const skill of payload.skills) {
           const skillCell = document.createElement('td');
           skillCell.className = 'score-cell';
+          skillCell.setAttribute('data-label', skillLabels[skill.code || ''] || skill.code || '');
           const skScore = student.skills?.[skill.code];
           const skVal = formatCompactScore(skScore);
           skillCell.innerHTML = `<span class="score-skill">${escapeHtml(skVal)}</span>`;
@@ -269,10 +274,12 @@ function renderResults(payload?: ResultsPayload | null) {
 
         const incidentCell = document.createElement('td');
         incidentCell.textContent = incidentCellText(student);
+        incidentCell.setAttribute('data-label', 'Sự cố');
         row.append(incidentCell);
 
         // 5. Submitted At Cell: Two-line layout (Line 1: Time, Line 2: Date)
         const submittedCell = document.createElement('td');
+        submittedCell.setAttribute('data-label', 'Nộp lúc');
         const ts = formatSubmissionTimestamp(student.submittedAt);
         if (ts) {
           submittedCell.innerHTML = `
@@ -304,6 +311,12 @@ function renderResults(payload?: ResultsPayload | null) {
             });
           });
           actionsGroup.append(detailBtn);
+          // Trên điện thoại bấm cả thẻ học viên đều mở bài (desktop giữ nút "Xem bài").
+          row.classList.add('result-row-openable');
+          lifecycle.listen(row, 'click', (event: Event) => {
+            if ((event.target as HTMLElement | null)?.closest?.('button, a, input, select')) return;
+            if (document.defaultView?.matchMedia?.('(max-width: 640px)').matches) detailBtn.click();
+          });
         }
 
         actionCell.append(actionsGroup);

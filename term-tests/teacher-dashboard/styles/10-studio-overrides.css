@@ -863,3 +863,94 @@ button.btn-icon:disabled,
 
 /* Logo ngang thay chữ IZONE / LEARNING PLATFORM trên màn đăng nhập */
 .login-brand .login-logo { display: block; height: 48px; width: auto; max-width: 100%; margin: 0 auto 12px; }
+
+/* Mobile (≤640px): màn Chấm điểm & Đánh giá. Breadcrumb và tab không cuộn ngang; danh sách kết quả và bảng chấm từng câu
+   thành thẻ; bộ lọc gom sau nút "Bộ lọc"; ngăn chấm bài toàn màn hình với thanh nút 2×2. Chỉ đổi cách bày, không đổi dữ liệu. */
+@media (max-width: 640px) {
+  #view-grading .assessment-header { padding: 12px; margin-bottom: 12px; }
+  #view-grading .assessment-header-top { flex-direction: column; align-items: stretch; gap: 10px; }
+  #view-grading .assessment-header .btn-back-dashboard { align-self: flex-start; min-height: 44px; }
+  #view-grading .assessment-breadcrumb { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 8px; min-width: 0; }
+  #view-grading .assessment-breadcrumb .crumb-separator { display: none; }
+  #view-grading .assessment-breadcrumb .crumb-class { grid-column: 1; grid-row: 1; font-size: 0.78rem; color: var(--izone-muted); }
+  #view-grading .assessment-breadcrumb .crumb-badge { grid-column: 2; grid-row: 1; }
+  #view-grading .assessment-breadcrumb .crumb-test { grid-column: 1 / -1; grid-row: 2; font-size: 1rem; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; }
+  #view-grading .assessment-nav-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; overflow: visible; }
+  #view-grading .assessment-tab-btn { flex-direction: column; justify-content: center; gap: 4px; min-height: 56px; padding: 8px 4px; font-size: 0.74rem; line-height: 1.2; text-align: center; white-space: normal; }
+
+  #results .results-header { flex-direction: column; align-items: stretch; gap: 10px; }
+  #results .refresh-container { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
+  #results .refresh-container > .last-updated { grid-column: 1 / -1; }
+  #results .refresh-container > #publish-all-btn, #results .refresh-container > #add-student-btn, #results .refresh-container > #refresh-btn:last-child { grid-column: 1 / -1; }
+  #results .refresh-container button { min-height: 44px; width: 100%; }
+
+  .filters-toggle-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; width: 100%; }
+  .filters-active-count { min-width: 20px; padding: 0 6px; border-radius: 9999px; background: var(--izone-primary); color: var(--izone-on-primary); font-size: 0.75rem; line-height: 20px; text-align: center; }
+  #filters-toolbar { grid-template-columns: 1fr 1fr; gap: 10px; }
+  #filters-toolbar > .field-search { grid-column: 1 / -1; }
+  #filters-toolbar > label:not(.field-search), #filters-toolbar > .filter-actions { display: none; }
+  #filters-toolbar.filters-open > label:not(.field-search) { display: grid; min-width: 0; }
+  #filters-toolbar.filters-open > .filter-actions { display: block; grid-column: 1 / -1; }
+  #filters-toolbar input, #filters-toolbar select, #filters-toolbar .filter-actions button { min-height: 44px; font-size: 16px; }
+  #filters-toolbar .filter-actions button { width: 100%; }
+  #filters-toolbar select { min-width: 0; max-width: 100%; }
+
+  #results-content .results-scroll { overflow: visible; border: 0; }
+  #results-content table, #results-content tbody { display: block; }
+  #results-content thead { display: none; }
+  #results-content tbody { display: flex; flex-direction: column; gap: 10px; }
+  #results-content tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; padding: 12px; border: 1px solid var(--izone-border); border-radius: 10px; background: var(--izone-card-bg); }
+  #results-content tbody td { display: block; padding: 0; border: 0; white-space: normal; min-width: 0; text-align: left; }
+  #results-content tbody td:first-child, #results-content tbody td:nth-child(2), #results-content tbody td:last-child { grid-column: 1 / -1; }
+  #results-content tbody td[data-label]::before { content: attr(data-label); display: block; font-size: 0.72rem; font-weight: 600; color: var(--izone-muted); }
+  #results-content tbody td:last-child .table-actions, #results-content tbody td:last-child button { width: 100%; }
+  #results-content tbody td:last-child button { min-height: 44px; justify-content: center; }
+  #results-content tbody tr.result-row-openable { cursor: pointer; }
+
+  #attempt-detail.sliding-drawer { width: 100vw; border-left: 0; }
+  #attempt-detail .detail-header { display: grid; grid-template-columns: minmax(0, 1fr) 44px; align-items: start; gap: 8px; padding: 12px 16px; }
+  #attempt-detail .btn-close-drawer { width: 44px; height: 44px; }
+  #attempt-detail .meta-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  #attempt-detail .detail-section { padding-left: 16px; padding-right: 16px; }
+  #attempt-detail .skill-tabs { display: flex; flex-wrap: wrap; gap: 6px; overflow: visible; }
+  #attempt-detail .skill-tab-btn { min-height: 44px; }
+
+  #attempt-detail .grading-table-wrap { overflow: visible; border: 0; }
+  #attempt-detail #detail-items-table, #attempt-detail #detail-items-table tbody { display: block; width: 100%; min-width: 0; }
+  #attempt-detail #detail-items-table colgroup, #attempt-detail #detail-items-table thead { display: none; }
+  #attempt-detail #detail-items-body { display: flex; flex-direction: column; gap: 12px; }
+  #attempt-detail #detail-items-body tr.section-header-row, #attempt-detail #detail-items-body tr.section-header-row td { display: block; }
+  #attempt-detail #detail-items-body tr:not(.section-header-row) { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "pos verdict" "prompt prompt" "student student" "expected expected" "score score" "feedback feedback" "action action"; gap: 8px; padding: 12px; border: 1px solid var(--izone-border); border-radius: 10px; background: var(--izone-card-bg); }
+  #attempt-detail #detail-items-body .sec-header-wrap { flex-wrap: wrap; gap: 6px 10px; min-width: 0; }
+  #attempt-detail #detail-items-body .sec-header-badges { flex-wrap: wrap; min-width: 0; max-width: 100%; }
+  #attempt-detail #detail-items-body tr.row-needs-review { border-color: var(--izone-danger-border); }
+  #attempt-detail #detail-items-body tr:not(.section-header-row) > td { display: block; padding: 0; border: 0; white-space: normal; min-width: 0; width: auto; background: transparent; }
+  #attempt-detail #detail-items-body td:nth-child(1) { grid-area: pos; }
+  #attempt-detail #detail-items-body td:nth-child(2) { grid-area: prompt; }
+  #attempt-detail #detail-items-body td:nth-child(3) { grid-area: student; }
+  #attempt-detail #detail-items-body td:nth-child(4) { grid-area: expected; }
+  #attempt-detail #detail-items-body td:nth-child(5) { grid-area: verdict; }
+  #attempt-detail #detail-items-body td:nth-child(6) { grid-area: score; }
+  #attempt-detail #detail-items-body td:nth-child(7) { grid-area: feedback; }
+  #attempt-detail #detail-items-body td:nth-child(8) { grid-area: action; }
+  #attempt-detail #detail-items-body td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 2px; font-size: 0.72rem; font-weight: 600; color: var(--izone-muted); }
+  #attempt-detail #detail-items-body td:nth-child(5)::before { display: none; }
+  #attempt-detail #detail-items-body .prompt-preview-text { -webkit-line-clamp: 4; overflow-wrap: anywhere; }
+  #attempt-detail #detail-items-body .ans-student-val, #attempt-detail #detail-items-body .ans-expected-val { -webkit-line-clamp: 8; overflow-wrap: anywhere; }
+  #attempt-detail #detail-items-body .grade-score-input { min-height: 44px; font-size: 16px; }
+  #attempt-detail #detail-items-body .grade-feedback-input { width: 100%; min-height: 88px; font-size: 16px; }
+  #attempt-detail #detail-items-body .btn-inspect-item, #attempt-detail #detail-items-body .btn-edit-score-inline, #attempt-detail #detail-items-body .prompt-opt-btn { min-height: 44px; }
+  #attempt-detail #detail-items-body .btn-inspect-item { width: 100%; justify-content: center; }
+
+  #attempt-detail .grading-actions-bar { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); }
+  #attempt-detail .grading-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  #attempt-detail .grading-buttons button { min-height: 44px; width: 100%; padding: 6px 8px; font-size: 0.85rem; white-space: normal; }
+  #attempt-detail #save-draft-btn { order: 1; }
+  #attempt-detail #complete-grading-btn { order: 2; }
+  #attempt-detail #grant-retake-btn { order: 3; }
+  #attempt-detail #publish-result-btn { order: 4; }
+}
+
+@media (min-width: 641px) {
+  .filters-toggle-btn { display: none; }
+}

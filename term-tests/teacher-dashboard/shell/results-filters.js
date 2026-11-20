@@ -1,6 +1,25 @@
 export function createResultsFilters({ lifecycle, queryCoordinator, results, status, searchInput, statusFilter, skillFilter, minScoreInput, maxScoreInput, sortBySelect, sortDirSelect, resetFiltersBtn, state, setUrl, loadResults }) {
+    // Nút "Bộ lọc" (chỉ hiện ở ≤640px): mở/đóng cụm lọc và hiện số bộ lọc đang bật.
+    const filtersForm = searchInput?.form ?? null;
+    const toggleBtn = filtersForm?.ownerDocument?.getElementById?.('filters-toggle-btn') ?? null;
+    const activeCountEl = filtersForm?.ownerDocument?.getElementById?.('filters-active-count') ?? null;
+    function updateFilterBadge() {
+        if (!activeCountEl)
+            return;
+        const active = [state.status, state.skill, state.minScore, state.maxScore, state.sortBy].filter(Boolean).length + (state.sortDir === 'desc' ? 1 : 0);
+        activeCountEl.textContent = active > 0 ? String(active) : '';
+        activeCountEl.hidden = active === 0;
+    }
+    if (toggleBtn && filtersForm) {
+        lifecycle.listen(toggleBtn, 'click', () => {
+            const open = filtersForm.classList.toggle('filters-open');
+            toggleBtn.setAttribute('aria-expanded', String(open));
+        });
+    }
+    updateFilterBadge();
     // Filter and pagination event handlers
     function applyFilterChange() {
+        updateFilterBadge();
         state.page = 1;
         setUrl();
         loadResults(state.classId, state.assignmentId).catch((error) => { status.textContent = error.message; });
@@ -74,6 +93,7 @@ export function createResultsFilters({ lifecycle, queryCoordinator, results, sta
                 sortBySelect.value = '';
             if (sortDirSelect)
                 sortDirSelect.value = 'asc';
+            updateFilterBadge();
             setUrl();
             loadResults(state.classId, state.assignmentId).catch((error) => { status.textContent = error.message; });
         });

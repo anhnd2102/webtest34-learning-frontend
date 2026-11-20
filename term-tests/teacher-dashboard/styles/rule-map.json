@@ -10189,402 +10189,1018 @@
   },
   {
     "order": 1671,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-header"
+  },
+  {
+    "order": 1672,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-header-top"
+  },
+  {
+    "order": 1673,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-header .btn-back-dashboard"
+  },
+  {
+    "order": 1674,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-breadcrumb"
+  },
+  {
+    "order": 1675,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-breadcrumb .crumb-separator"
+  },
+  {
+    "order": 1676,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-breadcrumb .crumb-class"
+  },
+  {
+    "order": 1677,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-breadcrumb .crumb-badge"
+  },
+  {
+    "order": 1678,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-breadcrumb .crumb-test"
+  },
+  {
+    "order": 1679,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-nav-tabs"
+  },
+  {
+    "order": 1680,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#view-grading .assessment-tab-btn"
+  },
+  {
+    "order": 1681,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results .results-header"
+  },
+  {
+    "order": 1682,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results .refresh-container"
+  },
+  {
+    "order": 1683,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results .refresh-container > .last-updated"
+  },
+  {
+    "order": 1684,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results .refresh-container > #publish-all-btn, #results .refresh-container > #add-student-btn, #results .refresh-container > #refresh-btn:last-child"
+  },
+  {
+    "order": 1685,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results .refresh-container button"
+  },
+  {
+    "order": 1686,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".filters-toggle-btn"
+  },
+  {
+    "order": 1687,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".filters-active-count"
+  },
+  {
+    "order": 1688,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar"
+  },
+  {
+    "order": 1689,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar > .field-search"
+  },
+  {
+    "order": 1690,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar > label:not(.field-search), #filters-toolbar > .filter-actions"
+  },
+  {
+    "order": 1691,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar.filters-open > label:not(.field-search)"
+  },
+  {
+    "order": 1692,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar.filters-open > .filter-actions"
+  },
+  {
+    "order": 1693,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar input, #filters-toolbar select, #filters-toolbar .filter-actions button"
+  },
+  {
+    "order": 1694,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar .filter-actions button"
+  },
+  {
+    "order": 1695,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#filters-toolbar select"
+  },
+  {
+    "order": 1696,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content .results-scroll"
+  },
+  {
+    "order": 1697,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content table, #results-content tbody"
+  },
+  {
+    "order": 1698,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content thead"
+  },
+  {
+    "order": 1699,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody"
+  },
+  {
+    "order": 1700,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody tr"
+  },
+  {
+    "order": 1701,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody td"
+  },
+  {
+    "order": 1702,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody td:first-child, #results-content tbody td:nth-child(2), #results-content tbody td:last-child"
+  },
+  {
+    "order": 1703,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody td[data-label]::before"
+  },
+  {
+    "order": 1704,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody td:last-child .table-actions, #results-content tbody td:last-child button"
+  },
+  {
+    "order": 1705,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody td:last-child button"
+  },
+  {
+    "order": 1706,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#results-content tbody tr.result-row-openable"
+  },
+  {
+    "order": 1707,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail.sliding-drawer"
+  },
+  {
+    "order": 1708,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .detail-header"
+  },
+  {
+    "order": 1709,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .btn-close-drawer"
+  },
+  {
+    "order": 1710,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .meta-badges"
+  },
+  {
+    "order": 1711,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .detail-section"
+  },
+  {
+    "order": 1712,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .skill-tabs"
+  },
+  {
+    "order": 1713,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .skill-tab-btn"
+  },
+  {
+    "order": 1714,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .grading-table-wrap"
+  },
+  {
+    "order": 1715,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-table, #attempt-detail #detail-items-table tbody"
+  },
+  {
+    "order": 1716,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-table colgroup, #attempt-detail #detail-items-table thead"
+  },
+  {
+    "order": 1717,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body"
+  },
+  {
+    "order": 1718,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body tr.section-header-row, #attempt-detail #detail-items-body tr.section-header-row td"
+  },
+  {
+    "order": 1719,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body tr:not(.section-header-row)"
+  },
+  {
+    "order": 1720,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .sec-header-wrap"
+  },
+  {
+    "order": 1721,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .sec-header-badges"
+  },
+  {
+    "order": 1722,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body tr.row-needs-review"
+  },
+  {
+    "order": 1723,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body tr:not(.section-header-row) > td"
+  },
+  {
+    "order": 1724,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(1)"
+  },
+  {
+    "order": 1725,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(2)"
+  },
+  {
+    "order": 1726,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(3)"
+  },
+  {
+    "order": 1727,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(4)"
+  },
+  {
+    "order": 1728,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(5)"
+  },
+  {
+    "order": 1729,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(6)"
+  },
+  {
+    "order": 1730,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(7)"
+  },
+  {
+    "order": 1731,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(8)"
+  },
+  {
+    "order": 1732,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td[data-label]::before"
+  },
+  {
+    "order": 1733,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body td:nth-child(5)::before"
+  },
+  {
+    "order": 1734,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .prompt-preview-text"
+  },
+  {
+    "order": 1735,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .ans-student-val, #attempt-detail #detail-items-body .ans-expected-val"
+  },
+  {
+    "order": 1736,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .grade-score-input"
+  },
+  {
+    "order": 1737,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .grade-feedback-input"
+  },
+  {
+    "order": 1738,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .btn-inspect-item, #attempt-detail #detail-items-body .btn-edit-score-inline, #attempt-detail #detail-items-body .prompt-opt-btn"
+  },
+  {
+    "order": 1739,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #detail-items-body .btn-inspect-item"
+  },
+  {
+    "order": 1740,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .grading-actions-bar"
+  },
+  {
+    "order": 1741,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .grading-buttons"
+  },
+  {
+    "order": 1742,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail .grading-buttons button"
+  },
+  {
+    "order": 1743,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #save-draft-btn"
+  },
+  {
+    "order": 1744,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #complete-grading-btn"
+  },
+  {
+    "order": 1745,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #grant-retake-btn"
+  },
+  {
+    "order": 1746,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": "#attempt-detail #publish-result-btn"
+  },
+  {
+    "order": 1747,
+    "source": "10-studio-overrides.css",
+    "conditions": [
+      "(min-width: 641px)"
+    ],
+    "selector": ".filters-toggle-btn"
+  },
+  {
+    "order": 1748,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".score-distribution-view"
   },
   {
-    "order": 1672,
+    "order": 1749,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-header-toolbar"
   },
   {
-    "order": 1673,
+    "order": 1750,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-header-info"
   },
   {
-    "order": 1674,
+    "order": 1751,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-title"
   },
   {
-    "order": 1675,
+    "order": 1752,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-title svg"
   },
   {
-    "order": 1676,
+    "order": 1753,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-meta"
   },
   {
-    "order": 1677,
+    "order": 1754,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-meta strong"
   },
   {
-    "order": 1678,
+    "order": 1755,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-header-actions"
   },
   {
-    "order": 1679,
+    "order": 1756,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".toggle-control"
   },
   {
-    "order": 1680,
+    "order": 1757,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".toggle-control:hover"
   },
   {
-    "order": 1681,
+    "order": 1758,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-skill-tabs"
   },
   {
-    "order": 1682,
+    "order": 1759,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skill-tab-btn"
   },
   {
-    "order": 1683,
+    "order": 1760,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skill-tab-btn:hover"
   },
   {
-    "order": 1684,
+    "order": 1761,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skill-tab-btn.active"
   },
   {
-    "order": 1685,
+    "order": 1762,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-roster-grid"
   },
   {
-    "order": 1686,
+    "order": 1763,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card"
   },
   {
-    "order": 1687,
+    "order": 1764,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card:hover"
   },
   {
-    "order": 1688,
+    "order": 1765,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".metric-card-header"
   },
   {
-    "order": 1689,
+    "order": 1766,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".metric-card-value"
   },
   {
-    "order": 1690,
+    "order": 1767,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-primary .metric-icon"
   },
   {
-    "order": 1691,
+    "order": 1768,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-success .metric-icon"
   },
   {
-    "order": 1692,
+    "order": 1769,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-warning .metric-icon"
   },
   {
-    "order": 1693,
+    "order": 1770,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-neutral .metric-icon"
   },
   {
-    "order": 1694,
+    "order": 1771,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-muted .metric-icon"
   },
   {
-    "order": 1695,
+    "order": 1772,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-metric-card.metric-info .metric-icon"
   },
   {
-    "order": 1696,
+    "order": 1773,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-statistics-grid"
   },
   {
-    "order": 1697,
+    "order": 1774,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-stat-card"
   },
   {
-    "order": 1698,
+    "order": 1775,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-card-top"
   },
   {
-    "order": 1699,
+    "order": 1776,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-icon"
   },
   {
-    "order": 1700,
+    "order": 1777,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-value"
   },
   {
-    "order": 1701,
+    "order": 1778,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".stat-desc"
   },
   {
-    "order": 1702,
+    "order": 1779,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-card-container"
   },
   {
-    "order": 1703,
+    "order": 1780,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-chart-header"
   },
   {
-    "order": 1704,
+    "order": 1781,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-header-left"
   },
   {
-    "order": 1705,
+    "order": 1782,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-title"
   },
   {
-    "order": 1706,
+    "order": 1783,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-title svg"
   },
   {
-    "order": 1707,
+    "order": 1784,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-subtitle"
   },
   {
-    "order": 1708,
+    "order": 1785,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-svg-wrapper"
   },
   {
-    "order": 1709,
+    "order": 1786,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-svg"
   },
   {
-    "order": 1710,
+    "order": 1787,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-grid-line line"
   },
   {
-    "order": 1711,
+    "order": 1788,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-grid-line:first-child line"
   },
   {
-    "order": 1712,
+    "order": 1789,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-y-axis-label"
   },
   {
-    "order": 1713,
+    "order": 1790,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-baseline"
   },
   {
-    "order": 1714,
+    "order": 1791,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-hover-slot"
   },
   {
-    "order": 1715,
+    "order": 1792,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bucket-col:hover .histogram-hover-slot"
   },
   {
-    "order": 1716,
+    "order": 1793,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bucket-col.active .histogram-hover-slot"
   },
   {
-    "order": 1717,
+    "order": 1794,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bar"
   },
   {
-    "order": 1718,
+    "order": 1795,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bar:hover"
   },
   {
-    "order": 1719,
+    "order": 1796,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bar.bar-selected"
   },
   {
-    "order": 1720,
+    "order": 1797,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-count-label"
   },
   {
-    "order": 1721,
+    "order": 1798,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-axis-label"
   },
   {
-    "order": 1722,
+    "order": 1799,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-bucket-col.active .histogram-axis-label"
   },
   {
-    "order": 1723,
+    "order": 1800,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-chart-footer"
   },
   {
-    "order": 1724,
+    "order": 1801,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".chart-hint"
   },
   {
-    "order": 1725,
+    "order": 1802,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-empty-state"
   },
   {
-    "order": 1726,
+    "order": 1803,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-loading-container"
   },
   {
-    "order": 1727,
+    "order": 1804,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-pulse .skeleton-card"
   },
   {
-    "order": 1728,
+    "order": 1805,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line"
   },
   {
-    "order": 1729,
+    "order": 1806,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line.short"
   },
   {
-    "order": 1730,
+    "order": 1807,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line.large"
   },
   {
-    "order": 1731,
+    "order": 1808,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-line.medium"
   },
   {
-    "order": 1732,
+    "order": 1809,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".skeleton-chart-box"
   },
   {
-    "order": 1733,
+    "order": 1810,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-error-panel"
   },
   {
-    "order": 1734,
+    "order": 1811,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-drilldown-split-area"
   },
   {
-    "order": 1735,
+    "order": 1812,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".histogram-card-slot"
   },
   {
-    "order": 1736,
+    "order": 1813,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-drilldown-slot"
   },
   {
-    "order": 1737,
+    "order": 1814,
     "source": "11-analytics.css",
     "conditions": [
       "(max-width: 1100px)"
@@ -10592,85 +11208,85 @@
     "selector": ".histogram-drilldown-split-area"
   },
   {
-    "order": 1738,
+    "order": 1815,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-drilldown-container"
   },
   {
-    "order": 1739,
+    "order": 1816,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-card"
   },
   {
-    "order": 1740,
+    "order": 1817,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-header"
   },
   {
-    "order": 1741,
+    "order": 1818,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-title"
   },
   {
-    "order": 1742,
+    "order": 1819,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-count"
   },
   {
-    "order": 1743,
+    "order": 1820,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-empty"
   },
   {
-    "order": 1744,
+    "order": 1821,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-badge-all"
   },
   {
-    "order": 1745,
+    "order": 1822,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table-wrapper"
   },
   {
-    "order": 1746,
+    "order": 1823,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table"
   },
   {
-    "order": 1747,
+    "order": 1824,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table th"
   },
   {
-    "order": 1748,
+    "order": 1825,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table td"
   },
   {
-    "order": 1749,
+    "order": 1826,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".drilldown-table tr:hover td"
   },
   {
-    "order": 1750,
+    "order": 1827,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".student-score-cell"
   },
   {
-    "order": 1751,
+    "order": 1828,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10678,7 +11294,7 @@
     "selector": "header, .navbar, .navbar-menu, .control-toolbar, .report-header-actions, .skill-tab-btn:not(.active), .chart-hint, .btn-close-drilldown"
   },
   {
-    "order": 1752,
+    "order": 1829,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10686,7 +11302,7 @@
     "selector": "body, main"
   },
   {
-    "order": 1753,
+    "order": 1830,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10694,7 +11310,7 @@
     "selector": ".score-distribution-view"
   },
   {
-    "order": 1754,
+    "order": 1831,
     "source": "11-analytics.css",
     "conditions": [
       "print"
@@ -10702,1333 +11318,1333 @@
     "selector": ".report-header-toolbar, .histogram-card-container, .drilldown-card, .report-metric-card, .report-stat-card"
   },
   {
-    "order": 1755,
+    "order": 1832,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-nav-wrapper"
   },
   {
-    "order": 1756,
+    "order": 1833,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-switcher-container"
   },
   {
-    "order": 1757,
+    "order": 1834,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-btn"
   },
   {
-    "order": 1758,
+    "order": 1835,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-btn:hover:not(.active)"
   },
   {
-    "order": 1759,
+    "order": 1836,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".report-mode-btn.active"
   },
   {
-    "order": 1760,
+    "order": 1837,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-analysis-container"
   },
   {
-    "order": 1761,
+    "order": 1838,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-analysis-toolbar"
   },
   {
-    "order": 1762,
+    "order": 1839,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-skill-tabs"
   },
   {
-    "order": 1763,
+    "order": 1840,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-filter-tab"
   },
   {
-    "order": 1764,
+    "order": 1841,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-filter-tab:hover:not(.active)"
   },
   {
-    "order": 1765,
+    "order": 1842,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-filter-tab.active"
   },
   {
-    "order": 1766,
+    "order": 1843,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".tab-count"
   },
   {
-    "order": 1767,
+    "order": 1844,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-controls"
   },
   {
-    "order": 1768,
+    "order": 1845,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".sort-label"
   },
   {
-    "order": 1769,
+    "order": 1846,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-btn"
   },
   {
-    "order": 1770,
+    "order": 1847,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-btn:hover:not(.active)"
   },
   {
-    "order": 1771,
+    "order": 1848,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-sort-btn.active"
   },
   {
-    "order": 1772,
+    "order": 1849,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-cards-list"
   },
   {
-    "order": 1773,
+    "order": 1850,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card"
   },
   {
-    "order": 1774,
+    "order": 1851,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card:hover"
   },
   {
-    "order": 1775,
+    "order": 1852,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card.card-expanded"
   },
   {
-    "order": 1776,
+    "order": 1853,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card-header"
   },
   {
-    "order": 1777,
+    "order": 1854,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card-header:hover"
   },
   {
-    "order": 1778,
+    "order": 1855,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-header-left"
   },
   {
-    "order": 1779,
+    "order": 1856,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-position-badge"
   },
   {
-    "order": 1780,
+    "order": 1857,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-skill-tag"
   },
   {
-    "order": 1781,
+    "order": 1858,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-prompt-snippet"
   },
   {
-    "order": 1782,
+    "order": 1859,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-header-center"
   },
   {
-    "order": 1783,
+    "order": 1860,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-dist-bar"
   },
   {
-    "order": 1784,
+    "order": 1861,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-correct"
   },
   {
-    "order": 1785,
+    "order": 1862,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-partial"
   },
   {
-    "order": 1786,
+    "order": 1863,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-incorrect"
   },
   {
-    "order": 1787,
+    "order": 1864,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-unanswered"
   },
   {
-    "order": 1788,
+    "order": 1865,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".bar-segment-empty"
   },
   {
-    "order": 1789,
+    "order": 1866,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-header-right"
   },
   {
-    "order": 1790,
+    "order": 1867,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-error-badge"
   },
   {
-    "order": 1791,
+    "order": 1868,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-danger-soft"
   },
   {
-    "order": 1792,
+    "order": 1869,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-warning-soft"
   },
   {
-    "order": 1793,
+    "order": 1870,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-neutral-soft"
   },
   {
-    "order": 1794,
+    "order": 1871,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".error-count-text"
   },
   {
-    "order": 1795,
+    "order": 1872,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".error-rate-text"
   },
   {
-    "order": 1796,
+    "order": 1873,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".btn-item-accordion"
   },
   {
-    "order": 1797,
+    "order": 1874,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".btn-item-accordion:hover"
   },
   {
-    "order": 1798,
+    "order": 1875,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-card-drawer"
   },
   {
-    "order": 1799,
+    "order": 1876,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-detail-section"
   },
   {
-    "order": 1800,
+    "order": 1877,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".detail-subtitle"
   },
   {
-    "order": 1801,
+    "order": 1878,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".expected-answer-box"
   },
   {
-    "order": 1802,
+    "order": 1879,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".expected-answer-content code"
   },
   {
-    "order": 1803,
+    "order": 1880,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".common-wrong-pills"
   },
   {
-    "order": 1804,
+    "order": 1881,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".wrong-pill"
   },
   {
-    "order": 1805,
+    "order": 1882,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".pill-answer"
   },
   {
-    "order": 1806,
+    "order": 1883,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".pill-count"
   },
   {
-    "order": 1807,
+    "order": 1884,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-wrong-table-wrapper"
   },
   {
-    "order": 1808,
+    "order": 1885,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".table-compact th, .table-compact td"
   },
   {
-    "order": 1809,
+    "order": 1886,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".badge-status"
   },
   {
-    "order": 1810,
+    "order": 1887,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".status-incorrect"
   },
   {
-    "order": 1811,
+    "order": 1888,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".status-partial"
   },
   {
-    "order": 1812,
+    "order": 1889,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".status-unanswered"
   },
   {
-    "order": 1813,
+    "order": 1890,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".item-analysis-state-box"
   },
   {
-    "order": 1814,
+    "order": 1891,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".state-title"
   },
   {
-    "order": 1815,
+    "order": 1892,
     "source": "11-analytics.css",
     "conditions": [],
     "selector": ".state-desc"
   },
   {
-    "order": 1816,
+    "order": 1893,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".exercise-reference-context-field"
   },
   {
-    "order": 1817,
+    "order": 1894,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".exercise-reference-context-field:focus-within"
   },
   {
-    "order": 1818,
+    "order": 1895,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".ai-inherited-context-notice"
   },
   {
-    "order": 1819,
+    "order": 1896,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-toggle-custom-item-context"
   },
   {
-    "order": 1820,
+    "order": 1897,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-toggle-custom-item-context:hover"
   },
   {
-    "order": 1821,
+    "order": 1898,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".candidate-sim-overlay"
   },
   {
-    "order": 1822,
+    "order": 1899,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".candidate-sim-modal, .block-csv-modal, .quick-csv-guide-modal"
   },
   {
-    "order": 1823,
+    "order": 1900,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".block-csv-modal"
   },
   {
-    "order": 1824,
+    "order": 1901,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-csv-guide-modal"
   },
   {
-    "order": 1825,
+    "order": 1902,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn.btn-view-csv-guide, .btn-ghost-subtle.btn-view-csv-guide"
   },
   {
-    "order": 1826,
+    "order": 1903,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn.btn-view-csv-guide:hover, .btn-ghost-subtle.btn-view-csv-guide:hover"
   },
   {
-    "order": 1827,
+    "order": 1904,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table"
   },
   {
-    "order": 1828,
+    "order": 1905,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table th"
   },
   {
-    "order": 1829,
+    "order": 1906,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table td"
   },
   {
-    "order": 1830,
+    "order": 1907,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".quick-guide-table tr:nth-child(2n) td"
   },
   {
-    "order": 1831,
+    "order": 1908,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".page-title-bar[hidden]"
   },
   {
-    "order": 1832,
+    "order": 1909,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-header"
   },
   {
-    "order": 1833,
+    "order": 1910,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-header-top"
   },
   {
-    "order": 1834,
+    "order": 1911,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-back-dashboard"
   },
   {
-    "order": 1835,
+    "order": 1912,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-back-dashboard:hover"
   },
   {
-    "order": 1836,
+    "order": 1913,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb"
   },
   {
-    "order": 1837,
+    "order": 1914,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-class"
   },
   {
-    "order": 1838,
+    "order": 1915,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-separator"
   },
   {
-    "order": 1839,
+    "order": 1916,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-test"
   },
   {
-    "order": 1840,
+    "order": 1917,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-breadcrumb .crumb-badge"
   },
   {
-    "order": 1841,
+    "order": 1918,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-nav-tabs"
   },
   {
-    "order": 1842,
+    "order": 1919,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn"
   },
   {
-    "order": 1843,
+    "order": 1920,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn:hover"
   },
   {
-    "order": 1844,
+    "order": 1921,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn:hover svg"
   },
   {
-    "order": 1845,
+    "order": 1922,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn:active"
   },
   {
-    "order": 1846,
+    "order": 1923,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn.active"
   },
   {
-    "order": 1847,
+    "order": 1924,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn.active:hover"
   },
   {
-    "order": 1848,
+    "order": 1925,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-btn.active svg"
   },
   {
-    "order": 1849,
+    "order": 1926,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".assessment-tab-panel[hidden]"
   },
   {
-    "order": 1850,
+    "order": 1927,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".report-kpi-grid"
   },
   {
-    "order": 1851,
+    "order": 1928,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".clickable-kpi-card"
   },
   {
-    "order": 1852,
+    "order": 1929,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".clickable-kpi-card:hover"
   },
   {
-    "order": 1853,
+    "order": 1930,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".clickable-kpi-card:focus-visible"
   },
   {
-    "order": 1854,
+    "order": 1931,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".retake-action-wrap"
   },
   {
-    "order": 1855,
+    "order": 1932,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".retake-badge"
   },
   {
-    "order": 1856,
+    "order": 1933,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".retake-badge.active"
   },
   {
-    "order": 1857,
+    "order": 1934,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-retake-renew"
   },
   {
-    "order": 1858,
+    "order": 1935,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn-retake-renew:hover"
   },
   {
-    "order": 1859,
+    "order": 1936,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".meta-badge.badge-retake-grant"
   },
   {
-    "order": 1860,
+    "order": 1937,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".prompt-help-text"
   },
   {
-    "order": 1861,
+    "order": 1938,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-prompt"
   },
   {
-    "order": 1862,
+    "order": 1939,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-help"
   },
   {
-    "order": 1863,
+    "order": 1940,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-answer"
   },
   {
-    "order": 1864,
+    "order": 1941,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-answer.modal-ctx-answer-expected"
   },
   {
-    "order": 1865,
+    "order": 1942,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-ctx-feedback"
   },
   {
-    "order": 1866,
+    "order": 1943,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-head"
   },
   {
-    "order": 1867,
+    "order": 1944,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-head h4"
   },
   {
-    "order": 1868,
+    "order": 1945,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-score-row"
   },
   {
-    "order": 1869,
+    "order": 1946,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-block input.modal-override-score-input"
   },
   {
-    "order": 1870,
+    "order": 1947,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-label"
   },
   {
-    "order": 1871,
+    "order": 1948,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-label.modal-override-label-block"
   },
   {
-    "order": 1872,
+    "order": 1949,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-max"
   },
   {
-    "order": 1873,
+    "order": 1950,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-feedback-row"
   },
   {
-    "order": 1874,
+    "order": 1951,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".modal-override-actions"
   },
   {
-    "order": 1875,
+    "order": 1952,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".batch-preview-row-text"
   },
   {
-    "order": 1876,
+    "order": 1953,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".batch-preview-row-meta"
   },
   {
-    "order": 1877,
+    "order": 1954,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".btn.btn-copy-sample.is-copied"
   },
   {
-    "order": 1878,
+    "order": 1955,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".pictorial-thumb-preview .pictorial-preview-img"
   },
   {
-    "order": 1879,
+    "order": 1956,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".pictorial-thumb-preview .pictorial-preview-error:not([hidden])"
   },
   {
-    "order": 1880,
+    "order": 1957,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".specific-classes-container:not([hidden])"
   },
   {
-    "order": 1881,
+    "order": 1958,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rich-editor__code:not([hidden]), .rich-editor-code:not([hidden])"
   },
   {
-    "order": 1882,
+    "order": 1959,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rich-editor__error.popup-image-error:not([hidden])"
   },
   {
-    "order": 1883,
+    "order": 1960,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rw-card"
   },
   {
-    "order": 1884,
+    "order": 1961,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rw-body"
   },
   {
-    "order": 1885,
+    "order": 1962,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rw-footer"
   },
   {
-    "order": 1886,
+    "order": 1963,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".rw-spacer"
   },
   {
-    "order": 1887,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-stepper"
-  },
-  {
-    "order": 1888,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-step"
-  },
-  {
-    "order": 1889,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-step-number"
-  },
-  {
-    "order": 1890,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-step.is-current"
-  },
-  {
-    "order": 1891,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-step.is-done"
-  },
-  {
-    "order": 1892,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-lead"
-  },
-  {
-    "order": 1893,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-muted"
-  },
-  {
-    "order": 1894,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-error, .rw-errors:not(:empty)"
-  },
-  {
-    "order": 1895,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-family"
-  },
-  {
-    "order": 1896,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-family legend"
-  },
-  {
-    "order": 1897,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-grid, .rw-level-grid"
-  },
-  {
-    "order": 1898,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-card, .rw-level-card"
-  },
-  {
-    "order": 1899,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-card input, .rw-level-card input"
-  },
-  {
-    "order": 1900,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-card:focus-within, .rw-level-card:focus-within"
-  },
-  {
-    "order": 1901,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-card.is-selected, .rw-level-card.is-selected"
-  },
-  {
-    "order": 1902,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-title"
-  },
-  {
-    "order": 1903,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-desc"
-  },
-  {
-    "order": 1904,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-variant-example"
-  },
-  {
-    "order": 1905,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-subtitle"
-  },
-  {
-    "order": 1906,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-summary"
-  },
-  {
-    "order": 1907,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-summary li"
-  },
-  {
-    "order": 1908,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-field"
-  },
-  {
-    "order": 1909,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-input"
-  },
-  {
-    "order": 1910,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-input-score"
-  },
-  {
-    "order": 1911,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-question"
-  },
-  {
-    "order": 1912,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-question-head"
-  },
-  {
-    "order": 1913,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-question-head h4"
-  },
-  {
-    "order": 1914,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-requirements"
-  },
-  {
-    "order": 1915,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-requirement-row"
-  },
-  {
-    "order": 1916,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-advanced"
-  },
-  {
-    "order": 1917,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-advanced summary"
-  },
-  {
-    "order": 1918,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-sandbox-result"
-  },
-  {
-    "order": 1919,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-result"
-  },
-  {
-    "order": 1920,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-card-head"
-  },
-  {
-    "order": 1921,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-chip"
-  },
-  {
-    "order": 1922,
-    "source": "12-context-and-assessment.css",
-    "conditions": [
-      "(max-width: 640px)"
-    ],
-    "selector": ".rw-stepper"
-  },
-  {
-    "order": 1923,
-    "source": "12-context-and-assessment.css",
-    "conditions": [
-      "(max-width: 640px)"
-    ],
-    "selector": ".rw-requirement-row"
-  },
-  {
-    "order": 1924,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".cbt-writing-aid"
-  },
-  {
-    "order": 1925,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".cbt-writing-aid h4"
-  },
-  {
-    "order": 1926,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".cbt-writing-aid ol"
-  },
-  {
-    "order": 1927,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".cbt-writing-aid p"
-  },
-  {
-    "order": 1928,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".cbt-writing-aid-note"
-  },
-  {
-    "order": 1929,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".cbt-vocab-chips"
-  },
-  {
-    "order": 1930,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".cbt-vocab-chips li"
-  },
-  {
-    "order": 1931,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-list"
-  },
-  {
-    "order": 1932,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-row"
-  },
-  {
-    "order": 1933,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-name"
-  },
-  {
-    "order": 1934,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-evidence"
-  },
-  {
-    "order": 1935,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-note"
-  },
-  {
-    "order": 1936,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-score"
-  },
-  {
-    "order": 1937,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-score-input"
-  },
-  {
-    "order": 1938,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-denom"
-  },
-  {
-    "order": 1939,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-ai"
-  },
-  {
-    "order": 1940,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".req-errors"
-  },
-  {
-    "order": 1941,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".score-by-requirement-hint"
-  },
-  {
-    "order": 1942,
-    "source": "12-context-and-assessment.css",
-    "conditions": [
-      "(max-width: 640px)"
-    ],
-    "selector": ".req-row"
-  },
-  {
-    "order": 1943,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-shared-context"
-  },
-  {
-    "order": 1944,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-shared-preview"
-  },
-  {
-    "order": 1945,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-shared-preview summary"
-  },
-  {
-    "order": 1946,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".rw-shared-preview p"
-  },
-  {
-    "order": 1947,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-preview"
-  },
-  {
-    "order": 1948,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-summary"
-  },
-  {
-    "order": 1949,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-chip"
-  },
-  {
-    "order": 1950,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-chip.is-ok"
-  },
-  {
-    "order": 1951,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-chip.is-warning"
-  },
-  {
-    "order": 1952,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-chip.is-error"
-  },
-  {
-    "order": 1953,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-action"
-  },
-  {
-    "order": 1954,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-notices"
-  },
-  {
-    "order": 1955,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-table-wrap"
-  },
-  {
-    "order": 1956,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-table"
-  },
-  {
-    "order": 1957,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-table th, .import-table td"
-  },
-  {
-    "order": 1958,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-table th"
-  },
-  {
-    "order": 1959,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-line"
-  },
-  {
-    "order": 1960,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-status"
-  },
-  {
-    "order": 1961,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-badge"
-  },
-  {
-    "order": 1962,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-badge.is-error"
-  },
-  {
-    "order": 1963,
-    "source": "12-context-and-assessment.css",
-    "conditions": [],
-    "selector": ".import-badge.is-warning"
-  },
-  {
     "order": 1964,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".import-row.is-error"
+    "selector": ".rw-stepper"
   },
   {
     "order": 1965,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".import-messages"
+    "selector": ".rw-step"
   },
   {
     "order": 1966,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".import-hint"
+    "selector": ".rw-step-number"
   },
   {
     "order": 1967,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".import-more, .import-preview-empty"
+    "selector": ".rw-step.is-current"
   },
   {
     "order": 1968,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".guide-body"
+    "selector": ".rw-step.is-done"
   },
   {
     "order": 1969,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".guide-section-title"
+    "selector": ".rw-lead"
   },
   {
     "order": 1970,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".guide-list"
+    "selector": ".rw-muted"
   },
   {
     "order": 1971,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".guide-list li"
+    "selector": ".rw-error, .rw-errors:not(:empty)"
   },
   {
     "order": 1972,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".guide-downloads"
+    "selector": ".rw-family"
   },
   {
     "order": 1973,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".guide-toc"
+    "selector": ".rw-family legend"
   },
   {
     "order": 1974,
     "source": "12-context-and-assessment.css",
     "conditions": [],
-    "selector": ".guide-toc-chip"
+    "selector": ".rw-variant-grid, .rw-level-grid"
   },
   {
     "order": 1975,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card, .rw-level-card"
+  },
+  {
+    "order": 1976,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card input, .rw-level-card input"
+  },
+  {
+    "order": 1977,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card:focus-within, .rw-level-card:focus-within"
+  },
+  {
+    "order": 1978,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-card.is-selected, .rw-level-card.is-selected"
+  },
+  {
+    "order": 1979,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-title"
+  },
+  {
+    "order": 1980,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-desc"
+  },
+  {
+    "order": 1981,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-variant-example"
+  },
+  {
+    "order": 1982,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-subtitle"
+  },
+  {
+    "order": 1983,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-summary"
+  },
+  {
+    "order": 1984,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-summary li"
+  },
+  {
+    "order": 1985,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-field"
+  },
+  {
+    "order": 1986,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-input"
+  },
+  {
+    "order": 1987,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-input-score"
+  },
+  {
+    "order": 1988,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-question"
+  },
+  {
+    "order": 1989,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-question-head"
+  },
+  {
+    "order": 1990,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-question-head h4"
+  },
+  {
+    "order": 1991,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-requirements"
+  },
+  {
+    "order": 1992,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-requirement-row"
+  },
+  {
+    "order": 1993,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-advanced"
+  },
+  {
+    "order": 1994,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-advanced summary"
+  },
+  {
+    "order": 1995,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-sandbox-result"
+  },
+  {
+    "order": 1996,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-result"
+  },
+  {
+    "order": 1997,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-card-head"
+  },
+  {
+    "order": 1998,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-chip"
+  },
+  {
+    "order": 1999,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".rw-stepper"
+  },
+  {
+    "order": 2000,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".rw-requirement-row"
+  },
+  {
+    "order": 2001,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".cbt-writing-aid"
+  },
+  {
+    "order": 2002,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".cbt-writing-aid h4"
+  },
+  {
+    "order": 2003,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".cbt-writing-aid ol"
+  },
+  {
+    "order": 2004,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".cbt-writing-aid p"
+  },
+  {
+    "order": 2005,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".cbt-writing-aid-note"
+  },
+  {
+    "order": 2006,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".cbt-vocab-chips"
+  },
+  {
+    "order": 2007,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".cbt-vocab-chips li"
+  },
+  {
+    "order": 2008,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-list"
+  },
+  {
+    "order": 2009,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-row"
+  },
+  {
+    "order": 2010,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-name"
+  },
+  {
+    "order": 2011,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-evidence"
+  },
+  {
+    "order": 2012,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-note"
+  },
+  {
+    "order": 2013,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-score"
+  },
+  {
+    "order": 2014,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-score-input"
+  },
+  {
+    "order": 2015,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-denom"
+  },
+  {
+    "order": 2016,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-ai"
+  },
+  {
+    "order": 2017,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".req-errors"
+  },
+  {
+    "order": 2018,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".score-by-requirement-hint"
+  },
+  {
+    "order": 2019,
+    "source": "12-context-and-assessment.css",
+    "conditions": [
+      "(max-width: 640px)"
+    ],
+    "selector": ".req-row"
+  },
+  {
+    "order": 2020,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-context"
+  },
+  {
+    "order": 2021,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-preview"
+  },
+  {
+    "order": 2022,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-preview summary"
+  },
+  {
+    "order": 2023,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".rw-shared-preview p"
+  },
+  {
+    "order": 2024,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-preview"
+  },
+  {
+    "order": 2025,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-summary"
+  },
+  {
+    "order": 2026,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip"
+  },
+  {
+    "order": 2027,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip.is-ok"
+  },
+  {
+    "order": 2028,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip.is-warning"
+  },
+  {
+    "order": 2029,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-chip.is-error"
+  },
+  {
+    "order": 2030,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-action"
+  },
+  {
+    "order": 2031,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-notices"
+  },
+  {
+    "order": 2032,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table-wrap"
+  },
+  {
+    "order": 2033,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table"
+  },
+  {
+    "order": 2034,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table th, .import-table td"
+  },
+  {
+    "order": 2035,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-table th"
+  },
+  {
+    "order": 2036,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-line"
+  },
+  {
+    "order": 2037,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-status"
+  },
+  {
+    "order": 2038,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-badge"
+  },
+  {
+    "order": 2039,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-badge.is-error"
+  },
+  {
+    "order": 2040,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-badge.is-warning"
+  },
+  {
+    "order": 2041,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-row.is-error"
+  },
+  {
+    "order": 2042,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-messages"
+  },
+  {
+    "order": 2043,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-hint"
+  },
+  {
+    "order": 2044,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".import-more, .import-preview-empty"
+  },
+  {
+    "order": 2045,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-body"
+  },
+  {
+    "order": 2046,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-section-title"
+  },
+  {
+    "order": 2047,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-list"
+  },
+  {
+    "order": 2048,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-list li"
+  },
+  {
+    "order": 2049,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-downloads"
+  },
+  {
+    "order": 2050,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-toc"
+  },
+  {
+    "order": 2051,
+    "source": "12-context-and-assessment.css",
+    "conditions": [],
+    "selector": ".guide-toc-chip"
+  },
+  {
+    "order": 2052,
     "source": "12-context-and-assessment.css",
     "conditions": [
       "(hover: hover)"
@@ -12036,133 +12652,133 @@
     "selector": ".guide-toc-chip:hover"
   },
   {
-    "order": 1976,
+    "order": 2053,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-type"
   },
   {
-    "order": 1977,
+    "order": 2054,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-type.is-focus"
   },
   {
-    "order": 1978,
+    "order": 2055,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-type-head"
   },
   {
-    "order": 1979,
+    "order": 2056,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-type-title"
   },
   {
-    "order": 1980,
+    "order": 2057,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-type-family"
   },
   {
-    "order": 1981,
+    "order": 2058,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-student"
   },
   {
-    "order": 1982,
+    "order": 2059,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-subtitle"
   },
   {
-    "order": 1983,
+    "order": 2060,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-table-wrap"
   },
   {
-    "order": 1984,
+    "order": 2061,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-table"
   },
   {
-    "order": 1985,
+    "order": 2062,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-table th, .guide-table td"
   },
   {
-    "order": 1986,
+    "order": 2063,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-table th"
   },
   {
-    "order": 1987,
+    "order": 2064,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".guide-mistakes"
   },
   {
-    "order": 1988,
+    "order": 2065,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".add-item-shortcuts"
   },
   {
-    "order": 1989,
+    "order": 2066,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".add-item-shortcuts summary"
   },
   {
-    "order": 1990,
+    "order": 2067,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".add-item-shortcuts .add-item-buttons"
   },
   {
-    "order": 1991,
+    "order": 2068,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-overlay .aq-dialog"
   },
   {
-    "order": 1992,
+    "order": 2069,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-body"
   },
   {
-    "order": 1993,
+    "order": 2070,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-family"
   },
   {
-    "order": 1994,
+    "order": 2071,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-family h4"
   },
   {
-    "order": 1995,
+    "order": 2072,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-type-grid"
   },
   {
-    "order": 1996,
+    "order": 2073,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-type-btn"
   },
   {
-    "order": 1997,
+    "order": 2074,
     "source": "12-context-and-assessment.css",
     "conditions": [
       "(hover: hover)"
@@ -12170,37 +12786,37 @@
     "selector": ".aq-type-btn:hover"
   },
   {
-    "order": 1998,
+    "order": 2075,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-chosen"
   },
   {
-    "order": 1999,
+    "order": 2076,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-points"
   },
   {
-    "order": 2000,
+    "order": 2077,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-points input"
   },
   {
-    "order": 2001,
+    "order": 2078,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-panel"
   },
   {
-    "order": 2002,
+    "order": 2079,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-single"
   },
   {
-    "order": 2003,
+    "order": 2080,
     "source": "12-context-and-assessment.css",
     "conditions": [
       "(max-width: 800px)"
@@ -12208,277 +12824,277 @@
     "selector": ".aq-single"
   },
   {
-    "order": 2004,
+    "order": 2081,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-form-row"
   },
   {
-    "order": 2005,
+    "order": 2082,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-required"
   },
   {
-    "order": 2006,
+    "order": 2083,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-note-text"
   },
   {
-    "order": 2007,
+    "order": 2084,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-side"
   },
   {
-    "order": 2008,
+    "order": 2085,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-side h5"
   },
   {
-    "order": 2009,
+    "order": 2086,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-card"
   },
   {
-    "order": 2010,
+    "order": 2087,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-prompt"
   },
   {
-    "order": 2011,
+    "order": 2088,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-options"
   },
   {
-    "order": 2012,
+    "order": 2089,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-meta, .aq-preview-points"
   },
   {
-    "order": 2013,
+    "order": 2090,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-tokens"
   },
   {
-    "order": 2014,
+    "order": 2091,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-token"
   },
   {
-    "order": 2015,
+    "order": 2092,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-input"
   },
   {
-    "order": 2016,
+    "order": 2093,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-preview-textarea"
   },
   {
-    "order": 2017,
+    "order": 2094,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-message-list"
   },
   {
-    "order": 2018,
+    "order": 2095,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-message-list .is-error"
   },
   {
-    "order": 2019,
+    "order": 2096,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-note"
   },
   {
-    "order": 2020,
+    "order": 2097,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-bulk-input textarea"
   },
   {
-    "order": 2021,
+    "order": 2098,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-quick-label"
   },
   {
-    "order": 2022,
+    "order": 2099,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-table-scroll"
   },
   {
-    "order": 2023,
+    "order": 2100,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-grid"
   },
   {
-    "order": 2024,
+    "order": 2101,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-grid th, .aq-grid td"
   },
   {
-    "order": 2025,
+    "order": 2102,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-grid th"
   },
   {
-    "order": 2026,
+    "order": 2103,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-cell"
   },
   {
-    "order": 2027,
+    "order": 2104,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-status"
   },
   {
-    "order": 2028,
+    "order": 2105,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-status.is-error"
   },
   {
-    "order": 2029,
+    "order": 2106,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-status.is-warning"
   },
   {
-    "order": 2030,
+    "order": 2107,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-row-messages"
   },
   {
-    "order": 2031,
+    "order": 2108,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-grid-empty"
   },
   {
-    "order": 2032,
+    "order": 2109,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-bulk-summary"
   },
   {
-    "order": 2033,
+    "order": 2110,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-file-actions"
   },
   {
-    "order": 2034,
+    "order": 2111,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-footer"
   },
   {
-    "order": 2035,
+    "order": 2112,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-footer-actions"
   },
   {
-    "order": 2036,
+    "order": 2113,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-added"
   },
   {
-    "order": 2037,
+    "order": 2114,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-dialog > .csv-layout-header"
   },
   {
-    "order": 2038,
+    "order": 2115,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-dialog .aq-body"
   },
   {
-    "order": 2039,
+    "order": 2116,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-dialog .aq-footer"
   },
   {
-    "order": 2040,
+    "order": 2117,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-points input"
   },
   {
-    "order": 2041,
+    "order": 2118,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-sticky"
   },
   {
-    "order": 2042,
+    "order": 2119,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-points"
   },
   {
-    "order": 2043,
+    "order": 2120,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".import-undo-toast"
   },
   {
-    "order": 2044,
+    "order": 2121,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".import-undo-label"
   },
   {
-    "order": 2045,
+    "order": 2122,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-media-row"
   },
   {
-    "order": 2046,
+    "order": 2123,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-media-base"
   },
   {
-    "order": 2047,
+    "order": 2124,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".aq-media-base input"
   },
   {
-    "order": 2048,
+    "order": 2125,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".ti-block"
   },
   {
-    "order": 2049,
+    "order": 2126,
     "source": "12-context-and-assessment.css",
     "conditions": [],
     "selector": ".ti-block summary"

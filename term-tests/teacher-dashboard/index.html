@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
-  <link rel="stylesheet" href="./styles.css?rev=20261121-logo-only">
+  <link rel="stylesheet" href="./styles.css?rev=20261121-grading-mobile">
   <script>
     (function () {
       var hostname = window.location.hostname;
@@ -492,6 +492,12 @@
 
       <div id="class-skill-summary" class="class-skill-summary" aria-label="Thống kê năng lực kỹ năng toàn lớp"></div>
 
+      <button id="filters-toggle-btn" type="button" class="btn-secondary filters-toggle-btn" aria-expanded="false" aria-controls="filters-toolbar">
+        <svg class="icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <span>Bộ lọc</span>
+        <span id="filters-active-count" class="filters-active-count" hidden></span>
+      </button>
+
       <form id="filters-toolbar" class="toolbar-grid" role="search" aria-label="Bộ lọc và tìm kiếm">
         <label class="field-search">
           <span>Tìm kiếm</span>
@@ -741,6 +747,6 @@
   </main>
 
   <script src="./vendor/xlsx.full.min.js"></script>
-  <script type="module" src="./main.js?rev=20261109-ipa-audio1"></script>
+  <script type="module" src="./main.js?rev=20261121-grading-mobile"></script>
 </body>
 </html>
