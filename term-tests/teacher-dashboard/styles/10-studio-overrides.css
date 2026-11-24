@@ -954,3 +954,48 @@ button.btn-icon:disabled,
 @media (min-width: 641px) {
   .filters-toggle-btn { display: none; }
 }
+
+/* Chú giải thanh phân bố chỉ hiện ở điện thoại (không có tooltip khi rê chuột). */
+.item-dist-legend { display: none; }
+
+/* Mobile (≤640px): tab Phân tích câu hỏi. Phần đầu thẻ xếp 3 hàng (nhãn + huy hiệu / đề bài / thanh phân bố + chú giải),
+   bộ lọc và sắp xếp cao 44px, bảng học viên cần lưu ý thành thẻ. Chỉ đổi cách bày, không đổi cách tính hay sắp xếp. */
+@media (max-width: 640px) {
+  #assessment-tab-items .item-analysis-toolbar { gap: 10px; padding: 12px; }
+  #assessment-tab-items .item-skill-tabs { display: flex; flex-wrap: wrap; gap: 6px; overflow: visible; }
+  #assessment-tab-items .item-filter-tab { min-height: 44px; }
+  #assessment-tab-items .item-sort-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  #assessment-tab-items .item-sort-controls .sort-label { grid-column: 1 / -1; }
+  #assessment-tab-items .item-sort-btn { min-height: 44px; padding: 6px 4px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; }
+
+  #assessment-tab-items .item-card { min-width: 0; max-width: 100%; }
+  #assessment-tab-items .item-card-header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "pos skill right" "prompt prompt prompt" "center center center"; align-items: center; gap: 8px 8px; padding: 12px; min-height: 44px; }
+  #assessment-tab-items .item-header-left { display: contents; }
+  #assessment-tab-items .item-position-badge { grid-area: pos; }
+  #assessment-tab-items .item-skill-tag { grid-area: skill; justify-self: start; }
+  #assessment-tab-items .item-prompt-snippet { grid-area: prompt; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; overflow-wrap: anywhere; }
+  #assessment-tab-items .item-header-right { grid-area: right; gap: 6px; }
+  #assessment-tab-items .item-error-badge .error-rate-text { display: none; }
+  #assessment-tab-items .btn-item-accordion { width: 44px; height: 44px; }
+  #assessment-tab-items .item-header-center { grid-area: center; width: 100%; }
+  #assessment-tab-items .item-dist-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; font-size: 0.78rem; color: var(--izone-muted); }
+  #assessment-tab-items .legend-item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  #assessment-tab-items .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  #assessment-tab-items .legend-correct { background: var(--izone-import-success); }
+  #assessment-tab-items .legend-partial { background: var(--izone-import-warning); }
+  #assessment-tab-items .legend-incorrect { background: var(--izone-import-error); }
+  #assessment-tab-items .legend-unanswered { background: var(--izone-border); }
+
+  #assessment-tab-items .item-card-drawer { padding: 12px; }
+  #assessment-tab-items .item-wrong-table-wrapper { overflow: visible; border: 0; }
+  #assessment-tab-items .item-wrong-table-wrapper table, #assessment-tab-items .item-wrong-table-wrapper tbody { display: block; width: 100%; min-width: 0; }
+  #assessment-tab-items .item-wrong-table-wrapper thead { display: none; }
+  #assessment-tab-items .item-wrong-table-wrapper tbody { display: flex; flex-direction: column; gap: 8px; }
+  #assessment-tab-items .item-wrong-table-wrapper tbody tr { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px; border: 1px solid var(--izone-border); border-radius: 10px; background: var(--izone-card-bg); }
+  #assessment-tab-items .item-wrong-table-wrapper tbody td { display: block; padding: 0; border: 0; white-space: normal; min-width: 0; text-align: left; }
+  #assessment-tab-items .item-wrong-table-wrapper tbody td.col-num { display: none; }
+  #assessment-tab-items .item-wrong-table-wrapper tbody td.col-student { grid-column: 1 / -1; }
+  #assessment-tab-items .item-wrong-table-wrapper tbody td.col-answer { grid-column: 1 / -1; overflow-wrap: anywhere; }
+  #assessment-tab-items .item-wrong-table-wrapper tbody td[data-label]::before { content: attr(data-label); display: block; font-size: 0.72rem; font-weight: 600; color: var(--izone-muted); }
+  #assessment-tab-items .item-wrong-table-wrapper tbody td.empty-table-cell { grid-column: 1 / -1; }
+}

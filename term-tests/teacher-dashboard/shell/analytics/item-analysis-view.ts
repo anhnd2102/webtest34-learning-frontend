@@ -168,6 +168,21 @@ export function renderItemDistributionBar(item?: AnalysisItem | null): string {
 }
 
 /**
+ * Chú giải bằng chữ cho thanh phân bố (hiện ở điện thoại, nơi không có tooltip khi rê chuột).
+ */
+export function renderItemDistributionLegend(item?: AnalysisItem | null): string {
+  const total = Number(item?.totalAttempts ?? item?.stats?.totalAttempts) || 0;
+  if (total <= 0) return '';
+  const parts: [string, string, unknown][] = [
+    ['correct', 'Đúng', item?.correctCount ?? item?.stats?.correctCount],
+    ['partial', 'Một phần', item?.partialCount ?? item?.stats?.partialCount],
+    ['incorrect', 'Sai', item?.incorrectCount ?? item?.stats?.incorrectCount],
+    ['unanswered', 'Bỏ trống', item?.unansweredCount ?? item?.stats?.unansweredCount]
+  ];
+  return `<div class="item-dist-legend">${parts.map(([key, label, count]) => `<span class="legend-item"><i class="legend-dot legend-${key}" aria-hidden="true"></i>${label} ${Number(count) || 0}</span>`).join('')}</div>`;
+}
+
+/**
  * Render single Item Card with summary bar and accordion drawer.
  */
 export function renderItemCard(item: ItemCardData, { isExpanded = false, maxScore = 1 }: { isExpanded?: boolean, maxScore?: number } = {}): string {
@@ -240,8 +255,8 @@ export function renderItemCard(item: ItemCardData, { isExpanded = false, maxScor
                 <div class="student-name">${escapeHtml(st.name || 'Học viên')}</div>
                 ${st.email ? `<div class="student-meta">${escapeHtml(st.email)}</div>` : ''}
               </td>
-              <td class="col-answer">${rawDisplay}</td>
-              <td class="col-score font-numeric">${scoreDisplay}</td>
+              <td class="col-answer" data-label="Câu trả lời thực tế">${rawDisplay}</td>
+              <td class="col-score font-numeric" data-label="Điểm câu">${scoreDisplay}</td>
               <td class="col-status">${statusBadge}</td>
             </tr>
           `;
@@ -292,6 +307,7 @@ export function renderItemCard(item: ItemCardData, { isExpanded = false, maxScor
 
         <div class="item-header-center">
           ${renderItemDistributionBar(item)}
+          ${renderItemDistributionLegend(item)}
         </div>
 
         <div class="item-header-right">
