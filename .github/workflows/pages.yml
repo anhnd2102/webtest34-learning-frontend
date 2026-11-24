@@ -47,5 +47,8 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+      # deploy-pages tra cứu artifact ngay sau khi upload và có lúc API chưa kịp hiện ("Found 0 artifact(s)"); chờ ngắn cho khỏi lỗi.
+      - name: Chờ artifact hiện trên API
+        run: sleep 30
       - id: deployment
         uses: actions/deploy-pages@v4
