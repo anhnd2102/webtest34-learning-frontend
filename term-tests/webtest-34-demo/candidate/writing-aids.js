@@ -2,7 +2,7 @@
 //
 // Dàn ý và từ vựng gợi ý hiện cho học viên ngay trên ô trả lời của câu Writing (spec #40). Dàn ý là các ý AI dùng để chấm
 // Task achievement; từ vựng gợi ý không bắt buộc. Đáp án mẫu và hướng dẫn chấm cho AI không bao giờ nằm trong định nghĩa công khai.
-import { escape } from './text-utils.js?rev=20261125-dead-code';
+import { escape } from './text-utils.js?rev=20261125-clean-urls';
 const texts = (value) => (Array.isArray(value) ? value : [])
     .map(entry => String(entry ?? '').trim())
     .filter(Boolean);

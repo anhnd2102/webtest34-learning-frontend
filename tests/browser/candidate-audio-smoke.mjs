@@ -98,7 +98,7 @@ async function openExam(browser, api) {
     if (url.pathname.endsWith('/audio/missing.wav')) return route.fulfill({ status: 404, body: 'not found' });
     return url.origin === new URL(origin).origin ? route.continue() : route.abort();
   });
-  await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
+  await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34&class=TEST-34#test=${TOKEN}`);
   await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
   await page.selectOption('#studentSelectInput', 's1');
   await page.click('#startExamBtn');

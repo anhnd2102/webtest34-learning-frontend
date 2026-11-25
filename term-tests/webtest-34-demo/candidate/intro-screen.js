@@ -1,9 +1,9 @@
 // Màn hình đầu: mã lớp, roster, chọn học viên, kiểm tra âm thanh và bắt đầu lượt (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; intro-screen.js do `npm run build` sinh ra (xem text-utils.ts). Import nội bộ viết
 // không có `?rev=`, bước build tự thêm rev dùng chung của shell học viên.
-import { getTotalItemCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261125-dead-code';
-import { escape, formatCandidateOptionLabel } from './text-utils.js?rev=20261125-dead-code';
-import { examPhase, resetLocalAttemptState } from './learning-api.js?rev=20261125-dead-code';
+import { getTotalItemCount, ICONS } from '../dynamic-exam-renderer.mjs?rev=20261125-clean-urls';
+import { escape, formatCandidateOptionLabel } from './text-utils.js?rev=20261125-clean-urls';
+import { examPhase, resetLocalAttemptState } from './learning-api.js?rev=20261125-clean-urls';
 export function createIntroScreen({ config, testToken, paramClassCode, state, learningState, apiRequest, createUuid, requestFullscreen, connectExamEvents, renderExamWaitingRoom, mountExamGuard, applyServerDraft, renderExamInterface, classInput, loadBtn, classStatus, studentSelect, studentStatus, startBtn, preview = false }) {
     // Thiết bị cảm ứng; iPad đời mới tự nhận là Macintosh nên nhận qua số điểm chạm.
     const isTouchDevice = matchMedia('(pointer: coarse)').matches || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
@@ -82,6 +82,10 @@ export function createIntroScreen({ config, testToken, paramClassCode, state, le
     } });
     if (paramClassCode) {
         void handleLoadRoster();
+    }
+    else if (!isTouchDevice) {
+        // Link không kèm mã lớp (thi lại, thi tập trung): học viên tự gõ mã lớp, đặt con trỏ vào ô nhập (không bật bàn phím trên điện thoại).
+        classInput.focus();
     }
     studentSelect.addEventListener('change', () => {
         const ref = studentSelect.value;

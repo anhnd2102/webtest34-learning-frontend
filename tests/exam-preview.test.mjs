@@ -20,6 +20,14 @@ test('previewPageUrl: token chỉ nằm trong fragment, không vào query', () =
   assert.equal(url.searchParams.get('classId'), null, 'không mang query của Dashboard');
 });
 
+test('previewPageUrl: dashboard phục vụ ở địa chỉ ngắn (gốc /) vẫn trỏ đúng renderer', () => {
+  const root = new URL(previewPageUrl({ pageUrl: 'https://test.izoneacademic.com/?classId=1#dashboard', token: 't1' }));
+  assert.equal(root.origin + root.pathname, 'https://test.izoneacademic.com/term-tests/webtest-34-demo/index.html');
+  assert.equal(root.hash, '#preview=t1');
+  const sub = new URL(previewPageUrl({ pageUrl: 'https://x.github.io/app/?classId=1', token: 't2' }));
+  assert.equal(sub.pathname, '/app/term-tests/webtest-34-demo/index.html');
+});
+
 test('fetchPreviewDefinition: chỉ GET với Bearer token; 401 báo hết hạn', async () => {
   const calls = [];
   const okFetch = async (url, init) => { calls.push({ url, init }); return { ok: true, status: 200, json: async () => ({ definition: { title: 'T' }, expiresAt: 'x' }) }; };

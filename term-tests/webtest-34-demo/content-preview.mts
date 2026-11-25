@@ -273,7 +273,7 @@ export async function mount(course: string) {
             <div class="cbt-intro-field">
               <label for="classCodeInput">Mã lớp</label>
               <div class="cbt-intro-input-row">
-                <input id="classCodeInput" class="cbt-intro-input" value="${escape(paramClassCode || `TEST-${course}`)}" placeholder="Ví dụ: ICxxxx" autocomplete="off" style="flex:1;font-weight:600">
+                <input id="classCodeInput" class="cbt-intro-input" value="${escape(paramClassCode)}" placeholder="Ví dụ: IC2283" autocomplete="off" style="flex:1;font-weight:600">
                 <button type="button" class="btn btn-secondary" id="loadRosterBtn" style="min-width:140px;font-weight:600">Tải danh sách</button>
               </div>
               <div id="classCodeStatus" class="cbt-intro-hint">Nhập đúng mã lớp do giáo viên cung cấp, sau đó bấm “Tải danh sách”.</div>
@@ -398,7 +398,8 @@ export async function mount(course: string) {
       });
     } else {
       createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect });
-      void handleLoadRoster();
+      // Chỉ tự tải danh sách khi link có mã lớp; link không kèm mã lớp chờ học viên tự nhập (không báo lỗi "nhập mã lớp" ngay khi mở trang).
+      if (paramClassCode) void handleLoadRoster();
     }
     return;
 

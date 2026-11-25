@@ -131,7 +131,7 @@ export async function openStartScreen(browser, viewport, contextOptions = {}, at
     return url.origin === new URL(origin).origin ? route.continue() : route.abort();
   });
   await mockLearningApi(page, attemptExtra);
-  await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
+  await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34&class=TEST-34#test=${TOKEN}`);
   await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
   return page;
 }

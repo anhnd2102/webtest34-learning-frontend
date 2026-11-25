@@ -10,7 +10,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = path.dirname(fileURLToPath(import.meta.url));
+// Đối số thứ ba (tùy chọn): thư mục gốc cần phục vụ, mặc định là thư mục chứa serve.mjs (ví dụ `node serve.mjs 8034 127.0.0.1 _site`).
+const root = process.argv[4] ? path.resolve(process.argv[4]) : path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.argv[2]) || 8034;
 const bind = process.argv[3] || '127.0.0.1';
 
@@ -70,7 +71,8 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const targetPath = filePath;
+  // Địa chỉ kết thúc bằng '/' phục vụ index.html của thư mục, giống GitHub Pages (cần cho `/` và `/exam/` của artifact _site).
+  const targetPath = decoded.endsWith('/') ? path.join(filePath, 'index.html') : filePath;
 
   fs.stat(targetPath, (err, stat) => {
     if (err || !stat.isFile()) {

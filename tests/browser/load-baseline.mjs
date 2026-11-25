@@ -84,7 +84,7 @@ async function mockApi(page) {
 const SCENARIOS = {
   // Từ lúc mở link tới khi màn chọn học viên dùng được, rồi tới khi vào được màn làm bài.
   async candidate(page, mark) {
-    await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TOKEN}`);
+    await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34&class=TEST-34#test=${TOKEN}`);
     await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
     mark('startScreenReady');
     await page.selectOption('#studentSelectInput', 's1');

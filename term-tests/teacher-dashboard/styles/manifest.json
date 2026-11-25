@@ -4,7 +4,7 @@
   "sourceLines": 13114,
   "fragments": [
     {
-      "href": "styles/01-foundation.css?rev=20261125-dead-code",
+      "href": "styles/01-foundation.css?rev=20261125-clean-urls",
       "startLine": 1,
       "endLine": 1107,
       "sha256": "42b95c76e931da3ac38a81c7b64332a3fb7e977a332b140e04a7a9890e664970",
@@ -12,7 +12,7 @@
       "extractionEndLine": 1069
     },
     {
-      "href": "styles/02-dashboard-grading.css?rev=20261125-dead-code",
+      "href": "styles/02-dashboard-grading.css?rev=20261125-clean-urls",
       "startLine": 1108,
       "endLine": 2747,
       "sha256": "c2ea5256b70ba84866c7c1aaead3ab356b293bb2d2b7e82ad8578509dc00bb92",
@@ -20,7 +20,7 @@
       "extractionEndLine": 2726
     },
     {
-      "href": "styles/03-studio-builder.css?rev=20261125-dead-code",
+      "href": "styles/03-studio-builder.css?rev=20261125-clean-urls",
       "startLine": 2748,
       "endLine": 4685,
       "sha256": "122646ac03a5bf5115d0aabbab4b1d8c57621cd4ee66da4cdd617c5a7bdfc4ff",
@@ -28,7 +28,7 @@
       "extractionEndLine": 4644
     },
     {
-      "href": "styles/04-authoring.css?rev=20261125-dead-code",
+      "href": "styles/04-authoring.css?rev=20261125-clean-urls",
       "startLine": 4686,
       "endLine": 5349,
       "sha256": "b80af14f1f3c10ca7400af86995d5af3ff0818e1c07c70f0f55709465ca0805d",
@@ -36,7 +36,7 @@
       "extractionEndLine": 5289
     },
     {
-      "href": "styles/05-simulation-questions.css?rev=20261125-dead-code",
+      "href": "styles/05-simulation-questions.css?rev=20261125-clean-urls",
       "startLine": 5350,
       "endLine": 6217,
       "sha256": "cd0dc4be60d4c3ef4fd3362030cbfaaf0199bbc29a1367d651a121d8700bdb31",
@@ -44,7 +44,7 @@
       "extractionEndLine": 6204
     },
     {
-      "href": "styles/06-publishing.css?rev=20261125-dead-code",
+      "href": "styles/06-publishing.css?rev=20261125-clean-urls",
       "startLine": 6218,
       "endLine": 7381,
       "sha256": "7ce7b2922eb224bcbd00f60ede6bbf37635b29206c1d4cf4dc205338f84416fc",
@@ -52,7 +52,7 @@
       "extractionEndLine": 6829
     },
     {
-      "href": "styles/07-reports-and-question-layouts.css?rev=20261125-dead-code",
+      "href": "styles/07-reports-and-question-layouts.css?rev=20261125-clean-urls",
       "startLine": 7382,
       "endLine": 8961,
       "sha256": "8cb5cc911b13c9c5319067ac1f559f217fb407b02992a4a816bea3b6ba1739a6",
@@ -60,7 +60,7 @@
       "extractionEndLine": 7911
     },
     {
-      "href": "styles/08-studio-simulation-shell.css?rev=20261125-dead-code",
+      "href": "styles/08-studio-simulation-shell.css?rev=20261125-clean-urls",
       "startLine": 8962,
       "endLine": 10034,
       "sha256": "80c667ef3d86958ece4fc90cf242bc561597583a06fe7d7bca5c6a3d4c088355",
@@ -68,7 +68,7 @@
       "extractionEndLine": 8949
     },
     {
-      "href": "styles/09-editor-media.css?rev=20261125-dead-code",
+      "href": "styles/09-editor-media.css?rev=20261125-clean-urls",
       "startLine": 10035,
       "endLine": 10585,
       "sha256": "bc8cf66528635916a8d6c48383ebde28595596a434a4196bc48e6d3015d99aeb",
@@ -76,7 +76,7 @@
       "extractionEndLine": 9535
     },
     {
-      "href": "styles/10-studio-overrides.css?rev=20261125-dead-code",
+      "href": "styles/10-studio-overrides.css?rev=20261125-clean-urls",
       "startLine": 10586,
       "endLine": 11607,
       "sha256": "117634ef828b3e7699178029417722d65025c38e1918cc8f3b78c1bacb567abb",
@@ -84,7 +84,7 @@
       "extractionEndLine": 10306
     },
     {
-      "href": "styles/11-analytics.css?rev=20261125-dead-code",
+      "href": "styles/11-analytics.css?rev=20261125-clean-urls",
       "startLine": 11608,
       "endLine": 12436,
       "sha256": "4194a4c288658dc193d0170fe7e02a3ecf7ffd6d3aa85ebce123ca6e84684d8b",
@@ -92,7 +92,7 @@
       "extractionEndLine": 11174
     },
     {
-      "href": "styles/12-context-and-assessment.css?rev=20261125-dead-code",
+      "href": "styles/12-context-and-assessment.css?rev=20261125-clean-urls",
       "startLine": 12437,
       "endLine": 13114,
       "sha256": "49a3f5d3f8c20294c8a37654f15e4244de404dc41257ea9628306b0054737efe",
@@ -105,5 +105,5 @@
     "sourceSha256": "da885b46fa7217234d761e32ebf5a47f089508bb0f7097c695f441fd1b6527f2",
     "sourceLines": 11527
   },
-  "revision": "dead-code"
+  "revision": "clean-urls"
 }
