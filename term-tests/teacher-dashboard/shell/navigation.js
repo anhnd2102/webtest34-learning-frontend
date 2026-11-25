@@ -2,7 +2,7 @@
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { readDashboardTab, switchDashboardTab } from './dashboard-state.js';
 import { hasActiveUnsavedChanges, clearActiveUnsavedChanges, openUnsavedChangesModal } from '../navigation/unsaved-changes.js';
-export function createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView }) {
+export function createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView, examRoomEvents }) {
     function syncAssessmentHeaderMeta() {
         if (assessmentClassName) {
             const cls = scopeState.rawClassesList.find(c => String(c.classId) === String(state.classId));
@@ -78,6 +78,12 @@ export function createNavigation({ lifecycle, queryCoordinator, viewState, scope
                 }
                 if (pageTitleBar) {
                     pageTitleBar.hidden = newTab !== 'dashboard';
+                }
+                if (newTab === 'dashboard') {
+                    void examRoomEvents?.resume();
+                }
+                else {
+                    examRoomEvents?.suspend();
                 }
                 if (newTab === 'grading') {
                     if (state.assignmentId && state.classId) {

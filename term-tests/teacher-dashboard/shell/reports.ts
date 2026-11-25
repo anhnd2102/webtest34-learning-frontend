@@ -243,13 +243,14 @@ export function createReports({ root, queryCoordinator, authState, document, win
       }
     }
 
+    // Chỉ vẽ panel của tab đang mở (switchAssessmentTab đặt mode rồi gọi lại renderReportsView khi chuyển tab).
     // 1. Render Assessment Tab: Score Distribution Panel
-    if (assessmentTabDistribution) {
+    if (assessmentTabDistribution && reportState.mode !== 'item_analysis') {
       renderScoreDistributionView(assessmentTabDistribution, reportState, renderDistroCallbacks);
     }
 
     // 2. Render Assessment Tab: Item Analysis Panel
-    if (assessmentTabItems) {
+    if (assessmentTabItems && reportState.mode === 'item_analysis') {
       const itemsPayload = reportState.itemAnalysisData;
       const items = itemsPayload?.items || [];
       const error = reportState.itemAnalysisError;
