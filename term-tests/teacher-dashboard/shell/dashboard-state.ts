@@ -128,7 +128,7 @@ export function readDashboardState(input: string | URL): DashboardState {
   return state;
 }
 
-export const SUPPORTED_DASHBOARD_TABS = ['dashboard', 'exams', 'grading', 'reports'];
+export const SUPPORTED_DASHBOARD_TABS = ['dashboard', 'exams', 'grading'];
 
 export const DEFAULT_DASHBOARD_TAB = 'dashboard';
 
@@ -148,6 +148,8 @@ export function readDashboardTab(input?: string | URL | { hash?: string } | null
   }
   hash = hash.split('?')[0].trim().toLowerCase();
   if (hash === 'test-studio') return 'test-studio';
+  // Liên kết cũ #reports (khung báo cáo độc lập đã gỡ): báo cáo nằm trong màn Chấm điểm & Đánh giá.
+  if (hash === 'reports') return 'grading';
   return SUPPORTED_DASHBOARD_TABS.includes(hash) ? hash : DEFAULT_DASHBOARD_TAB;
 }
 

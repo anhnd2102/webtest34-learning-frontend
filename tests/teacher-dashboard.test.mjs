@@ -1445,26 +1445,25 @@ test('readDashboardTab parses valid hash and defaults to dashboard', () => {
   assert.equal(readDashboardTab('#grading'), 'grading');
   assert.equal(readDashboardTab('https://example.test/?classId=101#grading'), 'grading');
   assert.equal(readDashboardTab('#exams'), 'exams');
-  assert.equal(readDashboardTab('#reports'), 'reports');
+  // Liên kết cũ #reports (khung báo cáo độc lập đã gỡ) chuyển về màn Chấm điểm & Đánh giá.
+  assert.equal(readDashboardTab('#reports'), 'grading');
   assert.equal(readDashboardTab('#dashboard'), 'dashboard');
   assert.equal(readDashboardTab(''), 'dashboard');
   assert.equal(readDashboardTab('#unknown'), 'dashboard');
   assert.equal(readDashboardTab(null), 'dashboard');
-  assert.deepEqual(SUPPORTED_DASHBOARD_TABS, ['dashboard', 'exams', 'grading', 'reports']);
+  assert.deepEqual(SUPPORTED_DASHBOARD_TABS, ['dashboard', 'exams', 'grading']);
 });
 
 test('switchDashboardTab updates view visibility and nav active class', () => {
   const views = {
     dashboard: { hidden: false },
     exams: { hidden: true },
-    grading: { hidden: true },
-    reports: { hidden: true }
+    grading: { hidden: true }
   };
   const navItems = [
     { getAttribute: (attr) => attr === 'href' ? '#dashboard' : null, classList: { add: () => {}, remove: () => {}, contains: (c) => c === 'active' }, setAttribute: () => {} },
     { getAttribute: (attr) => attr === 'href' ? '#exams' : null, classList: { add: () => {}, remove: () => {}, contains: () => false }, setAttribute: () => {} },
-    { getAttribute: (attr) => attr === 'href' ? '#grading' : null, classList: { add: () => {}, remove: () => {}, contains: () => false }, setAttribute: () => {} },
-    { getAttribute: (attr) => attr === 'href' ? '#reports' : null, classList: { add: () => {}, remove: () => {}, contains: () => false }, setAttribute: () => {} }
+    { getAttribute: (attr) => attr === 'href' ? '#grading' : null, classList: { add: () => {}, remove: () => {}, contains: () => false }, setAttribute: () => {} }
   ];
 
   let activeClassTarget = null;
@@ -1491,7 +1490,9 @@ test('teacher dashboard index.html provides view-dashboard, view-grading contain
   assert.match(html, /id="view-dashboard"/);
   assert.match(html, /id="view-grading"/);
   assert.match(html, /id="view-exams"/);
-  assert.match(html, /id="view-reports"/);
+  assert.doesNotMatch(html, /id="view-reports"/, 'khung báo cáo cũ đã gỡ, báo cáo nằm trong màn Chấm điểm');
+  assert.match(html, /id="assessment-tab-distribution"/);
+  assert.match(html, /id="assessment-tab-items"/);
   assert.match(html, /id="go-to-grading-btn"/);
   assert.match(html, /id="grading-empty-placeholder"/);
 });

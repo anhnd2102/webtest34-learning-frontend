@@ -1,6 +1,6 @@
 // NGUỒN: file .ts này; assignments-loader.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
-import { readDashboardTab, extractPhase } from './dashboard-state.js';
+import { extractPhase } from './dashboard-state.js';
 import type { AssignmentRecord, DashboardRequest, DashboardState, ScopeState } from './dashboard-state.js';
 import type { QueryHandle } from './query-coordinator.js';
 
@@ -20,14 +20,11 @@ export interface AssignmentsLoaderParams {
   setUrl: () => void;
   loadAttemptDetail: (classId: string, assignmentId: string, attemptId: string) => Promise<unknown>;
   loadResults: (classId: string, assignmentId: string) => Promise<unknown>;
-  getReportState: () => { mode?: string };
-  loadScoreDistributionReport: (classId: string, assignmentId: string) => Promise<unknown>;
-  loadItemAnalysisReport: (classId: string, assignmentId: string) => Promise<unknown>;
   renderSelectedAssignmentShowcase: (assignment: AssignmentRecord | null) => void;
   renderAssignmentChips: (selectedAssignmentId?: string) => void;
 }
 
-export function createAssignmentsLoader({ root, queryCoordinator, scopeState, window, classSelect, assignmentSelect, assignments, status, drawerBackdrop, state, loginError, request, setUrl, loadAttemptDetail, loadResults, getReportState, loadScoreDistributionReport, loadItemAnalysisReport, renderSelectedAssignmentShowcase, renderAssignmentChips }: AssignmentsLoaderParams) {
+export function createAssignmentsLoader({ root, queryCoordinator, scopeState, window, classSelect, assignmentSelect, assignments, status, drawerBackdrop, state, loginError, request, setUrl, loadAttemptDetail, loadResults, renderSelectedAssignmentShowcase, renderAssignmentChips }: AssignmentsLoaderParams) {
   async function loadAssignments(classId: string, selectedAssignmentId = ''): Promise<void> {
     const query = queryCoordinator?.begin?.('assignments');
     if (queryCoordinator && !query) return;
@@ -82,14 +79,6 @@ export function createAssignmentsLoader({ root, queryCoordinator, scopeState, wi
       if (selectedExists) {
         await loadResults(classId, selectedAssignmentId);
         if (query && !query.isCurrent()) return;
-        const currentTab = readDashboardTab(window.location.hash);
-        if (currentTab === 'reports') {
-          if (getReportState().mode === 'item_analysis') {
-            await loadItemAnalysisReport(classId, selectedAssignmentId);
-          } else {
-            await loadScoreDistributionReport(classId, selectedAssignmentId);
-          }
-        }
         if (state.attemptId) {
           try {
             await loadAttemptDetail(classId, selectedAssignmentId, state.attemptId);

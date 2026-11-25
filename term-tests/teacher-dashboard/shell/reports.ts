@@ -3,7 +3,7 @@
 import { assignmentResultsExportPath } from '../api/teacher.js';
 import { downloadResultsXlsx } from '../results/export.js';
 import { reportApiPath, renderScoreDistributionView } from './analytics/score-distribution-view.js';
-import { itemAnalysisApiPath, renderReportModeSwitch, renderItemAnalysisView } from './analytics/item-analysis-view.js';
+import { itemAnalysisApiPath, renderItemAnalysisView } from './analytics/item-analysis-view.js';
 import type { AuthState, DashboardRequest, DashboardState, ReportState } from './dashboard-state.js';
 import type { QueryHandle } from './query-coordinator.js';
 
@@ -31,7 +31,6 @@ export interface ReportsParams {
   document: Document;
   window: Window;
   status: HTMLElement;
-  viewReports: El;
   assessmentTabDistribution: El;
   assessmentTabItems: El;
   switchAssessmentTab: (tab: string) => void;
@@ -44,7 +43,7 @@ export interface ReportsParams {
   applyFilterChange: () => void;
 }
 
-export function createReports({ root, queryCoordinator, authState, document, window, status, viewReports, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab, statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange }: ReportsParams) {
+export function createReports({ root, queryCoordinator, authState, document, window, status, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab, statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange }: ReportsParams) {
   const getReportState = () => reportState;
   let reportState: FullReportState = {
     mode: 'distribution', // 'distribution' | 'item_analysis'
@@ -72,7 +71,7 @@ export function createReports({ root, queryCoordinator, authState, document, win
   }
 
   async function loadScoreDistributionReport(classId: string | undefined = state.classId, assignmentId: string | undefined = state.assignmentId): Promise<void> {
-    if (!viewReports && !assessmentTabDistribution) return;
+    if (!assessmentTabDistribution) return;
     if (!classId || !assignmentId) {
       queryCoordinator?.cancel?.('reports');
       reportState = {
@@ -115,7 +114,7 @@ export function createReports({ root, queryCoordinator, authState, document, win
   }
 
   async function loadItemAnalysisReport(classId: string | undefined = state.classId, assignmentId: string | undefined = state.assignmentId): Promise<void> {
-    if (!viewReports && !assessmentTabItems) return;
+    if (!assessmentTabItems) return;
     if (!classId || !assignmentId) {
       queryCoordinator?.cancel?.('itemAnalysis');
       reportState.itemAnalysisData = null;
@@ -153,7 +152,7 @@ export function createReports({ root, queryCoordinator, authState, document, win
   }
 
   function renderReportsView() {
-    if (!viewReports && !assessmentTabDistribution && !assessmentTabItems) return;
+    if (!assessmentTabDistribution && !assessmentTabItems) return;
 
     const renderDistroCallbacks = {
       onCardFilter: (filterStatus: string) => {
@@ -267,56 +266,6 @@ export function createReports({ root, queryCoordinator, authState, document, win
       bindItemAnalysisEvents(assessmentTabItems);
     }
 
-    // 3. Render legacy / standalone View Reports container if present
-    if (viewReports) {
-      viewReports.replaceChildren();
-
-      const switchWrapper = document.createElement('div');
-      switchWrapper.className = 'report-mode-nav-wrapper';
-      switchWrapper.innerHTML = renderReportModeSwitch(reportState.mode);
-
-      const modeButtons = switchWrapper.querySelectorAll<HTMLElement>('.report-mode-btn');
-      modeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const targetMode = btn.getAttribute('data-report-mode');
-          if (targetMode && targetMode !== reportState.mode) {
-            reportState.mode = targetMode;
-            if (targetMode === 'item_analysis' && !reportState.itemAnalysisData && !reportState.itemAnalysisLoading) {
-              loadItemAnalysisReport();
-            } else if (targetMode === 'distribution' && !reportState.reportData && !reportState.isLoading) {
-              loadScoreDistributionReport();
-            } else {
-              renderReportsView();
-            }
-          }
-        });
-      });
-
-      viewReports.appendChild(switchWrapper);
-
-      const contentContainer = document.createElement('div');
-      contentContainer.className = 'report-mode-content-wrapper';
-      viewReports.appendChild(contentContainer);
-
-      if (reportState.mode === 'item_analysis') {
-        const itemsPayload = reportState.itemAnalysisData;
-        const items = itemsPayload?.items || [];
-        const error = reportState.itemAnalysisError;
-        const loading = reportState.itemAnalysisLoading;
-
-        contentContainer.innerHTML = renderItemAnalysisView({
-          items,
-          loading,
-          error,
-          selectedSkill: reportState.itemSelectedSkill,
-          sortCriteria: reportState.itemSortCriteria,
-          expandedItemIds: reportState.expandedItemIds
-        });
-        bindItemAnalysisEvents(contentContainer);
-      } else {
-        renderScoreDistributionView(contentContainer, reportState, renderDistroCallbacks);
-      }
-    }
   }
 
   return { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView };

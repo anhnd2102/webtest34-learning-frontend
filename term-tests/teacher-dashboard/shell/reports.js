@@ -3,8 +3,8 @@
 import { assignmentResultsExportPath } from '../api/teacher.js';
 import { downloadResultsXlsx } from '../results/export.js';
 import { reportApiPath, renderScoreDistributionView } from './analytics/score-distribution-view.js';
-import { itemAnalysisApiPath, renderReportModeSwitch, renderItemAnalysisView } from './analytics/item-analysis-view.js';
-export function createReports({ root, queryCoordinator, authState, document, window, status, viewReports, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab, statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange }) {
+import { itemAnalysisApiPath, renderItemAnalysisView } from './analytics/item-analysis-view.js';
+export function createReports({ root, queryCoordinator, authState, document, window, status, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab, statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange }) {
     const getReportState = () => reportState;
     let reportState = {
         mode: 'distribution', // 'distribution' | 'item_analysis'
@@ -30,7 +30,7 @@ export function createReports({ root, queryCoordinator, authState, document, win
         reportState.itemAnalysisError = null;
     }
     async function loadScoreDistributionReport(classId = state.classId, assignmentId = state.assignmentId) {
-        if (!viewReports && !assessmentTabDistribution)
+        if (!assessmentTabDistribution)
             return;
         if (!classId || !assignmentId) {
             queryCoordinator?.cancel?.('reports');
@@ -74,7 +74,7 @@ export function createReports({ root, queryCoordinator, authState, document, win
         }
     }
     async function loadItemAnalysisReport(classId = state.classId, assignmentId = state.assignmentId) {
-        if (!viewReports && !assessmentTabItems)
+        if (!assessmentTabItems)
             return;
         if (!classId || !assignmentId) {
             queryCoordinator?.cancel?.('itemAnalysis');
@@ -113,7 +113,7 @@ export function createReports({ root, queryCoordinator, authState, document, win
         }
     }
     function renderReportsView() {
-        if (!viewReports && !assessmentTabDistribution && !assessmentTabItems)
+        if (!assessmentTabDistribution && !assessmentTabItems)
             return;
         const renderDistroCallbacks = {
             onCardFilter: (filterStatus) => {
@@ -222,53 +222,6 @@ export function createReports({ root, queryCoordinator, authState, document, win
                 expandedItemIds: reportState.expandedItemIds
             });
             bindItemAnalysisEvents(assessmentTabItems);
-        }
-        // 3. Render legacy / standalone View Reports container if present
-        if (viewReports) {
-            viewReports.replaceChildren();
-            const switchWrapper = document.createElement('div');
-            switchWrapper.className = 'report-mode-nav-wrapper';
-            switchWrapper.innerHTML = renderReportModeSwitch(reportState.mode);
-            const modeButtons = switchWrapper.querySelectorAll('.report-mode-btn');
-            modeButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const targetMode = btn.getAttribute('data-report-mode');
-                    if (targetMode && targetMode !== reportState.mode) {
-                        reportState.mode = targetMode;
-                        if (targetMode === 'item_analysis' && !reportState.itemAnalysisData && !reportState.itemAnalysisLoading) {
-                            loadItemAnalysisReport();
-                        }
-                        else if (targetMode === 'distribution' && !reportState.reportData && !reportState.isLoading) {
-                            loadScoreDistributionReport();
-                        }
-                        else {
-                            renderReportsView();
-                        }
-                    }
-                });
-            });
-            viewReports.appendChild(switchWrapper);
-            const contentContainer = document.createElement('div');
-            contentContainer.className = 'report-mode-content-wrapper';
-            viewReports.appendChild(contentContainer);
-            if (reportState.mode === 'item_analysis') {
-                const itemsPayload = reportState.itemAnalysisData;
-                const items = itemsPayload?.items || [];
-                const error = reportState.itemAnalysisError;
-                const loading = reportState.itemAnalysisLoading;
-                contentContainer.innerHTML = renderItemAnalysisView({
-                    items,
-                    loading,
-                    error,
-                    selectedSkill: reportState.itemSelectedSkill,
-                    sortCriteria: reportState.itemSortCriteria,
-                    expandedItemIds: reportState.expandedItemIds
-                });
-                bindItemAnalysisEvents(contentContainer);
-            }
-            else {
-                renderScoreDistributionView(contentContainer, reportState, renderDistroCallbacks);
-            }
         }
     }
     return { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView };
