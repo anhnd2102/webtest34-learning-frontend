@@ -365,14 +365,14 @@ function initializeDashboard(root: DashboardRoot, lifecycle: Lifecycle, queryCoo
   const { ensurePortalPanel, resetPortal } = createPortalPanel({ root, lifecycle, state, request, document, window });
   const setUrl = () => history.replaceState(null, '', assignmentUrl(location.href, state));
 
-  const { renderResults } = createResultsView({ root, lifecycle, state, viewState, actions: { ensurePortalPanel, setUrl, loadAttemptDetail, openGrantRetakeModal } });
+  const { renderResults } = createResultsView({ root, lifecycle, state, viewState, actions: { ensurePortalPanel, setUrl, loadAttemptDetail, openGrantRetakeModal, resultsTabActive: () => navState.currentAssessmentTab === 'details' } });
 
 
 
 
 
 
-  const { renderAttemptDetail, showConflictAlert, saveManualGradingDraft, completeManualGrading, publishAttemptResult, closeAttemptDetail } = createAttemptReview({ root, lifecycle, state, viewState, queryCoordinator, actions: { fillIncidentTimeline, loadAttemptDetail, request, setUrl, loadResults } });
+  const { renderAttemptDetail, showConflictAlert, saveManualGradingDraft, completeManualGrading, publishAttemptResult, closeAttemptDetail } = createAttemptReview({ root, lifecycle, state, viewState, queryCoordinator, actions: { fillIncidentTimeline, loadAttemptDetail, request, setUrl, loadResults, resultsTabActive: () => navState.currentAssessmentTab === 'details' } });
 
   async function loadAttemptDetail(classId: string | undefined, assignmentId: string | undefined, attemptId: string | undefined) {
     if (!classId || !assignmentId || !attemptId) {
