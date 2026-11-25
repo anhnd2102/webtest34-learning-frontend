@@ -38,13 +38,13 @@ export const ICONS = {
     pause: `<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
 };
 // Ô trả lời bài thi: tắt gợi ý chính tả và tự sửa/viết hoa của trình duyệt, bàn phím điện thoại.
-export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
+const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
 // Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
 // không phải import file này).
-export { scrollBehavior } from './candidate/motion.js?rev=20261121-logo-only';
-import { scrollBehavior } from './candidate/motion.js?rev=20261121-logo-only';
-import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261121-logo-only';
-import { exerciseHeadingHtml } from './candidate/exercise-heading.js?rev=20261121-logo-only';
+export { scrollBehavior } from './candidate/motion.js?rev=20261125-dead-code';
+import { scrollBehavior } from './candidate/motion.js?rev=20261125-dead-code';
+import { writingAidsHtml } from './candidate/writing-aids.js?rev=20261125-dead-code';
+import { exerciseHeadingHtml } from './candidate/exercise-heading.js?rev=20261125-dead-code';
 function escape(str) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -67,7 +67,7 @@ export function sanitizeRichContent(html) {
     clean = clean.replace(/(?:href|src)\s*=\s*["']\s*javascript:[^"']*["']/gi, '');
     return clean;
 }
-export function renderFormattedContent(text) {
+function renderFormattedContent(text) {
     if (!text || typeof text !== 'string')
         return '';
     if (/<[a-z][\s\S]*>/i.test(text)) {
@@ -121,7 +121,7 @@ export function formatPedagogicalTypeLabel(item) {
     return 'Câu hỏi';
 }
 // Câu điền chỗ trống (đoạn văn hoặc bảng). Mọi nơi dùng chung hàm này để màn làm bài, bảng câu hỏi và cách đếm số ô không lệch nhau.
-export function isInlineClozeItem(item) {
+function isInlineClozeItem(item) {
     return item.pedagogicalTypeCode === 'inline_cloze' ||
         item.layoutType === 'inline_cloze' ||
         item.pedagogicalTypeCode === 'table_completion' ||
@@ -490,7 +490,7 @@ export function isShortQaEligibleFor2Col(items) {
 }
 // Đề bài ngắn xếp 2 câu một hàng; đề bài dài (hoặc có bảng, ảnh) chiếm trọn một hàng.
 // Đề xếp từ cách nhau bằng dấu gạch chéo ("see/leave/can/...") không có chỗ xuống dòng nên luôn coi là dài.
-export function isShortQaItemShort(item) {
+function isShortQaItemShort(item) {
     if (!isShortQaEligibleFor2Col([item, item]))
         return false;
     const clean = String(item.prompt || '').replace(/<[^>]+>/g, ' ');
@@ -1635,7 +1635,7 @@ export function initDynamicExamInteractions(rootElArg, { definition, state = { a
     };
 }
 // state.audioProgress[audioKey] = { lastHeardSeconds, completed } khôi phục từ máy chủ; onAudioProgress(audioKey, seconds, completed) báo mốc mới.
-export function initStrictAudioDocks(rootEl, { state, onAudioProgress, allowReplay = false } = {}) {
+function initStrictAudioDocks(rootEl, { state, onAudioProgress, allowReplay = false } = {}) {
     if (!rootEl)
         return;
     const docks = rootEl.querySelectorAll('.strict-audio-dock');

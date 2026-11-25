@@ -47,7 +47,7 @@ interface ExamDefinition { blocks?: ExamBlock[], [key: string]: any }
 interface ExamState { answers: Record<string, any>, submittedAt?: unknown, unlockedAudioBlocks?: Set<string> | string[], [key: string]: any }
 
 // Ô trả lời bài thi: tắt gợi ý chính tả và tự sửa/viết hoa của trình duyệt, bàn phím điện thoại.
-export const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
+const ANSWER_TEXT_ATTRS = 'autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none"';
 
 // Cuộn bằng JS: không trượt mượt khi người dùng bật giảm chuyển động (nguồn: candidate/motion.ts, để module có kiểu
 // không phải import file này).
@@ -80,7 +80,7 @@ export function sanitizeRichContent(html: string) {
   return clean;
 }
 
-export function renderFormattedContent(text: string) {
+function renderFormattedContent(text: string) {
   if (!text || typeof text !== 'string') return '';
   if (/<[a-z][\s\S]*>/i.test(text)) {
     return sanitizeRichContent(text);
@@ -135,7 +135,7 @@ export function formatPedagogicalTypeLabel(item: ExamItem) {
 }
 
 // Câu điền chỗ trống (đoạn văn hoặc bảng). Mọi nơi dùng chung hàm này để màn làm bài, bảng câu hỏi và cách đếm số ô không lệch nhau.
-export function isInlineClozeItem(item: ExamItem) {
+function isInlineClozeItem(item: ExamItem) {
   return item.pedagogicalTypeCode === 'inline_cloze' ||
     item.layoutType === 'inline_cloze' ||
     item.pedagogicalTypeCode === 'table_completion' ||
@@ -498,7 +498,7 @@ export function isShortQaEligibleFor2Col(items: ExamItem[]) {
 
 // Đề bài ngắn xếp 2 câu một hàng; đề bài dài (hoặc có bảng, ảnh) chiếm trọn một hàng.
 // Đề xếp từ cách nhau bằng dấu gạch chéo ("see/leave/can/...") không có chỗ xuống dòng nên luôn coi là dài.
-export function isShortQaItemShort(item: ExamItem) {
+function isShortQaItemShort(item: ExamItem) {
   if (!isShortQaEligibleFor2Col([item, item])) return false;
   const clean = String(item.prompt || '').replace(/<[^>]+>/g, ' ');
   const longestToken = Math.max(0, ...clean.split(/\s+/).map(token => token.length));
@@ -1647,7 +1647,7 @@ export function initDynamicExamInteractions(rootElArg: HTMLElement | null | unde
 }
 
 // state.audioProgress[audioKey] = { lastHeardSeconds, completed } khôi phục từ máy chủ; onAudioProgress(audioKey, seconds, completed) báo mốc mới.
-export function initStrictAudioDocks(rootEl: HTMLElement | null | undefined, { state, onAudioProgress, allowReplay = false }: { state?: ExamState, onAudioProgress?: (...args: any[]) => void, allowReplay?: boolean } = {}) {
+function initStrictAudioDocks(rootEl: HTMLElement | null | undefined, { state, onAudioProgress, allowReplay = false }: { state?: ExamState, onAudioProgress?: (...args: any[]) => void, allowReplay?: boolean } = {}) {
   if (!rootEl) return;
   const docks = rootEl.querySelectorAll<HTMLElement>('.strict-audio-dock');
   docks.forEach((dock: HTMLElement) => {

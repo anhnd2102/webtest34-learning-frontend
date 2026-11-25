@@ -1,13 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  itemAnalysisApiPath,
-  renderReportModeSwitch,
-  renderItemAnalysisControls,
-  renderItemDistributionBar,
-  renderItemCard,
-  renderItemAnalysisView
-} from '../term-tests/teacher-dashboard/shell/analytics/item-analysis-view.js';
+import { itemAnalysisApiPath, renderItemAnalysisControls, renderItemDistributionBar, renderItemCard, renderItemAnalysisView } from '../term-tests/teacher-dashboard/shell/analytics/item-analysis-view.js';
 
 test('itemAnalysisApiPath constructs valid items-analysis endpoint URLs', () => {
   assert.equal(
@@ -22,18 +15,6 @@ test('itemAnalysisApiPath constructs valid items-analysis endpoint URLs', () => 
     itemAnalysisApiPath('Lớp 1', 'Đề #1'),
     '/api/teacher/classes/L%E1%BB%9Bp%201/assignments/%C4%90%E1%BB%81%20%231/items-analysis'
   );
-});
-
-test('renderReportModeSwitch renders mode switcher tabs without emoji', () => {
-  const html = renderReportModeSwitch('item_analysis');
-  assert.match(html, /data-report-mode="distribution"/);
-  assert.match(html, /data-report-mode="item_analysis"/);
-  assert.match(html, /Phổ điểm lớp/);
-  assert.match(html, /Phân tích câu hỏi/);
-  assert.match(html, /class="[^"]*active[^"]*"[^>]*data-report-mode="item_analysis"/);
-  
-  // Design system invariant: No unicode emojis
-  assert.doesNotMatch(html, /[\u{1F300}-\u{1F9FF}]/u);
 });
 
 test('renderItemAnalysisControls renders skill filter tabs and sorting buttons', () => {

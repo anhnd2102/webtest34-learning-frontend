@@ -7,7 +7,7 @@ import { createResultsView } from '../results/view.js';
 import { createAttemptReview } from '../grading/attempt-review.js';
 import { createExamRoomView } from '../exam-room/view.js';
 import { defaultApiBase, authMePath, authHeaders, assignmentResultsPath, assignmentResultsExportPath, attemptDetailPath } from '../api/teacher.js';
-import { readDashboardState, assignmentUrl } from './dashboard-state.js';
+import { readDashboardState, assignmentUrl, readDashboardTab } from './dashboard-state.js';
 import { downloadResultsXlsx } from '../results/export.js';
 import { renderTestBuilderView } from '../studio/builder.js';
 import { createPortalPanel } from './portal-panel.js';
@@ -330,7 +330,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
     // Phá vòng phụ thuộc: grant retake và view chỉ giữ wrapper lazy tới loadExamRoom/showExamRoomTimeline (khai báo sau).
     const { openGrantRetakeModal } = createGrantRetake({ lifecycle, viewState, scopeState, examRoom, grantRetakeModal, grantRetakeForm, grantRetakeBtn, retakeStudentName, retakeStudentRefInput, retakeReasonInput, retakeAvailableFromInput, retakeExpiresAtInput, cancelGrantRetakeBtn, grantRetakeError, state, request, loadExamRoom: (...args) => loadExamRoom(...args), loadAttemptDetail, loadResults });
     const { renderExamRoom } = createExamRoomView({ root, lifecycle, viewState, actions: { showExamRoomTimeline: student => showExamRoomTimeline(student), openGrantRetakeModal } });
-    const { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents } = createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout: () => handleLogout() });
+    const { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents, suspendExamRoomEvents, resumeExamRoomEvents } = createExamRoomActions({ root, lifecycle, queryCoordinator, viewState, authState, scopeState, examRoomState, document, examRoomOpenButton, examRoom, examRoomMessage, examRoomStartButton, examRoomExtendButton, examRoomExtensionMinutes, examRoomRefreshButton, examRoomCloseButton, results, state, apiBase, request, renderExamRoom, handleLogout: () => handleLogout() });
     const { updateExamModeUI, updateSelfProctoringUI, renderExamSwitch } = createExamControls({ lifecycle, scopeState, examModeToggle, examModeStatusPill, selfProctoringToggle, examModeLockHint, selfProctoringLockHint, selfProctoringLimit, selfProctoringSave, examSwitchControls, examSwitchHint, examSwitchLimit, examSwitchButton, examSwitchMessage, examRoomOpenButton, examRoom, status, state, request, loadAssignments: (...args) => loadAssignments(...args) });
     const { ensurePortalPanel, resetPortal } = createPortalPanel({ root, lifecycle, state, request, document, window });
     const setUrl = () => history.replaceState(null, '', assignmentUrl(location.href, state));
@@ -407,7 +407,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         }
     }
     const { getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView } = createReports({ root, queryCoordinator, authState, document, window, status, assessmentTabDistribution, assessmentTabItems, switchAssessmentTab: (...args) => switchAssessmentTab(...args), statusFilter, state, apiBase, authHeader, endSession, request, applyFilterChange: (...args) => applyFilterChange(...args) });
-    const { syncAssessmentHeaderMeta, switchAssessmentTab, updateDashboardTab } = createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView });
+    const { syncAssessmentHeaderMeta, switchAssessmentTab, updateDashboardTab } = createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView, examRoomEvents: { suspend: suspendExamRoomEvents, resume: resumeExamRoomEvents } });
     const { renderSelectedAssignmentShowcase } = createShowcase({ root, lifecycle, viewState, scopeState, document, classSelect, selectedAssignmentCard, showcaseBadgeClass, showcaseTitle, showcaseBlockBadge, showcasePhaseBadge, showcaseStatusBadge, examSwitchControls, examRoomOpenButton, examRoom, showcaseLinkBar, showcaseStudentUrl, copyShowcaseLinkBtn, openShowcaseLinkBtn, currentLocation, apiBase, previewAssignmentBtn, request, previewWindow: window, stopExamRoomEvents, updateExamModeUI, updateSelfProctoringUI, renderExamSwitch });
     const { renderAssignmentChips, selectAssignment } = createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, syncAssessmentHeaderMeta, switchAssessmentTab });
     const { loadAssignments } = createAssignmentsLoader({ root, queryCoordinator, scopeState, window, classSelect, assignmentSelect, assignments, status, drawerBackdrop, state, loginError, request, setUrl, loadAttemptDetail, loadResults, renderSelectedAssignmentShowcase, renderAssignmentChips });
@@ -551,9 +551,16 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
             selectAssignment(assignmentSelect.value);
         });
     }
-    // Light periodic polling every 30 seconds if visible and active
+    // Polling nhẹ 30 giây, chỉ khi dữ liệu kết quả đang được hiển thị: thẻ bài đang chọn ở Teacher Dashboard (tiến độ nộp bài)
+    // hoặc bảng ở tab "Chấm chi tiết". Các màn khác (Quản lý bài thi, Phổ điểm, Phân tích câu hỏi) không cần.
+    function isResultsPollingNeeded() {
+        const tab = readDashboardTab(window.location.hash);
+        if (tab === 'dashboard')
+            return true;
+        return tab === 'grading' && navState.currentAssessmentTab === 'details';
+    }
     lifecycle.interval(() => {
-        if (!document.hidden && state.classId && state.assignmentId) {
+        if (!document.hidden && state.classId && state.assignmentId && isResultsPollingNeeded()) {
             loadResults(state.classId, state.assignmentId).catch(() => { });
         }
     }, 30000);

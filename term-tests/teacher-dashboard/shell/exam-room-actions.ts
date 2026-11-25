@@ -195,5 +195,19 @@ export function createExamRoomActions({ root, lifecycle, queryCoordinator, viewS
     });
   });
 
-  return { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents };
+  // Rời màn Teacher Dashboard thì ngắt luồng SSE (panel Phòng thi đang ẩn, không cần vẽ và đỡ giữ kết nối server);
+  // quay lại mà phòng thi còn mở thì nối lại và tải trạng thái mới.
+  function suspendExamRoomEvents() {
+    stopExamRoomEvents();
+  }
+
+  async function resumeExamRoomEvents() {
+    if (!examRoom || examRoom.hidden || examRoomState.examRoomSession) return;
+    if (!scopeState.currentSelectedAssignment || !state.classId || !authState.sessionToken) return;
+    const session = createCurrentRoomSession();
+    await loadExamRoom(session);
+    if (session.isCurrent() && authState.sessionToken) session.start();
+  }
+
+  return { fillIncidentTimeline, showExamRoomTimeline, loadExamRoom, stopExamRoomEvents, suspendExamRoomEvents, resumeExamRoomEvents };
 }

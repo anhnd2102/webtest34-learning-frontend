@@ -7,7 +7,7 @@ import { escapeHtml } from '../ui/presentation.js';
 type Feedback = Record<string, any>;
 export type RequirementScores = Record<string, number>;
 
-export const LANGUAGE_ID = 'language';
+const LANGUAGE_ID = 'language';
 
 export function hasRequirementBreakdown(feedback: unknown): boolean {
   const list = (feedback as Feedback | null)?.requiredStructures;

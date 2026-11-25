@@ -1,7 +1,7 @@
 // Dựng kết quả bài làm cho học viên (tách nguyên văn từ content-preview.mjs).
 // NGUỒN: file .ts này; result-view.js do `npm run build` sinh ra (xem text-utils.ts).
-import { scrollBehavior } from './motion.js?rev=20261121-logo-only';
-import { escape } from './text-utils.js?rev=20261121-logo-only';
+import { scrollBehavior } from './motion.js?rev=20261125-dead-code';
+import { escape } from './text-utils.js?rev=20261125-dead-code';
 export function resultViewModel(result) {
     const summary = result?.summary || {};
     const gradingStatus = result?.gradingStatus || 'pending';
@@ -55,13 +55,13 @@ export function resultDetailsHtml(result, definition) {
         return `<article class="learning-result-section"><div class="learning-result-section-header"><h3>${escape(block.title)}</h3><div class="learning-result-section-actions"><div class="learning-result-section-summary"><div class="learning-result-score">${score} / ${maxScore} điểm</div><div class="meta">${correct}/${items.length} câu đúng</div></div><button class="result-details-toggle" type="button" data-result-details="result-${escape(block.blockId)}" aria-expanded="false">Xem chi tiết</button></div></div><div class="learning-result-exercise" id="result-${escape(block.blockId)}" hidden><div class="learning-result-items">${details}</div></div></article>`;
     }).join('');
 }
-export const resultTypeLabel = (defItem) => defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm'
+const resultTypeLabel = (defItem) => defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm'
     : defItem.pedagogicalTypeCode === 'sentence_rewrite' ? 'Biến đổi câu'
         : defItem.pedagogicalTypeCode === 'sentence_reorder' ? 'Sắp xếp câu'
             : ({ correction_pair: 'Sửa lỗi sai', text_select_pair: 'Cặp từ vựng', single_choice: 'Trắc nghiệm', multi_choice_group: 'Chọn nhiều', short_text: 'Điền từ' }[defItem.interactionType ?? ''] || 'Tự luận');
 // Câu cặp từ vựng lưu "<chữ>,<mã nghĩa>" (vd. "adapt to,meaning-21"); học viên chỉ cần phần chữ.
-export const cleanPairAnswer = (value) => String(value).replace(/,\s*[\w-]*\d[\w-]*$/, '');
-export const RESULT_VERDICTS = {
+const cleanPairAnswer = (value) => String(value).replace(/,\s*[\w-]*\d[\w-]*$/, '');
+const RESULT_VERDICTS = {
     correct: { cls: 'correct', icon: '✓', label: 'Đúng' },
     partial: { cls: 'partial', icon: '◐', label: 'Đúng một phần' },
     incorrect: { cls: 'incorrect', icon: '✕', label: 'Chưa đúng' },

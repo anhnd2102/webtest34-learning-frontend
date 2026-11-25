@@ -17,7 +17,7 @@ const countOutsideQuotes = (line, char) => {
     }
     return count;
 };
-export function detectDelimiter(text) {
+function detectDelimiter(text) {
     const firstLine = text.replace(/^﻿/, '').split(/\r?\n/)[0] || '';
     const candidates = [',', ';', '\t'].map(char => ({ char, count: countOutsideQuotes(firstLine, char) }));
     const best = candidates.reduce((a, b) => (b.count > a.count ? b : a));
@@ -106,7 +106,7 @@ function resolveLetter(token, options, allowRoman) {
 const message = (level, field, text, hint) => ({ level, column: COLUMN_LABEL[field] || String(field), text, ...(hint ? { hint } : {}) });
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i;
 // Chỉ có tên file (không đường dẫn, không giao thức): cần thư mục để biết file nằm ở đâu.
-export const isBareFilename = (value) => Boolean(value) && !value.includes('/') && !SCHEME.test(value);
+const isBareFilename = (value) => Boolean(value) && !value.includes('/') && !SCHEME.test(value);
 export function resolveMedia(value, base) {
     const raw = String(value ?? '').trim();
     if (!raw || !isBareFilename(raw))
@@ -675,7 +675,7 @@ export function typeTemplateCsv(typeCode) {
     const columns = [...COLUMNS.map(column => column.id).filter(id => spec.columns.includes(id))];
     return recordsToCsv(typeTemplateRecords(typeCode), columns);
 }
-export function blockTemplateRecords() {
+function blockTemplateRecords() {
     const records = [];
     TYPES.forEach((spec, index) => {
         spec.examples.forEach((example, position) => {
@@ -690,13 +690,6 @@ export function blockTemplateRecords() {
     return records;
 }
 export function blockTemplateCsv() { return recordsToCsv(blockTemplateRecords(), blockColumnIds()); }
-// Chuyển kết quả đọc sang dạng {items, invalidRows} mà các hộp thoại nhập một dạng hiện có đang dùng.
-export function toLegacyResult(result) {
-    return {
-        items: result.cards,
-        invalidRows: result.rows.filter(row => row.status === 'error').map(row => ({ line: row.line, row: Object.values(row.record).map(String), reason: row.messages.filter(m => m.level === 'error').map(m => `${m.column}: ${m.text}`).join(' ') }))
-    };
-}
 const SHEET_FORBIDDEN = /[\\/?*[\]:]/g;
 // Tên sheet Excel hợp lệ từ một nhãn: bỏ ký tự cấm, tối đa 31 ký tự. Bộ đọc cả đề dùng chính hàm này để nhận ra sheet theo dạng.
 export const excelSheetName = (label) => label.replace(SHEET_FORBIDDEN, ' ').replace(/\s+/g, ' ').trim().slice(0, 31);

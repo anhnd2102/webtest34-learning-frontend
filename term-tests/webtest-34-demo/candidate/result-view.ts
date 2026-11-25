@@ -90,15 +90,15 @@ export function resultDetailsHtml(result?: ResultPayload | null, definition?: Re
   }).join('');
 }
 
-export const resultTypeLabel = (defItem: Partial<DefinitionItem>) => defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm'
+const resultTypeLabel = (defItem: Partial<DefinitionItem>) => defItem.pedagogicalTypeCode === 'pronunciation_choice' ? 'Phát âm'
   : defItem.pedagogicalTypeCode === 'sentence_rewrite' ? 'Biến đổi câu'
   : defItem.pedagogicalTypeCode === 'sentence_reorder' ? 'Sắp xếp câu'
   : (({ correction_pair: 'Sửa lỗi sai', text_select_pair: 'Cặp từ vựng', single_choice: 'Trắc nghiệm', multi_choice_group: 'Chọn nhiều', short_text: 'Điền từ' } as Record<string, string>)[defItem.interactionType ?? ''] || 'Tự luận');
 
 // Câu cặp từ vựng lưu "<chữ>,<mã nghĩa>" (vd. "adapt to,meaning-21"); học viên chỉ cần phần chữ.
-export const cleanPairAnswer = (value: unknown) => String(value).replace(/,\s*[\w-]*\d[\w-]*$/, '');
+const cleanPairAnswer = (value: unknown) => String(value).replace(/,\s*[\w-]*\d[\w-]*$/, '');
 
-export const RESULT_VERDICTS: Record<string, { cls: string, icon: string, label: string }> = {
+const RESULT_VERDICTS: Record<string, { cls: string, icon: string, label: string }> = {
   correct: { cls: 'correct', icon: '✓', label: 'Đúng' },
   partial: { cls: 'partial', icon: '◐', label: 'Đúng một phần' },
   incorrect: { cls: 'incorrect', icon: '✕', label: 'Chưa đúng' },

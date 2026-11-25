@@ -1,12 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  itemAnalysisApiPath,
-  renderReportModeSwitch,
-  renderItemAnalysisControls,
-  renderItemCard,
-  renderItemAnalysisView
-} from '../term-tests/teacher-dashboard/shell/analytics/item-analysis-view.js';
+import { itemAnalysisApiPath, renderItemAnalysisControls, renderItemCard, renderItemAnalysisView } from '../term-tests/teacher-dashboard/shell/analytics/item-analysis-view.js';
 import {
   computeItemErrorRate,
   sortItems,

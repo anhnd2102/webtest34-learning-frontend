@@ -52,7 +52,7 @@ const countOutsideQuotes = (line: string, char: string): number => {
   return count;
 };
 
-export function detectDelimiter(text: string): string {
+function detectDelimiter(text: string): string {
   const firstLine = text.replace(/^﻿/, '').split(/\r?\n/)[0] || '';
   const candidates = [',', ';', '\t'].map(char => ({ char, count: countOutsideQuotes(firstLine, char) }));
   const best = candidates.reduce((a, b) => (b.count > a.count ? b : a));
@@ -120,7 +120,7 @@ interface BuildContext { defaultPoints: number, newGroupId: () => string, mediaB
 
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i;
 // Chỉ có tên file (không đường dẫn, không giao thức): cần thư mục để biết file nằm ở đâu.
-export const isBareFilename = (value: string): boolean => Boolean(value) && !value.includes('/') && !SCHEME.test(value);
+const isBareFilename = (value: string): boolean => Boolean(value) && !value.includes('/') && !SCHEME.test(value);
 
 export function resolveMedia(value: string, base?: string): string {
   const raw = String(value ?? '').trim();
@@ -584,7 +584,7 @@ export function typeTemplateCsv(typeCode: TypeCode): string {
   return recordsToCsv(typeTemplateRecords(typeCode), columns);
 }
 
-export function blockTemplateRecords(): ImportRecord[] {
+function blockTemplateRecords(): ImportRecord[] {
   const records: ImportRecord[] = [];
   TYPES.forEach((spec, index) => {
     spec.examples.forEach((example, position) => {
@@ -602,13 +602,6 @@ export function blockTemplateRecords(): ImportRecord[] {
 export function blockTemplateCsv(): string { return recordsToCsv(blockTemplateRecords(), blockColumnIds()); }
 
 // Chuyển kết quả đọc sang dạng {items, invalidRows} mà các hộp thoại nhập một dạng hiện có đang dùng.
-export function toLegacyResult(result: ReadResult): { items: ImportCardOut[], invalidRows: { line: number, row: string[], reason: string }[] } {
-  return {
-    items: result.cards,
-    invalidRows: result.rows.filter(row => row.status === 'error').map(row => ({ line: row.line, row: Object.values(row.record).map(String), reason: row.messages.filter(m => m.level === 'error').map(m => `${m.column}: ${m.text}`).join(' ') }))
-  };
-}
-
 // Excel mẫu (sinh lúc tải, không còn file nhị phân tĩnh): "Phần thi" đứng đầu để tải lên được ngay, "Thông tin Phần",
 // mỗi dạng một sheet có ví dụ điền sẵn, và "Hướng dẫn" liệt kê cột từng dạng. Dữ liệu thuần; ghi file ở lớp giao diện.
 export interface SheetData { name: string, rows: string[][] }

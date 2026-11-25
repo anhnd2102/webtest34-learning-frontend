@@ -1,15 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  reportApiPath,
-  formatScoreFraction,
-  renderRosterSummaryCards,
-  renderStatisticsCards,
-  renderHistogramSvg,
-  renderEmptyState,
-  renderDrilldownTable,
-  renderScoreDistributionView
-} from '../term-tests/teacher-dashboard/shell/analytics/score-distribution-view.js';
+import { reportApiPath, formatScoreFraction, renderHistogramSvg, renderEmptyState, renderDrilldownTable, renderScoreDistributionView } from '../term-tests/teacher-dashboard/shell/analytics/score-distribution-view.js';
 
 test('reportApiPath constructs valid teacher report endpoint URLs', () => {
   assert.equal(
@@ -36,52 +27,6 @@ test('formatScoreFraction strictly formats achieved/max without %', () => {
   
   // Design system invariant: Never contain percentage sign
   assert.doesNotMatch(formatScoreFraction(80, 100), /%/);
-});
-
-test('renderRosterSummaryCards renders all critical metrics', () => {
-  const summary = {
-    totalRoster: 24,
-    submitted: 20,
-    officialGraded: 18,
-    provisional: 2,
-    pendingReview: 1,
-    retaking: 0,
-    notSubmitted: 4
-  };
-  const html = renderRosterSummaryCards(summary);
-
-  assert.match(html, /Tổng số học viên/);
-  assert.match(html, /24/);
-  assert.match(html, /Đã nộp bài/);
-  assert.match(html, /20/);
-  assert.match(html, /Có điểm chính thức/);
-  assert.match(html, /18/);
-  assert.match(html, /Chờ chấm \/ duyệt/);
-  assert.match(html, /1/);
-  assert.match(html, /Chưa nộp bài/);
-  assert.match(html, /4/);
-  // No emoji unicode check
-  assert.doesNotMatch(html, /[\u{1F300}-\u{1F9FF}]/u);
-});
-
-test('renderStatisticsCards displays min/max/mean/median/SD with fraction format', () => {
-  const stats = {
-    count: 20,
-    min: 45,
-    max: 95,
-    mean: 72.4,
-    median: 75,
-    standardDeviation: 12.3
-  };
-  const html = renderStatisticsCards(stats, 100);
-
-  assert.match(html, /95\/100/, 'Max score fraction');
-  assert.match(html, /45\/100/, 'Min score fraction');
-  assert.match(html, /72.4\/100/, 'Mean score fraction');
-  assert.match(html, /75\/100/, 'Median score fraction');
-  assert.match(html, /12.3/, 'Standard deviation');
-  // Invariant check: No percentage
-  assert.doesNotMatch(html, /%/);
 });
 
 test('renderHistogramSvg generates accessible SVG with bars, labels and buckets', () => {

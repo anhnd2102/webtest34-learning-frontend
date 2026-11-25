@@ -15,7 +15,7 @@ const VARIANT_LABELS = {
     speaking_text: 'Speaking dạng văn bản',
     writing: 'Viết đoạn/bài (Writing)'
 };
-export const RUBRIC_V2_VERSION = 'izone-rubric-v2';
+const RUBRIC_V2_VERSION = 'izone-rubric-v2';
 export function isRubricV2(rubric) {
     return Boolean(rubric && typeof rubric === 'object' && rubric.scoringVersion === RUBRIC_V2_VERSION);
 }

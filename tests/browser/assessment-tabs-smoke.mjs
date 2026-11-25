@@ -26,6 +26,7 @@ try {
     page.setDefaultTimeout(10000);
     const errors = [];
     let resultReads = 0;
+    let delayResultsMs = 0;
     page.on('pageerror', error => errors.push(error.message));
     await page.clock.install();
     await page.addInitScript(() => { sessionStorage.setItem('izone_teacher_token', 'synthetic-tabs-token'); });
@@ -37,7 +38,7 @@ try {
         if (path.endsWith('/auth/me')) payload = { teacher: { name: 'Giáo viên', role: 'admin', courseCodes: ['34'] } };
         else if (path.endsWith('/classes')) payload = { classes: [{ classId: '101', name: 'Lớp IC2283', courseCode: '34', status: 'on_going' }] };
         else if (path.endsWith('/assignments')) payload = { assignments: [{ assignmentId: 'assign-1', classId: '101', title: 'Bài thi', courseCode: '34', status: 'published' }] };
-        else if (path.endsWith('/results')) { resultReads++; payload = { assignment: { assignmentId: 'assign-1' }, skills: [], students: [{ studentRef: 's1', name: 'Nguyễn Văn An', status: 'complete', attemptId: 'a1', skills: {} }], pagination: { page: 1, totalPages: 1, totalItems: 1, pageSize: 25 } }; }
+        else if (path.endsWith('/results')) { resultReads++; if (delayResultsMs) await new Promise(resolve => setTimeout(resolve, delayResultsMs)); payload = { assignment: { assignmentId: 'assign-1' }, skills: [], students: [{ studentRef: 's1', name: 'Nguyễn Văn An', status: 'complete', attemptId: 'a1', skills: {} }], pagination: { page: 1, totalPages: 1, totalItems: 1, pageSize: 25 } }; }
         else if (path.endsWith('/report')) payload = report;
         else if (path.endsWith('/items-analysis')) payload = { items: [1, 2].map(item), summary: {} };
         else if (path.endsWith('/portal-tests')) payload = { tests: [] };
@@ -57,18 +58,31 @@ try {
     await page.clock.runFor(1000);
     await page.waitForTimeout(300);
     await only('details', 'lúc mở màn');
+    // Mỗi lần chuyển tab, đợi qua hơn hai chu kỳ polling: tại mọi thời điểm chỉ tab đang mở được hiện, không trùng id.
     for (const tab of ['distribution', 'items', 'details', 'distribution', 'items']) {
       await page.locator(`[data-assessment-tab="${tab}"]`).click();
       await page.clock.runFor(1000);
       await page.waitForTimeout(200);
       await only(tab, 'ngay sau khi chuyển tab');
-      const before = resultReads;
-      for (let k = 0; k < 13; k++) { await page.clock.runFor(5000); await page.waitForTimeout(60); } // 65 giây = hơn hai chu kỳ polling, tua từng bước để phản hồi kịp về
-      assert.ok(resultReads > before, `${width}px: polling không chạy trong lúc ở tab "${tab}" (không kiểm được lỗi)`);
+      for (let k = 0; k < 13; k++) { await page.clock.runFor(5000); await page.waitForTimeout(60); } // 65 giây
       await only(tab, 'sau hai chu kỳ polling');
       const dup = await page.evaluate(() => ['report-drilldown-container', 'report-toggle-provisional'].map(id => [id, document.querySelectorAll('#' + id).length]).filter(([, n]) => n > 1));
       assert.deepEqual(dup, [], `${width}px, tab "${tab}": id trùng do báo cáo bị vẽ vào nhiều khung`);
     }
+
+    // Phản hồi /results về muộn sau khi đã chuyển sang tab khác không được kéo bảng kết quả hiện lại.
+    await page.locator('[data-assessment-tab="details"]').click();
+    await page.clock.runFor(1000);
+    await page.waitForTimeout(200);
+    delayResultsMs = 1500;
+    const before = resultReads;
+    for (let k = 0; k < 7 && resultReads === before; k++) { await page.clock.runFor(5000); await page.waitForTimeout(60); } // chờ polling kế tiếp phát request
+    assert.ok(resultReads > before, `${width}px: không bắt được request /results để làm trễ`);
+    await page.locator('[data-assessment-tab="distribution"]').click(); // chuyển tab khi phản hồi chưa về
+    await page.waitForTimeout(2200);
+    delayResultsMs = 0;
+    await page.clock.runFor(500);
+    await only('distribution', 'sau khi phản hồi /results về muộn');
     assert.deepEqual(errors, []);
     await page.close();
   }

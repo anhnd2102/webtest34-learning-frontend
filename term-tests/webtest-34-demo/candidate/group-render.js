@@ -3,7 +3,7 @@
 // NGUỒN: file .ts này; group-render.js do `npm run build` sinh ra (xem text-utils.ts). Import nội bộ viết
 // không có `?rev=`, bước build tự thêm rev dùng chung của shell học viên (cùng URL với import trong
 // content-preview.mjs nên dùng chung một thể hiện module).
-import { optionId } from './text-utils.js?rev=20261121-logo-only';
+import { optionId } from './text-utils.js?rev=20261125-dead-code';
 export function withLocalGroupLabels(definition, form) {
     if (!definition || !Array.isArray(definition.blocks) || !Array.isArray(form?.groups))
         return definition;
