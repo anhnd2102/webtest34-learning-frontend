@@ -86,7 +86,7 @@ export function renderStrictCandidateAudioDock(container, options = {}) {
                     ? ''
                     : `${window.location.protocol}//${hostname}:8788`;
             }
-            else if (hostname === 'webtest.ducanhdev.com') {
+            else if (hostname === 'webtest.izoneacademic.com') {
                 apiBase = '';
             }
             else {

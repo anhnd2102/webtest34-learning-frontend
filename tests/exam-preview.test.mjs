@@ -12,7 +12,7 @@ test('readPreviewToken: chỉ đọc từ fragment dạng #preview=<token>', () 
 });
 
 test('previewPageUrl: token chỉ nằm trong fragment, không vào query', () => {
-  const url = new URL(previewPageUrl({ pageUrl: 'https://x.github.io/app/term-tests/teacher-dashboard/index.html?classId=1#test-studio', token: 'a.b-c_d', apiBase: 'https://webtest.ducanhdev.com' }));
+  const url = new URL(previewPageUrl({ pageUrl: 'https://x.github.io/app/term-tests/teacher-dashboard/index.html?classId=1#test-studio', token: 'a.b-c_d', apiBase: 'https://webtest.izoneacademic.com' }));
   assert.equal(url.pathname, '/app/term-tests/webtest-34-demo/index.html');
   assert.equal(url.hash, '#preview=a.b-c_d');
   assert.ok(!url.search.includes('a.b-c_d'));

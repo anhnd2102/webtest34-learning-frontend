@@ -297,7 +297,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         if (isTunnel) {
             loginApiBase.value = currentLocation.origin;
         }
-        else if (isLocalHost && (!loginApiBase.value || loginApiBase.value.includes('webtest.ducanhdev.com'))) {
+        else if (isLocalHost && (!loginApiBase.value || loginApiBase.value.includes('webtest.izoneacademic.com'))) {
             loginApiBase.value = 'http://127.0.0.1:8788';
         }
         else if (!loginApiBase.value || (!isLocalHost && loginApiBase.value.includes('localhost'))) {
@@ -308,7 +308,7 @@ function initializeDashboard(root, lifecycle, queryCoordinator) {
         if (isTunnel) {
             form.elements.apiBase.value = currentLocation.origin;
         }
-        else if (isLocalHost && (!form.elements.apiBase.value || form.elements.apiBase.value.includes('webtest.ducanhdev.com'))) {
+        else if (isLocalHost && (!form.elements.apiBase.value || form.elements.apiBase.value.includes('webtest.izoneacademic.com'))) {
             form.elements.apiBase.value = 'http://127.0.0.1:8788';
         }
         else if (!form.elements.apiBase.value || (!isLocalHost && form.elements.apiBase.value.includes('localhost'))) {

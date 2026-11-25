@@ -16,7 +16,7 @@ export function localStudentUrl(studentUrl, location, apiBase = '') {
     else if (!url.searchParams.has('prod') && !apiBase) {
         url.searchParams.set('prod', '1');
     }
-    else if (apiBase && (apiBase.includes('webtest.ducanhdev.com') || apiBase.includes('production'))) {
+    else if (apiBase && (apiBase.includes('webtest.izoneacademic.com') || apiBase.includes('production'))) {
         url.searchParams.set('prod', '1');
     }
     return `${location.origin}${url.pathname.slice(index)}${url.search}${url.hash}`;

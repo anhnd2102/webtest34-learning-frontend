@@ -102,7 +102,7 @@ export function renderStrictCandidateAudioDock(container: HTMLElement | null | u
         apiBase = (window.location.port === '8034' || window.location.port === '8788')
           ? ''
           : `${window.location.protocol}//${hostname}:8788`;
-      } else if (hostname === 'webtest.ducanhdev.com') {
+      } else if (hostname === 'webtest.izoneacademic.com') {
         apiBase = '';
       } else {
         apiBase = defaultApiBase();
