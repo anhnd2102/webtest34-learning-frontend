@@ -11,14 +11,14 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const port = Number(process.env.SMOKE_PORT || 18396);
 const server = spawn(process.execPath, ['serve.mjs', String(port), '127.0.0.1'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
 const students = [
-  { studentRef: 's1', name: 'Nguyễn Văn An', email: 'an.nguyen.van.1998@example-center.edu.vn', score: 21 },
-  { studentRef: 's2', name: 'Trần Thị Bình Nguyên Phương', email: 'binh.nguyen.phuong@example-center.edu.vn', score: 18 },
+  { studentRef: 's1', name: 'Nguyễn Văn An', email: 'an.nguyen.van.1998@example-center.edu.vn', score: 100 },
+  { studentRef: 's2', name: 'Trần Thị Bình Nguyên Phương', email: 'binh.nguyen.phuong@example-center.edu.vn', score: 87.5 },
   { studentRef: 's3', name: 'Lê Hoàng Cường', email: '', score: 12 }
 ];
 const report = {
-  assignment: { assignmentId: 'assign-1', title: 'Bài thi giữa khóa', className: 'Lớp IC2283', maxScore: 25 },
+  assignment: { assignmentId: 'assign-1', title: 'Bài thi giữa khóa', className: 'Lớp IC2283', maxScore: 100 },
   rosterSummary: { totalRoster: 3, submitted: 3, officialGraded: 3, provisional: 0, pendingReview: 0, retaking: 0, notSubmitted: 0 },
-  overall: { maxScore: 25, statistics: { count: 3, mean: 17, median: 18, min: 12, max: 21 }, histogram: { buckets: [{ min: 10, max: 15, label: '10 – 15', count: 1, students: [students[2]] }, { min: 15, max: 25, label: '15 – 25', count: 2, students: [students[0], students[1]] }] } },
+  overall: { maxScore: 100, statistics: { count: 3, mean: 17, median: 18, min: 12, max: 21 }, histogram: { buckets: [{ min: 10, max: 15, label: '10 – 15', count: 1, students: [students[2]] }, { min: 15, max: 25, label: '15 – 25', count: 2, students: [students[0], students[1]] }] } },
   skills: []
 };
 let browser;
@@ -76,6 +76,11 @@ try {
     });
     let s = await state();
     assert.ok(s.page <= 0, `${width}px: trang cuộn ngang ${s.page}px`);
+    const scoreCells = await page.evaluate(() => [...document.querySelectorAll('.drilldown-card .student-score-cell')].filter(c => c.getClientRects().length).map(c => ({ text: c.textContent.trim(), h: Math.round(c.getBoundingClientRect().height), fs: Math.round(parseFloat(getComputedStyle(c).fontSize)), w: Math.round(c.getBoundingClientRect().width) })));
+    assert.ok(scoreCells.length >= 3, `${width}px: thiếu ô điểm`);
+    const head = await page.evaluate(() => { const th = [...document.querySelectorAll('.drilldown-card th:last-child')].find(e => e.getClientRects().length); const r = th.getBoundingClientRect(); return { text: th.textContent.trim(), h: Math.round(r.height), fs: Math.round(parseFloat(getComputedStyle(th).fontSize)), over: th.scrollWidth - th.clientWidth }; });
+    assert.ok(head.h <= head.fs * 1.8 + 20 && head.over <= 0, `${width}px: tiêu đề cột điểm "${head.text}" bị xuống dòng hoặc tràn (cao ${head.h}px)`);
+    for (const c of scoreCells) assert.ok(c.h <= c.fs * 1.8 + 20, `${width}px: điểm "${c.text}" bị xuống dòng (cao ${c.h}px, rộng ${c.w}px)`);
     if (mobile) {
       assert.equal(s.toggleVisible, true, `${width}px: thiếu nút bật/tắt email`);
       assert.equal(s.emailVisible, false, `${width}px: email phải thu gọn mặc định`);
