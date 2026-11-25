@@ -432,7 +432,7 @@ export function renderDrilldownTable(bucket, maxScore, skillCode = 'overall', al
         : `Danh sách học viên ${skillCode === 'overall' ? 'toàn bài' : 'kỹ năng ' + (skillCode || '').toUpperCase()}`;
     const countText = `${students.length} học viên`;
     return `
-    <div class="drilldown-card">
+    <div class="drilldown-card${students.length > 0 ? ' email-collapsed' : ''}">
       <div class="drilldown-header">
         <div class="drilldown-header-left">
           <h4 class="drilldown-title">
@@ -451,13 +451,16 @@ export function renderDrilldownTable(bucket, maxScore, skillCode = 'overall', al
       ${students.length === 0 ? `
         <div class="drilldown-empty"><p>Không có học viên nào trong danh sách.</p></div>
       ` : `
+        <div class="drilldown-email-toggle-row">
+          <button type="button" class="btn btn-secondary btn-sm btn-toggle-email" aria-pressed="false">Hiện email</button>
+        </div>
         <div class="drilldown-table-wrapper">
           <table class="drilldown-table">
             <thead>
               <tr>
                 <th style="width: 50px;">STT</th>
                 <th>Học viên</th>
-                <th>Email</th>
+                <th class="col-email">Email</th>
                 <th style="text-align: right;">Điểm (${skillCode === 'overall' ? 'Toàn bài' : skillCode})</th>
               </tr>
             </thead>
@@ -610,6 +613,16 @@ export function renderScoreDistributionView(container, state = {}, callbacks = {
             onBucketClick({ bucket, index: idx, skillCode: activeSkill });
         });
     });
+    // Điện thoại: cột email mặc định thu gọn, bấm nút để mở rộng/thu gọn (desktop luôn hiện, nút bị ẩn bằng CSS).
+    const emailToggleBtn = container.querySelector('.btn-toggle-email');
+    if (emailToggleBtn) {
+        emailToggleBtn.addEventListener('click', () => {
+            const card = emailToggleBtn.closest('.drilldown-card');
+            const collapsed = card ? card.classList.toggle('email-collapsed') : true;
+            emailToggleBtn.setAttribute('aria-pressed', String(!collapsed));
+            emailToggleBtn.textContent = collapsed ? 'Hiện email' : 'Ẩn email';
+        });
+    }
     const closeDrilldownBtn = container.querySelector('.btn-close-drilldown');
     if (closeDrilldownBtn) {
         closeDrilldownBtn.addEventListener('click', () => {

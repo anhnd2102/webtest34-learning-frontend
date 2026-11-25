@@ -999,3 +999,22 @@ button.btn-icon:disabled,
   #assessment-tab-items .item-wrong-table-wrapper tbody td[data-label]::before { content: attr(data-label); display: block; font-size: 0.72rem; font-weight: 600; color: var(--izone-muted); }
   #assessment-tab-items .item-wrong-table-wrapper tbody td.empty-table-cell { grid-column: 1 / -1; }
 }
+
+/* Nút bật/tắt cột email của bảng drill-down (Phổ điểm) chỉ hiện ở điện thoại. */
+.drilldown-email-toggle-row { display: none; }
+
+/* Mobile (≤640px): bảng drill-down vừa khung, cột email mặc định thu gọn và mở rộng bằng nút. */
+@media (max-width: 640px) {
+  #assessment-tab-distribution .drilldown-card { padding: 14px; min-width: 0; }
+  #assessment-tab-distribution .drilldown-header { flex-wrap: wrap; gap: 8px; }
+  #assessment-tab-distribution .drilldown-email-toggle-row { display: flex; margin-bottom: 10px; }
+  #assessment-tab-distribution .btn-toggle-email { min-height: 44px; width: 100%; }
+  #assessment-tab-distribution .drilldown-table-wrapper { overflow-x: hidden; }
+  #assessment-tab-distribution .drilldown-table, #assessment-tab-distribution .drilldown-table thead, #assessment-tab-distribution .drilldown-table tbody { display: block; width: 100%; }
+  #assessment-tab-distribution .drilldown-table tr { display: grid; grid-template-columns: 36px minmax(0, 1fr) 72px; align-items: start; border-bottom: 1px solid var(--izone-border-subtle); }
+  #assessment-tab-distribution .drilldown-table th, #assessment-tab-distribution .drilldown-table td { display: block; width: auto; padding: 8px 6px; border: 0; white-space: normal; overflow-wrap: anywhere; }
+  #assessment-tab-distribution .drilldown-table th { position: static; }
+  #assessment-tab-distribution .drilldown-table th.col-email { display: none; }
+  #assessment-tab-distribution .drilldown-table td.student-email-cell { grid-column: 2 / -1; grid-row: 2; padding-top: 0; font-size: 0.8rem; color: var(--izone-muted); }
+  #assessment-tab-distribution .drilldown-card.email-collapsed .student-email-cell { display: none; }
+}
