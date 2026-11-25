@@ -31,6 +31,8 @@ export interface AttemptReviewParams {
     request: DashboardRequest;
     setUrl: () => void;
     loadResults: (classId: string | undefined, assignmentId: string | undefined) => Promise<unknown>;
+    /** Khi đóng ngăn chấm bài chỉ bỏ ẩn bảng kết quả nếu tab "Chấm chi tiết" đang mở. */
+    resultsTabActive?: () => boolean;
   };
 }
 
@@ -922,7 +924,7 @@ function closeAttemptDetail() {
       drawerBackdrop.hidden = true;
     }
     if (results) {
-      results.hidden = false;
+      results.hidden = !(actions.resultsTabActive?.() ?? true);
     }
     delete state.attemptId;
     setUrl();

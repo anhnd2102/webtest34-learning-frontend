@@ -8,7 +8,7 @@ import { incidentCellText } from '../exam-room/presentation.js';
 import { ICONS } from '../ui/icons.js';
 export function createResultsView({ root, lifecycle, state, viewState, actions }) {
     const document = root.ownerDocument || root;
-    const { ensurePortalPanel, setUrl, loadAttemptDetail, openGrantRetakeModal } = actions;
+    const { ensurePortalPanel, setUrl, loadAttemptDetail, openGrantRetakeModal, resultsTabActive } = actions;
     const exportXlsxBtn = root.querySelector('#export-xlsx-btn');
     const results = root.querySelector('#results');
     const resultsContent = root.querySelector('#results-content');
@@ -287,7 +287,7 @@ export function createResultsView({ root, lifecycle, state, viewState, actions }
         if (lastUpdated) {
             lastUpdated.textContent = `Cập nhật lúc ${formatCurrentTime()} (Asia/Ho_Chi_Minh)`;
         }
-        results.hidden = false;
+        results.hidden = !(resultsTabActive?.() ?? true);
     }
     return { renderResults };
 }

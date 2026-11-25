@@ -878,7 +878,7 @@ export function createAttemptReview({ root, lifecycle, state, viewState, queryCo
             drawerBackdrop.hidden = true;
         }
         if (results) {
-            results.hidden = false;
+            results.hidden = !(actions.resultsTabActive?.() ?? true);
         }
         delete state.attemptId;
         setUrl();

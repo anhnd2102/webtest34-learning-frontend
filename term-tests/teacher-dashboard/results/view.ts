@@ -43,12 +43,14 @@ export interface ResultsViewParams {
     setUrl: () => void;
     loadAttemptDetail: (classId: string, assignmentId: string, attemptId: string) => Promise<unknown>;
     openGrantRetakeModal?: unknown;
+    /** Chỉ bỏ ẩn bảng kết quả khi tab "Chấm chi tiết" đang mở (polling/tải lại không được kéo bảng sang tab khác). */
+    resultsTabActive?: () => boolean;
   };
 }
 
 export function createResultsView({ root, lifecycle, state, viewState, actions }: ResultsViewParams) {
   const document: Document = (root as HTMLElement).ownerDocument || (root as Document);
-  const { ensurePortalPanel, setUrl, loadAttemptDetail, openGrantRetakeModal } = actions;
+  const { ensurePortalPanel, setUrl, loadAttemptDetail, openGrantRetakeModal, resultsTabActive } = actions;
   const exportXlsxBtn = root.querySelector<HTMLElement>('#export-xlsx-btn');
   const results = root.querySelector<HTMLElement>('#results');
   const resultsContent = root.querySelector<HTMLElement>('#results-content')!;
@@ -342,7 +344,7 @@ function renderResults(payload?: ResultsPayload | null) {
       lastUpdated.textContent = `Cập nhật lúc ${formatCurrentTime()} (Asia/Ho_Chi_Minh)`;
     }
 
-    results!.hidden = false;
+    results!.hidden = !(resultsTabActive?.() ?? true);
   }
   return { renderResults };
 }
