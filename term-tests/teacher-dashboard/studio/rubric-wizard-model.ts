@@ -122,7 +122,7 @@ const positive = (text: string): number | null => {
   return String(text ?? '').trim() !== '' && Number.isFinite(value) && value > 0 ? value : null;
 };
 
-export const ROLE_GUIDANCE_PREFIX = 'Vai trò đúng của câu: ';
+const ROLE_GUIDANCE_PREFIX = 'Vai trò đúng của câu: ';
 
 export function buildRubricPayload(state: WizardState, question: QuestionDraft): Record<string, any> {
   const variant = state.variant!;

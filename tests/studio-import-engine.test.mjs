@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  blockColumnIds, blockTemplateCsv, parseDelimited, readImport, recordsToCsv, toLegacyResult, typeTemplateCsv
+  blockColumnIds, blockTemplateCsv, parseDelimited, readImport, recordsToCsv, typeTemplateCsv
 } from '../term-tests/teacher-dashboard/studio/import-engine.js';
 import { COLUMNS, TYPES, TYPE_BY_CODE, resolveTypeCode } from '../term-tests/teacher-dashboard/studio/import-registry.js';
 import * as legacy from '../term-tests/teacher-dashboard/studio/content-import.js';
@@ -164,7 +164,6 @@ test('lỗi từng dòng có số dòng, cột và cách sửa; một dòng lỗ
   assert.equal(result.rows[4].cards[0].maxScore, 1, 'điểm sai thì dùng mặc định');
   assert.deepEqual(result.summary, { total: 5, ok: 1, warning: 1, error: 3 });
   assert.equal(result.cards.length, 2, 'chỉ dòng Hợp lệ/Cảnh báo ra câu hỏi');
-  assert.equal(toLegacyResult(result).invalidRows.length, 3);
 });
 
 test('cả Phần: dạng câu lạ báo lỗi, dạng để trống dùng dạng của dòng trước, bài tập để trống dùng bài tập trước', () => {

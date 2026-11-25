@@ -477,45 +477,6 @@
    Item Error Analysis Styles (IZONE Design System Compliance)
    ========================================================================== */
 
-.report-mode-nav-wrapper {
-  margin-bottom: 20px;
-}
-.report-mode-switcher-container {
-  display: inline-flex;
-  gap: 6px;
-  background: #f1f5f9;
-  padding: 4px;
-  border-radius: 8px;
-  border: 1px solid var(--izone-border, #e2e8f0);
-}
-.report-mode-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #64748b;
-  cursor: pointer;
-  box-shadow: none;
-  transition: all 0.15s ease;
-}
-.report-mode-btn:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.6);
-  color: #1e293b;
-  transform: none;
-  box-shadow: none;
-}
-.report-mode-btn.active {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: var(--izone-primary, #db0829);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
 /* Toolbar: Skill Filter & Sorting */
 .item-analysis-container {
   display: flex;

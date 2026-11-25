@@ -3,7 +3,7 @@
 // Màn chấm lại của giáo viên cho câu rubric v2 (spec #40, GĐ 5): thấy bằng chứng AI từng yêu cầu và sửa điểm từng yêu cầu.
 // Chỉ gửi điểm từng thành phần; tổng điểm câu do backend tính lại, giá trị xem trước ở đây không phải điểm chính thức.
 import { escapeHtml } from '../ui/presentation.js';
-export const LANGUAGE_ID = 'language';
+const LANGUAGE_ID = 'language';
 export function hasRequirementBreakdown(feedback) {
     const list = feedback?.requiredStructures;
     return Array.isArray(list) && list.length > 0 && list.every((requirement) => requirement.maxScore !== undefined);

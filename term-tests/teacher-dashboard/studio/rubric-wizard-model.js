@@ -77,7 +77,7 @@ const positive = (text) => {
     const value = Number(String(text ?? '').trim().replace(',', '.'));
     return String(text ?? '').trim() !== '' && Number.isFinite(value) && value > 0 ? value : null;
 };
-export const ROLE_GUIDANCE_PREFIX = 'Vai trò đúng của câu: ';
+const ROLE_GUIDANCE_PREFIX = 'Vai trò đúng của câu: ';
 export function buildRubricPayload(state, question) {
     const variant = state.variant;
     const payload = { variant, level: state.level, maxScore: Number(String(state.points).replace(',', '.')) };

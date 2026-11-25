@@ -1,20 +1,20 @@
 // NGUỒN: file .mts này; content-preview.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261121-logo-only';
-import { escape } from './candidate/text-utils.js?rev=20261121-logo-only';
-import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261121-logo-only';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261121-logo-only';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261121-logo-only';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261121-logo-only';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261121-logo-only';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261121-logo-only';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261121-logo-only';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261121-logo-only';
-import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261121-logo-only';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261121-logo-only';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261121-logo-only';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261121-logo-only';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261121-logo-only';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261125-dead-code';
+import { escape } from './candidate/text-utils.js?rev=20261125-dead-code';
+import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261125-dead-code';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261125-dead-code';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261125-dead-code';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261125-dead-code';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261125-dead-code';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261125-dead-code';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261125-dead-code';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261125-dead-code';
+import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261125-dead-code';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261125-dead-code';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261125-dead-code';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261125-dead-code';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261125-dead-code';
 export async function mount(course) {
     if (!['03', '34', '45'].includes(course))
         throw new Error('Unknown demo course');

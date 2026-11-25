@@ -17,7 +17,7 @@ const VARIANT_LABELS: Record<string, string> = {
   writing: 'Viết đoạn/bài (Writing)'
 };
 
-export const RUBRIC_V2_VERSION = 'izone-rubric-v2';
+const RUBRIC_V2_VERSION = 'izone-rubric-v2';
 
 export function isRubricV2(rubric: unknown): boolean {
   return Boolean(rubric && typeof rubric === 'object' && (rubric as { scoringVersion?: string }).scoringVersion === RUBRIC_V2_VERSION);

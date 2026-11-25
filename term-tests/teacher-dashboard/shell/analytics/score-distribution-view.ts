@@ -143,142 +143,6 @@ export function renderScoreKpiCards(rosterSummary: Record<string, any> = {}, sta
   `;
 }
 
-export function renderRosterSummaryCards(rosterSummary: Record<string, any> = {}): string {
-  const {
-    totalRoster = 0,
-    submitted = 0,
-    officialGraded = 0,
-    provisional = 0,
-    pendingReview = 0,
-    retaking = 0,
-    notSubmitted = 0
-  } = rosterSummary;
-
-  const cards = [
-    {
-      label: 'Tổng số học viên',
-      value: totalRoster,
-      icon: VIEW_ICONS.users,
-      badgeClass: 'metric-neutral',
-      tooltip: 'Sĩ số danh sách lớp trong bài thi'
-    },
-    {
-      label: 'Đã nộp bài',
-      value: submitted,
-      icon: VIEW_ICONS.submitted,
-      badgeClass: 'metric-primary',
-      tooltip: 'Số học viên đã hoàn thành và nộp bài'
-    },
-    {
-      label: 'Có điểm chính thức',
-      value: officialGraded,
-      icon: VIEW_ICONS.award,
-      badgeClass: 'metric-success',
-      tooltip: 'Bài đã được chấm xong toàn diện'
-    },
-    {
-      label: 'Chờ chấm / duyệt',
-      value: pendingReview + provisional,
-      icon: VIEW_ICONS.clock,
-      badgeClass: 'metric-warning',
-      tooltip: 'Bao gồm bài cần chấm tự luận/nói hoặc điểm tạm tính'
-    },
-    {
-      label: 'Chưa nộp bài',
-      value: notSubmitted,
-      icon: VIEW_ICONS.alert,
-      badgeClass: 'metric-muted',
-      tooltip: 'Học viên chưa bắt đầu hoặc chưa nộp bài'
-    }
-  ];
-
-  if (retaking > 0) {
-    cards.push({
-      label: 'Đang làm lại',
-      value: retaking,
-      icon: VIEW_ICONS.rotate,
-      badgeClass: 'metric-info',
-      tooltip: 'Được cấp quyền và đang làm lại bài'
-    });
-  }
-
-  return `
-    <div class="report-roster-grid">
-      ${cards.map(c => `
-        <div class="report-metric-card ${c.badgeClass}" title="${c.tooltip}">
-          <div class="metric-card-header">
-            <span class="metric-icon">${c.icon}</span>
-            <span class="metric-label">${c.label}</span>
-          </div>
-          <div class="metric-card-value">${c.value}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-/**
- * Render Statistical indicators grid (Min, Max, Mean, Median, SD).
- */
-export function renderStatisticsCards(statistics: Record<string, any> = {}, maxScore: unknown = 100): string {
-  const {
-    count = 0,
-    min = null,
-    max = null,
-    mean = null,
-    median = null,
-    standardDeviation = null
-  } = statistics;
-
-  const items = [
-    {
-      label: 'Điểm cao nhất',
-      value: formatScoreFraction(max, maxScore),
-      icon: VIEW_ICONS.trendUp,
-      desc: 'Học viên có kết quả cao nhất'
-    },
-    {
-      label: 'Điểm thấp nhất',
-      value: formatScoreFraction(min, maxScore),
-      icon: VIEW_ICONS.trendDown,
-      desc: 'Học viên có kết quả thấp nhất'
-    },
-    {
-      label: 'Điểm trung bình',
-      value: formatScoreFraction(mean, maxScore),
-      icon: VIEW_ICONS.target,
-      desc: 'Giá trị trung bình cộng'
-    },
-    {
-      label: 'Điểm trung vị (Median)',
-      value: formatScoreFraction(median, maxScore),
-      icon: VIEW_ICONS.scale,
-      desc: 'Mốc điểm chính giữa phân bố'
-    },
-    {
-      label: 'Độ lệch chuẩn (SD)',
-      value: standardDeviation !== null && standardDeviation !== undefined ? standardDeviation : '—',
-      icon: VIEW_ICONS.chart,
-      desc: 'Mức độ phân tán điểm số'
-    }
-  ];
-
-  return `
-    <div class="report-statistics-grid">
-      ${items.map(it => `
-        <div class="report-stat-card">
-          <div class="stat-card-top">
-            <span class="stat-icon">${it.icon}</span>
-            <span class="stat-label">${it.label}</span>
-          </div>
-          <div class="stat-value">${it.value}</div>
-          <div class="stat-desc">${it.desc}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
 /**
  * Render SVG Histogram Chart.
  */
@@ -427,7 +291,7 @@ export function renderEmptyState(message: string = 'Vui lòng chọn Lớp và B
 /**
  * Render Loading Skeleton State.
  */
-export function renderLoadingSkeleton() {
+function renderLoadingSkeleton() {
   return `
     <div class="report-loading-container" aria-busy="true">
       <div class="report-roster-grid skeleton-pulse">
@@ -456,7 +320,7 @@ export function renderLoadingSkeleton() {
 /**
  * Render Error State with Retry button.
  */
-export function renderErrorState(errorMessage?: string, onRetry?: unknown): string {
+function renderErrorState(errorMessage?: string, onRetry?: unknown): string {
   return `
     <div class="panel report-error-panel">
       <div class="alert alert-danger">

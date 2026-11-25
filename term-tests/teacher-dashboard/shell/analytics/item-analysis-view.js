@@ -26,37 +26,6 @@ export function itemAnalysisApiPath(classId, assignmentId, { includeProvisional 
     return includeProvisional ? `${base}?includeProvisional=true` : base;
 }
 /**
- * Render Mode Switcher between Score Distribution (Histogram) and Item Analysis.
- */
-export function renderReportModeSwitch(activeMode = 'distribution') {
-    const isDist = activeMode === 'distribution';
-    const isItems = activeMode === 'item_analysis';
-    return `
-    <div class="report-mode-switcher-container" role="tablist" aria-label="Chế độ báo cáo">
-      <button 
-        type="button" 
-        class="report-mode-btn ${isDist ? 'active' : ''}" 
-        data-report-mode="distribution"
-        role="tab"
-        aria-selected="${isDist}"
-      >
-        ${ITEM_ICONS.chart}
-        <span>Phổ điểm lớp</span>
-      </button>
-      <button 
-        type="button" 
-        class="report-mode-btn ${isItems ? 'active' : ''}" 
-        data-report-mode="item_analysis"
-        role="tab"
-        aria-selected="${isItems}"
-      >
-        ${ITEM_ICONS.list}
-        <span>Phân tích câu hỏi</span>
-      </button>
-    </div>
-  `;
-}
-/**
  * Render Toolbar for Item Analysis: Skill Filter Tabs & Sorting Buttons.
  */
 export function renderItemAnalysisControls({ skills = [], selectedSkill = 'ALL', sortCriteria = 'error_rate_desc', totalItems = 0 } = {}) {
@@ -131,7 +100,7 @@ export function renderItemDistributionBar(item) {
 /**
  * Chú giải bằng chữ cho thanh phân bố (hiện ở điện thoại, nơi không có tooltip khi rê chuột).
  */
-export function renderItemDistributionLegend(item) {
+function renderItemDistributionLegend(item) {
     const total = Number(item?.totalAttempts ?? item?.stats?.totalAttempts) || 0;
     if (total <= 0)
         return '';
