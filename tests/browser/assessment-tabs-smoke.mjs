@@ -66,6 +66,8 @@ try {
       for (let k = 0; k < 13; k++) { await page.clock.runFor(5000); await page.waitForTimeout(60); } // 65 giây = hơn hai chu kỳ polling, tua từng bước để phản hồi kịp về
       assert.ok(resultReads > before, `${width}px: polling không chạy trong lúc ở tab "${tab}" (không kiểm được lỗi)`);
       await only(tab, 'sau hai chu kỳ polling');
+      const dup = await page.evaluate(() => ['report-drilldown-container', 'report-toggle-provisional'].map(id => [id, document.querySelectorAll('#' + id).length]).filter(([, n]) => n > 1));
+      assert.deepEqual(dup, [], `${width}px, tab "${tab}": id trùng do báo cáo bị vẽ vào nhiều khung`);
     }
     assert.deepEqual(errors, []);
     await page.close();

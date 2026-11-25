@@ -22,13 +22,11 @@ export interface AssignmentSelectionParams {
   loadResults: (classId: string, assignmentId: string) => Promise<unknown>;
   getReportState: () => { reportData: unknown, itemAnalysisData: unknown, expandedItemIds: Set<string>, mode?: string };
   cancelAssessmentQueries: () => void;
-  loadScoreDistributionReport: () => unknown;
-  loadItemAnalysisReport: () => unknown;
   syncAssessmentHeaderMeta: () => void;
   switchAssessmentTab: (tab: string) => void;
 }
 
-export function createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, syncAssessmentHeaderMeta, switchAssessmentTab }: AssignmentSelectionParams) {
+export function createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, syncAssessmentHeaderMeta, switchAssessmentTab }: AssignmentSelectionParams) {
   function renderAssignmentChips(targetAssignmentId = state.assignmentId) {
     renderAssignmentChipsView(assignments, {
       assignmentsList: scopeState.currentAssignmentsList,
@@ -73,14 +71,6 @@ export function createAssignmentSelection({ queryCoordinator, scopeState, navSta
         if (assessmentHeader) assessmentHeader.hidden = true;
       }
     }
-    if (currentTab === 'reports') {
-      if (getReportState().mode === 'item_analysis') {
-        loadItemAnalysisReport();
-      } else {
-        loadScoreDistributionReport();
-      }
-    }
-
     if (assignmentId) {
       const activeAssignment = scopeState.currentAssignmentsList.find(a => a.assignmentId === assignmentId);
       renderSelectedAssignmentShowcase(activeAssignment);

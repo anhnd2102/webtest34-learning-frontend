@@ -19,7 +19,6 @@ export interface NavigationParams {
   viewDashboard: El;
   viewGrading: El;
   viewExams: El;
-  viewReports: El;
   navItems: HTMLElement[];
   goToGradingBtn: El;
   gradingEmptyPlaceholder: El;
@@ -44,7 +43,7 @@ export interface NavigationParams {
   renderReportsView: () => void;
 }
 
-export function createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, viewReports, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView }: NavigationParams) {
+export function createNavigation({ lifecycle, queryCoordinator, viewState, scopeState, navState, window, results, status, viewDashboard, viewGrading, viewExams, navItems, goToGradingBtn, gradingEmptyPlaceholder, gradingBackToDashboardBtn, pageTitleBar, assessmentHeader, assessmentBackBtn, assessmentClassName, assessmentTestTitle, assessmentStatusBadge, assessmentTabDistribution, assessmentTabItems, assessmentTabBtns, disposeOwnedBuilder, state, loadAndRenderTestStudio, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, renderReportsView }: NavigationParams) {
   function syncAssessmentHeaderMeta() {
     if (assessmentClassName) {
       const cls = scopeState.rawClassesList.find(c => String(c.classId) === String(state.classId));
@@ -105,8 +104,7 @@ export function createNavigation({ lifecycle, queryCoordinator, viewState, scope
       views: {
         dashboard: viewDashboard,
         grading: viewGrading,
-        exams: viewExams,
-        reports: viewReports
+        exams: viewExams
       },
       navItems,
       onTabChange: (newTab) => {
@@ -115,7 +113,7 @@ export function createNavigation({ lifecycle, queryCoordinator, viewState, scope
           queryCoordinator.cancel('testStudio');
           queryCoordinator.cancel('testStudioBuilder');
         }
-        if (newTab !== 'reports' && newTab !== 'grading') {
+        if (newTab !== 'grading') {
           cancelAssessmentQueries();
         }
         if (pageTitleBar) {
@@ -137,13 +135,6 @@ export function createNavigation({ lifecycle, queryCoordinator, viewState, scope
         }
         if (newTab === 'test-studio' || newTab === 'exams') {
           loadAndRenderTestStudio();
-        }
-        if (newTab === 'reports') {
-          if (getReportState().mode === 'item_analysis') {
-            loadItemAnalysisReport();
-          } else {
-            loadScoreDistributionReport();
-          }
         }
       }
     });

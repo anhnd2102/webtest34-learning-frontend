@@ -1,7 +1,7 @@
 // NGUỒN: file .ts này; assignment-selection.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 import { readDashboardTab, renderAssignmentChipsView } from './dashboard-state.js';
-export function createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, loadScoreDistributionReport, loadItemAnalysisReport, syncAssessmentHeaderMeta, switchAssessmentTab }) {
+export function createAssignmentSelection({ queryCoordinator, scopeState, navState, window, assignmentSelect, assignments, results, status, gradingEmptyPlaceholder, assessmentHeader, assessmentTabDistribution, assessmentTabItems, renderSelectedAssignmentShowcase, state, setUrl, loadResults, getReportState, cancelAssessmentQueries, syncAssessmentHeaderMeta, switchAssessmentTab }) {
     function renderAssignmentChips(targetAssignmentId = state.assignmentId) {
         renderAssignmentChipsView(assignments, {
             assignmentsList: scopeState.currentAssignmentsList,
@@ -51,14 +51,6 @@ export function createAssignmentSelection({ queryCoordinator, scopeState, navSta
                     gradingEmptyPlaceholder.hidden = false;
                 if (assessmentHeader)
                     assessmentHeader.hidden = true;
-            }
-        }
-        if (currentTab === 'reports') {
-            if (getReportState().mode === 'item_analysis') {
-                loadItemAnalysisReport();
-            }
-            else {
-                loadScoreDistributionReport();
             }
         }
         if (assignmentId) {
