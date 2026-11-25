@@ -100,7 +100,7 @@ try {
   {
     const log = [];
     const page = await newPage(browser, log);
-    await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34#test=${TEST_TOKEN}`);
+    await page.goto(`${origin}/term-tests/webtest-34-demo/index.html?demoCourse=34&class=TEST-34#test=${TEST_TOKEN}`);
     await page.waitForFunction(() => document.querySelector('#studentSelectInput')?.disabled === false);
     await page.selectOption('#studentSelectInput', 's1');
     await page.click('#startExamBtn');

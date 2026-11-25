@@ -1,20 +1,20 @@
 // NGUỒN: file .mts này; content-preview.mjs do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; build tự thêm rev (tree webtest-34-demo/) và đọc rev từ chính file .mjs đã sinh.
-import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261125-dead-code';
-import { escape } from './candidate/text-utils.js?rev=20261125-dead-code';
-import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261125-dead-code';
-import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261125-dead-code';
-import { createExamMode } from './candidate/exam-mode.js?rev=20261125-dead-code';
-import { createIntroScreen } from './candidate/intro-screen.js?rev=20261125-dead-code';
-import { createReviewScreen } from './candidate/review-screen.js?rev=20261125-dead-code';
-import { createExamTimer } from './candidate/exam-timer.js?rev=20261125-dead-code';
-import { createDraftSync } from './candidate/draft-sync.js?rev=20261125-dead-code';
-import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261125-dead-code';
-import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261125-dead-code';
-export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261125-dead-code';
-export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261125-dead-code';
-export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261125-dead-code';
-export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261125-dead-code';
+import { renderDynamicExam, getTotalItemCount, getAnsweredCount, renderSectionNavPills, renderSidePanel, initDynamicExamInteractions, ICONS } from './dynamic-exam-renderer.mjs?rev=20261125-clean-urls';
+import { escape } from './candidate/text-utils.js?rev=20261125-clean-urls';
+import { learningRequestMethod, learningRequestBody, selfProctoringBannerHtml } from './candidate/learning-api.js?rev=20261125-clean-urls';
+import { mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261125-clean-urls';
+import { createExamMode } from './candidate/exam-mode.js?rev=20261125-clean-urls';
+import { createIntroScreen } from './candidate/intro-screen.js?rev=20261125-clean-urls';
+import { createReviewScreen } from './candidate/review-screen.js?rev=20261125-clean-urls';
+import { createExamTimer } from './candidate/exam-timer.js?rev=20261125-clean-urls';
+import { createDraftSync } from './candidate/draft-sync.js?rev=20261125-clean-urls';
+import { createSubmitFlow } from './candidate/submit-flow.js?rev=20261125-clean-urls';
+import { readPreviewToken, previewBannerHtml, fetchPreviewDefinition, blockedPreviewRequest, PREVIEW_CSS } from './candidate/preview-mode.js?rev=20261125-clean-urls';
+export { formatCandidateOptionLabel } from './candidate/text-utils.js?rev=20261125-clean-urls';
+export { draftKey, sanitizeDraft, learningRequestMethod, learningRequestBody, examPhase, selfProctoringBannerHtml, resetLocalAttemptState } from './candidate/learning-api.js?rev=20261125-clean-urls';
+export { resultViewModel, resultDetailsHtml, studentResultsBodyHtml, studentResultsHtml, studentReviewHtml, bindResultFilters } from './candidate/result-view.js?rev=20261125-clean-urls';
+export { withLocalGroupLabels, mapAnswerToDefinitionValue, mapAnswerFromDefinitionValue } from './candidate/group-render.js?rev=20261125-clean-urls';
 export async function mount(course) {
     if (!['03', '34', '45'].includes(course))
         throw new Error('Unknown demo course');
@@ -261,7 +261,7 @@ export async function mount(course) {
             <div class="cbt-intro-field">
               <label for="classCodeInput">Mã lớp</label>
               <div class="cbt-intro-input-row">
-                <input id="classCodeInput" class="cbt-intro-input" value="${escape(paramClassCode || `TEST-${course}`)}" placeholder="Ví dụ: ICxxxx" autocomplete="off" style="flex:1;font-weight:600">
+                <input id="classCodeInput" class="cbt-intro-input" value="${escape(paramClassCode)}" placeholder="Ví dụ: IC2283" autocomplete="off" style="flex:1;font-weight:600">
                 <button type="button" class="btn btn-secondary" id="loadRosterBtn" style="min-width:140px;font-weight:600">Tải danh sách</button>
               </div>
               <div id="classCodeStatus" class="cbt-intro-hint">Nhập đúng mã lớp do giáo viên cung cấp, sau đó bấm “Tải danh sách”.</div>
@@ -389,7 +389,9 @@ export async function mount(course) {
     }
     else {
         createReviewScreen({ testToken, title, learningState, apiRequest, studentSelect });
-        void handleLoadRoster();
+        // Chỉ tự tải danh sách khi link có mã lớp; link không kèm mã lớp chờ học viên tự nhập (không báo lỗi "nhập mã lớp" ngay khi mở trang).
+        if (paramClassCode)
+            void handleLoadRoster();
     }
     return;
     // --- RENDER GIAO DIỆN BÀI THI CHÍNH THỨC ---

@@ -19,8 +19,8 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="dynamic-test.css?rev=20261119-bold-a">
-  <link rel="modulepreload" href="./content-preview.mjs?rev=20261125-dead-code">
-  <link rel="modulepreload" href="./dynamic-exam-renderer.mjs?rev=20261125-dead-code">
+  <link rel="modulepreload" href="./content-preview.mjs?rev=20261125-clean-urls">
+  <link rel="modulepreload" href="./dynamic-exam-renderer.mjs?rev=20261125-clean-urls">
   <link rel="modulepreload" href="../teacher-dashboard/exam-room-sse.js">
   <script>
     (() => {
@@ -28,12 +28,12 @@
       const h = location.hash.replace(/^#/, '');
       const rawHash = h;
       const hashToken = rawHash.includes('=') ? (new URLSearchParams(rawHash).get('test') || new URLSearchParams(rawHash).get('token') || new URLSearchParams(rawHash).get('preview')) : (rawHash.includes('-') && !rawHash.includes('&') ? rawHash : '');
-      const demoCourse = p.get('demoCourse') || p.get('course');
+      const demoCourse = p.get('c') || p.get('demoCourse') || p.get('course');
       const isCandidateCbt = Boolean(hashToken);
       if (isCandidateCbt) {
         document.documentElement.classList.add('cbt-mounting');
         const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
-        window.__cbtMountPromise = import('./content-preview.mjs?rev=20261125-dead-code').then(m => m.mount(courseToMount));
+        window.__cbtMountPromise = import('./content-preview.mjs?rev=20261125-clean-urls').then(m => m.mount(courseToMount));
       }
     })();
   </script>
@@ -450,7 +450,7 @@
   // Học viên chỉ vào bài thi bằng link có token (#test=...); shell thi nằm ở content-preview.mjs.
   // ?demoCourse= (hoặc ?course=) chỉ chọn khóa 03/34/45 cho link có token, không còn mở bản xem thử.
   const search = new URLSearchParams(location.search);
-  const demoCourse = search.get('demoCourse') || search.get('course');
+  const demoCourse = search.get('c') || search.get('demoCourse') || search.get('course');
   const rawHash = window.location.hash.replace(/^#/, '');
   const hashToken = rawHash.includes('=') ? (new URLSearchParams(rawHash).get('test') || new URLSearchParams(rawHash).get('token') || new URLSearchParams(rawHash).get('preview')) : (rawHash.includes('-') && !rawHash.includes('&') ? rawHash : '');
   const isCandidateCbt = Boolean(hashToken);
@@ -459,7 +459,7 @@
     return;
   }
   const courseToMount = ['03', '34', '45'].includes(demoCourse) ? demoCourse : (hashToken.startsWith('03') ? '03' : (hashToken.startsWith('45') ? '45' : '34'));
-  const mountPromise = window.__cbtMountPromise || import('./content-preview.mjs?rev=20261125-dead-code').then(module => module.mount(courseToMount));
+  const mountPromise = window.__cbtMountPromise || import('./content-preview.mjs?rev=20261125-clean-urls').then(module => module.mount(courseToMount));
   mountPromise.catch((err) => {
     console.error('Mount error:', err);
     document.body.textContent = 'Không tải được đề thi. Hãy mở lại link của giáo viên và thử lại. Lỗi: ' + (err?.message || err);

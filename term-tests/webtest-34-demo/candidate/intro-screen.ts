@@ -142,6 +142,9 @@ export function createIntroScreen({ config, testToken, paramClassCode, state, le
 
     if (paramClassCode) {
       void handleLoadRoster();
+    } else if (!isTouchDevice) {
+      // Link không kèm mã lớp (thi lại, thi tập trung): học viên tự gõ mã lớp, đặt con trỏ vào ô nhập (không bật bàn phím trên điện thoại).
+      classInput.focus();
     }
 
     studentSelect.addEventListener('change', () => {

@@ -1,9 +1,9 @@
 // Exam Mode của học viên: phòng chờ, SSE, nhịp tim, Exam Guard (reducer ở exam-guard.js) và giữ màn hình sáng.
 // NGUỒN: file .ts này; exam-mode.js do `npm run build` sinh ra (xem text-utils.ts). Import nội bộ viết
 // không có `?rev=`, bước build tự thêm rev dùng chung của shell học viên.
-import { parseSseChunk } from '../../teacher-dashboard/exam-room-sse.js?rev=20261125-dead-code';
-import { escape } from './text-utils.js?rev=20261125-dead-code';
-import { selfProctoringBannerHtml } from './learning-api.js?rev=20261125-dead-code';
+import { parseSseChunk } from '../../teacher-dashboard/exam-room-sse.js?rev=20261125-clean-urls';
+import { escape } from './text-utils.js?rev=20261125-clean-urls';
+import { selfProctoringBannerHtml } from './learning-api.js?rev=20261125-clean-urls';
 export function createExamMode({ apiBase, learningState, deviceId, apiRequest, createUuid, renderExamInterface }) {
     const ignoreFocusSignals = Boolean(globalThis.isIosDevice?.(navigator));
     const supportsFullscreen = () => !ignoreFocusSignals && typeof document.documentElement.requestFullscreen === 'function';

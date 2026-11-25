@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      SMOKE_ORIGIN: https://anhnd2102.github.io/webtest34-learning-frontend
+      SMOKE_ORIGIN: https://test.izoneacademic.com
       PLAYWRIGHT_MODULE: ${{ github.workspace }}/node_modules/playwright/index.mjs
     steps:
       # Smoke lấy đúng commit vừa deploy (workflow_run) để khớp với bản đang phục vụ.
@@ -44,7 +44,9 @@ jobs:
           # CDN của Pages có thể trễ vài chục giây sau deploy; chờ tối đa ~3 phút để file chính trả 200.
           for attempt in $(seq 1 18); do
             if curl -fsS -o /dev/null "$SMOKE_ORIGIN/term-tests/webtest-34-demo/candidate/text-utils.js" \
-              && curl -fsS -o /dev/null "$SMOKE_ORIGIN/term-tests/webtest-34-demo/index.html"; then
+              && curl -fsS -o /dev/null "$SMOKE_ORIGIN/term-tests/webtest-34-demo/index.html" \
+              && curl -fsS -o /dev/null "$SMOKE_ORIGIN/exam/" \
+              && curl -fsS -o /dev/null "$SMOKE_ORIGIN/"; then
               echo "site sẵn sàng (lần thử $attempt)"; exit 0
             fi
             sleep 10
