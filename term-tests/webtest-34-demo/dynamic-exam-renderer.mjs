@@ -842,13 +842,13 @@ export function convertGoogleDriveAudioUrl(rawUrl) {
                     ? ''
                     : `${window.location.protocol}//${hostname}:8788`;
             }
-            else if (hostname === 'webtest.ducanhdev.com') {
+            else if (hostname === 'webtest.izoneacademic.com') {
                 apiBase = '';
             }
             else {
                 apiBase = window.WEBTEST_34_PREVIEW_CONFIG?.API_BASE_URL
                     || window.WEBTEST_34_PREVIEW_CONFIG?.LEARNING_API_BASE_URL
-                    || 'https://webtest.ducanhdev.com';
+                    || 'https://webtest.izoneacademic.com';
             }
         }
         const cleanBase = apiBase ? apiBase.replace(/\/$/, '') : '';

@@ -4,7 +4,7 @@ import { formPreviewTokenPath } from '../api/teacher.js';
 // Trang xem trước là renderer học viên (`webtest-34-demo`); token chỉ nằm trong fragment, không vào query.
 export function previewPageUrl({ pageUrl, token, apiBase = '' }) {
     const url = new URL('../webtest-34-demo/index.html', pageUrl);
-    if (apiBase && (apiBase.includes('webtest.ducanhdev.com') || apiBase.includes('production')))
+    if (apiBase && (apiBase.includes('webtest.izoneacademic.com') || apiBase.includes('production')))
         url.searchParams.set('prod', '1');
     url.hash = `preview=${encodeURIComponent(token)}`;
     return url.toString();

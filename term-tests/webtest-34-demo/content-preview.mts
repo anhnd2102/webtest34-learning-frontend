@@ -42,7 +42,7 @@ export async function mount(course: string) {
   const isPreview = Boolean(previewToken);
 
   const isProd = queryParams.get('prod') === '1' || queryParams.get('apiEnv') === 'production';
-  const apiBase = (isProd ? 'https://webtest.ducanhdev.com' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.ducanhdev.com')).replace(/\/$/, '');
+  const apiBase = (isProd ? 'https://webtest.izoneacademic.com' : (config.LEARNING_API_BASE_URL || config.API_BASE_URL || 'https://webtest.izoneacademic.com')).replace(/\/$/, '');
   // Shell chỉ mở bằng link có token (chế độ xem thử bằng đề dựng sẵn đã bỏ); `isLearningMode` giữ lại làm tham số cho các module `candidate/`.
   if (!testToken && !isPreview) throw new Error('Thiếu mã bài thi: hãy mở bài thi bằng link do giáo viên cung cấp.');
   const isLearningMode = true;

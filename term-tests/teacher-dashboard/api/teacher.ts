@@ -1,7 +1,7 @@
 // NGUỒN: file .ts này; teacher.js do `npm run build` sinh ra (xem candidate/text-utils.ts). Import nội bộ viết
 // không có `?rev=`; dashboard không dùng rev chung nên build không thêm vào đây.
 export function defaultApiBase(): string {
-  return 'https://webtest.ducanhdev.com';
+  return 'https://webtest.izoneacademic.com';
 }
 
 export function fixtureHeaders({ actorId }: { actorId: string }): Record<string, string> {

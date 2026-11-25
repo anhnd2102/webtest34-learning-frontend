@@ -17,7 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const databaseUrl = process.env.LEARNING_E2E_DATABASE_URL;
 if (!databaseUrl) { console.error('Cần LEARNING_E2E_DATABASE_URL (Postgres thử đã migrate).'); process.exit(2); }
-if (/\b(webtest\.ducanhdev\.com|prod)/i.test(databaseUrl)) { console.error('Từ chối chạy: URL có vẻ là production.'); process.exit(2); }
+if (/\b(webtest\.(?:izoneacademic|ducanhdev)\.com|prod)/i.test(databaseUrl)) { console.error('Từ chối chạy: URL có vẻ là production.'); process.exit(2); }
 
 const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 const frontendRoot = fileURLToPath(new URL('../../', import.meta.url));

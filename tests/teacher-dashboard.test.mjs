@@ -55,10 +55,10 @@ import {
 } from '../term-tests/teacher-dashboard/app.js';
 
 test('defaultApiBase always resolves to the production origin, including local hosts', () => {
-  assert.equal(defaultApiBase({ hostname: 'localhost' }), 'https://webtest.ducanhdev.com');
-  assert.equal(defaultApiBase({ hostname: '127.0.0.1' }), 'https://webtest.ducanhdev.com');
-  assert.equal(defaultApiBase({ hostname: 'anhnd2102.github.io' }), 'https://webtest.ducanhdev.com');
-  assert.equal(defaultApiBase(null), 'https://webtest.ducanhdev.com');
+  assert.equal(defaultApiBase({ hostname: 'localhost' }), 'https://webtest.izoneacademic.com');
+  assert.equal(defaultApiBase({ hostname: '127.0.0.1' }), 'https://webtest.izoneacademic.com');
+  assert.equal(defaultApiBase({ hostname: 'anhnd2102.github.io' }), 'https://webtest.izoneacademic.com');
+  assert.equal(defaultApiBase(null), 'https://webtest.izoneacademic.com');
 });
 
 test('localStudentUrl points student links at the local server with the production API only when the dashboard runs locally', () => {

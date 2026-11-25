@@ -17,7 +17,7 @@ test('API configuration isolates loopback and file previews from production', as
   }
   const window={location:{hostname:'anhnd2102.github.io',protocol:'https:'}};
   vm.runInNewContext(source,{window});
-  assert.equal(window.WEBTEST_34_PREVIEW_CONFIG.LEARNING_API_BASE_URL,'https://webtest.ducanhdev.com');
+  assert.equal(window.WEBTEST_34_PREVIEW_CONFIG.LEARNING_API_BASE_URL,'https://webtest.izoneacademic.com');
   const fileWindow={location:{hostname:'',protocol:'file:'}};
   vm.runInNewContext(source,{window:fileWindow});
   assert.equal(fileWindow.WEBTEST_34_PREVIEW_CONFIG.LEARNING_API_BASE_URL,'http://127.0.0.1:8788');
@@ -25,7 +25,7 @@ test('API configuration isolates loopback and file previews from production', as
 
 test('Webtest 34 points to the generic Learning platform API', async () => {
   const config = await read('term-tests/webtest-34-demo/config.js');
-  assert.match(config, /https:\/\/webtest\.ducanhdev\.com/);
+  assert.match(config, /https:\/\/webtest\.izoneacademic\.com/);
   assert.doesNotMatch(config, /ducizone\.ddns\.net\/mapping-api/);
 });
 
